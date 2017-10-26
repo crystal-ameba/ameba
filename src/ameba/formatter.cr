@@ -13,6 +13,7 @@ module Ameba
 
     def start(sources)
       puts formatter.before sources
+      puts "\n\n"
     end
 
     def report(source)
@@ -20,7 +21,7 @@ module Ameba
     end
 
     def finish(sources)
-      puts
+      puts "\n\n"
       puts formatter.after sources
     end
   end
@@ -39,7 +40,20 @@ module Ameba
     end
 
     def after(sources)
-      "Done!"
+      String.build do |mes|
+        failures = sources.select { |s| s.errors.any? }
+        l = failures.map { |f| f.errors.size }.sum
+
+        mes << "#{sources.size} inspected, #{l} failure#{"s" if l != 1}.\n\n"
+
+        failures.each do |failure|
+          failure.errors.each do |error|
+            mes << "#{failure.path}:#{error.pos}"
+            mes << "\n"
+            mes << "#{error.rule}: #{error.message}\n\n"
+          end
+        end
+      end
     end
   end
 end

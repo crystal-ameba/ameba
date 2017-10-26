@@ -13,7 +13,7 @@ module Ameba
   end
 
   def run(files, formatter : Formatter)
-    sources = files.map { |path| Source.new(File.read path) }
+    sources = files.map { |path| Source.new(path) }
 
     reporter = Reporter.new formatter
     reporter.start sources

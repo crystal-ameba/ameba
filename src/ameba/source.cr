@@ -1,10 +1,20 @@
 module Ameba
   class Source
-    getter lines : Array(String)
-    getter errors = [] of String
+    record Error,
+      rule : String,
+      pos : Int32,
+      message : String
 
-    def initialize(content : String)
-      @lines = content.split "\n"
+    getter lines : Array(String)
+    getter errors = [] of Error
+    getter path : String
+
+    def initialize(@path : String)
+      @lines = File.read_lines(@path)
+    end
+
+    def error(rule, line_number : Int32, message : String)
+      errors << Error.new rule.class.name, line_number, message
     end
   end
 end

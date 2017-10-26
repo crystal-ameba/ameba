@@ -33,6 +33,21 @@ require "ameba"
 Ameba.run
 ```
 
+```sh
+Inspecting 7 files.
+
+
+..F...F
+
+7 inspected, 2 failures.
+
+src/ameba/formatter.cr:47
+Ameba::Rule::LineLength: Line too long [122]
+
+src/ameba.cr:18
+Ameba::Rule::LineLength: Line too long [81]
+```
+
 ## Contributing
 
 1. Fork it ( https://github.com/veelenga/ameba/fork )
