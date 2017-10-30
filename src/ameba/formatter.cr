@@ -50,7 +50,7 @@ module Ameba
           failure.errors.each do |error|
             mes << "#{failure.path}:#{error.pos}"
             mes << "\n"
-            mes << "#{error.rule}: #{error.message}\n\n"
+            mes << "#{error.rule.name}: #{error.message}\n\n"
           end
         end
       end

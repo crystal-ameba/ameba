@@ -1,7 +1,14 @@
 module Ameba
+  # An entity that represents a Crystal source file.
+  # Has path, lines of code and errors reported by rules.
   class Source
+
+    # Represents an error caught by Ameba.
+    #
+    # Each error has the rule that created this error,
+    # position of the error and a message.
     record Error,
-      rule : String,
+      rule : Rule,
       pos : Int32,
       message : String
 
@@ -13,8 +20,16 @@ module Ameba
       @lines = File.read_lines(@path)
     end
 
-    def error(rule, line_number : Int32, message : String)
-      errors << Error.new rule.class.name, line_number, message
+    def initialize(@path : String, content : String)
+      @lines = content.split("\n")
+    end
+
+    def error(rule : Rule, line_number : Int32, message : String)
+      errors << Error.new rule, line_number, message
+    end
+
+    def valid?
+      errors.empty?
     end
   end
 end

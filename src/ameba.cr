@@ -1,12 +1,12 @@
 require "./ameba/*"
-require "./ameba/rule/*"
+require "./ameba/rules/*"
 
 module Ameba
   extend self
 
-  RULES = [
-    Rule::LineLength,
-  ]
+  abstract struct BaseRule
+    abstract def test(source : Source)
+  end
 
   def run(formatter = DotFormatter.new)
     run Dir["**/*.cr"], formatter
