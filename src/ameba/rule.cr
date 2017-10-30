@@ -1,6 +1,7 @@
 module Ameba
   RULES = [
     Rules::LineLength,
+    Rules::TrailingWhitespace,
   ]
 
   abstract struct Rule
