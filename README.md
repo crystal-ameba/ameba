@@ -9,6 +9,12 @@
       </i>
     </sup>
   </p>
+  <p align="center">
+    <a href="https://travis-ci.org/veelenga/ameba"><img src="https://img.shields.io/travis/veelenga/ameba.svg?maxAge=360"></a>
+    <a href="https://github.com/veelenga/ameba/releases"><img src="https://img.shields.io/github/release/veelenga/ameba.svg?maxAge=360"></a>
+    <a href="https://shards.rocks/badge/github/veelenga/ameba"><img src="https://shards.rocks/badge/github/veelenga/ameba/status.svg"></a>
+    <a href="https://github.com/veelenga/ameba/blob/master/LICENSE"><img src="https://img.shields.io/github/license/mashape/apistatus.svg"></a>
+  </p>
 </p>
 
 ## Status
