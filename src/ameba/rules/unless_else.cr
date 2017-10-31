@@ -2,7 +2,7 @@
 #
 # For example, the rule considers these valid:
 #
-# ```crystal
+# ```
 # unless something
 #   :ok
 # end
@@ -16,7 +16,7 @@
 #
 # But it considers this one invalid as it is an `unless` with an `else`:
 #
-# ```crystal
+# ```
 # unless something
 #   :one
 # else
@@ -27,7 +27,7 @@
 # The solution is to swap the order of the blocks, and change the `unless` to
 # an `if`, so the previous invalid example would become this:
 #
-# ```crystal
+# ```
 # if something
 #   :two
 # else

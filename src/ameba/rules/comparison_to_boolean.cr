@@ -2,7 +2,7 @@
 #
 # For example, these are considered invalid:
 #
-# ```crystal
+# ```
 # foo == true
 # bar != false
 # false === baz
