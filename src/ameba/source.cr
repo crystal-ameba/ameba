@@ -1,5 +1,3 @@
-require "compiler/crystal/syntax/*"
-
 module Ameba
   # An entity that represents a Crystal source file.
   # Has path, lines of code and errors reported by rules.
@@ -13,13 +11,13 @@ module Ameba
       pos : Int32?,
       message : String
 
-    getter lines : Array(String)
+    getter lines : Array(String)?
     getter errors = [] of Error
     getter path : String?
     getter content : String
+    getter ast : Crystal::ASTNode?
 
     def initialize(@content : String, @path = nil)
-      @lines = @content.split("\n")
     end
 
     def error(rule : Rule, line_number : Int32?, message : String)
@@ -30,8 +28,14 @@ module Ameba
       errors.empty?
     end
 
+    def lines
+      @lines ||= @content.split("\n")
+    end
+
     def ast
-      Crystal::Parser.new(@content).tap { |p| p.filename = @path }.parse
+      @ast ||= Crystal::Parser.new(@content)
+                              .tap { |p| p.filename = @path }
+                              .parse
     end
   end
 end
