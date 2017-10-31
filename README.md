@@ -40,18 +40,18 @@ Ameba.run
 ```
 
 ```sh
-Inspecting 7 files.
+Inspecting 18 files.
 
 
-..F...F
+...............F.F
 
-7 inspected, 2 failures.
+18 inspected, 2 failures.
 
-src/ameba/formatter.cr:47
-LineLength: Line too long [122]
+src/ameba/source.cr:26
+LineLength: Line too long (82 symbols)
 
-src/ameba.cr:18
-LineLength: Line too long [81]
+src/ameba.cr:12
+UnlessElse: Favour if over unless with else
 ```
 
 ## Contributing

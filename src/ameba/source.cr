@@ -10,7 +10,7 @@ module Ameba
     # position of the error and a message.
     record Error,
       rule : Rule,
-      pos : Int32,
+      pos : Int32?,
       message : String
 
     getter lines : Array(String)
@@ -22,7 +22,7 @@ module Ameba
       @lines = @content.split("\n")
     end
 
-    def error(rule : Rule, line_number : Int32, message : String)
+    def error(rule : Rule, line_number : Int32?, message : String)
       errors << Error.new rule, line_number, message
     end
 
