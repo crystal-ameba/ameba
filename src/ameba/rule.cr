@@ -1,6 +1,7 @@
 module Ameba
   RULES = [
     Rules::LineLength,
+    Rules::TrailingBlankLines,
     Rules::TrailingWhitespace,
   ]
 
