@@ -5,27 +5,27 @@ module Ameba::Rules
 
   describe TrailingBlankLines do
     it "passes if there is no blank lines at the end" do
-      source = Source.new "", "no-blankline"
+      source = Source.new "no-blankline"
       subject.catch(source).valid?.should be_true
     end
 
     it "fails if there is a blank line at the end of a source" do
-      source = Source.new "", "a = 1\n \n "
+      source = Source.new "a = 1\n \n "
       subject.catch(source).valid?.should be_false
     end
 
     it "passes if source is empty" do
-      source = Source.new "", ""
+      source = Source.new ""
       subject.catch(source).valid?.should be_true
     end
 
     it "passes if last line is not blank" do
-      source = Source.new "", "\n\n\n puts 22"
+      source = Source.new "\n\n\n puts 22"
       subject.catch(source).valid?.should be_true
     end
 
     it "reports rule, pos and message" do
-      source = Source.new "", "a = 1\n\n "
+      source = Source.new "a = 1\n\n "
       subject.catch(source)
 
       error = source.errors.first

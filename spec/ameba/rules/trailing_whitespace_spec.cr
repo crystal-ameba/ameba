@@ -5,17 +5,17 @@ module Ameba::Rules
 
   describe TrailingWhitespace do
     it "passes if all lines do not have trailing whitespace" do
-      source = Source.new "", "no-whispace"
+      source = Source.new "no-whispace"
       subject.catch(source).valid?.should be_true
     end
 
     it "fails if there is a line with trailing whitespace" do
-      source = Source.new "", "whitespace at the end "
+      source = Source.new "whitespace at the end "
       subject.catch(source).valid?.should be_false
     end
 
     it "reports rule, pos and message" do
-      source = Source.new "", "a = 1\n b = 2 "
+      source = Source.new "a = 1\n b = 2 "
       subject.catch(source).valid?.should be_false
 
       error = source.errors.first
