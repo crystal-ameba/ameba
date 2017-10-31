@@ -1,5 +1,6 @@
 module Ameba
   RULES = [
+    Rules::ComparisonToBoolean,
     Rules::LineLength,
     Rules::TrailingBlankLines,
     Rules::TrailingWhitespace,
