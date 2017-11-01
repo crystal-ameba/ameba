@@ -2,8 +2,10 @@ require "compiler/crystal/syntax/*"
 
 module Ameba
   NODE_VISITORS = [
-    Unless,
     Call,
+    Case,
+    If,
+    Unless,
   ]
 
   {% for name in NODE_VISITORS %}
