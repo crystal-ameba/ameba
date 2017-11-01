@@ -4,6 +4,7 @@ module Ameba::AST
   NODE_VISITORS = [
     Call,
     Case,
+    Def,
     If,
     StringInterpolation,
     Unless,
