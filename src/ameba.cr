@@ -10,7 +10,7 @@ module Ameba
   end
 
   def run(formatter = DotFormatter.new)
-    run Dir["**/*.cr"], formatter
+    run Dir["**/*.cr"].reject(&.starts_with? "lib/"), formatter
   end
 
   def run(files, formatter : Formatter)

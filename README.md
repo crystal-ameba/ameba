@@ -17,9 +17,12 @@
   </p>
 </p>
 
-## Status
+## About
 
-**CONSTRUCTION ZONE** :construction:
+Ameba is a tool for enforcing a consistent Crystal code style, for catching code smells and wrong code constructions.
+Ameba's [rules](src/ameba/rules/) traverse AST and report bad parts of your code.
+
+Is still under construction, compatibility may be broken :construction:
 
 ## Installation
 
@@ -31,15 +34,16 @@ development_dependencies:
     github: veelenga/ameba
 ```
 
+That will compile and install `ameba` binary onto your system.
+
+Or just compile it from sources `make install`.
+
 ## Usage
 
-```crystal
-require "ameba"
-
-Ameba.run
-```
+Run `ameba` binary to catch code issues within you project:
 
 ```sh
+$ ameba
 Inspecting 18 files.
 
 
@@ -54,13 +58,38 @@ src/ameba.cr:12
 UnlessElse: Favour if over unless with else
 ```
 
-## Contributing
+## Write a new Rule
 
-1. Fork it ( https://github.com/veelenga/ameba/fork )
-2. Create your feature branch (git checkout -b my-new-feature)
-3. Commit your changes (git commit -am 'Add some feature')
-4. Push to the branch (git push origin my-new-feature)
-5. Create a new Pull Request
+Adding a new rule is as simple as inheriting from `Rule` struct and implementing
+your logic to detect a problem:
+
+```crystal
+struct DebuggerStatement < Rule
+  # This is a required method to be implemented by the rule.
+  # Source will pass here. If rule finds an issue in this source,
+  # it adds an error: 
+  # 
+  #   source.error rule, line_number, message
+  #
+  def test(source)
+    # This line deletegates verification to a particular AST visitor.
+    AST::CallVisitor.new self, source
+  end
+
+  # This method is called once our visitor finds a required node.
+  # 
+  # It reports an error, once there is `debugger` method call
+  # without arguments and a receiver. That's it, somebody forgot
+  # to remove debugger statement.
+  def test(source, node : Crystal::Call)
+    return unless node.name == "debugger" && node.args.empty? && node.obj.nil?
+
+    source.error self, node.location.try &.line_number,
+      "Possible forgotten debugger statement detected"
+  end
+end
+
+```
 
 ## Contributors
 
