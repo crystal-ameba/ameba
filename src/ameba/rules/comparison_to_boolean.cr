@@ -9,8 +9,8 @@ module Ameba::Rules
   # false === baz
   # ```
   # This is because these expressions evaluate to `true` or `false`, so you
-  # could get the same result by using either the variable directly, or negating
-  # the variable.
+  # could get the same result by using either the variable directly,
+  # or negating the variable.
   struct ComparisonToBoolean < Rule
     def test(source)
       CallVisitor.new self, source

@@ -10,6 +10,11 @@ module Ameba::Rules
       subject.catch(source).valid?.should be_true
     end
 
+    it "passes if line consists of 79 symbols" do
+      source = Source.new "*" * 79
+      subject.catch(source).valid?.should be_true
+    end
+
     it "fails if there is at least one line longer than 79 symbols" do
       source = Source.new long_line
       subject.catch(source).valid?.should be_false
