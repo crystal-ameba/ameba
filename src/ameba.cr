@@ -23,6 +23,7 @@ module Ameba
       reporter.report source
     end
     reporter.try &.finish sources
+    sources
   end
 
   def catch(source : Source)
