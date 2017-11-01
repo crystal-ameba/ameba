@@ -11,4 +11,4 @@ targets:
     main: src/cli.cr
 
 scripts:
-  postinstall: cd ameba && make build
+  postinstall: make build
