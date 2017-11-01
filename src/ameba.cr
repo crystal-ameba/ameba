@@ -1,4 +1,5 @@
 require "./ameba/*"
+require "./ameba/ast/*"
 require "./ameba/rules/*"
 
 module Ameba

@@ -13,10 +13,12 @@ module Ameba::Rules
   # end
   # ```
   struct LiteralInCondition < Rule
+    include AST::Util
+
     def test(source)
-      IfVisitor.new self, source
-      UnlessVisitor.new self, source
-      CaseVisitor.new self, source
+      AST::IfVisitor.new self, source
+      AST::UnlessVisitor.new self, source
+      AST::CaseVisitor.new self, source
     end
 
     def check_node(source, node)
@@ -35,10 +37,6 @@ module Ameba::Rules
 
     def test(source, node : Crystal::Case)
       check_node source, node
-    end
-
-    private def literal?(node)
-      node.try &.class.name.ends_with? "Literal"
     end
   end
 end

@@ -1,10 +1,10 @@
-require "../spec_helper"
+require "../../spec_helper"
 
-module Ameba
+module Ameba::AST
   rule = DummyRule.new
   source = Source.new ""
 
-  describe "AST Traverse" do
+  describe "Traverse" do
     {% for name in NODE_VISITORS %}
       describe "{{name}}" do
         it "allow to visit {{name}} node" do

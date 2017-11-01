@@ -13,7 +13,7 @@ module Ameba::Rules
   # or negating the variable.
   struct ComparisonToBoolean < Rule
     def test(source)
-      CallVisitor.new self, source
+      AST::CallVisitor.new self, source
     end
 
     def test(source, node : Crystal::Call)
