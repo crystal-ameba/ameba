@@ -16,7 +16,7 @@ module Ameba::Rules
           :ok
         end
       )
-      subject.catch(s).valid?.should be_true
+      subject.catch(s).should be_valid
     end
 
     it "fails if there is a negated condition in unless" do
@@ -25,7 +25,7 @@ module Ameba::Rules
           :nok
         end
       )
-      subject.catch(s).valid?.should be_false
+      subject.catch(s).should_not be_valid
     end
 
     it "fails if one of AND conditions is negated" do
@@ -34,7 +34,7 @@ module Ameba::Rules
           :nok
         end
       )
-      subject.catch(s).valid?.should be_false
+      subject.catch(s).should_not be_valid
     end
 
     it "fails if one of OR conditions is negated" do
@@ -43,7 +43,7 @@ module Ameba::Rules
           :nok
         end
       )
-      subject.catch(s).valid?.should be_false
+      subject.catch(s).should_not be_valid
     end
 
     it "fails if one of inner conditions is negated" do
@@ -52,12 +52,12 @@ module Ameba::Rules
           :nok
         end
       )
-      subject.catch(s).valid?.should be_false
+      subject.catch(s).should_not be_valid
     end
 
     it "reports rule, pos and message" do
       s = Source.new ":nok unless !s.empty?"
-      subject.catch(s).valid?.should be_false
+      subject.catch(s).should_not be_valid
 
       error = s.errors.first
       error.rule.should_not be_nil

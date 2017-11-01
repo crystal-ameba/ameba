@@ -23,7 +23,7 @@ module Ameba::Rules
           :ok
         end
       )
-      subject.catch(s).valid?.should be_true
+      subject.catch(s).should be_valid
     end
 
     it "fails if there is a predicate in if conditional" do
@@ -32,7 +32,7 @@ module Ameba::Rules
           :ok
         end
       )
-      subject.catch(s).valid?.should be_false
+      subject.catch(s).should_not be_valid
     end
 
     it "fails if there is a predicate in unless conditional" do
@@ -41,7 +41,7 @@ module Ameba::Rules
           :ok
         end
       )
-      subject.catch(s).valid?.should be_false
+      subject.catch(s).should_not be_valid
     end
 
     it "fails if there is a predicate in case conditional" do
@@ -53,14 +53,14 @@ module Ameba::Rules
           :also_ok
         end
       )
-      subject.catch(s).valid?.should be_false
+      subject.catch(s).should_not be_valid
     end
 
     it "reports rule, pos and message" do
       s = Source.new %(
         puts "hello" if true
       )
-      subject.catch(s)
+      subject.catch(s).should_not be_valid
 
       s.errors.size.should eq 1
       error = s.errors.first

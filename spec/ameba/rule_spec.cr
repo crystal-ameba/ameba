@@ -11,7 +11,7 @@ module Ameba
 
     describe "#name" do
       it "returns name of the rule" do
-        DummyRule.new.name.should eq "DummyRule"
+        DummyRule.new.name.should eq "Ameba::DummyRule"
       end
     end
 

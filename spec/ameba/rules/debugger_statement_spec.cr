@@ -19,7 +19,7 @@ module Ameba::Rules
         end
         A.new.debugger
       )
-      subject.catch(s).valid?.should be_true
+      subject.catch(s).should be_valid
     end
 
     it "fails if there is a debugger statement" do
@@ -28,12 +28,12 @@ module Ameba::Rules
         debugger
         a = a + 1
       )
-      subject.catch(s).valid?.should be_false
+      subject.catch(s).should_not be_valid
     end
 
     it "reports rule, pos and message" do
       s = Source.new "debugger"
-      subject.catch(s).valid?.should be_false
+      subject.catch(s).should_not be_valid
 
       error = s.errors.first
       error.rule.should_not be_nil

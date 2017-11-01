@@ -10,7 +10,7 @@ module Ameba::Rules
           :ok
         end
       )
-      subject.catch(s).valid?.should be_true
+      subject.catch(s).should be_valid
     end
 
     it "fails if unless has else" do
@@ -21,7 +21,7 @@ module Ameba::Rules
           :two
         end
       )
-      subject.catch(s).valid?.should be_false
+      subject.catch(s).should_not be_valid
     end
 
     it "reports rule, pos and message" do
@@ -32,7 +32,7 @@ module Ameba::Rules
           :two
         end
       )
-      subject.catch(s)
+      subject.catch(s).should_not be_valid
 
       error = s.errors.first
       error.should_not be_nil

@@ -14,7 +14,7 @@ module Ameba::Rules
           end
         end
       )
-      subject.catch(s).valid?.should be_true
+      subject.catch(s).should be_valid
     end
 
     it "fails if predicate name is wrong" do
@@ -22,7 +22,7 @@ module Ameba::Rules
         def is_valid?(x)
         end
       )
-      subject.catch(s).valid?.should be_false
+      subject.catch(s).should_not be_valid
     end
 
     it "reports rule, pos and message" do
@@ -33,7 +33,7 @@ module Ameba::Rules
           end
         end
       )
-      subject.catch(s).valid?.should be_false
+      subject.catch(s).should_not be_valid
 
       error = s.errors.first
       error.rule.should_not be_nil

@@ -13,7 +13,7 @@ module Ameba::Rules
 
         "Name size: #{name.size}"
       )
-      subject.catch(s).valid?.should be_true
+      subject.catch(s).should be_valid
     end
 
     it "fails if there is useless interpolation" do
@@ -24,13 +24,13 @@ module Ameba::Rules
         %q("#{false}"),
         %q("here are #{4} cats"),
       ].each do |str|
-        subject.catch(Source.new str).valid?.should be_false
+        subject.catch(Source.new str).should_not be_valid
       end
     end
 
     it "reports rule, pos and message" do
       s = Source.new %q("#{4}")
-      subject.catch(s).valid?.should be_false
+      subject.catch(s).should_not be_valid
 
       error = s.errors.first
       error.rule.should_not be_nil

@@ -33,7 +33,7 @@ module Ameba::Rules
           :not_ok
         end
       )
-      subject.catch(source).valid?.should be_true
+      subject.catch(source).should be_valid
     end
 
     context "boolean on the right" do
@@ -43,7 +43,7 @@ module Ameba::Rules
             :ok
           end
         )
-        subject.catch(source).valid?.should be_false
+        subject.catch(source).should_not be_valid
       end
 
       it "fails if there is != comparison to boolean" do
@@ -52,14 +52,14 @@ module Ameba::Rules
             :ok
           end
         )
-        subject.catch(source).valid?.should be_false
+        subject.catch(source).should_not be_valid
       end
 
       it "fails if there is case comparison to boolean" do
         source = Source.new %(
           a === true
         )
-        subject.catch(source).valid?.should be_false
+        subject.catch(source).should_not be_valid
       end
 
       it "reports rule, pos and message" do
@@ -80,7 +80,7 @@ module Ameba::Rules
             :ok
           end
         )
-        subject.catch(source).valid?.should be_false
+        subject.catch(source).should_not be_valid
       end
 
       it "fails if there is != comparison to boolean" do
@@ -89,19 +89,19 @@ module Ameba::Rules
             :ok
           end
         )
-        subject.catch(source).valid?.should be_false
+        subject.catch(source).should_not be_valid
       end
 
       it "fails if there is case comparison to boolean" do
         source = Source.new %(
           true === a
         )
-        subject.catch(source).valid?.should be_false
+        subject.catch(source).should_not be_valid
       end
 
       it "reports rule, pos and message" do
         source = Source.new "true != a"
-        subject.catch(source)
+        subject.catch(source).should_not be_valid
 
         error = source.errors.first
         error.rule.should_not be_nil
