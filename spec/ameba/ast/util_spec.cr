@@ -35,5 +35,15 @@ module Ameba::AST
         subject.literal?(Crystal::Nop).should be_false
       end
     end
+
+    describe "#string_literal?" do
+      it "returns true if node is a string literal" do
+        subject.string_literal?(Crystal::StringLiteral.new "").should be_true
+      end
+
+      it "returns false if node is not a string literal" do
+        subject.string_literal?(Crystal::Nop.new).should be_false
+      end
+    end
   end
 end

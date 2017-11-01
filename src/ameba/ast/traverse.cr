@@ -5,6 +5,7 @@ module Ameba::AST
     Call,
     Case,
     If,
+    StringInterpolation,
     Unless,
   ]
 
