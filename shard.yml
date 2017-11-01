@@ -8,3 +8,6 @@ authors:
 
 scripts:
   postinstall: make build
+
+executables:
+  - ameba
