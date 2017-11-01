@@ -13,7 +13,7 @@ module Ameba
 
     def start(sources)
       puts formatter.before sources
-      puts "\n\n"
+      puts "\n"
     end
 
     def report(source)
@@ -36,7 +36,7 @@ module Ameba
     end
 
     def format(source : Source)
-      source.errors.size == 0 ? "." : "F"
+      source.valid? ? ".".colorize(:green) : "F".colorize(:red)
     end
 
     def after(sources)
@@ -44,15 +44,17 @@ module Ameba
         failures = sources.select { |s| s.errors.any? }
         l = failures.map { |f| f.errors.size }.sum
 
-        mes << "#{sources.size} inspected, #{l} failure#{"s" if l != 1}.\n\n"
-
         failures.each do |failure|
           failure.errors.each do |error|
-            mes << "#{failure.path}:#{error.pos}"
-            mes << "\n"
-            mes << "#{error.rule.name}: #{error.message}\n\n"
+            mes << "#{failure.path}:#{error.pos}\n".colorize(:cyan)
+            mes << "#{error.rule.name}: #{error.message}".colorize(:red)
+            mes << "\n\n"
           end
         end
+
+        color = l == 0 ? :green : :red
+        mes << "#{sources.size} inspected, #{l} failure#{"s" if l != 1}."
+          .colorize(color)
       end
     end
   end
