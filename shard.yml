@@ -1,9 +1,14 @@
 name: ameba
 version: 0.1.0
 
+crystal: 0.23.1
+license: MIT
 authors:
   - Vitalii Elenhaupt <velenhaupt@gmail.com>
 
-crystal: 0.23.1
+targets:
+  ameba:
+    main: src/cli.cr
 
-license: MIT
+scripts:
+  postinstall: cd ameba && make build
