@@ -1,12 +1,6 @@
 require "../../spec/spec_helper"
 
 module Ameba
-  describe RULES do
-    it "contains available rules" do
-      Ameba::RULES.empty?.should be_false
-    end
-  end
-
   describe Rule do
     describe "#catch" do
       it "accepts and returns source" do
@@ -18,6 +12,12 @@ module Ameba
     describe "#name" do
       it "returns name of the rule" do
         DummyRule.new.name.should eq "DummyRule"
+      end
+    end
+
+    describe ".rules" do
+      it "returns a list of all defined rules" do
+        Rule.rules.includes?(DummyRule).should be_true
       end
     end
   end

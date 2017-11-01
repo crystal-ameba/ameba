@@ -25,7 +25,7 @@ module Ameba
   end
 
   def catch(source : Source)
-    RULES.each do |rule|
+    Rule.rules.each do |rule|
       rule.new.test(source)
     end
   end

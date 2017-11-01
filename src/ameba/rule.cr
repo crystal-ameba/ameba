@@ -1,12 +1,4 @@
 module Ameba
-  RULES = [
-    Rules::ComparisonToBoolean,
-    Rules::LineLength,
-    Rules::TrailingBlankLines,
-    Rules::TrailingWhitespace,
-    Rules::UnlessElse,
-  ]
-
   abstract struct Rule
     abstract def test(source : Source)
 
@@ -20,6 +12,10 @@ module Ameba
 
     def name
       self.class.name.gsub("Ameba::Rules::", "")
+    end
+
+    def self.rules
+      {{ @type.subclasses }}
     end
   end
 end
