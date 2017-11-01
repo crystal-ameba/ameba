@@ -12,6 +12,7 @@ module Ameba::Rules
   #   :ok
   # end
   # ```
+  #
   struct LiteralInCondition < Rule
     include AST::Util
 

@@ -6,7 +6,7 @@ module Ameba::Rules
   #
   # ```
   # "Hello, #{:Ary}"
-  # "The are #{4} cats"
+  # "There are #{4} cats"
   # ```
   #
   struct LiteralInInterpolation < Rule
@@ -17,12 +17,8 @@ module Ameba::Rules
     end
 
     def test(source, node : Crystal::StringInterpolation)
-      has_literal = node.expressions.any? do |e|
-        !string_literal?(e) && literal?(e)
-      end
-
-      return unless has_literal
-
+      found = node.expressions.any? { |e| !string_literal?(e) && literal?(e) }
+      return unless found
       source.error self, node.location.try &.line_number,
         "Literal value found in interpolation"
     end

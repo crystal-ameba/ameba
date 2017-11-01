@@ -3,6 +3,7 @@ module Ameba::Rules
   #
   # This is because we don't want debugger breakpoints accidentally being
   # committed into our codebase.
+  #
   struct DebuggerStatement < Rule
     def test(source)
       AST::CallVisitor.new self, source

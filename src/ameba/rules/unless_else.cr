@@ -35,6 +35,7 @@ module Ameba::Rules
   #   :one
   # end
   # ```
+  #
   struct UnlessElse < Rule
     def test(source)
       AST::UnlessVisitor.new self, source
