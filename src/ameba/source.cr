@@ -37,5 +37,13 @@ module Ameba
                               .tap { |p| p.filename = @path }
                               .parse
     end
+
+    def lexer
+      Crystal::Lexer.new(@content).tap do |l|
+        l.count_whitespace = true
+        l.comments_enabled = true
+        l.wants_raw = true
+      end
+    end
   end
 end
