@@ -5,10 +5,6 @@ require "./ameba/rules/*"
 module Ameba
   extend self
 
-  abstract struct BaseRule
-    abstract def test(source : Source)
-  end
-
   def run(formatter = DotFormatter.new)
     run Dir["**/*.cr"].reject(&.starts_with? "lib/"), formatter
   end
