@@ -8,6 +8,7 @@ module Ameba::Rules
   # ```
   # 10000
   # 141592654
+  # 5.12345
   # ```
   #
   # And has to be rewritten as the following:
@@ -15,6 +16,7 @@ module Ameba::Rules
   # ```
   # 10_000
   # 141_592_654
+  # 5.123_45
   # ```
   #
   struct LargeNumbers < Rule
@@ -23,7 +25,7 @@ module Ameba::Rules
       while (token = lexer.next_token).type != :EOF
         next unless token.type == :NUMBER && decimal?(token.raw)
 
-        if (expected = underscored_value(*parse_number(token.raw))) != token.raw
+        if (expected = underscored(*parse_number(token.raw))) != token.raw
           source.error self, token.line_number,
             "Large numbers should be written with underscores: #{expected}"
         end
@@ -34,42 +36,21 @@ module Ameba::Rules
       value !~ /^0(x|b|o)/
     end
 
-    private def underscored_value(sign, value, fraction, suffix)
-      value = ([] of String).tap do |parts|
-        value.to_s.reverse.chars.reject(&.== '_').each_slice(3) { |s| parts << s.reverse.join }
-      end.reverse.join("_")
-
-      fraction = ([] of String).tap do |parts|
-        fraction.to_s.chars.reject(&.== '_').each_slice(3) { |s| parts << s.join }
-      end.join("_")
-
-      fraction = ".#{fraction}" unless fraction.to_s.empty?
+    private def underscored(sign, value, fraction, suffix)
+      value = slice_digits(value.reverse) { |slice| slice }.reverse
+      fraction = "." + slice_digits(fraction) { |slice| slice } if fraction
 
       "#{sign}#{value}#{fraction}#{suffix}"
     end
 
-    # Detects parts of the number.
-    # Each number may consist of the following parts:
-    # sign, value, fraction, suffix
-    #
-    # ```
-    # -100_i32
-    # ```
-    #
-    #  sign: -
-    #  value: 100
-    #  fraction: nil
-    #  suffix: _i32
-    #
-    # ```
-    # 100.111_f32
-    # ```
-    #
-    # sign: nil
-    # value: 100
-    # fraction: 111
-    # suffix: _f32
-    #
+    private def slice_digits(value, by = 3)
+      ([] of String).tap do |slices|
+        value.chars.reject(&.== '_').each_slice(by) do |slice|
+          slices << (yield slice).join
+        end
+      end.join("_")
+    end
+
     private def parse_number(value)
       value, sign = parse_sign(value)
       value, suffix = parse_suffix(value)
