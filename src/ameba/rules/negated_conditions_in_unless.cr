@@ -3,7 +3,7 @@ module Ameba::Rules
   #
   # For example, this is considered invalid:
   #
-  # ```crystal
+  # ```
   # unless !s.empty?
   #   :ok
   # end
@@ -11,7 +11,7 @@ module Ameba::Rules
   #
   # And should be rewritten to the following:
   #
-  # ```crystal
+  # ```
   # if s.emtpy?
   #   :ok
   # end
