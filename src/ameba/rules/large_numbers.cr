@@ -21,11 +21,10 @@ module Ameba::Rules
   #
   struct LargeNumbers < Rule
     def test(source)
-      lexer = source.lexer
-      while (token = lexer.next_token).type != :EOF
+      Tokenizer.new(source).run do |token|
         next unless token.type == :NUMBER && decimal?(token.raw)
 
-        if (expected = underscored(*parse_number(token.raw))) != token.raw
+        if (expected = underscored token.raw) != token.raw
           source.error self, token.line_number,
             "Large numbers should be written with underscores: #{expected}"
         end
@@ -36,7 +35,8 @@ module Ameba::Rules
       value !~ /^0(x|b|o)/
     end
 
-    private def underscored(sign, value, fraction, suffix)
+    private def underscored(raw_number)
+      sign, value, fraction, suffix = parse_number raw_number
       value = slice_digits(value.reverse) { |slice| slice }.reverse
       fraction = "." + slice_digits(fraction) { |slice| slice } if fraction
 

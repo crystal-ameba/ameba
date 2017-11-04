@@ -16,7 +16,9 @@ module Ameba::AST
       @source : Source
 
       def initialize(@rule, @source)
-        @source.ast.accept self
+        parser = Crystal::Parser.new(@source.content)
+        parser.filename = @source.path
+        parser.parse.accept self
       end
 
       def visit(node : Crystal::ASTNode)

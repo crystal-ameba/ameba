@@ -1,9 +1,11 @@
 require "../../spec_helper"
 
-def check_transformed_number(number, expected)
-  s = Ameba::Source.new number
-  Ameba::Rules::LargeNumbers.new.catch(s).should_not be_valid
-  s.errors.first.message.should contain expected
+private def it_transforms(number, expected)
+  it "transforms large number #{number}" do
+    s = Ameba::Source.new number
+    Ameba::Rules::LargeNumbers.new.catch(s).should_not be_valid
+    s.errors.first.message.should contain expected
+  end
 end
 
 module Ameba::Rules
@@ -67,48 +69,40 @@ module Ameba::Rules
       subject.catch(s).should be_valid
     end
 
-    it "fails if large number requires underscore" do
-      check_transformed_number "10000", "10_000"
-      check_transformed_number "+10000", "+10_000"
-      check_transformed_number "-10000", "-10_000"
+    it_transforms "10000", "10_000"
+    it_transforms "+10000", "+10_000"
+    it_transforms "-10000", "-10_000"
 
-      check_transformed_number "9223372036854775808", "9_223_372_036_854_775_808"
-      check_transformed_number "-9223372036854775808", "-9_223_372_036_854_775_808"
-      check_transformed_number "+9223372036854775808", "+9_223_372_036_854_775_808"
-    end
+    it_transforms "9223372036854775808", "9_223_372_036_854_775_808"
+    it_transforms "-9223372036854775808", "-9_223_372_036_854_775_808"
+    it_transforms "+9223372036854775808", "+9_223_372_036_854_775_808"
 
-    it "fails if large number is wrongly underscored" do
-      check_transformed_number "1_00000", "100_000"
-    end
+    it_transforms "1_00000", "100_000"
 
-    it "fails if large number has suffix requires underscore" do
-      check_transformed_number "1_23_i8", "123_i8"
-      check_transformed_number "1000_i16", "1_000_i16"
-      check_transformed_number "1000_i32", "1_000_i32"
-      check_transformed_number "1000_i64", "1_000_i64"
+    it_transforms "1_23_i8", "123_i8"
+    it_transforms "1000_i16", "1_000_i16"
+    it_transforms "1000_i32", "1_000_i32"
+    it_transforms "1000_i64", "1_000_i64"
 
-      check_transformed_number "1_23_u8", "123_u8"
-      check_transformed_number "1000_u16", "1_000_u16"
-      check_transformed_number "1000_u32", "1_000_u32"
-      check_transformed_number "1000_u64", "1_000_u64"
+    it_transforms "1_23_u8", "123_u8"
+    it_transforms "1000_u16", "1_000_u16"
+    it_transforms "1000_u32", "1_000_u32"
+    it_transforms "1000_u64", "1_000_u64"
 
-      check_transformed_number "123456_f32", "123_456_f32"
-      check_transformed_number "123456_f64", "123_456_f64"
+    it_transforms "123456_f32", "123_456_f32"
+    it_transforms "123456_f64", "123_456_f64"
 
-      check_transformed_number "123456.5e-7_f32", "123_456.5e-7_f32"
-      check_transformed_number "123456e10_f64", "123_456e10_f64"
+    it_transforms "123456.5e-7_f32", "123_456.5e-7_f32"
+    it_transforms "123456e10_f64", "123_456e10_f64"
 
-      check_transformed_number "123456.5e-7", "123_456.5e-7"
-      check_transformed_number "123456e10", "123_456e10"
-    end
+    it_transforms "123456.5e-7", "123_456.5e-7"
+    it_transforms "123456e10", "123_456e10"
 
-    it "fails if large number with fraction requires underscore" do
-      check_transformed_number "3.00_1", "3.001"
-      check_transformed_number "3.0012", "3.001_2"
-      check_transformed_number "3.00123", "3.001_23"
-      check_transformed_number "3.001234", "3.001_234"
-      check_transformed_number "3.0012345", "3.001_234_5"
-    end
+    it_transforms "3.00_1", "3.001"
+    it_transforms "3.0012", "3.001_2"
+    it_transforms "3.00123", "3.001_23"
+    it_transforms "3.001234", "3.001_234"
+    it_transforms "3.0012345", "3.001_234_5"
 
     it "reports rule, pos and message" do
       s = Source.new %q(

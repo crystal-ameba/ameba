@@ -15,7 +15,6 @@ module Ameba
     getter errors = [] of Error
     getter path : String?
     getter content : String
-    getter ast : Crystal::ASTNode?
 
     def initialize(@content : String, @path = nil)
     end
@@ -30,20 +29,6 @@ module Ameba
 
     def lines
       @lines ||= @content.split("\n")
-    end
-
-    def ast
-      @ast ||= Crystal::Parser.new(@content)
-                              .tap { |p| p.filename = @path }
-                              .parse
-    end
-
-    def lexer
-      Crystal::Lexer.new(@content).tap do |l|
-        l.count_whitespace = true
-        l.comments_enabled = true
-        l.wants_raw = true
-      end
     end
   end
 end
