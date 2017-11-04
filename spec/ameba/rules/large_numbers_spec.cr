@@ -1,17 +1,17 @@
 require "../../spec_helper"
 
-private def it_transforms(number, expected)
-  it "transforms large number #{number}" do
-    s = Ameba::Source.new number
-    Ameba::Rules::LargeNumbers.new.catch(s).should_not be_valid
-    s.errors.first.message.should contain expected
+module Ameba
+  subject = Rules::LargeNumbers.new
+
+  private def it_transforms(number, expected)
+    it "transforms large number #{number}" do
+      s = Source.new number
+      Rules::LargeNumbers.new.catch(s).should_not be_valid
+      s.errors.first.message.should contain expected
+    end
   end
-end
 
-module Ameba::Rules
-  subject = LargeNumbers.new
-
-  describe LargeNumbers do
+  describe Rules::LargeNumbers do
     it "passes if large number does not require underscore" do
       s = Source.new %q(
         1 2 3 4 5 6 7 8 9 10 11 12 13 14 15
