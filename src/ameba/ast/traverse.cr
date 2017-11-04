@@ -6,13 +6,16 @@ module Ameba::AST
     Call,
     Case,
     ClassDef,
+    ClassVar,
     Def,
     EnumDef,
     If,
+    InstanceVar,
     LibDef,
     ModuleDef,
     StringInterpolation,
     Unless,
+    Var,
   ]
 
   abstract class Visitor < Crystal::Visitor
