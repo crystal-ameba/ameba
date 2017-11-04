@@ -21,15 +21,5 @@ module Ameba
         s.errors.first.message.should eq "Error!"
       end
     end
-
-    describe "#ast" do
-      it "returns ast nodes" do
-        s = Source.new %(
-          class A; end
-          class B; end
-        )
-        s.ast.to_s.should eq "class A\nend\nclass B\nend\n"
-      end
-    end
   end
 end
