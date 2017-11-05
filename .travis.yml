@@ -1,4 +1,3 @@
 language: crystal
-after_script:
-  - make build
-  - ./bin/ameba
+script:
+  - make test

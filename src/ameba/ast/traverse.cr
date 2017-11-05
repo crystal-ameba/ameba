@@ -3,6 +3,7 @@ require "compiler/crystal/syntax/*"
 module Ameba::AST
   NODE_VISITORS = [
     Alias,
+    Assign,
     Call,
     Case,
     ClassDef,

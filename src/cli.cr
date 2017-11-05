@@ -15,6 +15,4 @@ OptionParser.parse(ARGV) do |parser|
   end
 end
 
-sources = Ameba.run
-failed = sources.any? { |s| !s.valid? }
-exit(-1) if failed
+exit(1) unless Ameba.run.all? &.valid?
