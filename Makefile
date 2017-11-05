@@ -8,3 +8,6 @@ clean:
 install: build
 	mkdir -p $(PREFIX)/bin
 	cp ./bin/ameba $(PREFIX)/bin
+test: build
+	$(CRYSTAL_BIN) spec
+	./bin/ameba
