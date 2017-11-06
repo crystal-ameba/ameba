@@ -67,22 +67,21 @@ your logic to detect a problem:
 ```crystal
 struct DebuggerStatement < Rule
   # This is a required method to be implemented by the rule.
-  # Source will pass here. If rule finds an issue in this source,
-  # it adds an error: 
+  # Source will be passed here. If rule finds an issue in this source,
+  # it reports an error: 
   # 
   #   source.error rule, line_number, message
   #
   def test(source)
     # This line deletegates verification to a particular AST visitor.
-    AST::CallVisitor.new self, source
+    AST::Visitor.new self, source
   end
 
-  # This method is called once our visitor finds a required node.
-  # 
-  # It reports an error, once there is `debugger` method call
-  # without arguments and a receiver. That's it, somebody forgot
-  # to remove debugger statement.
+  # This method is called once the visitor finds a required node.
   def test(source, node : Crystal::Call)
+    # It reports an error, if there is `debugger` method call
+    # without arguments and a receiver. That's it, somebody forgot
+    # to remove a debugger statement.
     return unless node.name == "debugger" && node.args.empty? && node.obj.nil?
 
     source.error self, node.location.try &.line_number,
