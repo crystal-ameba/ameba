@@ -1,24 +1,25 @@
 require "./ameba/*"
 require "./ameba/ast/*"
 require "./ameba/rules/*"
+require "./ameba/formatter/*"
 
 module Ameba
   extend self
 
-  def run(formatter = DotFormatter.new)
+  def run(formatter = Formatter::BaseFormatter.new)
     run Dir["**/*.cr"].reject(&.starts_with? "lib/"), formatter
   end
 
-  def run(files, formatter : Formatter)
+  def run(files, formatter : Formatter::BaseFormatter)
     sources = files.map { |path| Source.new(File.read(path), path) }
 
-    reporter = Reporter.new formatter
-    reporter.start sources
+    formatter.started sources
     sources.each do |source|
+      formatter.source_started source
       catch(source)
-      reporter.report source
+      formatter.source_finished source
     end
-    reporter.try &.finish sources
+    formatter.finished sources
     sources
   end
 

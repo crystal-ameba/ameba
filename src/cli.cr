@@ -1,6 +1,8 @@
 require "option_parser"
 require "./ameba"
 
+formatter = Ameba::Formatter::DotFormatter
+
 OptionParser.parse(ARGV) do |parser|
   parser.banner = "Usage: ameba [options]"
 
@@ -13,6 +15,12 @@ OptionParser.parse(ARGV) do |parser|
     puts parser
     exit 0
   end
+
+  parser.on("-s", "--silent", "Disable output") do
+    formatter = Ameba::Formatter::BaseFormatter
+  end
 end
 
-exit(1) unless Ameba.run.all? &.valid?
+files = Dir["**/*.cr"]
+
+exit(1) unless Ameba.run(files, formatter.new).all? &.valid?
