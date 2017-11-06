@@ -26,11 +26,7 @@ module Ameba::Rules
   #
   struct VariableNames < Rule
     def test(source)
-      [
-        AST::VarVisitor,
-        AST::InstanceVarVisitor,
-        AST::ClassVarVisitor,
-      ].each &.new(self, source)
+      AST::Visitor.new self, source
     end
 
     private def check_node(source, node)

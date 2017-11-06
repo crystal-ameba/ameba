@@ -6,7 +6,7 @@ module Ameba::Rules
   #
   struct DebuggerStatement < Rule
     def test(source)
-      AST::CallVisitor.new self, source
+      AST::Visitor.new self, source
     end
 
     def test(source, node : Crystal::Call)

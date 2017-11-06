@@ -13,7 +13,7 @@ module Ameba::Rules
     include AST::Util
 
     def test(source)
-      AST::StringInterpolationVisitor.new self, source
+      AST::Visitor.new self, source
     end
 
     def test(source, node : Crystal::StringInterpolation)
