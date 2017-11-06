@@ -2,7 +2,7 @@ require "../../spec_helper"
 
 module Ameba::Rules
   subject = LineLength.new
-  long_line = "*" * 80
+  long_line = "*" * 81
 
   describe LineLength do
     it "passes if all lines are shorter than 80 symbols" do
@@ -11,7 +11,7 @@ module Ameba::Rules
     end
 
     it "passes if line consists of 79 symbols" do
-      source = Source.new "*" * 79
+      source = Source.new "*" * 80
       subject.catch(source).should be_valid
     end
 
@@ -27,7 +27,7 @@ module Ameba::Rules
       error = source.errors.first
       error.rule.should eq subject
       error.pos.should eq 1
-      error.message.should eq "Line too long (80 symbols)"
+      error.message.should eq "Line too long (81 symbols)"
     end
   end
 end
