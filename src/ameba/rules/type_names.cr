@@ -47,13 +47,7 @@ module Ameba::Rules
   #
   struct TypeNames < Rule
     def test(source)
-      [
-        AST::ClassDefVisitor,
-        AST::EnumDefVisitor,
-        AST::ModuleDefVisitor,
-        AST::AliasVisitor,
-        AST::LibDefVisitor,
-      ].each(&.new self, source)
+      AST::Visitor.new self, source
     end
 
     private def check_node(source, node)

@@ -17,9 +17,7 @@ module Ameba::Rules
     include AST::Util
 
     def test(source)
-      AST::IfVisitor.new self, source
-      AST::UnlessVisitor.new self, source
-      AST::CaseVisitor.new self, source
+      AST::Visitor.new self, source
     end
 
     def check_node(source, node)

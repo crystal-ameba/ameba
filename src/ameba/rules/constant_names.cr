@@ -17,7 +17,7 @@ module Ameba::Rules
   #
   struct ConstantNames < Rule
     def test(source)
-      AST::AssignVisitor.new self, source
+      AST::Visitor.new self, source
     end
 
     def test(source, node : Crystal::Assign)

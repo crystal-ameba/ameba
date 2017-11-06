@@ -3,7 +3,7 @@ module Ameba
     abstract def test(source : Source)
 
     def test(source : Source, node : Crystal::ASTNode)
-      raise "Unimplemented"
+      # can't be abstract
     end
 
     def catch(source : Source)

@@ -14,7 +14,7 @@ module Ameba::Rules
   #
   struct ComparisonToBoolean < Rule
     def test(source)
-      AST::CallVisitor.new self, source
+      AST::Visitor.new self, source
     end
 
     def test(source, node : Crystal::Call)

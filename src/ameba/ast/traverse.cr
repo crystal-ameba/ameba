@@ -19,26 +19,23 @@ module Ameba::AST
     Var,
   ]
 
-  abstract class Visitor < Crystal::Visitor
+  class Visitor < Crystal::Visitor
     @rule : Rule
     @source : Source
 
     def initialize(@rule, @source)
-      parser = Crystal::Parser.new(@source.content)
-      parser.filename = @source.path
-      parser.parse.accept self
+      @source.ast.accept self
     end
 
     def visit(node : Crystal::ASTNode)
       true
     end
-  end
 
-  {% for name in NODE_VISITORS %}
-    class {{name}}Visitor < Visitor
+    {% for name in NODE_VISITORS %}
       def visit(node : Crystal::{{name}})
         @rule.test @source, node
+        true
       end
-    end
-  {% end %}
+    {% end %}
+  end
 end
