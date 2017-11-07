@@ -1,6 +1,6 @@
 require "./ameba/*"
 require "./ameba/ast/*"
-require "./ameba/rules/*"
+require "./ameba/rule/*"
 require "./ameba/formatter/*"
 
 module Ameba

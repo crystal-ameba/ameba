@@ -2,7 +2,7 @@ require "spec"
 require "../src/ameba"
 
 module Ameba
-  struct DummyRule < Ameba::Rule
+  struct DummyRule < Rule::Base
     def test(source)
     end
   end

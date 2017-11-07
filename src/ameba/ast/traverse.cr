@@ -21,7 +21,7 @@ module Ameba::AST
   ]
 
   class Visitor < Crystal::Visitor
-    @rule : Rule
+    @rule : Rule::Base
     @source : Source
 
     def initialize(@rule, @source)

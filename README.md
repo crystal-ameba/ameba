@@ -65,11 +65,11 @@ Finished in 10.53 milliseconds
 
 ## Write a new Rule
 
-Adding a new rule is as simple as inheriting from `Rule` struct and implementing
+Adding a new rule is as simple as inheriting from `Rule::Base` struct and implementing
 your logic to detect a problem:
 
 ```crystal
-struct DebuggerStatement < Rule
+struct DebuggerStatement < Rule::Base
   # This is a required method to be implemented by the rule.
   # Source will be passed here. If rule finds an issue in this source,
   # it reports an error: 

@@ -5,9 +5,9 @@ module Ameba
     # Represents an error caught by Ameba.
     #
     # Each error has the rule that created this error,
-    # position of the error and a message.
+    # location of the issue and a message.
     record Error,
-      rule : Rule,
+      rule : Rule::Base,
       location : Crystal::Location?,
       message : String
 
@@ -20,7 +20,7 @@ module Ameba
     def initialize(@code : String, @path = nil)
     end
 
-    def error(rule : Rule, location, message : String)
+    def error(rule : Rule::Base, location, message : String)
       errors << Error.new rule, location, message
     end
 
