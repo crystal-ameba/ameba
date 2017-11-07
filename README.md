@@ -45,18 +45,22 @@ Run `ameba` binary to catch code issues within you project:
 
 ```sh
 $ ameba
-Inspecting 18 files.
+Inspecting 52 files.
 
+.........................F.......F........F.........
 
-...............F.F
+src/ameba/ast/traverse.cr:27:5
+PredicateName: Favour method name 'node?' over 'is_node?'
 
-18 inspected, 2 failures.
+src/ameba/rules/empty_expression.cr:42:7
+LiteralInCondition: Literal value found in conditional
 
-src/ameba/source.cr:26
-LineLength: Line too long (82 symbols)
-
-src/ameba.cr:12
+src/ameba/rules/empty_expression.cr:30:7
 UnlessElse: Favour if over unless with else
+
+Finished in 10.53 milliseconds
+
+52 inspected, 3 failures.
 ```
 
 ## Write a new Rule
