@@ -18,12 +18,13 @@ module Ameba::Rules
     end
 
     def test(source, node : Crystal::Call)
-      if %w(== != ===).includes?(node.name) && (
-           node.args.first?.try &.is_a?(Crystal::BoolLiteral) ||
-           node.obj.is_a?(Crystal::BoolLiteral)
-         )
-        source.error self, node.location, "Comparison to a boolean is pointless"
-      end
+      comparison? = %w(== != ===).includes?(node.name)
+      to_boolean? = node.args.first?.try &.is_a?(Crystal::BoolLiteral) ||
+                    node.obj.is_a?(Crystal::BoolLiteral)
+
+      return unless comparison? && to_boolean?
+
+      source.error self, node.location, "Comparison to a boolean is pointless"
     end
   end
 end
