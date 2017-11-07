@@ -45,5 +45,31 @@ module Ameba::AST
         subject.string_literal?(Crystal::Nop.new).should be_false
       end
     end
+
+    describe "#node_source" do
+      it "returns original source of the node" do
+        s = %(
+          a = 1
+        )
+        node = Crystal::Parser.new(s).parse
+        source = subject.node_source node, s.split("\n")
+        source.should eq ["a = 1"]
+      end
+
+      it "returns original source of multiline node" do
+        s = %(
+          if ()
+            :ok
+          end
+        )
+        node = Crystal::Parser.new(s).parse
+        source = subject.node_source node, s.split("\n")
+        source.should eq([
+          "if ()",
+          "            :ok",
+          "          end",
+        ])
+      end
+    end
   end
 end
