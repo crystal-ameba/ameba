@@ -3,9 +3,9 @@ require "../../spec_helper"
 module Ameba
   subject = Rules::MethodNames.new
 
-  private def it_reports_method_name(content, expected)
+  private def it_reports_method_name(code, expected)
     it "reports method name #{expected}" do
-      s = Source.new content
+      s = Source.new code
       Rules::MethodNames.new.catch(s).should_not be_valid
       s.errors.first.message.should contain expected
     end
@@ -42,11 +42,11 @@ module Ameba
       s = Source.new %(
         def bad_Name
         end
-      )
+      ), "source.cr"
       subject.catch(s).should_not be_valid
       error = s.errors.first
       error.rule.should_not be_nil
-      error.pos.should eq 2
+      error.location.to_s.should eq "source.cr:2:9"
       error.message.should eq(
         "Method name should be underscore-cased: bad_name, not bad_Name"
       )

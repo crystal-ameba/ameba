@@ -3,9 +3,9 @@ require "../../spec_helper"
 module Ameba
   subject = Rules::ConstantNames.new
 
-  private def it_reports_constant(content, expected)
+  private def it_reports_constant(code, expected)
     it "reports constant name #{expected}" do
-      s = Source.new content
+      s = Source.new code
       Rules::ConstantNames.new.catch(s).should_not be_valid
       s.errors.first.message.should contain expected
     end
@@ -38,11 +38,11 @@ module Ameba
     it "reports rule, pos and message" do
       s = Source.new %(
         Const = 1
-      )
+      ), "source.cr"
       subject.catch(s).should_not be_valid
       error = s.errors.first
       error.rule.should_not be_nil
-      error.pos.should eq 2
+      error.location.to_s.should eq "source.cr:2:9"
       error.message.should eq(
         "Constant name should be screaming-cased: CONST, not Const"
       )

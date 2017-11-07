@@ -5,7 +5,7 @@ module Ameba::Rules
     def test(source)
       source.lines.each_with_index do |line, index|
         next unless line =~ /\s$/
-        source.error self, index + 1,
+        source.error self, source.location(index + 1, line.size),
           "Trailing whitespace detected"
       end
     end

@@ -22,8 +22,7 @@ module Ameba::Rules
 
     def check_node(source, node)
       return unless literal?(node.cond)
-      source.error self, node.location.try &.line_number,
-        "Literal value found in conditional"
+      source.error self, node.location, "Literal value found in conditional"
     end
 
     def test(source, node : Crystal::If)

@@ -21,13 +21,13 @@ module Ameba::Rules
     end
 
     it "reports rule, pos and message" do
-      source = Source.new long_line
+      source = Source.new long_line, "source.cr"
       subject.catch(source).should_not be_valid
 
       error = source.errors.first
       error.rule.should eq subject
-      error.pos.should eq 1
-      error.message.should eq "Line too long (81 symbols)"
+      error.location.to_s.should eq "source.cr:1:81"
+      error.message.should eq "Line too long"
     end
   end
 end

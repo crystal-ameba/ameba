@@ -14,7 +14,7 @@ module Ameba::Rules
                     node.args.empty? &&
                     node.obj.nil?
 
-      source.error self, node.location.try &.line_number,
+      source.error self, node.location,
         "Possible forgotten debugger statement detected"
     end
   end

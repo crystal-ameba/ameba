@@ -25,7 +25,7 @@ module Ameba::Rules
         name = target.names.first
         return if (expected = name.upcase) == name
 
-        source.error self, node.location.try &.line_number,
+        source.error self, node.location,
           "Constant name should be screaming-cased: #{expected}, not #{name}"
       end
     end

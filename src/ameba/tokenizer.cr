@@ -3,7 +3,7 @@ require "compiler/crystal/syntax/*"
 module Ameba
   class Tokenizer
     def initialize(source)
-      @lexer = Crystal::Lexer.new source.content
+      @lexer = Crystal::Lexer.new source.code
       @lexer.count_whitespace = true
       @lexer.comments_enabled = true
       @lexer.wants_raw = true

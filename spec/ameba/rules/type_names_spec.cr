@@ -3,9 +3,9 @@ require "../../spec_helper"
 module Ameba
   subject = Rules::TypeNames.new
 
-  private def it_reports_name(content, expected)
+  private def it_reports_name(code, expected)
     it "reports type name #{expected}" do
-      s = Source.new content
+      s = Source.new code
       Rules::TypeNames.new.catch(s).should_not be_valid
       s.errors.first.message.should contain expected
     end
@@ -47,11 +47,11 @@ module Ameba
       s = Source.new %(
         class My_class
         end
-      )
+      ), "source.cr"
       subject.catch(s).should_not be_valid
       error = s.errors.first
       error.rule.should_not be_nil
-      error.pos.should eq 2
+      error.location.to_s.should eq "source.cr:2:9"
       error.message.should eq(
         "Type name should be camelcased: MyClass, but it was My_class"
       )

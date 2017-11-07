@@ -38,7 +38,7 @@ module Ameba::Rules
     def test(source, node : Crystal::Def)
       return if (expected = node.name.underscore) == node.name
 
-      source.error self, node.location.try &.line_number,
+      source.error self, node.location,
         "Method name should be underscore-cased: #{expected}, not #{node.name}"
     end
   end

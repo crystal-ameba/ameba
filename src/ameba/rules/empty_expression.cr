@@ -33,8 +33,7 @@ module Ameba::Rules
 
       return if exp.nil? || exp == "nil"
 
-      source.error self, node.location.try &.line_number,
-        "Avoid empty expression '#{exp}'"
+      source.error self, node.location, "Avoid empty expression '#{exp}'"
     end
   end
 end

@@ -20,7 +20,7 @@ module Ameba::Formatter
 
       it "writes invalid source" do
         s = Source.new ""
-        s.error DummyRule.new, 3, "message"
+        s.error DummyRule.new, nil, "message"
         subject.source_finished s
         output.to_s.should contain "F"
       end

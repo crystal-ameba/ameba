@@ -8,20 +8,20 @@ module Ameba
     # position of the error and a message.
     record Error,
       rule : Rule,
-      pos : Int32?,
+      location : Crystal::Location?,
       message : String
 
     getter lines : Array(String)?
     getter errors = [] of Error
     getter path : String?
-    getter content : String
+    getter code : String
     getter ast : Crystal::ASTNode?
 
-    def initialize(@content : String, @path = nil)
+    def initialize(@code : String, @path = nil)
     end
 
-    def error(rule : Rule, line_number : Int32?, message : String)
-      errors << Error.new rule, line_number, message
+    def error(rule : Rule, location, message : String)
+      errors << Error.new rule, location, message
     end
 
     def valid?
@@ -29,14 +29,18 @@ module Ameba
     end
 
     def lines
-      @lines ||= @content.split("\n")
+      @lines ||= @code.split("\n")
     end
 
     def ast
       @ast ||=
-        Crystal::Parser.new(content)
+        Crystal::Parser.new(code)
                        .tap { |parser| parser.filename = @path }
                        .parse
+    end
+
+    def location(l, c)
+      Crystal::Location.new path, l, c
     end
   end
 end

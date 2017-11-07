@@ -55,7 +55,7 @@ module Ameba::Rules
       expected = name.camelcase
       return if expected == name
 
-      source.error self, node.location.try &.line_number,
+      source.error self, node.location,
         "Type name should be camelcased: #{expected}, but it was #{name}"
     end
 

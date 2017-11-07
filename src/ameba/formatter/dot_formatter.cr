@@ -20,7 +20,7 @@ module Ameba::Formatter
 
       failed_sources.each do |source|
         source.errors.each do |error|
-          output << "#{source.path}:#{error.pos}\n".colorize(:cyan)
+          output << "#{error.location}\n".colorize(:cyan)
           output << "#{error.rule.name}: #{error.message}\n\n".colorize(:red)
         end
       end

@@ -27,7 +27,7 @@ module Ameba::Rules
 
     def test(source, node : Crystal::Unless)
       return unless negated_condition? node.cond
-      source.error self, node.location.try &.line_number,
+      source.error self, node.location,
         "Avoid negated conditions in unless blocks"
     end
 

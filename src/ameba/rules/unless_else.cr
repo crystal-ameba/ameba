@@ -42,10 +42,8 @@ module Ameba::Rules
     end
 
     def test(source, node : Crystal::Unless)
-      unless node.else.is_a?(Crystal::Nop)
-        source.error self, node.location.try &.line_number,
-          "Favour if over unless with else"
-      end
+      return if node.else.nop?
+      source.error self, node.location, "Favour if over unless with else"
     end
   end
 end

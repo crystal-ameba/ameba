@@ -19,8 +19,7 @@ module Ameba::Rules
     def test(source, node : Crystal::StringInterpolation)
       found = node.expressions.any? { |e| !string_literal?(e) && literal?(e) }
       return unless found
-      source.error self, node.location.try &.line_number,
-        "Literal value found in interpolation"
+      source.error self, node.location, "Literal value found in interpolation"
     end
   end
 end

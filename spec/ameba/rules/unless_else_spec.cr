@@ -31,13 +31,13 @@ module Ameba::Rules
         else
           :two
         end
-      )
+      ), "source.cr"
       subject.catch(s).should_not be_valid
 
       error = s.errors.first
       error.should_not be_nil
       error.rule.should_not be_nil
-      error.pos.should eq 2
+      error.location.to_s.should eq "source.cr:2:9"
       error.message.should eq "Favour if over unless with else"
     end
   end

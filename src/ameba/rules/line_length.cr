@@ -5,8 +5,9 @@ module Ameba::Rules
     def test(source)
       source.lines.each_with_index do |line, index|
         next unless line.size > 80
-        source.error self, index + 1,
-          "Line too long (#{line.size} symbols)"
+
+        source.error self, source.location(index + 1, line.size),
+          "Line too long"
       end
     end
   end

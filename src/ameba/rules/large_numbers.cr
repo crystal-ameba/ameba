@@ -25,7 +25,7 @@ module Ameba::Rules
         next unless token.type == :NUMBER && decimal?(token.raw)
 
         if (expected = underscored token.raw) != token.raw
-          source.error self, token.line_number,
+          source.error self, token.location,
             "Large numbers should be written with underscores: #{expected}"
         end
       end

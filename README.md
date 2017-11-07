@@ -84,7 +84,7 @@ struct DebuggerStatement < Rule
     # to remove a debugger statement.
     return unless node.name == "debugger" && node.args.empty? && node.obj.nil?
 
-    source.error self, node.location.try &.line_number,
+    source.error self, node.location,
       "Possible forgotten debugger statement detected"
   end
 end

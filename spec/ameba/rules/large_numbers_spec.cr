@@ -107,11 +107,11 @@ module Ameba
     it "reports rule, pos and message" do
       s = Source.new %q(
          1200000
-      )
+      ), "source.cr"
       subject.catch(s).should_not be_valid
       error = s.errors.first
       error.rule.should_not be_nil
-      error.pos.should eq 2
+      error.location.to_s.should eq "source.cr:2:10"
       error.message.should match /1_200_000/
     end
   end

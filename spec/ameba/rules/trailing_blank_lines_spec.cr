@@ -25,12 +25,12 @@ module Ameba::Rules
     end
 
     it "reports rule, pos and message" do
-      source = Source.new "a = 1\n\n "
+      source = Source.new "a = 1\n\n ", "source.cr"
       subject.catch(source).should_not be_valid
 
       error = source.errors.first
       error.rule.should_not be_nil
-      error.pos.should eq 3
+      error.location.to_s.should eq "source.cr:3:1"
       error.message.should eq "Blank lines detected at the end of the file"
     end
   end

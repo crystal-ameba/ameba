@@ -56,12 +56,12 @@ module Ameba::Rules
     end
 
     it "reports rule, pos and message" do
-      s = Source.new ":nok unless !s.empty?"
+      s = Source.new ":nok unless !s.empty?", "source.cr"
       subject.catch(s).should_not be_valid
 
       error = s.errors.first
       error.rule.should_not be_nil
-      error.pos.should eq 1
+      error.location.to_s.should eq "source.cr:1:1"
       error.message.should eq "Avoid negated conditions in unless blocks"
     end
   end

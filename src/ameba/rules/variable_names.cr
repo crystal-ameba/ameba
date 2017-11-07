@@ -32,7 +32,7 @@ module Ameba::Rules
     private def check_node(source, node)
       return if (expected = node.name.underscore) == node.name
 
-      source.error self, node.location.try &.line_number,
+      source.error self, node.location,
         "Var name should be underscore-cased: #{expected}, not #{node.name}"
     end
 

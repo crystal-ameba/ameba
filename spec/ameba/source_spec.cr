@@ -3,22 +3,24 @@ require "../spec_helper"
 module Ameba
   describe Source do
     describe ".new" do
-      it "allows to create a source by content and path" do
-        s = Source.new("content", "path")
+      it "allows to create a source by code and path" do
+        s = Source.new("code", "path")
         s.path.should eq "path"
-        s.content.should eq "content"
-        s.lines.should eq ["content"]
+        s.code.should eq "code"
+        s.lines.should eq ["code"]
       end
     end
 
     describe "#error" do
       it "adds and error" do
-        s = Source.new ""
-        s.error(DummyRule.new, 23, "Error!")
-        s.errors.size.should eq 1
-        s.errors.first.rule.should_not be_nil
-        s.errors.first.pos.should eq 23
-        s.errors.first.message.should eq "Error!"
+        s = Source.new "", "source.cr"
+        s.error(DummyRule.new, s.location(23, 2), "Error!")
+        s.should_not be_valid
+
+        error = s.errors.first
+        error.rule.should_not be_nil
+        error.location.to_s.should eq "source.cr:23:2"
+        error.message.should eq "Error!"
       end
     end
   end

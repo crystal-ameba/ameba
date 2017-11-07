@@ -22,8 +22,7 @@ module Ameba::Rules
            node.args.first?.try &.is_a?(Crystal::BoolLiteral) ||
            node.obj.is_a?(Crystal::BoolLiteral)
          )
-        source.error self, node.location.try &.line_number,
-          "Comparison to a boolean is pointless"
+        source.error self, node.location, "Comparison to a boolean is pointless"
       end
     end
   end

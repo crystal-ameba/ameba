@@ -59,13 +59,13 @@ module Ameba::Rules
     it "reports rule, pos and message" do
       s = Source.new %(
         puts "hello" if true
-      )
+      ), "source.cr"
       subject.catch(s).should_not be_valid
 
       s.errors.size.should eq 1
       error = s.errors.first
       error.rule.should_not be_nil
-      error.pos.should eq 2
+      error.location.to_s.should eq "source.cr:2:9"
       error.message.should eq "Literal value found in conditional"
     end
   end
