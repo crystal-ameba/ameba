@@ -14,6 +14,7 @@ module Ameba::AST
     InstanceVar,
     LibDef,
     ModuleDef,
+    NilLiteral,
     StringInterpolation,
     Unless,
     Var,
