@@ -1,7 +1,7 @@
 require "../src/ameba"
 require "benchmark"
 
-private def get_sources(n)
+private def get_files(n)
   Dir["src/**/*.cr"].first(n)
 end
 
@@ -16,10 +16,11 @@ Benchmark.ips do |x|
     30,
     40,
   ].each do |n|
-    sources = get_sources(n)
-    formatter = Ameba::Formatter::BaseFormatter.new
+    config = Ameba::Config.load
+    config.formatter = Ameba::Formatter::BaseFormatter.new
+    config.files = get_files(n)
     s = n == 1 ? "" : "s"
-    x.report("#{n} source#{s}") { Ameba.run sources, formatter }
+    x.report("#{n} source#{s}") { Ameba.run config }
   end
 end
 

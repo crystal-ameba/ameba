@@ -1,6 +1,10 @@
 module Ameba::Rule
   abstract struct Base
+    include Config::Rule
+
     abstract def test(source : Source)
+
+    prop enabled? = true
 
     def test(source : Source, node : Crystal::ASTNode)
       # can't be abstract
