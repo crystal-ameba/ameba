@@ -27,6 +27,8 @@ Is still under construction, compatibility may be broken :construction:
 
 ## Installation
 
+### As a project dependency:
+
 Add this to your application's `shard.yml`:
 
 ```yaml
@@ -35,8 +37,21 @@ development_dependencies:
     github: veelenga/ameba
 ```
 
-That will compile and install `ameba` binary onto your system.
+Compile and install `ameba` binary onto your system while running `crystal deps`.
 
+### OS X
+
+```
+$ brew tap veelenga/tap
+$ brew install ameba
+```
+
+### From sources
+
+```
+$ git clone https://github.com/veelenga/ameba && cd ameba
+$ make install
+```
 Or just compile it from sources `make install`.
 
 ## Usage
