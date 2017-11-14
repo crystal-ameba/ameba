@@ -52,7 +52,6 @@ $ brew install ameba
 $ git clone https://github.com/veelenga/ameba && cd ameba
 $ make install
 ```
-Or just compile it from sources `make install`.
 
 ## Usage
 
