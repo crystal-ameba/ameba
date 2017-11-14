@@ -9,6 +9,13 @@ module Ameba::Rule
   # "There are #{4} cats"
   # ```
   #
+  # YAML configuration example:
+  #
+  # ```
+  # LiteralInInterpolation
+  #   Enabled: true
+  # ```
+  #
   struct LiteralInInterpolation < Base
     include AST::Util
 

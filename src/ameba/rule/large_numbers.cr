@@ -19,6 +19,13 @@ module Ameba::Rule
   # 5.123_45
   # ```
   #
+  # YAML configuration example:
+  #
+  # ```
+  # LargeNumbers:
+  #   Enabled: true
+  # ```
+  #
   struct LargeNumbers < Base
     def test(source)
       Tokenizer.new(source).run do |token|

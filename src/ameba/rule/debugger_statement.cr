@@ -4,6 +4,13 @@ module Ameba::Rule
   # This is because we don't want debugger breakpoints accidentally being
   # committed into our codebase.
   #
+  # YAML configuration example:
+  #
+  # ```
+  # DebuggerStatement:
+  #   Enabled: true
+  # ```
+  #
   struct DebuggerStatement < Base
     def test(source)
       AST::Visitor.new self, source

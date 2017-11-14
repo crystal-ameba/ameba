@@ -45,6 +45,13 @@ module Ameba::Rule
   # end
   # ```
   #
+  # YAML configuration example:
+  #
+  # ```
+  # TypeNames:
+  #   Enabled: true
+  # ```
+  #
   struct TypeNames < Base
     def test(source)
       AST::Visitor.new self, source

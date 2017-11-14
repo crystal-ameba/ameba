@@ -41,7 +41,7 @@ Or just compile it from sources `make install`.
 
 ## Usage
 
-Run `ameba` binary to catch code issues within you project:
+Run `ameba` binary within your project directory to catch code issues:
 
 ```sh
 $ ameba
@@ -62,6 +62,12 @@ Finished in 10.53 milliseconds
 
 52 inspected, 3 failures.
 ```
+
+## Configuration
+
+It is possible to configure or even disable specific rules using YAML configuration file.
+By default Ameba is looking for `.ameba.yml` in a project root directory.
+Copy and adjust [existed example](config/ameba.yml).
 
 ## Write a new Rule
 

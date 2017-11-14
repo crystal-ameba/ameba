@@ -8,6 +8,7 @@ module Ameba::Rule
   #   Enabled: true
   #   MaxLength: 100
   # ```
+  #
   struct LineLength < Base
     prop max_length = 80
 

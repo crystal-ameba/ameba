@@ -30,6 +30,14 @@ module Ameba::Rule
   #   end
   # end
   # ```
+  #
+  # YAML configuration example:
+  #
+  # ```
+  # MethodNames:
+  #   Enabled: true
+  # ```
+  #
   struct MethodNames < Base
     def test(source)
       AST::Visitor.new self, source

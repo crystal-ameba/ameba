@@ -22,6 +22,13 @@ module Ameba::Rule
   # end
   # ```
   #
+  # YAML configuration example:
+  #
+  # ```
+  # PredicateName:
+  #   Enabled: true
+  # ```
+  #
   struct PredicateName < Base
     def test(source)
       AST::Visitor.new self, source

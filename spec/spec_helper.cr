@@ -7,6 +7,29 @@ module Ameba
     end
   end
 
+  class DummyFormatter < Formatter::BaseFormatter
+    property started_sources : Array(Source)?
+    property finished_sources : Array(Source)?
+    property started_source : Source?
+    property finished_source : Source?
+
+    def started(sources)
+      @started_sources = sources
+    end
+
+    def source_finished(source : Source)
+      @started_source = source
+    end
+
+    def source_started(source : Source)
+      @finished_source = source
+    end
+
+    def finished(sources)
+      @finished_sources = sources
+    end
+  end
+
   struct BeValidExpectation
     def match(source)
       source.valid?

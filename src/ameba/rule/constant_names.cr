@@ -15,6 +15,13 @@ module Ameba::Rule
   # Wrong_NAME    = 2
   # ```
   #
+  # YAML configuration example:
+  #
+  # ```
+  # ConstantNames:
+  #   Enabled: true
+  # ```
+  #
   struct ConstantNames < Base
     def test(source)
       AST::Visitor.new self, source

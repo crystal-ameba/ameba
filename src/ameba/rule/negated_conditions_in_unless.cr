@@ -20,6 +20,13 @@ module Ameba::Rule
   # It is pretty difficult to wrap your head around a block of code
   # that is executed if a negated condition is NOT met.
   #
+  # YAML configuration example:
+  #
+  # ```
+  # NegatedConditionsInUnless:
+  #   Enabled: true
+  # ```
+  #
   struct NegatedConditionsInUnless < Base
     def test(source)
       AST::Visitor.new self, source

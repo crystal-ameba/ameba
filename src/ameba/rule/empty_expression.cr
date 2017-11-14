@@ -21,6 +21,13 @@ module Ameba::Rule
   # end
   # ```
   #
+  # YAML configuration example:
+  #
+  # ```
+  # EmptyExpression:
+  #   Enabled: true
+  # ```
+  #
   struct EmptyExpression < Base
     include AST::Util
 

@@ -13,6 +13,13 @@ module Ameba::Rule
   # end
   # ```
   #
+  # YAML configuration example:
+  #
+  # ```
+  # LiteralInCondition:
+  #   Enabled: true
+  # ```
+  #
   struct LiteralInCondition < Base
     include AST::Util
 

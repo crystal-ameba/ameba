@@ -10,6 +10,10 @@ module Ameba
       @formatter = config.formatter
     end
 
+    def initialize(@sources, @formatter)
+      @rules = load_rules nil
+    end
+
     def run
       @formatter.started @sources
       @sources.each do |source|
@@ -26,13 +30,6 @@ module Ameba
 
     def success?
       @sources.all? &.valid?
-    end
-
-    def test_source(source)
-      @formatter.source_started source
-      @rules.each &.test(source)
-    ensure
-      @formatter.source_finished source
     end
 
     private def load_sources(config)

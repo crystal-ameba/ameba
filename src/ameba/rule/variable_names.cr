@@ -24,6 +24,13 @@ module Ameba::Rule
   # wrong_Name = 2
   # ```
   #
+  # YAML configuration example:
+  #
+  # ```
+  # VariableNames:
+  #   Enabled: true
+  # ```
+  #
   struct VariableNames < Base
     def test(source)
       AST::Visitor.new self, source

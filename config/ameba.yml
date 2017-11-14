@@ -1,0 +1,67 @@
+ComaprisonToBoolean:
+  # Disallows comparison to booleans in conditions.
+  Enabled: true
+
+ConstantNames:
+  # Enforces constant names to be in a screaming case.
+  Enabled: true
+
+DebuggerStatement:
+  # Disallows calls to debugger.
+  Enabled: true
+
+EmptyExpression:
+  # Disallows empty expressions.
+  Enabled: true
+
+LargeNumbers:
+  # A rule that disallows usage of large numbers without underscore.
+  Enabled: true
+
+LineLength:
+  # Disallows lines longer that MaxLength number of symbols.
+  Enabled: true
+  MaxLength: 80
+
+LiteralInCondition:
+  # Disallows useless conditional statements that contain a literal in place
+  # of a variable or predicate function.
+  Enabled: true
+
+LiteralInInterpolation:
+  # Disallows useless string interpolations that contain a literal value
+  # instead of a variable or function.
+  Enabled: true
+
+MethodNames:
+  # Enforces method names to be in the underscored case.
+  Enabled: true
+
+NegatedConditionsInUnless:
+  # Disallows negated conditions in unless.
+  Enabled: true
+
+PredicateName:
+  # Disallows tautological predicate names, meaning those that start with
+  # the prefix `has_` or the prefix `is_`.
+  Enabled: true
+
+TrailingBlankLines:
+  # Disallows trailing blank lines at the end of the source file.
+  Enabled: true
+
+TrailingWhitespace:
+  # Disallows trailing whitespaces.
+  Enabled: true
+
+TypeNames:
+  # Enforces type names in a camelcase manner.
+  Enabled: true
+
+UnlessElse:
+  # Disallows the use of an `else` block with `unless`.
+  Enabled: true
+
+VariableNames:
+  # Enforces variable names to be in the underscored case.
+  Enabled: true

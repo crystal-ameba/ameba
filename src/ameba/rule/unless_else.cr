@@ -36,6 +36,13 @@ module Ameba::Rule
   # end
   # ```
   #
+  # YAML configuration example:
+  #
+  # ```
+  # UnlessElse:
+  #   Enabled: true
+  # ```
+  #
   struct UnlessElse < Base
     def test(source)
       AST::Visitor.new self, source
