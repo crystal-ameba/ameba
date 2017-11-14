@@ -41,14 +41,14 @@ Compile and install `ameba` binary onto your system while running `crystal deps`
 
 ### OS X
 
-```
+```sh
 $ brew tap veelenga/tap
 $ brew install ameba
 ```
 
 ### From sources
 
-```
+```sh
 $ git clone https://github.com/veelenga/ameba && cd ameba
 $ make install
 ```

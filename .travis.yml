@@ -1,3 +1,13 @@
 language: crystal
 script:
   - make test
+  - sed -i -e 's:<.*>::g' README.md
+  - crystal docs
+deploy:
+  provider: pages
+  skip_cleanup: true
+  github_token: $GITHUB_TOKEN
+  project_name: ameba
+  on:
+    branch: master
+  local_dir: doc
