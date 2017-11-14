@@ -12,6 +12,10 @@ class Ameba::Config
     Config.new YAML.parse(content)
   end
 
+  def self.load(path : Nil)
+    self.load
+  end
+
   def files
     @files ||= default_files
   end
