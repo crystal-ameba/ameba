@@ -24,7 +24,7 @@ require "./ameba/formatter/*"
 module Ameba
   extend self
 
-  VERSION = "0.2.0"
+  VERSION = "0.2.1"
 
   # Initializes `Ameba::Runner` and runs it.
   # Can be configured via `config` parameter.
