@@ -1,5 +1,5 @@
 name: ameba
-version: 0.2.1
+version: 0.2.2
 
 crystal: 0.23.1
 license: MIT
@@ -7,7 +7,7 @@ authors:
   - Vitalii Elenhaupt <velenhaupt@gmail.com>
 
 scripts:
-  postinstall: make install
+  postinstall: make build
 
 executables:
   - ameba
