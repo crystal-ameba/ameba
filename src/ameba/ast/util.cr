@@ -1,12 +1,18 @@
+# Utility module for Ameba's rules.
 module Ameba::AST::Util
+  # Returns true if current `node` is a literal, false - otherwise.
   def literal?(node)
     node.try &.class.name.ends_with? "Literal"
   end
 
+  # Returns true if current `node` is a string literal, false - otherwise.
   def string_literal?(node)
     node.is_a? Crystal::StringLiteral
   end
 
+  # Returns a source code for the current node.
+  # This method uses `node.location` and `node.end_location`
+  # to determine and cut a piece of source of the node.
   def node_source(node, code_lines)
     loc, end_loc = node.location, node.end_location
 

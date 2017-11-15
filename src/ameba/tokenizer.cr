@@ -1,7 +1,24 @@
 require "compiler/crystal/syntax/*"
 
 module Ameba
+  # Represents Crystal syntax tokenizer based on `Crystal::Lexer`.
+  #
+  # ```
+  # source = Ameba::Source.new code, path
+  # tokenizer = Ameba::Tokenizer.new(source)
+  # tokenizer.run do |token|
+  #   puts token
+  # end
+  # ```
+  #
   class Tokenizer
+    # Instantiates Tokenizer using a `source`.
+    #
+    # ```
+    # source = Ameba::Source.new code, path
+    # Ameba::Tokenizer.new(source)
+    # ```
+    #
     def initialize(source)
       @lexer = Crystal::Lexer.new source.code
       @lexer.count_whitespace = true
@@ -10,6 +27,14 @@ module Ameba
       @lexer.filename = source.path
     end
 
+    # Runs the tokenizer and yields each token as a block argument.
+    #
+    # ```
+    # Ameba::Tokenizer.new(source).run do |token|
+    #   puts token
+    # end
+    # ```
+    #
     def run(&block : Crystal::Token -> _)
       run_normal_state @lexer, &block
       true

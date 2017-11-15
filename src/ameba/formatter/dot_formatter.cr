@@ -1,19 +1,24 @@
 module Ameba::Formatter
+  # A formatter that shows a progress of inspection in a terminal using dots.
+  # It is similar to Crystal's dot formatter for specs.
   class DotFormatter < BaseFormatter
     @started_at : Time?
 
+    # Reports a message when inspection is started.
     def started(sources)
       @started_at = Time.now # Time.monotonic
 
       output << started_message(sources.size)
     end
 
+    # Reports a result of the inspection of a corresponding source.
     def source_finished(source : Source)
       sym = source.valid? ? ".".colorize(:green) : "F".colorize(:red)
       output << sym
       output.flush
     end
 
+    # Reports a message when inspection is finished.
     def finished(sources)
       output << "\n\n"
       failed_sources = sources.reject { |s| s.valid? }

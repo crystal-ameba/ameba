@@ -5,7 +5,7 @@ module Ameba::AST
   source = Source.new ""
 
   describe "Traverse" do
-    {% for name in NODE_VISITORS %}
+    {% for name in NODES %}
       describe "{{name}}" do
         it "allow to visit {{name}} node" do
           visitor = Visitor.new rule, source
