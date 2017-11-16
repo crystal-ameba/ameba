@@ -10,6 +10,10 @@ DebuggerStatement:
   # Disallows calls to debugger.
   Enabled: true
 
+EmptyEnsure:
+  # Disallows empty ensure statement.
+  Enabled: true
+
 EmptyExpression:
   # Disallows empty expressions.
   Enabled: true

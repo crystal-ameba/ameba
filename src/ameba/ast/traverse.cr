@@ -12,6 +12,7 @@ module Ameba::AST
     ClassVar,
     Def,
     EnumDef,
+    ExceptionHandler,
     If,
     InstanceVar,
     LibDef,
