@@ -4,9 +4,7 @@
   <p align="center">Code style linter for Crystal<p>
   <p align="center">
     <sup>
-      <i>
-        (a single-celled animal that catches food and moves about by extending fingerlike projections of protoplasm)
-      </i>
+      <i> (a single-celled animal that catches food and moves about by extending fingerlike projections of protoplasm) </i>
     </sup>
   </p>
   <p align="center">
