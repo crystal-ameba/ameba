@@ -23,8 +23,6 @@
 Ameba is a tool for enforcing a consistent Crystal code style, for catching code smells and wrong code constructions.
 Ameba's [rules](src/ameba/rules/) traverse AST and report bad parts of your code.
 
-Is still under construction, compatibility may be broken :construction:
-
 ## Installation
 
 ### As a project dependency:
