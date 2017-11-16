@@ -1,13 +1,18 @@
 # Utility module for Ameba's rules.
 module Ameba::AST::Util
-  # Returns true if current `node` is a literal, false - otherwise.
+  # Returns true if current `node` is a literal, false otherwise.
   def literal?(node)
     node.try &.class.name.ends_with? "Literal"
   end
 
-  # Returns true if current `node` is a string literal, false - otherwise.
+  # Returns true if current `node` is a string literal, false otherwise.
   def string_literal?(node)
     node.is_a? Crystal::StringLiteral
+  end
+
+  # Returns true if current `node` is an exception handler, false otherwise.
+  def exception_handler?(node)
+    node.is_a? Crystal::ExceptionHandler
   end
 
   # Returns a source code for the current node.

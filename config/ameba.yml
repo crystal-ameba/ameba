@@ -50,6 +50,10 @@ PredicateName:
   # the prefix `has_` or the prefix `is_`.
   Enabled: true
 
+RedundantBegin:
+  # Disallows redundant begin blocks.
+  Enabled: true
+
 TrailingBlankLines:
   # Disallows trailing blank lines at the end of the source file.
   Enabled: true
