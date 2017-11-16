@@ -37,7 +37,18 @@ development_dependencies:
     github: veelenga/ameba
 ```
 
-Compile and install `ameba` binary onto your system while running `crystal deps`.
+Build `bin/ameba` binary within your project directory while running `crystal deps`.
+
+You may want also use it on [Travis](travis-ci.org):
+
+```yaml
+language: crystal
+install:
+  - crystal deps
+script:
+  - crystal spec
+  - bin/ameba
+```
 
 ### OS X
 
