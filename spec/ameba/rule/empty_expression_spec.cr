@@ -24,6 +24,12 @@ module Ameba
         a = nil
         a = ""
         a = 0
+
+        nil
+        :any.nil?
+
+        begin "" end
+        [nil] << nil
       )
       subject.catch(s).should be_valid
     end
@@ -66,6 +72,25 @@ module Ameba
     it_detects_empty_expression %(
       def method
       rescue
+        ()
+      end
+    )
+    it_detects_empty_expression %(
+      def method
+        begin
+        end
+      end
+    )
+    it_detects_empty_expression %(
+      begin; end
+    )
+    it_detects_empty_expression %(
+      begin
+        nil
+      end
+    )
+    it_detects_empty_expression %(
+      begin
         ()
       end
     )

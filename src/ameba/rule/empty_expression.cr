@@ -42,5 +42,11 @@ module Ameba::Rule
 
       source.error self, node.location, "Avoid empty expression '#{exp}'"
     end
+
+    def test(source, node : Crystal::Expressions)
+      if node.expressions.size == 1 && node.expressions.first.nop?
+        source.error self, node.location, "Avoid empty expressions"
+      end
+    end
   end
 end
