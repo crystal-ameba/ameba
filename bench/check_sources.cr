@@ -25,4 +25,6 @@ Benchmark.ips do |x|
 end
 
 puts "== Measure:"
-puts Benchmark.measure { Ameba.run }
+config = Ameba::Config.load
+config.formatter = Ameba::Formatter::BaseFormatter.new
+puts Benchmark.measure { Ameba.run config }
