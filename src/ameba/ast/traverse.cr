@@ -14,6 +14,7 @@ module Ameba::AST
     EnumDef,
     ExceptionHandler,
     Expressions,
+    HashLiteral,
     If,
     InstanceVar,
     LibDef,

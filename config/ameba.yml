@@ -18,6 +18,10 @@ EmptyExpression:
   # Disallows empty expressions.
   Enabled: true
 
+HashDuplicatedKey:
+  # Disallows duplicated keys in hash literals.
+  Enabled: true
+
 LargeNumbers:
   # A rule that disallows usage of large numbers without underscore.
   Enabled: true
