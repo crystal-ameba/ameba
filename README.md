@@ -24,7 +24,7 @@ also catches code smells and wrong code constructions.
 
 ## How it works
 
-Ameba's *"fingerlike projections"* are [rules](src/rule/). Each rule makes the inspection for that or
+Ameba's *"fingerlike projections"* are [rules](src/ameba/rule/). Each rule makes the inspection for that or
 another problem in the source code. Currently rules are able to:
 
 - [x] simply validate lines of source code
@@ -58,7 +58,7 @@ script:
   - bin/ameba
 ```
 
-Using this config Ameba will inspect files just and the specs run. Travis will also fail
+Using this config Ameba will inspect files just after the specs run. Travis will also fail
 the build if some problems detected.
 
 ### OS X
