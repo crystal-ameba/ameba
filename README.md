@@ -18,8 +18,19 @@
 
 ## About
 
-Ameba is a tool for enforcing a consistent Crystal code style, for catching code smells and wrong code constructions.
-Ameba's [rules](src/ameba/rules/) traverse AST and report bad parts of your code.
+Ameba is a static code analysis tool for the Crystal language.
+It enforces a consistent [Crystal code style](https://crystal-lang.org/docs/conventions/coding_style.html),
+also catches code smells and wrong code constructions.
+
+## How it works
+
+Ameba's *"fingerlike projections"* are [rules](src/rule/). Each rule makes the inspection for that or
+another problem in the source code. Currently rules are able to:
+
+- [x] simply validate lines of source code
+- [x] traverse AST using [`Crystal::Visitor`](https://github.com/crystal-lang/crystal/blob/1f3e8b0e742b55c1feb5584dc932e87034365f48/src/compiler/crystal/syntax/visitor.cr)
+- [x] tokenize sources using [`Crystal::Lexer`](https://github.com/crystal-lang/crystal/blob/1f3e8b0e742b55c1feb5584dc932e87034365f48/src/compiler/crystal/syntax/lexer.cr) and iterate through tokens
+- [ ] do semantics analysis using [`Crystal::SemanticVisitor`](https://github.com/crystal-lang/crystal/blob/master/src/compiler/crystal/semantic/semantic_visitor.cr)
 
 ## Installation
 
@@ -35,9 +46,10 @@ development_dependencies:
 
 Build `bin/ameba` binary within your project directory while running `crystal deps`.
 
-You may want also use it on [Travis](travis-ci.org):
+You may also want to use it on [Travis](travis-ci.org):
 
 ```yaml
+# .travis.yml
 language: crystal
 install:
   - crystal deps
@@ -45,6 +57,9 @@ script:
   - crystal spec
   - bin/ameba
 ```
+
+Using this config Ameba will inspect files just and the specs run. Travis will also fail
+the build if some problems detected.
 
 ### OS X
 
@@ -64,7 +79,7 @@ $ make install
 
 Run `ameba` binary within your project directory to catch code issues:
 
-```sh
+```
 $ ameba
 Inspecting 52 files.
 
@@ -86,11 +101,12 @@ Finished in 10.53 milliseconds
 
 ## Configuration
 
-It is possible to configure or even disable specific rules using YAML configuration file.
-By default Ameba is looking for `.ameba.yml` in a project root directory.
-Copy and adjust [existed example](config/ameba.yml).
+Default configuration file is `.ameba.yml`.
+It allows to configure or even disable specific rules.
+Simply copy and adjust [existed sample](config/ameba.yml).
+Each rule is enabled by default, even if you remove it from the config file.
 
-## Write a new Rule
+## Writing a new Rule
 
 Adding a new rule is as simple as inheriting from `Rule::Base` struct and implementing
 your logic to detect a problem:
@@ -104,23 +120,29 @@ struct DebuggerStatement < Rule::Base
   #   source.error rule, line_number, message
   #
   def test(source)
-    # This line deletegates verification to a particular AST visitor.
+    # This line deletegates verification to a particular callback in the AST visitor.
     AST::Visitor.new self, source
   end
 
-  # This method is called once the visitor finds a required node.
+  # This method is called once the visitor finds a needed node.
   def test(source, node : Crystal::Call)
     # It reports an error, if there is `debugger` method call
     # without arguments and a receiver. That's it, somebody forgot
     # to remove a debugger statement.
     return unless node.name == "debugger" && node.args.empty? && node.obj.nil?
 
-    source.error self, node.location,
-      "Possible forgotten debugger statement detected"
+    source.error self, node.location, "Possible forgotten debugger statement detected"
   end
 end
 
 ```
+
+## Credits & inspirations
+
+- [Crystal Language](crystal-lang.org)
+- [Rubocop](http://rubocop.readthedocs.io/en/latest/)
+- [Credo](http://credo-ci.org/)
+- [Dogma](https://github.com/lpil/dogma)
 
 ## Contributors
 
