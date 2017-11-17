@@ -17,7 +17,11 @@ module Ameba
         1 2 3 4 5 6 7 8 9 10 11 12 13 14 15
         16 17 18 19 20 30 40 50 60 70 80 90
         100
+        999
+        1000
         1_000
+        9999
+        9_999
         10_000
         100_000
         200_000
@@ -79,15 +83,13 @@ module Ameba
 
     it_transforms "1_00000", "100_000"
 
-    it_transforms "1_23_i8", "123_i8"
-    it_transforms "1000_i16", "1_000_i16"
-    it_transforms "1000_i32", "1_000_i32"
-    it_transforms "1000_i64", "1_000_i64"
+    it_transforms "10000_i16", "10_000_i16"
+    it_transforms "10000_i32", "10_000_i32"
+    it_transforms "10000_i64", "10_000_i64"
 
-    it_transforms "1_23_u8", "123_u8"
-    it_transforms "1000_u16", "1_000_u16"
-    it_transforms "1000_u32", "1_000_u32"
-    it_transforms "1000_u64", "1_000_u64"
+    it_transforms "10000_u16", "10_000_u16"
+    it_transforms "10000_u32", "10_000_u32"
+    it_transforms "10000_u64", "10_000_u64"
 
     it_transforms "123456_f32", "123_456_f32"
     it_transforms "123456_f64", "123_456_f64"

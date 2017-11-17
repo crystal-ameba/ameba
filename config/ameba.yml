@@ -21,6 +21,7 @@ EmptyExpression:
 LargeNumbers:
   # A rule that disallows usage of large numbers without underscore.
   Enabled: true
+  IntMinDigits: 5 # i.e. integers higher than 9999
 
 LineLength:
   # Disallows lines longer that MaxLength number of symbols.

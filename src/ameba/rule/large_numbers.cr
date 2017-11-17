@@ -24,14 +24,19 @@ module Ameba::Rule
   # ```
   # LargeNumbers:
   #   Enabled: true
+  #   IntMinDigits: 5 # i.e. integers higher than 9999
   # ```
   #
   struct LargeNumbers < Base
+    prop int_min_digits = 5
+
     def test(source)
       Tokenizer.new(source).run do |token|
         next unless token.type == :NUMBER && decimal?(token.raw)
 
-        if (expected = underscored token.raw) != token.raw
+        parsed = parse_number token.raw
+
+        if allowed?(*parsed) && (expected = underscored *parsed) != token.raw
           source.error self, token.location,
             "Large numbers should be written with underscores: #{expected}"
         end
@@ -42,8 +47,14 @@ module Ameba::Rule
       value !~ /^0(x|b|o)/
     end
 
-    private def underscored(raw_number)
-      sign, value, fraction, suffix = parse_number raw_number
+    private def allowed?(_sign, value, fraction, _suffix)
+      return true unless fraction.nil?
+
+      digits = value.chars.select &.to_s.=~ /[0-9]/
+      digits.size >= int_min_digits
+    end
+
+    private def underscored(sign, value, fraction, suffix)
       value = slice_digits(value.reverse) { |slice| slice }.reverse
       fraction = "." + slice_digits(fraction) { |slice| slice } if fraction
 
@@ -75,7 +86,7 @@ module Ameba::Rule
     end
 
     private def parse_suffix(value)
-      if pos = (value =~ /e/ || value =~ /_(i|u|f)/)
+      if pos = (value =~ /e/ || value =~ /_?(i|u|f)/)
         suffix = value[pos..-1]
         value = value[0..pos - 1]
       end
