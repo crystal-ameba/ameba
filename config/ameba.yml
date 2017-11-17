@@ -46,6 +46,12 @@ NegatedConditionsInUnless:
   # Disallows negated conditions in unless.
   Enabled: true
 
+PercentArrays:
+  # Disallows unwanted symbols in percent array literals.
+  Enabled: true
+  StringArrayUnwantedSymbols: ',"'
+  SymbolArrayUnwantedSymbols: ',:'
+
 PredicateName:
   # Disallows tautological predicate names, meaning those that start with
   # the prefix `has_` or the prefix `is_`.
