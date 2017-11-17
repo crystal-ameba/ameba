@@ -48,6 +48,12 @@ module Ameba::Rule
   #   b = 2
   # end
   # ```
+  # YAML configuration example:
+  #
+  # ```
+  # RedundantBegin:
+  #   Enabled: true
+  # ```
   #
   struct RedundantBegin < Base
     include AST::Util
