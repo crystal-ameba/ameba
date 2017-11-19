@@ -60,8 +60,8 @@ class Ameba::Config
     @formatter ||= default_formatter
   end
 
-  # Returns a subconfig of a home full loaded configuration.
-  # This is used to get a corresponding to a specific rule config.
+  # Returns a subconfig of a fully loaded configuration.
+  # This is used to get a config for a specific rule.
   #
   # ```
   # config = Ameba::Config.load

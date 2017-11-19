@@ -1,4 +1,4 @@
-ComaprisonToBoolean:
+ComparisonToBoolean:
   # Disallows comparison to booleans in conditions.
   Enabled: true
 
@@ -8,6 +8,10 @@ ConstantNames:
 
 DebuggerStatement:
   # Disallows calls to debugger.
+  Enabled: true
+
+DuplicatedWhen:
+  # Disallows duplicated when conditions in case.
   Enabled: true
 
 EmptyEnsure:
