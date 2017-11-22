@@ -19,6 +19,10 @@ module Ameba::Rule
   struct LiteralInInterpolation < Base
     include AST::Util
 
+    properties do
+      description = "Disallows useless string interpolations"
+    end
+
     def test(source)
       AST::Visitor.new self, source
     end

@@ -27,10 +27,6 @@ module Ameba::Rule
     # that are tested by this rule, it should add an error.
     abstract def test(source : Source)
 
-    # Enabled property indicates whether this rule enabled or not.
-    # Only enabled rules will be included into the inspection.
-    prop enabled? = true
-
     def test(source : Source, node : Crystal::ASTNode)
       # can't be abstract
     end
@@ -59,7 +55,11 @@ module Ameba::Rule
     # ```
     #
     def name
-      self.class.name.gsub("Ameba::Rule::", "")
+      {{@type}}.class_name
+    end
+
+    protected def self.class_name
+      name.gsub("Ameba::Rule::", "")
     end
 
     protected def self.subclasses

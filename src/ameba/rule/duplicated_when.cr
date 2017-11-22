@@ -31,6 +31,10 @@ module Ameba::Rule
   # ```
   #
   struct DuplicatedWhen < Base
+    properties do
+      description = "Disallows duplicated when conditions in case"
+    end
+
     def test(source)
       AST::Visitor.new self, source
     end
@@ -38,7 +42,7 @@ module Ameba::Rule
     def test(source, node : Crystal::Case)
       return unless duplicated_whens?(node.whens)
 
-      source.error self, node.location, "Duplicated when conditions in case."
+      source.error self, node.location, "Duplicated when conditions in case"
     end
 
     private def duplicated_whens?(whens)

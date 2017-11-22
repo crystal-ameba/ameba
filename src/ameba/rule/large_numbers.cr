@@ -28,7 +28,10 @@ module Ameba::Rule
   # ```
   #
   struct LargeNumbers < Base
-    prop int_min_digits = 5
+    properties do
+      description = "Disallows usage of large numbers without underscore"
+      int_min_digits = 5
+    end
 
     def test(source)
       Tokenizer.new(source).run do |token|

@@ -33,6 +33,10 @@ module Ameba::Rule
   # ```
   #
   struct EmptyEnsure < Base
+    properties do
+      description = "Disallows empty ensure statement"
+    end
+
     def test(source)
       AST::Visitor.new self, source
     end

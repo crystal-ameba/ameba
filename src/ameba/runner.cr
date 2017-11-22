@@ -93,7 +93,7 @@ module Ameba
     end
 
     private def load_rules(config)
-      Rule.rules.map { |r| r.new config }.select &.enabled?
+      Rule.rules.map { |r| r.new config }.select &.enabled
     end
   end
 end

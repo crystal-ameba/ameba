@@ -108,33 +108,30 @@ Each rule is enabled by default, even if you remove it from the config file.
 
 ## Writing a new Rule
 
-Adding a new rule is as simple as inheriting from `Rule::Base` struct and implementing
-your logic to detect a problem:
+Adding a new rule is as simple as inheriting from `Ameba::Rule::Base` struct and implementing
+a logic to detect a problem in the source file:
 
 ```crystal
-struct DebuggerStatement < Rule::Base
+struct MySuperRule < Ameba::Rule::Base
   # This is a required method to be implemented by the rule.
-  # Source will be passed here. If rule finds an issue in this source,
-  # it reports an error: 
-  # 
-  #   source.error rule, line_number, message
+  # Source will be passed here. If rule detects an issue in the source,
+  # it reports an error:
+  #
+  #   source.error rule, location, message
   #
   def test(source)
-    # This line deletegates verification to a particular callback in the AST visitor.
-    AST::Visitor.new self, source
-  end
-
-  # This method is called once the visitor finds a needed node.
-  def test(source, node : Crystal::Call)
-    # It reports an error, if there is `debugger` method call
-    # without arguments and a receiver. That's it, somebody forgot
-    # to remove a debugger statement.
-    return unless node.name == "debugger" && node.args.empty? && node.obj.nil?
-
-    source.error self, node.location, "Possible forgotten debugger statement detected"
+    # TODO: test source
   end
 end
 
+```
+
+As soon as a custom rule is defined, it becomes available in a full set of rules
+executed by default and also can be configured via config file:
+
+```yaml
+MySuperRule:
+  Enabled: false
 ```
 
 ## Credits & inspirations

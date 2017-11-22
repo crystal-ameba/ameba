@@ -25,8 +25,11 @@ module Ameba::Rule
   # ```
   #
   struct PercentArrays < Base
-    prop string_array_unwanted_symbols = ",\""
-    prop symbol_array_unwanted_symbols = ",:"
+    properties do
+      description = "Disallows some unwanted symbols in percent array literals"
+      string_array_unwanted_symbols = ",\""
+      symbol_array_unwanted_symbols = ",:"
+    end
 
     def test(source)
       error = start_token = nil

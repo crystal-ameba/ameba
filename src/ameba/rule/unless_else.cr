@@ -44,6 +44,10 @@ module Ameba::Rule
   # ```
   #
   struct UnlessElse < Base
+    properties do
+      description = "Disallows the use of an `else` block with the `unless`"
+    end
+
     def test(source)
       AST::Visitor.new self, source
     end

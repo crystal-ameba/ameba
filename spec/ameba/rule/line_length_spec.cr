@@ -29,5 +29,14 @@ module Ameba::Rule
       error.location.to_s.should eq "source.cr:1:81"
       error.message.should eq "Line too long"
     end
+
+    context "properties" do
+      it "allows to configure max length of the line" do
+        source = Source.new long_line
+        rule = LineLength.new
+        rule.max_length = long_line.size
+        rule.catch(source).should be_valid
+      end
+    end
   end
 end

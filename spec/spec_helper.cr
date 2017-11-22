@@ -3,6 +3,10 @@ require "../src/ameba"
 
 module Ameba
   struct DummyRule < Rule::Base
+    properties do
+      description : String = "Dummy rule that does nothing."
+    end
+
     def test(source)
     end
   end

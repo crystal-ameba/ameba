@@ -10,7 +10,11 @@ module Ameba::Rule
   # ```
   #
   struct LineLength < Base
-    prop max_length = 80
+    properties do
+      enabled = false
+      description = "Disallows lines longer than `MaxLength` number of symbols"
+      max_length = 80
+    end
 
     def test(source)
       source.lines.each_with_index do |line, index|

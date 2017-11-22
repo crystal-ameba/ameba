@@ -21,6 +21,11 @@ module Ameba::Rule
   # ```
   #
   struct ComparisonToBoolean < Base
+    properties do
+      enabled = false
+      description = "Disallows comparison to booleans"
+    end
+
     def test(source)
       AST::Visitor.new self, source
     end

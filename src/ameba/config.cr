@@ -80,66 +80,71 @@ class Ameba::Config
     Formatter::DotFormatter.new
   end
 
-  # An entity that represents a corresponding configuration for a specific Rule.
+  # :no_doc:
   module Rule
-    # Represents a configuration of a specific Rule.
-    getter config : YAML::Any?
-
-    # A macro that defines a dsl to define configurable properties.
-    #
-    # ```
-    # class Configurable
-    #   include Ameba::Config::Rule
-    #
-    #   prop enabled? = false
-    #   prop max_length = 80
-    #   prop wildcard = "*"
-    # end
-    # ```
-    #
-    macro prop(assign)
-      # Rule configuration property.
-      def {{assign.target}}
-        {% prop_name = assign.target.id.camelcase.gsub(/\?/, "") %}
-
-        {% if assign.value.is_a? NumberLiteral %}
-          int_prop "{{prop_name}}", {{assign.value}}
-        {% elsif assign.value.is_a? BoolLiteral %}
-          bool_prop "{{prop_name}}", {{assign.value}}
-        {% elsif assign.value.is_a? StringLiteral %}
-          str_prop "{{prop_name}}", {{assign.value}}
+    macro properties(&block)
+      {% definitions = [] of NamedTuple %}
+      {% if block.body.is_a? Assign %}
+        {% definitions << {var: block.body.target, value: block.body.value} %}
+      {% elsif block.body.is_a? TypeDeclaration %}
+        {% definitions << {var: block.body.var, value: block.body.value, type: block.body.type} %}
+      {% elsif block.body.is_a? Expressions %}
+        {% for prop in block.body.expressions %}
+          {% if prop.is_a? Assign %}
+            {% definitions << {var: prop.target, value: prop.value} %}
+          {% elsif prop.is_a? TypeDeclaration %}
+            {% definitions << {var: prop.var, value: prop.value, type: prop.type} %}
+          {% end %}
         {% end %}
+      {% end %}
+
+      {% properties = {} of MacroId => NamedTuple %}
+      {% for df in definitions %}
+        {% name = df[:var].id %}
+        {% key = name.camelcase.stringify %}
+        {% value = df[:value] %}
+        {% type = df[:type] %}
+
+        {% if type == nil %}
+          {% if value.is_a? BoolLiteral %}
+            {% type = Bool %}
+          {% elsif value.is_a? StringLiteral %}
+            {% type = String %}
+          {% elsif value.is_a? NumberLiteral %}
+            {% if value.kind == :i32 %}
+              {% type = Int32 %}
+            {% elsif value.kind == :i64 %}
+              {% type = Int64 %}
+            {% elsif value.kind == :f32 %}
+              {% type = Float32 %}
+            {% elsif value.kind == :f64 %}
+              {% type = Float64 %}
+            {% end %}
+          {% end %}
+
+          {% type = Nil if type == nil %}
+        {% end %}
+
+        {% properties[name] = {key: key, default: value, type: type} %}
+      {% end %}
+
+      {% if properties["enabled".id] == nil %}
+        {% properties["enabled".id] = {key: "Enabled", default: true, type: Bool} %}
+      {% end %}
+
+      YAML.mapping({{properties}})
+    end
+
+    macro included
+      macro inherited
+        # allow creating rules without properties
+        properties {}
+
+        def self.new(config : Ameba::Config? = nil)
+          yaml = config.try &.subconfig(class_name).try &.to_yaml || "{}"
+          from_yaml yaml
+        end
       end
-    end
-
-    # Creates an instance of a Rule configuration.
-    #
-    # ```
-    # class Configurable
-    #   include Ameba::Config::Rule
-    #
-    #   prop enabled? = false
-    #   prop max_length = 80
-    #   prop wildcard = "*"
-    # end
-    #
-    # Configurable.new config
-    # ```
-    #
-    def initialize(config = nil)
-      @config = config.try &.subconfig(name)
-    end
-
-    protected def int_prop(name, default : Number)
-      str_prop(name, default).to_i
-    end
-
-    protected def bool_prop(name, default : Bool)
-      str_prop(name, default.to_s) == "true"
-    end
-
-    protected def str_prop(name, default)
-      config.try &.[name]?.try &.as_s || default
     end
   end
 end

@@ -207,7 +207,7 @@ module Ameba::Rule
       error = s.errors.first
       error.rule.should_not be_nil
       error.location.to_s.should eq "source.cr:2:9"
-      error.message.should eq "Redundant `begin` block detected."
+      error.message.should eq "Redundant `begin` block detected"
     end
   end
 end

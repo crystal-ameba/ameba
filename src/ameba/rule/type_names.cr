@@ -53,6 +53,10 @@ module Ameba::Rule
   # ```
   #
   struct TypeNames < Base
+    properties do
+      description = "Enforces type names in camelcase manner"
+    end
+
     def test(source)
       AST::Visitor.new self, source
     end

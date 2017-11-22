@@ -32,6 +32,10 @@ module Ameba::Rule
   # ```
   #
   struct VariableNames < Base
+    properties do
+      description = "Enforces variable names to be in underscored case"
+    end
+
     def test(source)
       AST::Visitor.new self, source
     end

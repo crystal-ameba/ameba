@@ -1,6 +1,6 @@
 ComparisonToBoolean:
   # Disallows comparison to booleans in conditions.
-  Enabled: true
+  Enabled: false
 
 ConstantNames:
   # Enforces constant names to be in a screaming case.
@@ -33,7 +33,7 @@ LargeNumbers:
 
 LineLength:
   # Disallows lines longer that MaxLength number of symbols.
-  Enabled: true
+  Enabled: false
   MaxLength: 80
 
 LiteralInCondition:

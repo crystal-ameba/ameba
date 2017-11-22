@@ -9,6 +9,10 @@ module Ameba::Rule
   # ```
   #
   struct TrailingWhitespace < Base
+    properties do
+      description = "Disallows trailing whitespaces"
+    end
+
     def test(source)
       source.lines.each_with_index do |line, index|
         next unless line =~ /\s$/

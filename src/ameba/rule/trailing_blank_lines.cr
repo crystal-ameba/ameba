@@ -9,6 +9,10 @@ module Ameba::Rule
   # ```
   #
   struct TrailingBlankLines < Base
+    properties do
+      description = "Disallows trailing blank lines"
+    end
+
     def test(source)
       if source.lines.size > 1 && source.lines[-2, 2].join.strip.empty?
         source.error self, source.location(source.lines.size, 1),

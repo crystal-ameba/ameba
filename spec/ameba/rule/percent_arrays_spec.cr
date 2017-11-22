@@ -65,5 +65,21 @@ module Ameba::Rule
         "Symbols `,\"` may be unwanted in %w array literals"
       )
     end
+
+    context "properties" do
+      it "allows to configure string_array_unwanted_symbols" do
+        rule = PercentArrays.new
+        rule.string_array_unwanted_symbols = ","
+        s = Source.new %( %w("one") )
+        rule.catch(s).should be_valid
+      end
+
+      it "allows to configure symbol_array_unwanted_symbols" do
+        rule = PercentArrays.new
+        rule.symbol_array_unwanted_symbols = ","
+        s = Source.new %( %i(:one) )
+        rule.catch(s).should be_valid
+      end
+    end
   end
 end

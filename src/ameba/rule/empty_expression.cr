@@ -31,6 +31,10 @@ module Ameba::Rule
   struct EmptyExpression < Base
     include AST::Util
 
+    properties do
+      description = "Disallows empty expressions"
+    end
+
     def test(source)
       AST::Visitor.new self, source
     end

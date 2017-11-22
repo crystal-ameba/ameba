@@ -112,7 +112,7 @@ module Ameba::Rule
       error = s.errors.first
       error.rule.should_not be_nil
       error.location.to_s.should eq "source.cr:2:9"
-      error.message.should eq "Duplicated when conditions in case."
+      error.message.should eq "Duplicated when conditions in case"
     end
   end
 end

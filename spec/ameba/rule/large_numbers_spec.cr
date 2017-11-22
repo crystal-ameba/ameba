@@ -116,5 +116,14 @@ module Ameba
       error.location.to_s.should eq "source.cr:2:10"
       error.message.should match /1_200_000/
     end
+
+    context "properties" do
+      it "allows to configure integer min digits" do
+        s = Source.new %q(1200000)
+        rule = Rule::LargeNumbers.new
+        rule.int_min_digits = 10
+        rule.catch(s).should be_valid
+      end
+    end
   end
 end
