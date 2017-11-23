@@ -6,8 +6,9 @@ module Ameba::Cli
   extend self
 
   private class Opts
-    property config : String?
+    property config = Ameba::Config::PATH
     property silent : Bool = false
+    property generate : Bool = false
     property files : Array(String)?
     property only : Array(String)?
     property except : Array(String)?
@@ -33,6 +34,10 @@ module Ameba::Cli
       parser.on("--except RULE1,RULE2,...", "Disable the given rules") do |rules|
         opts.except = rules.split ","
       end
+
+      parser.on("--gen-config", "Generate a configuration file acting as a TODO list") do
+        opts.generate = true
+      end
     end
 
     run_ameba opts
@@ -45,7 +50,9 @@ module Ameba::Cli
 
     configure_rules(config, opts)
 
-    exit 1 unless Ameba.run(config).success?
+    runner = Ameba.run(config)
+    generate_config_file(config, runner, opts) if opts.generate
+    exit 1 unless runner.success?
   rescue e
     puts "Error: #{e.message}"
     exit 255
@@ -62,6 +69,16 @@ module Ameba::Cli
     opts.except.try &.each do |rule_name|
       config.update_rule(rule_name, enabled: false)
     end
+  end
+
+  private def generate_config_file(config, runner, opts)
+    failed_rules =
+      runner.sources
+            .map { |s| s.errors.map &.rule.name }
+            .flatten
+            .uniq!
+    failed_rules.each { |rule| config.update_rule rule, enabled: false }
+    File.write(opts.config, config.to_yaml)
   end
 
   private def print_version

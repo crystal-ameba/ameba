@@ -12,6 +12,7 @@ require "yaml"
 # By default config loads `.ameba.yml` file in a current directory.
 #
 class Ameba::Config
+  PATH = ".ameba.yml"
   setter formatter : Formatter::BaseFormatter?
   setter files : Array(String)?
   getter rules : Array(Rule::Base)
@@ -19,7 +20,7 @@ class Ameba::Config
   # Creates a new instance of `Ameba::Config` based on YAML parameters.
   #
   # `Config.load` uses this constructor to instantiate new config by YAML file.
-  protected def initialize(config : YAML::Any)
+  protected def initialize(@config : Hash(YAML::Type, YAML::Type))
     @rules = Rule.rules.map &.new(config)
   end
 
@@ -29,10 +30,11 @@ class Ameba::Config
   # config = Ameba::Config.load
   # ```
   #
-  def self.load(path = nil)
-    path ||= ".ameba.yml"
+  def self.load(path = PATH)
     content = File.exists?(path) ? File.read path : "{}"
-    Config.new YAML.parse(content)
+    Config.new YAML.parse(content).as_h
+  rescue e
+    raise "Config file is invalid"
   end
 
   # Returns a list of paths (with wildcards) to files.
@@ -76,6 +78,15 @@ class Ameba::Config
     rule = @rules[index]
     rule.enabled = enabled
     @rules[index] = rule
+  end
+
+  def to_yaml(yaml : YAML::Builder)
+    yaml.mapping do
+      rules.each do |rule|
+        rule.name.to_yaml(yaml)
+        rule.to_yaml(yaml)
+      end
+    end
   end
 
   private def default_files
