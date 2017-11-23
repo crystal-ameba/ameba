@@ -80,7 +80,7 @@ class Ameba::Config
     Formatter::DotFormatter.new
   end
 
-  # :no_doc:
+  # :nodoc:
   module Rule
     macro properties(&block)
       {% definitions = [] of NamedTuple %}
