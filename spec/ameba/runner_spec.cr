@@ -48,10 +48,11 @@ module Ameba
       end
 
       it "returns false if there are invalid sources" do
+        rules = Rule.rules.map &.new
         s = Source.new %q(
           WrongConstant = 5
         )
-        Runner.new([s], formatter).run.success?.should be_false
+        Runner.new(rules, [s], formatter).run.success?.should be_false
       end
     end
   end

@@ -14,11 +14,13 @@ require "yaml"
 class Ameba::Config
   setter formatter : Formatter::BaseFormatter?
   setter files : Array(String)?
+  getter rules : Array(Rule::Base)
 
   # Creates a new instance of `Ameba::Config` based on YAML parameters.
   #
   # `Config.load` uses this constructor to instantiate new config by YAML file.
-  protected def initialize(@config : YAML::Any)
+  protected def initialize(config : YAML::Any)
+    @rules = Rule.rules.map &.new(config)
   end
 
   # Loads YAML configuration file by `path`.
@@ -60,16 +62,20 @@ class Ameba::Config
     @formatter ||= default_formatter
   end
 
-  # Returns a subconfig of a fully loaded configuration.
-  # This is used to get a config for a specific rule.
+  # Updates rule properties.
   #
   # ```
   # config = Ameba::Config.load
-  # config.subconfig "LineLength"
+  # config.update_rule "MyRuleName", enabled: false
   # ```
   #
-  def subconfig(name)
-    @config[name]?
+  def update_rule(name, enabled = true)
+    index = @rules.index { |r| r.name == name }
+    raise ArgumentError.new("Rule `#{name}` does not exist") unless index
+
+    rule = @rules[index]
+    rule.enabled = enabled
+    @rules[index] = rule
   end
 
   private def default_files
@@ -81,7 +87,7 @@ class Ameba::Config
   end
 
   # :nodoc:
-  module Rule
+  module RuleConfig
     macro properties(&block)
       {% definitions = [] of NamedTuple %}
       {% if block.body.is_a? Assign %}
@@ -140,8 +146,8 @@ class Ameba::Config
         # allow creating rules without properties
         properties {}
 
-        def self.new(config : Ameba::Config? = nil)
-          yaml = config.try &.subconfig(class_name).try &.to_yaml || "{}"
+        def self.new(config = nil)
+          yaml = config.try &.[class_name]?.try &.to_yaml || "{}"
           from_yaml yaml
         end
       end

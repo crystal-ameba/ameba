@@ -21,7 +21,7 @@ module Ameba::Rule
   # that are tested by this rule, it should add an error.
   #
   abstract struct Base
-    include Config::Rule
+    include Config::RuleConfig
 
     # This method is designed to test the source passed in. If source has issues
     # that are tested by this rule, it should add an error.

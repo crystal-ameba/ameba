@@ -31,19 +31,13 @@ module Ameba
     # ```
     #
     def initialize(config : Config)
-      @rules = load_rules(config)
       @sources = load_sources(config)
       @formatter = config.formatter
+      @rules = config.rules.select &.enabled
     end
 
-    # Instantiates a runner using a list of sources and a formatter.
-    #
-    # ```
-    # runner = Ameba::Runner.new sources, formatter
-    # ```
-    #
-    def initialize(@sources, @formatter)
-      @rules = load_rules nil
+    # :nodoc:
+    protected def initialize(@rules, @sources, @formatter)
     end
 
     # Performs the inspection. Iterates through all sources and test it using
@@ -90,10 +84,6 @@ module Ameba
             .map { |wildcard| Dir[wildcard] }
             .flatten
             .map { |path| Source.new File.read(path), path }
-    end
-
-    private def load_rules(config)
-      Rule.rules.map { |r| r.new config }.select &.enabled
     end
   end
 end

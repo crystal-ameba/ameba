@@ -46,13 +46,5 @@ module Ameba
         config.formatter.should eq formatter
       end
     end
-
-    describe "#subconfig" do
-      it "returns a specific subconfig" do
-        config = Config.load config_sample
-        config.subconfig("NoSuchConfig").should be_nil
-        config.subconfig(Rule::LineLength.new.name).should_not be_nil
-      end
-    end
   end
 end
