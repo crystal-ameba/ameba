@@ -13,6 +13,9 @@ module Ameba::Rule
           def picture?(x)
           end
         end
+
+        def allow_this_picture?
+        end
       )
       subject.catch(s).should be_valid
     end

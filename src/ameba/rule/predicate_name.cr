@@ -39,7 +39,7 @@ module Ameba::Rule
     end
 
     def test(source, node : Crystal::Def)
-      if node.name =~ /(is|has)_(\w+)\?/
+      if node.name =~ /^(is|has)_(\w+)\?/
         source.error self, node.location,
           "Favour method name '#{$2}?' over '#{node.name}'"
       end
