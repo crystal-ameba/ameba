@@ -15,7 +15,7 @@ module Ameba
     @rules : Array(Rule::Base)
 
     # A list of sources to run inspection on.
-    @sources : Array(Source)
+    getter sources : Array(Source)
 
     # A formatter to prepare report.
     @formatter : Formatter::BaseFormatter
