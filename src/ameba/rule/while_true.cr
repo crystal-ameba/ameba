@@ -3,17 +3,21 @@ module Ameba::Rule
   #
   # For example, this is considered invalid:
   #
+  # ```
   # while true
   #   do_something
   #   break if some_condition
   # end
+  # ```
   #
   # And should be replaced by the following:
   #
+  # ```
   # loop do
   #   do_something
   #   break if some_condition
   # end
+  # ```
   #
   # YAML configuration example:
   #
