@@ -88,3 +88,7 @@ UnlessElse:
 VariableNames:
   # Enforces variable names to be in the underscored case.
   Enabled: true
+
+WhileTrue:
+  # Disallows `while` statements with a `true` literal as condition
+  Enabled: true

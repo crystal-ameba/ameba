@@ -23,6 +23,7 @@ module Ameba::AST
     StringInterpolation,
     Unless,
     Var,
+    While,
   ]
 
   # An AST Visitor used by rules.

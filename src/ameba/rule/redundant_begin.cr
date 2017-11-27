@@ -102,7 +102,7 @@ module Ameba::Rule
     private def def_redundant_begin?(code)
       lexer = Crystal::Lexer.new code
       in_body? = in_argument_list? = false
-      while true
+      loop do
         token = lexer.next_token
 
         case token.type

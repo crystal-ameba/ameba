@@ -45,7 +45,7 @@ module Ameba
 
     private def run_normal_state(lexer, break_on_rcurly = false,
                                  &block : Crystal::Token -> _)
-      while true
+      loop do
         token = @lexer.next_token
         block.call token
 
@@ -63,7 +63,7 @@ module Ameba
     end
 
     private def run_delimiter_state(lexer, token, &block : Crystal::Token -> _)
-      while true
+      loop do
         token = @lexer.next_string_token(token.delimiter_state)
         block.call token
 
@@ -79,7 +79,7 @@ module Ameba
     end
 
     private def run_array_state(lexer, token, &block : Crystal::Token -> _)
-      while true
+      loop do
         lexer.next_string_array_token
         block.call token
 
