@@ -20,7 +20,7 @@ module Ameba::Cli
       parser.on("-v", "--version", "Print version") { print_version }
       parser.on("-h", "--help", "Show this help") { show_help parser }
       parser.on("-s", "--silent", "Disable output") { opts.silent = true }
-      parser.unknown_args { |f| files = f if f.any? }
+      parser.unknown_args { |f| opts.files = f if f.any? }
 
       parser.on("-c PATH", "--config PATH", "Specify configuration file") do |f|
         opts.config = f
