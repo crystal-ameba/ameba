@@ -71,12 +71,13 @@ class Ameba::Config
   # config.update_rule "MyRuleName", enabled: false
   # ```
   #
-  def update_rule(name, enabled = true)
+  def update_rule(name, enabled = true, excluded = nil)
     index = @rules.index { |r| r.name == name }
     raise ArgumentError.new("Rule `#{name}` does not exist") unless index
 
     rule = @rules[index]
     rule.enabled = enabled
+    rule.excluded = excluded
     @rules[index] = rule
   end
 
@@ -138,6 +139,10 @@ class Ameba::Config
 
       {% if properties["enabled".id] == nil %}
         {% properties["enabled".id] = {key: "Enabled", default: true, type: Bool} %}
+      {% end %}
+
+      {% if properties["excluded".id] == nil %}
+        {% properties["excluded".id] = {key: "Excluded", type: "Array(String)?".id} %}
       {% end %}
 
       YAML.mapping({{properties}})

@@ -21,6 +21,7 @@ module Ameba::Formatter
       @io << header
       rule_errors_map(errors).each do |rule, rule_errors|
         @io << "\n# Problems found: #{rule_errors.size}"
+        @io << "\n# Run `ameba --only #{rule.name}` for details"
         @io << rule_todo(rule, rule_errors).gsub("---", "")
       end
     ensure
@@ -47,7 +48,11 @@ module Ameba::Formatter
     end
 
     private def rule_todo(rule, errors)
-      rule.enabled = false
+      rule.excluded =
+        errors.map(&.location.try &.filename.try &.to_s)
+              .compact
+              .uniq!
+
       YAML.build do |yaml|
         yaml.mapping do
           rule.name.to_yaml(yaml)

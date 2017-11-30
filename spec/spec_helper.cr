@@ -11,6 +11,13 @@ module Ameba
     end
   end
 
+  struct ErrorRule < Rule::Base
+    def test(source)
+      source.error self, source.location(1, 1),
+        "This rule always adds an error"
+    end
+  end
+
   class DummyFormatter < Formatter::BaseFormatter
     property started_sources : Array(Source)?
     property finished_sources : Array(Source)?

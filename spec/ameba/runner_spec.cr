@@ -6,6 +6,8 @@ module Ameba
     config.formatter = formatter
     config.files = files
 
+    config.update_rule ErrorRule.class_name, enabled: false
+
     Runner.new(config)
   end
 
@@ -35,6 +37,19 @@ module Ameba
       it "calls source_finished callback" do
         runner(formatter: formatter).run
         formatter.finished_source.should_not be_nil
+      end
+
+      it "skips rule check if source is excluded" do
+        path = "source.cr"
+        source = Source.new "", path
+
+        rules = ([] of Rule::Base).tap do |rules|
+          rule = ErrorRule.new
+          rule.excluded = [path]
+          rules << rule
+        end
+
+        Runner.new(rules, [source], formatter).run.success?.should be_true
       end
     end
 
