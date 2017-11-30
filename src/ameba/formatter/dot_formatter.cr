@@ -21,7 +21,7 @@ module Ameba::Formatter
     # Reports a message when inspection is finished.
     def finished(sources)
       output << "\n\n"
-      failed_sources = sources.reject { |s| s.valid? }
+      failed_sources = sources.reject &.valid?
 
       failed_sources.each do |source|
         source.errors.each do |error|

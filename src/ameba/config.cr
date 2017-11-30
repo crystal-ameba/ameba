@@ -20,7 +20,7 @@ class Ameba::Config
   # Creates a new instance of `Ameba::Config` based on YAML parameters.
   #
   # `Config.load` uses this constructor to instantiate new config by YAML file.
-  protected def initialize(@config : Hash(YAML::Type, YAML::Type))
+  protected def initialize(@config : YAML::Any)
     @rules = Rule.rules.map &.new(config)
   end
 
@@ -31,9 +31,9 @@ class Ameba::Config
   # ```
   #
   def self.load(path = PATH)
-    content = File.exists?(path) ? File.read path : "{}"
-    Config.new YAML.parse(content).as_h
-  rescue e
+    content = File.exists?(path) ? File.read path : ""
+    Config.new YAML.parse(content)
+  rescue
     raise "Config file is invalid"
   end
 
@@ -78,15 +78,6 @@ class Ameba::Config
     rule = @rules[index]
     rule.enabled = enabled
     @rules[index] = rule
-  end
-
-  def to_yaml(yaml : YAML::Builder)
-    yaml.mapping do
-      rules.each do |rule|
-        rule.name.to_yaml(yaml)
-        rule.to_yaml(yaml)
-      end
-    end
   end
 
   private def default_files
@@ -158,8 +149,10 @@ class Ameba::Config
         properties {}
 
         def self.new(config = nil)
-          yaml = config.try &.[class_name]?.try &.to_yaml || "{}"
-          from_yaml yaml
+          if (raw = config.try &.raw).is_a? Hash
+            yaml = raw[class_name]?.try &.to_yaml
+          end
+          from_yaml yaml || "{}"
         end
       end
     end

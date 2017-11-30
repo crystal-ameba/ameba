@@ -46,13 +46,11 @@ module Ameba::Cli
   def run_ameba(opts)
     config = Ameba::Config.load opts.config
     config.files = opts.files
-    config.formatter = Ameba::Formatter::BaseFormatter.new if opts.silent
 
+    configure_formatter(config, opts)
     configure_rules(config, opts)
 
-    runner = Ameba.run(config)
-    generate_config_file(config, runner, opts) if opts.generate
-    exit 1 unless runner.success?
+    exit 1 unless Ameba.run(config).success?
   rescue e
     puts "Error: #{e.message}"
     exit 255
@@ -71,14 +69,14 @@ module Ameba::Cli
     end
   end
 
-  private def generate_config_file(config, runner, opts)
-    failed_rules =
-      runner.sources
-            .map { |s| s.errors.map &.rule.name }
-            .flatten
-            .uniq!
-    failed_rules.each { |rule| config.update_rule rule, enabled: false }
-    File.write(opts.config, config.to_yaml)
+  private def configure_formatter(config, opts)
+    if opts.silent
+      config.formatter = Ameba::Formatter::BaseFormatter.new
+    elsif opts.generate
+      config.formatter = Ameba::Formatter::TODOFormatter.new
+    else
+      config.formatter = Ameba::Formatter::DotFormatter.new
+    end
   end
 
   private def print_version
