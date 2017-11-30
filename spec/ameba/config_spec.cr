@@ -46,5 +46,24 @@ module Ameba
         config.formatter.should eq formatter
       end
     end
+
+    describe "#update_rule" do
+      config = Config.load config_sample
+
+      it "updates enabled property" do
+        name = DummyRule.class_name
+        config.update_rule name, enabled: false
+        rule = config.rules.find(&.name.== name).not_nil!
+        rule.enabled.should be_false
+      end
+
+      it "updates excluded property" do
+        name = DummyRule.class_name
+        excluded = %w(spec/source.cr)
+        config.update_rule name, excluded: excluded
+        rule = config.rules.find(&.name.== name).not_nil!
+        rule.excluded.should eq excluded
+      end
+    end
   end
 end

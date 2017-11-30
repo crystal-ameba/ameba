@@ -17,6 +17,10 @@ module Ameba::Rule
       it "has a description property" do
         subject.description.should_not be_nil
       end
+
+      it "has excluded property" do
+        subject.excluded.should be_nil
+      end
     end
 
     describe "when a rule does not have defined properties" do
