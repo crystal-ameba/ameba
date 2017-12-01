@@ -2,7 +2,7 @@ require "../spec_helper"
 
 module Ameba
   private def runner(files = [__FILE__], formatter = DummyFormatter.new)
-    config = Config.load "config/ameba.yml"
+    config = Config.load
     config.formatter = formatter
     config.files = files
 

@@ -102,9 +102,9 @@ Finished in 10.53 milliseconds
 ## Configuration
 
 Default configuration file is `.ameba.yml`.
-It allows to configure or even disable specific rules.
-Simply copy and adjust [existed sample](config/ameba.yml).
-Each rule is enabled by default, even if you remove it from the config file.
+It allows to configure rule properties, disable specific rules and exclude sources from the rules.
+
+Generate new file by running `ameba --gen-config`.
 
 ## Writing a new Rule
 
