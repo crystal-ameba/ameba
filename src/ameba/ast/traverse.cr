@@ -23,6 +23,7 @@ module Ameba::AST
     StringInterpolation,
     Unless,
     Var,
+    When,
     While,
   ]
 
