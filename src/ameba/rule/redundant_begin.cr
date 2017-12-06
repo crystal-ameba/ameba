@@ -48,6 +48,7 @@ module Ameba::Rule
   #   b = 2
   # end
   # ```
+  #
   # YAML configuration example:
   #
   # ```
