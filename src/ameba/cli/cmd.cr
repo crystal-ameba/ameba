@@ -5,45 +5,15 @@ require "option_parser"
 module Ameba::Cli
   extend self
 
-  private class Opts
-    property config = Ameba::Config::PATH
-    property silent : Bool = false
-    property generate : Bool = false
-    property files : Array(String)?
-    property only : Array(String)?
-    property except : Array(String)?
-  end
+  AVAILABLE_FORMATTERS = {
+    progress: Formatter::DotFormatter,
+    todo:     Formatter::TODOFormatter,
+    flycheck: Formatter::FlycheckFormatter,
+    silent:   Formatter::BaseFormatter,
+  }
 
-  def run(args, opts = Opts.new)
-    OptionParser.parse(args) do |parser|
-      parser.banner = "Usage: ameba [options] [file1 file2 ...]"
-
-      parser.on("-v", "--version", "Print version") { print_version }
-      parser.on("-h", "--help", "Show this help") { show_help parser }
-      parser.on("-s", "--silent", "Disable output") { opts.silent = true }
-      parser.unknown_args { |f| opts.files = f if f.any? }
-
-      parser.on("-c PATH", "--config PATH", "Specify configuration file") do |f|
-        opts.config = f
-      end
-
-      parser.on("--only RULE1,RULE2,...", "Specify a list of rules") do |rules|
-        opts.only = rules.split ","
-      end
-
-      parser.on("--except RULE1,RULE2,...", "Disable the given rules") do |rules|
-        opts.except = rules.split ","
-      end
-
-      parser.on("--gen-config", "Generate a configuration file acting as a TODO list") do
-        opts.generate = true
-      end
-    end
-
-    run_ameba opts
-  end
-
-  def run_ameba(opts)
+  def run(args)
+    opts = parse_args args
     config = Ameba::Config.load opts.config
     config.files = opts.files
 
@@ -54,6 +24,52 @@ module Ameba::Cli
   rescue e
     puts "Error: #{e.message}"
     exit 255
+  end
+
+  private class Opts
+    property config = Ameba::Config::PATH
+    property formatter : String | Symbol = :progress
+    property files : Array(String)?
+    property only : Array(String)?
+    property except : Array(String)?
+  end
+
+  def parse_args(args, opts = Opts.new)
+    OptionParser.parse(args) do |parser|
+      parser.banner = "Usage: ameba [options] [file1 file2 ...]"
+
+      parser.on("-v", "--version", "Print version") { print_version }
+      parser.on("-h", "--help", "Show this help") { show_help parser }
+      parser.on("-s", "--silent", "Disable output") { opts.formatter = :silent }
+      parser.unknown_args { |f| opts.files = f if f.any? }
+
+      parser.on("-c", "--config PATH",
+        "Specify a configuration file") do |path|
+        opts.config = path
+      end
+
+      parser.on("-f", "--format FORMATTER",
+        "Choose an output formatter: #{formatters}") do |formatter|
+        opts.formatter = formatter
+      end
+
+      parser.on("--only RULE1,RULE2,...",
+        "Run only given rules") do |rules|
+        opts.only = rules.split ","
+      end
+
+      parser.on("--except RULE1,RULE2,...",
+        "Disable the given rules") do |rules|
+        opts.except = rules.split ","
+      end
+
+      parser.on("--gen-config",
+        "Generate a configuration file acting as a TODO list") do
+        opts.formatter = "todo"
+      end
+    end
+
+    opts
   end
 
   private def configure_rules(config, opts)
@@ -70,13 +86,15 @@ module Ameba::Cli
   end
 
   private def configure_formatter(config, opts)
-    if opts.silent
-      config.formatter = Ameba::Formatter::BaseFormatter.new
-    elsif opts.generate
-      config.formatter = Ameba::Formatter::TODOFormatter.new
+    if cls = AVAILABLE_FORMATTERS[opts.formatter]?
+      config.formatter = cls.new
     else
-      config.formatter = Ameba::Formatter::DotFormatter.new
+      raise "Unknown formatter `#{opts.formatter}`. Use any of #{formatters}."
     end
+  end
+
+  private def formatters
+    AVAILABLE_FORMATTERS.keys.join("|")
   end
 
   private def print_version
