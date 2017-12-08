@@ -14,7 +14,7 @@ module Ameba::Cli
 
   def run(args)
     opts = parse_args args
-    config = Ameba::Config.load opts.config
+    config = Config.load opts.config
     config.files = opts.files
 
     configure_formatter(config, opts)
@@ -27,7 +27,7 @@ module Ameba::Cli
   end
 
   private class Opts
-    property config = Ameba::Config::PATH
+    property config = Config::PATH
     property formatter : String | Symbol = :progress
     property files : Array(String)?
     property only : Array(String)?
@@ -65,7 +65,7 @@ module Ameba::Cli
 
       parser.on("--gen-config",
         "Generate a configuration file acting as a TODO list") do
-        opts.formatter = "todo"
+        opts.formatter = :todo
       end
     end
 
@@ -98,7 +98,7 @@ module Ameba::Cli
   end
 
   private def print_version
-    puts Ameba::VERSION
+    puts VERSION
     exit 0
   end
 
