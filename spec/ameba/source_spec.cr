@@ -23,5 +23,17 @@ module Ameba
         error.message.should eq "Error!"
       end
     end
+
+    describe "#fullpath" do
+      it "returns a relative path of the source" do
+        s = Source.new "", "./source_spec.cr"
+        s.fullpath.should contain "source_spec.cr"
+      end
+
+      it "returns fullpath if path is blank" do
+        s = Source.new "", ""
+        s.fullpath.should_not be_nil
+      end
+    end
   end
 end

@@ -58,6 +58,21 @@ module Ameba::Rule
       {{@type}}.class_name
     end
 
+    # Checks whether the source is excluded from this rule.
+    # It searches for a path in `excluded` property which matches
+    # the one of the given source.
+    #
+    # ```
+    # my_rule.excluded?(source) # => true or false
+    # ```
+    #
+    def excluded?(source)
+      excluded.try &.any? do |path|
+        # TODO: file pattern match
+        source.path == path || source.fullpath == File.expand_path(path)
+      end
+    end
+
     protected def self.class_name
       name.gsub("Ameba::Rule::", "")
     end

@@ -12,7 +12,7 @@ module Ameba
       message : String
 
     # Path to the source file.
-    getter path : String?
+    getter path : String
 
     # Crystal code (content of a source file).
     getter code : String
@@ -22,6 +22,7 @@ module Ameba
 
     @lines : Array(String)?
     @ast : Crystal::ASTNode?
+    @fullpath : String?
 
     # Creates a new source by `code` and `path`.
     #
@@ -32,7 +33,7 @@ module Ameba
     # Ameba::Source.new File.read(path), path
     # ```
     #
-    def initialize(@code : String, @path = nil)
+    def initialize(@code : String, @path = "")
     end
 
     # Add new error to the list of errors.
@@ -98,6 +99,10 @@ module Ameba
     #
     def location(l, c)
       Crystal::Location.new path, l, c
+    end
+
+    def fullpath
+      @fullpath ||= File.expand_path @path
     end
   end
 end

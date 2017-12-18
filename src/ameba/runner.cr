@@ -58,7 +58,7 @@ module Ameba
         @formatter.source_started source
 
         @rules.each do |rule|
-          next if rule.excluded.try &.any? &.== source.path
+          next if rule.excluded?(source)
           rule.test(source)
         end
 
