@@ -104,7 +104,7 @@ module Ameba
       error = s.errors.first
       error.rule.should_not be_nil
       error.location.to_s.should eq "source.cr:2:12"
-      error.message.should eq "Avoid empty expression '()'"
+      error.message.should eq "Avoid empty expressions"
     end
   end
 end

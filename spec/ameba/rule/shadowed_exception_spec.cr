@@ -158,6 +158,7 @@ module Ameba::Rule
     it "reports rule, location and a message" do
       s = Source.new %q(
         begin
+          do_something
         rescue Exception | IndexError
         end
       ), "source.cr"
@@ -165,7 +166,7 @@ module Ameba::Rule
       error = s.errors.first
 
       error.rule.should_not be_nil
-      error.location.to_s.should eq "source.cr:2:9"
+      error.location.to_s.should eq "source.cr:3:11"
       error.message.should eq(
         "Exception handler has shadowed exceptions: IndexError"
       )
