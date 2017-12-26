@@ -10,4 +10,4 @@ deploy:
   project_name: ameba
   on:
     branch: master
-  local_dir: doc
+  local_dir: docs
