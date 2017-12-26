@@ -79,7 +79,7 @@ $ make install
 
 Run `ameba` binary within your project directory to catch code issues:
 
-```
+```sh
 $ ameba
 Inspecting 52 files.
 
