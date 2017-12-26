@@ -24,7 +24,7 @@ require "./ameba/formatter/*"
 module Ameba
   extend self
 
-  VERSION = "0.3.0"
+  VERSION = {{ `shards version #{__DIR__}`.chomp.stringify }}
 
   # Initializes `Ameba::Runner` and runs it.
   # Can be configured via `config` parameter.
