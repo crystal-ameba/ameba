@@ -53,15 +53,7 @@ module Ameba::Formatter
               .compact
               .uniq!
 
-      nodes_builder = YAML::Nodes::Builder.new
-      nodes_builder.mapping do
-        rule.name.to_yaml nodes_builder
-        rule.to_yaml nodes_builder
-      end
-
-      YAML.build do |builder|
-        nodes_builder.document.to_yaml(builder)
-      end
+      {rule.name => rule}.to_yaml
     end
   end
 end
