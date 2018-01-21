@@ -3,7 +3,7 @@ PREFIX ?= /usr/local
 SHARD_BIN ?= ../../bin
 
 build:
-	$(CRYSTAL_BIN) build --release --no-debug -o bin/ameba src/cli.cr $(CRFLAGS)
+	$(CRYSTAL_BIN) build --no-debug -o bin/ameba src/cli.cr $(CRFLAGS)
 clean:
 	rm -f ./bin/ameba
 install: build
