@@ -83,10 +83,11 @@ module Ameba
     end
 
     private def load_sources(config)
-      config.files
-            .map { |wildcard| Dir[wildcard] }
-            .flatten
-            .map { |path| Source.new File.read(path), path }
+      config.files.map do |wildcard|
+        wildcard += "/**/*.cr" if File.directory?(wildcard)
+        Dir[wildcard]
+      end.flatten
+         .map { |path| Source.new File.read(path), path }
     end
   end
 end
