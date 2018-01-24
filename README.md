@@ -134,6 +134,11 @@ MySuperRule:
   Enabled: false
 ```
 
+## Editor integration
+
+ * Vim: [vim-crystal](https://github.com/rhysd/vim-crystal) (via [Syntastic](https://github.com/vim-syntastic/syntastic))
+ * Emacs: [ameba.el](https://github.com/veelenga/ameba.el)
+
 ## Credits & inspirations
 
 - [Crystal Language](crystal-lang.org)
