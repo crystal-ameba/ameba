@@ -20,6 +20,9 @@ module Ameba
     # A formatter to prepare report.
     @formatter : Formatter::BaseFormatter
 
+    # A syntax rule which always inspects a source first
+    @syntax_rule = Rule::Syntax.new
+
     # Instantiates a runner using a `config`.
     #
     # ```
@@ -57,9 +60,11 @@ module Ameba
       @sources.each do |source|
         @formatter.source_started source
 
-        @rules.each do |rule|
-          next if rule.excluded?(source)
-          rule.test(source)
+        if @syntax_rule.catch(source).valid?
+          @rules.each do |rule|
+            next if rule.excluded?(source)
+            rule.test(source)
+          end
         end
 
         @formatter.source_finished source

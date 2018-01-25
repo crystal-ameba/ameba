@@ -9,7 +9,6 @@ module Ameba::Rule
         def hello
           puts "totally valid"
         rescue e: Exception
-          #
         end
       )
       subject.catch(s).should be_valid
@@ -20,7 +19,6 @@ module Ameba::Rule
         def hello
           puts "invalid"
         rescue Exception => e
-          #
         end
       )
       subject.catch(s).should_not be_valid

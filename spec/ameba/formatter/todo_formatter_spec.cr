@@ -50,6 +50,21 @@ module Ameba
       it "excludes source from this rule" do
         create_todo.should contain "Excluded:\n  - source.cr"
       end
+
+      context "when invalid syntax" do
+        it "does not exclude Syntax rule" do
+          file = IO::Memory.new
+          formatter = Formatter::TODOFormatter.new IO::Memory.new, file
+
+          s = Source.new "def invalid_syntax"
+          s.error Rule::Syntax.new, s.location(1, 2), "message"
+
+          formatter.finished [s]
+          content = file.to_s
+
+          content.should_not contain "Syntax"
+        end
+      end
     end
   end
 end

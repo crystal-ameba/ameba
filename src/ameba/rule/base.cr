@@ -82,13 +82,14 @@ module Ameba::Rule
     end
   end
 
-  # Returns a list of all available rules.
+  # Returns a list of all available rules
+  # (except a `Rule::Syntax` which is a special rule).
   #
   # ```
   # Ameba::Rule.rules # => [LineLength, ConstantNames, ....]
   # ```
   #
   def self.rules
-    Base.subclasses
+    Base.subclasses.reject! &.== Rule::Syntax
   end
 end
