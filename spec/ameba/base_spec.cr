@@ -7,6 +7,19 @@ module Ameba::Rule
   end
 
   describe Base do
+    context ".rules" do
+      it "returns a list of all rules" do
+        rules = Rule.rules
+        rules.should_not be_nil
+        rules.should contain DummyRule
+        rules.should contain NoProperties
+      end
+
+      it "should not include syntax rule" do
+        Rule.rules.should_not contain Rule::Syntax
+      end
+    end
+
     context "properties" do
       subject = DummyRule.new
 

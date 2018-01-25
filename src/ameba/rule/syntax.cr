@@ -20,11 +20,6 @@ module Ameba::Rule
   # ```
   #
   struct Syntax < Base
-    properties do
-      enabled = true
-      description = "Reports invalid Crystal syntax"
-    end
-
     def test(source)
       source.ast
     rescue e : Crystal::SyntaxException

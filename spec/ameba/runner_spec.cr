@@ -51,6 +51,30 @@ module Ameba
 
         Runner.new(rules, [source], formatter).run.success?.should be_true
       end
+
+      context "invalid syntax" do
+        it "reports a syntax error" do
+          rules = [Rule::Syntax.new] of Rule::Base
+          source = Source.new "def bad_syntax"
+
+          Runner.new(rules, [source], formatter).run
+          source.should_not be_valid
+          source.errors.first.rule.name.should eq "Syntax"
+        end
+
+        it "does not run other rules" do
+          rules = [Rule::Syntax.new, Rule::ConstantNames.new] of Rule::Base
+          source = Source.new %q(
+              MyBadConstant = 1
+
+              when my_bad_syntax
+          )
+
+          Runner.new(rules, [source], formatter).run
+          source.should_not be_valid
+          source.errors.size.should eq 1
+        end
+      end
     end
 
     describe "#success?" do
