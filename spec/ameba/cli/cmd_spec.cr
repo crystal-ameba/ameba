@@ -3,10 +3,6 @@ require "../../../src/ameba/cli/cmd"
 
 module Ameba::Cli
   describe "Cmd" do
-    it "has a list of available formatters" do
-      AVAILABLE_FORMATTERS.should_not be_nil
-    end
-
     describe ".run" do
       it "runs ameba" do
         r = Cli.run %w(-f silent file.cr)
@@ -58,7 +54,7 @@ module Ameba::Cli
 
       it "allows args to be blank" do
         c = Cli.parse_args [] of String
-        c.formatter.should eq :progress
+        c.formatter.should be_nil
         c.files.should be_nil
         c.only.should be_nil
         c.except.should be_nil

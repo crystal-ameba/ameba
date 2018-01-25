@@ -4,6 +4,10 @@ module Ameba
   describe Config do
     config_sample = "config/ameba.yml"
 
+    it "should have a list of available formatters" do
+      Config::AVAILABLE_FORMATTERS.should_not be_nil
+    end
+
     describe ".load" do
       it "loads custom config" do
         config = Config.load config_sample
@@ -44,6 +48,17 @@ module Ameba
       it "allows to set formatter" do
         config.formatter = formatter
         config.formatter.should eq formatter
+      end
+
+      it "allows to set formatter using a name" do
+        config.formatter = :progress
+        config.formatter.should_not be_nil
+      end
+
+      it "raises an error if not available formatter is set" do
+        expect_raises(Exception) do
+          config.formatter = :no_such_formatter
+        end
       end
     end
 

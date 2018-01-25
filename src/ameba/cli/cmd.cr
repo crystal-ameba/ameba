@@ -5,13 +5,6 @@ require "option_parser"
 module Ameba::Cli
   extend self
 
-  AVAILABLE_FORMATTERS = {
-    progress: Formatter::DotFormatter,
-    todo:     Formatter::TODOFormatter,
-    flycheck: Formatter::FlycheckFormatter,
-    silent:   Formatter::BaseFormatter,
-  }
-
   def run(args)
     opts = parse_args args
     config = Config.load opts.config
@@ -28,7 +21,7 @@ module Ameba::Cli
 
   private class Opts
     property config = Config::PATH
-    property formatter : String | Symbol = :progress
+    property formatter : Symbol | String | Nil
     property files : Array(String)?
     property only : Array(String)?
     property except : Array(String)?
@@ -49,7 +42,7 @@ module Ameba::Cli
       end
 
       parser.on("-f", "--format FORMATTER",
-        "Choose an output formatter: #{formatters}") do |formatter|
+        "Choose an output formatter: #{Config.formatter_names}") do |formatter|
         opts.formatter = formatter
       end
 
@@ -86,15 +79,9 @@ module Ameba::Cli
   end
 
   private def configure_formatter(config, opts)
-    if cls = AVAILABLE_FORMATTERS[opts.formatter]?
-      config.formatter = cls.new
-    else
-      raise "Unknown formatter `#{opts.formatter}`. Use any of #{formatters}."
+    if name = opts.formatter
+      config.formatter = name
     end
-  end
-
-  private def formatters
-    AVAILABLE_FORMATTERS.keys.join("|")
   end
 
   private def print_version

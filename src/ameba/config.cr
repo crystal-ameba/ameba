@@ -12,6 +12,13 @@ require "yaml"
 # By default config loads `.ameba.yml` file in a current directory.
 #
 class Ameba::Config
+  AVAILABLE_FORMATTERS = {
+    progress: Formatter::DotFormatter,
+    todo:     Formatter::TODOFormatter,
+    flycheck: Formatter::FlycheckFormatter,
+    silent:   Formatter::BaseFormatter,
+  }
+
   PATH = ".ameba.yml"
   setter formatter : Formatter::BaseFormatter?
   setter files : Array(String)?
@@ -22,6 +29,10 @@ class Ameba::Config
   # `Config.load` uses this constructor to instantiate new config by YAML file.
   protected def initialize(@config : YAML::Any)
     @rules = Rule.rules.map &.new(config)
+
+    if @config.as_h? && (name = @config["Formatter"]?.try &.["Name"]?)
+      self.formatter = name.to_s
+    end
   end
 
   # Loads YAML configuration file by `path`.
@@ -33,8 +44,12 @@ class Ameba::Config
   def self.load(path = PATH)
     content = File.exists?(path) ? File.read path : ""
     Config.new YAML.parse(content)
-  rescue
-    raise "Config file is invalid"
+  rescue e
+    raise "Config file is invalid: #{e.message}"
+  end
+
+  def self.formatter_names
+    AVAILABLE_FORMATTERS.keys.join("|")
   end
 
   # Returns a list of paths (with wildcards) to files.
@@ -62,6 +77,21 @@ class Ameba::Config
   #
   def formatter
     @formatter ||= default_formatter
+  end
+
+  # Sets formatter by name.
+  #
+  # ```
+  # config = Ameba::Config.load
+  # config.formatter = :progress
+  # ```
+  #
+  def formatter=(name : String | Symbol)
+    if f = AVAILABLE_FORMATTERS[name]?
+      @formatter = f.new
+    else
+      raise "Unknown formatter `#{name}`. Use one of #{Config.formatter_names}."
+    end
   end
 
   # Updates rule properties.
