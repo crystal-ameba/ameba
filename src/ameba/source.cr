@@ -36,7 +36,7 @@ module Ameba
     def initialize(@code : String, @path = "")
     end
 
-    # Add new error to the list of errors.
+    # Adds new error to the list of errors.
     #
     # ```
     # source.error rule, location, "Line too long"
@@ -44,6 +44,17 @@ module Ameba
     #
     def error(rule : Rule::Base, location, message : String)
       errors << Error.new rule, location, message
+    end
+
+    # Adds new error to the list of errors using line and column number.
+    #
+    # ```
+    # source.error rule, line_number, column_number, "Bad code"
+    # ```
+    #
+    def error(rule : Rule::Base, l : Int32, c : Int32, message : String)
+      location = Crystal::Location.new path, l, c
+      error rule, location, message
     end
 
     # Indicates whether source is valid or not.
@@ -87,18 +98,6 @@ module Ameba
         Crystal::Parser.new(code)
                        .tap { |parser| parser.filename = @path }
                        .parse
-    end
-
-    # Returns a new instance of the `Crystal::Location` in current
-    # source based on the line number `l` and column number `c`.
-    #
-    # ```
-    # s = Ameba::Source.new code, path
-    # s.location(3, 76)
-    # ```
-    #
-    def location(l, c)
-      Crystal::Location.new path, l, c
     end
 
     def fullpath
