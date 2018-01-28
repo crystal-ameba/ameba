@@ -13,8 +13,7 @@ module Ameba
 
   struct ErrorRule < Rule::Base
     def test(source)
-      source.error self, source.location(1, 1),
-        "This rule always adds an error"
+      source.error self, 1, 1, "This rule always adds an error"
     end
   end
 

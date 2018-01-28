@@ -23,8 +23,7 @@ module Ameba::Rule
     def test(source)
       source.ast
     rescue e : Crystal::SyntaxException
-      location = source.location(e.line_number, e.column_number)
-      source.error self, location, e.message.to_s
+      source.error self, e.line_number, e.column_number, e.message.to_s
     end
   end
 end

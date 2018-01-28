@@ -18,7 +18,7 @@ module Ameba::Formatter
     context "when problems found" do
       it "reports an error" do
         s = Source.new "a = 1", "source.cr"
-        s.error DummyRule.new, s.location(1, 2), "message"
+        s.error DummyRule.new, 1, 2, "message"
         subject = flycheck
         subject.source_finished s
         subject.output.to_s.should eq "source.cr:1:2: E: message\n"
@@ -26,7 +26,7 @@ module Ameba::Formatter
 
       it "properly reports multi-line message" do
         s = Source.new "a = 1", "source.cr"
-        s.error DummyRule.new, s.location(1, 2), "multi\nline"
+        s.error DummyRule.new, 1, 2, "multi\nline"
         subject = flycheck
         subject.source_finished s
         subject.output.to_s.should eq "source.cr:1:2: E: multi line\n"

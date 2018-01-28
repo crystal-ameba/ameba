@@ -14,7 +14,7 @@ module Ameba
     describe "#error" do
       it "adds and error" do
         s = Source.new "", "source.cr"
-        s.error(DummyRule.new, s.location(23, 2), "Error!")
+        s.error(DummyRule.new, 23, 2, "Error!")
         s.should_not be_valid
 
         error = s.errors.first

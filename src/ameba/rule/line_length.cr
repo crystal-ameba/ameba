@@ -20,8 +20,7 @@ module Ameba::Rule
       source.lines.each_with_index do |line, index|
         next unless line.size > max_length
 
-        source.error self, source.location(index + 1, line.size),
-          "Line too long"
+        source.error self, index + 1, line.size, "Line too long"
       end
     end
   end
