@@ -25,6 +25,7 @@ module Ameba::Formatter
 
       failed_sources.each do |source|
         source.errors.each do |error|
+          next if error.disabled?
           output << "#{error.location}\n".colorize(:cyan)
           output << "#{error.rule.name}: #{error.message}\n\n".colorize(:red)
         end

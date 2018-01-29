@@ -2,6 +2,8 @@ module Ameba
   # An entity that represents a Crystal source file.
   # Has path, lines of code and errors reported by rules.
   class Source
+    include InlineComments
+
     # Represents an error caught by Ameba.
     #
     # Each error has the rule that created this error,
@@ -9,7 +11,12 @@ module Ameba
     record Error,
       rule : Rule::Base,
       location : Crystal::Location?,
-      message : String
+      message : String,
+      status : Symbol? do
+      def disabled?
+        status == :disabled
+      end
+    end
 
     # Path to the source file.
     getter path : String
@@ -42,8 +49,9 @@ module Ameba
     # source.error rule, location, "Line too long"
     # ```
     #
-    def error(rule : Rule::Base, location, message : String)
-      errors << Error.new rule, location, message
+    def error(rule : Rule::Base, location, message : String, status = nil)
+      status ||= :disabled if location_disabled?(location, rule.name)
+      errors << Error.new rule, location, message, status
     end
 
     # Adds new error to the list of errors using line and column number.
@@ -52,9 +60,9 @@ module Ameba
     # source.error rule, line_number, column_number, "Bad code"
     # ```
     #
-    def error(rule : Rule::Base, l : Int32, c : Int32, message : String)
+    def error(rule : Rule::Base, l, c, message : String, status = nil)
       location = Crystal::Location.new path, l, c
-      error rule, location, message
+      error rule, location, message, status
     end
 
     # Indicates whether source is valid or not.
@@ -68,7 +76,7 @@ module Ameba
     # ```
     #
     def valid?
-      errors.empty?
+      errors.reject(&.disabled?).empty?
     end
 
     # Returns lines of code splitted by new line character.

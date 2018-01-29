@@ -11,6 +11,19 @@ module Ameba
     end
   end
 
+  struct NamedRule < Rule::Base
+    properties do
+      description : String = "A rule with a custom name."
+    end
+
+    def test(source)
+    end
+
+    def self.name
+      "BreakingRule"
+    end
+  end
+
   struct ErrorRule < Rule::Base
     def test(source)
       source.error self, 1, 1, "This rule always adds an error"
