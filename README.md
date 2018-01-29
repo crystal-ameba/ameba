@@ -106,6 +106,17 @@ It allows to configure rule properties, disable specific rules and exclude sourc
 
 Generate new file by running `ameba --gen-config`.
 
+### Inline disabling
+
+One or more rules can't be disabled using inline directives:
+
+```crystal
+# ameba:disable LargeNumbers
+time = Time.epoch(1483859302)
+
+time = Time.epoch(1483859302) # ameba:disable LargeNumbers
+```
+
 ## Writing a new Rule
 
 Adding a new rule is as simple as inheriting from `Ameba::Rule::Base` struct and implementing

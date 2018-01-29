@@ -31,7 +31,7 @@ module Ameba::Formatter
     private def rule_errors_map(errors)
       Hash(Rule::Base, Array(Source::Error)).new.tap do |h|
         errors.each do |error|
-          next if error.rule.is_a? Rule::Syntax
+          next if error.disabled? || error.rule.is_a? Rule::Syntax
           h[error.rule] ||= Array(Source::Error).new
           h[error.rule] << error
         end
