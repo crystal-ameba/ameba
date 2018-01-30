@@ -7,7 +7,7 @@ module Ameba
     # Represents an error caught by Ameba.
     #
     # Each error has the rule that created this error,
-    # location of the issue and a message.
+    # location of the issue, message and status.
     record Error,
       rule : Rule::Base,
       location : Crystal::Location?,
@@ -43,7 +43,7 @@ module Ameba
     def initialize(@code : String, @path = "")
     end
 
-    # Adds new error to the list of errors.
+    # Adds a new error to the list of errors.
     #
     # ```
     # source.error rule, location, "Line too long"
@@ -54,7 +54,7 @@ module Ameba
       errors << Error.new rule, location, message, status
     end
 
-    # Adds new error to the list of errors using line and column number.
+    # Adds a new error to the list of errors using line and column number.
     #
     # ```
     # source.error rule, line_number, column_number, "Bad code"

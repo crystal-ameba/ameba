@@ -10,7 +10,7 @@ module Ameba
     #   1. The line of the location ends with a comment directive.
     #   2. The line above the location is a comment directive.
     #
-    # For example, here is two examples of disabled location:
+    # For example, here are two examples of disabled location:
     #
     # ```
     # # ameba:disable LargeNumbers

@@ -17,6 +17,7 @@ class Ameba::Config
     todo:     Formatter::TODOFormatter,
     flycheck: Formatter::FlycheckFormatter,
     silent:   Formatter::BaseFormatter,
+    disabled: Formatter::DisabledFormatter,
   }
 
   PATH = ".ameba.yml"
