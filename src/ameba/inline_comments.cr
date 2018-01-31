@@ -1,5 +1,5 @@
 module Ameba
-  # A module that represents inline comments parsing and processing logic.
+  # A module that utilizes inline comments parsing and processing logic.
   module InlineComments
     COMMENT_DIRECTIVE_REGEX = Regex.new "# ameba : (\\w+) ([\\w, ]+)".gsub(" ", "\\s*")
 
@@ -42,22 +42,48 @@ module Ameba
           line_disabled?(prev_line, rule))
     end
 
+    # Parses inline comment directive. Returns a tuple that consists of
+    # an action and parsed rules if directive found, nil otherwise.
+    #
+    # ```
+    # line = "# ameba:disable Rule1, Rule2"
+    # directive = parse_inline_directive(line)
+    # directive[:action] # => "disable"
+    # directive[:rules]  # => ["Rule1", "Rule2"]
+    # ```
+    #
+    # It ignores the directive if it is commented out.
+    #
+    # ```
+    # line = "# # ameba:disable Rule1, Rule2"
+    # parse_inline_directive(line) # => nil
+    # ```
+    #
+    def parse_inline_directive(line)
+      if directive = COMMENT_DIRECTIVE_REGEX.match(line)
+        return if commented_out?(line.gsub directive[0], "")
+        {
+          action: directive[1],
+          rules:  directive[2].split(/[\s,]/, remove_empty: true),
+        }
+      end
+    end
+
     private def comment?(line)
-      line.lstrip.starts_with? '#'
+      return true if line.lstrip.starts_with? '#'
     end
 
     private def line_disabled?(line, rule)
-      return false unless inline_comment = parse_inline_comment(line)
-      inline_comment[:action] == "disable" && inline_comment[:rules].includes?(rule)
+      return false unless directive = parse_inline_directive(line)
+      directive[:action] == "disable" && directive[:rules].includes?(rule)
     end
 
-    private def parse_inline_comment(line)
-      if comment = COMMENT_DIRECTIVE_REGEX.match(line)
-        {
-          action: comment[1],
-          rules:  comment[2].split(/[\s,]/, remove_empty: true),
-        }
-      end
+    private def commented_out?(line)
+      commented? = false
+
+      lexer = Crystal::Lexer.new(line).tap { |l| l.comments_enabled = true }
+      Tokenizer.new(lexer).run { |t| commented? = true if t.type == :COMMENT }
+      commented?
     end
   end
 end

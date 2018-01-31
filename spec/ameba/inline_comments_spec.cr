@@ -83,5 +83,22 @@ module Ameba
       s.error(NamedRule.new, 3, 12, "")
       s.should_not be_valid
     end
+
+    it "does not disable if that is a commented out directive" do
+      s = Source.new %Q(
+        # # ameba:disable #{NamedRule.name}
+        Time.epoch(1483859302)
+      )
+      s.error(NamedRule.new, 3, 12, "")
+      s.should_not be_valid
+    end
+
+    it "does not disable if that is an inline commented out directive" do
+      s = Source.new %Q(
+        a = 1 # Disable it: # ameba:disable #{NamedRule.name}
+      )
+      s.error(NamedRule.new, 2, 12, "")
+      s.should_not be_valid
+    end
   end
 end

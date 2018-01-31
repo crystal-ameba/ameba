@@ -27,6 +27,16 @@ module Ameba
       @lexer.filename = source.path
     end
 
+    # Instantiates Tokenizer using a `lexer`.
+    #
+    # ```
+    # lexer = Crystal::Lexer.new(code)
+    # Ameba::Tokenizer.new(lexer)
+    # ```
+    #
+    def initialize(@lexer : Crystal::Lexer)
+    end
+
     # Runs the tokenizer and yields each token as a block argument.
     #
     # ```
