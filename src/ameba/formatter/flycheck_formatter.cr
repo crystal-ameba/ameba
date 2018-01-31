@@ -4,9 +4,9 @@ module Ameba::Formatter
       source.errors.each do |e|
         next if e.disabled?
         if loc = e.location
-          output.printf "%s:%d:%d: %s: %s\n",
+          output.printf "%s:%d:%d: %s: [%s] %s\n",
             source.path, loc.line_number, loc.column_number, "E",
-            e.message.gsub("\n", " ")
+            e.rule.name, e.message.gsub("\n", " ")
         end
       end
     end

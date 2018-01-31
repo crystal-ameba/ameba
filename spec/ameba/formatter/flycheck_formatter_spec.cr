@@ -21,7 +21,9 @@ module Ameba::Formatter
         s.error DummyRule.new, 1, 2, "message"
         subject = flycheck
         subject.source_finished s
-        subject.output.to_s.should eq "source.cr:1:2: E: message\n"
+        subject.output.to_s.should eq(
+          "source.cr:1:2: E: [#{DummyRule.name}] message\n"
+        )
       end
 
       it "properly reports multi-line message" do
@@ -29,7 +31,9 @@ module Ameba::Formatter
         s.error DummyRule.new, 1, 2, "multi\nline"
         subject = flycheck
         subject.source_finished s
-        subject.output.to_s.should eq "source.cr:1:2: E: multi line\n"
+        subject.output.to_s.should eq(
+          "source.cr:1:2: E: [#{DummyRule.name}] multi line\n"
+        )
       end
 
       it "reports nothing if location was not set" do
