@@ -67,7 +67,7 @@ module Ameba::Rule
 
     it "fails if there is disabled UnneededDisableDirective" do
       s = Source.new %Q(
-        # ameba:disable #{UnneededDisableDirective.class_name}
+        # ameba:disable #{UnneededDisableDirective.rule_name}
         a = 1
       ), "source.cr"
       s.error UnneededDisableDirective.new, 3, 1, "Alarm!", :disabled

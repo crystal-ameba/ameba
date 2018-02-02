@@ -66,14 +66,14 @@ module Ameba
       config = Config.load config_sample
 
       it "updates enabled property" do
-        name = DummyRule.class_name
+        name = DummyRule.rule_name
         config.update_rule name, enabled: false
         rule = config.rules.find(&.name.== name).not_nil!
         rule.enabled.should be_false
       end
 
       it "updates excluded property" do
-        name = DummyRule.class_name
+        name = DummyRule.rule_name
         excluded = %w(spec/source.cr)
         config.update_rule name, excluded: excluded
         rule = config.rules.find(&.name.== name).not_nil!

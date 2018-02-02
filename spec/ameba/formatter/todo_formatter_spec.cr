@@ -44,7 +44,7 @@ module Ameba
       end
 
       it "creates a todo with run details" do
-        create_todo.should contain "Run `ameba --only #{DummyRule.class_name}`"
+        create_todo.should contain "Run `ameba --only #{DummyRule.rule_name}`"
       end
 
       it "excludes source from this rule" do

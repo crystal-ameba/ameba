@@ -1,7 +1,9 @@
 module Ameba::Rule
+  # List of names of the special rules, which
+  # behave differently than usual rules.
   SPECIAL = [
-    Syntax.class_name,
-    UnneededDisableDirective.class_name,
+    Syntax.rule_name,
+    UnneededDisableDirective.rule_name,
   ]
 
   # Represents a base of all rules. In other words, all rules
@@ -60,7 +62,7 @@ module Ameba::Rule
     # ```
     #
     def name
-      {{@type}}.class_name
+      {{@type}}.rule_name
     end
 
     # Checks whether the source is excluded from this rule.
@@ -78,7 +80,18 @@ module Ameba::Rule
       end
     end
 
-    protected def self.class_name
+    # Returns true if this rule is special and behaves differently than
+    # usual rules.
+    #
+    # ```
+    # my_rule.special? # => true or false
+    # ```
+    #
+    def special?
+      SPECIAL.includes? name
+    end
+
+    protected def self.rule_name
       name.gsub("Ameba::Rule::", "")
     end
 
@@ -95,6 +108,6 @@ module Ameba::Rule
   # ```
   #
   def self.rules
-    Base.subclasses.reject! &.== Rule::Syntax
+    Base.subclasses
   end
 end
