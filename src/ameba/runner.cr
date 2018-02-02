@@ -23,6 +23,9 @@ module Ameba
     # A syntax rule which always inspects a source first
     @syntax_rule = Rule::Syntax.new
 
+    # Checks for unneeded disable directives. Always inspects a source last
+    @unneeded_disable_directive_rule : Rule::Base?
+
     # Instantiates a runner using a `config`.
     #
     # ```
@@ -36,7 +39,11 @@ module Ameba
     def initialize(config : Config)
       @sources = load_sources(config)
       @formatter = config.formatter
-      @rules = config.rules.select &.enabled
+      @rules = config.rules.select(&.enabled).reject!(&.special?)
+
+      @unneeded_disable_directive_rule =
+        config.rules
+              .find &.name.==(Rule::UnneededDisableDirective.rule_name)
     end
 
     # :nodoc:
@@ -65,6 +72,7 @@ module Ameba
             next if rule.excluded?(source)
             rule.test(source)
           end
+          check_unneeded_directives(source)
         end
 
         @formatter.source_finished source
@@ -85,6 +93,12 @@ module Ameba
     #
     def success?
       @sources.all? &.valid?
+    end
+
+    private def check_unneeded_directives(source)
+      if (rule = @unneeded_disable_directive_rule) && rule.enabled
+        rule.test(source)
+      end
     end
 
     private def load_sources(config)

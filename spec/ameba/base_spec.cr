@@ -14,10 +14,6 @@ module Ameba::Rule
         rules.should contain DummyRule
         rules.should contain NoProperties
       end
-
-      it "should not include syntax rule" do
-        Rule.rules.should_not contain Rule::Syntax
-      end
     end
 
     context "properties" do
