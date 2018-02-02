@@ -9,7 +9,7 @@ module Ameba::Rule
   # end
   # ```
   #
-  # as the predicate name is correct and comment directive does not
+  # as the predicate name is correct and the comment directive does not
   # have any effect, the snippet should be written as the following:
   #
   # ```
@@ -39,11 +39,11 @@ module Ameba::Rule
       return unless directive[:action] == "disable"
 
       directive[:rules].reject do |rule_name|
-        any = source.errors.any? do |error|
+        source.errors.any? do |error|
           error.rule.name == rule_name &&
             error.disabled? &&
             error.location.try(&.line_number) == location.line_number
-        end
+        end && rule_name != self.name
       end
     end
   end
