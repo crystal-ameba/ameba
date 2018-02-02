@@ -1,4 +1,9 @@
 module Ameba::Rule
+  SPECIAL = [
+    Syntax.class_name,
+    UnneededDisableDirective.class_name,
+  ]
+
   # Represents a base of all rules. In other words, all rules
   # inherits from this struct:
   #

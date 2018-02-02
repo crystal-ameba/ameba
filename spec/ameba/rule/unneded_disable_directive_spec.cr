@@ -65,6 +65,15 @@ module Ameba::Rule
       s.errors.last.message.should contain "Rule3"
     end
 
+    it "fails if there is disabled UnneededDisableDirective" do
+      s = Source.new %Q(
+        # ameba:disable #{UnneededDisableDirective.class_name}
+        a = 1
+      ), "source.cr"
+      s.error UnneededDisableDirective.new, 3, 1, "Alarm!", :disabled
+      subject.catch(s).should_not be_valid
+    end
+
     it "reports error, location and message" do
       s = Source.new %Q(
         # ameba:disable Rule1, Rule2
