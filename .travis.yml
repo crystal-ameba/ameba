@@ -11,3 +11,4 @@ deploy:
   on:
     branch: master
   local_dir: docs
+  verbose: true
