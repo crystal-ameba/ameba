@@ -1,7 +1,7 @@
 name: ameba
 version: 0.5.0
 
-crystal: 0.24.1
+crystal: 0.24.2
 license: MIT
 authors:
   - Vitalii Elenhaupt <velenhaupt@gmail.com>
