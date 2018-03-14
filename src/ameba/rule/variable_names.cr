@@ -37,7 +37,7 @@ module Ameba::Rule
     end
 
     def test(source)
-      AST::Visitor.new self, source
+      AST::NodeVisitor.new self, source
     end
 
     private def check_node(source, node)
