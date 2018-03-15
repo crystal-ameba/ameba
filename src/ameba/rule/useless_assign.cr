@@ -10,8 +10,9 @@ module Ameba::Rule
 
     def test(source, node, scope : AST::Scope)
       scope.assigns.each do |assign|
-        next if scope.used?(assign)
-        source.error self, assign.location, "Useless assignment found"
+        next unless scope.unused_var?(assign)
+        var_name = assign.target.as(Crystal::Var).name
+        source.error self, assign.location, "Useless assignment to variable `#{var_name}`"
       end
     end
   end

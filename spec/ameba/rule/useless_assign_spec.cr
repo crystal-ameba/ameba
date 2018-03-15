@@ -52,7 +52,28 @@ module Ameba::Rule
       error = s.errors.first
       error.rule.should_not be_nil
       error.location.to_s.should eq "source.cr:3:11"
-      error.message.should eq "Useless assignment found"
+      error.message.should eq "Useless assignment to variable `a`"
+    end
+
+    it "does not report useless assignment of instance var" do
+      s = Source.new %(
+        class Cls
+          def initialize(@name)
+          end
+        end
+      )
+      subject.catch(s).should be_valid
+    end
+
+    it "passes if assignment belongs to outer scope" do
+      s = Source.new %(
+        def method
+          var = true
+          3.times { var = false }
+          var
+        end
+      )
+      subject.catch(s).should be_valid
     end
   end
 end
