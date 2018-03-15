@@ -1,34 +1,29 @@
 module Ameba::AST
-  class Scope
+  class Scope < Crystal::Visitor
+    getter assigns = [] of Crystal::Assign
+    getter variable_table = {} of Crystal::Assign => Array(Crystal::Var)
+
     def initialize(@node : Crystal::ASTNode)
-      @vars, @assigns = VarVisitor.new(@node).vars_and_assigns
+      @node.accept self
     end
 
-    private class VarVisitor < Crystal::Visitor
-      getter vars = [] of Crystal::Var
-      getter assigns = [] of Crystal::Assign
+    def used?(assign : Crystal::Assign)
+      variable_table[assign].size > 1
+    end
 
-      def initialize(ast_node)
-        ast_node.accept self
-      end
+    def visit(node : Crystal::ASTNode)
+      true
+    end
 
-      def visit(node : Crystal::ASTNode)
-        true
-      end
+    def visit(node : Crystal::Assign)
+      @assigns << node
+    end
 
-      def visit(node : Crystal::Assign)
-        @vars << node
-        false
-      end
+    def visit(node : Crystal::Var)
+      last_assign = @assigns.last
+      (variable_table[last_assign] ||= Array(Crystal::Var).new) << node
 
-      def visit(node : Crystal::Var)
-        @assigns << node
-        false
-      end
-
-      def vars_and_assigns
-        {vars, assigns}
-      end
+      false
     end
   end
 end
