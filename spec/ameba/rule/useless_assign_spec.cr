@@ -75,5 +75,15 @@ module Ameba::Rule
       )
       subject.catch(s).should be_valid
     end
+
+    it "reports if there are few assigns one by one" do
+      s = Source.new %(
+        def method
+          a = 2
+          a = 2
+        end
+      )
+      subject.catch(s).should_not be_valid
+    end
   end
 end

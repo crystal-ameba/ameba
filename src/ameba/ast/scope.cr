@@ -9,7 +9,7 @@ module Ameba::AST
 
     def unused_var?(assign)
       return false unless assign.target.is_a?(Crystal::Var)
-      assign_var_table[assign].size < 2
+      !assign_var_table.has_key? assign
     end
 
     def visit(node : Crystal::ASTNode)
@@ -18,6 +18,7 @@ module Ameba::AST
 
     def visit(node : Crystal::Assign)
       @assigns << node
+      false
     end
 
     def visit(node : Crystal::Var)
