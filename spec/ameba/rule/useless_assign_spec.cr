@@ -23,15 +23,6 @@ module Ameba::Rule
       subject.catch(s).should_not be_valid
     end
 
-    it "reports a useless assignment in a block" do
-      s = Source.new %(
-        3.times do
-          a = 2
-        end
-      )
-      subject.catch(s).should_not be_valid
-    end
-
     it "reports a useless assignment in a proc" do
       s = Source.new %(
         ->() {
@@ -76,11 +67,50 @@ module Ameba::Rule
       subject.catch(s).should be_valid
     end
 
-    it "reports if there are few assigns one by one" do
+    it "reports if assignment belongs to outer scope and is useless" do
       s = Source.new %(
         def method
-          a = 2
-          a = 2
+          var = true
+          3.times { var = false }
+        end
+      )
+      subject.catch(s).should_not be_valid
+    end
+
+    it "passes if variable reassigned and used" do
+      s = Source.new %(
+        def method
+          var = true
+          var = false
+          var
+        end
+      )
+      subject.catch(s).should be_valid
+    end
+
+    it "reports if variable reassigned and not used" do
+      s = Source.new %(
+        def method
+          var = true
+          var = false
+        end
+      )
+      subject.catch(s).should_not be_valid
+    end
+
+    it "passes if variable used in a switch statement" do
+      s = Source.new %(
+        def method
+          a
+        end
+      )
+    end
+
+    pending "reports if variable is used in the useless assignment" do
+      s = Source.new %(
+        def method
+          a = 1
+          a = a + 1
         end
       )
       subject.catch(s).should_not be_valid
