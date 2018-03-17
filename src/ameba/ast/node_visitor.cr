@@ -26,7 +26,8 @@ module Ameba::AST
     While,
   ]
 
-  # An AST Visitor used by rules.
+  # An AST Visitor that traverses the source and allows all nodes
+  # to be inspected by rules.
   #
   # ```
   # visitor = Ameba::AST::NodeVisitor.new(rule, source)

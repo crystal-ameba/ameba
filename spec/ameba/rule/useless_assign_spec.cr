@@ -106,7 +106,7 @@ module Ameba::Rule
       )
     end
 
-    pending "reports if variable is used in the useless assignment" do
+    it "reports second assignment as useless" do
       s = Source.new %(
         def method
           a = 1
@@ -114,6 +114,28 @@ module Ameba::Rule
         end
       )
       subject.catch(s).should_not be_valid
+    end
+
+    it "passes if variable is referenced in other assignment" do
+      s = Source.new %(
+        def method
+          if f = get_something
+            @f = f
+          end
+        end
+      )
+      subject.catch(s).should be_valid
+    end
+
+    it "passes if variable is referenced in a call" do
+      s = Source.new %(
+        def method
+          if f = FORMATTER
+            @formatter = f.new
+          end
+        end
+      )
+      subject.catch(s).should be_valid
     end
   end
 end

@@ -30,6 +30,17 @@ module Ameba
     end
   end
 
+  struct ScopeRule < Rule::Base
+    getter scopes = [] of AST::Scope
+
+    def test(source)
+    end
+
+    def test(source, node : Crystal::ASTNode, scope : AST::Scope)
+      @scopes << scope
+    end
+  end
+
   class DummyFormatter < Formatter::BaseFormatter
     property started_sources : Array(Source)?
     property finished_sources : Array(Source)?
@@ -75,4 +86,8 @@ end
 
 def be_valid
   Ameba::BeValidExpectation.new
+end
+
+def as_node(source)
+  Crystal::Parser.new(source).parse
 end
