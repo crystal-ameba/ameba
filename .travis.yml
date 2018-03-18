@@ -4,9 +4,6 @@ script:
   - sed -i -e 's:<.*>::g' README.md
   - crystal docs
 deploy:
-  # https://github.com/travis-ci/travis-ci/issues/9312#issuecomment-371590249
-  edge:
-    branch: v1.8.47
   provider: pages
   skip_cleanup: true
   github_token: $GITHUB_TOKEN
