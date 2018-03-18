@@ -56,17 +56,6 @@ module Ameba::Rule
       subject.catch(s).should be_valid
     end
 
-    it "passes if assignment belongs to outer scope" do
-      s = Source.new %(
-        def method
-          var = true
-          3.times { var = false }
-          var
-        end
-      )
-      subject.catch(s).should be_valid
-    end
-
     it "reports if assignment belongs to outer scope and is useless" do
       s = Source.new %(
         def method
@@ -77,7 +66,7 @@ module Ameba::Rule
       subject.catch(s).should_not be_valid
     end
 
-    it "passes if variable reassigned and used" do
+    it "fails if first assignment is useless" do
       s = Source.new %(
         def method
           var = true
@@ -85,7 +74,8 @@ module Ameba::Rule
           var
         end
       )
-      subject.catch(s).should be_valid
+      subject.catch(s).should_not be_valid
+      s.errors.first.location.to_s.should eq ":3:11"
     end
 
     it "reports if variable reassigned and not used" do
@@ -127,6 +117,27 @@ module Ameba::Rule
       subject.catch(s).should be_valid
     end
 
+    it "passes if variable is referenced in a setter" do
+      s = Source.new %(
+        def method
+          foo = 2
+          table[foo] ||= "bar"
+        end
+      )
+      subject.catch(s).should be_valid
+    end
+
+    it "passes if variable is reassigned but not referenced" do
+      s = Source.new %(
+        def method
+          foo = 1
+          puts foo
+          foo = 2
+        end
+      )
+      subject.catch(s).should_not be_valid
+    end
+
     it "passes if variable is referenced in a call" do
       s = Source.new %(
         def method
@@ -136,6 +147,107 @@ module Ameba::Rule
         end
       )
       subject.catch(s).should be_valid
+    end
+
+    it "passes if a setter is invoked with operator assignment" do
+      s = Source.new %(
+        def method
+          obj = {} of Symbol => Int32
+          obj[:name] = 3
+        end
+      )
+      subject.catch(s).should be_valid
+    end
+
+    context "op assigns" do
+      it "passes if variable is referenced below the op assign" do
+        s = Source.new %(
+          def method
+            a = 1
+            a += 1
+            a
+          end
+        )
+        subject.catch(s).should be_valid
+      end
+
+      it "fails if variable is not referenced below the op assign" do
+        s = Source.new %(
+          def method
+            a = 1
+            a += 1
+          end
+        )
+        subject.catch(s).should_not be_valid
+      end
+
+      it "reports rule, location and a message" do
+        s = Source.new %(
+          def method
+            b = 2
+            a = 3
+            a += 1
+          end
+        ), "source.cr"
+        subject.catch(s).should_not be_valid
+
+        error = s.errors.last
+        error.rule.should_not be_nil
+        error.location.to_s.should eq "source.cr:5:13"
+        error.message.should eq "Useless assignment to variable `a`"
+      end
+    end
+
+    context "multi assigns" do
+      it "passes if all assigns are referenced" do
+        s = Source.new %(
+          def method
+            a, b = {1, 2}
+            a + b
+          end
+        )
+        subject.catch(s).should be_valid
+      end
+
+      it "reports if one assign is not referenced" do
+        s = Source.new %(
+          def method
+            a, b = {1, 2}
+            a
+          end
+        )
+        subject.catch(s).should_not be_valid
+        error = s.errors.first
+        error.location.to_s.should eq ":3:16"
+        error.message.should eq "Useless assignment to variable `b`"
+      end
+
+      it "reports if both assigns are reassigned and useless" do
+        s = Source.new %(
+          def method
+            a, b = {1, 2}
+            a, b = {3, 4}
+          end
+        )
+        subject.catch(s).should_not be_valid
+      end
+
+      it "reports if both assigns are not referenced" do
+        s = Source.new %(
+          def method
+            a, b = {1, 2}
+          end
+        )
+        subject.catch(s).should_not be_valid
+
+        error = s.errors.first
+        error.location.to_s.should eq ":3:13"
+        error.message.should eq "Useless assignment to variable `a`"
+
+        error = s.errors.last
+        error.location.to_s.should eq ":3:16"
+        error.message.should eq "Useless assignment to variable `b`"
+      end
     end
   end
 end

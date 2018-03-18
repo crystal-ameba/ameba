@@ -27,6 +27,8 @@ module Ameba::Rule
   # ```
   #
   struct UselessAssign < Base
+    include AST::Util
+
     properties do
       description = "Disallows useless variable assignments"
     end
@@ -36,17 +38,18 @@ module Ameba::Rule
     end
 
     def test(source, node : Crystal::Def | Crystal::ProcLiteral, scope : AST::Scope)
-      scope.assigns.each do |assign|
-        next unless unused_var?(scope, assign)
-        var_name = assign.target.as(Crystal::Var).name
-        source.error self, assign.location, "Useless assignment to variable `#{var_name}`"
+      scope.targets.each do |target|
+        next unless unused_var?(scope, target)
+        var_name = target.as(Crystal::Var).name
+        source.error self, target.location, "Useless assignment to variable `#{var_name}`"
       end
     end
 
-    private def unused_var?(scope, assign)
-      return false unless assign.target.is_a?(Crystal::Var)
-      return false if scope.parent.try &.references?(assign)
-      !scope.references?(assign)
+    private def unused_var?(scope, target)
+      return false if !local_var?(target) ||
+                      scope.outer_scope.try(&.referenced? target)
+
+      !scope.referenced?(target)
     end
   end
 end

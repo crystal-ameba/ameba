@@ -11,7 +11,7 @@ module Ameba::AST
 
     private def on_scope_end(node)
       @rule.test @source, node, @current_scope
-      @current_scope = @current_scope.try &.parent
+      @current_scope = @current_scope.try &.outer_scope
     end
 
     # :nodoc:

@@ -15,6 +15,10 @@ module Ameba::AST::Util
     node.is_a? Crystal::ExceptionHandler
   end
 
+  def local_var?(node)
+    node.is_a? Crystal::Var
+  end
+
   # Returns a source code for the current node.
   # This method uses `node.location` and `node.end_location`
   # to determine and cut a piece of source of the node.
@@ -39,5 +43,26 @@ module Ameba::AST::Util
     node_lines[-1] = last_line.sub(end_column + 1...last_line.size, "")
 
     node_lines
+  end
+
+  def used_in_block?(node, var)
+  end
+
+  def used_in_loop?(node, var)
+  end
+
+  private class UsedInBlockVisitor < Crystal::Visitor
+    @check_node : Crystal::ASTNode
+
+    def initialize(@check_node)
+    end
+
+    def visit(node : Crystal::ASTNode)
+      true
+    end
+
+    def visit(node : Crystal::Block)
+      @current_block = node
+    end
   end
 end

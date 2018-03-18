@@ -1,43 +1,42 @@
 module Ameba::AST
   # Represents a context of the local variable visibility.
   # This is where the local variables belong to.
-  # Holds list of all assignments in this scope, link the parent
-  # scope, AST node and a assign reference table.
   class Scope
-    # List of all assigns in the current scope
-    getter assigns = [] of Crystal::Assign
+    # List of all assigned variables in the current scope.
+    getter targets = [] of Crystal::ASTNode
 
-    # Assign to reference table. Each assign may have multiple
-    # referenced variables.
-    getter assign_ref_table = {} of Crystal::Assign => Array(Crystal::Var)
+    # List of all references in the current scope.
+    getter references = [] of Crystal::ASTNode
 
-    # Link to the parent scope
-    getter parent : Scope?
+    getter referenced_targets = [] of Crystal::ASTNode
+
+    # Link to the outer scope
+    getter outer_scope : Scope?
 
     # The actual AST node that represents a current scope.
     getter node : Crystal::ASTNode
 
-    # Creates a new scope. Accepts the AST node and a parent scope.
+    # Creates a new scope. Accepts the AST node and the outer scope.
     #
     # ```
     # scope = Scope.new(class_node, nil)
     # ```
-    def initialize(@node, @parent = nil)
-      @node.accept VariableVisitor.new(self)
+    def initialize(@node, @outer_scope = nil)
+      @node.accept AssignVarVisitor.new(self)
     end
 
-    # Returns true if assignment is referenced in the current scope.
+    # Returns true if the target is referenced in the current scope.
     #
     # ```
     # scope = Scope.new(node, scope)
-    # scope.references?(assign)
+    # scope.referenced?(target)
     # ```
-    def references?(assign)
-      assign_ref_table.has_key?(assign)
+    def referenced?(target)
+      referenced_targets.any? { |t| t.location == target.location }
     end
 
     # :nodoc:
-    private class VariableVisitor < Crystal::Visitor
+    private class AssignVarVisitor < Crystal::Visitor
       def initialize(@scope : Scope)
       end
 
@@ -51,18 +50,38 @@ module Ameba::AST
         false
       end
 
-      def end_visit(node : Crystal::Assign)
-        @scope.assigns << node
+      def visit(node : Crystal::OpAssign)
+        true
+      end
+
+      def visit(node : Crystal::MultiAssign)
+        node.values.each &.accept self
+
+        false
+      end
+
+      def end_visit(node : Crystal::Assign | Crystal::OpAssign)
+        @scope.targets << node.target
+      end
+
+      def end_visit(node : Crystal::MultiAssign)
+        node.targets.each { |target| @scope.targets << target }
       end
 
       def visit(node : Crystal::Var)
-        @scope.assigns
-              .select { |a| (t = a.target) && t.is_a?(Crystal::Var) && t.name == node.name }
-              .each do |assign|
-          (@scope.assign_ref_table[assign] ||= Array(Crystal::Var).new) << node
+        @scope.references << node
+
+        if target = find_ref_target node
+          @scope.referenced_targets << target
         end
 
         false
+      end
+
+      private def find_ref_target(var)
+        @scope.targets.reverse.find do |target|
+          target.is_a?(Crystal::Var) && target.name == var.name
+        end
       end
     end
   end

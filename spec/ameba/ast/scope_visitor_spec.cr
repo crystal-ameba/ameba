@@ -36,8 +36,8 @@ module Ameba::AST
           end
         )
         rule.scopes.size.should eq 2
-        rule.scopes.last.parent.should be_nil
-        rule.scopes.first.parent.should eq rule.scopes.last
+        rule.scopes.last.outer_scope.should be_nil
+        rule.scopes.first.outer_scope.should eq rule.scopes.last
       end
 
       it "creates scope for block inside block" do
@@ -50,8 +50,8 @@ module Ameba::AST
         rule.scopes.size.should eq 2
         inner_block = rule.scopes.first
         outer_block = rule.scopes.last
-        inner_block.parent.should eq outer_block
-        outer_block.parent.should be_nil
+        inner_block.outer_scope.should eq outer_block
+        outer_block.outer_scope.should be_nil
       end
     end
   end
