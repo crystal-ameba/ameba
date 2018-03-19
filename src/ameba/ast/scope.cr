@@ -13,6 +13,9 @@ module Ameba::AST
     # Link to the outer scope
     getter outer_scope : Scope?
 
+    # List of inner scopes
+    getter inner_scopes = [] of Scope
+
     # The actual AST node that represents a current scope.
     getter node : Crystal::ASTNode
 
@@ -22,7 +25,23 @@ module Ameba::AST
     # scope = Scope.new(class_node, nil)
     # ```
     def initialize(@node, @outer_scope = nil)
+      @outer_scope.try &.inner_scopes.<<(self)
       @node.accept AssignVarVisitor.new(self)
+    end
+
+    def captured_by_block?(var, scope = self)
+      return variable_used?(var) if scope.node.is_a?(Crystal::Block)
+
+      scope.inner_scopes.each do |inner_scope|
+        return true if captured_by_block?(var, inner_scope)
+      end
+
+      false
+    end
+
+    def variable_used?(var)
+      targets.any? { |t| t.is_a?(Crystal::Var) && t.name == var.name } ||
+        references.any? { |r| r.is_a?(Crystal::Var) && r.name == var.name }
     end
 
     # Returns true if the target is referenced in the current scope.

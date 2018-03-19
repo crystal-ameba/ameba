@@ -26,17 +26,6 @@ module Ameba::AST
     end
 
     # :nodoc:
-    def visit(node : Crystal::ProcLiteral)
-      on_scope_enter(node)
-      true
-    end
-
-    # :nodoc:
-    def end_visit(node : Crystal::ProcLiteral)
-      on_scope_end(node)
-    end
-
-    # :nodoc:
     def visit(node : Crystal::Block)
       on_scope_enter(node)
       true

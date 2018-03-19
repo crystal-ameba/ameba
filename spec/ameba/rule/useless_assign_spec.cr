@@ -32,6 +32,41 @@ module Ameba::Rule
       subject.catch(s).should_not be_valid
     end
 
+    it "does not report a useless assignment in a block" do
+      s = Source.new %(
+        def method
+          3.times do
+            a = 1
+          end
+        end
+      )
+      subject.catch(s).should be_valid
+    end
+
+    it "reports a useless assignment in a proc inside def" do
+      s = Source.new %(
+        def method
+          ->() {
+            a = 2
+          }
+        end
+      )
+      subject.catch(s).should_not be_valid
+    end
+
+    it "reports a useless assignment in a proc inside a block" do
+      s = Source.new %(
+        def method
+          3.times do
+            ->() {
+              a = 2
+            }
+          end
+        end
+      )
+      subject.catch(s).should_not be_valid
+    end
+
     it "reports rule, position and a message" do
       s = Source.new %(
         def method
@@ -56,14 +91,14 @@ module Ameba::Rule
       subject.catch(s).should be_valid
     end
 
-    it "reports if assignment belongs to outer scope and is useless" do
+    it "passes if assignment used in a the inner block scope" do
       s = Source.new %(
         def method
           var = true
           3.times { var = false }
         end
       )
-      subject.catch(s).should_not be_valid
+      subject.catch(s).should be_valid
     end
 
     it "fails if first assignment is useless" do

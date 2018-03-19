@@ -16,7 +16,7 @@ module Ameba::AST
       ScopeVisitor.new rule, Source.new %(
         -> {}
       )
-      rule.scopes.size.should eq 2 # proc & def
+      rule.scopes.size.should eq 1
     end
 
     it "creates a scope for the block" do
