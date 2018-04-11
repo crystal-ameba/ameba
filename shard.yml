@@ -6,6 +6,10 @@ license: MIT
 authors:
   - Vitalii Elenhaupt <velenhaupt@gmail.com>
 
+targets:
+  ameba:
+    main: src/cli.cr
+
 scripts:
   postinstall: make bin
 
