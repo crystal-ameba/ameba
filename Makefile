@@ -1,9 +1,10 @@
 CRYSTAL_BIN ?= $(shell which crystal)
+SHARDS_BIN ?= $(shell which shards)
 PREFIX ?= /usr/local
 SHARD_BIN ?= ../../bin
 
 build:
-	$(CRYSTAL_BIN) build --no-debug -o bin/ameba src/cli.cr $(CRFLAGS)
+	$(SHARDS_BIN) build --no-debug $(CRFLAGS)
 clean:
 	rm -f ./bin/ameba
 install: build
