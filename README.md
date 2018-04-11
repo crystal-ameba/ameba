@@ -44,7 +44,7 @@ development_dependencies:
     github: veelenga/ameba
 ```
 
-Build `bin/ameba` binary within your project directory while running `crystal deps`.
+Build `bin/ameba` binary within your project directory while running `shards install`.
 
 You may also want to use it on [Travis](travis-ci.org):
 
@@ -52,7 +52,7 @@ You may also want to use it on [Travis](travis-ci.org):
 # .travis.yml
 language: crystal
 install:
-  - crystal deps
+  - shards install
 script:
   - crystal spec
   - bin/ameba
