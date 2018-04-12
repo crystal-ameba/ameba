@@ -44,5 +44,16 @@ module Ameba::Rule
       error.message.should eq(
         "Favour method name 'picture?' over 'has_picture?'")
     end
+
+    it "ignores if alternative name isn't valid syntax" do
+      s = Source.new %q(
+        class Image
+          def is_404?(x)
+            true
+          end
+        end
+      )
+      subject.catch(s).should be_valid
+    end
   end
 end
