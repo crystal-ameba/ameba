@@ -41,7 +41,7 @@ module Ameba::Rule
     def test(source, node : Crystal::Def)
       if node.name =~ /^(is|has)_(\w+)\?/
         alternative = $2
-        return unless alternative =~ /^[a-z_][a-zA-Z_0-9]*$/
+        return unless alternative =~ /^[a-z][a-zA-Z_0-9]*$/
 
         source.error self, node.location,
           "Favour method name '#{alternative}?' over '#{node.name}'"
