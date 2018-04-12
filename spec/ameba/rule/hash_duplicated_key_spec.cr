@@ -35,7 +35,16 @@ module Ameba::Rule
       error = s.errors.first
       error.rule.should_not be_nil
       error.location.to_s.should eq "source.cr:2:13"
-      error.message.should eq "Duplicated keys in hash literal."
+      error.message.should eq %(Duplicated keys in hash literal: "a")
+    end
+
+    it "reports multiple duplicated keys" do
+      s = Source.new %q(
+        h = {"key1" => 1, "key1" => 2, "key2" => 3, "key2" => 4}
+      )
+      subject.catch(s).should_not be_valid
+      error = s.errors.first
+      error.message.should eq %(Duplicated keys in hash literal: "key1","key2")
     end
   end
 end

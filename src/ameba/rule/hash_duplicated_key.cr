@@ -30,15 +30,17 @@ module Ameba::Rule
     end
 
     def test(source, node : Crystal::HashLiteral)
-      return unless duplicated_keys?(node.entries)
+      return unless (keys = duplicated_keys(node.entries)).any?
 
-      source.error self, node.location, "Duplicated keys in hash literal."
+      source.error self, node.location,
+        "Duplicated keys in hash literal: #{keys.join(",")}"
     end
 
-    private def duplicated_keys?(entries)
+    private def duplicated_keys(entries)
       entries.map(&.key)
              .group_by(&.itself)
-             .any? { |_, v| v.size > 1 }
+             .select { |_, v| v.size > 1 }
+             .map { |k, _| k }
     end
   end
 end
