@@ -33,7 +33,7 @@ module Ameba::Rule
       return unless (keys = duplicated_keys(node.entries)).any?
 
       source.error self, node.location,
-        "Duplicated keys in hash literal: #{keys.join(",")}"
+        "Duplicated keys in hash literal: #{keys.join(", ")}"
     end
 
     private def duplicated_keys(entries)

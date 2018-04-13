@@ -44,7 +44,7 @@ module Ameba::Rule
       )
       subject.catch(s).should_not be_valid
       error = s.errors.first
-      error.message.should eq %(Duplicated keys in hash literal: "key1","key2")
+      error.message.should eq %(Duplicated keys in hash literal: "key1", "key2")
     end
   end
 end
