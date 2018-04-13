@@ -4,7 +4,7 @@ PREFIX ?= /usr/local
 SHARD_BIN ?= ../../bin
 
 build:
-	$(SHARDS_BIN) build --no-debug $(CRFLAGS)
+	$(SHARDS_BIN) build --release $(CRFLAGS)
 clean:
 	rm -f ./bin/ameba
 install: build
