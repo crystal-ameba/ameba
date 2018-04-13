@@ -4,9 +4,9 @@ PREFIX ?= /usr/local
 SHARD_BIN ?= ../../bin
 
 build:
-	$(SHARDS_BIN) build --no-debug $(CRFLAGS)
+	$(SHARDS_BIN) build $(CRFLAGS)
 clean:
-	rm -f ./bin/ameba
+	rm -f ./bin/ameba ./bin/ameba.dwarf
 install: build
 	mkdir -p $(PREFIX)/bin
 	cp ./bin/ameba $(PREFIX)/bin
