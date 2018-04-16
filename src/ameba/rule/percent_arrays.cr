@@ -64,7 +64,7 @@ module Ameba::Rule
 
     private def check_array_entry(entry, symbols, literal)
       return unless entry =~ /[#{symbols}]/
-      MSG % [symbols, literal]
+      sprintf(MSG, symbols, literal)
     end
   end
 end

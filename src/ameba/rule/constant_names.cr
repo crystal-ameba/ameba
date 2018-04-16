@@ -38,7 +38,7 @@ module Ameba::Rule
         name = target.names.first
         return if (expected = name.upcase) == name
 
-        source.error self, node.location, MSG % [expected, name]
+        source.error self, node.location, sprintf(MSG, expected, name)
       end
     end
   end

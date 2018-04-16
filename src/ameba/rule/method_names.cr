@@ -52,7 +52,7 @@ module Ameba::Rule
     def test(source, node : Crystal::Def)
       return if (expected = node.name.underscore) == node.name
 
-      source.error self, node.location, MSG % [expected, node.name]
+      source.error self, node.location, sprintf(MSG, expected, node.name)
     end
   end
 end
