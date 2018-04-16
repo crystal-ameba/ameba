@@ -26,6 +26,8 @@ module Ameba::Rule
       description = "Disallows comparison to booleans"
     end
 
+    MSG = "Comparison to a boolean is pointless"
+
     def test(source)
       AST::Visitor.new self, source
     end
@@ -37,7 +39,7 @@ module Ameba::Rule
 
       return unless comparison? && to_boolean?
 
-      source.error self, node.location, "Comparison to a boolean is pointless"
+      source.error self, node.location, MSG
     end
   end
 end

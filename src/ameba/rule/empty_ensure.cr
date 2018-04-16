@@ -37,6 +37,8 @@ module Ameba::Rule
       description = "Disallows empty ensure statement"
     end
 
+    MSG = "Empty `ensure` block detected"
+
     def test(source)
       AST::Visitor.new self, source
     end
@@ -45,7 +47,7 @@ module Ameba::Rule
       node_ensure = node.ensure
       return if node_ensure.nil? || !node_ensure.nop?
 
-      source.error self, node.location, "Empty `ensure` block detected"
+      source.error self, node.location, MSG
     end
   end
 end

@@ -13,10 +13,12 @@ module Ameba::Rule
       description = "Disallows trailing whitespaces"
     end
 
+    MSG = "Trailing whitespace detected"
+
     def test(source)
       source.lines.each_with_index do |line, index|
         next unless line =~ /\s$/
-        source.error self, index + 1, line.size, "Trailing whitespace detected"
+        source.error self, index + 1, line.size, MSG
       end
     end
   end

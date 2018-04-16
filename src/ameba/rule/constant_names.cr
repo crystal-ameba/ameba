@@ -27,6 +27,8 @@ module Ameba::Rule
       description = "Enforces constant names to be in screaming case"
     end
 
+    MSG = "Constant name should be screaming-cased: %s, not %s"
+
     def test(source)
       AST::Visitor.new self, source
     end
@@ -36,8 +38,7 @@ module Ameba::Rule
         name = target.names.first
         return if (expected = name.upcase) == name
 
-        source.error self, node.location,
-          "Constant name should be screaming-cased: #{expected}, not #{name}"
+        source.error self, node.location, MSG % [expected, name]
       end
     end
   end

@@ -36,6 +36,8 @@ module Ameba::Rule
       description = "Disallows useless conditions in when"
     end
 
+    MSG = "Useless condition in when detected"
+
     # TODO: condition.cond may be a complex ASTNode with
     # useless inner conditions. We might need to improve this
     # simple implementation in future.
@@ -46,7 +48,7 @@ module Ameba::Rule
                   .map(&.to_s)
                   .none? { |c| c == cond_s }
 
-      source.error self, cond.location, "Useless condition in when detected"
+      source.error self, cond.location, MSG
     end
 
     def test(source)

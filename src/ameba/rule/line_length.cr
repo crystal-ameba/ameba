@@ -16,11 +16,13 @@ module Ameba::Rule
       max_length = 80
     end
 
+    MSG = "Line too long"
+
     def test(source)
       source.lines.each_with_index do |line, index|
         next unless line.size > max_length
 
-        source.error self, index + 1, line.size, "Line too long"
+        source.error self, index + 1, line.size, MSG
       end
     end
   end

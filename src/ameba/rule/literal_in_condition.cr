@@ -28,13 +28,15 @@ module Ameba::Rule
         a literal in place of a variable or predicate function"
     end
 
+    MSG = "Literal value found in conditional"
+
     def test(source)
       AST::Visitor.new self, source
     end
 
     def check_node(source, node)
       return unless literal?(node.cond)
-      source.error self, node.location, "Literal value found in conditional"
+      source.error self, node.location, MSG
     end
 
     def test(source, node : Crystal::If)

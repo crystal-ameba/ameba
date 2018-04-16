@@ -23,6 +23,8 @@ module Ameba::Rule
       description = "Reports unneeded disable directives in comments"
     end
 
+    MSG = "Unnecessary disabling of %s"
+
     def test(source)
       Tokenizer.new(source).run do |token|
         next unless token.type == :COMMENT
@@ -30,8 +32,7 @@ module Ameba::Rule
         next unless names = unneeded_disables(source, directive, token.location)
         next unless names.any?
 
-        source.error self, token.location,
-          "Unnecessary disabling of #{names.join(", ")}"
+        source.error self, token.location, MSG % names.join(", ")
       end
     end
 

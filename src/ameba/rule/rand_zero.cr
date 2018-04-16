@@ -28,6 +28,8 @@ module Ameba::Rule
       description = "Disallows rand zero calls"
     end
 
+    MSG = "%s always returns 0"
+
     def test(source)
       AST::Visitor.new self, source
     end
@@ -40,7 +42,7 @@ module Ameba::Rule
                     (value = arg.value) &&
                     (value == "0" || value == "1")
 
-      source.error self, node.location, "#{node} always returns 0"
+      source.error self, node.location, MSG % node
     end
   end
 end

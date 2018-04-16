@@ -57,6 +57,8 @@ module Ameba::Rule
       description = "Enforces type names in camelcase manner"
     end
 
+    MSG = "Type name should be camelcased: %s, but it was %s"
+
     def test(source)
       AST::Visitor.new self, source
     end
@@ -66,8 +68,7 @@ module Ameba::Rule
       expected = name.camelcase
       return if expected == name
 
-      source.error self, node.location,
-        "Type name should be camelcased: #{expected}, but it was #{name}"
+      source.error self, node.location, MSG % [expected, name]
     end
 
     def test(source, node : Crystal::ClassDef)
