@@ -35,6 +35,9 @@ module Ameba::Rule
       description = "Disallows empty expressions"
     end
 
+    MSG      = "Avoid empty expression %s"
+    MSG_EXRS = "Avoid empty expressions"
+
     def test(source)
       AST::Visitor.new self, source
     end
@@ -44,12 +47,12 @@ module Ameba::Rule
 
       return if exp.nil? || exp == "nil"
 
-      source.error self, node.location, "Avoid empty expression '#{exp}'"
+      source.error self, node.location, MSG % exp
     end
 
     def test(source, node : Crystal::Expressions)
       if node.expressions.size == 1 && node.expressions.first.nop?
-        source.error self, node.location, "Avoid empty expressions"
+        source.error self, node.location, MSG_EXRS
       end
     end
   end

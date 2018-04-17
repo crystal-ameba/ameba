@@ -25,6 +25,8 @@ module Ameba::Rule
       description = "Disallows duplicated keys in hash literals"
     end
 
+    MSG = "Duplicated keys in hash literal: %s"
+
     def test(source)
       AST::Visitor.new self, source
     end
@@ -32,8 +34,7 @@ module Ameba::Rule
     def test(source, node : Crystal::HashLiteral)
       return unless (keys = duplicated_keys(node.entries)).any?
 
-      source.error self, node.location,
-        "Duplicated keys in hash literal: #{keys.join(", ")}"
+      source.error self, node.location, MSG % keys.join(", ")
     end
 
     private def duplicated_keys(entries)

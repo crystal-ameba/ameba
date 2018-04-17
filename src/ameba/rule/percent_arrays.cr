@@ -31,6 +31,8 @@ module Ameba::Rule
       symbol_array_unwanted_symbols = ",:"
     end
 
+    MSG = "Symbols `%s` may be unwanted in %s array literals"
+
     def test(source)
       error = start_token = nil
 
@@ -62,7 +64,7 @@ module Ameba::Rule
 
     private def check_array_entry(entry, symbols, literal)
       return unless entry =~ /[#{symbols}]/
-      "Symbols `#{symbols}` may be unwanted in #{literal} array literals"
+      sprintf(MSG, symbols, literal)
     end
   end
 end

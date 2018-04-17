@@ -16,6 +16,8 @@ module Ameba::Rule
       description = "Disallows calls to debugger"
     end
 
+    MSG = "Possible forgotten debugger statement detected"
+
     def test(source)
       AST::Visitor.new self, source
     end
@@ -25,8 +27,7 @@ module Ameba::Rule
                     node.args.empty? &&
                     node.obj.nil?
 
-      source.error self, node.location,
-        "Possible forgotten debugger statement detected"
+      source.error self, node.location, MSG
     end
   end
 end

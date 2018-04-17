@@ -36,6 +36,8 @@ module Ameba::Rule
       description = "Enforces variable names to be in underscored case"
     end
 
+    MSG = "Var name should be underscore-cased: %s, not %s"
+
     def test(source)
       AST::Visitor.new self, source
     end
@@ -43,8 +45,7 @@ module Ameba::Rule
     private def check_node(source, node)
       return if (expected = node.name.underscore) == node.name
 
-      source.error self, node.location,
-        "Var name should be underscore-cased: #{expected}, not #{node.name}"
+      source.error self, node.location, sprintf(MSG, expected, node.name)
     end
 
     def test(source, node : Crystal::Var)

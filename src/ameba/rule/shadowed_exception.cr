@@ -39,6 +39,8 @@ module Ameba::Rule
       description = "Disallows rescued exception that get shadowed"
     end
 
+    MSG = "Exception handler has shadowed exceptions: %s"
+
     def test(source)
       AST::Visitor.new self, source
     end
@@ -47,8 +49,7 @@ module Ameba::Rule
       return unless excs = node.rescues
 
       if (excs = shadowed excs.map(&.types)).any?
-        source.error self, node.location,
-          "Exception handler has shadowed exceptions: #{excs.join(", ")}"
+        source.error self, node.location, MSG % excs.join(", ")
       end
     end
 

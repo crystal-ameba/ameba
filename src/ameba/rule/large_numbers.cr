@@ -33,6 +33,8 @@ module Ameba::Rule
       int_min_digits = 5
     end
 
+    MSG = "Large numbers should be written with underscores: %s"
+
     def test(source)
       Tokenizer.new(source).run do |token|
         next unless token.type == :NUMBER && decimal?(token.raw)
@@ -40,8 +42,7 @@ module Ameba::Rule
         parsed = parse_number token.raw
 
         if allowed?(*parsed) && (expected = underscored *parsed) != token.raw
-          source.error self, token.location,
-            "Large numbers should be written with underscores: #{expected}"
+          source.error self, token.location, MSG % expected
         end
       end
     end

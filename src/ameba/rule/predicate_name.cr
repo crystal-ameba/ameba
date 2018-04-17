@@ -34,6 +34,8 @@ module Ameba::Rule
       description = "Disallows tautological predicate names"
     end
 
+    MSG = "Favour method name '%s?' over '%s'"
+
     def test(source)
       AST::Visitor.new self, source
     end
@@ -43,8 +45,7 @@ module Ameba::Rule
         alternative = $2
         return unless alternative =~ /^[a-z][a-zA-Z_0-9]*$/
 
-        source.error self, node.location,
-          "Favour method name '#{alternative}?' over '#{node.name}'"
+        source.error self, node.location, sprintf(MSG, alternative, node.name)
       end
     end
   end

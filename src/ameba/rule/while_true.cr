@@ -31,13 +31,15 @@ module Ameba::Rule
       description = "Disallows while statements with a true literal as condition"
     end
 
+    MSG = "While statement using true literal as condition"
+
     def test(source)
       AST::Visitor.new self, source
     end
 
     def test(source, node : Crystal::While)
       return unless node.cond.true_literal?
-      source.error self, node.location, "While statement using true literal as condition"
+      source.error self, node.location, MSG
     end
   end
 end

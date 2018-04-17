@@ -62,6 +62,8 @@ module Ameba::Rule
       description = "Disallows redundant begin blocks"
     end
 
+    MSG = "Redundant `begin` block detected"
+
     def test(source)
       AST::Visitor.new self, source
     end
@@ -69,7 +71,7 @@ module Ameba::Rule
     def test(source, node : Crystal::Def)
       return unless redundant_begin?(source, node)
 
-      source.error self, node.location, "Redundant `begin` block detected"
+      source.error self, node.location, MSG
     end
 
     private def redundant_begin?(source, node)

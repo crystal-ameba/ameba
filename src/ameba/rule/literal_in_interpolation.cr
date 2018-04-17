@@ -23,6 +23,8 @@ module Ameba::Rule
       description = "Disallows useless string interpolations"
     end
 
+    MSG = "Literal value found in interpolation"
+
     def test(source)
       AST::Visitor.new self, source
     end
@@ -30,7 +32,7 @@ module Ameba::Rule
     def test(source, node : Crystal::StringInterpolation)
       found = node.expressions.any? { |e| !string_literal?(e) && literal?(e) }
       return unless found
-      source.error self, node.location, "Literal value found in interpolation"
+      source.error self, node.location, MSG
     end
   end
 end

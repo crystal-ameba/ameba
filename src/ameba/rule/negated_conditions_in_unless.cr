@@ -32,14 +32,15 @@ module Ameba::Rule
       description = "Disallows negated conditions in unless"
     end
 
+    MSG = "Avoid negated conditions in unless blocks"
+
     def test(source)
       AST::Visitor.new self, source
     end
 
     def test(source, node : Crystal::Unless)
       return unless negated_condition? node.cond
-      source.error self, node.location,
-        "Avoid negated conditions in unless blocks"
+      source.error self, node.location, MSG
     end
 
     private def negated_condition?(node)

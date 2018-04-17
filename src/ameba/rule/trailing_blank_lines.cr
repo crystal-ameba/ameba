@@ -13,10 +13,11 @@ module Ameba::Rule
       description = "Disallows trailing blank lines"
     end
 
+    MSG = "Blank lines detected at the end of the file"
+
     def test(source)
       if source.lines.size > 1 && source.lines[-2, 2].join.strip.empty?
-        source.error self, source.lines.size, 1,
-          "Blank lines detected at the end of the file"
+        source.error self, source.lines.size, 1, MSG
       end
     end
   end
