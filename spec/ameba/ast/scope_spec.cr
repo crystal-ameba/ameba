@@ -2,7 +2,7 @@ require "../../spec_helper"
 
 module Ameba::AST
   describe Scope do
-    describe ".new" do
+    describe "#initialize" do
       source = "a = 2"
 
       it "assigns outer scope" do
@@ -16,42 +16,40 @@ module Ameba::AST
         scope.node.should_not be_nil
       end
     end
+  end
 
-    describe "#targets" do
-      it "returns a list of all targets" do
-        scope = Scope.new as_node %(
-          foo = 1
-          bar = 2
-        )
-        scope.targets.size.should eq 2
-      end
+  describe "#add_variable" do
+    it "adds a new variable to the scope" do
+      scope = Scope.new as_node("")
+      scope.add_variable(Crystal::Var.new "foo")
+      scope.variables.any?.should be_true
+    end
+  end
 
-      it "does not count references" do
-        scope = Scope.new as_node %(
-          foo = 1
-          foo
-        )
-        scope.targets.size.should eq 1
-      end
+  describe "#find_variable" do
+    it "returns the variable in the scope by name" do
+      scope = Scope.new as_node("foo = 1")
+      scope.find_variable("foo").should_not be_nil
     end
 
-    describe "#referenced?" do
-      it "returns true if a target has a reference below" do
-        scope = Scope.new as_node %(
-          a = 2
-          a
-        )
-        scope.referenced?(scope.targets.first).should be_true
-      end
+    it "returns nil if variable not exist in this scope" do
+      scope = Scope.new as_node("foo = 1")
+      scope.find_variable("bar").should be_nil
+    end
+  end
 
-      it "returns false if a target does not have a reference" do
-        scope = Scope.new as_node %(
-          foo = 2
-          bar = 3
-        )
-        scope.referenced?(scope.targets.first).should be_false
-        scope.referenced?(scope.targets.last).should be_false
-      end
+  describe "#assign_variable" do
+    it "creates a new assignment" do
+      scope = Scope.new as_node("foo = 1")
+      scope.find_variable("foo").not_nil!.assignments.size.should eq 1
+      scope.assign_variable(Crystal::Var.new "foo")
+      scope.find_variable("foo").not_nil!.assignments.size.should eq 2
+    end
+
+    it "does not create the assignment if variable is wrong" do
+      scope = Scope.new as_node("foo = 1")
+      scope.assign_variable(Crystal::Var.new "bar")
+      scope.find_variable("foo").not_nil!.assignments.size.should eq 1
     end
   end
 end

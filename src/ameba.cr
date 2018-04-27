@@ -1,5 +1,5 @@
 require "./ameba/*"
-require "./ameba/ast/*"
+require "./ameba/ast/**"
 require "./ameba/rule/*"
 require "./ameba/formatter/*"
 

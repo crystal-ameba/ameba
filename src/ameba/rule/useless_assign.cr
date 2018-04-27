@@ -31,23 +31,20 @@ module Ameba::Rule
       description = "Disallows useless variable assignments"
     end
 
+    MSG = "Useless assignment to variable `%s`"
+
     def test(source)
       AST::ScopeVisitor.new self, source
     end
 
     def test(source, node : Crystal::Def, scope : AST::Scope)
-      scope.targets.each do |target|
-        next unless unused_var?(scope, target)
-        var_name = target.as(Crystal::Var).name
-        source.error self, target.location, "Useless assignment to variable `#{var_name}`"
+      scope.variables.each do |var|
+        next if var.captured_by_block?
+        var.assignments.each do |assign|
+          next if assign.referenced?
+          source.error self, assign.location, MSG % var.name
+        end
       end
-    end
-
-    private def unused_var?(scope, target)
-      return false unless target.is_a?(Crystal::Var)
-      return false if scope.captured_by_block?(target)
-
-      !scope.referenced?(target)
     end
   end
 end

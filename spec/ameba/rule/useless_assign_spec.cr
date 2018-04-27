@@ -91,7 +91,7 @@ module Ameba::Rule
       subject.catch(s).should be_valid
     end
 
-    it "passes if assignment used in a the inner block scope" do
+    it "passes if assignment used in the inner block scope" do
       s = Source.new %(
         def method
           var = true
@@ -123,12 +123,16 @@ module Ameba::Rule
       subject.catch(s).should_not be_valid
     end
 
-    it "passes if variable used in a switch statement" do
+    it "passes if variable used in a condition" do
       s = Source.new %(
         def method
-          a
+          a = 1
+          if a
+            nil
+          end
         end
       )
+      subject.catch(s).should be_valid
     end
 
     it "reports second assignment as useless" do
@@ -200,6 +204,19 @@ module Ameba::Rule
           def method
             a = 1
             a += 1
+            a
+          end
+        )
+        subject.catch(s).should be_valid
+      end
+
+      it "passes if variable is referenced in op assign few times" do
+        s = Source.new %(
+          def method
+            a = 1
+            a += 1
+            a += 1
+            a = a + 1
             a
           end
         )
