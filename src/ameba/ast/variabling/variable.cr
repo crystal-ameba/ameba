@@ -11,6 +11,9 @@ module Ameba::AST
     # The actual var node.
     getter node
 
+    # Scope of this variable.
+    getter scope
+
     delegate location, to: @node
     delegate name, to: @node
     delegate to_s, to: @node

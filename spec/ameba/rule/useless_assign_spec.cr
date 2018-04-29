@@ -301,5 +301,24 @@ module Ameba::Rule
         error.message.should eq "Useless assignment to variable `b`"
       end
     end
+
+    context "branching" do
+      context "if-then-else" do
+        pending "doesn't report if assignment is consumed by branches" do
+          s = Source.new %(
+            def method
+              a = 0
+              if something
+                a = 1
+              else
+                a = 2
+              end
+              a
+            end
+          )
+          subject.catch(s).should be_valid
+        end
+      end
+    end
   end
 end

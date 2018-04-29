@@ -90,6 +90,7 @@ module Ameba
       Crystal::OpAssign,
       Crystal::MultiAssign,
       Crystal::Block,
+      Crystal::Def,
     ]
 
     def initialize(node)
