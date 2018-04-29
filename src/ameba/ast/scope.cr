@@ -47,13 +47,18 @@ module Ameba::AST
     end
 
     # Creates a new assignment for the variable.
+    #
+    # ```
+    # scope = Scope.new(class_node, nil)
+    # scope.assign_variable(var_node)
+    # ```
     def assign_variable(node)
       node.is_a?(Crystal::Var) && find_variable(node.name).try &.assign(node)
     end
 
     # :nodoc:
     private class AssignVarVisitor < Crystal::Visitor
-      @current_assign : Crystal::ASTNode?
+      @assign : Crystal::ASTNode?
 
       def initialize(@scope : Scope)
       end
@@ -63,24 +68,24 @@ module Ameba::AST
       end
 
       def visit(node : Crystal::Assign | Crystal::OpAssign | Crystal::MultiAssign)
-        @current_assign = node
+        @assign = node
       end
 
       def end_visit(node : Crystal::Assign | Crystal::OpAssign)
         @scope.assign_variable(node.target)
-        @current_assign = nil
+        @assign = nil
       end
 
       def end_visit(node : Crystal::MultiAssign)
         node.targets.each { |target| @scope.assign_variable(target) }
-        @current_assign = nil
+        @assign = nil
       end
 
       def visit(node : Crystal::Var)
         if variable = @scope.find_variable(node.name)
-          (@current_assign.is_a? Crystal::OpAssign ||
-            !Reference.new(node).target_of? @current_assign) &&
-            variable.reference_assignments(node)
+          (@assign.is_a? Crystal::OpAssign ||
+            !Reference.new(node).target_of? @assign) &&
+            variable.reference(node)
         else
           @scope.add_variable(node)
         end

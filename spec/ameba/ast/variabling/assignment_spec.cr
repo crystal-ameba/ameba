@@ -12,10 +12,10 @@ module Ameba::AST
       end
     end
 
-    describe "#reference" do
+    describe "#reference=" do
       it "creates a new reference" do
         assignment = Assignment.new(node, variable)
-        assignment.reference(variable.node)
+        assignment.referenced = true
         assignment.referenced?.should be_true
       end
     end

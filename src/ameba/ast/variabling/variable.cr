@@ -5,6 +5,9 @@ module Ameba::AST
     # List of the assigments of this variable.
     getter assignments = [] of Assignment
 
+    # List of the references of this variable.
+    getter references = [] of Reference
+
     # The actual var node.
     getter node
 
@@ -40,11 +43,12 @@ module Ameba::AST
     # ```
     # variable = Variable.new(node, scope)
     # variable.assign(assign_node)
-    # variable.reference_assignments(var_node)
+    # variable.reference(var_node)
     # ```
     #
-    def reference_assignments(node)
-      assignments.last?.try &.reference(node)
+    def reference(node : Crystal::Var)
+      references << Reference.new(node)
+      assignments.last?.try &.referenced = true
     end
 
     # Returns true if the current assignment is captured (used in)

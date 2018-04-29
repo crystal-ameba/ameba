@@ -45,13 +45,12 @@ module Ameba::AST
       end
     end
 
-    describe "#reference_assignments" do
+    describe "#reference" do
       it "references the existed assignment" do
         variable = Variable.new(var_node)
         variable.assign(as_node "foo=1")
-        variable.assignments.last.referenced?.should be_false
-        variable.reference_assignments(var_node)
-        variable.assignments.last.referenced?.should be_true
+        variable.reference(var_node)
+        variable.references.any?.should be_true
       end
     end
 

@@ -5,8 +5,7 @@ module Ameba::AST
   # Represents the assignment to the variable.
   # Holds the assign node and the variable.
   class Assignment
-    # A list of variable references for this assignment.
-    getter references = [] of Reference
+    property? referenced = false
 
     # The actual assignment node.
     getter node
@@ -21,29 +20,6 @@ module Ameba::AST
     # ```
     #
     def initialize(@node : Crystal::ASTNode, @variable : Variable)
-    end
-
-    # References this assignment meaning the variable
-    # is used below the assignment.
-    #
-    # ```
-    # assignment.reference(node)
-    # ```
-    #
-    def reference(node)
-      references << Reference.new(node)
-    end
-
-    # Returns true if the assignment has any references,
-    # false - otherwise.
-    #
-    # ```
-    # assignment.reference(node)
-    # assignment.referenced? # => true
-    # ```
-    #
-    def referenced?
-      references.any?
     end
   end
 end

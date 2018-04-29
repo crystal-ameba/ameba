@@ -4,7 +4,7 @@ module Ameba::Rule
   describe UselessAssign do
     subject = UselessAssign.new
 
-    it "passes if there are no useless assigments" do
+    it "does not report used assigments" do
       s = Source.new %(
         def method
           a = 2
@@ -91,7 +91,7 @@ module Ameba::Rule
       subject.catch(s).should be_valid
     end
 
-    it "passes if assignment used in the inner block scope" do
+    it "does not report if assignment used in the inner block scope" do
       s = Source.new %(
         def method
           var = true
@@ -101,7 +101,7 @@ module Ameba::Rule
       subject.catch(s).should be_valid
     end
 
-    it "fails if first assignment is useless" do
+    it "reports if first assignment is useless" do
       s = Source.new %(
         def method
           var = true
@@ -123,7 +123,7 @@ module Ameba::Rule
       subject.catch(s).should_not be_valid
     end
 
-    it "passes if variable used in a condition" do
+    it "does not report if variable used in a condition" do
       s = Source.new %(
         def method
           a = 1
@@ -145,7 +145,7 @@ module Ameba::Rule
       subject.catch(s).should_not be_valid
     end
 
-    it "passes if variable is referenced in other assignment" do
+    it "does not report if variable is referenced in other assignment" do
       s = Source.new %(
         def method
           if f = get_something
@@ -156,7 +156,7 @@ module Ameba::Rule
       subject.catch(s).should be_valid
     end
 
-    it "passes if variable is referenced in a setter" do
+    it "does not report if variable is referenced in a setter" do
       s = Source.new %(
         def method
           foo = 2
@@ -166,7 +166,7 @@ module Ameba::Rule
       subject.catch(s).should be_valid
     end
 
-    it "passes if variable is reassigned but not referenced" do
+    it "does not report if variable is reassigned but not referenced" do
       s = Source.new %(
         def method
           foo = 1
@@ -177,7 +177,7 @@ module Ameba::Rule
       subject.catch(s).should_not be_valid
     end
 
-    it "passes if variable is referenced in a call" do
+    it "does not report if variable is referenced in a call" do
       s = Source.new %(
         def method
           if f = FORMATTER
@@ -188,7 +188,7 @@ module Ameba::Rule
       subject.catch(s).should be_valid
     end
 
-    it "passes if a setter is invoked with operator assignment" do
+    it "does not report if a setter is invoked with operator assignment" do
       s = Source.new %(
         def method
           obj = {} of Symbol => Int32
@@ -199,7 +199,7 @@ module Ameba::Rule
     end
 
     context "op assigns" do
-      it "passes if variable is referenced below the op assign" do
+      it "does not report if variable is referenced below the op assign" do
         s = Source.new %(
           def method
             a = 1
@@ -210,7 +210,7 @@ module Ameba::Rule
         subject.catch(s).should be_valid
       end
 
-      it "passes if variable is referenced in op assign few times" do
+      it "does not report if variable is referenced in op assign few times" do
         s = Source.new %(
           def method
             a = 1
@@ -223,7 +223,7 @@ module Ameba::Rule
         subject.catch(s).should be_valid
       end
 
-      it "fails if variable is not referenced below the op assign" do
+      it "reports if variable is not referenced below the op assign" do
         s = Source.new %(
           def method
             a = 1
@@ -251,7 +251,7 @@ module Ameba::Rule
     end
 
     context "multi assigns" do
-      it "passes if all assigns are referenced" do
+      it "does not report if all assigns are referenced" do
         s = Source.new %(
           def method
             a, b = {1, 2}
