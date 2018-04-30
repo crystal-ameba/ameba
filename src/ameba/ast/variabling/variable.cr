@@ -51,7 +51,15 @@ module Ameba::AST
     #
     def reference(node : Crystal::Var)
       references << Reference.new(node)
-      assignments.last?.try &.referenced = true
+      consumed_branches = Set(Branch).new
+
+      assignments.reverse_each do |assignment|
+        next if consumed_branches.includes?(assignment.branch)
+        assignment.referenced = true
+
+        break unless assignment.branch
+        consumed_branches << assignment.branch.not_nil!
+      end
     end
 
     # Returns true if the current assignment is captured (used in)

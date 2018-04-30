@@ -304,7 +304,7 @@ module Ameba::Rule
 
     context "branching" do
       context "if-then-else" do
-        pending "doesn't report if assignment is consumed by branches" do
+        it "doesn't report if assignment is consumed by branches" do
           s = Source.new %(
             def method
               a = 0
@@ -317,6 +317,254 @@ module Ameba::Rule
             end
           )
           subject.catch(s).should be_valid
+        end
+
+        it "doesn't report if assignment is in one branch" do
+          s = Source.new %(
+            def method
+              a = 0
+              if something
+                a = 1
+              else
+                nil
+              end
+              a
+            end
+          )
+          subject.catch(s).should be_valid
+        end
+
+        it "doesn't report if assignment is in one line branch" do
+          s = Source.new %(
+            def method
+              a = 0
+              a = 1 if something
+              a
+            end
+          )
+          subject.catch(s).should be_valid
+        end
+
+        it "reports if assignment is useless in the branch" do
+          s = Source.new %(
+            def method(a)
+              if a
+                a = 2
+              end
+            end
+          )
+          subject.catch(s).should_not be_valid
+        end
+
+        it "reports if only last assignment is referenced in a branch" do
+          s = Source.new %(
+            def method(a)
+              a = 1
+              if a
+                a = 2
+                a = 3
+              end
+              a
+            end
+          )
+          subject.catch(s).should_not be_valid
+          s.errors.size.should eq 1
+          s.errors.first.location.to_s.should eq ":5:17"
+        end
+      end
+
+      context "unless-then-else" do
+        it "doesn't report if assignment is consumed by branches" do
+          s = Source.new %(
+            def method
+              a = 0
+              unless something
+                a = 1
+              else
+                a = 2
+              end
+              a
+            end
+          )
+          subject.catch(s).should be_valid
+        end
+
+        it "reports if there is a useless assignment in a branch" do
+          s = Source.new %(
+            def method
+              a = 0
+              unless something
+                a = 1
+                a = 2
+              else
+                a = 2
+              end
+              a
+            end
+          )
+          subject.catch(s).should_not be_valid
+          s.errors.size.should eq 1
+          s.errors.first.location.to_s.should eq ":5:17"
+        end
+      end
+
+      context "case" do
+        it "does not report if assignment is referenced" do
+          s = Source.new %(
+            def method(a)
+              case a
+              when /foo/
+                a = 1
+              when /bar/
+                a = 2
+              end
+              puts a
+            end
+          )
+          subject.catch(s).should be_valid
+        end
+
+        it "reports if assignment is useless" do
+          s = Source.new %(
+            def method(a)
+              case a
+              when /foo/
+                a = 1
+              when /bar/
+                a = 2
+              end
+            end
+          )
+          subject.catch(s).should_not be_valid
+          s.errors.size.should eq 2
+          s.errors.first.location.to_s.should eq ":5:17"
+          s.errors.last.location.to_s.should eq ":7:17"
+        end
+      end
+
+      context "binary operator" do
+        it "does not report if assignment is referenced" do
+          s = Source.new %(
+            def method(a)
+              (a = 1) && (b = 1)
+              a + b
+            end
+          )
+          subject.catch(s).should be_valid
+        end
+
+        it "reports if assignment is useless" do
+          s = Source.new %(
+            def method(a)
+              (a = 1) || (b = 1)
+              a
+            end
+          )
+          subject.catch(s).should_not be_valid
+          s.errors.size.should eq 1
+          s.errors.first.location.to_s.should eq ":3:27"
+        end
+      end
+
+      context "while" do
+        it "does not report if assignment is referenced" do
+          s = Source.new %(
+            def method(a)
+              while a < 10
+                a = a + 1
+              end
+              a
+            end
+          )
+          subject.catch(s).should be_valid
+        end
+
+        it "reports if assignment is useless" do
+          s = Source.new %(
+            def method(a)
+              while a < 10
+                a = a + 1
+              end
+            end
+          )
+          subject.catch(s).should_not be_valid
+          s.errors.size.should eq 1
+          s.errors.first.location.to_s.should eq ":4:17"
+        end
+      end
+
+      context "until" do
+        it "does not report if assignment is referenced" do
+          s = Source.new %(
+            def method(a)
+              until a > 10
+                a = a + 1
+              end
+              a
+            end
+          )
+          subject.catch(s).should be_valid
+        end
+
+        it "reports if assignment is useless" do
+          s = Source.new %(
+            def method(a)
+              until a > 10
+                a = a + 1
+              end
+            end
+          )
+          subject.catch(s).should_not be_valid
+          s.errors.size.should eq 1
+          s.errors.first.location.to_s.should eq ":4:17"
+        end
+      end
+
+      context "exception handler" do
+        it "does not report if assignment is referenced in body" do
+          s = Source.new %(
+            def method(a)
+              a = 2
+            rescue
+              a
+            end
+          )
+          subject.catch(s).should be_valid
+        end
+
+        it "doesn't report if assignment is referenced in ensure" do
+          s = Source.new %(
+            def method(a)
+              a = 2
+            ensure
+              a
+            end
+          )
+          subject.catch(s).should be_valid
+        end
+
+        it "doesn't report if assignment is referenced in else" do
+          s = Source.new %(
+            def method(a)
+              a = 2
+            rescue
+            else
+              a
+            end
+          )
+          subject.catch(s).should be_valid
+        end
+
+        it "reports if assignment is useless" do
+          s = Source.new %(
+            def method(a)
+            rescue
+              a = 2
+            end
+          )
+          subject.catch(s).should_not be_valid
+          s.errors.size.should eq 1
+          s.errors.first.location.to_s.should eq ":4:15"
         end
       end
     end
