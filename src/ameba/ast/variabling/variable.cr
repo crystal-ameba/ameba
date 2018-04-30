@@ -9,10 +9,10 @@ module Ameba::AST
     getter references = [] of Reference
 
     # The actual var node.
-    getter node
+    getter node : Crystal::Var
 
     # Scope of this variable.
-    getter scope
+    getter scope : Scope?
 
     delegate location, to: @node
     delegate name, to: @node
@@ -24,7 +24,7 @@ module Ameba::AST
     # Variable.new(node, scope)
     # ```
     #
-    def initialize(@node : Crystal::Var, @scope : Scope? = nil)
+    def initialize(@node, @scope = nil)
     end
 
     # Assigns the variable (creates a new assignment).
@@ -39,6 +39,17 @@ module Ameba::AST
     #
     def assign(node)
       assignments << Assignment.new(node, self)
+    end
+
+    # Returns true if variable has any reference.
+    #
+    # ```
+    # variable = Variable.new(node, scope)
+    # variable.reference(var_node)
+    # variable.referenced? # => true
+    # ```
+    def referenced?
+      references.any?
     end
 
     # References the existed assignments.

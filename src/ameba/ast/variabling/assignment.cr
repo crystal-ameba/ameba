@@ -8,10 +8,10 @@ module Ameba::AST
     property? referenced = false
 
     # The actual assignment node.
-    getter node
+    getter node : Crystal::ASTNode
 
     # Variable of this assignment.
-    getter variable
+    getter variable : Variable
 
     # Branch of this assignment.
     getter branch : Branch?
@@ -26,10 +26,15 @@ module Ameba::AST
     # Assignment.new(node, variable)
     # ```
     #
-    def initialize(@node : Crystal::ASTNode, @variable : Variable)
-      if scope_node = scope.try(&.node)
-        @branch = Branch.of(@node, scope_node)
+    def initialize(@node, @variable)
+      if scope = @variable.scope
+        @branch = Branch.of(@node, scope)
+        @referenced = true if referenced_in_loop?
       end
+    end
+
+    def referenced_in_loop?
+      @variable.referenced? && @branch.try &.in_loop?
     end
   end
 end

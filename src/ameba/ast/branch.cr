@@ -4,17 +4,20 @@ module Ameba::AST
   # For example, the branchable if statement contains 3 branches:
   #
   # ```
-  # if a = something # --> cond branch (Crystal::Assign)
-  #   a = 1          # --> then branch (Crystal::Expressions)
-  #   put a
+  # if a = something # --> Branch A
+  #   a = 1          # --> Branch B
+  #   put a if out   # --> Branch C
   # else
-  #   do_something a # --> else branch (Crystal::Call)
+  #   do_something a # --> Branch D
   # end
   # ```
   #
   class Branch
     # The actual branch node.
-    getter node
+    getter node : Crystal::ASTNode
+
+    # The parent branchable.
+    getter parent : Branchable
 
     delegate to_s, to: @node
     delegate location, to: @node
@@ -26,85 +29,136 @@ module Ameba::AST
     # ```
     # Branch.new(if_node)
     # ```
-    def initialize(@node : Crystal::ASTNode)
+    def initialize(@node, @parent)
     end
 
-    # Constructs a new branch based on the node in some parent node.
+    def in_loop?
+      @parent.loop?
+    end
+
+    # Constructs a new branch based on the node in scope.
+    #
+    # ```
+    # Branch.of(assign_node, scope)
+    # ```
+    def self.of(node : Crystal::ASTNode, scope : Scope)
+      of(node, scope.node)
+    end
+
+    # Constructs a new branch based on the node some parent scope.
     #
     # ```
     # Branch.of(assign_node, def_node)
     # ```
-    def self.of(node : Crystal::ASTNode, parent : Crystal::ASTNode)
-      visitor = BranchVisitor.new(node).tap &.accept(parent)
-      if branch_node = visitor.branch_node
-        Branch.new(branch_node)
-      end
+    def self.of(node : Crystal::ASTNode, parent_node : Crystal::ASTNode)
+      BranchVisitor.new(node).tap(&.accept parent_node).branch
     end
 
     # :nodoc:
     private class BranchVisitor < Crystal::Visitor
       @current_branch : Crystal::ASTNode?
 
-      property branch_node : Crystal::ASTNode?
+      property branchable : Branchable?
+      property branch : Branch?
 
       def initialize(@node : Crystal::ASTNode)
       end
 
-      def visit(node : Crystal::ASTNode)
-        return false if @branch_node
+      private def on_branchable_start(node, *branches)
+        on_branchable_start(node, branches)
+      end
 
-        if node.class == @node.class && node.location == @node.location
-          @branch_node = @current_branch
+      private def on_branchable_start(node, branches : Array | Tuple)
+        @branchable = Branchable.new(node, @branchable)
+
+        branches.each do |node|
+          break if branch # branch found
+          @current_branch = node
+          node.try &.accept(self)
+        end
+
+        false
+      end
+
+      private def on_branchable_end(node)
+        @branchable = @branchable.try &.parent
+      end
+
+      def visit(node : Crystal::ASTNode)
+        return false if branch
+
+        if node.class == @node.class &&
+           node.location == @node.location &&
+           (branchable = @branchable) &&
+           (branch = @current_branch)
+          @branch = Branch.new(branch, branchable)
         end
 
         true
       end
 
       def visit(node : Crystal::If)
-        search_branch_in node.cond, node.then, node.else
+        on_branchable_start node, node.cond, node.then, node.else
+      end
+
+      def end_visit(node : Crystal::If)
+        on_branchable_end node
       end
 
       def visit(node : Crystal::Unless)
-        search_branch_in node.cond, node.then, node.else
+        on_branchable_start node, node.cond, node.then, node.else
+      end
+
+      def end_visit(node : Crystal::Unless)
+        on_branchable_end node
       end
 
       def visit(node : Crystal::BinaryOp)
-        search_branch_in node.left, node.right
+        on_branchable_start node, node.left, node.right
+      end
+
+      def end_visit(node : Crystal::BinaryOp)
+        on_branchable_end node
       end
 
       def visit(node : Crystal::Case)
-        search_branch_in [node.cond, node.whens, node.else].flatten
+        on_branchable_start node, [node.cond, node.whens, node.else].flatten
+      end
+
+      def end_visit(node : Crystal::Case)
+        on_branchable_end node
       end
 
       def visit(node : Crystal::While)
-        search_branch_in node.cond, node.body
+        on_branchable_start node, node.cond, node.body
+      end
+
+      def end_visit(node : Crystal::While)
+        on_branchable_end node
       end
 
       def visit(node : Crystal::Until)
-        search_branch_in node.cond, node.body
+        on_branchable_start node, node.cond, node.body
+      end
+
+      def end_visit(node : Crystal::Until)
+        on_branchable_end node
       end
 
       def visit(node : Crystal::ExceptionHandler)
-        search_branch_in [node.body, node.rescues, node.else, node.ensure].flatten
+        on_branchable_start node, [node.body, node.rescues, node.else, node.ensure].flatten
+      end
+
+      def end_visit(node : Crystal::ExceptionHandler)
+        on_branchable_end node
       end
 
       def visit(node : Crystal::Rescue)
-        search_branch_in node.body
+        on_branchable_start node, node.body
       end
 
-      private def search_branch_in(*branches)
-        search_branch_in(branches)
-      end
-
-      private def search_branch_in(branches : Array | Tuple)
-        branches.each do |branch|
-          break if branch_node # branch found
-          next unless branch
-          @current_branch = branch
-          branch.accept(self)
-        end
-
-        false
+      def end_visit(node : Crystal::Rescue)
+        on_branchable_end node
       end
     end
   end

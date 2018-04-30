@@ -483,13 +483,63 @@ module Ameba::Rule
           s = Source.new %(
             def method(a)
               while a < 10
-                a = a + 1
+                b = a
               end
             end
           )
           subject.catch(s).should_not be_valid
           s.errors.size.should eq 1
           s.errors.first.location.to_s.should eq ":4:17"
+        end
+
+        it "does not report if assignment is referenced in a loop" do
+          s = Source.new %(
+            def method
+              a = 3
+              result = 0
+
+              while result < 10
+                result += a
+                a = a + 1
+              end
+              result
+            end
+          )
+          subject.catch(s).should be_valid
+        end
+
+        it "does not report if assignment is referenced as param in a loop" do
+          s = Source.new %(
+            def method(a)
+              result = 0
+
+              while result < 10
+                result += a
+                a = a + 1
+              end
+              result
+            end
+          )
+          subject.catch(s).should be_valid
+        end
+
+        it "does not report if assignment is referenced in loop and inner branch" do
+          s = Source.new %(
+            def method(a)
+              result = 0
+
+              while result < 10
+                result += a
+                if result > 0
+                  a = a + 1
+                else
+                  a = 3
+                end
+              end
+              result
+            end
+          )
+          subject.catch(s).should be_valid
         end
       end
 
@@ -510,7 +560,7 @@ module Ameba::Rule
           s = Source.new %(
             def method(a)
               until a > 10
-                a = a + 1
+                b = a + 1
               end
             end
           )

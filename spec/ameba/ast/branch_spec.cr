@@ -264,32 +264,62 @@ module Ameba::AST
 
     describe "#initialize" do
       it "creates new branch" do
-        branch = Branch.new as_node %(
+        nodes = as_nodes %(
           if true
             a = 2
           end
         )
+        branchable = Branchable.new nodes.if_nodes.first
+        branch = Branch.new nodes.assign_nodes.first, branchable
         branch.node.should_not be_nil
       end
     end
 
     describe "delegation" do
       it "delegates to_s to node" do
-        branch = Branch.new as_node %(
+        nodes = as_nodes %(
           if true
             a = 2
           end
         )
+        branchable = Branchable.new nodes.if_nodes.first
+        branch = Branch.new nodes.assign_nodes.first, branchable
         branch.to_s.should eq branch.node.to_s
       end
 
       it "delegates location to node" do
-        branch = Branch.new as_node %(
+        nodes = as_nodes %(
           if true
             a = 2
           end
         )
+        branchable = Branchable.new nodes.if_nodes.first
+        branch = Branch.new nodes.assign_nodes.first, branchable
         branch.location.should eq branch.node.location
+      end
+    end
+
+    describe "#in_loop?" do
+      it "returns true if branch is in a loop" do
+        nodes = as_nodes %(
+          while true
+            a = 1
+          end
+        )
+        branchable = Branchable.new nodes.while_nodes.first
+        branch = Branch.new nodes.assign_nodes.first, branchable
+        branch.in_loop?.should be_true
+      end
+
+      it "returns false if branch is not in a loop" do
+        nodes = as_nodes %(
+          if a > 2
+            a = 1
+          end
+        )
+        branchable = Branchable.new nodes.if_nodes.first
+        branch = Branch.new nodes.assign_nodes.first, branchable
+        branch.in_loop?.should be_false
       end
     end
   end

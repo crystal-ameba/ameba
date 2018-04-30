@@ -91,6 +91,8 @@ module Ameba
       Crystal::MultiAssign,
       Crystal::Block,
       Crystal::Def,
+      Crystal::If,
+      Crystal::While,
     ]
 
     def initialize(node)
