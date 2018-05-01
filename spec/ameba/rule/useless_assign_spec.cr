@@ -371,6 +371,21 @@ module Ameba::Rule
           s.errors.size.should eq 1
           s.errors.first.location.to_s.should eq ":5:17"
         end
+
+        it "does not report of assignments are referenced in all branches" do
+          s = Source.new %(
+            def method
+              if matches
+                matches = owner.lookup_matches signature
+              else
+                matches = owner.lookup_matches signature
+              end
+
+              matches
+            end
+          )
+          subject.catch(s).should be_valid
+        end
       end
 
       context "unless-then-else" do

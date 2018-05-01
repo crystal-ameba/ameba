@@ -22,7 +22,7 @@ module Ameba::AST
     delegate to_s, to: @node
     delegate location, to: @node
 
-    def_equals_and_hash node
+    def_equals_and_hash node, location
 
     # Creates a new branch.
     #
