@@ -25,7 +25,7 @@ module Ameba::Rule
   #
   struct RandZero < Base
     properties do
-      description = "Disallows rand zero calls"
+      description "Disallows rand zero calls"
     end
 
     def test(source)

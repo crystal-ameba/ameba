@@ -34,7 +34,7 @@ module Ameba::Rule
   #
   struct EmptyEnsure < Base
     properties do
-      description = "Disallows empty ensure statement"
+      description "Disallows empty ensure statement"
     end
 
     def test(source)

@@ -13,7 +13,7 @@ module Ameba::Rule
   #
   struct DebuggerStatement < Base
     properties do
-      description = "Disallows calls to debugger"
+      description "Disallows calls to debugger"
     end
 
     def test(source)

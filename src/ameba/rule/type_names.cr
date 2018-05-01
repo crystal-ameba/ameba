@@ -54,7 +54,7 @@ module Ameba::Rule
   #
   struct TypeNames < Base
     properties do
-      description = "Enforces type names in camelcase manner"
+      description "Enforces type names in camelcase manner"
     end
 
     def test(source)

@@ -24,7 +24,7 @@ module Ameba::Rule
     include AST::Util
 
     properties do
-      description = "Disallows useless conditional statements that contain \
+      description "Disallows useless conditional statements that contain \
         a literal in place of a variable or predicate function"
     end
 

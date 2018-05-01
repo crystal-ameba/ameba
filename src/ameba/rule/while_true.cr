@@ -28,7 +28,7 @@ module Ameba::Rule
   #
   struct WhileTrue < Base
     properties do
-      description = "Disallows while statements with a true literal as condition"
+      description "Disallows while statements with a true literal as condition"
     end
 
     def test(source)

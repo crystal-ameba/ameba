@@ -36,7 +36,7 @@ module Ameba::Rule
   #
   struct ShadowedException < Base
     properties do
-      description = "Disallows rescued exception that get shadowed"
+      description "Disallows rescued exception that get shadowed"
     end
 
     def test(source)

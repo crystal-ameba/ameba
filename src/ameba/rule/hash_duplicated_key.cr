@@ -22,7 +22,7 @@ module Ameba::Rule
   #
   struct HashDuplicatedKey < Base
     properties do
-      description = "Disallows duplicated keys in hash literals"
+      description "Disallows duplicated keys in hash literals"
     end
 
     def test(source)

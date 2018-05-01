@@ -22,8 +22,8 @@ module Ameba::Rule
   #
   struct ComparisonToBoolean < Base
     properties do
-      enabled = false
-      description = "Disallows comparison to booleans"
+      enabled false
+      description "Disallows comparison to booleans"
     end
 
     def test(source)

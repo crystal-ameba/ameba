@@ -29,8 +29,8 @@ module Ameba::Rule
   #
   struct LargeNumbers < Base
     properties do
-      description = "Disallows usage of large numbers without underscore"
-      int_min_digits = 5
+      description "Disallows usage of large numbers without underscore"
+      int_min_digits 5
     end
 
     def test(source)

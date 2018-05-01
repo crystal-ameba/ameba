@@ -32,7 +32,7 @@ module Ameba::Rule
     include AST::Util
 
     properties do
-      description = "Disallows empty expressions"
+      description "Disallows empty expressions"
     end
 
     def test(source)

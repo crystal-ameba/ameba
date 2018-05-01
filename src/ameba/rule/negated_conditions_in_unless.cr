@@ -29,7 +29,7 @@ module Ameba::Rule
   #
   struct NegatedConditionsInUnless < Base
     properties do
-      description = "Disallows negated conditions in unless"
+      description "Disallows negated conditions in unless"
     end
 
     def test(source)

@@ -59,7 +59,7 @@ module Ameba::Rule
   struct RedundantBegin < Base
     include AST::Util
     properties do
-      description = "Disallows redundant begin blocks"
+      description "Disallows redundant begin blocks"
     end
 
     def test(source)

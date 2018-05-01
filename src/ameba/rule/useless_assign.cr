@@ -28,7 +28,7 @@ module Ameba::Rule
   #
   struct UselessAssign < Base
     properties do
-      description = "Disallows useless variable assignments"
+      description "Disallows useless variable assignments"
     end
 
     MSG = "Useless assignment to variable `%s`"

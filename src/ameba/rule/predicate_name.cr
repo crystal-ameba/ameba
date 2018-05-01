@@ -31,7 +31,7 @@ module Ameba::Rule
   #
   struct PredicateName < Base
     properties do
-      description = "Disallows tautological predicate names"
+      description "Disallows tautological predicate names"
     end
 
     def test(source)

@@ -20,7 +20,7 @@ module Ameba::Rule
     include AST::Util
 
     properties do
-      description = "Disallows useless string interpolations"
+      description "Disallows useless string interpolations"
     end
 
     def test(source)

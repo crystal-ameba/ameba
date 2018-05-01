@@ -45,7 +45,7 @@ module Ameba::Rule
   #
   struct UnlessElse < Base
     properties do
-      description = "Disallows the use of an `else` block with the `unless`"
+      description "Disallows the use of an `else` block with the `unless`"
     end
 
     def test(source)

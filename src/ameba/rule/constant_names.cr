@@ -24,7 +24,7 @@ module Ameba::Rule
   #
   struct ConstantNames < Base
     properties do
-      description = "Enforces constant names to be in screaming case"
+      description "Enforces constant names to be in screaming case"
     end
 
     def test(source)

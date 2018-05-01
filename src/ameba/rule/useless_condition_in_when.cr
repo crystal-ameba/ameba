@@ -33,7 +33,7 @@ module Ameba::Rule
   #
   struct UselessConditionInWhen < Base
     properties do
-      description = "Disallows useless conditions in when"
+      description "Disallows useless conditions in when"
     end
 
     # TODO: condition.cond may be a complex ASTNode with

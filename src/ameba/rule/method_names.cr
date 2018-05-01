@@ -40,7 +40,7 @@ module Ameba::Rule
   #
   struct MethodNames < Base
     properties do
-      description = "Enforces method names to be in underscored case"
+      description "Enforces method names to be in underscored case"
     end
 
     def test(source)

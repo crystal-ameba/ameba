@@ -10,7 +10,7 @@ module Ameba::Rule
   #
   struct TrailingWhitespace < Base
     properties do
-      description = "Disallows trailing whitespaces"
+      description "Disallows trailing whitespaces"
     end
 
     def test(source)
