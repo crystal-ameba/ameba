@@ -28,6 +28,18 @@ module Ameba::AST
       end
     end
 
+    describe "#special?" do
+      it "returns truthy if it is a special `$?` var" do
+        variable = Variable.new Crystal::Var.new("$?")
+        variable.special?.should be_truthy
+      end
+
+      it "returns falsey otherwise" do
+        variable = Variable.new Crystal::Var.new("a")
+        variable.special?.should be_falsey
+      end
+    end
+
     describe "#assign" do
       assign_node = as_node("foo=1")
 

@@ -198,6 +198,15 @@ module Ameba::Rule
       subject.catch(s).should be_valid
     end
 
+    it "does not report if global var" do
+      s = Source.new %(
+        def method
+          $? = 3
+        end
+      )
+      subject.catch(s).should be_valid
+    end
+
     context "op assigns" do
       it "does not report if variable is referenced below the op assign" do
         s = Source.new %(

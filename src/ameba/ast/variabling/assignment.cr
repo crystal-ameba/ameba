@@ -29,7 +29,7 @@ module Ameba::AST
     def initialize(@node, @variable)
       if scope = @variable.scope
         @branch = Branch.of(@node, scope)
-        @referenced = true if referenced_in_loop?
+        @referenced = true if @variable.special? || referenced_in_loop?
       end
     end
 

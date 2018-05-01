@@ -27,6 +27,11 @@ module Ameba::AST
     def initialize(@node, @scope = nil)
     end
 
+    # Returns true if it is a special variable, i.e `$?`.
+    def special?
+      name =~ /^\$/
+    end
+
     # Assigns the variable (creates a new assignment).
     # Variable may have multiple assignments.
     #
