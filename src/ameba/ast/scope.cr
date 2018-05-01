@@ -16,6 +16,11 @@ module Ameba::AST
     # The actual AST node that represents a current scope.
     getter node : Crystal::ASTNode
 
+    delegate to_s, to: node
+    delegate location, to: node
+
+    def_equals_and_hash node, location
+
     # Creates a new scope. Accepts the AST node and the outer scope.
     #
     # ```
@@ -23,7 +28,6 @@ module Ameba::AST
     # ```
     def initialize(@node, @outer_scope = nil)
       @outer_scope.try &.inner_scopes.<<(self)
-      @node.accept AssignVarVisitor.new(self)
     end
 
     # Creates a new variable in the current scope.
@@ -43,7 +47,7 @@ module Ameba::AST
     # scope.find_variable("foo")
     # ```
     def find_variable(name : String)
-      variables.find { |v| v.name == name }
+      variables.find { |v| v.name == name } || outer_scope.try &.find_variable(name)
     end
 
     # Creates a new assignment for the variable.
@@ -56,40 +60,10 @@ module Ameba::AST
       node.is_a?(Crystal::Var) && find_variable(node.name).try &.assign(node)
     end
 
-    # :nodoc:
-    private class AssignVarVisitor < Crystal::Visitor
-      @assign : Crystal::ASTNode?
-
-      def initialize(@scope : Scope)
-      end
-
-      def visit(node : Crystal::ASTNode)
-        true
-      end
-
-      def visit(node : Crystal::Assign | Crystal::OpAssign | Crystal::MultiAssign)
-        @assign = node
-      end
-
-      def end_visit(node : Crystal::Assign | Crystal::OpAssign)
-        @scope.assign_variable(node.target)
-        @assign = nil
-      end
-
-      def end_visit(node : Crystal::MultiAssign)
-        node.targets.each { |target| @scope.assign_variable(target) }
-        @assign = nil
-      end
-
-      def visit(node : Crystal::Var)
-        if variable = @scope.find_variable(node.name)
-          (@assign.is_a? Crystal::OpAssign ||
-            !Reference.new(node).target_of? @assign) &&
-            variable.reference(node)
-        else
-          @scope.add_variable(node)
-        end
-      end
+    # Returns true if current scope represents a block (or proc),
+    # false if not.
+    def block?
+      node.is_a?(Crystal::Block) || node.is_a?(Crystal::ProcLiteral)
     end
   end
 end

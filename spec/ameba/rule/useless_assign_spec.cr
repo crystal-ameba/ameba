@@ -32,7 +32,7 @@ module Ameba::Rule
       subject.catch(s).should_not be_valid
     end
 
-    it "does not report a useless assignment in a block" do
+    it "reports a useless assignment in a block" do
       s = Source.new %(
         def method
           3.times do
@@ -40,7 +40,7 @@ module Ameba::Rule
           end
         end
       )
-      subject.catch(s).should be_valid
+      subject.catch(s).should_not be_valid
     end
 
     it "reports a useless assignment in a proc inside def" do
@@ -202,6 +202,17 @@ module Ameba::Rule
       s = Source.new %(
         def method
           $? = 3
+        end
+      )
+      subject.catch(s).should be_valid
+    end
+
+    it "does not report if assignment is referenced in a proc" do
+      s = Source.new %(
+        def method
+          called = false
+          ->() { called = true }
+          called
         end
       )
       subject.catch(s).should be_valid

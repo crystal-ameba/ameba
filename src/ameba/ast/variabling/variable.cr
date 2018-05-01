@@ -89,9 +89,9 @@ module Ameba::AST
     #
     def captured_by_block?(scope = @scope)
       return false unless scope
-      return scope.find_variable(name) if scope.node.is_a?(Crystal::Block)
 
       scope.inner_scopes.each do |inner_scope|
+        return !inner_scope.find_variable(name).nil? if inner_scope.block?
         return true if captured_by_block?(inner_scope)
       end
 

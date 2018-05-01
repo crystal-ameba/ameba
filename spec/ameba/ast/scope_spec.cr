@@ -29,6 +29,7 @@ module Ameba::AST
   describe "#find_variable" do
     it "returns the variable in the scope by name" do
       scope = Scope.new as_node("foo = 1")
+      scope.add_variable Crystal::Var.new "foo"
       scope.find_variable("foo").should_not be_nil
     end
 
@@ -41,15 +42,31 @@ module Ameba::AST
   describe "#assign_variable" do
     it "creates a new assignment" do
       scope = Scope.new as_node("foo = 1")
-      scope.find_variable("foo").not_nil!.assignments.size.should eq 1
+      scope.add_variable Crystal::Var.new "foo"
       scope.assign_variable(Crystal::Var.new "foo")
-      scope.find_variable("foo").not_nil!.assignments.size.should eq 2
+      scope.find_variable("foo").not_nil!.assignments.size.should eq 1
     end
 
     it "does not create the assignment if variable is wrong" do
       scope = Scope.new as_node("foo = 1")
+      scope.add_variable Crystal::Var.new "foo"
       scope.assign_variable(Crystal::Var.new "bar")
-      scope.find_variable("foo").not_nil!.assignments.size.should eq 1
+      scope.find_variable("foo").not_nil!.assignments.size.should eq 0
+    end
+  end
+
+  describe "#block?" do
+    it "returns true if Crystal::Block" do
+      nodes = as_nodes %(
+        3.times {}
+      )
+      scope = Scope.new nodes.block_nodes.first
+      scope.block?.should be_true
+    end
+
+    it "returns false otherwise" do
+      scope = Scope.new as_node "a = 1"
+      scope.block?.should be_false
     end
   end
 end

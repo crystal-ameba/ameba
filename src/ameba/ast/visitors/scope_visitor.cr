@@ -16,24 +16,58 @@ module Ameba::AST
 
     # :nodoc:
     def visit(node : Crystal::Def)
-      on_scope_enter(node)
-      true
+      node.name == "->" || on_scope_enter(node)
     end
 
     # :nodoc:
     def end_visit(node : Crystal::Def)
+      node.name == "->" || on_scope_end(node)
+    end
+
+    # :nodoc:
+    def visit(node : Crystal::ProcLiteral)
+      on_scope_enter(node)
+    end
+
+    # :nodoc:
+    def end_visit(node : Crystal::ProcLiteral)
       on_scope_end(node)
     end
 
     # :nodoc:
     def visit(node : Crystal::Block)
       on_scope_enter(node)
-      true
     end
 
     # :nodoc:
     def end_visit(node : Crystal::Block)
       on_scope_end(node)
+    end
+
+    @assign : Crystal::ASTNode?
+
+    def visit(node : Crystal::Assign | Crystal::OpAssign | Crystal::MultiAssign)
+      @assign = node
+    end
+
+    def end_visit(node : Crystal::Assign | Crystal::OpAssign)
+      @current_scope.try &.assign_variable(node.target)
+      @assign = nil
+    end
+
+    def end_visit(node : Crystal::MultiAssign)
+      node.targets.each { |target| @current_scope.try &.assign_variable(target) }
+      @assign = nil
+    end
+
+    def visit(node : Crystal::Var)
+      if variable = @current_scope.try &.find_variable(node.name)
+        (@assign.is_a? Crystal::OpAssign ||
+          !Reference.new(node).target_of? @assign) &&
+          variable.reference(node)
+      else
+        @current_scope.try &.add_variable(node)
+      end
     end
   end
 end

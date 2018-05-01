@@ -37,9 +37,10 @@ module Ameba::Rule
       AST::ScopeVisitor.new self, source
     end
 
-    def test(source, node : Crystal::Def, scope : AST::Scope)
+    def test(source, node, scope : AST::Scope)
       scope.variables.each do |var|
         next if var.captured_by_block?
+
         var.assignments.each do |assign|
           next if assign.referenced?
           source.error self, assign.location, MSG % var.name
