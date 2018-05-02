@@ -75,11 +75,12 @@ module Ameba::AST
           end
         )
         scope = Scope.new nodes.def_nodes.first
-        var_node = Crystal::Var.new "a"
+        var_node = nodes.var_nodes.first
         scope.add_variable var_node
         scope.inner_scopes << Scope.new(nodes.block_nodes.first, scope)
 
         variable = Variable.new(var_node, scope)
+        variable.reference nodes.var_nodes.last, scope.inner_scopes.last
         variable.captured_by_block?.should be_truthy
       end
 

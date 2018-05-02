@@ -57,16 +57,27 @@ module Ameba::AST
       references.any?
     end
 
-    # References the existed assignments.
+    # Creates a reference to this variable in some scope.
+    #
+    # ```
+    # variable = Variable.new(node, scope)
+    # variable.reference(var_node, some_scope)
+    # ```
+    #
+    def reference(node : Crystal::Var, scope : Scope? = nil)
+      Reference.new(node, scope).tap do |reference|
+        references << reference
+      end
+    end
+
+    # Reference variable's assignments.
     #
     # ```
     # variable = Variable.new(node, scope)
     # variable.assign(assign_node)
-    # variable.reference(var_node)
+    # variable.reference_assignments!
     # ```
-    #
-    def reference(node : Crystal::Var)
-      references << Reference.new(node)
+    def reference_assignments!
       consumed_branches = Set(Branch).new
 
       assignments.reverse_each do |assignment|
@@ -78,8 +89,8 @@ module Ameba::AST
       end
     end
 
-    # Returns true if the current assignment is captured (used in)
-    # by the `Crystal::Block`. For example this variable is captured
+    # Returns true if the current assignment is referenced in
+    # in the block. For example this variable is captured
     # by block:
     #
     # ```
@@ -87,11 +98,17 @@ module Ameba::AST
     # 3.times { |i| a = a + i }
     # ```
     #
+    # And this variable is not captured by block.
+    #
+    # ```
+    # i = 1
+    # 3.times { |i| i + 1 }
+    # ```
     def captured_by_block?(scope = @scope)
       return false unless scope
 
       scope.inner_scopes.each do |inner_scope|
-        return !inner_scope.find_variable(name).nil? if inner_scope.block?
+        return true if inner_scope.block? && inner_scope.references?(self)
         return true if captured_by_block?(inner_scope)
       end
 

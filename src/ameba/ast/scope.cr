@@ -65,5 +65,29 @@ module Ameba::AST
     def block?
       node.is_a?(Crystal::Block) || node.is_a?(Crystal::ProcLiteral)
     end
+
+    # Returns true if current scope references variable, false if not.
+    def references?(variable : Variable)
+      variable.references.any? { |reference| reference.scope == self }
+    end
+
+    # Returns arguments of this scope (if any).
+    def args
+      case current_node = node
+      when Crystal::Block, Crystal::Def then current_node.args
+      when Crystal::ProcLiteral         then current_node.def.args
+      else
+        [] of Crystal::Var
+      end
+    end
+
+    # Returns true if variable is an argument in current scope, false if not.
+    def arg?(var : Crystal::Var)
+      args.any? do |arg|
+        arg.is_a?(Crystal::Var) &&
+          arg.name == var.name &&
+          arg.location == var.location
+      end
+    end
   end
 end

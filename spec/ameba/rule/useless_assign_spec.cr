@@ -101,6 +101,33 @@ module Ameba::Rule
       subject.catch(s).should be_valid
     end
 
+    it "reports if assigned is not referenced in the inner block scope" do
+      s = Source.new %(
+        def method
+          var = true
+          3.times {}
+        end
+      )
+      subject.catch(s).should_not be_valid
+    end
+
+    it "doesn't report if assignment in referenced in inner block" do
+      s = Source.new %(
+        def method
+          two = true
+
+          3.times do
+            mutex.synchronize do
+              two = 2
+            end
+          end
+
+          two.should be_true
+        end
+      )
+      subject.catch(s).should be_valid
+    end
+
     it "reports if first assignment is useless" do
       s = Source.new %(
         def method
@@ -216,6 +243,18 @@ module Ameba::Rule
         end
       )
       subject.catch(s).should be_valid
+    end
+
+    it "reports if variable is shadowed in inner scope" do
+      s = Source.new %(
+        def method
+          i = 1
+          3.times do |i|
+            i + 1
+          end
+        end
+      )
+      subject.catch(s).should_not be_valid
     end
 
     context "op assigns" do

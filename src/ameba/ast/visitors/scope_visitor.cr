@@ -44,32 +44,40 @@ module Ameba::AST
       on_scope_end(node)
     end
 
-    @assign : Crystal::ASTNode?
+    @current_assign : Crystal::ASTNode?
 
+    # :nodoc:
     def visit(node : Crystal::Assign | Crystal::OpAssign | Crystal::MultiAssign)
-      @assign = node
+      @current_assign = node
     end
 
+    # :nodoc:
     def end_visit(node : Crystal::Assign | Crystal::OpAssign)
       @current_scope.try &.assign_variable(node.target)
-      @assign = nil
+      @current_assign = nil
     end
 
+    # :nodoc:
     def end_visit(node : Crystal::MultiAssign)
       node.targets.each { |target| @current_scope.try &.assign_variable(target) }
-      @assign = nil
+      @current_assign = nil
     end
 
+    # :nodoc:
     def visit(node : Crystal::Var)
-      if variable = @current_scope.try &.find_variable(node.name)
-        (@assign.is_a? Crystal::OpAssign ||
-          !Reference.new(node).target_of? @assign) &&
-          variable.reference(node)
+      return unless scope = @current_scope
+      if !scope.arg?(node) && (variable = scope.find_variable node.name)
+        reference = variable.reference node, scope
+
+        if @current_assign.is_a?(Crystal::OpAssign) || !reference.target_of?(@current_assign)
+          variable.reference_assignments!
+        end
       else
-        @current_scope.try &.add_variable(node)
+        scope.add_variable(node)
       end
     end
 
+    # :nodoc:
     def visit(node : Crystal::MacroLiteral)
       MacroLiteralVarVisitor.new(node).vars.each { |var| visit(var) }
     end
