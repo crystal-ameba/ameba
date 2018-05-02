@@ -251,6 +251,44 @@ module Ameba::AST
         end
       end
 
+      context "Crystal::MacroIf" do
+        it "constructs a branch in cond" do
+          branch = branch_of_assign_in_def %(
+            def method(a)
+              {% if a = 2 %}
+              {% end %}
+            end
+          )
+          branch.to_s.should eq "a = 2"
+        end
+
+        it "constructs a branch in then" do
+          nodes = as_nodes %(
+            def method(a)
+              {% if true %}
+                a = 2
+              {% end %}
+            end
+          )
+          branch = Branch.of(nodes.macro_literal_nodes.first, nodes.def_nodes.first)
+          branch.to_s.strip.should eq "a = 2"
+        end
+      end
+
+      context "Crystal::MacroFor" do
+        it "constructs a branch in body" do
+          nodes = as_nodes %(
+            def method(a)
+              {% for x in [1, 2, 3] %}
+                a = 2
+              {% end %}
+            end
+          )
+          branch = Branch.of(nodes.macro_literal_nodes.first, nodes.def_nodes.first)
+          branch.to_s.strip.should eq "a = 2"
+        end
+      end
+
       it "returns nil if branch does not exist" do
         nodes = as_nodes %(
           def method

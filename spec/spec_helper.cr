@@ -93,6 +93,7 @@ module Ameba
       Crystal::Def,
       Crystal::If,
       Crystal::While,
+      Crystal::MacroLiteral,
     ]
 
     def initialize(node)

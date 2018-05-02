@@ -160,6 +160,22 @@ module Ameba::AST
       def end_visit(node : Crystal::Rescue)
         on_branchable_end node
       end
+
+      def visit(node : Crystal::MacroIf)
+        on_branchable_start node, node.cond, node.then, node.else
+      end
+
+      def end_visit(node : Crystal::MacroIf)
+        on_branchable_end node
+      end
+
+      def visit(node : Crystal::MacroFor)
+        on_branchable_start node, node.exp, node.body
+      end
+
+      def end_visit(node : Crystal::MacroFor)
+        on_branchable_end node
+      end
     end
   end
 end

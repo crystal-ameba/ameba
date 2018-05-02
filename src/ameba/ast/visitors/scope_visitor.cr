@@ -69,5 +69,31 @@ module Ameba::AST
         @current_scope.try &.add_variable(node)
       end
     end
+
+    def visit(node : Crystal::MacroLiteral)
+      MacroLiteralVarVisitor.new(node).vars.each { |var| visit(var) }
+    end
+  end
+
+  private class MacroLiteralVarVisitor < Crystal::Visitor
+    getter vars = [] of Crystal::Var
+
+    def initialize(literal)
+      Crystal::Parser.new(literal.value).parse.accept self
+    rescue
+      nil
+    end
+
+    def visit(node : Crystal::ASTNode)
+      true
+    end
+
+    def visit(node : Crystal::Var)
+      vars << node
+    end
+
+    def visit(node : Crystal::Call)
+      vars << Crystal::Var.new(node.name).at(node.location)
+    end
   end
 end

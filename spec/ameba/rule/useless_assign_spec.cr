@@ -653,5 +653,36 @@ module Ameba::Rule
         end
       end
     end
+
+    context "macro" do
+      it "doesn't report if assignment is referenced in macro" do
+        s = Source.new %(
+          def method
+            a = 2
+            {% if flag?(:bits64) %}
+              a.to_s
+            {% else %}
+              a
+            {% end %}
+          end
+        )
+        subject.catch(s).should be_valid
+      end
+
+      it "doesn't report referenced assignments in macro literal" do
+        s = Source.new %(
+          def method
+            a = 2
+            {% if flag?(:bits64) %}
+              a = 3
+            {% else %}
+              a = 4
+            {% end %}
+            puts a
+          end
+        )
+        subject.catch(s).should be_valid
+      end
+    end
   end
 end
