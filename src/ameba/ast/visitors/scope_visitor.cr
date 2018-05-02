@@ -64,8 +64,14 @@ module Ameba::AST
     end
 
     # :nodoc:
+    def visit(node : Crystal::Arg)
+      @current_scope.try &.add_variable Crystal::Var.new(node.name).at(node.location)
+    end
+
+    # :nodoc:
     def visit(node : Crystal::Var)
       return unless scope = @current_scope
+
       if !scope.arg?(node) && (variable = scope.find_variable node.name)
         reference = variable.reference node, scope
 

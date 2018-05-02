@@ -257,6 +257,18 @@ module Ameba::Rule
       subject.catch(s).should_not be_valid
     end
 
+    it "does not report if parameter is referenced after the branch" do
+      s = Source.new %(
+        def method(param)
+          3.times do
+            param = 3
+          end
+          param
+        end
+      )
+      subject.catch(s).should be_valid
+    end
+
     context "op assigns" do
       it "does not report if variable is referenced below the op assign" do
         s = Source.new %(
