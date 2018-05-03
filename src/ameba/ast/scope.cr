@@ -66,6 +66,17 @@ module Ameba::AST
       node.is_a?(Crystal::Block) || node.is_a?(Crystal::ProcLiteral)
     end
 
+    # Returns true if and only if current scope represents some
+    # type definition, for example a class.
+    def type_definition?
+      node.is_a?(Crystal::ClassDef) ||
+        node.is_a?(Crystal::ModuleDef) ||
+        node.is_a?(Crystal::LibDef) ||
+        node.is_a?(Crystal::FunDef) ||
+        node.is_a?(Crystal::TypeDef) ||
+        node.is_a?(Crystal::CStructOrUnionDef)
+    end
+
     # Returns true if current scope references variable, false if not.
     def references?(variable : Variable)
       variable.references.any? { |reference| reference.scope == self }
@@ -88,6 +99,12 @@ module Ameba::AST
           arg.name == var.name &&
           arg.location == var.location
       end
+    end
+
+    # Returns true if the `node` represents exactly
+    # the same Crystal node as `@node`.
+    def eql?(node)
+      node == @node && node.location == @node.location
     end
   end
 end

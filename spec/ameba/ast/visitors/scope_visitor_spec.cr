@@ -24,7 +24,7 @@ module Ameba::AST
       ScopeVisitor.new rule, Source.new %(
         3.times {}
       )
-      rule.scopes.size.should eq 1
+      rule.scopes.size.should eq 2
     end
 
     context "inner scopes" do
@@ -36,7 +36,7 @@ module Ameba::AST
           end
         )
         rule.scopes.size.should eq 2
-        rule.scopes.last.outer_scope.should be_nil
+        rule.scopes.last.outer_scope.should_not be_nil
         rule.scopes.first.outer_scope.should eq rule.scopes.last
       end
 
@@ -47,10 +47,10 @@ module Ameba::AST
             2.times {}
           end
         )
-        rule.scopes.size.should eq 2
+        rule.scopes.size.should eq 3
         inner_block = rule.scopes.first
         outer_block = rule.scopes.last
-        inner_block.outer_scope.should eq outer_block
+        inner_block.outer_scope.should_not eq outer_block
         outer_block.outer_scope.should be_nil
       end
     end

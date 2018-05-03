@@ -12,7 +12,7 @@ module Ameba::AST
     getter node : Crystal::Var
 
     # Scope of this variable.
-    getter scope : Scope?
+    getter scope : Scope
 
     delegate location, to: @node
     delegate name, to: @node
@@ -24,7 +24,7 @@ module Ameba::AST
     # Variable.new(node, scope)
     # ```
     #
-    def initialize(@node, @scope = nil)
+    def initialize(@node, @scope)
     end
 
     # Returns true if it is a special variable, i.e `$?`.
@@ -64,7 +64,7 @@ module Ameba::AST
     # variable.reference(var_node, some_scope)
     # ```
     #
-    def reference(node : Crystal::Var, scope : Scope? = nil)
+    def reference(node : Crystal::Var, scope : Scope)
       Reference.new(node, scope).tap do |reference|
         references << reference
       end

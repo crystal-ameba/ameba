@@ -373,6 +373,43 @@ module Ameba::Rule
       end
     end
 
+    context "top level" do
+      it "reports if assignment is not referenced" do
+        s = Source.new %(
+          a = 1
+          a = 2
+        )
+        subject.catch(s).should_not be_valid
+        s.errors.size.should eq 2
+        s.errors.first.location.to_s.should eq ":2:11"
+        s.errors.last.location.to_s.should eq ":3:11"
+      end
+
+      it "doesn't report if assignments are referenced" do
+        s = Source.new %(
+          a = 1
+          a += 1
+          a
+
+          b, c = {1, 2}
+          b
+          c
+        )
+        subject.catch(s).should be_valid
+      end
+
+      it "doesn't report if assignment is captured by block" do
+        s = Source.new %(
+          a = 1
+
+          3.times do
+            a = 2
+          end
+        )
+        subject.catch(s).should be_valid
+      end
+    end
+
     context "branching" do
       context "if-then-else" do
         it "doesn't report if assignment is consumed by branches" do
