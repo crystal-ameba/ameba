@@ -30,6 +30,7 @@ module Ameba::AST
     def initialize(@node, @parent = nil)
     end
 
+    # Returns true if this node or one of the parent branchables is a loop, false otherwise.
     def loop?
       return true if node.is_a? Crystal::While ||
                      node.is_a? Crystal::Until ||

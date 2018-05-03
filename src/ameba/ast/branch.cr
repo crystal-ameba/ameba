@@ -32,6 +32,18 @@ module Ameba::AST
     def initialize(@node, @parent)
     end
 
+    # Returns true if current branch is in a loop, false - otherwise.
+    # For example, this branch is in a loop:
+    #
+    # ```
+    # while true
+    #   handle_input # this branch is in a loop
+    #   if wrong_input
+    #     show_message # this branch is also in a loop.
+    #   end
+    # end
+    # ```
+    #
     def in_loop?
       @parent.loop?
     end
@@ -73,7 +85,7 @@ module Ameba::AST
 
         branches.each do |node|
           break if branch # branch found
-          @current_branch = node
+          @current_branch = node if node
           node.try &.accept(self)
         end
 

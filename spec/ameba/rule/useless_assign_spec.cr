@@ -627,6 +627,24 @@ module Ameba::Rule
           )
           subject.catch(s).should be_valid
         end
+
+        it "works properly if there is branch with blank node" do
+          s = Source.new %(
+            def visit
+              count = 0
+              while true
+                break if count == 1
+                case something
+                when :any
+                else
+                  :anything_else
+                end
+                count += 1
+              end
+            end
+          )
+          subject.catch(s).should be_valid
+        end
       end
 
       context "until" do
