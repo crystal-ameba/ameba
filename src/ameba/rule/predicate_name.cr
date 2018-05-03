@@ -31,13 +31,13 @@ module Ameba::Rule
   #
   struct PredicateName < Base
     properties do
-      description = "Disallows tautological predicate names"
+      description "Disallows tautological predicate names"
     end
 
     MSG = "Favour method name '%s?' over '%s'"
 
     def test(source)
-      AST::Visitor.new self, source
+      AST::NodeVisitor.new self, source
     end
 
     def test(source, node : Crystal::Def)

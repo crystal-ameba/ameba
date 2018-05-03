@@ -20,13 +20,13 @@ module Ameba::Rule
     include AST::Util
 
     properties do
-      description = "Disallows useless string interpolations"
+      description "Disallows useless string interpolations"
     end
 
     MSG = "Literal value found in interpolation"
 
     def test(source)
-      AST::Visitor.new self, source
+      AST::NodeVisitor.new self, source
     end
 
     def test(source, node : Crystal::StringInterpolation)

@@ -54,13 +54,13 @@ module Ameba::Rule
   #
   struct TypeNames < Base
     properties do
-      description = "Enforces type names in camelcase manner"
+      description "Enforces type names in camelcase manner"
     end
 
     MSG = "Type name should be camelcased: %s, but it was %s"
 
     def test(source)
-      AST::Visitor.new self, source
+      AST::NodeVisitor.new self, source
     end
 
     private def check_node(source, node)

@@ -34,7 +34,7 @@ module Ameba::Rule
     # that are tested by this rule, it should add an error.
     abstract def test(source : Source)
 
-    def test(source : Source, node : Crystal::ASTNode)
+    def test(source : Source, node : Crystal::ASTNode, *opts)
       # can't be abstract
     end
 

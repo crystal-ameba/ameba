@@ -33,7 +33,7 @@ module Ameba::Rule
   #
   struct UselessConditionInWhen < Base
     properties do
-      description = "Disallows useless conditions in when"
+      description "Disallows useless conditions in when"
     end
 
     MSG = "Useless condition in when detected"
@@ -52,7 +52,7 @@ module Ameba::Rule
     end
 
     def test(source)
-      AST::Visitor.new self, source
+      AST::NodeVisitor.new self, source
     end
 
     def test(source, node : Crystal::When)

@@ -20,7 +20,7 @@ module Ameba::Rule
   #
   struct UnneededDisableDirective < Base
     properties do
-      description = "Reports unneeded disable directives in comments"
+      description "Reports unneeded disable directives in comments"
     end
 
     MSG = "Unnecessary disabling of %s"

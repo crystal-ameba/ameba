@@ -22,14 +22,14 @@ module Ameba::Rule
   #
   struct ComparisonToBoolean < Base
     properties do
-      enabled = false
-      description = "Disallows comparison to booleans"
+      enabled false
+      description "Disallows comparison to booleans"
     end
 
     MSG = "Comparison to a boolean is pointless"
 
     def test(source)
-      AST::Visitor.new self, source
+      AST::NodeVisitor.new self, source
     end
 
     def test(source, node : Crystal::Call)

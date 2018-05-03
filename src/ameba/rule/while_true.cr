@@ -28,13 +28,13 @@ module Ameba::Rule
   #
   struct WhileTrue < Base
     properties do
-      description = "Disallows while statements with a true literal as condition"
+      description "Disallows while statements with a true literal as condition"
     end
 
     MSG = "While statement using true literal as condition"
 
     def test(source)
-      AST::Visitor.new self, source
+      AST::NodeVisitor.new self, source
     end
 
     def test(source, node : Crystal::While)

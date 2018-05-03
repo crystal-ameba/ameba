@@ -126,12 +126,16 @@ class Ameba::Config
       {% definitions = [] of NamedTuple %}
       {% if block.body.is_a? Assign %}
         {% definitions << {var: block.body.target, value: block.body.value} %}
+      {% elsif block.body.is_a? Call %}
+          {% definitions << {var: block.body.name, value: block.body.args.first} %}
       {% elsif block.body.is_a? TypeDeclaration %}
         {% definitions << {var: block.body.var, value: block.body.value, type: block.body.type} %}
       {% elsif block.body.is_a? Expressions %}
         {% for prop in block.body.expressions %}
           {% if prop.is_a? Assign %}
             {% definitions << {var: prop.target, value: prop.value} %}
+          {% elsif prop.is_a? Call %}
+            {% definitions << {var: prop.name, value: prop.args.first} %}
           {% elsif prop.is_a? TypeDeclaration %}
             {% definitions << {var: prop.var, value: prop.value, type: prop.type} %}
           {% end %}

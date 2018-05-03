@@ -13,13 +13,13 @@ module Ameba::Rule
   #
   struct DebuggerStatement < Base
     properties do
-      description = "Disallows calls to debugger"
+      description "Disallows calls to debugger"
     end
 
     MSG = "Possible forgotten debugger statement detected"
 
     def test(source)
-      AST::Visitor.new self, source
+      AST::NodeVisitor.new self, source
     end
 
     def test(source, node : Crystal::Call)

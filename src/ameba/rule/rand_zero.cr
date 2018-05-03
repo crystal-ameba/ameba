@@ -25,13 +25,13 @@ module Ameba::Rule
   #
   struct RandZero < Base
     properties do
-      description = "Disallows rand zero calls"
+      description "Disallows rand zero calls"
     end
 
     MSG = "%s always returns 0"
 
     def test(source)
-      AST::Visitor.new self, source
+      AST::NodeVisitor.new self, source
     end
 
     def test(source, node : Crystal::Call)

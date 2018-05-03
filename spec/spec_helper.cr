@@ -30,6 +30,17 @@ module Ameba
     end
   end
 
+  struct ScopeRule < Rule::Base
+    getter scopes = [] of AST::Scope
+
+    def test(source)
+    end
+
+    def test(source, node : Crystal::ASTNode, scope : AST::Scope)
+      @scopes << scope
+    end
+  end
+
   class DummyFormatter < Formatter::BaseFormatter
     property started_sources : Array(Source)?
     property finished_sources : Array(Source)?
@@ -71,8 +82,49 @@ module Ameba
       "Source expected to be invalid, but it is valid."
     end
   end
+
+  class TestNodeVisitor < Crystal::Visitor
+    NODES = [
+      Crystal::Var,
+      Crystal::Assign,
+      Crystal::OpAssign,
+      Crystal::MultiAssign,
+      Crystal::Block,
+      Crystal::Def,
+      Crystal::If,
+      Crystal::While,
+      Crystal::MacroLiteral,
+    ]
+
+    def initialize(node)
+      node.accept self
+    end
+
+    def visit(node : Crystal::ASTNode)
+      true
+    end
+
+    {% for node in NODES %}
+      {{getter_name = node.stringify.split("::").last.underscore + "_nodes"}}
+
+      getter {{getter_name.id}} = [] of {{node}}
+
+      def visit(node : {{node}})
+        {{getter_name.id}} << node
+        true
+      end
+    {% end %}
+  end
 end
 
 def be_valid
   Ameba::BeValidExpectation.new
+end
+
+def as_node(source)
+  Crystal::Parser.new(source).parse
+end
+
+def as_nodes(source)
+  Ameba::TestNodeVisitor.new(as_node source)
 end

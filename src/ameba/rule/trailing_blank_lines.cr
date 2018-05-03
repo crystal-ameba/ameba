@@ -10,7 +10,7 @@ module Ameba::Rule
   #
   struct TrailingBlankLines < Base
     properties do
-      description = "Disallows trailing blank lines"
+      description "Disallows trailing blank lines"
     end
 
     MSG = "Blank lines detected at the end of the file"

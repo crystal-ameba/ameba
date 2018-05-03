@@ -29,13 +29,13 @@ module Ameba::Rule
   #
   struct NegatedConditionsInUnless < Base
     properties do
-      description = "Disallows negated conditions in unless"
+      description "Disallows negated conditions in unless"
     end
 
     MSG = "Avoid negated conditions in unless blocks"
 
     def test(source)
-      AST::Visitor.new self, source
+      AST::NodeVisitor.new self, source
     end
 
     def test(source, node : Crystal::Unless)

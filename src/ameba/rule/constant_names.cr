@@ -24,13 +24,13 @@ module Ameba::Rule
   #
   struct ConstantNames < Base
     properties do
-      description = "Enforces constant names to be in screaming case"
+      description "Enforces constant names to be in screaming case"
     end
 
     MSG = "Constant name should be screaming-cased: %s, not %s"
 
     def test(source)
-      AST::Visitor.new self, source
+      AST::NodeVisitor.new self, source
     end
 
     def test(source, node : Crystal::Assign)

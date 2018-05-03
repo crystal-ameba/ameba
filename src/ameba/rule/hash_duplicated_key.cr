@@ -22,13 +22,13 @@ module Ameba::Rule
   #
   struct HashDuplicatedKey < Base
     properties do
-      description = "Disallows duplicated keys in hash literals"
+      description "Disallows duplicated keys in hash literals"
     end
 
     MSG = "Duplicated keys in hash literal: %s"
 
     def test(source)
-      AST::Visitor.new self, source
+      AST::NodeVisitor.new self, source
     end
 
     def test(source, node : Crystal::HashLiteral)

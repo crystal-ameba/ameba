@@ -11,9 +11,9 @@ module Ameba::Rule
   #
   struct LineLength < Base
     properties do
-      enabled = false
-      description = "Disallows lines longer than `MaxLength` number of symbols"
-      max_length = 80
+      enabled false
+      description "Disallows lines longer than `MaxLength` number of symbols"
+      max_length 80
     end
 
     MSG = "Line too long"

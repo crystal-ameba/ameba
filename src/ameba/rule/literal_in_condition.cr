@@ -24,14 +24,14 @@ module Ameba::Rule
     include AST::Util
 
     properties do
-      description = "Disallows useless conditional statements that contain \
+      description "Disallows useless conditional statements that contain \
         a literal in place of a variable or predicate function"
     end
 
     MSG = "Literal value found in conditional"
 
     def test(source)
-      AST::Visitor.new self, source
+      AST::NodeVisitor.new self, source
     end
 
     def check_node(source, node)

@@ -32,14 +32,14 @@ module Ameba::Rule
     include AST::Util
 
     properties do
-      description = "Disallows empty expressions"
+      description "Disallows empty expressions"
     end
 
     MSG      = "Avoid empty expression %s"
     MSG_EXRS = "Avoid empty expressions"
 
     def test(source)
-      AST::Visitor.new self, source
+      AST::NodeVisitor.new self, source
     end
 
     def test(source, node : Crystal::NilLiteral)

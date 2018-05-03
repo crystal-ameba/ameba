@@ -40,13 +40,13 @@ module Ameba::Rule
   #
   struct MethodNames < Base
     properties do
-      description = "Enforces method names to be in underscored case"
+      description "Enforces method names to be in underscored case"
     end
 
     MSG = "Method name should be underscore-cased: %s, not %s"
 
     def test(source)
-      AST::Visitor.new self, source
+      AST::NodeVisitor.new self, source
     end
 
     def test(source, node : Crystal::Def)

@@ -36,13 +36,13 @@ module Ameba::Rule
   #
   struct ShadowedException < Base
     properties do
-      description = "Disallows rescued exception that get shadowed"
+      description "Disallows rescued exception that get shadowed"
     end
 
     MSG = "Exception handler has shadowed exceptions: %s"
 
     def test(source)
-      AST::Visitor.new self, source
+      AST::NodeVisitor.new self, source
     end
 
     def test(source, node : Crystal::ExceptionHandler)

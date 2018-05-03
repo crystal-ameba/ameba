@@ -35,7 +35,7 @@ module Ameba::Rule
       subject.catch(s).should be_valid
     end
 
-    it "failes if there is unneeded directive" do
+    it "fails if there is unneeded directive" do
       s = Source.new %Q(
         # ameba:disable #{NamedRule.name}
         a = 1

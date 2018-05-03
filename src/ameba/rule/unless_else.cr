@@ -45,13 +45,13 @@ module Ameba::Rule
   #
   struct UnlessElse < Base
     properties do
-      description = "Disallows the use of an `else` block with the `unless`"
+      description "Disallows the use of an `else` block with the `unless`"
     end
 
     MSG = "Favour if over unless with else"
 
     def test(source)
-      AST::Visitor.new self, source
+      AST::NodeVisitor.new self, source
     end
 
     def test(source, node : Crystal::Unless)
