@@ -85,7 +85,7 @@ module Ameba::AST
 
         branches.each do |node|
           break if branch # branch found
-          @current_branch = node if node
+          @current_branch = node if node && !node.nop?
           node.try &.accept(self)
         end
 

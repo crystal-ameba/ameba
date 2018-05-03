@@ -494,6 +494,25 @@ module Ameba::Rule
           )
           subject.catch(s).should be_valid
         end
+
+        it "does not report referenced assignments in inner branches" do
+          s = Source.new %(
+            def method
+              has_newline = false
+
+              if something
+                do_something unless false
+                has_newline = false
+              else
+                do_something if true
+                has_newline = true
+              end
+
+              has_newline
+            end
+          )
+          subject.catch(s).should be_valid
+        end
       end
 
       context "unless-then-else" do
