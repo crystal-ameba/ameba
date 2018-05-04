@@ -37,7 +37,7 @@ module Ameba::Rule
       AST::ScopeVisitor.new self, source
     end
 
-    def test(source, node, scope : AST::Scope)
+    def test(source, _node, scope : AST::Scope)
       scope.variables.each do |var|
         next if var.captured_by_block?
 

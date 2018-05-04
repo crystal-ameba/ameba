@@ -78,7 +78,7 @@ module Ameba::Rule
         true
       end
 
-      def visit(node : Crystal::ASTNode)
+      def visit(_node : Crystal::ASTNode)
         true
       end
     end

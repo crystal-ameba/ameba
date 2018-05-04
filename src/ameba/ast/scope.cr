@@ -7,6 +7,9 @@ module Ameba::AST
     # Link to local variables
     getter variables = [] of Variable
 
+    # Link to the arguments in current scope
+    getter arguments = [] of Argument
+
     # Link to the outer scope
     getter outer_scope : Scope?
 
@@ -38,6 +41,11 @@ module Ameba::AST
     # ```
     def add_variable(node)
       variables << Variable.new(node, self)
+    end
+
+    def add_argument(node)
+      add_variable Crystal::Var.new(node.name).at(node.location)
+      arguments << Argument.new(node, variables.last)
     end
 
     # Returns variable by its name or nil if it does not exist.
@@ -77,28 +85,30 @@ module Ameba::AST
         node.is_a?(Crystal::CStructOrUnionDef)
     end
 
-    # Returns true if current scope references variable, false if not.
+    # Returns true if current scope (or any of inner scopes) references variable,
+    # false if not.
     def references?(variable : Variable)
-      variable.references.any? { |reference| reference.scope == self }
+      variable.references.any? do |reference|
+        reference.scope == self || inner_scopes.any?(&.references? variable)
+      end
     end
 
-    # Returns arguments of this scope (if any).
-    def args
+    # Returns true if var is an argument in current scope, false if not.
+    def arg?(var)
       case current_node = node
-      when Crystal::Block, Crystal::Def then current_node.args
-      when Crystal::ProcLiteral         then current_node.def.args
+      when Crystal::Def
+        var.is_a?(Crystal::Arg) && any_arg?(current_node.args, var)
+      when Crystal::Block
+        var.is_a?(Crystal::Var) && any_arg?(current_node.args, var)
+      when Crystal::ProcLiteral
+        var.is_a?(Crystal::Var) && any_arg?(current_node.def.args, var)
       else
-        [] of Crystal::Var
+        false
       end
     end
 
-    # Returns true if variable is an argument in current scope, false if not.
-    def arg?(var : Crystal::Var)
-      args.any? do |arg|
-        arg.is_a?(Crystal::Var) &&
-          arg.name == var.name &&
-          arg.location == var.location
-      end
+    private def any_arg?(args, var)
+      args.any? { |arg| arg.name == var.name && arg.location == var.location }
     end
 
     # Returns true if the `node` represents exactly

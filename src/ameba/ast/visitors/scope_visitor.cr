@@ -94,19 +94,22 @@ module Ameba::AST
 
     # :nodoc:
     def visit(node : Crystal::Arg)
-      @current_scope.add_variable Crystal::Var.new(node.name).at(node.location)
+      @current_scope.add_argument node
     end
 
     # :nodoc:
     def visit(node : Crystal::Var)
-      if !@current_scope.arg?(node) && (variable = @current_scope.find_variable node.name)
-        reference = variable.reference node, @current_scope
+      variable = @current_scope.find_variable node.name
 
+      if @current_scope.arg?(node)
+        @current_scope.add_argument(node)
+      elsif variable.nil? && @current_assign
+        @current_scope.add_variable(node)
+      elsif variable # this is a reference
+        reference = variable.reference node, @current_scope
         if @current_assign.is_a?(Crystal::OpAssign) || !reference.target_of?(@current_assign)
           variable.reference_assignments!
         end
-      else
-        @current_scope.add_variable(node)
       end
     end
 
@@ -125,7 +128,7 @@ module Ameba::AST
       nil
     end
 
-    def visit(node : Crystal::ASTNode)
+    def visit(_node : Crystal::ASTNode)
       true
     end
 

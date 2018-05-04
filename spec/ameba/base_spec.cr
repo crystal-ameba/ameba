@@ -2,7 +2,7 @@ require "../spec_helper"
 
 module Ameba::Rule
   struct NoProperties < Rule::Base
-    def test(source)
+    def test(_source)
     end
   end
 

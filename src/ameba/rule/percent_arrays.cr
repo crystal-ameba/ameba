@@ -53,7 +53,7 @@ module Ameba::Rule
       end
     end
 
-    private def array_entry_invalid?(entry, array_type)
+    private def array_entry_invalid?(entry, array_type) # ameba:disable UnusedArgument
       case array_type
       when .starts_with? "%w"
         check_array_entry entry, string_array_unwanted_symbols, "%w"

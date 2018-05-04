@@ -32,9 +32,9 @@ module Ameba::Rule
 
     # This method is designed to test the source passed in. If source has issues
     # that are tested by this rule, it should add an error.
-    abstract def test(source : Source)
+    abstract def test(_source : Source)
 
-    def test(source : Source, node : Crystal::ASTNode, *opts)
+    def test(_source : Source, _node : Crystal::ASTNode, *_opts)
       # can't be abstract
     end
 
