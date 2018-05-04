@@ -29,7 +29,7 @@ module Ameba::AST
 
     # Returns true if it is a special variable, i.e `$?`.
     def special?
-      name =~ /^\$/
+      @node.special_var?
     end
 
     # Assigns the variable (creates a new assignment).
