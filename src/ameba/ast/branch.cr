@@ -92,7 +92,7 @@ module Ameba::AST
         false
       end
 
-      private def on_branchable_end(_node)
+      private def on_branchable_end(node)
         @branchable = @branchable.try &.parent
       end
 

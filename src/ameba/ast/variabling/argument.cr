@@ -30,10 +30,12 @@ module Ameba::AST
     def initialize(@node, @variable)
     end
 
+    # Returns true if the name starts with '_', false if not.
     def ignored?
       name.starts_with? '_'
     end
 
+    # Name of the argument.
     def name
       case current_node = node
       when Crystal::Var then current_node.name

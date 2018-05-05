@@ -7,7 +7,7 @@ module Ameba
       description : String = "Dummy rule that does nothing."
     end
 
-    def test(_source)
+    def test(source)
     end
   end
 
@@ -16,7 +16,7 @@ module Ameba
       description : String = "A rule with a custom name."
     end
 
-    def test(_source)
+    def test(source)
     end
 
     def self.name
@@ -33,10 +33,10 @@ module Ameba
   struct ScopeRule < Rule::Base
     getter scopes = [] of AST::Scope
 
-    def test(_source)
+    def test(source)
     end
 
-    def test(_source, _node : Crystal::ASTNode, scope : AST::Scope)
+    def test(source, node : Crystal::ASTNode, scope : AST::Scope)
       @scopes << scope
     end
   end
@@ -78,7 +78,7 @@ module Ameba
       end
     end
 
-    def negative_failure_message(_source)
+    def negative_failure_message(source)
       "Source expected to be invalid, but it is valid."
     end
   end
@@ -100,7 +100,7 @@ module Ameba
       node.accept self
     end
 
-    def visit(_node : Crystal::ASTNode)
+    def visit(node : Crystal::ASTNode)
       true
     end
 

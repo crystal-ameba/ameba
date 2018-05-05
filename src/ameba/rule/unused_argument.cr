@@ -20,11 +20,18 @@ module Ameba::Rule
   # ```
   # UnusedArgument:
   #   Enabled: true
+  #   IgnoreDefs: true
+  #   IgnoreBlocks: false
+  #   IgnoreProcs: false
   # ```
   #
   struct UnusedArgument < Base
     properties do
       description "Disallows unused arguments"
+
+      ignore_defs true
+      ignore_blocks false
+      ignore_procs false
     end
 
     MSG = "Unused argument `%s`"
@@ -33,16 +40,16 @@ module Ameba::Rule
       AST::ScopeVisitor.new self, source
     end
 
-    def test(source, _node : Crystal::ProcLiteral, scope : AST::Scope)
-      find_unused_arguments source, scope
+    def test(source, node : Crystal::ProcLiteral, scope : AST::Scope)
+      ignore_procs || find_unused_arguments source, scope
     end
 
-    def test(source, _node : Crystal::Block, scope : AST::Scope)
-      find_unused_arguments source, scope
+    def test(source, node : Crystal::Block, scope : AST::Scope)
+      ignore_blocks || find_unused_arguments source, scope
     end
 
-    def test(source, _node : Crystal::Def, scope : AST::Scope)
-      find_unused_arguments source, scope
+    def test(source, node : Crystal::Def, scope : AST::Scope)
+      ignore_defs || find_unused_arguments source, scope
     end
 
     private def find_unused_arguments(source, scope)

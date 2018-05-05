@@ -2,6 +2,7 @@ require "../../spec_helper"
 
 module Ameba::Rule
   subject = UnusedArgument.new
+  subject.ignore_defs = false
 
   describe UnusedArgument do
     it "doesn't report if arguments are used" do
@@ -134,13 +135,13 @@ module Ameba::Rule
       subject.catch(s).should_not be_valid
     end
 
-    pending "doesn't report if block is used with yield" do
+    it "reports if unused and there is yield" do
       s = Source.new %(
         def method(&block)
           yield 1
         end
       )
-      subject.catch(s).should be_valid
+      subject.catch(s).should_not be_valid
     end
 
     it "reports rule, location and message" do
@@ -153,6 +154,64 @@ module Ameba::Rule
       error.rule.should_not be_nil
       error.message.should eq "Unused argument `a`"
       error.location.to_s.should eq "source.cr:2:20"
+    end
+
+    context "properties" do
+      describe "#ignore_defs" do
+        it "lets the rule to ignore def scopes if true" do
+          subject.ignore_defs = true
+          s = Source.new %(
+            def method(a)
+            end
+          )
+          subject.catch(s).should be_valid
+        end
+
+        it "lets the rule not to ignore def scopes if false" do
+          subject.ignore_defs = false
+          s = Source.new %(
+            def method(a)
+            end
+          )
+          subject.catch(s).should_not be_valid
+        end
+      end
+
+      context "#ignore_blocks" do
+        it "lets the rule to ignore block scopes if true" do
+          subject.ignore_blocks = true
+          s = Source.new %(
+            3.times { |i| puts "yo!" }
+          )
+          subject.catch(s).should be_valid
+        end
+
+        it "lets the rule not to ignore block scopes if false" do
+          subject.ignore_blocks = false
+          s = Source.new %(
+            3.times { |i| puts "yo!" }
+          )
+          subject.catch(s).should_not be_valid
+        end
+      end
+
+      context "#ignore_procs" do
+        it "lets the rule to ignore proc scopes if true" do
+          subject.ignore_procs = true
+          s = Source.new %(
+            ->(a : Int32) {}
+          )
+          subject.catch(s).should be_valid
+        end
+
+        it "lets the rule not to ignore proc scopes if false" do
+          subject.ignore_procs = false
+          s = Source.new %(
+            ->(a : Int32) {}
+          )
+          subject.catch(s).should_not be_valid
+        end
+      end
     end
   end
 end
