@@ -117,6 +117,17 @@ module Ameba::AST
     def visit(node : Crystal::MacroLiteral)
       MacroLiteralVarVisitor.new(node).vars.each { |var| visit(var) }
     end
+
+    # :nodoc:
+    def visit(node : Crystal::Call)
+      return true unless node.name == "super" && node.args.empty?
+      return true unless (scope = @current_scope).def?
+      scope.arguments.each do |arg|
+        variable = arg.variable
+        variable.reference(variable.node, scope).explicit = false
+      end
+      true
+    end
   end
 
   private class MacroLiteralVarVisitor < Crystal::Visitor

@@ -93,6 +93,11 @@ module Ameba::AST
       end
     end
 
+    # Returns true if current scope is a def, false if not.
+    def def?
+      node.is_a? Crystal::Def
+    end
+
     # Returns true if var is an argument in current scope, false if not.
     def arg?(var)
       case current_node = node

@@ -144,6 +144,29 @@ module Ameba::Rule
       subject.catch(s).should_not be_valid
     end
 
+    it "doesn't report if variable is referenced implicitly" do
+      s = Source.new %(
+        class Bar < Foo
+          def method(a, b)
+            super
+          end
+        end
+      )
+      subject.catch(s).should be_valid
+    end
+
+    it "reports if variable is not referenced implicitly by super" do
+      s = Source.new %(
+        class Bar < Foo
+          def method(a, b)
+            super a
+          end
+        end
+      )
+      subject.catch(s).should_not be_valid
+      s.errors.first.message.should eq "Unused argument `b`"
+    end
+
     it "reports rule, location and message" do
       s = Source.new %(
         def method(a)
