@@ -109,24 +109,6 @@ module Ameba::Rule
       subject.catch(s).should be_valid
     end
 
-    it "doesn't report if it is a used macro argument" do
-      s = Source.new %(
-        macro my_macro(arg)
-          {% arg %}
-        end
-      )
-      subject.catch(s).should be_valid
-    end
-
-    it "doesn't report if it is a used macro block argument" do
-      s = Source.new %(
-        macro my_macro(&block)
-          {% block %}
-        end
-      )
-      subject.catch(s).should be_valid
-    end
-
     it "reports if block arg is not used" do
       s = Source.new %(
         def method(&block)
@@ -155,28 +137,65 @@ module Ameba::Rule
       subject.catch(s).should be_valid
     end
 
-    it "reports if variable is not referenced implicitly by super" do
-      s = Source.new %(
-        class Bar < Foo
-          def method(a, b)
-            super a
+    context "super" do
+      it "reports if variable is not referenced implicitly by super" do
+        s = Source.new %(
+          class Bar < Foo
+            def method(a, b)
+              super a
+            end
           end
-        end
-      )
-      subject.catch(s).should_not be_valid
-      s.errors.first.message.should eq "Unused argument `b`"
+        )
+        subject.catch(s).should_not be_valid
+        s.errors.first.message.should eq "Unused argument `b`"
+      end
+
+      it "reports rule, location and message" do
+        s = Source.new %(
+          def method(a)
+          end
+        ), "source.cr"
+        subject.catch(s).should_not be_valid
+        error = s.errors.first
+        error.rule.should_not be_nil
+        error.message.should eq "Unused argument `a`"
+        error.location.to_s.should eq "source.cr:2:22"
+      end
     end
 
-    it "reports rule, location and message" do
-      s = Source.new %(
-        def method(a)
-        end
-      ), "source.cr"
-      subject.catch(s).should_not be_valid
-      error = s.errors.first
-      error.rule.should_not be_nil
-      error.message.should eq "Unused argument `a`"
-      error.location.to_s.should eq "source.cr:2:20"
+    context "macro" do
+      it "doesn't report if it is a used macro argument" do
+        s = Source.new %(
+          macro my_macro(arg)
+            {% arg %}
+          end
+        )
+        subject.catch(s).should be_valid
+      end
+
+      it "doesn't report if it is a used macro block argument" do
+        s = Source.new %(
+          macro my_macro(&block)
+            {% block %}
+          end
+        )
+        subject.catch(s).should be_valid
+      end
+
+      it "doesn't report used macro args with equal names in record" do
+        s = Source.new %(
+          record X do
+            macro foo(a, b)
+              {{a}} + {{b}}
+            end
+
+            macro bar(a, b, c)
+              {{a}} + {{b}} + {{c}}
+            end
+          end
+        )
+        subject.catch(s).should be_valid
+      end
     end
 
     context "properties" do

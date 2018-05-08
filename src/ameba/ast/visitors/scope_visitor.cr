@@ -73,6 +73,11 @@ module Ameba::AST
       on_scope_enter(node)
     end
 
+    # :nodoc:
+    def visit(node : Crystal::Macro)
+      on_scope_enter(node)
+    end
+
     @current_assign : Crystal::ASTNode?
 
     # :nodoc:

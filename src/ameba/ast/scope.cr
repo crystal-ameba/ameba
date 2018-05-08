@@ -119,7 +119,9 @@ module Ameba::AST
     # Returns true if the `node` represents exactly
     # the same Crystal node as `@node`.
     def eql?(node)
-      node == @node && node.location == @node.location
+      node == @node &&
+        !node.location.nil? &&
+        node.location == @node.location
     end
   end
 end
