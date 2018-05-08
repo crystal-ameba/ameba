@@ -22,15 +22,28 @@ Ameba is a static code analysis tool for the Crystal language.
 It enforces a consistent [Crystal code style](https://crystal-lang.org/docs/conventions/coding_style.html),
 also catches code smells and wrong code constructions.
 
-## How it works
+## Usage
 
-Ameba's *"fingerlike projections"* are [rules](src/ameba/rule/). Each rule makes the inspection for that or
-another problem in the source code. Currently rules are able to:
+Run `ameba` binary within your project directory to catch code issues:
 
-- [x] simply validate lines of source code
-- [x] traverse AST using [`Crystal::Visitor`](https://github.com/crystal-lang/crystal/blob/1f3e8b0e742b55c1feb5584dc932e87034365f48/src/compiler/crystal/syntax/visitor.cr)
-- [x] tokenize sources using [`Crystal::Lexer`](https://github.com/crystal-lang/crystal/blob/1f3e8b0e742b55c1feb5584dc932e87034365f48/src/compiler/crystal/syntax/lexer.cr) and iterate through tokens
-- [ ] do semantics analysis using [`Crystal::SemanticVisitor`](https://github.com/crystal-lang/crystal/blob/master/src/compiler/crystal/semantic/semantic_visitor.cr)
+```sh
+$ ameba
+Inspecting 107 files.
+
+...............F.....................F...............................................
+.....................
+
+src/ameba/rule/unneeded_disable_directive.cr:29:7
+UselessAssign: Useless assignment to variable `s`
+
+src/ameba/formatter/flycheck_formatter.cr:5:21
+UnusedArgument: Unused argument `location`
+
+Finished in 248.9 milliseconds
+
+107 inspected, 2 failures.
+
+```
 
 ## Installation
 
@@ -75,30 +88,6 @@ $ git clone https://github.com/veelenga/ameba && cd ameba
 $ make install
 ```
 
-## Usage
-
-Run `ameba` binary within your project directory to catch code issues:
-
-```sh
-$ ameba
-Inspecting 52 files.
-
-.........................F.......F........F.........
-
-src/ameba/ast/traverse.cr:27:5
-PredicateName: Favour method name 'node?' over 'is_node?'
-
-src/ameba/rules/empty_expression.cr:42:7
-LiteralInCondition: Literal value found in conditional
-
-src/ameba/rules/empty_expression.cr:30:7
-UnlessElse: Favour if over unless with else
-
-Finished in 10.53 milliseconds
-
-52 inspected, 3 failures.
-```
-
 ## Configuration
 
 Default configuration file is `.ameba.yml`.
@@ -115,34 +104,6 @@ One or more rules can't be disabled using inline directives:
 time = Time.epoch(1483859302)
 
 time = Time.epoch(1483859302) # ameba:disable LargeNumbers
-```
-
-## Writing a new Rule
-
-Adding a new rule is as simple as inheriting from `Ameba::Rule::Base` struct and implementing
-a logic to detect a problem in the source file:
-
-```crystal
-struct MySuperRule < Ameba::Rule::Base
-  # This is a required method to be implemented by the rule.
-  # Source will be passed here. If rule detects an issue in the source,
-  # it reports an error:
-  #
-  #   source.error rule, location, message
-  #
-  def test(source)
-    # TODO: test source
-  end
-end
-
-```
-
-As soon as a custom rule is defined, it becomes available in a full set of rules
-executed by default and also can be configured via config file:
-
-```yaml
-MySuperRule:
-  Enabled: false
 ```
 
 ## Editor integration
