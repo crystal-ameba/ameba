@@ -582,6 +582,18 @@ module Ameba::Rule
           s.errors.first.location.to_s.should eq ":5:17"
           s.errors.last.location.to_s.should eq ":7:17"
         end
+
+        it "doesn't report if assignment is referenced in cond" do
+          s = Source.new %(
+            def method
+              a = 2
+              case a
+              when /foo/
+              end
+            end
+          )
+          subject.catch(s).should be_valid
+        end
       end
 
       context "binary operator" do

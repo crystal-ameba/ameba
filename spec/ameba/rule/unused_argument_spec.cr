@@ -137,6 +137,17 @@ module Ameba::Rule
       subject.catch(s).should be_valid
     end
 
+    it "doesn't report if arg if referenced in case" do
+      s = Source.new %(
+        def foo(a)
+          case a
+          when /foo/
+          end
+        end
+      )
+      subject.catch(s).should be_valid
+    end
+
     context "super" do
       it "reports if variable is not referenced implicitly by super" do
         s = Source.new %(

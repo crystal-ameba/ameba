@@ -121,18 +121,16 @@ module Ameba::AST
       end
 
       context "Crystal::Case" do
-        # FIXME:
-        # https://github.com/crystal-lang/crystal/pull/6032
-        # it "constructs a branch in cond" do
-        #   branch = branch_of_assign_in_def %(
-        #     def method(a)
-        #       case (a = 2)
-        #       when true then nil
-        #       end
-        #     end
-        #   )
-        #   branch.to_s.should eq "(a = 2)"
-        # end
+        it "constructs a branch in cond" do
+          branch = branch_of_assign_in_def %(
+            def method(a)
+              case (a = 2)
+              when true then nil
+              end
+            end
+          )
+          branch.to_s.should eq "(a = 2)"
+        end
 
         it "constructs a branch in when" do
           branch = branch_of_assign_in_def %(
