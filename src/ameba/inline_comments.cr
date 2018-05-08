@@ -70,6 +70,13 @@ module Ameba
       end
     end
 
+    # Returns true if the line at the given `line_number` is a comment.
+    def comment?(line_number : Int32)
+      if line = lines[line_number]?
+        comment?(line)
+      end
+    end
+
     private def comment?(line)
       return true if line.lstrip.starts_with? '#'
     end

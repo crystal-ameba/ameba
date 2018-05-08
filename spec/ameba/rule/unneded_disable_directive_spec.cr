@@ -18,7 +18,16 @@ module Ameba::Rule
       subject.catch(s).should be_valid
     end
 
-    it "passes if there is disable directive and it is needed" do
+    it "doesn't report if there is disable directive and it is needed" do
+      s = Source.new %Q(
+        # ameba:disable #{NamedRule.name}
+        a = 1
+      )
+      s.error NamedRule.new, 3, 9, "Useless assignment", :disabled
+      subject.catch(s).should be_valid
+    end
+
+    it "passes if there is inline disable directive and it is needed" do
       s = Source.new %Q(
         a = 1 # ameba:disable #{NamedRule.name}
       )

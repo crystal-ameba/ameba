@@ -72,7 +72,7 @@ module Ameba
     def failure_message(source)
       String.build do |str|
         str << "Source expected to be valid, but there are errors:\n\n"
-        source.errors.each do |e|
+        source.errors.reject(&.disabled?).each do |e|
           str << "  * #{e.rule.name}: #{e.message}\n"
         end
       end

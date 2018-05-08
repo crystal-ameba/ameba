@@ -43,9 +43,18 @@ module Ameba::Rule
         source.errors.any? do |error|
           error.rule.name == rule_name &&
             error.disabled? &&
-            error.location.try(&.line_number) == location.line_number
+            error_at_location?(source, error, location)
         end && rule_name != self.name
       end
+    end
+
+    private def error_at_location?(source, error, location)
+      return false unless error_line_number = error.location.try(&.line_number)
+
+      error_line_number == location.line_number ||
+        ((prev_line_number = error_line_number - 1) &&
+          prev_line_number == location.line_number &&
+          source.comment?(prev_line_number - 1))
     end
   end
 end
