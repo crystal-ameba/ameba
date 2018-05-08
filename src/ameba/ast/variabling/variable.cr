@@ -105,8 +105,6 @@ module Ameba::AST
     # 3.times { |i| i + 1 }
     # ```
     def captured_by_block?(scope = @scope)
-      return false unless scope
-
       scope.inner_scopes.each do |inner_scope|
         return true if inner_scope.block? && inner_scope.references?(self)
         return true if captured_by_block?(inner_scope)

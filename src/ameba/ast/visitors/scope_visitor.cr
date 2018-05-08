@@ -73,6 +73,11 @@ module Ameba::AST
       on_scope_enter(node)
     end
 
+    # :nodoc:
+    def visit(node : Crystal::Macro)
+      on_scope_enter(node)
+    end
+
     @current_assign : Crystal::ASTNode?
 
     # :nodoc:
@@ -94,25 +99,39 @@ module Ameba::AST
 
     # :nodoc:
     def visit(node : Crystal::Arg)
-      @current_scope.add_variable Crystal::Var.new(node.name).at(node.location)
+      @current_scope.add_argument node
     end
 
     # :nodoc:
     def visit(node : Crystal::Var)
-      if !@current_scope.arg?(node) && (variable = @current_scope.find_variable node.name)
-        reference = variable.reference node, @current_scope
+      variable = @current_scope.find_variable node.name
 
+      if @current_scope.arg?(node) # node is an argument
+        @current_scope.add_argument(node)
+      elsif variable.nil? && @current_assign # node is a variable
+        @current_scope.add_variable(node)
+      elsif variable # node is a reference
+        reference = variable.reference node, @current_scope
         if @current_assign.is_a?(Crystal::OpAssign) || !reference.target_of?(@current_assign)
           variable.reference_assignments!
         end
-      else
-        @current_scope.add_variable(node)
       end
     end
 
     # :nodoc:
     def visit(node : Crystal::MacroLiteral)
       MacroLiteralVarVisitor.new(node).vars.each { |var| visit(var) }
+    end
+
+    # :nodoc:
+    def visit(node : Crystal::Call)
+      return true unless node.name == "super" && node.args.empty?
+      return true unless (scope = @current_scope).def?
+      scope.arguments.each do |arg|
+        variable = arg.variable
+        variable.reference(variable.node, scope).explicit = false
+      end
+      true
     end
   end
 
