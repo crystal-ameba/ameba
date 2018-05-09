@@ -1,4 +1,4 @@
-{% if Crystal::VERSION == "0.24.2" %}
+{% if compare_versions(Crystal::VERSION, "0.24.2") <= 0 %}
   # workaround for https://github.com/crystal-lang/crystal/pull/6032
   module Crystal
     class Case < ASTNode
