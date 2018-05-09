@@ -97,7 +97,7 @@ Generate new file by running `ameba --gen-config`.
 
 ### Inline disabling
 
-One or more rules can't be disabled using inline directives:
+One or more rules can be disabled using inline directives:
 
 ```crystal
 # ameba:disable LargeNumbers
