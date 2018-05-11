@@ -18,6 +18,7 @@ class Ameba::Config
     flycheck: Formatter::FlycheckFormatter,
     silent:   Formatter::BaseFormatter,
     disabled: Formatter::DisabledFormatter,
+    json:     Formatter::JSONFormatter,
   }
 
   PATH = ".ameba.yml"
