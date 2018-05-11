@@ -47,6 +47,12 @@ module Ameba::Cli
         c.formatter.should eq :todo
       end
 
+      it "ignores --config if --gen-config flag passed" do
+        c = Cli.parse_args %w(--gen-config --config my_config.yml)
+        c.formatter.should eq :todo
+        c.config.should eq ""
+      end
+
       it "accepts unknown args as files" do
         c = Cli.parse_args %w(source1.cr source2.cr)
         c.files.should eq %w(source1.cr source2.cr)

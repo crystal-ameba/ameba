@@ -59,6 +59,7 @@ module Ameba::Cli
       parser.on("--gen-config",
         "Generate a configuration file acting as a TODO list") do
         opts.formatter = :todo
+        opts.config = ""
       end
     end
 
