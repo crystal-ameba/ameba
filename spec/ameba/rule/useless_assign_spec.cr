@@ -820,6 +820,37 @@ module Ameba::Rule
         )
         subject.catch(s).should be_valid
       end
+
+      it "doesn't report if assignment is referenced in macro def" do
+        s = Source.new %(
+          macro macro_call
+            puts x
+          end
+
+          def foo
+            x = 1
+            macro_call
+          end
+        )
+        subject.catch(s).should be_valid
+      end
+
+      it "reports if assignment is referenced in macro def in a different scope" do
+        s = Source.new %(
+          class Foo
+            def foo
+              x = 1
+            end
+          end
+
+          class Bar
+            macro macro_call
+              puts x
+            end
+          end
+        )
+        subject.catch(s).should_not be_valid
+      end
     end
   end
 end

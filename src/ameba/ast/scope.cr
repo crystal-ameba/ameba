@@ -19,6 +19,9 @@ module Ameba::AST
     # The actual AST node that represents a current scope.
     getter node : Crystal::ASTNode
 
+    # Macro literals in current scope
+    getter macro_literals = [] of Crystal::MacroLiteral
+
     delegate to_s, to: node
     delegate location, to: node
 

@@ -120,7 +120,7 @@ module Ameba::AST
 
     # :nodoc:
     def visit(node : Crystal::MacroLiteral)
-      MacroLiteralVarVisitor.new(node).vars.each { |var| visit(var) }
+      @current_scope.macro_literals << node
     end
 
     # :nodoc:
@@ -132,28 +132,6 @@ module Ameba::AST
         variable.reference(variable.node, scope).explicit = false
       end
       true
-    end
-  end
-
-  private class MacroLiteralVarVisitor < Crystal::Visitor
-    getter vars = [] of Crystal::Var
-
-    def initialize(literal)
-      Crystal::Parser.new(literal.value).parse.accept self
-    rescue
-      nil
-    end
-
-    def visit(node : Crystal::ASTNode)
-      true
-    end
-
-    def visit(node : Crystal::Var)
-      vars << node
-    end
-
-    def visit(node : Crystal::Call)
-      vars << Crystal::Var.new(node.name).at(node.location)
     end
   end
 end

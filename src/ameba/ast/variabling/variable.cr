@@ -89,7 +89,7 @@ module Ameba::AST
       end
     end
 
-    # Returns true if the current assignment is referenced in
+    # Returns true if the current var is referenced in
     # in the block. For example this variable is captured
     # by block:
     #
@@ -110,6 +110,16 @@ module Ameba::AST
         return true if captured_by_block?(inner_scope)
       end
 
+      false
+    end
+
+    # Returns true if current variable potentially referenced in a macro literal,
+    # false if not.
+    def used_in_macro?(scope = @scope)
+      scope.inner_scopes.each do |inner_scope|
+        return true if inner_scope.macro_literals.any? { |literal| literal.value.includes?(name) }
+      end
+      return true if (outer_scope = scope.outer_scope) && used_in_macro?(outer_scope)
       false
     end
 
