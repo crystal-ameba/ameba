@@ -110,6 +110,7 @@ time = Time.epoch(1483859302) # ameba:disable LargeNumbers
 
  * Vim: [vim-crystal](https://github.com/rhysd/vim-crystal) (via [Syntastic](https://github.com/vim-syntastic/syntastic))
  * Emacs: [ameba.el](https://github.com/veelenga/ameba.el)
+ * Sublime Text: [Sublime Linter Ameba](https://github.com/epergo/SublimeLinter-contrib-ameba)
 
 ## Credits & inspirations
 
