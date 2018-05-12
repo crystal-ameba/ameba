@@ -81,7 +81,7 @@ module Ameba::AST
     @current_assign : Crystal::ASTNode?
 
     # :nodoc:
-    def visit(node : Crystal::Assign | Crystal::OpAssign | Crystal::MultiAssign)
+    def visit(node : Crystal::Assign | Crystal::OpAssign | Crystal::MultiAssign | Crystal::UninitializedVar)
       @current_assign = node
     end
 
@@ -89,12 +89,21 @@ module Ameba::AST
     def end_visit(node : Crystal::Assign | Crystal::OpAssign)
       @current_scope.assign_variable(node.target)
       @current_assign = nil
+      on_scope_end(node) if @current_scope.eql?(node)
     end
 
     # :nodoc:
     def end_visit(node : Crystal::MultiAssign)
       node.targets.each { |target| @current_scope.assign_variable(target) }
       @current_assign = nil
+      on_scope_end(node) if @current_scope.eql?(node)
+    end
+
+    # :nodoc:
+    def end_visit(node : Crystal::UninitializedVar)
+      @current_scope.assign_variable(node.var)
+      @current_assign = nil
+      on_scope_end(node) if @current_scope.eql?(node)
     end
 
     # :nodoc:

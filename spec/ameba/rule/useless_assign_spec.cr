@@ -852,5 +852,33 @@ module Ameba::Rule
         subject.catch(s).should_not be_valid
       end
     end
+
+    context "uninitialized" do
+      it "reports if uninitialized assignment is not referenced at a top level" do
+        s = Source.new %(
+          a = uninitialized U
+        )
+        subject.catch(s).should_not be_valid
+      end
+
+      it "reports if uninitialized assignment is not referenced in a method" do
+        s = Source.new %(
+          def foo
+            a = uninitialized U
+          end
+        )
+        subject.catch(s).should_not be_valid
+      end
+
+      it "doesn't report if uninitialized assignment is referenced" do
+        s = Source.new %(
+          def foo
+            a = uninitialized U
+            a
+          end
+        )
+        subject.catch(s).should be_valid
+      end
+    end
   end
 end
