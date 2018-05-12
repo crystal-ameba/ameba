@@ -117,7 +117,7 @@ module Ameba::AST
     # false if not.
     def used_in_macro?(scope = @scope)
       scope.inner_scopes.each do |inner_scope|
-        return true if inner_scope.macro_literals.any? { |literal| literal.value.includes?(name) }
+        return true if MacroLiteralFinder.new(inner_scope.node).references? node
       end
       return true if (outer_scope = scope.outer_scope) && used_in_macro?(outer_scope)
       false
@@ -141,6 +141,26 @@ module Ameba::AST
       node.is_a?(Crystal::Var) &&
         node.name == @node.name &&
         node.location == @node.location
+    end
+
+    private class MacroLiteralFinder < Crystal::Visitor
+      @macro_literals = [] of Crystal::MacroLiteral
+
+      def initialize(node)
+        node.accept self
+      end
+
+      def references?(node : Crystal::Var)
+        @macro_literals.any? { |literal| literal.value.includes? node.name }
+      end
+
+      def visit(node : Crystal::ASTNode)
+        true
+      end
+
+      def visit(node : Crystal::MacroLiteral)
+        @macro_literals << node
+      end
     end
   end
 end

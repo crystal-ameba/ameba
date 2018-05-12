@@ -851,6 +851,22 @@ module Ameba::Rule
         )
         subject.catch(s).should_not be_valid
       end
+
+      it "doesn't report if assignment is referenced in a macro below" do
+        s = Source.new %(
+          class Foo
+            def foo
+              a = 1
+              macro_call
+            end
+
+            macro macro_call
+              puts a
+            end
+          end
+        )
+        subject.catch(s).should be_valid
+      end
     end
 
     context "uninitialized" do

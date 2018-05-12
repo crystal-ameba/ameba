@@ -128,11 +128,6 @@ module Ameba::AST
     end
 
     # :nodoc:
-    def visit(node : Crystal::MacroLiteral)
-      @current_scope.macro_literals << node
-    end
-
-    # :nodoc:
     def visit(node : Crystal::Call)
       return true unless node.name == "super" && node.args.empty?
       return true unless (scope = @current_scope).def?
