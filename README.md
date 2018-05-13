@@ -22,6 +22,8 @@ Ameba is a static code analysis tool for the Crystal language.
 It enforces a consistent [Crystal code style](https://crystal-lang.org/docs/conventions/coding_style.html),
 also catches code smells and wrong code constructions.
 
+See also [Roadmap](https://github.com/veelenga/ameba/wiki).
+
 ## Usage
 
 Run `ameba` binary within your project directory to catch code issues:
