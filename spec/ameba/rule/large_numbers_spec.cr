@@ -69,6 +69,10 @@ module Ameba
         11_234e10_f32
         +1.123
         -0.000_5
+
+        1200.0
+        1200.01
+        1200.012
       )
       subject.catch(s).should be_valid
     end

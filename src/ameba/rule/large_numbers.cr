@@ -52,7 +52,7 @@ module Ameba::Rule
     end
 
     private def allowed?(_sign, value, fraction, _suffix)
-      return true unless fraction.nil?
+      return true if !fraction.nil? && fraction.size > 3
 
       digits = value.chars.select &.to_s.=~ /[0-9]/
       digits.size >= int_min_digits
