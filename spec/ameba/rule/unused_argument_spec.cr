@@ -27,7 +27,8 @@ module Ameba::Rule
         end
       )
       subject.catch(s).should_not be_valid
-      s.errors.first.message.should eq "Unused argument `c`"
+      s.errors.first.message.should eq "Unused argument `c`. If it's necessary, use `_c` " \
+                                       "as an argument name to indicate that it won't be used."
     end
 
     it "reports if block argument is unused" do
@@ -37,7 +38,8 @@ module Ameba::Rule
         end
       )
       subject.catch(s).should_not be_valid
-      s.errors.first.message.should eq "Unused argument `i`"
+      s.errors.first.message.should eq "Unused argument `i`. If it's necessary, use `_` " \
+                                       "as an argument name to indicate that it won't be used."
     end
 
     it "reports if proc argument is unused" do
@@ -47,7 +49,8 @@ module Ameba::Rule
         end
       )
       subject.catch(s).should_not be_valid
-      s.errors.first.message.should eq "Unused argument `b`"
+      s.errors.first.message.should eq "Unused argument `b`. If it's necessary, use `_b` " \
+                                       "as an argument name to indicate that it won't be used."
     end
 
     it "reports multiple unused args" do
@@ -57,9 +60,12 @@ module Ameba::Rule
         end
       )
       subject.catch(s).should_not be_valid
-      s.errors[0].message.should eq "Unused argument `a`"
-      s.errors[1].message.should eq "Unused argument `b`"
-      s.errors[2].message.should eq "Unused argument `c`"
+      s.errors[0].message.should eq "Unused argument `a`. If it's necessary, use `_a` " \
+                                    "as an argument name to indicate that it won't be used."
+      s.errors[1].message.should eq "Unused argument `b`. If it's necessary, use `_b` " \
+                                    "as an argument name to indicate that it won't be used."
+      s.errors[2].message.should eq "Unused argument `c`. If it's necessary, use `_c` " \
+                                    "as an argument name to indicate that it won't be used."
     end
 
     it "doesn't report if it is an instance var argument" do
@@ -158,7 +164,8 @@ module Ameba::Rule
           end
         )
         subject.catch(s).should_not be_valid
-        s.errors.first.message.should eq "Unused argument `b`"
+        s.errors.first.message.should eq "Unused argument `b`. If it's necessary, use `_b` " \
+                                         "as an argument name to indicate that it won't be used."
       end
 
       it "reports rule, location and message" do
@@ -169,7 +176,8 @@ module Ameba::Rule
         subject.catch(s).should_not be_valid
         error = s.errors.first
         error.rule.should_not be_nil
-        error.message.should eq "Unused argument `a`"
+        error.message.should eq "Unused argument `a`. If it's necessary, use `_a` " \
+                                "as an argument name to indicate that it won't be used."
         error.location.to_s.should eq "source.cr:2:22"
       end
     end

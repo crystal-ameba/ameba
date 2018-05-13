@@ -34,7 +34,8 @@ module Ameba::Rule
       ignore_procs false
     end
 
-    MSG = "Unused argument `%s`"
+    MSG = "Unused argument `%s`. If it's necessary, use `%s` " \
+          "as an argument name to indicate that it won't be used."
 
     def test(source)
       AST::ScopeVisitor.new self, source
@@ -56,7 +57,8 @@ module Ameba::Rule
       scope.arguments.each do |argument|
         next if argument.ignored? || scope.references?(argument.variable)
 
-        source.error self, argument.location, MSG % argument.name
+        name_suggestion = scope.node.is_a?(Crystal::Block) ? '_' : "_#{argument.name}"
+        source.error self, argument.location, MSG % [argument.name, name_suggestion]
       end
     end
   end
