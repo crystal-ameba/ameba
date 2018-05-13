@@ -58,7 +58,7 @@ module Ameba::Rule
         next if argument.ignored? || scope.references?(argument.variable)
 
         name_suggestion = scope.node.is_a?(Crystal::Block) ? '_' : "_#{argument.name}"
-        source.error self, argument.location, MSG % [argument.name, name_suggestion]
+        source.error self, argument.location, MSG % {argument.name, name_suggestion}
       end
     end
   end
