@@ -32,8 +32,7 @@ Run `ameba` binary within your project directory to catch code issues:
 $ ameba
 Inspecting 107 files.
 
-...............F.....................F...............................................
-.....................
+...............F.....................F....................................................................
 
 src/ameba/rule/unneeded_disable_directive.cr:29:7
 UselessAssign: Useless assignment to variable `s`
@@ -57,6 +56,7 @@ Add this to your application's `shard.yml`:
 development_dependencies:
   ameba:
     github: veelenga/ameba
+    version: 0.6.0
 ```
 
 Build `bin/ameba` binary within your project directory while running `shards install`.
