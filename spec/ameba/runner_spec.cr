@@ -100,7 +100,7 @@ module Ameba
       end
 
       it "returns false if there are invalid sources" do
-        rules = Rule.rules.map &.new
+        rules = Rule.rules.map &.new.as(Rule::Base)
         s = Source.new %q(
           WrongConstant = 5
         )

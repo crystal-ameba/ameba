@@ -30,7 +30,7 @@ class Ameba::Config
   #
   # `Config.load` uses this constructor to instantiate new config by YAML file.
   protected def initialize(@config : YAML::Any)
-    @rules = Rule.rules.map &.new(config)
+    @rules = Rule.rules.map &.new(config).as(Rule::Base)
 
     if @config.as_h? && (name = @config["Formatter"]?.try &.["Name"]?)
       self.formatter = name.to_s
