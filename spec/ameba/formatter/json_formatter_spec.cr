@@ -26,7 +26,7 @@ module Ameba
     context "sources" do
       it "shows path to the source" do
         result = get_result [Source.new "", "source.cr"]
-        result["sources"].first["path"].should eq "source.cr"
+        result["sources"][0]["path"].should eq "source.cr"
       end
 
       it "shows rule name" do
@@ -34,7 +34,7 @@ module Ameba
         s.error DummyRule.new, 1, 2, "message1"
 
         result = get_result [s]
-        result["sources"].first["errors"].first["rule_name"].should eq DummyRule.name
+        result["sources"][0]["errors"][0]["rule_name"].should eq DummyRule.name
       end
 
       it "shows a message" do
@@ -42,7 +42,7 @@ module Ameba
         s.error DummyRule.new, 1, 2, "message"
 
         result = get_result [s]
-        result["sources"].first["errors"].first["message"].should eq "message"
+        result["sources"][0]["errors"][0]["message"].should eq "message"
       end
 
       it "shows error location" do
@@ -50,7 +50,7 @@ module Ameba
         s.error DummyRule.new, 1, 2, "message"
 
         result = get_result [s]
-        location = result["sources"].first["errors"].first["location"]
+        location = result["sources"][0]["errors"][0]["location"]
         location["line"].should eq 1
         location["column"].should eq 2
       end
