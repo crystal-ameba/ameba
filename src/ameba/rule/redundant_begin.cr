@@ -88,12 +88,16 @@ module Ameba::Rule
     end
 
     private def redundant_begin_in_handler?(source, handler, node)
-      return false if begin_exprs_in_handler?(handler)
+      return false if begin_exprs_in_handler?(handler) || inner_handler?(handler)
 
       code = node_source(node, source.lines).try &.join("\n")
       def_redundant_begin? code if code
     rescue
       false
+    end
+
+    private def inner_handler?(handler)
+      handler.body.is_a?(Crystal::ExceptionHandler)
     end
 
     private def begin_exprs_in_handler?(handler)

@@ -153,7 +153,7 @@ module Ameba::Rule
       subject.catch(s).should_not be_valid
     end
 
-    it "fails if there is an inner redundant block" do
+    it "doesn't report if there is an inner redundant block" do
       s = Source.new %q(
         def method
           begin
@@ -164,7 +164,7 @@ module Ameba::Rule
         rescue
         end
       )
-      subject.catch(s).should_not be_valid
+      subject.catch(s).should be_valid
     end
 
     it "fails if there is a redundant block with yield" do
