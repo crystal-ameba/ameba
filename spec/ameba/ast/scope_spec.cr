@@ -43,14 +43,14 @@ module Ameba::AST
     it "creates a new assignment" do
       scope = Scope.new as_node("foo = 1")
       scope.add_variable Crystal::Var.new "foo"
-      scope.assign_variable(Crystal::Var.new "foo")
+      scope.assign_variable("foo", Crystal::Var.new "foo")
       scope.find_variable("foo").not_nil!.assignments.size.should eq 1
     end
 
     it "does not create the assignment if variable is wrong" do
       scope = Scope.new as_node("foo = 1")
       scope.add_variable Crystal::Var.new "foo"
-      scope.assign_variable(Crystal::Var.new "bar")
+      scope.assign_variable("bar", Crystal::Var.new "bar")
       scope.find_variable("foo").not_nil!.assignments.size.should eq 0
     end
   end

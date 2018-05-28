@@ -62,10 +62,10 @@ module Ameba::AST
     #
     # ```
     # scope = Scope.new(class_node, nil)
-    # scope.assign_variable(var_node)
+    # scope.assign_variable(var_name, assign_node)
     # ```
-    def assign_variable(node)
-      node.is_a?(Crystal::Var) && find_variable(node.name).try &.assign(node)
+    def assign_variable(name, node)
+      find_variable(name).try &.assign(node)
     end
 
     # Returns true if current scope represents a block (or proc),
