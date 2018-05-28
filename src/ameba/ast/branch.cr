@@ -83,10 +83,10 @@ module Ameba::AST
       private def on_branchable_start(node, branches : Array | Tuple)
         @branchable = Branchable.new(node, @branchable)
 
-        branches.each do |node|
+        branches.each do |branch_node|
           break if branch # branch found
-          @current_branch = node if node && !node.nop?
-          node.try &.accept(self)
+          @current_branch = branch_node if branch_node && !branch_node.nop?
+          branch_node.try &.accept(self)
         end
 
         false
