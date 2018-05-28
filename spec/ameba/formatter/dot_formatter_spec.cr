@@ -39,9 +39,9 @@ module Ameba::Formatter
 
       context "when errors found" do
         it "writes each error" do
-          s = Source.new("").tap do |s|
-            s.error(DummyRule.new, 1, 1, "DummyRuleError")
-            s.error(NamedRule.new, 1, 2, "NamedRuleError")
+          s = Source.new("").tap do |source|
+            source.error(DummyRule.new, 1, 1, "DummyRuleError")
+            source.error(NamedRule.new, 1, 2, "NamedRuleError")
           end
           subject.finished [s]
           log = output.to_s

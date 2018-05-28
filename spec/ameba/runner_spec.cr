@@ -43,13 +43,13 @@ module Ameba
         path = "source.cr"
         source = Source.new "", path
 
-        rules = ([] of Rule::Base).tap do |rules|
+        all_rules = ([] of Rule::Base).tap do |rules|
           rule = ErrorRule.new
           rule.excluded = [path]
           rules << rule
         end
 
-        Runner.new(rules, [source], formatter).run.success?.should be_true
+        Runner.new(all_rules, [source], formatter).run.success?.should be_true
       end
 
       context "invalid syntax" do

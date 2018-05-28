@@ -15,9 +15,9 @@ module Ameba::Formatter
         Colorize.enabled = false
 
         path = "source.cr"
-        s = Source.new("", path).tap do |s|
-          s.error(ErrorRule.new, 1, 2, "ErrorRule", :disabled)
-          s.error(NamedRule.new, 2, 2, "NamedRule", :disabled)
+        s = Source.new("", path).tap do |source|
+          source.error(ErrorRule.new, 1, 2, "ErrorRule", :disabled)
+          source.error(NamedRule.new, 2, 2, "NamedRule", :disabled)
         end
         subject.finished [s]
         log = output.to_s
@@ -29,9 +29,9 @@ module Ameba::Formatter
       end
 
       it "does not write not-disabled rules" do
-        s = Source.new("", "source.cr").tap do |s|
-          s.error(ErrorRule.new, 1, 2, "ErrorRule")
-          s.error(NamedRule.new, 2, 2, "NamedRule", :disabled)
+        s = Source.new("", "source.cr").tap do |source|
+          source.error(ErrorRule.new, 1, 2, "ErrorRule")
+          source.error(NamedRule.new, 2, 2, "NamedRule", :disabled)
         end
         subject.finished [s]
         output.to_s.should_not contain ErrorRule.name
