@@ -55,10 +55,10 @@ module Ameba::Rule
         rule.excluded?(Source.new "", "source.cr").should be_true
       end
 
-      pending "returns true if source matches the wildcard" do
+      it "returns true if source matches the wildcard" do
         rule = DummyRule.new
         rule.excluded = %w(**/*.cr)
-        rule.excluded?(Source.new "", "source.cr").should be_true
+        rule.excluded?(Source.new "", __FILE__).should be_true
       end
 
       it "returns false if source does not match the wildcard" do

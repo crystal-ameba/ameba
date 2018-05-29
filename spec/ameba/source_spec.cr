@@ -35,5 +35,17 @@ module Ameba
         s.fullpath.should_not be_nil
       end
     end
+
+    describe "#matches_path?" do
+      it "returns true if source's path is matched" do
+        s = Source.new "", "source.cr"
+        s.matches_path?("source.cr").should be_true
+      end
+
+      it "returns false if source's path is not matched" do
+        s = Source.new "", "source.cr"
+        s.matches_path?("new_source.cr").should be_false
+      end
+    end
   end
 end

@@ -75,8 +75,8 @@ module Ameba::Rule
     #
     def excluded?(source)
       excluded.try &.any? do |path|
-        # TODO: file pattern match
-        source.path == path || source.fullpath == File.expand_path(path)
+        source.matches_path?(path) ||
+          Dir.glob(path).any? { |glob| source.matches_path? glob }
       end
     end
 

@@ -111,5 +111,10 @@ module Ameba
     def fullpath
       @fullpath ||= File.expand_path @path
     end
+
+    # Returns true if *filepath* matches the source's path, false if it does not.
+    def matches_path?(filepath)
+      path == filepath || path == File.expand_path(filepath)
+    end
   end
 end
