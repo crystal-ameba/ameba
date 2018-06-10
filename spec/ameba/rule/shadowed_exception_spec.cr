@@ -3,7 +3,7 @@ require "../../spec_helper"
 private def check_shadowed(source, exceptions)
   s = Ameba::Source.new source
   Ameba::Rule::ShadowedException.new.catch(s).should_not be_valid
-  s.errors.first.message.should contain exceptions.join(", ")
+  s.issues.first.message.should contain exceptions.join(", ")
 end
 
 module Ameba::Rule
@@ -163,11 +163,11 @@ module Ameba::Rule
         end
       ), "source.cr"
       subject.catch(s).should_not be_valid
-      error = s.errors.first
+      issue = s.issues.first
 
-      error.rule.should_not be_nil
-      error.location.to_s.should eq "source.cr:3:11"
-      error.message.should eq(
+      issue.rule.should_not be_nil
+      issue.location.to_s.should eq "source.cr:3:11"
+      issue.message.should eq(
         "Exception handler has shadowed exceptions: IndexError"
       )
     end

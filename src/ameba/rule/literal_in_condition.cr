@@ -36,7 +36,7 @@ module Ameba::Rule
 
     def check_node(source, node)
       return unless literal?(node.cond)
-      source.error self, node.location, MSG
+      issue_for node, MSG
     end
 
     def test(source, node : Crystal::If)

@@ -68,7 +68,7 @@ module Ameba::Rule
       expected = name.camelcase
       return if expected == name
 
-      source.error self, node.location, sprintf(MSG, expected, name)
+      issue_for node, MSG % {expected, name}
     end
 
     def test(source, node : Crystal::ClassDef)

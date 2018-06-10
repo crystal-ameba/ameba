@@ -11,19 +11,6 @@ module Ameba
       end
     end
 
-    describe "#error" do
-      it "adds and error" do
-        s = Source.new "", "source.cr"
-        s.error(DummyRule.new, 23, 2, "Error!")
-        s.should_not be_valid
-
-        error = s.errors.first
-        error.rule.should_not be_nil
-        error.location.to_s.should eq "source.cr:23:2"
-        error.message.should eq "Error!"
-      end
-    end
-
     describe "#fullpath" do
       it "returns a relative path of the source" do
         s = Source.new "", "./source_spec.cr"

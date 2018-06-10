@@ -26,7 +26,7 @@ module Ameba
 
   struct ErrorRule < Rule::Base
     def test(source)
-      source.error self, 1, 1, "This rule always adds an error"
+      issue_for({1, 1}, "This rule always adds an error")
     end
   end
 
@@ -71,8 +71,8 @@ module Ameba
 
     def failure_message(source)
       String.build do |str|
-        str << "Source expected to be valid, but there are errors:\n\n"
-        source.errors.reject(&.disabled?).each do |e|
+        str << "Source expected to be valid, but there are issues: \n\n"
+        source.issues.reject(&.disabled?).each do |e|
           str << "  * #{e.rule.name}: #{e.message}\n"
         end
       end

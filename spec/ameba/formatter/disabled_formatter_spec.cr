@@ -16,8 +16,8 @@ module Ameba::Formatter
 
         path = "source.cr"
         s = Source.new("", path).tap do |source|
-          source.error(ErrorRule.new, 1, 2, "ErrorRule", :disabled)
-          source.error(NamedRule.new, 2, 2, "NamedRule", :disabled)
+          source.add_issue(ErrorRule.new, {1, 2}, message: "ErrorRule", status: :disabled)
+          source.add_issue(NamedRule.new, location: {2, 2}, message: "NamedRule", status: :disabled)
         end
         subject.finished [s]
         log = output.to_s
@@ -30,8 +30,9 @@ module Ameba::Formatter
 
       it "does not write not-disabled rules" do
         s = Source.new("", "source.cr").tap do |source|
-          source.error(ErrorRule.new, 1, 2, "ErrorRule")
-          source.error(NamedRule.new, 2, 2, "NamedRule", :disabled)
+          source.add_issue(ErrorRule.new, {1, 2}, "ErrorRule")
+          source.add_issue(NamedRule.new, location: {2, 2},
+            message: "NamedRule", status: :disabled)
         end
         subject.finished [s]
         output.to_s.should_not contain ErrorRule.name

@@ -47,7 +47,7 @@ module Ameba::Rule
       node_ensure = node.ensure
       return if node_ensure.nil? || !node_ensure.nop?
 
-      source.error self, node.location, MSG
+      issue_for node, MSG
     end
   end
 end

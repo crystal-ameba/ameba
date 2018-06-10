@@ -44,10 +44,10 @@ module Ameba::Rule
       ), "source.cr"
 
       subject.catch(s).should_not be_valid
-      error = s.errors.first
-      error.rule.should_not be_nil
-      error.location.to_s.should eq "source.cr:2:9"
-      error.message.should eq(
+      issue = s.issues.first
+      issue.rule.should_not be_nil
+      issue.location.to_s.should eq "source.cr:2:9"
+      issue.message.should eq(
         "Symbols `,:` may be unwanted in %i array literals"
       )
     end
@@ -58,10 +58,10 @@ module Ameba::Rule
       ), "source.cr"
 
       subject.catch(s).should_not be_valid
-      error = s.errors.first
-      error.rule.should_not be_nil
-      error.location.to_s.should eq "source.cr:2:9"
-      error.message.should eq(
+      issue = s.issues.first
+      issue.rule.should_not be_nil
+      issue.location.to_s.should eq "source.cr:2:9"
+      issue.message.should eq(
         "Symbols `,\"` may be unwanted in %w array literals"
       )
     end

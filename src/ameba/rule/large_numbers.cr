@@ -42,7 +42,7 @@ module Ameba::Rule
         parsed = parse_number token.raw
 
         if allowed?(*parsed) && (expected = underscored *parsed) != token.raw
-          source.error self, token.location, MSG % expected
+          issue_for token, MSG % expected
         end
       end
     end

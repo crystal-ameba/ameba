@@ -47,12 +47,12 @@ module Ameba::Rule
 
       return if exp.nil? || exp == "nil"
 
-      source.error self, node.location, MSG % exp
+      issue_for node, MSG % exp
     end
 
     def test(source, node : Crystal::Expressions)
       if node.expressions.size == 1 && node.expressions.first.nop?
-        source.error self, node.location, MSG_EXRS
+        issue_for node, MSG_EXRS
       end
     end
   end

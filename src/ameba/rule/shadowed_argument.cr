@@ -51,7 +51,7 @@ module Ameba::Rule
       scope.arguments.each do |arg|
         next unless assign = arg.variable.assign_before_reference
 
-        source.error self, assign.location, MSG % arg.name
+        issue_for assign, MSG % arg.name
       end
     end
   end

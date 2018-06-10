@@ -23,7 +23,7 @@ module Ameba::Rule
     def test(source)
       source.ast
     rescue e : Crystal::SyntaxException
-      source.error self, e.line_number, e.column_number, e.message.to_s
+      issue_for({e.line_number, e.column_number}, e.message.to_s)
     end
   end
 end

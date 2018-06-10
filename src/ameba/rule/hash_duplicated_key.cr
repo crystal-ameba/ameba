@@ -34,7 +34,7 @@ module Ameba::Rule
     def test(source, node : Crystal::HashLiteral)
       return unless (keys = duplicated_keys(node.entries)).any?
 
-      source.error self, node.location, MSG % keys.join(", ")
+      issue_for node, MSG % keys.join(", ")
     end
 
     private def duplicated_keys(entries)

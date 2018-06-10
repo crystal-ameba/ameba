@@ -43,7 +43,7 @@ module Ameba::Rule
 
         var.assignments.each do |assign|
           next if assign.referenced?
-          source.error self, assign.location, MSG % var.name
+          issue_for assign, MSG % var.name
         end
       end
     end

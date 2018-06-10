@@ -59,10 +59,10 @@ module Ameba::Rule
       s = Source.new ":nok unless !s.empty?", "source.cr"
       subject.catch(s).should_not be_valid
 
-      error = s.errors.first
-      error.rule.should_not be_nil
-      error.location.to_s.should eq "source.cr:1:1"
-      error.message.should eq "Avoid negated conditions in unless blocks"
+      issue = s.issues.first
+      issue.rule.should_not be_nil
+      issue.location.to_s.should eq "source.cr:1:1"
+      issue.message.should eq "Avoid negated conditions in unless blocks"
     end
   end
 end

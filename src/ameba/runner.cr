@@ -52,7 +52,7 @@ module Ameba
 
     # Performs the inspection. Iterates through all sources and test it using
     # list of rules. If a specific rule fails on a specific source, it adds
-    # an error to that source.
+    # an issue to that source.
     #
     # This action also notifies formatter when inspection is started/finished,
     # and when a specific source started/finished to be inspected.

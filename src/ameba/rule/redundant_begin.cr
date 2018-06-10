@@ -71,7 +71,7 @@ module Ameba::Rule
     def test(source, node : Crystal::Def)
       return unless redundant_begin?(source, node)
 
-      source.error self, node.location, MSG
+      issue_for node, MSG
     end
 
     private def redundant_begin?(source, node)

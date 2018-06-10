@@ -1,31 +1,15 @@
 module Ameba
   # An entity that represents a Crystal source file.
-  # Has path, lines of code and errors reported by rules.
+  # Has path, lines of code and issues reported by rules.
   class Source
     include InlineComments
-
-    # Represents an error caught by Ameba.
-    #
-    # Each error has the rule that created this error,
-    # location of the issue, message and status.
-    record Error,
-      rule : Rule::Base,
-      location : Crystal::Location?,
-      message : String,
-      status : Symbol? do
-      def disabled?
-        status == :disabled
-      end
-    end
+    include Reportable
 
     # Path to the source file.
     getter path : String
 
     # Crystal code (content of a source file).
     getter code : String
-
-    # List of errors reported.
-    getter errors = [] of Error
 
     @lines : Array(String)?
     @ast : Crystal::ASTNode?
@@ -41,42 +25,6 @@ module Ameba
     # ```
     #
     def initialize(@code : String, @path = "")
-    end
-
-    # Adds a new error to the list of errors.
-    #
-    # ```
-    # source.error rule, location, "Line too long"
-    # ```
-    #
-    def error(rule : Rule::Base, location, message : String, status = nil)
-      status ||= :disabled if location_disabled?(location, rule.name)
-      errors << Error.new rule, location, message, status
-    end
-
-    # Adds a new error to the list of errors using line and column number.
-    #
-    # ```
-    # source.error rule, line_number, column_number, "Bad code"
-    # ```
-    #
-    def error(rule : Rule::Base, l, c, message : String, status = nil)
-      location = Crystal::Location.new path, l, c
-      error rule, location, message, status
-    end
-
-    # Indicates whether source is valid or not.
-    # Returns true if the list or errors empty, false otherwise.
-    #
-    # ```
-    # source = Ameba::Source.new code, path
-    # source.valid? # => true
-    # source.error rule, location, message
-    # source.valid? # => false
-    # ```
-    #
-    def valid?
-      errors.reject(&.disabled?).empty?
     end
 
     # Returns lines of code splitted by new line character.

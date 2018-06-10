@@ -23,7 +23,8 @@ module Ameba::Rule
         # ameba:disable #{NamedRule.name}
         a = 1
       )
-      s.error NamedRule.new, 3, 9, "Useless assignment", :disabled
+      s.add_issue NamedRule.new, location: {3, 9},
+        message: "Useless assignment", status: :disabled
       subject.catch(s).should be_valid
     end
 
@@ -31,7 +32,8 @@ module Ameba::Rule
       s = Source.new %Q(
         a = 1 # ameba:disable #{NamedRule.name}
       )
-      s.error NamedRule.new, 2, 1, "Alarm!", :disabled
+      s.add_issue NamedRule.new, location: {2, 1},
+        message: "Alarm!", status: :disabled
       subject.catch(s).should be_valid
     end
 
@@ -40,7 +42,8 @@ module Ameba::Rule
         # # ameba:disable #{NamedRule.name}
         a = 1
       )
-      s.error NamedRule.new, 3, 1, "Alarm!", :disabled
+      s.add_issue NamedRule.new, location: {3, 1},
+        message: "Alarm!", status: :disabled
       subject.catch(s).should be_valid
     end
 
@@ -50,7 +53,7 @@ module Ameba::Rule
         a = 1
       )
       subject.catch(s).should_not be_valid
-      s.errors.first.message.should eq(
+      s.issues.first.message.should eq(
         "Unnecessary disabling of #{NamedRule.name}"
       )
     end
@@ -58,7 +61,7 @@ module Ameba::Rule
     it "fails if there is inline unneeded directive" do
       s = Source.new %Q(a = 1 # ameba:disable #{NamedRule.name})
       subject.catch(s).should_not be_valid
-      s.errors.first.message.should eq(
+      s.issues.first.message.should eq(
         "Unnecessary disabling of #{NamedRule.name}"
       )
     end
@@ -69,9 +72,9 @@ module Ameba::Rule
         a = 1 # ameba:disable Rule3
       ), "source.cr"
       subject.catch(s).should_not be_valid
-      s.errors.size.should eq 2
-      s.errors.first.message.should contain "Rule1, Rule2"
-      s.errors.last.message.should contain "Rule3"
+      s.issues.size.should eq 2
+      s.issues.first.message.should contain "Rule1, Rule2"
+      s.issues.last.message.should contain "Rule3"
     end
 
     it "fails if there is disabled UnneededDisableDirective" do
@@ -79,20 +82,21 @@ module Ameba::Rule
         # ameba:disable #{UnneededDisableDirective.rule_name}
         a = 1
       ), "source.cr"
-      s.error UnneededDisableDirective.new, 3, 1, "Alarm!", :disabled
+      s.add_issue UnneededDisableDirective.new, location: {3, 1},
+        message: "Alarm!", status: :disabled
       subject.catch(s).should_not be_valid
     end
 
-    it "reports error, location and message" do
+    it "reports issue, location and message" do
       s = Source.new %Q(
         # ameba:disable Rule1, Rule2
         a = 1
       ), "source.cr"
       subject.catch(s).should_not be_valid
-      error = s.errors.first
-      error.rule.should_not be_nil
-      error.location.to_s.should eq "source.cr:2:9"
-      error.message.should eq "Unnecessary disabling of Rule1, Rule2"
+      issue = s.issues.first
+      issue.rule.should_not be_nil
+      issue.location.to_s.should eq "source.cr:2:9"
+      issue.message.should eq "Unnecessary disabling of Rule1, Rule2"
     end
   end
 end

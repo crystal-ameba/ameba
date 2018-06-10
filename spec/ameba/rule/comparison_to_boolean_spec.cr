@@ -66,10 +66,10 @@ module Ameba::Rule
         source = Source.new "a != true", "source.cr"
         subject.catch(source)
 
-        error = source.errors.first
-        error.rule.should_not be_nil
-        error.location.to_s.should eq "source.cr:1:1"
-        error.message.should eq "Comparison to a boolean is pointless"
+        issue = source.issues.first
+        issue.rule.should_not be_nil
+        issue.location.to_s.should eq "source.cr:1:1"
+        issue.message.should eq "Comparison to a boolean is pointless"
       end
     end
 
@@ -103,10 +103,10 @@ module Ameba::Rule
         source = Source.new "true != a", "source.cr"
         subject.catch(source).should_not be_valid
 
-        error = source.errors.first
-        error.rule.should_not be_nil
-        error.location.to_s.should eq "source.cr:1:1"
-        error.message.should eq "Comparison to a boolean is pointless"
+        issue = source.issues.first
+        issue.rule.should_not be_nil
+        issue.location.to_s.should eq "source.cr:1:1"
+        issue.message.should eq "Comparison to a boolean is pointless"
       end
     end
   end

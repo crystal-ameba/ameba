@@ -45,7 +45,7 @@ module Ameba::Rule
         alternative = $2
         return unless alternative =~ /^[a-z][a-zA-Z_0-9]*$/
 
-        source.error self, node.location, sprintf(MSG, alternative, node.name)
+        issue_for node, MSG % {alternative, node.name}
       end
     end
   end

@@ -59,7 +59,7 @@ module Ameba
 
           Runner.new(rules, [source], formatter).run
           source.should_not be_valid
-          source.errors.first.rule.name.should eq Rule::Syntax.rule_name
+          source.issues.first.rule.name.should eq Rule::Syntax.rule_name
         end
 
         it "does not run other rules" do
@@ -72,12 +72,12 @@ module Ameba
 
           Runner.new(rules, [source], formatter).run
           source.should_not be_valid
-          source.errors.size.should eq 1
+          source.issues.size.should eq 1
         end
       end
 
       context "unneeded disables" do
-        it "reports an error if such disable exists" do
+        it "reports an issue if such disable exists" do
           rules = [Rule::UnneededDisableDirective.new] of Rule::Base
           source = Source.new %(
             a = 1 # ameba:disable LineLength
@@ -85,7 +85,7 @@ module Ameba
 
           Runner.new(rules, [source], formatter).run
           source.should_not be_valid
-          source.errors.first.rule.name.should eq Rule::UnneededDisableDirective.rule_name
+          source.issues.first.rule.name.should eq Rule::UnneededDisableDirective.rule_name
         end
       end
     end

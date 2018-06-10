@@ -26,11 +26,11 @@ module Ameba::Rule
     it "reports rule, location and a message" do
       s = Source.new "rand(1)", "source.cr"
       subject.catch(s).should_not be_valid
-      error = s.errors.first
+      issue = s.issues.first
 
-      error.rule.should_not be_nil
-      error.location.to_s.should eq "source.cr:1:1"
-      error.message.should eq "rand(1) always returns 0"
+      issue.rule.should_not be_nil
+      issue.location.to_s.should eq "source.cr:1:1"
+      issue.message.should eq "rand(1) always returns 0"
     end
   end
 end

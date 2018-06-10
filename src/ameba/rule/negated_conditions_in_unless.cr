@@ -40,7 +40,7 @@ module Ameba::Rule
 
     def test(source, node : Crystal::Unless)
       return unless negated_condition? node.cond
-      source.error self, node.location, MSG
+      issue_for node, MSG
     end
 
     private def negated_condition?(node)

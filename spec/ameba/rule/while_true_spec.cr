@@ -34,9 +34,9 @@ module Ameba::Rule
       source = Source.new invalid_source, "source.cr"
       subject.catch(source).should_not be_valid
 
-      error = source.errors.first
-      error.location.to_s.should eq "source.cr:2:1"
-      error.message.should eq "While statement using true literal as condition"
+      issue = source.issues.first
+      issue.location.to_s.should eq "source.cr:2:1"
+      issue.message.should eq "While statement using true literal as condition"
     end
   end
 end

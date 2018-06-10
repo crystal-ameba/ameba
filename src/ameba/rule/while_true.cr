@@ -39,7 +39,7 @@ module Ameba::Rule
 
     def test(source, node : Crystal::While)
       return unless node.cond.true_literal?
-      source.error self, node.location, MSG
+      issue_for node, MSG
     end
   end
 end
