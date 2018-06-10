@@ -75,10 +75,10 @@ module Ameba::Rule
       ), "source.cr"
       subject.catch(s).should_not be_valid
 
-      error = s.errors.first
-      error.rule.should_not be_nil
-      error.location.to_s.should eq "source.cr:3:11"
-      error.message.should eq "Useless assignment to variable `a`"
+      issue = s.issues.first
+      issue.rule.should_not be_nil
+      issue.location.to_s.should eq "source.cr:3:11"
+      issue.message.should eq "Useless assignment to variable `a`"
     end
 
     it "does not report useless assignment of instance var" do
@@ -137,7 +137,7 @@ module Ameba::Rule
         end
       )
       subject.catch(s).should_not be_valid
-      s.errors.first.location.to_s.should eq ":3:11"
+      s.issues.first.location.to_s.should eq ":3:11"
     end
 
     it "reports if variable reassigned and not used" do
@@ -314,10 +314,10 @@ module Ameba::Rule
         ), "source.cr"
         subject.catch(s).should_not be_valid
 
-        error = s.errors.last
-        error.rule.should_not be_nil
-        error.location.to_s.should eq "source.cr:5:13"
-        error.message.should eq "Useless assignment to variable `a`"
+        issue = s.issues.last
+        issue.rule.should_not be_nil
+        issue.location.to_s.should eq "source.cr:5:13"
+        issue.message.should eq "Useless assignment to variable `a`"
       end
     end
 
@@ -340,9 +340,9 @@ module Ameba::Rule
           end
         )
         subject.catch(s).should_not be_valid
-        error = s.errors.first
-        error.location.to_s.should eq ":3:16"
-        error.message.should eq "Useless assignment to variable `b`"
+        issue = s.issues.first
+        issue.location.to_s.should eq ":3:16"
+        issue.message.should eq "Useless assignment to variable `b`"
       end
 
       it "reports if both assigns are reassigned and useless" do
@@ -363,13 +363,13 @@ module Ameba::Rule
         )
         subject.catch(s).should_not be_valid
 
-        error = s.errors.first
-        error.location.to_s.should eq ":3:13"
-        error.message.should eq "Useless assignment to variable `a`"
+        issue = s.issues.first
+        issue.location.to_s.should eq ":3:13"
+        issue.message.should eq "Useless assignment to variable `a`"
 
-        error = s.errors.last
-        error.location.to_s.should eq ":3:16"
-        error.message.should eq "Useless assignment to variable `b`"
+        issue = s.issues.last
+        issue.location.to_s.should eq ":3:16"
+        issue.message.should eq "Useless assignment to variable `b`"
       end
     end
 
@@ -380,9 +380,9 @@ module Ameba::Rule
           a = 2
         )
         subject.catch(s).should_not be_valid
-        s.errors.size.should eq 2
-        s.errors.first.location.to_s.should eq ":2:11"
-        s.errors.last.location.to_s.should eq ":3:11"
+        s.issues.size.should eq 2
+        s.issues.first.location.to_s.should eq ":2:11"
+        s.issues.last.location.to_s.should eq ":3:11"
       end
 
       it "doesn't report if assignments are referenced" do
@@ -476,8 +476,8 @@ module Ameba::Rule
             end
           )
           subject.catch(s).should_not be_valid
-          s.errors.size.should eq 1
-          s.errors.first.location.to_s.should eq ":5:17"
+          s.issues.size.should eq 1
+          s.issues.first.location.to_s.should eq ":5:17"
         end
 
         it "does not report of assignments are referenced in all branches" do
@@ -545,8 +545,8 @@ module Ameba::Rule
             end
           )
           subject.catch(s).should_not be_valid
-          s.errors.size.should eq 1
-          s.errors.first.location.to_s.should eq ":5:17"
+          s.issues.size.should eq 1
+          s.issues.first.location.to_s.should eq ":5:17"
         end
       end
 
@@ -578,9 +578,9 @@ module Ameba::Rule
             end
           )
           subject.catch(s).should_not be_valid
-          s.errors.size.should eq 2
-          s.errors.first.location.to_s.should eq ":5:17"
-          s.errors.last.location.to_s.should eq ":7:17"
+          s.issues.size.should eq 2
+          s.issues.first.location.to_s.should eq ":5:17"
+          s.issues.last.location.to_s.should eq ":7:17"
         end
 
         it "doesn't report if assignment is referenced in cond" do
@@ -615,8 +615,8 @@ module Ameba::Rule
             end
           )
           subject.catch(s).should_not be_valid
-          s.errors.size.should eq 1
-          s.errors.first.location.to_s.should eq ":3:27"
+          s.issues.size.should eq 1
+          s.issues.first.location.to_s.should eq ":3:27"
         end
       end
 
@@ -642,8 +642,8 @@ module Ameba::Rule
             end
           )
           subject.catch(s).should_not be_valid
-          s.errors.size.should eq 1
-          s.errors.first.location.to_s.should eq ":4:17"
+          s.issues.size.should eq 1
+          s.issues.first.location.to_s.should eq ":4:17"
         end
 
         it "does not report if assignment is referenced in a loop" do
@@ -737,8 +737,8 @@ module Ameba::Rule
             end
           )
           subject.catch(s).should_not be_valid
-          s.errors.size.should eq 1
-          s.errors.first.location.to_s.should eq ":4:17"
+          s.issues.size.should eq 1
+          s.issues.first.location.to_s.should eq ":4:17"
         end
       end
 
@@ -785,8 +785,8 @@ module Ameba::Rule
             end
           )
           subject.catch(s).should_not be_valid
-          s.errors.size.should eq 1
-          s.errors.first.location.to_s.should eq ":4:15"
+          s.issues.size.should eq 1
+          s.issues.first.location.to_s.should eq ":4:15"
         end
       end
     end

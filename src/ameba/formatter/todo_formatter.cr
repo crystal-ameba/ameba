@@ -1,6 +1,6 @@
 module Ameba::Formatter
   # A formatter that creates a todo config.
-  # Basically, it takes all errors reported and disables corresponding rules
+  # Basically, it takes all issues reported and disables corresponding rules
   # or excludes failed sources from these rules.
   class TODOFormatter < DotFormatter
     @io : IO::FileDescriptor | IO::Memory
@@ -10,30 +10,30 @@ module Ameba::Formatter
 
     def finished(sources)
       super
-      errors = sources.map(&.errors).flatten
-      generate_todo_config errors if errors.any?
+      issues = sources.map(&.issues).flatten
+      generate_todo_config issues if issues.any?
       if (io = @io).is_a?(File)
         @output << "Created #{io.path}\n"
       end
     end
 
-    private def generate_todo_config(errors)
+    private def generate_todo_config(issues)
       @io << header
-      rule_errors_map(errors).each do |rule, rule_errors|
-        @io << "\n# Problems found: #{rule_errors.size}"
+      rule_issues_map(issues).each do |rule, rule_issues|
+        @io << "\n# Problems found: #{rule_issues.size}"
         @io << "\n# Run `ameba --only #{rule.name}` for details"
-        @io << rule_todo(rule, rule_errors).gsub("---", "")
+        @io << rule_todo(rule, rule_issues).gsub("---", "")
       end
     ensure
       @io.flush
     end
 
-    private def rule_errors_map(errors)
-      Hash(Rule::Base, Array(Source::Error)).new.tap do |h|
-        errors.each do |error|
-          next if error.disabled? || error.rule.is_a? Rule::Syntax
-          h[error.rule] ||= Array(Source::Error).new
-          h[error.rule] << error
+    private def rule_issues_map(issues)
+      Hash(Rule::Base, Array(Issue)).new.tap do |h|
+        issues.each do |issue|
+          next if issue.disabled? || issue.rule.is_a? Rule::Syntax
+          h[issue.rule] ||= Array(Issue).new
+          h[issue.rule] << issue
         end
       end
     end
@@ -48,9 +48,9 @@ module Ameba::Formatter
         HEADER
     end
 
-    private def rule_todo(rule, errors)
+    private def rule_todo(rule, issues)
       rule.excluded =
-        errors.map(&.location.try &.filename.try &.to_s)
+        issues.map(&.location.try &.filename.try &.to_s)
               .compact
               .uniq!
 

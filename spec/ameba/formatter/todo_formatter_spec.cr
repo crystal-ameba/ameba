@@ -6,7 +6,7 @@ module Ameba
     formatter = Formatter::TODOFormatter.new IO::Memory.new, file
 
     s = Source.new "a = 1", "source.cr"
-    s.error DummyRule.new, 1, 2, "message"
+    s.add_issue DummyRule.new, {1, 2}, "message"
 
     formatter.finished [s]
     file.to_s
@@ -57,7 +57,7 @@ module Ameba
           formatter = Formatter::TODOFormatter.new IO::Memory.new, file
 
           s = Source.new "def invalid_syntax"
-          s.error Rule::Syntax.new, 1, 2, "message"
+          s.add_issue Rule::Syntax.new, {1, 2}, "message"
 
           formatter.finished [s]
           content = file.to_s

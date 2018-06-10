@@ -34,11 +34,11 @@ module Ameba::Rule
       ), "source.cr"
       subject.catch(s).should_not be_valid
 
-      error = s.errors.first
-      error.should_not be_nil
-      error.rule.should_not be_nil
-      error.location.to_s.should eq "source.cr:2:9"
-      error.message.should eq "Favour if over unless with else"
+      issue = s.issues.first
+      issue.should_not be_nil
+      issue.rule.should_not be_nil
+      issue.location.to_s.should eq "source.cr:2:9"
+      issue.message.should eq "Favour if over unless with else"
     end
   end
 end

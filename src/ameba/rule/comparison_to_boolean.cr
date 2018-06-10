@@ -39,7 +39,7 @@ module Ameba::Rule
 
       return unless comparison? && to_boolean?
 
-      source.error self, node.location, MSG
+      issue_for node, MSG
     end
   end
 end

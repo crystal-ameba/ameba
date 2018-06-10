@@ -56,7 +56,7 @@ module Ameba::Rule
 
     def test(source, node : Crystal::Unless)
       return if node.else.nop?
-      source.error self, node.location, MSG
+      issue_for node, MSG
     end
   end
 end

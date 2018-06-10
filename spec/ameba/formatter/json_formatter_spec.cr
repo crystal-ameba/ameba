@@ -31,26 +31,26 @@ module Ameba
 
       it "shows rule name" do
         s = Source.new ""
-        s.error DummyRule.new, 1, 2, "message1"
+        s.add_issue DummyRule.new, {1, 2}, "message1"
 
         result = get_result [s]
-        result["sources"][0]["errors"][0]["rule_name"].should eq DummyRule.name
+        result["sources"][0]["issues"][0]["rule_name"].should eq DummyRule.name
       end
 
       it "shows a message" do
         s = Source.new ""
-        s.error DummyRule.new, 1, 2, "message"
+        s.add_issue DummyRule.new, {1, 2}, "message"
 
         result = get_result [s]
-        result["sources"][0]["errors"][0]["message"].should eq "message"
+        result["sources"][0]["issues"][0]["message"].should eq "message"
       end
 
-      it "shows error location" do
+      it "shows issue location" do
         s = Source.new ""
-        s.error DummyRule.new, 1, 2, "message"
+        s.add_issue DummyRule.new, {1, 2}, "message"
 
         result = get_result [s]
-        location = result["sources"][0]["errors"][0]["location"]
+        location = result["sources"][0]["issues"][0]["location"]
         location["line"].should eq 1
         location["column"].should eq 2
       end
@@ -62,16 +62,16 @@ module Ameba
         result["summary"]["target_sources_count"].should eq 2
       end
 
-      it "shows errors count" do
+      it "shows issues count" do
         s1 = Source.new ""
-        s1.error DummyRule.new, 1, 2, "message1"
-        s1.error DummyRule.new, 1, 2, "message2"
+        s1.add_issue DummyRule.new, {1, 2}, "message1"
+        s1.add_issue DummyRule.new, {1, 2}, "message2"
 
         s2 = Source.new ""
-        s2.error DummyRule.new, 1, 2, "message3"
+        s2.add_issue DummyRule.new, {1, 2}, "message3"
 
         result = get_result [s1, s2]
-        result["summary"]["errors_count"].should eq 3
+        result["summary"]["issues_count"].should eq 3
       end
     end
   end

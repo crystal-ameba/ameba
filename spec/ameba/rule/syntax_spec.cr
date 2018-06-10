@@ -27,11 +27,11 @@ module Ameba::Rule
     it "reports rule, location and message" do
       s = Source.new "def hello end", "source.cr"
       subject.catch(s).should_not be_valid
-      error = s.errors.first
+      issue = s.issues.first
 
-      error.rule.should_not be_nil
-      error.location.to_s.should eq "source.cr:1:11"
-      error.message.should eq "unexpected token: end (expected ';' or newline)"
+      issue.rule.should_not be_nil
+      issue.location.to_s.should eq "source.cr:1:11"
+      issue.message.should eq "unexpected token: end (expected ';' or newline)"
     end
   end
 end

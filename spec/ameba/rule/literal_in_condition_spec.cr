@@ -62,11 +62,11 @@ module Ameba::Rule
       ), "source.cr"
       subject.catch(s).should_not be_valid
 
-      s.errors.size.should eq 1
-      error = s.errors.first
-      error.rule.should_not be_nil
-      error.location.to_s.should eq "source.cr:2:9"
-      error.message.should eq "Literal value found in conditional"
+      s.issues.size.should eq 1
+      issue = s.issues.first
+      issue.rule.should_not be_nil
+      issue.location.to_s.should eq "source.cr:2:9"
+      issue.message.should eq "Literal value found in conditional"
     end
   end
 end

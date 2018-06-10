@@ -32,10 +32,10 @@ module Ameba::Rule
         h = {"a" => 1, "a" => 2}
       ), "source.cr"
       subject.catch(s).should_not be_valid
-      error = s.errors.first
-      error.rule.should_not be_nil
-      error.location.to_s.should eq "source.cr:2:13"
-      error.message.should eq %(Duplicated keys in hash literal: "a")
+      issue = s.issues.first
+      issue.rule.should_not be_nil
+      issue.location.to_s.should eq "source.cr:2:13"
+      issue.message.should eq %(Duplicated keys in hash literal: "a")
     end
 
     it "reports multiple duplicated keys" do
@@ -43,8 +43,8 @@ module Ameba::Rule
         h = {"key1" => 1, "key1" => 2, "key2" => 3, "key2" => 4}
       )
       subject.catch(s).should_not be_valid
-      error = s.errors.first
-      error.message.should eq %(Duplicated keys in hash literal: "key1", "key2")
+      issue = s.issues.first
+      issue.message.should eq %(Duplicated keys in hash literal: "key1", "key2")
     end
   end
 end

@@ -34,21 +34,21 @@ module Ameba::Rule
     MSG = "Symbols `%s` may be unwanted in %s array literals"
 
     def test(source)
-      error = start_token = nil
+      issue = start_token = nil
 
       Tokenizer.new(source).run do |token|
         case token.type
         when :STRING_ARRAY_START, :SYMBOL_ARRAY_START
           start_token = token.dup
         when :STRING
-          if start_token && error.nil?
-            error = array_entry_invalid?(token.value, start_token.not_nil!.raw)
+          if start_token && issue.nil?
+            issue = array_entry_invalid?(token.value, start_token.not_nil!.raw)
           end
         when :STRING_ARRAY_END, :SYMBOL_ARRAY_END
-          if error
-            source.error(self, start_token.try &.location, error.not_nil!)
+          if issue
+            issue_for start_token.not_nil!, issue.not_nil!
           end
-          error = start_token = nil
+          issue = start_token = nil
         end
       end
     end
@@ -64,7 +64,7 @@ module Ameba::Rule
 
     private def check_array_entry(entry, symbols, literal)
       return unless entry =~ /[#{symbols}]/
-      sprintf(MSG, symbols, literal)
+      MSG % {symbols, literal}
     end
   end
 end

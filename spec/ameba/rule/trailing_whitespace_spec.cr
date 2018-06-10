@@ -18,10 +18,10 @@ module Ameba::Rule
       source = Source.new "a = 1\n b = 2 ", "source.cr"
       subject.catch(source).should_not be_valid
 
-      error = source.errors.first
-      error.rule.should_not be_nil
-      error.location.to_s.should eq "source.cr:2:7"
-      error.message.should eq "Trailing whitespace detected"
+      issue = source.issues.first
+      issue.rule.should_not be_nil
+      issue.location.to_s.should eq "source.cr:2:7"
+      issue.message.should eq "Trailing whitespace detected"
     end
   end
 end

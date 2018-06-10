@@ -32,7 +32,7 @@ module Ameba::Rule
         next unless names = unneeded_disables(source, directive, token.location)
         next unless names.any?
 
-        source.error self, token.location, MSG % names.join(", ")
+        issue_for token, MSG % names.join(", ")
       end
     end
 
@@ -40,19 +40,19 @@ module Ameba::Rule
       return unless directive[:action] == "disable"
 
       directive[:rules].reject do |rule_name|
-        source.errors.any? do |error|
-          error.rule.name == rule_name &&
-            error.disabled? &&
-            error_at_location?(source, error, location)
+        source.issues.any? do |issue|
+          issue.rule.name == rule_name &&
+            issue.disabled? &&
+            issue_at_location?(source, issue, location)
         end && rule_name != self.name
       end
     end
 
-    private def error_at_location?(source, error, location)
-      return false unless error_line_number = error.location.try(&.line_number)
+    private def issue_at_location?(source, issue, location)
+      return false unless issue_line_number = issue.location.try(&.line_number)
 
-      error_line_number == location.line_number ||
-        ((prev_line_number = error_line_number - 1) &&
+      issue_line_number == location.line_number ||
+        ((prev_line_number = issue_line_number - 1) &&
           prev_line_number == location.line_number &&
           source.comment?(prev_line_number - 1))
     end

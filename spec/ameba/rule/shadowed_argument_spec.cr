@@ -156,10 +156,10 @@ module Ameba::Rule
       ), "source.cr"
       subject.catch(s).should_not be_valid
 
-      error = s.errors.first
-      error.rule.should_not be_nil
-      error.location.to_s.should eq "source.cr:3:11"
-      error.message.should eq "Argument `bar` is assigned before it is used"
+      issue = s.issues.first
+      issue.rule.should_not be_nil
+      issue.location.to_s.should eq "source.cr:3:11"
+      issue.message.should eq "Argument `bar` is assigned before it is used"
     end
   end
 end

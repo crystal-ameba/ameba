@@ -49,7 +49,7 @@ module Ameba::Rule
       return unless excs = node.rescues
 
       if (excs = shadowed excs.map(&.types)).any?
-        source.error self, node.location, MSG % excs.join(", ")
+        issue_for node, MSG % excs.join(", ")
       end
     end
 

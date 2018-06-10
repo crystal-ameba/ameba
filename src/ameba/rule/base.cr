@@ -13,7 +13,7 @@ module Ameba::Rule
   # struct MyRule < Ameba::Rule::Base
   #   def test(source)
   #     if invalid?(source)
-  #       source.error self, location, "Something wrong."
+  #       issue_for line, column, "Something wrong."
   #     end
   #   end
   #
@@ -25,13 +25,13 @@ module Ameba::Rule
   #
   # Enforces rules to implement an abstract `#test` method which
   # is designed to test the source passed in. If source has issues
-  # that are tested by this rule, it should add an error.
+  # that are tested by this rule, it should add an issue.
   #
   abstract struct Base
     include Config::RuleConfig
 
     # This method is designed to test the source passed in. If source has issues
-    # that are tested by this rule, it should add an error.
+    # that are tested by this rule, it should add an issue.
     abstract def test(source : Source)
 
     def test(source : Source, node : Crystal::ASTNode, *opts)
@@ -89,6 +89,10 @@ module Ameba::Rule
     #
     def special?
       SPECIAL.includes? name
+    end
+
+    macro issue_for(*args)
+      source.add_issue self, {{*args}}
     end
 
     protected def self.rule_name

@@ -42,7 +42,7 @@ module Ameba::Rule
                     (value = arg.value) &&
                     (value == "0" || value == "1")
 
-      source.error self, node.location, MSG % node
+      issue_for node, MSG % node
     end
   end
 end

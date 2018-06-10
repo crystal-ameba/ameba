@@ -18,7 +18,7 @@ module Ameba::Rule
     def test(source)
       source.lines.each_with_index do |line, index|
         next unless line =~ /\s$/
-        source.error self, index + 1, line.size, MSG
+        issue_for({index + 1, line.size}, MSG)
       end
     end
   end

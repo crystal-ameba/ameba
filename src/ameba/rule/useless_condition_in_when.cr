@@ -48,7 +48,7 @@ module Ameba::Rule
                   .map(&.to_s)
                   .none? { |c| c == cond_s }
 
-      source.error self, cond.location, MSG
+      issue_for cond, MSG
     end
 
     def test(source)

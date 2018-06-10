@@ -22,7 +22,7 @@ module Ameba::Rule
       source.lines.each_with_index do |line, index|
         next unless line.size > max_length
 
-        source.error self, index + 1, line.size, MSG
+        issue_for({index + 1, line.size}, MSG)
       end
     end
   end

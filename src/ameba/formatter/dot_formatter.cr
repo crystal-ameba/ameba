@@ -24,10 +24,10 @@ module Ameba::Formatter
       failed_sources = sources.reject &.valid?
 
       failed_sources.each do |source|
-        source.errors.each do |error|
-          next if error.disabled?
-          output << "#{error.location}\n".colorize(:cyan)
-          output << "#{error.rule.name}: #{error.message}\n\n".colorize(:red)
+        source.issues.each do |issue|
+          next if issue.disabled?
+          output << "#{issue.location}\n".colorize(:cyan)
+          output << "#{issue.rule.name}: #{issue.message}\n\n".colorize(:red)
         end
       end
 
@@ -71,7 +71,7 @@ module Ameba::Formatter
 
     private def final_message(sources, failed_sources)
       total = sources.size
-      failures = failed_sources.map { |f| f.errors.size }.sum
+      failures = failed_sources.map { |f| f.issues.size }.sum
       color = failures == 0 ? :green : :red
       s = failures != 1 ? "s" : ""
 

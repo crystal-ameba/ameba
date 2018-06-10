@@ -27,7 +27,7 @@ module Ameba::Rule
                     node.args.empty? &&
                     node.obj.nil?
 
-      source.error self, node.location, MSG
+      issue_for node, MSG
     end
   end
 end

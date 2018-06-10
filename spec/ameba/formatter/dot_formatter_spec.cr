@@ -20,7 +20,7 @@ module Ameba::Formatter
 
       it "writes invalid source" do
         s = Source.new ""
-        s.error DummyRule.new, nil, "message"
+        s.add_issue DummyRule.new, Crystal::Nop.new, "message"
         subject.source_finished s
         output.to_s.should contain "F"
       end
@@ -37,11 +37,11 @@ module Ameba::Formatter
         output.to_s.should contain "Finished in"
       end
 
-      context "when errors found" do
-        it "writes each error" do
+      context "when issues found" do
+        it "writes each issue" do
           s = Source.new("").tap do |source|
-            source.error(DummyRule.new, 1, 1, "DummyRuleError")
-            source.error(NamedRule.new, 1, 2, "NamedRuleError")
+            source.add_issue(DummyRule.new, {1, 1}, "DummyRuleError")
+            source.add_issue(NamedRule.new, {1, 2}, "NamedRuleError")
           end
           subject.finished [s]
           log = output.to_s
@@ -50,9 +50,10 @@ module Ameba::Formatter
           log.should contain "NamedRuleError"
         end
 
-        it "does not write disabled errors" do
+        it "does not write disabled issues" do
           s = Source.new ""
-          s.error(DummyRule.new, 1, 1, "DummyRuleError", :disabled)
+          s.add_issue(DummyRule.new, location: {1, 1},
+            message: "DummyRuleError", status: :disabled)
           subject.finished [s]
           output.to_s.should contain "1 inspected, 0 failures."
         end

@@ -24,10 +24,10 @@ module Ameba::Rule
       source = Source.new long_line, "source.cr"
       subject.catch(source).should_not be_valid
 
-      error = source.errors.first
-      error.rule.should eq subject
-      error.location.to_s.should eq "source.cr:1:81"
-      error.message.should eq "Line too long"
+      issue = source.issues.first
+      issue.rule.should eq subject
+      issue.location.to_s.should eq "source.cr:1:81"
+      issue.message.should eq "Line too long"
     end
 
     context "properties" do

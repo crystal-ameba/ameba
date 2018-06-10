@@ -68,7 +68,7 @@ module Ameba::Rule
       )
       subject.catch(source).should_not be_valid
 
-      source.errors.size.should eq 2
+      source.issues.size.should eq 2
     end
 
     it "reports if a splat block argument shadows local var" do
@@ -89,7 +89,7 @@ module Ameba::Rule
         end
       )
       subject.catch(source).should_not be_valid
-      source.errors.first.message.should eq "Shadowing outer local variable `block`"
+      source.issues.first.message.should eq "Shadowing outer local variable `block`"
     end
 
     it "reports if there are multiple args and one shadows local var" do
@@ -100,7 +100,7 @@ module Ameba::Rule
         end
       )
       subject.catch(source).should_not be_valid
-      source.errors.first.message.should eq "Shadowing outer local variable `foo`"
+      source.issues.first.message.should eq "Shadowing outer local variable `foo`"
     end
 
     it "doesn't report if an outer var is reassigned in a block" do
@@ -131,10 +131,10 @@ module Ameba::Rule
       ), "source.cr"
       subject.catch(source).should_not be_valid
 
-      error = source.errors.first
-      error.rule.should_not be_nil
-      error.location.to_s.should eq "source.cr:3:20"
-      error.message.should eq "Shadowing outer local variable `foo`"
+      issue = source.issues.first
+      issue.rule.should_not be_nil
+      issue.location.to_s.should eq "source.cr:3:20"
+      issue.message.should eq "Shadowing outer local variable `foo`"
     end
   end
 end

@@ -13,7 +13,7 @@ module Ameba::Formatter
   #   },
   #   "sources": [
   #     {
-  #       "errors": [
+  #       "issues": [
   #         {
   #           "location": {
   #             "column": 7,
@@ -43,7 +43,7 @@ module Ameba::Formatter
   #     },
   #   ],
   #   "summary": {
-  #     "errors_count":         3,
+  #     "issues_count":         3,
   #     "target_sources_count": 1,
   #   },
   # }
@@ -61,10 +61,10 @@ module Ameba::Formatter
     def source_finished(source : Source)
       json_source = AsJSON::Source.new source.path
 
-      source.errors.each do |e|
+      source.issues.each do |e|
         next if e.disabled?
-        json_source.errors << AsJSON::Error.new(e.rule.name, e.location, e.message)
-        @result.summary.errors_count += 1
+        json_source.issues << AsJSON::Issue.new(e.rule.name, e.location, e.message)
+        @result.summary.issues_count += 1
       end
 
       @result.sources << json_source
@@ -87,13 +87,13 @@ module Ameba::Formatter
 
     record Source,
       path : String,
-      errors = [] of Error do
+      issues = [] of Issue do
       def to_json(json)
-        {path: path, errors: errors}.to_json(json)
+        {path: path, issues: issues}.to_json(json)
       end
     end
 
-    record Error,
+    record Issue,
       rule_name : String,
       location : Crystal::Location?,
       message : String do
@@ -120,12 +120,12 @@ module Ameba::Formatter
 
     class Summary
       property target_sources_count = 0
-      property errors_count = 0
+      property issues_count = 0
 
       def to_json(json)
         json.object do
           json.field :target_sources_count, target_sources_count
-          json.field :errors_count, errors_count
+          json.field :issues_count, issues_count
         end
       end
     end
