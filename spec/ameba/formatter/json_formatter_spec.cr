@@ -54,6 +54,19 @@ module Ameba
         location["line"].should eq 1
         location["column"].should eq 2
       end
+
+      it "shows issue end_location" do
+        s = Source.new ""
+        s.add_issue DummyRule.new,
+                    Crystal::Location.new("path", 3, 3),
+                    Crystal::Location.new("path", 5, 4),
+                    "message"
+
+        result = get_result [s]
+        end_location = result["sources"][0]["issues"][0]["end_location"]
+        end_location["line"].should eq 5
+        end_location["column"].should eq 4
+      end
     end
 
     context "summary" do

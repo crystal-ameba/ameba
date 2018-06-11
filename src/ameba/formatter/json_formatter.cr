@@ -19,6 +19,10 @@ module Ameba::Formatter
   #             "column": 7,
   #             "line":   17,
   #           },
+  #           "end_location": {
+  #             "column": 20,
+  #             "line":   17,
+  #           },
   #           "message":   "Useless assignment to variable `a`",
   #           "rule_name": "UselessAssign",
   #         },
@@ -27,12 +31,20 @@ module Ameba::Formatter
   #             "column": 7,
   #             "line":   18,
   #           },
+  #           "end_location": {
+  #             "column": 8,
+  #             "line":   18,
+  #           },
   #           "message":   "Useless assignment to variable `a`",
   #           "rule_name": "UselessAssign",
   #         },
   #         {
   #           "location": {
   #             "column": 7,
+  #             "line":   19,
+  #           },
+  #           "location": {
+  #             "column": 9,
   #             "line":   19,
   #           },
   #           "message":   "Useless assignment to variable `a`",
@@ -63,7 +75,7 @@ module Ameba::Formatter
 
       source.issues.each do |e|
         next if e.disabled?
-        json_source.issues << AsJSON::Issue.new(e.rule.name, e.location, e.message)
+        json_source.issues << AsJSON::Issue.new(e.rule.name, e.location, e.end_location, e.message)
         @result.summary.issues_count += 1
       end
 
@@ -96,6 +108,7 @@ module Ameba::Formatter
     record Issue,
       rule_name : String,
       location : Crystal::Location?,
+      end_location : Crystal::Location?,
       message : String do
       def to_json(json)
         json.object do
@@ -103,6 +116,8 @@ module Ameba::Formatter
           json.field :message, message
           json.field :location,
             {line: location.try &.line_number, column: location.try &.column_number}
+          json.field :end_location,
+            {line: end_location.try &.line_number, column: end_location.try &.column_number}
         end
       end
     end
