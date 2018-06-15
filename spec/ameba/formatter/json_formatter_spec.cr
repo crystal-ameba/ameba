@@ -34,7 +34,7 @@ module Ameba
         s.add_issue DummyRule.new, {1, 2}, "message1"
 
         result = get_result [s]
-        result["sources"][0]["issues"][0]["rule_name"].should eq DummyRule.name
+        result["sources"][0]["issues"][0]["rule_name"].should eq DummyRule.rule_name
       end
 
       it "shows a message" do

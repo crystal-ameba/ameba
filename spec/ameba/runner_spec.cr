@@ -54,16 +54,16 @@ module Ameba
 
       context "invalid syntax" do
         it "reports a syntax error" do
-          rules = [Rule::Syntax.new] of Rule::Base
+          rules = [Rule::Lint::Syntax.new] of Rule::Base
           source = Source.new "def bad_syntax"
 
           Runner.new(rules, [source], formatter).run
           source.should_not be_valid
-          source.issues.first.rule.name.should eq Rule::Syntax.rule_name
+          source.issues.first.rule.name.should eq Rule::Lint::Syntax.rule_name
         end
 
         it "does not run other rules" do
-          rules = [Rule::Syntax.new, Rule::ConstantNames.new] of Rule::Base
+          rules = [Rule::Lint::Syntax.new, Rule::Style::ConstantNames.new] of Rule::Base
           source = Source.new %q(
               MyBadConstant = 1
 
@@ -78,14 +78,14 @@ module Ameba
 
       context "unneeded disables" do
         it "reports an issue if such disable exists" do
-          rules = [Rule::UnneededDisableDirective.new] of Rule::Base
+          rules = [Rule::Lint::UnneededDisableDirective.new] of Rule::Base
           source = Source.new %(
             a = 1 # ameba:disable LineLength
           )
 
           Runner.new(rules, [source], formatter).run
           source.should_not be_valid
-          source.issues.first.rule.name.should eq Rule::UnneededDisableDirective.rule_name
+          source.issues.first.rule.name.should eq Rule::Lint::UnneededDisableDirective.rule_name
         end
       end
     end
