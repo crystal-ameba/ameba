@@ -2,8 +2,8 @@ module Ameba::Rule
   # List of names of the special rules, which
   # behave differently than usual rules.
   SPECIAL = [
-    Syntax.rule_name,
-    UnneededDisableDirective.rule_name,
+    Lint::Syntax.rule_name,
+    Lint::UnneededDisableDirective.rule_name,
   ]
 
   # Represents a base of all rules. In other words, all rules
@@ -96,7 +96,7 @@ module Ameba::Rule
     end
 
     protected def self.rule_name
-      name.gsub("Ameba::Rule::", "")
+      name.gsub("Ameba::Rule::", "").gsub("::", "/")
     end
 
     protected def self.subclasses

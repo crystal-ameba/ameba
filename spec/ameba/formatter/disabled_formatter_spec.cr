@@ -21,8 +21,8 @@ module Ameba::Formatter
         end
         subject.finished [s]
         log = output.to_s
-        log.should contain "#{path}:1 #{ErrorRule.name}"
-        log.should contain "#{path}:2 #{NamedRule.name}"
+        log.should contain "#{path}:1 #{ErrorRule.rule_name}"
+        log.should contain "#{path}:2 #{NamedRule.rule_name}"
       ensure
         output.clear
         Colorize.enabled = true
@@ -35,7 +35,7 @@ module Ameba::Formatter
             message: "NamedRule", status: :disabled)
         end
         subject.finished [s]
-        output.to_s.should_not contain ErrorRule.name
+        output.to_s.should_not contain ErrorRule.rule_name
       end
     end
   end

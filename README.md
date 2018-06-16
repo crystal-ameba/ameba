@@ -35,10 +35,10 @@ Inspecting 107 files.
 ...............F.....................F....................................................................
 
 src/ameba/rule/unneeded_disable_directive.cr:29:7
-UselessAssign: Useless assignment to variable `s`
+Lint/UselessAssign: Useless assignment to variable `s`
 
 src/ameba/formatter/flycheck_formatter.cr:5:21
-UnusedArgument: Unused argument `location`
+Lint/UnusedArgument: Unused argument `location`
 
 Finished in 248.9 milliseconds
 
@@ -102,10 +102,10 @@ Generate new file by running `ameba --gen-config`.
 One or more rules can be disabled using inline directives:
 
 ```crystal
-# ameba:disable LargeNumbers
+# ameba:disable Style/LargeNumbers
 time = Time.epoch(1483859302)
 
-time = Time.epoch(1483859302) # ameba:disable LargeNumbers
+time = Time.epoch(1483859302) # ameba:disable Style/LargeNumbers
 ```
 
 ## Editor integration

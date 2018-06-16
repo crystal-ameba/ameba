@@ -21,7 +21,7 @@ module Ameba
     @formatter : Formatter::BaseFormatter
 
     # A syntax rule which always inspects a source first
-    @syntax_rule = Rule::Syntax.new
+    @syntax_rule = Rule::Lint::Syntax.new
 
     # Checks for unneeded disable directives. Always inspects a source last
     @unneeded_disable_directive_rule : Rule::Base?
@@ -43,7 +43,7 @@ module Ameba
 
       @unneeded_disable_directive_rule =
         config.rules
-              .find &.name.==(Rule::UnneededDisableDirective.rule_name)
+              .find &.name.==(Rule::Lint::UnneededDisableDirective.rule_name)
     end
 
     # :nodoc:
