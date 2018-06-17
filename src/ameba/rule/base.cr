@@ -65,6 +65,20 @@ module Ameba::Rule
       {{@type}}.rule_name
     end
 
+    # Returns a group this rule belong to.
+    #
+    # ```
+    # struct MyGroup::MyRule < Ameba::Rule::Base
+    #   # ...
+    # end
+    #
+    # MyGroup::MyRule.new.group # => "MyGroup"
+    # ```
+    #
+    def group
+      {{@type}}.group_name
+    end
+
     # Checks whether the source is excluded from this rule.
     # It searches for a path in `excluded` property which matches
     # the one of the given source.
@@ -99,16 +113,19 @@ module Ameba::Rule
       name.gsub("Ameba::Rule::", "").gsub("::", "/")
     end
 
+    protected def self.group_name
+      rule_name.split("/")[0...-1].join("/")
+    end
+
     protected def self.subclasses
       {{ @type.subclasses }}
     end
   end
 
-  # Returns a list of all available rules
-  # (except a `Rule::Syntax` which is a special rule).
+  # Returns a list of all available rules.
   #
   # ```
-  # Ameba::Rule.rules # => [LineLength, ConstantNames, ....]
+  # Ameba::Rule.rules # => [Rule1, Rule2, ....]
   # ```
   #
   def self.rules

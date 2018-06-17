@@ -14,6 +14,12 @@ module Ameba
         DummyRule.new.name.should eq "Ameba/DummyRule"
       end
     end
+
+    describe "#group" do
+      it "returns a group rule belongs to" do
+        DummyRule.new.group.should eq "Ameba"
+      end
+    end
   end
 
   describe Rule do
