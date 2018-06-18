@@ -47,12 +47,12 @@ module Ameba::Cli
       end
 
       parser.on("--only RULE1,RULE2,...",
-        "Run only given rules") do |rules|
+        "Run only given rules (or groups)") do |rules|
         opts.only = rules.split ","
       end
 
       parser.on("--except RULE1,RULE2,...",
-        "Disable the given rules") do |rules|
+        "Disable the given rules (or groups)") do |rules|
         opts.except = rules.split ","
       end
 
@@ -69,14 +69,10 @@ module Ameba::Cli
   private def configure_rules(config, opts)
     if only = opts.only
       config.rules.map! { |r| r.enabled = false; r }
-      only.each do |rule_name|
-        config.update_rule(rule_name, enabled: true)
-      end
+      config.update_rules(only, enabled: true)
     end
 
-    opts.except.try &.each do |rule_name|
-      config.update_rule(rule_name, enabled: false)
-    end
+    config.update_rules(opts.except, enabled: false)
   end
 
   private def configure_formatter(config, opts)

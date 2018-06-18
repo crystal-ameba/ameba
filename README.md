@@ -97,6 +97,18 @@ It allows to configure rule properties, disable specific rules and exclude sourc
 
 Generate new file by running `ameba --gen-config`.
 
+### Only/Except
+
+One or more rules, or a one or more group of rules can be included or excluded
+via command line arguments:
+
+```
+$ ameba --only   Lint/Syntax # runs only Lint/Syntax rule
+$ ameba --only   Style,Lint  # runs only rules from Style and Lint groups
+$ ameba --except Lint/Syntax # runs all rules except Lint/Syntax
+$ ameba --except Style,Lint  # runs all rules except rules in Style and Lint groups
+```
+
 ### Inline disabling
 
 One or more rules can be disabled using inline directives:

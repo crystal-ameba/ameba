@@ -80,5 +80,39 @@ module Ameba
         rule.excluded.should eq excluded
       end
     end
+
+    describe "#update_rules" do
+      config = Config.load config_sample
+
+      it "updates multiple rules by enabled property" do
+        name = DummyRule.rule_name
+        config.update_rules [name], enabled: false
+        rule = config.rules.find(&.name.== name).not_nil!
+        rule.enabled.should be_false
+      end
+
+      it "updates multiple rules by excluded property" do
+        name = DummyRule.rule_name
+        excluded = %w(spec/source.cr)
+        config.update_rules [name], excluded: excluded
+        rule = config.rules.find(&.name.== name).not_nil!
+        rule.excluded.should eq excluded
+      end
+
+      it "updates a group of rules by enabled property" do
+        group = DummyRule.group_name
+        config.update_rules [group], enabled: false
+        rule = config.rules.find(&.name.== DummyRule.rule_name).not_nil!
+        rule.enabled.should be_false
+      end
+
+      it "updates a group by excluded property" do
+        name = DummyRule.group_name
+        excluded = %w(spec/source.cr)
+        config.update_rules [name], excluded: excluded
+        rule = config.rules.find(&.name.== DummyRule.rule_name).not_nil!
+        rule.excluded.should eq excluded
+      end
+    end
   end
 end

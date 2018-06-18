@@ -26,11 +26,14 @@ class Ameba::Config
   setter files : Array(String)?
   getter rules : Array(Rule::Base)
 
+  @rule_groups: Hash(String, Array(Rule::Base))
+
   # Creates a new instance of `Ameba::Config` based on YAML parameters.
   #
   # `Config.load` uses this constructor to instantiate new config by YAML file.
   protected def initialize(@config : YAML::Any)
     @rules = Rule.rules.map &.new(config).as(Rule::Base)
+    @rule_groups = @rules.group_by &.group
 
     if @config.as_h? && (name = @config["Formatter"]?.try &.["Name"]?)
       self.formatter = name.to_s
@@ -111,6 +114,29 @@ class Ameba::Config
     rule.enabled = enabled
     rule.excluded = excluded
     @rules[index] = rule
+  end
+
+  # Updates rules properties.
+  #
+  # ```
+  # config = Ameba::Config.load
+  # config.update_rules %w(Rule1 Rule2), enabled: true
+  # ```
+  #
+  # also it allows to update groups of rules:
+  #
+  # ```
+  # config.update_rules %w(Group1 Group2), enabled: true
+  # ```
+  #
+  def update_rules(names, **args)
+    names.try &.each do |name|
+      if group = @rule_groups[name]?
+        group.each { |rule| update_rule(rule.name, **args) }
+      else
+        update_rule name, **args
+      end
+    end
   end
 
   private def default_files
