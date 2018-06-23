@@ -111,6 +111,13 @@ module Ameba::AST
     end
 
     # :nodoc:
+    def visit(node : Crystal::TypeDeclaration)
+      if !@current_scope.type_definition? && (var = node.var).is_a?(Crystal::Var)
+        @current_scope.add_variable var
+      end
+    end
+
+    # :nodoc:
     def visit(node : Crystal::Arg)
       @current_scope.add_argument node
     end

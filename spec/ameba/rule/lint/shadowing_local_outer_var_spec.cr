@@ -124,6 +124,20 @@ module Ameba::Rule::Lint
       subject.catch(source).should be_valid
     end
 
+    it "doesn't report if it shadows record type declaration" do
+      source = Source.new %(
+        class FooBar
+          record Foo, index : String
+
+          def bar
+            3.times do |index|
+            end
+          end
+        end
+      )
+      subject.catch(source).should be_valid
+    end
+
     it "reports rule, location and message" do
       source = Source.new %(
         foo = 1

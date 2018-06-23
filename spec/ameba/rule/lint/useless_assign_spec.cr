@@ -408,6 +408,17 @@ module Ameba::Rule::Lint
         )
         subject.catch(s).should be_valid
       end
+
+      it "doesn't report if assignment initialized and captured by block" do
+        s = Source.new %(
+          a : String? = nil
+
+          1.times do
+            a = "Fotis"
+          end
+        )
+        subject.catch(s).should be_valid
+      end
     end
 
     context "branching" do
