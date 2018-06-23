@@ -1,7 +1,13 @@
 module Ameba
   # A module that utilizes inline comments parsing and processing logic.
   module InlineComments
-    COMMENT_DIRECTIVE_REGEX = Regex.new "# ameba : (\\w+) ([\\w, ]+)".gsub(" ", "\\s*")
+    COMMENT_DIRECTIVE_REGEX = Regex.new "# ameba : (\\w+) ([\\w\/, ]+)".gsub(" ", "\\s*")
+
+    # Available actions in the inline comments
+    enum Action
+      Disable
+      Enable
+    end
 
     # Returns true if current location is disabled for a particular rule,
     # false otherwise.
@@ -32,7 +38,7 @@ module Ameba
     # ```
     #
     def location_disabled?(location, rule)
-      return false if Rule::SPECIAL.includes?(rule)
+      return false if Rule::SPECIAL.includes?(rule.name)
       return false unless line_number = location.try &.line_number.try &.- 1
       return false unless line = lines[line_number]?
 
@@ -83,7 +89,8 @@ module Ameba
 
     private def line_disabled?(line, rule)
       return false unless directive = parse_inline_directive(line)
-      directive[:action] == "disable" && directive[:rules].includes?(rule)
+      Action.parse?(directive[:action]).try(&.disable?) &&
+        (directive[:rules].includes?(rule.name) || directive[:rules].includes?(rule.group))
     end
 
     private def commented_out?(line)

@@ -6,7 +6,7 @@ module Ameba
 
     # Adds a new issue to the list of issues.
     def add_issue(rule, location, end_location, message, status = nil)
-      status ||= :disabled if location_disabled?(location, rule.name)
+      status ||= :disabled if location_disabled?(location, rule)
       issues << Issue.new rule, location, end_location, message, status
     end
 

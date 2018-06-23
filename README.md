@@ -111,13 +111,15 @@ $ ameba --except Style,Lint  # runs all rules except rules in Style and Lint gro
 
 ### Inline disabling
 
-One or more rules can be disabled using inline directives:
+One or more rules or one or more group of rules can be disabled using inline directives:
 
 ```crystal
 # ameba:disable Style/LargeNumbers
 time = Time.epoch(1483859302)
 
-time = Time.epoch(1483859302) # ameba:disable Style/LargeNumbers
+time = Time.epoch(1483859302) # ameba:disable Style/LargeNumbers, Lint/UselessAssign
+
+time = Time.epoch(1483859302) # ameba:disable Style, Lint
 ```
 
 ## Editor integration

@@ -100,5 +100,39 @@ module Ameba
       s.add_issue(NamedRule.new, location: {2, 12}, message: "")
       s.should_not be_valid
     end
+
+    context "with group name" do
+      it "disables one rule with a group" do
+        s = Source.new %Q(
+          a = 1 # ameba:disable #{DummyRule.rule_name}
+        )
+        s.add_issue(DummyRule.new, location: {2, 12}, message: "")
+        s.should be_valid
+      end
+
+      it "doesn't disable others rules" do
+        s = Source.new %Q(
+          a = 1 # ameba:disable #{DummyRule.rule_name}
+        )
+        s.add_issue(NamedRule.new, location: {2, 12}, message: "")
+        s.should_not be_valid
+      end
+
+      it "disables a hole group of rules" do
+        s = Source.new %Q(
+          a = 1 # ameba:disable #{DummyRule.group_name}
+        )
+        s.add_issue(DummyRule.new, location: {2, 12}, message: "")
+        s.should be_valid
+      end
+
+      it "does not disable rules which do not belong to the group" do
+        s = Source.new %Q(
+          a = 1 # ameba:disable Lint
+        )
+        s.add_issue(DummyRule.new, location: {2, 12}, message: "")
+        s.should_not be_valid
+      end
+    end
   end
 end
