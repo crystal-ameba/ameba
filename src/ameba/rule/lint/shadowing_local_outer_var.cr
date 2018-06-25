@@ -53,6 +53,7 @@ module Ameba::Rule::Lint
 
     private def find_shadowing(source, scope)
       scope.arguments.each do |arg|
+        next if arg.ignored?
         if scope.outer_scope.try &.find_variable(arg.name)
           issue_for arg, MSG % arg.name
         end

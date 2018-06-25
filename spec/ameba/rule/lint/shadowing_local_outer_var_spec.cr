@@ -138,6 +138,19 @@ module Ameba::Rule::Lint
       subject.catch(source).should be_valid
     end
 
+    it "doesn't report if it shadows throwaway arguments" do
+      source = Source.new %(
+        data = [{1, "a"}, {2, "b"}, {3, "c"}]
+
+        data.each do |_, string|
+          data.each do |number, _|
+            puts string, number
+          end
+        end
+      )
+      subject.catch(source).should be_valid
+    end
+
     it "reports rule, location and message" do
       source = Source.new %(
         foo = 1
