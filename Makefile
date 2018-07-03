@@ -3,7 +3,8 @@ SHARDS_BIN ?= $(shell which shards)
 PREFIX ?= /usr/local
 SHARD_BIN ?= ../../bin
 
-build:
+build: bin/ameba
+bin/ameba:
 	$(SHARDS_BIN) build $(CRFLAGS)
 clean:
 	rm -f ./bin/ameba ./bin/ameba.dwarf
