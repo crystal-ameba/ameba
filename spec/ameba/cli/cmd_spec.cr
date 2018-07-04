@@ -42,6 +42,16 @@ module Ameba::Cli
         c.except.should eq %w(RULE1 RULE2)
       end
 
+      it "defaults all? flag to false" do
+        c = Cli.parse_args %w(file.cr)
+        c.all?.should eq false
+      end
+
+      it "accepts --all flag" do
+        c = Cli.parse_args %w(--all)
+        c.all?.should eq true
+      end
+
       it "accepts --gen-config flag" do
         c = Cli.parse_args %w(--gen-config)
         c.formatter.should eq :todo

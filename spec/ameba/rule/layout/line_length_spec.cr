@@ -2,20 +2,20 @@ require "../../../spec_helper"
 
 module Ameba::Rule::Layout
   subject = LineLength.new
-  long_line = "*" * 81
+  long_line = "*" * (subject.max_length + 1)
 
   describe LineLength do
-    it "passes if all lines are shorter than 80 symbols" do
+    it "passes if all lines are shorter than MaxLength symbols" do
       source = Source.new "short line"
       subject.catch(source).should be_valid
     end
 
-    it "passes if line consists of 79 symbols" do
-      source = Source.new "*" * 80
+    it "passes if line consists of MaxLength symbols" do
+      source = Source.new "*" * subject.max_length
       subject.catch(source).should be_valid
     end
 
-    it "fails if there is at least one line longer than 79 symbols" do
+    it "fails if there is at least one line longer than MaxLength symbols" do
       source = Source.new long_line
       subject.catch(source).should_not be_valid
     end
@@ -26,7 +26,7 @@ module Ameba::Rule::Layout
 
       issue = source.issues.first
       issue.rule.should eq subject
-      issue.location.to_s.should eq "source.cr:1:81"
+      issue.location.to_s.should eq "source.cr:1:#{subject.max_length + 1}"
       issue.message.should eq "Line too long"
     end
 

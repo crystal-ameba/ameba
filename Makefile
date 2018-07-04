@@ -16,4 +16,4 @@ bin: build
 	cp ./bin/ameba $(SHARD_BIN)
 test: build
 	$(CRYSTAL_BIN) spec
-	./bin/ameba
+	./bin/ameba --all

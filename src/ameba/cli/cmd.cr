@@ -25,6 +25,7 @@ module Ameba::Cli
     property files : Array(String)?
     property only : Array(String)?
     property except : Array(String)?
+    property? all = false
   end
 
   def parse_args(args, opts = Opts.new)
@@ -56,6 +57,10 @@ module Ameba::Cli
         opts.except = rules.split ","
       end
 
+      parser.on("--all", "Enables all available rules") do
+        opts.all = true
+      end
+
       parser.on("--gen-config",
         "Generate a configuration file acting as a TODO list") do
         opts.formatter = :todo
@@ -70,6 +75,8 @@ module Ameba::Cli
     if only = opts.only
       config.rules.map! { |r| r.enabled = false; r }
       config.update_rules(only, enabled: true)
+    elsif opts.all?
+      config.rules.map! { |r| r.enabled = true; r }
     end
 
     config.update_rules(opts.except, enabled: false)

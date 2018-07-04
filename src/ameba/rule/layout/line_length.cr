@@ -13,7 +13,7 @@ module Ameba::Rule::Layout
     properties do
       enabled false
       description "Disallows lines longer than `MaxLength` number of symbols"
-      max_length 80
+      max_length 140
     end
 
     MSG = "Line too long"
