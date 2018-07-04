@@ -31,6 +31,7 @@ module Ameba::Rule::Style
     properties do
       description "Disallows usage of large numbers without underscore"
       int_min_digits 5
+      enabled false
     end
 
     MSG = "Large numbers should be written with underscores: %s"

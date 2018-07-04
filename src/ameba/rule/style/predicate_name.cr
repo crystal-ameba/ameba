@@ -32,6 +32,7 @@ module Ameba::Rule::Style
   struct PredicateName < Base
     properties do
       description "Disallows tautological predicate names"
+      enabled false
     end
 
     MSG = "Favour method name '%s?' over '%s'"
