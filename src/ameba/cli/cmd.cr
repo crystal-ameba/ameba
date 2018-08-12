@@ -7,7 +7,7 @@ module Ameba::Cli
 
   def run(args)
     opts = parse_args args
-    config = Config.load opts.config
+    config = Config.load opts.config, opts.colors?
     config.files = opts.files
 
     configure_formatter(config, opts)
@@ -26,6 +26,7 @@ module Ameba::Cli
     property only : Array(String)?
     property except : Array(String)?
     property? all = false
+    property? colors = true
   end
 
   def parse_args(args, opts = Opts.new)
@@ -65,6 +66,10 @@ module Ameba::Cli
         "Generate a configuration file acting as a TODO list") do
         opts.formatter = :todo
         opts.config = ""
+      end
+
+      parser.on("--no-color", "Disable colors") do
+        opts.colors = false
       end
     end
 

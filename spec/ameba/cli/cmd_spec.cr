@@ -57,6 +57,16 @@ module Ameba::Cli
         c.formatter.should eq :todo
       end
 
+      it "accepts --no-color flag" do
+        c = Cli.parse_args %w(--no-color)
+        c.colors?.should be_false
+      end
+
+      it "doesn't disable colors by default" do
+        c = Cli.parse_args %w(--all)
+        c.colors?.should be_true
+      end
+
       it "ignores --config if --gen-config flag passed" do
         c = Cli.parse_args %w(--gen-config --config my_config.yml)
         c.formatter.should eq :todo
