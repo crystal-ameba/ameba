@@ -1,0 +1,8 @@
+.*
+Dockerfile
+Makefile
+bench/
+bin/
+spec/
+
+*.html
