@@ -6,7 +6,7 @@ COPY . /ameba/
 RUN shards build --release
 
 FROM alpine:3.8
-RUN apk add --update crystal openssl yaml pcre gc libevent libgcc
+RUN apk add --update openssl yaml pcre gc libevent libgcc
 RUN mkdir /src
 WORKDIR /src
 COPY --from=builder /ameba/bin/ameba /usr/bin/
