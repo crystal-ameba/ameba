@@ -82,6 +82,20 @@ $ brew tap veelenga/tap
 $ brew install ameba
 ```
 
+### Docker
+
+Build the image:
+
+```sh
+$ docker build -t ameba/ameba .
+```
+
+To use the resulting image on a local source folder, mount the current (or target) directory into `/src`:
+
+```sh
+$ docker run -v $(pwd):/src ameba/ameba
+```
+
 ### From sources
 
 ```sh

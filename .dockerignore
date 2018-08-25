@@ -1,8 +1,4 @@
 .*
-Dockerfile
-Makefile
-bench/
-bin/
-spec/
-
-*.html
+!Makefile
+!shard.yml
+!src
