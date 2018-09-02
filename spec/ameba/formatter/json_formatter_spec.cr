@@ -58,9 +58,9 @@ module Ameba
       it "shows issue end_location" do
         s = Source.new ""
         s.add_issue DummyRule.new,
-                    Crystal::Location.new("path", 3, 3),
-                    Crystal::Location.new("path", 5, 4),
-                    "message"
+          Crystal::Location.new("path", 3, 3),
+          Crystal::Location.new("path", 5, 4),
+          "message"
 
         result = get_result [s]
         end_location = result["sources"][0]["issues"][0]["end_location"]

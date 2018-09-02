@@ -43,7 +43,7 @@ module Ameba
 
       @unneeded_disable_directive_rule =
         config.rules
-              .find &.name.==(Rule::Lint::UnneededDisableDirective.rule_name)
+          .find &.name.==(Rule::Lint::UnneededDisableDirective.rule_name)
     end
 
     # :nodoc:
@@ -106,7 +106,7 @@ module Ameba
         wildcard += "/**/*.cr" if File.directory?(wildcard)
         Dir[wildcard]
       end.flatten
-         .map { |path| Source.new File.read(path), path }
+        .map { |path| Source.new File.read(path), path }
     end
   end
 end

@@ -51,8 +51,8 @@ module Ameba::Formatter
     private def rule_todo(rule, issues)
       rule.excluded =
         issues.map(&.location.try &.filename.try &.to_s)
-              .compact
-              .uniq!
+          .compact
+          .uniq!
 
       {rule.name => rule}.to_yaml
     end

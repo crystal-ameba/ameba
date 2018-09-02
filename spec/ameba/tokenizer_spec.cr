@@ -5,8 +5,8 @@ module Ameba
     it "tokenizes #{str}" do
       ([] of Symbol).tap do |token_types|
         Tokenizer.new(Source.new str)
-                 .run { |token| token_types << token.type }
-                 .should be_true
+          .run { |token| token_types << token.type }
+          .should be_true
       end.should eq expected
     end
   end

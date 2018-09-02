@@ -26,7 +26,7 @@ class Ameba::Config
   setter files : Array(String)?
   getter rules : Array(Rule::Base)
 
-  @rule_groups: Hash(String, Array(Rule::Base))
+  @rule_groups : Hash(String, Array(Rule::Base))
 
   # Creates a new instance of `Ameba::Config` based on YAML parameters.
   #

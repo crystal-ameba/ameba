@@ -39,9 +39,9 @@ module Ameba::Rule::Lint
 
     private def duplicated_keys(entries)
       entries.map(&.key)
-             .group_by(&.itself)
-             .select { |_, v| v.size > 1 }
-             .map { |k, _| k }
+        .group_by(&.itself)
+        .select { |_, v| v.size > 1 }
+        .map { |k, _| k }
     end
   end
 end
