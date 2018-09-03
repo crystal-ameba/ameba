@@ -1,6 +1,7 @@
 language: crystal
 script:
   - make test
+  - crystal tool format --check
   - sed -i -e 's:<.*>::g' README.md
   - crystal docs
 deploy:
