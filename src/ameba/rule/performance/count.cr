@@ -32,7 +32,6 @@ module Ameba::Rule::Performance
                    caller names (`select`/`reject` by default)."
     end
 
-
     def test(source)
       AST::NodeVisitor.new self, source
     end
@@ -43,7 +42,7 @@ module Ameba::Rule::Performance
       if obj.is_a?(Crystal::Call) &&
          object_call_names.includes?(obj.name) && !obj.block.nil?
 
-        issue_for obj, MSG % obj.name
+        issue_for obj.name_location, node.name_end_location, MSG % obj.name
       end
     end
   end
