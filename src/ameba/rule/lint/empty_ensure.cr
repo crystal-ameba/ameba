@@ -32,6 +32,13 @@ module Ameba::Rule::Lint
   # end
   # ```
   #
+  # YAML configuration example:
+  #
+  # ```
+  # Lint/EmptyEnsure
+  #   Enabled: true
+  # ```
+  #
   struct EmptyEnsure < Base
     properties do
       description "Disallows empty ensure statement"

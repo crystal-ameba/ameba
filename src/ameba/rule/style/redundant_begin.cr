@@ -52,7 +52,7 @@ module Ameba::Rule::Style
   # YAML configuration example:
   #
   # ```
-  # RedundantBegin:
+  # Style/RedundantBegin:
   #   Enabled: true
   # ```
   #

@@ -4,7 +4,7 @@ module Ameba::Rule::Layout
   # YAML configuration example:
   #
   # ```
-  # LineLength:
+  # Layout/LineLength:
   #   Enabled: true
   #   MaxLength: 100
   # ```

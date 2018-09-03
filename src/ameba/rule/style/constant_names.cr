@@ -18,7 +18,7 @@ module Ameba::Rule::Style
   # YAML configuration example:
   #
   # ```
-  # ConstantNames:
+  # Style/ConstantNames:
   #   Enabled: true
   # ```
   #

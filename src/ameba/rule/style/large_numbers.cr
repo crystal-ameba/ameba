@@ -22,7 +22,7 @@ module Ameba::Rule::Style
   # YAML configuration example:
   #
   # ```
-  # LargeNumbers:
+  # Style/LargeNumbers:
   #   Enabled: true
   #   IntMinDigits: 5 # i.e. integers higher than 9999
   # ```

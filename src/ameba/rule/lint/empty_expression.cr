@@ -24,7 +24,7 @@ module Ameba::Rule::Lint
   # YAML configuration example:
   #
   # ```
-  # EmptyExpression:
+  # Lint/EmptyExpression:
   #   Enabled: true
   # ```
   #

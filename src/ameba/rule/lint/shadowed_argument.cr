@@ -32,7 +32,7 @@ module Ameba::Rule::Lint
   # YAML configuration example:
   #
   # ```
-  # ShadowedArgument:
+  # Lint/ShadowedArgument:
   #   Enabled: true
   # ```
   #

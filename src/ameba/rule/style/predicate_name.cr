@@ -25,7 +25,7 @@ module Ameba::Rule::Style
   # YAML configuration example:
   #
   # ```
-  # PredicateName:
+  # Style/PredicateName:
   #   Enabled: true
   # ```
   #

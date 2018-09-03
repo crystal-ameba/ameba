@@ -22,7 +22,7 @@ module Ameba::Rule::Lint
   # YAML configuration example:
   #
   # ```
-  # UselessAssign:
+  # Lint/UselessAssign:
   #   Enabled: true
   # ```
   #

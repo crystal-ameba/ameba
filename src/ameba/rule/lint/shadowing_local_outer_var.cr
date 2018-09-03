@@ -27,7 +27,7 @@ module Ameba::Rule::Lint
   # YAML configuration example:
   #
   # ```
-  # ShadowingOuterLocalVar:
+  # Lint/ShadowingOuterLocalVar:
   #   Enabled: true
   # ```
   #

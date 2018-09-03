@@ -12,7 +12,7 @@ module Ameba::Rule::Lint
   # YAML configuration example:
   #
   # ```
-  # LiteralInInterpolation
+  # Lint/LiteralInInterpolation
   #   Enabled: true
   # ```
   #

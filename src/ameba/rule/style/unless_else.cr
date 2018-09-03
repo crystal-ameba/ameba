@@ -39,7 +39,7 @@ module Ameba::Rule::Style
   # YAML configuration example:
   #
   # ```
-  # UnlessElse:
+  # Style/UnlessElse:
   #   Enabled: true
   # ```
   #

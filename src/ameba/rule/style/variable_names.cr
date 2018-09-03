@@ -27,7 +27,7 @@ module Ameba::Rule::Style
   # YAML configuration example:
   #
   # ```
-  # VariableNames:
+  # Style/VariableNames:
   #   Enabled: true
   # ```
   #

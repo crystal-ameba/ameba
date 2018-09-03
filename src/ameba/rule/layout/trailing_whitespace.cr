@@ -4,7 +4,7 @@ module Ameba::Rule::Layout
   # YAML configuration example:
   #
   # ```
-  # TrailingWhitespace:
+  # Layout/TrailingWhitespace:
   #   Enabled: true
   # ```
   #

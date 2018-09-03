@@ -18,7 +18,7 @@ module Ameba::Rule::Lint
   # YAML configuration example:
   #
   # ```
-  # PercentArrays:
+  # Lint/PercentArrays:
   #   Enabled: true
   #   StringArrayUnwantedSymbols: ',"'
   #   SymbolArrayUnwantedSymbols: ',:'

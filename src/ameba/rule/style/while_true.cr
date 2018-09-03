@@ -22,7 +22,7 @@ module Ameba::Rule::Style
   # YAML configuration example:
   #
   # ```
-  # WhileTrue:
+  # Style/WhileTrue:
   #   Enabled: true
   # ```
   #

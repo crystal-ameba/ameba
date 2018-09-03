@@ -7,7 +7,7 @@ module Ameba::Rule::Lint
   # YAML configuration example:
   #
   # ```
-  # DebuggerStatement:
+  # Lint/DebuggerStatement:
   #   Enabled: true
   # ```
   #

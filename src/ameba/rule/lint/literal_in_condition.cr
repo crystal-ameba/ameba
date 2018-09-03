@@ -16,7 +16,7 @@ module Ameba::Rule::Lint
   # YAML configuration example:
   #
   # ```
-  # LiteralInCondition:
+  # Lint/LiteralInCondition:
   #   Enabled: true
   # ```
   #

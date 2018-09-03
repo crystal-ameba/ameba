@@ -18,7 +18,7 @@ module Ameba::Rule::Lint
   # YAML configuration example:
   #
   # ```
-  # UnusedArgument:
+  # Lint/UnusedArgument:
   #   Enabled: true
   #   IgnoreDefs: true
   #   IgnoreBlocks: false

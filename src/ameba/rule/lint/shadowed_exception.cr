@@ -30,7 +30,7 @@ module Ameba::Rule::Lint
   # YAML configuration example:
   #
   # ```
-  # ShadowedException:
+  # Lint/ShadowedException:
   #   Enabled: true
   # ```
   #

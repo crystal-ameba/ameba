@@ -48,7 +48,7 @@ module Ameba::Rule::Style
   # YAML configuration example:
   #
   # ```
-  # TypeNames:
+  # Style/TypeNames:
   #   Enabled: true
   # ```
   #

@@ -27,7 +27,7 @@ module Ameba::Rule::Lint
   # YAML configuration example:
   #
   # ```
-  # UselessConditionInWhen:
+  # Lint/UselessConditionInWhen:
   #   Enabled: true
   # ```
   #

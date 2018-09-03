@@ -23,7 +23,7 @@ module Ameba::Rule::Style
   # YAML configuration example:
   #
   # ```
-  # NegatedConditionsInUnless:
+  # Style/NegatedConditionsInUnless:
   #   Enabled: true
   # ```
   #

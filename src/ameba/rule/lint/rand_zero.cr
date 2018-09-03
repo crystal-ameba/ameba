@@ -19,7 +19,7 @@ module Ameba::Rule::Lint
   # YAML configuration example:
   #
   # ```
-  # RandZero:
+  # Lint/RandZero:
   #   Enabled: true
   # ```
   #
