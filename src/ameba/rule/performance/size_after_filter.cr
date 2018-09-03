@@ -1,6 +1,5 @@
 module Ameba::Rule::Performance
-  # This rule is used to identify usage of `size` calls that follow to object
-  # caller names `select` and `reject`.
+  # This rule is used to identify usage of `size` calls that follow filter.
   #
   # For example, this is considered invalid:
   #
@@ -16,20 +15,29 @@ module Ameba::Rule::Performance
   #
   # ```
   # [1, 2, 3].count { |e| e > 2 }
-  # [1, 2, 3].count { |e| e > 2 }
+  # [1, 2, 3].count { |e| e >= 2 }
   # [1, 2, 3].count(&.< 2)
   # [0, 1, 2].count(&.zero?)
   # [0, 1, 2].count(&.!= 0)
   # ```
   #
-  struct Count < Base
-    SIZE_CALL_NAME = "size"
-    MSG = "Use `count {...}` instead of `%s {...}.#{SIZE_CALL_NAME}`."
+  # YAML configuration example:
+  #
+  # ```
+  # Performance/SizeAfterFilter:
+  #   Enabled: true
+  #   FilterNames:
+  #     - select
+  #     - reject
+  # ```
+  #
+  struct SizeAfterFilter < Base
+    SIZE_NAME = "size"
+    MSG = "Use `count {...}` instead of `%s {...}.#{SIZE_NAME}`."
 
     properties do
-      object_call_names : Array(String) = %w(select reject)
-      description "Identifies usage of `size` calls that follow to object \
-                   caller names (`select`/`reject` by default)."
+      filter_names : Array(String) = %w(select reject)
+      description "Identifies usage of `size` calls that follow filter"
     end
 
     def test(source)
@@ -37,10 +45,10 @@ module Ameba::Rule::Performance
     end
 
     def test(source, node : Crystal::Call)
-      return unless node.name == SIZE_CALL_NAME && (obj = node.obj)
+      return unless node.name == SIZE_NAME && (obj = node.obj)
 
       if obj.is_a?(Crystal::Call) &&
-         object_call_names.includes?(obj.name) && !obj.block.nil?
+         filter_names.includes?(obj.name) && !obj.block.nil?
 
         issue_for obj.name_location, node.name_end_location, MSG % obj.name
       end

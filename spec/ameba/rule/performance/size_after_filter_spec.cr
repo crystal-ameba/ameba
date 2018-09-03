@@ -1,9 +1,9 @@
 require "../../../spec_helper"
 
 module Ameba::Rule::Performance
-  subject = Count.new
+  subject = SizeAfterFilter.new
 
-  describe Count do
+  describe SizeAfterFilter do
     it "passes if there is no potential performance improvements" do
       source = Source.new %(
         [1, 2, 3].select { |e| e > 2 }
@@ -43,8 +43,8 @@ module Ameba::Rule::Performance
         source = Source.new %(
           [1, 2, 3].reject(&.empty?).size
         )
-        rule = Rule::Performance::Count.new
-        rule.object_call_names = %w(select)
+        rule = Rule::Performance::SizeAfterFilter.new
+        rule.filter_names = %w(select)
         rule.catch(source).should be_valid
       end
     end
