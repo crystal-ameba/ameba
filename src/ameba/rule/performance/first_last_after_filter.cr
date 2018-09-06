@@ -1,11 +1,11 @@
 module Ameba::Rule::Performance
-  # This rule is used to identify usage of `first/last` calls that follow filters.
+  # This rule is used to identify usage of `first/last/first?/last?` calls that follow filters.
   #
   # For example, this is considered inefficient:
   #
   # ```
-  # [-1, 0, 1, 2].select { |e| e > 0 }.first
-  # [-1, 0, 1, 2].select { |e| e > 0 }.last
+  # [-1, 0, 1, 2].select { |e| e > 0 }.first?
+  # [-1, 0, 1, 2].select { |e| e > 0 }.last?
   # ```
   #
   # And can be written as this:
@@ -25,13 +25,13 @@ module Ameba::Rule::Performance
   # ```
   #
   struct FirstLastAfterFilter < Base
-    CALL_NAMES  = %w(first last)
-    MSG         = "Use `find {...}` instead of `%s {...}.first`"
-    MSG_REVERSE = "Use `reverse_each.find {...}` instead of `%s {...}.last`"
+    CALL_NAMES  = %w(first last first? last?)
+    MSG         = "Use `find {...}` instead of `%s {...}.%s`"
+    MSG_REVERSE = "Use `reverse_each.find {...}` instead of `%s {...}.%s`"
 
     properties do
       filter_names : Array(String) = %w(select)
-      description "Identifies usage of `first/last` calls that follow filters."
+      description "Identifies usage of `first/last/first?/last?` calls that follow filters."
     end
 
     def test(source)
@@ -43,8 +43,8 @@ module Ameba::Rule::Performance
 
       if node.block.nil? && obj.is_a?(Crystal::Call) &&
          filter_names.includes?(obj.name) && !obj.block.nil?
-        message = node.name == CALL_NAMES.first ? MSG : MSG_REVERSE
-        issue_for obj.name_location, node.name_end_location, message % obj.name
+        message = node.name.includes?(CALL_NAMES.first) ? MSG : MSG_REVERSE
+        issue_for obj.name_location, node.name_end_location, message % {obj.name, node.name}
       end
     end
   end
