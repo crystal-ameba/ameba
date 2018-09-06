@@ -75,7 +75,7 @@ module Ameba::Rule::Performance
       issue.location.to_s.should eq "source.cr:2:19"
       issue.end_location.to_s.should eq "source.cr:2:44"
 
-      issue.message.should eq "Use `reverse.find {...}` instead of `select {...}.last`"
+      issue.message.should eq "Use `reverse_each.find {...}` instead of `select {...}.last`"
     end
   end
 end

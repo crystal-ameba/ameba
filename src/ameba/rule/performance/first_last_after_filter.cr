@@ -12,7 +12,7 @@ module Ameba::Rule::Performance
   #
   # ```
   # [-1, 0, 1, 2].find { |e| e > 0 }
-  # [-1, 0, 1, 2].reverse.find { |e| e > 0 }
+  # [-1, 0, 1, 2].reverse_each.find { |e| e > 0 }
   # ```
   #
   # YAML configuration example:
@@ -27,7 +27,7 @@ module Ameba::Rule::Performance
   struct FirstLastAfterFilter < Base
     CALL_NAMES  = %w(first last)
     MSG         = "Use `find {...}` instead of `%s {...}.first`"
-    MSG_REVERSE = "Use `reverse.find {...}` instead of `%s {...}.last`"
+    MSG_REVERSE = "Use `reverse_each.find {...}` instead of `%s {...}.last`"
 
     properties do
       filter_names : Array(String) = %w(select)
