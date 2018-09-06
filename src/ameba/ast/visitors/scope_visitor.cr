@@ -3,6 +3,21 @@ require "./base_visitor"
 module Ameba::AST
   # AST Visitor that traverses the source and constructs scopes.
   class ScopeVisitor < BaseVisitor
+    SUPER = "super"
+    # List of special top level macros that use assignments
+    # as the macro arguments thus such arguments are not treated as assignments.
+    #
+    # For example:
+    #
+    # ```
+    # bar = 1
+    # record Foo, bar = 2 # this is not an assignment
+    # bar                 # => 1
+    # ```
+    SPECIAL_TOP_LEVEL_MACROS = %w(
+      record
+    )
+
     @current_scope : Scope
 
     def initialize(@rule, @source)
@@ -140,12 +155,18 @@ module Ameba::AST
 
     # :nodoc:
     def visit(node : Crystal::Call)
-      return true unless node.name == "super" && node.args.empty?
-      return true unless (scope = @current_scope).def?
-      scope.arguments.each do |arg|
-        variable = arg.variable
-        variable.reference(variable.node, scope).explicit = false
+      case @current_scope
+      when .def?
+        if node.name == SUPER && node.args.empty?
+          @current_scope.arguments.each do |arg|
+            variable = arg.variable
+            variable.reference(variable.node, @current_scope).explicit = false
+          end
+        end
+      when .top_level?
+        return false if SPECIAL_TOP_LEVEL_MACROS.includes?(node.name)
       end
+
       true
     end
   end

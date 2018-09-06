@@ -98,6 +98,11 @@ module Ameba::AST
       node.is_a? Crystal::Def
     end
 
+    # Returns true if this scope is a top level scope, false if not.
+    def top_level?
+      outer_scope.nil?
+    end
+
     # Returns true if var is an argument in current scope, false if not.
     def arg?(var)
       case current_node = node
