@@ -419,6 +419,35 @@ module Ameba::Rule::Lint
         )
         subject.catch(s).should be_valid
       end
+
+      it "doesn't report if this is a record declaration" do
+        s = Source.new %(
+          record Foo, foo = "foo"
+        )
+        subject.catch(s).should be_valid
+      end
+
+      it "does not report if assignment is referenced after the record declaration" do
+        s = Source.new %(
+          foo = 2
+          record Bar, foo = 3 # foo = 3 is not parsed as assignment
+          puts foo
+        )
+        subject.catch(s).should be_valid
+      end
+
+      it "reports if assignment is not referenced after the record declaration" do
+        s = Source.new %(
+          foo = 2
+          record Bar, foo = 3
+        ), "source.cr"
+        subject.catch(s).should_not be_valid
+        s.issues.size.should eq 1
+
+        issue = s.issues.first
+        issue.location.to_s.should eq "source.cr:2:11"
+        issue.message.should eq "Useless assignment to variable `foo`"
+      end
     end
 
     context "branching" do

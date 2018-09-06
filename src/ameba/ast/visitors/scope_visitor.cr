@@ -3,6 +3,9 @@ require "./base_visitor"
 module Ameba::AST
   # AST Visitor that traverses the source and constructs scopes.
   class ScopeVisitor < BaseVisitor
+    SUPER_NODE_NAME  = "super"
+    RECORD_NODE_NAME = "record"
+
     @current_scope : Scope
 
     def initialize(@rule, @source)
@@ -140,13 +143,23 @@ module Ameba::AST
 
     # :nodoc:
     def visit(node : Crystal::Call)
-      return true unless node.name == "super" && node.args.empty?
-      return true unless (scope = @current_scope).def?
-      scope.arguments.each do |arg|
-        variable = arg.variable
-        variable.reference(variable.node, scope).explicit = false
+      case @current_scope
+      when .def?
+        if node.name == SUPER_NODE_NAME && node.args.empty?
+          @current_scope.arguments.each do |arg|
+            variable = arg.variable
+            variable.reference(variable.node, @current_scope).explicit = false
+          end
+        end
+      when .top_level?
+        return false if record_macro?(node)
       end
+
       true
+    end
+
+    private def record_macro?(node)
+      node.name == RECORD_NODE_NAME && node.args.first?.is_a?(Crystal::Path)
     end
   end
 end
