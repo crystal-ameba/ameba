@@ -7,7 +7,7 @@ module Ameba
         # ameba:disable #{NamedRule.name}
         Time.epoch(1483859302)
       )
-      s.add_issue(NamedRule.new, location: {3, 12}, message: "Error!")
+      s.add_issue(NamedRule.new, location: {1, 12}, message: "Error!")
       s.should be_valid
     end
 
@@ -15,7 +15,7 @@ module Ameba
       s = Source.new %Q(
         Time.epoch(1483859302) # ameba:disable #{NamedRule.name}
       )
-      s.add_issue(NamedRule.new, location: {2, 12}, message: "Error!")
+      s.add_issue(NamedRule.new, location: {1, 12}, message: "Error!")
       s.should be_valid
     end
 
@@ -24,7 +24,7 @@ module Ameba
         # ameba:disable WrongName
         Time.epoch(1483859302)
       )
-      s.add_issue(NamedRule.new, location: {3, 12}, message: "Error!")
+      s.add_issue(NamedRule.new, location: {2, 12}, message: "Error!")
       s.should_not be_valid
     end
 
@@ -33,7 +33,7 @@ module Ameba
         # ameba:disable SomeRule LargeNumbers #{NamedRule.name} SomeOtherRule
         Time.epoch(1483859302)
       )
-      s.add_issue(NamedRule.new, location: {3, 12}, message: "")
+      s.add_issue(NamedRule.new, location: {2, 12}, message: "")
       s.should be_valid
     end
 
@@ -42,7 +42,7 @@ module Ameba
         # ameba:disable SomeRule, LargeNumbers, #{NamedRule.name}, SomeOtherRule
         Time.epoch(1483859302)
       )
-      s.add_issue(NamedRule.new, location: {3, 12}, message: "")
+      s.add_issue(NamedRule.new, location: {2, 12}, message: "")
       s.should be_valid
     end
 
@@ -51,7 +51,7 @@ module Ameba
         # ameba:disable SomeRule, SomeOtherRule LargeNumbers
         Time.epoch(1483859302)
       )
-      s.add_issue(NamedRule.new, location: {3, 12}, message: "")
+      s.add_issue(NamedRule.new, location: {2, 12}, message: "")
       s.should_not be_valid
     end
 
@@ -61,7 +61,7 @@ module Ameba
         #
         Time.epoch(1483859302)
       )
-      s.add_issue(NamedRule.new, location: {4, 12}, message: "")
+      s.add_issue(NamedRule.new, location: {3, 12}, message: "")
       s.should_not be_valid
     end
 
@@ -106,7 +106,7 @@ module Ameba
         s = Source.new %Q(
           a = 1 # ameba:disable #{DummyRule.rule_name}
         )
-        s.add_issue(DummyRule.new, location: {2, 12}, message: "")
+        s.add_issue(DummyRule.new, location: {1, 12}, message: "")
         s.should be_valid
       end
 
@@ -122,7 +122,7 @@ module Ameba
         s = Source.new %Q(
           a = 1 # ameba:disable #{DummyRule.group_name}
         )
-        s.add_issue(DummyRule.new, location: {2, 12}, message: "")
+        s.add_issue(DummyRule.new, location: {1, 12}, message: "")
         s.should be_valid
       end
 

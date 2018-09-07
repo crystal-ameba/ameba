@@ -10,7 +10,7 @@ module Ameba::Rule::Layout
     end
 
     it "fails if there is a blank line at the end of a source" do
-      source = Source.new "a = 1\n \n "
+      source = Source.new "a = 1\n \n ", normalize: false
       subject.catch(source).should_not be_valid
     end
 
@@ -20,12 +20,12 @@ module Ameba::Rule::Layout
     end
 
     it "passes if last line is not blank" do
-      source = Source.new "\n\n\n puts 22"
+      source = Source.new "\n\n\n puts 22", normalize: false
       subject.catch(source).should be_valid
     end
 
     it "reports rule, pos and message" do
-      source = Source.new "a = 1\n\n ", "source.cr"
+      source = Source.new "a = 1\n\n ", "source.cr", normalize: false
       subject.catch(source).should_not be_valid
 
       issue = source.issues.first

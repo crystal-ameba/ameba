@@ -57,8 +57,8 @@ module Ameba::Rule::Performance
       issue = s.issues.first
 
       issue.rule.should_not be_nil
-      issue.location.to_s.should eq "source.cr:2:4"
-      issue.end_location.to_s.should eq "source.cr:2:25"
+      issue.location.to_s.should eq "source.cr:1:4"
+      issue.end_location.to_s.should eq "source.cr:1:25"
       issue.message.should eq "Use `count {...}` instead of `reject {...}.size`."
     end
   end

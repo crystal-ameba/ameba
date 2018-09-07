@@ -178,7 +178,7 @@ module Ameba::Rule::Lint
         issue.rule.should_not be_nil
         issue.message.should eq "Unused argument `a`. If it's necessary, use `_a` " \
                                 "as an argument name to indicate that it won't be used."
-        issue.location.to_s.should eq "source.cr:2:22"
+        issue.location.to_s.should eq "source.cr:1:12"
       end
     end
 

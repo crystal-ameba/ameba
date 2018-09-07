@@ -40,7 +40,7 @@ module Ameba::Rule::Style
 
       issue = s.issues.first
       issue.rule.should_not be_nil
-      issue.location.to_s.should eq "source.cr:3:11"
+      issue.location.to_s.should eq "source.cr:2:3"
       issue.message.should eq(
         "Favour method name 'picture?' over 'has_picture?'")
     end

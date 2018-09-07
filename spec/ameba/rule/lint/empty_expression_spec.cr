@@ -103,7 +103,7 @@ module Ameba
       subject.catch(s).should_not be_valid
       issue = s.issues.first
       issue.rule.should_not be_nil
-      issue.location.to_s.should eq "source.cr:2:12"
+      issue.location.to_s.should eq "source.cr:1:4"
       issue.message.should eq "Avoid empty expressions"
     end
   end

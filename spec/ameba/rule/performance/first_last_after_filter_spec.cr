@@ -71,8 +71,8 @@ module Ameba::Rule::Performance
 
       issue = s.issues.first
       issue.rule.should_not be_nil
-      issue.location.to_s.should eq "source.cr:2:19"
-      issue.end_location.to_s.should eq "source.cr:2:45"
+      issue.location.to_s.should eq "source.cr:1:11"
+      issue.end_location.to_s.should eq "source.cr:1:37"
 
       issue.message.should eq "Use `find {...}` instead of `select {...}.first`"
     end
@@ -86,8 +86,8 @@ module Ameba::Rule::Performance
 
       issue = s.issues.first
       issue.rule.should_not be_nil
-      issue.location.to_s.should eq "source.cr:2:19"
-      issue.end_location.to_s.should eq "source.cr:2:46"
+      issue.location.to_s.should eq "source.cr:1:11"
+      issue.end_location.to_s.should eq "source.cr:1:38"
 
       issue.message.should eq "Use `find {...}` instead of `select {...}.first?`"
     end
@@ -101,8 +101,8 @@ module Ameba::Rule::Performance
 
       issue = s.issues.first
       issue.rule.should_not be_nil
-      issue.location.to_s.should eq "source.cr:2:19"
-      issue.end_location.to_s.should eq "source.cr:2:44"
+      issue.location.to_s.should eq "source.cr:1:11"
+      issue.end_location.to_s.should eq "source.cr:1:36"
 
       issue.message.should eq "Use `reverse_each.find {...}` instead of `select {...}.last`"
     end
@@ -116,8 +116,8 @@ module Ameba::Rule::Performance
 
       issue = s.issues.first
       issue.rule.should_not be_nil
-      issue.location.to_s.should eq "source.cr:2:19"
-      issue.end_location.to_s.should eq "source.cr:2:45"
+      issue.location.to_s.should eq "source.cr:1:11"
+      issue.end_location.to_s.should eq "source.cr:1:37"
 
       issue.message.should eq "Use `reverse_each.find {...}` instead of `select {...}.last?`"
     end

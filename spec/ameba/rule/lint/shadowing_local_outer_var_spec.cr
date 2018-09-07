@@ -160,7 +160,7 @@ module Ameba::Rule::Lint
 
       issue = source.issues.first
       issue.rule.should_not be_nil
-      issue.location.to_s.should eq "source.cr:3:20"
+      issue.location.to_s.should eq "source.cr:2:12"
       issue.message.should eq "Shadowing outer local variable `foo`"
     end
   end

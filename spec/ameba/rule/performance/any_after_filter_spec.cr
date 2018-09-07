@@ -56,8 +56,8 @@ module Ameba::Rule::Performance
       issue = s.issues.first
 
       issue.rule.should_not be_nil
-      issue.location.to_s.should eq "source.cr:2:19"
-      issue.end_location.to_s.should eq "source.cr:2:44"
+      issue.location.to_s.should eq "source.cr:1:11"
+      issue.end_location.to_s.should eq "source.cr:1:36"
       issue.message.should eq "Use `any? {...}` instead of `reject {...}.any?`"
     end
   end

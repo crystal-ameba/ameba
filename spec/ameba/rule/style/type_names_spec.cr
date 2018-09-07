@@ -51,7 +51,7 @@ module Ameba
       subject.catch(s).should_not be_valid
       issue = s.issues.first
       issue.rule.should_not be_nil
-      issue.location.to_s.should eq "source.cr:2:9"
+      issue.location.to_s.should eq "source.cr:1:1"
       issue.message.should eq(
         "Type name should be camelcased: MyClass, but it was My_class"
       )

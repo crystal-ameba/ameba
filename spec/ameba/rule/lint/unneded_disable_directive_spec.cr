@@ -23,7 +23,7 @@ module Ameba::Rule::Lint
         # ameba:disable #{NamedRule.name}
         a = 1
       )
-      s.add_issue NamedRule.new, location: {3, 9},
+      s.add_issue NamedRule.new, location: {2, 1},
         message: "Useless assignment", status: :disabled
       subject.catch(s).should be_valid
     end
@@ -32,7 +32,7 @@ module Ameba::Rule::Lint
       s = Source.new %Q(
         a = 1 # ameba:disable #{NamedRule.name}
       )
-      s.add_issue NamedRule.new, location: {2, 1},
+      s.add_issue NamedRule.new, location: {1, 1},
         message: "Alarm!", status: :disabled
       subject.catch(s).should be_valid
     end
@@ -95,7 +95,7 @@ module Ameba::Rule::Lint
       subject.catch(s).should_not be_valid
       issue = s.issues.first
       issue.rule.should_not be_nil
-      issue.location.to_s.should eq "source.cr:2:9"
+      issue.location.to_s.should eq "source.cr:1:1"
       issue.message.should eq "Unnecessary disabling of Rule1, Rule2"
     end
   end
