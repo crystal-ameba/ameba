@@ -113,7 +113,7 @@ module Ameba::Rule::Style
         token = lexer.next_token
 
         case token.type
-        when :EOF
+        when :EOF, :"->"
           break
         when :IDENT
           return token.value == :begin if in_body?

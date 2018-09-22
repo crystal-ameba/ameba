@@ -192,6 +192,19 @@ module Ameba::Rule::Style
       subject.catch(s).should_not be_valid
     end
 
+    it "doesn't report if begin-end block in a proc literal" do
+      s = Source.new %q(
+        foo = ->{
+          begin
+            raise "Foo!"
+          rescue ex
+            pp ex
+          end
+        }
+      )
+      subject.catch(s).should be_valid
+    end
+
     it "reports rule, pos and message" do
       s = Source.new %q(
         def method
