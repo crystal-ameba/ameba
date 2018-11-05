@@ -65,6 +65,17 @@ module Ameba
     end
   end
 
+  struct FlowExpressionRule < Rule::Base
+    getter expressions = [] of AST::FlowExpression
+
+    def test(source)
+    end
+
+    def test(source, node, flow_expression : AST::FlowExpression)
+      @expressions << flow_expression
+    end
+  end
+
   class DummyFormatter < Formatter::BaseFormatter
     property started_sources : Array(Source)?
     property finished_sources : Array(Source)?
@@ -118,6 +129,7 @@ module Ameba
       Crystal::If,
       Crystal::While,
       Crystal::MacroLiteral,
+      Crystal::ControlExpression,
     ]
 
     def initialize(node)
