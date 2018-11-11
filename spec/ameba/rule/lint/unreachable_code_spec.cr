@@ -33,12 +33,45 @@ module Ameba::Rule::Lint
       it "doesn't report if there are returns in if-then-else" do
         s = Source.new %(
           if a > 0
-            return :positivie
+            return :positive
           else
             return :negative
           end
         )
         subject.catch(s).should be_valid
+      end
+
+      it "doesn't report if return is used in a block" do
+        s = Source.new %(
+          def foo
+            bar = obj.try do
+              if something
+                a = 1
+              end
+              return nil
+            end
+
+            bar
+          end
+        )
+        subject.catch(s).should be_valid
+      end
+
+      pending "reports if there is unreachable code after if-then-else" do
+        s = Source.new %(
+          def foo
+            if a > 0
+              return :positive
+            else
+              return :negative
+            end
+
+            :unreachable
+          end
+        )
+        subject.catch(s).should_not be_valid
+        issue = s.issues.first
+        issue.location.to_s.should eq ":8:4"
       end
     end
 
@@ -94,6 +127,99 @@ module Ameba::Rule::Lint
             end
             puts a
           end
+        )
+        subject.catch(s).should be_valid
+      end
+    end
+
+    context "raise" do
+      it "reports if there is unreachable code after raise" do
+        s = Source.new %(
+          a = 1
+          raise "exception"
+          b = 2
+        )
+        subject.catch(s).should_not be_valid
+
+        issue = s.issues.first
+        issue.location.to_s.should eq ":3:1"
+      end
+
+      it "doesn't report if raise is in a condition" do
+        s = Source.new %(
+          a = 1
+          raise "exception" if a > 0
+          b = 2
+        )
+        subject.catch(s).should be_valid
+      end
+    end
+
+    context "exit" do
+      it "reports if there is unreachable code after exit without args" do
+        s = Source.new %(
+          a = 1
+          exit
+          b = 2
+        )
+        subject.catch(s).should_not be_valid
+
+        issue = s.issues.first
+        issue.location.to_s.should eq ":3:1"
+      end
+
+      it "reports if there is unreachable code after exit with exit code" do
+        s = Source.new %(
+          a = 1
+          exit 1
+          b = 2
+        )
+        subject.catch(s).should_not be_valid
+
+        issue = s.issues.first
+        issue.location.to_s.should eq ":3:1"
+      end
+
+      it "doesn't report if exit is in a condition" do
+        s = Source.new %(
+          a = 1
+          exit if a > 0
+          b = 2
+        )
+        subject.catch(s).should be_valid
+      end
+    end
+
+    context "abort" do
+      it "reports if there is unreachable code after abort with one argument" do
+        s = Source.new %(
+          a = 1
+          abort "abort"
+          b = 2
+        )
+        subject.catch(s).should_not be_valid
+
+        issue = s.issues.first
+        issue.location.to_s.should eq ":3:1"
+      end
+
+      it "reports if there is unreachable code after abort with two args" do
+        s = Source.new %(
+          a = 1
+          abort "abort", 1
+          b = 2
+        )
+        subject.catch(s).should_not be_valid
+
+        issue = s.issues.first
+        issue.location.to_s.should eq ":3:1"
+      end
+
+      it "doesn't report if abort is in a condition" do
+        s = Source.new %(
+          a = 1
+          abort "abort" if a > 0
+          b = 2
         )
         subject.catch(s).should be_valid
       end
