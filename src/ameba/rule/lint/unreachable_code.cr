@@ -43,6 +43,8 @@ module Ameba::Rule::Lint
   # ```
   #
   struct UnreachableCode < Base
+    include AST::Util
+
     properties do
       description "Reports unreachable code"
     end
@@ -54,7 +56,7 @@ module Ameba::Rule::Lint
     end
 
     def test(source, node, flow_expression : AST::FlowExpression)
-      if unreachable_node = flow_expression.find_unreachable_node
+      if unreachable_node = flow_expression.unreachable_nodes.first?
         issue_for unreachable_node, MSG
       end
     end

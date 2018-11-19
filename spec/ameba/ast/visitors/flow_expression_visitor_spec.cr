@@ -25,7 +25,7 @@ module Ameba::AST
           end
         end
       )
-      rule.expressions.size.should eq 2
+      rule.expressions.size.should eq 3
     end
 
     it "properly creates nested flow expressions" do
@@ -40,7 +40,7 @@ module Ameba::AST
           )
         end
       )
-      rule.expressions.size.should eq 3
+      rule.expressions.size.should eq 4
     end
 
     it "creates an expression for break" do
