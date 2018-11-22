@@ -1,3 +1,5 @@
+require "./util"
+
 module Ameba::AST
   # A generic entity to represent a branchable Crystal node.
   # For example, `Crystal::If`, `Crystal::Unless`, `Crystal::While`
@@ -11,6 +13,8 @@ module Ameba::AST
   # end
   # ```
   class Branchable
+    include Util
+
     getter branches = [] of Crystal::ASTNode
 
     # The actual Crystal node.
@@ -32,10 +36,7 @@ module Ameba::AST
 
     # Returns true if this node or one of the parent branchables is a loop, false otherwise.
     def loop?
-      return true if node.is_a? Crystal::While ||
-                     node.is_a? Crystal::Until ||
-                     ((n = node) && n.is_a?(Crystal::Call) && n.name == "loop")
-
+      return true if loop?(node)
       parent.try(&.loop?) || false
     end
   end
