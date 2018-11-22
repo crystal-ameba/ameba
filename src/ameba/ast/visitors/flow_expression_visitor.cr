@@ -1,60 +1,67 @@
+require "../util"
 require "./base_visitor"
 
 module Ameba::AST
   # AST Visitor that traverses all the flow expressions.
   class FlowExpressionVisitor < BaseVisitor
-    @node_stack = Array(Crystal::ASTNode).new
-    @flow_expression : FlowExpression?
+    include Util
 
+    @loop_stack = [] of Crystal::ASTNode
+
+    # Creates a new flow expression visitor.
     def initialize(@rule, @source)
       @source.ast.accept self
     end
 
+    # :nodoc:
     def visit(node)
-      @node_stack.push node
-    end
-
-    def end_visit(node)
-      if @flow_expression.nil?
-        @node_stack.pop unless @node_stack.empty?
-      else
-        @flow_expression = nil
+      if flow_expression?(node, in_loop?)
+        @rule.test @source, node, FlowExpression.new(node, in_loop?)
       end
-    end
-
-    def visit(node : Crystal::ControlExpression)
-      on_flow_expression_start(node)
 
       true
     end
 
+    # :nodoc:
+    def visit(node : Crystal::While)
+      on_loop_started(node)
+    end
+
+    # :nodoc:
+    def visit(node : Crystal::Until)
+      on_loop_started(node)
+    end
+
+    # :nodoc:
     def visit(node : Crystal::Call)
-      if raise?(node) || exit?(node) || abort?(node)
-        on_flow_expression_start(node)
-      else
-        @node_stack.push node
-      end
-
-      true
+      on_loop_started(node) if loop?(node)
     end
 
-    private def on_flow_expression_start(node)
-      if parent_node = @node_stack.last?
-        @flow_expression = FlowExpression.new(node, parent_node)
-        @rule.test @source, node, @flow_expression
-      end
+    # :nodoc:
+    def end_visit(node : Crystal::While)
+      on_loop_ended(node)
     end
 
-    private def raise?(node)
-      node.name == "raise" && node.args.size == 1 && node.obj.nil?
+    # :nodoc:
+    def end_visit(node : Crystal::Until)
+      on_loop_ended(node)
     end
 
-    private def exit?(node)
-      node.name == "exit" && node.args.size <= 1 && node.obj.nil?
+    # :nodoc:
+    def end_visit(node : Crystal::Call)
+      on_loop_ended(node) if loop?(node)
     end
 
-    private def abort?(node)
-      node.name == "abort" && node.args.size <= 2 && node.obj.nil?
+    private def on_loop_started(node)
+      @loop_stack.push(node)
+    end
+
+    private def on_loop_ended(node)
+      @loop_stack.pop?
+    end
+
+    private def in_loop?
+      @loop_stack.any?
     end
   end
 end

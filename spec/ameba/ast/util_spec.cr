@@ -71,5 +71,242 @@ module Ameba::AST
         ])
       end
     end
+
+    describe "#flow_command?" do
+      it "returns true if this is return" do
+        node = as_node("return 22")
+        subject.flow_command?(node, false).should eq true
+      end
+
+      it "returns true if this is a break in a loop" do
+        node = as_node("break")
+        subject.flow_command?(node, true).should eq true
+      end
+
+      it "returns false if this is a break out of loop" do
+        node = as_node("break")
+        subject.flow_command?(node, false).should eq false
+      end
+
+      it "returns true if this is a next in a loop" do
+        node = as_node("next")
+        subject.flow_command?(node, true).should eq true
+      end
+
+      it "returns false if this is a next out of loop" do
+        node = as_node("next")
+        subject.flow_command?(node, false).should eq false
+      end
+
+      it "returns true if this is raise" do
+        node = as_node("raise e")
+        subject.flow_command?(node, false).should eq true
+      end
+
+      it "returns true if this is exit" do
+        node = as_node("exit")
+        subject.flow_command?(node, false).should eq true
+      end
+
+      it "returns true if this is abort" do
+        node = as_node("abort")
+        subject.flow_command?(node, false).should eq true
+      end
+
+      it "returns false otherwise" do
+        node = as_node("foobar")
+        subject.flow_command?(node, false).should eq false
+      end
+    end
+
+    describe "#flow_expression?" do
+      it "returns true if this is a flow command" do
+        node = as_node("return")
+        subject.flow_expression?(node, true).should eq true
+      end
+
+      it "returns true if this is if-else consumed by flow expressions" do
+        node = as_node %(
+          if foo
+            return :foo
+          else
+            return :bar
+          end
+        )
+        subject.flow_expression?(node, false).should eq true
+      end
+
+      it "returns true if this is unless-else consumed by flow expressions" do
+        node = as_node %(
+          unless foo
+            return :foo
+          else
+            return :bar
+          end
+        )
+        subject.flow_expression?(node).should eq true
+      end
+
+      it "returns true if this is case consumed by flow expressions" do
+        node = as_node %(
+          case
+          when 1
+            return 1
+          when 2
+            return 2
+          else
+            return 3
+          end
+        )
+        subject.flow_expression?(node).should eq true
+      end
+
+      it "returns true if this is exception handler consumed by flow expressions" do
+        node = as_node %(
+          begin
+            raise "exp"
+          rescue e
+            return e
+          end
+        )
+        subject.flow_expression?(node).should eq true
+      end
+
+      it "returns true if this while consumed by flow expressions" do
+        node = as_node %(
+          while true
+            return
+          end
+        )
+        subject.flow_expression?(node).should eq true
+      end
+
+      it "returns false if this while with break" do
+        node = as_node %(
+          while true
+            break
+          end
+        )
+        subject.flow_expression?(node).should eq false
+      end
+
+      it "returns true if this until consumed by flow expressions" do
+        node = as_node %(
+          until false
+            return
+          end
+        )
+        subject.flow_expression?(node).should eq true
+      end
+
+      it "returns false if this until with break" do
+        node = as_node %(
+          until false
+            break
+          end
+        )
+        subject.flow_expression?(node).should eq false
+      end
+
+      it "returns true if this expressions consumed by flow expressions" do
+        node = as_node %(
+          exp1
+          exp2
+          return
+        )
+        subject.flow_expression?(node).should eq true
+      end
+
+      it "returns false otherwise" do
+        node = as_node %(
+          exp1
+          exp2
+        )
+        subject.flow_expression?(node).should eq false
+      end
+    end
+
+    describe "#raise?" do
+      it "returns true if this is a raise method call" do
+        node = as_node "raise e"
+        subject.raise?(node).should eq true
+      end
+
+      it "returns false if it has a receiver" do
+        node = as_node "obj.raise e"
+        subject.raise?(node).should eq false
+      end
+
+      it "returns false if size of the arguments doesn't match" do
+        node = as_node "raise"
+        subject.raise?(node).should eq false
+      end
+    end
+
+    describe "#exit?" do
+      it "returns true if this is a exit method call" do
+        node = as_node "exit"
+        subject.exit?(node).should eq true
+      end
+
+      it "returns true if this is a exit method call with one argument" do
+        node = as_node "exit 1"
+        subject.exit?(node).should eq true
+      end
+
+      it "returns false if it has a receiver" do
+        node = as_node "obj.exit"
+        subject.exit?(node).should eq false
+      end
+
+      it "returns false if size of the arguments doesn't match" do
+        node = as_node "exit 1, 1"
+        subject.exit?(node).should eq false
+      end
+    end
+
+    describe "#abort?" do
+      it "returns true if this is an abort method call" do
+        node = as_node "abort"
+        subject.abort?(node).should eq true
+      end
+
+      it "returns true if this is an abort method call with one argument" do
+        node = as_node "abort \"message\""
+        subject.abort?(node).should eq true
+      end
+
+      it "returns true if this is an abort method call with two arguments" do
+        node = as_node "abort \"message\", 1"
+        subject.abort?(node).should eq true
+      end
+
+      it "returns false if it has a receiver" do
+        node = as_node "obj.abort"
+        subject.abort?(node).should eq false
+      end
+
+      it "returns false if size of the arguments doesn't match" do
+        node = as_node "abort 1, 1, 1"
+        subject.abort?(node).should eq false
+      end
+    end
+
+    describe "#loop?" do
+      it "returns true if this is a loop method call" do
+        node = as_node "loop"
+        subject.loop?(node).should eq true
+      end
+
+      it "returns false if it has a receiver" do
+        node = as_node "obj.loop"
+        subject.loop?(node).should eq false
+      end
+
+      it "returns false if size of the arguments doesn't match" do
+        node = as_node "loop 1"
+        subject.loop?(node).should eq false
+      end
+    end
   end
 end

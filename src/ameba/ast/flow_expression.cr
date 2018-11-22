@@ -1,3 +1,5 @@
+require "./util"
+
 module Ameba::AST
   # Represents a flow expression in Crystal code.
   # For example,
@@ -14,11 +16,13 @@ module Ameba::AST
   # a parent node, which allows easily search through the related statement
   # (i.e. find unreachable code)
   class FlowExpression
+    include Util
+
+    # Is true only if some of the nodes parents is a loop.
+    getter? in_loop : Bool
+
     # The actual node of the flow expression.
     getter node : Crystal::ASTNode
-
-    # Parent ast node.
-    getter parent_node : Crystal::ASTNode
 
     delegate to_s, to: @node
     delegate location, to: @node
@@ -28,10 +32,10 @@ module Ameba::AST
     # ```
     # FlowExpression.new(node, parent_node)
     # ```
-    def initialize(@node, @parent_node)
+    def initialize(@node, @in_loop)
     end
 
-    # Returns first node which can't be reached because of a flow expression.
+    # Returns nodes which can't be reached because of a flow expression inside.
     # For example:
     #
     # ```
@@ -41,39 +45,21 @@ module Ameba::AST
     #
     #   a + 2 # => unreachable assign node
     # end
-    # ```
-    #
-    def find_unreachable_node
-      UnreachableNodeVisitor.new(node, parent_node)
-        .tap(&.accept parent_node)
-        .unreachable_nodes
-        .first?
-    end
+    def unreachable_nodes
+      unreachable_nodes = [] of Crystal::ASTNode
 
-    # :nodoc:
-    private class UnreachableNodeVisitor < Crystal::Visitor
-      getter unreachable_nodes = Array(Crystal::ASTNode).new
-      @after_control_flow_node = false
-      @branch : AST::Branch?
-
-      def initialize(@node : Crystal::ASTNode, parent_node)
-        @branch = Branch.of(@node, parent_node)
+      case current_node = node
+      when Crystal::Expressions
+        control_flow_found = false
+        current_node.expressions.each do |exp|
+          unreachable_nodes << exp if control_flow_found
+          control_flow_found ||= flow_expression?(exp, in_loop?)
+        end
+      when Crystal::BinaryOp
+        unreachable_nodes << current_node.right if flow_expression?(current_node.left, in_loop?)
       end
 
-      def visit(node : Crystal::ASTNode)
-        if node.class == @node.class &&
-           node.location == @node.location
-          @after_control_flow_node = true
-          return false
-        end
-
-        if @after_control_flow_node && !node.nop? && @branch.nil?
-          @unreachable_nodes << node
-          return false
-        end
-
-        true
-      end
+      unreachable_nodes
     end
   end
 end

@@ -1,7 +1,7 @@
 module Ameba::AST
   # A generic entity to represent a branchable Crystal node.
   # For example, `Crystal::If`, `Crystal::Unless`, `Crystal::While`
-  # are branchable.
+  # are branchables.
   #
   # ```
   # white a > 100 # Branchable A

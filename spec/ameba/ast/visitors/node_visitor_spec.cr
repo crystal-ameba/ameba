@@ -5,14 +5,12 @@ module Ameba::AST
   source = Source.new ""
 
   describe NodeVisitor do
-    {% for name in NODES %}
-      describe "{{name}}" do
-        it "allow to visit {{name}} node" do
-          visitor = NodeVisitor.new rule, source
-          nodes = Crystal::Parser.new("").parse
-          nodes.accept visitor
-        end
+    describe "visit" do
+      it "allow to visit ASTNode" do
+        visitor = NodeVisitor.new rule, source
+        nodes = Crystal::Parser.new("").parse
+        nodes.accept visitor
       end
-    {% end %}
+    end
   end
 end

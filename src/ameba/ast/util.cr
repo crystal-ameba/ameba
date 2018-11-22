@@ -40,4 +40,101 @@ module Ameba::AST::Util
 
     node_lines
   end
+
+  # Returns true if node is a flow command, false - otherwise.
+  # Node represents a flow command if it is a control expression,
+  # or special call node that interrupts execution (i.e. raise, exit, abort).
+  def flow_command?(node, in_loop?)
+    case node
+    when Crystal::Return
+      true
+    when Crystal::Break, Crystal::Next
+      in_loop?
+    when Crystal::Call
+      raise?(node) || exit?(node) || abort?(node)
+    else
+      false
+    end
+  end
+
+  # Returns true if node is a flow expression, false if not.
+  # Node represents a flow expression if it is full-filed by a flow command.
+  #
+  # For example, this node is a flow expressions, because each branch contains
+  # a flow command `return`:
+  #
+  # ```
+  # if a > 0
+  #   return :positive
+  # elsif a < 0
+  #   return :negative
+  # else
+  #   return :zero
+  # end
+  # ```
+  #
+  # This node is a not a flow expression:
+  #
+  # ```
+  # if a > 0
+  #   return :positive
+  # end
+  # ```
+  #
+  # That's because not all branches return(i.e. `else` is missing).
+  #
+  def flow_expression?(node, in_loop? = false)
+    return true if flow_command? node, in_loop?
+
+    case node
+    when Crystal::If, Crystal::Unless
+      flow_expressions? [node.then, node.else], in_loop?
+    when Crystal::BinaryOp
+      flow_expression? node.left, in_loop?
+    when Crystal::Case
+      flow_expressions? [node.whens, node.else].flatten, in_loop?
+    when Crystal::ExceptionHandler
+      flow_expressions? [node.else || node.body, node.rescues].flatten, in_loop?
+    when Crystal::While, Crystal::Until
+      flow_expression? node.body, in_loop?
+    when Crystal::Rescue, Crystal::When
+      flow_expression? node.body, in_loop?
+    when Crystal::Expressions
+      node.expressions.any? { |exp| flow_expression? exp, in_loop? }
+    else
+      false
+    end
+  end
+
+  private def flow_expressions?(nodes, in_loop?)
+    nodes.all? { |exp| flow_expression? exp, in_loop? }
+  end
+
+  # Returns true if node represents `raise` method call.
+  def raise?(node)
+    node.is_a?(Crystal::Call) &&
+      node.name == "raise" && node.args.size == 1 && node.obj.nil?
+  end
+
+  # Returns true if node represents `exit` method call.
+  def exit?(node)
+    node.is_a?(Crystal::Call) &&
+      node.name == "exit" && node.args.size <= 1 && node.obj.nil?
+  end
+
+  # Returns true if node represents `abort` method call.
+  def abort?(node)
+    node.is_a?(Crystal::Call) &&
+      node.name == "abort" && node.args.size <= 2 && node.obj.nil?
+  end
+
+  # Returns true if node represents a loop.
+  def loop?(node)
+    case node
+    when Crystal::While, Crystal::Until
+      true
+    when Crystal::Call
+      node.name == "loop" && node.args.size == 0 && node.obj.nil?
+    end
+  end
 end
