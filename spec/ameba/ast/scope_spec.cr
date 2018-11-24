@@ -18,6 +18,21 @@ module Ameba::AST
     end
   end
 
+  describe "delegation" do
+    it "delegates to_s to node" do
+      node = as_node("def foo; end")
+      scope = Scope.new node
+      scope.to_s.should eq node.to_s
+    end
+
+    it "delegates locations to node" do
+      node = as_node("def foo; end")
+      scope = Scope.new node
+      scope.location.should eq node.location
+      scope.end_location.should eq node.end_location
+    end
+  end
+
   describe "#add_variable" do
     it "adds a new variable to the scope" do
       scope = Scope.new as_node("")

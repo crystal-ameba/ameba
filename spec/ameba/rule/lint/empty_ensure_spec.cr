@@ -62,6 +62,7 @@ module Ameba::Rule::Lint
 
       issue.rule.should_not be_nil
       issue.location.to_s.should eq "source.cr:2:3"
+      issue.end_location.to_s.should eq "source.cr:6:3"
       issue.message.should eq "Empty `ensure` block detected"
     end
   end

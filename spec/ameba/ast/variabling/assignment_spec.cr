@@ -22,9 +22,10 @@ module Ameba::AST
     end
 
     describe "delegation" do
-      it "delegates location" do
+      it "delegates locations" do
         assignment = Assignment.new(node, variable)
         assignment.location.should eq node.location
+        assignment.end_location.should eq node.end_location
       end
 
       it "delegates to_s" do

@@ -43,7 +43,7 @@ module Ameba::Rule::Lint
 
         var.assignments.each do |assign|
           next if assign.referenced?
-          issue_for assign, MSG % var.name
+          issue_for assign.target_node, MSG % var.name
         end
       end
     end

@@ -104,6 +104,7 @@ module Ameba
       issue = s.issues.first
       issue.rule.should_not be_nil
       issue.location.to_s.should eq "source.cr:1:4"
+      issue.end_location.to_s.should eq "source.cr:1:5"
       issue.message.should eq "Avoid empty expressions"
     end
   end

@@ -17,10 +17,11 @@ module Ameba::AST
           flow_expression.to_s.should eq node.to_s
         end
 
-        it "delegates location to @node" do
+        it "delegates locations to @node" do
           node = as_node %(break if true)
           flow_expression = FlowExpression.new node, false
           flow_expression.location.should eq node.location
+          flow_expression.end_location.should eq node.end_location
         end
       end
 

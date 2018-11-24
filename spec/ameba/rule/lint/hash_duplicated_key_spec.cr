@@ -35,6 +35,7 @@ module Ameba::Rule::Lint
       issue = s.issues.first
       issue.rule.should_not be_nil
       issue.location.to_s.should eq "source.cr:1:5"
+      issue.end_location.to_s.should eq "source.cr:1:24"
       issue.message.should eq %(Duplicated keys in hash literal: "a")
     end
 

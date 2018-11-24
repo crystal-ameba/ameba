@@ -14,9 +14,10 @@ module Ameba::AST
     end
 
     describe "delegation" do
-      it "delegates location to node" do
+      it "delegates locations to node" do
         argument = Argument.new(arg, variable)
         argument.location.should eq arg.location
+        argument.end_location.should eq arg.end_location
       end
 
       it "delegates to_s to node" do

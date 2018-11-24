@@ -11,12 +11,12 @@ module Ameba
     end
 
     # Adds a new issue for AST *node*.
-    def add_issue(rule, node, message, **args)
+    def add_issue(rule, node : Crystal::ASTNode, message, **args)
       add_issue rule, node.location, node.end_location, message, **args
     end
 
     # Adds a new issue for Crystal *token*.
-    def add_issue(rule, token, message, **args)
+    def add_issue(rule, token : Crystal::Token, message, **args)
       add_issue rule, token.location, nil, message, **args
     end
 

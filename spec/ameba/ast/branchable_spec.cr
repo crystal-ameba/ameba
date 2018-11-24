@@ -16,10 +16,11 @@ module Ameba::AST
         branchable.to_s.should eq node.to_s
       end
 
-      it "delegates location to @node" do
+      it "delegates locations to @node" do
         node = as_node %(a = 2 if true)
         branchable = Branchable.new node
         branchable.location.should eq node.location
+        branchable.end_location.should eq node.end_location
       end
     end
 

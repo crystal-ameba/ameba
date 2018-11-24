@@ -36,6 +36,7 @@ module Ameba::Rule::Style
 
       issue = source.issues.first
       issue.location.to_s.should eq "source.cr:2:1"
+      issue.end_location.to_s.should eq "source.cr:5:3"
       issue.message.should eq "While statement using true literal as condition"
     end
   end

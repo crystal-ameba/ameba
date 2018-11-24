@@ -159,6 +159,7 @@ module Ameba::Rule::Lint
       issue = s.issues.first
       issue.rule.should_not be_nil
       issue.location.to_s.should eq "source.cr:2:3"
+      issue.end_location.to_s.should eq "source.cr:2:10"
       issue.message.should eq "Argument `bar` is assigned before it is used"
     end
   end

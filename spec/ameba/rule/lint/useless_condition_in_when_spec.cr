@@ -39,6 +39,7 @@ module Ameba::Rule::Lint
       issue = s.issues.first
       issue.rule.should_not be_nil
       issue.location.to_s.should eq "source.cr:5:15"
+      issue.end_location.to_s.should eq "source.cr:5:27"
       issue.message.should eq "Useless condition in when detected"
     end
   end

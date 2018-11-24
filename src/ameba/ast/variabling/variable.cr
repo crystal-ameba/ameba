@@ -18,6 +18,7 @@ module Ameba::AST
     getter assign_before_reference : Crystal::ASTNode?
 
     delegate location, to: @node
+    delegate end_location, to: @node
     delegate name, to: @node
     delegate to_s, to: @node
 

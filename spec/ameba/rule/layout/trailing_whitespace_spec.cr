@@ -21,6 +21,7 @@ module Ameba::Rule::Layout
       issue = source.issues.first
       issue.rule.should_not be_nil
       issue.location.to_s.should eq "source.cr:2:7"
+      issue.end_location.should be_nil
       issue.message.should eq "Trailing whitespace detected"
     end
   end

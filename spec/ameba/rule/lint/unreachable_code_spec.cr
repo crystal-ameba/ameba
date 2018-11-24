@@ -682,5 +682,20 @@ module Ameba::Rule::Lint
         subject.catch(s).should be_valid
       end
     end
+
+    it "reports message, rule, location" do
+      s = Source.new %(
+        return
+        :unreachable
+      ), "source.cr"
+
+      subject.catch(s).should_not be_valid
+
+      issue = s.issues.first
+      issue.rule.should_not be_nil
+      issue.location.to_s.should eq "source.cr:2:1"
+      issue.end_location.to_s.should eq "source.cr:2:12"
+      issue.message.should eq "Unreachable code detected"
+    end
   end
 end

@@ -21,6 +21,7 @@ module Ameba::AST
 
     delegate to_s, to: node
     delegate location, to: node
+    delegate end_location, to: node
 
     def_equals_and_hash node, location
 
@@ -44,7 +45,7 @@ module Ameba::AST
     end
 
     def add_argument(node)
-      add_variable Crystal::Var.new(node.name).at(node.location)
+      add_variable Crystal::Var.new(node.name).at(node)
       arguments << Argument.new(node, variables.last)
     end
 

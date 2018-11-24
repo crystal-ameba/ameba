@@ -26,6 +26,7 @@ module Ameba::AST
 
     delegate to_s, to: @node
     delegate location, to: @node
+    delegate end_location, to: @node
 
     # Creates a new flow expression.
     #

@@ -47,6 +47,7 @@ module Ameba
       issue = s.issues.first
       issue.rule.should_not be_nil
       issue.location.to_s.should eq "source.cr:1:1"
+      issue.end_location.to_s.should eq "source.cr:2:3"
       issue.message.should eq(
         "Method name should be underscore-cased: bad_name, not bad_Name"
       )

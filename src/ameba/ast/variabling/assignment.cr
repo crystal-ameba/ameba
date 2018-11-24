@@ -17,6 +17,8 @@ module Ameba::AST
     getter branch : Branch?
 
     delegate to_s, to: @node
+    delegate location, to: @node
+    delegate end_location, to: @node
     delegate scope, to: @variable
 
     # Creates a new assignment.
@@ -58,18 +60,18 @@ module Ameba::AST
       !branch.nil?
     end
 
-    # Returns the location of the current variable in the assignment.
-    def location
+    # Returns the target node of the variable in this assignment.
+    def target_node
       case assign = node
-      when Crystal::Assign           then assign.target.location
-      when Crystal::OpAssign         then assign.target.location
-      when Crystal::UninitializedVar then assign.var.location
+      when Crystal::Assign           then assign.target
+      when Crystal::OpAssign         then assign.target
+      when Crystal::UninitializedVar then assign.var
       when Crystal::MultiAssign
-        assign.targets.find do |target|
+        assign.targets.find(node) do |target|
           target.is_a?(Crystal::Var) && target.name == variable.name
-        end.try &.location
+        end
       else
-        node.location
+        node
       end
     end
   end

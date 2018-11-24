@@ -62,6 +62,7 @@ module Ameba::Rule::Style
       issue = s.issues.first
       issue.rule.should_not be_nil
       issue.location.to_s.should eq "source.cr:1:1"
+      issue.end_location.to_s.should eq "source.cr:1:21"
       issue.message.should eq "Avoid negated conditions in unless blocks"
     end
   end

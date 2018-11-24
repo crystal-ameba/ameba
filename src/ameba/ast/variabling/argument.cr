@@ -20,6 +20,7 @@ module Ameba::AST
     getter variable : Variable
 
     delegate location, to: @node
+    delegate end_location, to: @node
     delegate to_s, to: @node
 
     # Creates a new argument.

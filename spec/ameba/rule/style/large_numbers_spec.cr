@@ -118,6 +118,7 @@ module Ameba
       issue = s.issues.first
       issue.rule.should_not be_nil
       issue.location.to_s.should eq "source.cr:1:1"
+      issue.end_location.should be_nil
       issue.message.should match /1_200_000/
     end
 

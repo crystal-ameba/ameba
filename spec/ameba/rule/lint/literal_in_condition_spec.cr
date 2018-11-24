@@ -66,6 +66,7 @@ module Ameba::Rule::Lint
       issue = s.issues.first
       issue.rule.should_not be_nil
       issue.location.to_s.should eq "source.cr:1:1"
+      issue.end_location.to_s.should eq "source.cr:1:20"
       issue.message.should eq "Literal value found in conditional"
     end
   end

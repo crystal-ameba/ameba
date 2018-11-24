@@ -27,6 +27,7 @@ module Ameba::Rule::Layout
       issue = source.issues.first
       issue.rule.should eq subject
       issue.location.to_s.should eq "source.cr:1:#{subject.max_length + 1}"
+      issue.end_location.should be_nil
       issue.message.should eq "Line too long"
     end
 

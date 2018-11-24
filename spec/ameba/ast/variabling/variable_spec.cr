@@ -13,9 +13,10 @@ module Ameba::AST
     end
 
     describe "delegation" do
-      it "delegates location" do
+      it "delegates locations" do
         variable = Variable.new(var_node, scope)
         variable.location.should eq var_node.location
+        variable.end_location.should eq var_node.end_location
       end
 
       it "delegates name" do

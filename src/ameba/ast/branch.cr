@@ -21,6 +21,7 @@ module Ameba::AST
 
     delegate to_s, to: @node
     delegate location, to: @node
+    delegate end_location, to: @node
 
     def_equals_and_hash node, location
 

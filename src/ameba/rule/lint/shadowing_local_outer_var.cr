@@ -55,7 +55,7 @@ module Ameba::Rule::Lint
       scope.arguments.each do |arg|
         next if arg.ignored?
         if scope.outer_scope.try &.find_variable(arg.name)
-          issue_for arg, MSG % arg.name
+          issue_for arg.node, MSG % arg.name
         end
       end
     end

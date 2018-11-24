@@ -323,7 +323,7 @@ module Ameba::AST
         branch.to_s.should eq branch.node.to_s
       end
 
-      it "delegates location to node" do
+      it "delegates locations to node" do
         nodes = as_nodes %(
           if true
             a = 2
@@ -332,6 +332,7 @@ module Ameba::AST
         branchable = Branchable.new nodes.if_nodes.first
         branch = Branch.new nodes.assign_nodes.first, branchable
         branch.location.should eq branch.node.location
+        branch.end_location.should eq branch.node.end_location
       end
     end
 
