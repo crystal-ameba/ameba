@@ -52,7 +52,16 @@ module Ameba::Rule::Style
     def test(source, node : Crystal::Def)
       return if (expected = node.name.underscore) == node.name
 
-      issue_for node, MSG % {expected, node.name}
+      line_number = node.location.try &.line_number
+      column_number = node.name_column_number
+
+      return unless line_number
+
+      issue_for(
+        {line_number, column_number},
+        {line_number, column_number + node.name.size - 1},
+        MSG % {expected, node.name}
+      )
     end
   end
 end

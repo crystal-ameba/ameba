@@ -26,6 +26,13 @@ module Ameba
       add_issue rule, location, nil, message, **args
     end
 
+    # Adds a new issue for *location* and *end_location* defined by line and column numbers.
+    def add_issue(rule, location : Tuple(Int32, Int32), end_location : Tuple(Int32, Int32), message, **args)
+      location = Crystal::Location.new path, *location
+      end_location = Crystal::Location.new path, *end_location
+      add_issue rule, location, end_location, message, **args
+    end
+
     # Returns true if the list of not disabled issues is empty, false otherwise.
     def valid?
       issues.reject(&.disabled?).empty?
