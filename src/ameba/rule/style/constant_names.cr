@@ -38,7 +38,7 @@ module Ameba::Rule::Style
         name = target.names.first
         return if (expected = name.upcase) == name
 
-        issue_for node, MSG % {expected, name}
+        issue_for target, MSG % {expected, name}
       end
     end
   end

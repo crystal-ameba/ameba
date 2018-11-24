@@ -43,7 +43,7 @@ module Ameba
       issue = s.issues.first
       issue.rule.should_not be_nil
       issue.location.to_s.should eq "source.cr:1:1"
-      issue.end_location.to_s.should eq "source.cr:1:9"
+      issue.end_location.to_s.should eq "source.cr:1:5"
       issue.message.should eq(
         "Constant name should be screaming-cased: CONST, not Const"
       )
