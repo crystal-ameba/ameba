@@ -67,5 +67,11 @@ module Ameba::Rule
         rule.excluded?(Source.new "", "source.cr").should be_false
       end
     end
+
+    describe ".parsed_doc" do
+      it "returns the parsed rule doc" do
+        DummyRule.parsed_doc.should eq "Dummy Rule which does nothing."
+      end
+    end
   end
 end

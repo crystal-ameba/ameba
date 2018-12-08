@@ -2,6 +2,7 @@ require "spec"
 require "../src/ameba"
 
 module Ameba
+  # Dummy Rule which does nothing.
   struct DummyRule < Rule::Base
     properties do
       description : String = "Dummy rule that does nothing."

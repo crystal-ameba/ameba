@@ -120,6 +120,56 @@ module Ameba::Rule
     protected def self.subclasses
       {{ @type.subclasses }}
     end
+
+    macro inherited
+      protected def self.path_to_source_file
+        __FILE__
+      end
+    end
+
+    # Returns documentation for this rule if any.
+    #
+    # ```
+    # module Ameba
+    #   # This is a test rule.
+    #   # Does nothing.
+    #   struct MyRule < Ameba::Rule::Base
+    #     def test(source)
+    #     end
+    #   end
+    # end
+    #
+    # MyRule.parsed_doc # => "This is a test rule.\nDoes nothing."
+    # ```
+    def self.parsed_doc
+      source = File.read(path_to_source_file)
+      nodes = Crystal::Parser.new(source).tap(&.wants_doc = true).parse
+      type_name = rule_name.split("/").last?
+      DocFinder.new(nodes, type_name).doc
+    end
+
+    # :nodoc:
+    private class DocFinder < Crystal::Visitor
+      getter doc : String?
+      getter type_name : String?
+
+      def initialize(nodes, @type_name)
+        self.accept(nodes)
+      end
+
+      def visit(node : Crystal::ASTNode)
+        return false if @doc
+
+        if node.responds_to?(:name) &&
+           (name = node.name) &&
+           name.is_a?(Crystal::Path) &&
+           name.names.last? == @type_name
+          @doc = node.doc
+        end
+
+        true
+      end
+    end
   end
 
   # Returns a list of all available rules.
