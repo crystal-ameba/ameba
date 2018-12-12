@@ -154,6 +154,19 @@ module Ameba::Rule::Lint
       subject.catch(s).should be_valid
     end
 
+    it "doesn't report if enum in a record" do
+      s = Source.new %(
+        class Class
+          record Record do
+            enum Enum
+              CONSTANT
+            end
+          end
+        end
+      )
+      subject.catch(s).should be_valid
+    end
+
     context "super" do
       it "reports if variable is not referenced implicitly by super" do
         s = Source.new %(

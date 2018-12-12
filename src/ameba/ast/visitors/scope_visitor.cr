@@ -46,6 +46,11 @@ module Ameba::AST
     end
 
     # :nodoc:
+    def visit(node : Crystal::EnumDef)
+      on_scope_enter(node)
+    end
+
+    # :nodoc:
     def visit(node : Crystal::LibDef)
       on_scope_enter(node)
     end
