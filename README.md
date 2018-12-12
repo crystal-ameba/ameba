@@ -33,15 +33,19 @@ Inspecting 107 files.
 
 ...............F.....................F....................................................................
 
-src/ameba/rule/unneeded_disable_directive.cr:29:7
-Lint/UselessAssign: Useless assignment to variable `s`
-
-src/ameba/formatter/flycheck_formatter.cr:5:21
+src/ameba/formatter/flycheck_formatter.cr:4:33
 Lint/UnusedArgument: Unused argument `location`
+> source.issues.each do |e, location|
+                            ^
 
-Finished in 248.9 milliseconds
+src/ameba/formatter/base_formatter.cr:12:7
+Lint/UselessAssign: Useless assignment to variable `s`
+> return s += issues.size
+         ^
 
-107 inspected, 2 failures.
+Finished in 542.64 milliseconds
+
+129 inspected, 2 failures.
 
 ```
 

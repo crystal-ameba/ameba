@@ -27,6 +27,7 @@ module Ameba::Cli
     property except : Array(String)?
     property? all = false
     property? colors = true
+    property? without_affected_code = false
   end
 
   def parse_args(args, opts = Opts.new)
@@ -68,6 +69,11 @@ module Ameba::Cli
         opts.config = ""
       end
 
+      parser.on("--without-affected-code",
+        "Stop showing affected code while using a default formatter") do
+        opts.without_affected_code = true
+      end
+
       parser.on("--no-color", "Disable colors") do
         opts.colors = false
       end
@@ -91,6 +97,7 @@ module Ameba::Cli
     if name = opts.formatter
       config.formatter = name
     end
+    config.formatter.config[:without_affected_code] = opts.without_affected_code?
   end
 
   private def print_version

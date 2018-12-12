@@ -22,7 +22,7 @@ module Ameba::Rule::Layout
       source.lines.each_with_index do |line, index|
         next unless line.size > max_length
 
-        issue_for({index + 1, line.size}, MSG)
+        issue_for({index + 1, max_length + 1}, MSG)
       end
     end
   end

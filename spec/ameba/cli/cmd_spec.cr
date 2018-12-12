@@ -62,6 +62,11 @@ module Ameba::Cli
         c.colors?.should be_false
       end
 
+      it "accepts --without-affected-code flag" do
+        c = Cli.parse_args %w(--without-affected-code)
+        c.without_affected_code?.should be_true
+      end
+
       it "doesn't disable colors by default" do
         c = Cli.parse_args %w(--all)
         c.colors?.should be_true

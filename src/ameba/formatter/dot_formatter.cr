@@ -19,15 +19,25 @@ module Ameba::Formatter
     end
 
     # Reports a message when inspection is finished.
-    def finished(sources)
-      output << "\n\n"
+    def finished(sources, break_line = "\n\n")
+      output << break_line
+
+      show_affected_code = !config[:without_affected_code]?
       failed_sources = sources.reject &.valid?
 
       failed_sources.each do |source|
         source.issues.each do |issue|
           next if issue.disabled?
-          output << "#{issue.location}\n".colorize(:cyan)
-          output << "#{issue.rule.name}: #{issue.message}\n\n".colorize(:red)
+          next if (location = issue.location).nil?
+
+          output << "#{location}\n".colorize(:cyan)
+          output << "#{issue.rule.name}: #{issue.message}\n".colorize(:red)
+
+          if show_affected_code && (code = affected_code(source, location))
+            output << code
+          end
+
+          output << "\n"
         end
       end
 
@@ -76,6 +86,26 @@ module Ameba::Formatter
       s = failures != 1 ? "s" : ""
 
       "#{total} inspected, #{failures} failure#{s}.\n".colorize color
+    end
+
+    private def affected_code(source, location, max_length = 100, placeholder = " ...", prompt = "> ")
+      line, column = location.line_number, location.column_number
+      affected_line = source.lines[line - 1]?
+
+      return unless affected_line
+
+      if affected_line.size > max_length && column < max_length
+        affected_line = affected_line[0, max_length - placeholder.size - 1] + placeholder
+      end
+
+      stripped = affected_line.lstrip
+      position = column - (affected_line.size - stripped.size) + prompt.size
+
+      String.build do |str|
+        str << prompt << stripped << "\n"
+        str << " " * (position - 1)
+        str << "^".colorize(:yellow)
+      end
     end
   end
 end
