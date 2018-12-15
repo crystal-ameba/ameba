@@ -19,8 +19,8 @@ module Ameba::Formatter
     end
 
     # Reports a message when inspection is finished.
-    def finished(sources, break_line = "\n\n")
-      output << break_line
+    def finished(sources)
+      output << "\n\n"
 
       show_affected_code = !config[:without_affected_code]?
       failed_sources = sources.reject &.valid?
