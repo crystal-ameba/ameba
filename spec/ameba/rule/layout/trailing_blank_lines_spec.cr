@@ -30,7 +30,7 @@ module Ameba::Rule::Layout
 
       issue = source.issues.first
       issue.rule.should_not be_nil
-      issue.location.to_s.should eq "source.cr:3:1"
+      issue.location.to_s.should eq "source.cr:2:1"
       issue.end_location.should be_nil
       issue.message.should eq "Blank lines detected at the end of the file"
     end

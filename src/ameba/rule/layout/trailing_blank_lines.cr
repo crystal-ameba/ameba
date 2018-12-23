@@ -17,7 +17,7 @@ module Ameba::Rule::Layout
 
     def test(source)
       if source.lines.size > 1 && source.lines[-2, 2].join.strip.empty?
-        issue_for({source.lines.size, 1}, MSG)
+        issue_for({source.lines.size - 1, 1}, MSG)
       end
     end
   end
