@@ -90,6 +90,41 @@ module Ameba
       end
     end
 
+    describe "#explain" do
+      io = IO::Memory.new
+
+      it "writes nothing if sources are valid" do
+        io.clear
+        runner = runner(formatter: formatter).run
+        runner.explain({file: "source.cr", line: 1, column: 2}, io)
+        io.to_s.should be_empty
+      end
+
+      it "writes the explanation if sources are not valid and location found" do
+        io.clear
+        rules = [ErrorRule.new] of Rule::Base
+        source = Source.new %(
+            a = 1
+          ), "source.cr"
+
+        runner = Runner.new(rules, [source], formatter).run
+        runner.explain({file: "source.cr", line: 1, column: 1}, io)
+        io.to_s.should_not be_empty
+      end
+
+      it "writes nothing if sources are not valid and location is not found" do
+        io.clear
+        rules = [ErrorRule.new] of Rule::Base
+        source = Source.new %(
+            a = 1
+          ), "source.cr"
+
+        runner = Runner.new(rules, [source], formatter).run
+        runner.explain({file: "source.cr", line: 1, column: 2}, io)
+        io.to_s.should be_empty
+      end
+    end
+
     describe "#success?" do
       it "returns true if runner has not been run" do
         runner.success?.should be_true
