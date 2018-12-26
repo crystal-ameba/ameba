@@ -4,17 +4,9 @@ module Ameba::Rule::Style
   # For example, these variable names are considered valid:
   #
   # ```
-  # class Greeting
-  #   @@default_greeting = "Hello world"
-  #
-  #   def initialize(@custom_greeting = nil)
-  #   end
-  #
-  #   def print_greeting
-  #     greeting = @custom_greeting || @@default_greeting
-  #     puts greeting
-  #   end
-  # end
+  # var_name = 1
+  # name = 2
+  # _another_good_name = 3
   # ```
   #
   # And these are invalid method names:
