@@ -82,6 +82,21 @@ module Ameba
       @formatter.finished @sources
     end
 
+    # Explains an issue at a specified *location*.
+    #
+    # Runner should perform inspection before doing the explain.
+    # This is necessary to be able to find the issue at a specified location.
+    #
+    # ```
+    # runner = Ameba::Runner.new config
+    # runner.run
+    # runner.explain({file: file, line: l, column: c})
+    # ```
+    #
+    def explain(location, output = STDOUT)
+      Formatter::ExplainFormatter.new(output, location).finished @sources
+    end
+
     # Indicates whether the last inspection successful or not.
     # It returns true if no issues in sources found, false otherwise.
     #

@@ -126,6 +126,19 @@ $ ameba --except Lint/Syntax # runs all rules except Lint/Syntax
 $ ameba --except Style,Lint  # runs all rules except rules in Style and Lint groups
 ```
 
+### Explanation
+
+Ameba allows you to dig deeper into an issue, by showing you details about the issue
+and the reasoning by it being reported.
+
+To be convenient, you can just copy-paste the `PATH:line:column` string from the
+report and paste behind the `ameba` command to check it out.
+
+```
+$ ameba crystal/command/format.cr:26:83           # show explanation for the issue
+$ ameba --explain crystal/command/format.cr:26:83 # same thing
+```
+
 ### Inline disabling
 
 One or more rules or one or more group of rules can be disabled using inline directives:

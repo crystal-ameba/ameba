@@ -1,3 +1,5 @@
+require "./util"
+
 # A module that utilizes Ameba's formatters.
 module Ameba::Formatter
   # A base formatter for all formatters. It uses `output` IO

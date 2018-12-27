@@ -13,7 +13,13 @@ module Ameba::Cli
     configure_formatter(config, opts)
     configure_rules(config, opts)
 
-    exit 1 unless Ameba.run(config).success?
+    runner = Ameba.run(config)
+
+    if location = opts.location_to_explain
+      runner.explain(location)
+    else
+      exit 1 unless runner.success?
+    end
   rescue e
     puts "Error: #{e.message}"
     exit 255
@@ -25,6 +31,7 @@ module Ameba::Cli
     property files : Array(String)?
     property only : Array(String)?
     property except : Array(String)?
+    property location_to_explain : NamedTuple(file: String, line: Int32, column: Int32)?
     property? all = false
     property? colors = true
     property? without_affected_code = false
@@ -37,7 +44,13 @@ module Ameba::Cli
       parser.on("-v", "--version", "Print version") { print_version }
       parser.on("-h", "--help", "Show this help") { show_help parser }
       parser.on("-s", "--silent", "Disable output") { opts.formatter = :silent }
-      parser.unknown_args { |f| opts.files = f if f.any? }
+      parser.unknown_args do |f|
+        if f.size == 1 && f.first =~ /.+:\d+:\d+/
+          configure_explain_opts(f.first, opts)
+        else
+          opts.files = f if f.any?
+        end
+      end
 
       parser.on("-c", "--config PATH",
         "Specify a configuration file") do |path|
@@ -69,6 +82,11 @@ module Ameba::Cli
         opts.config = ""
       end
 
+      parser.on("-e", "--explain PATH:line:column",
+        "Explain an issue at a specified location") do |loc|
+        configure_explain_opts(loc, opts)
+      end
+
       parser.on("--without-affected-code",
         "Stop showing affected code while using a default formatter") do
         opts.without_affected_code = true
@@ -98,6 +116,22 @@ module Ameba::Cli
       config.formatter = name
     end
     config.formatter.config[:without_affected_code] = opts.without_affected_code?
+  end
+
+  private def configure_explain_opts(loc, opts)
+    location_to_explain = parse_explain_location(loc)
+    opts.location_to_explain = location_to_explain
+    opts.files = [location_to_explain[:file]]
+    opts.formatter = :silent
+  end
+
+  private def parse_explain_location(arg)
+    location = arg.split(":", remove_empty: true).map &.strip
+    raise ArgumentError.new unless location.size === 3
+    file, line, column = location
+    {file: file, line: line.to_i, column: column.to_i}
+  rescue
+    raise "location should have PATH:line:column format"
   end
 
   private def print_version

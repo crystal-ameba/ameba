@@ -78,9 +78,55 @@ module Ameba::Cli
         c.config.should eq ""
       end
 
+      describe "-e/--explain" do
+        it "configures file/line/column" do
+          c = Cli.parse_args %w(--explain src/file.cr:3:5)
+          c.location_to_explain.should_not be_nil
+
+          location_to_explain = c.location_to_explain.not_nil!
+          location_to_explain[:file].should eq "src/file.cr"
+          location_to_explain[:line].should eq 3
+          location_to_explain[:column].should eq 5
+        end
+
+        it "raises an error if location is not valid" do
+          expect_raises(Exception, "location should have PATH:line:column") do
+            Cli.parse_args %w(--explain src/file.cr:3)
+          end
+        end
+
+        it "raises an error if line number is not valid" do
+          expect_raises(Exception, "location should have PATH:line:column") do
+            Cli.parse_args %w(--explain src/file.cr:a:3)
+          end
+        end
+
+        it "raises an error if column number is not valid" do
+          expect_raises(Exception, "location should have PATH:line:column") do
+            Cli.parse_args %w(--explain src/file.cr:3:&)
+          end
+        end
+
+        it "raises an error if line/column are missing" do
+          expect_raises(Exception, "location should have PATH:line:column") do
+            Cli.parse_args %w(--explain src/file.cr)
+          end
+        end
+      end
+
       it "accepts unknown args as files" do
         c = Cli.parse_args %w(source1.cr source2.cr)
         c.files.should eq %w(source1.cr source2.cr)
+      end
+
+      it "accepts one unknown arg as explain location if it has correct format" do
+        c = Cli.parse_args %w(source.cr:3:22)
+        c.location_to_explain.should_not be_nil
+
+        location_to_explain = c.location_to_explain.not_nil!
+        location_to_explain[:file].should eq "source.cr"
+        location_to_explain[:line].should eq 3
+        location_to_explain[:column].should eq 22
       end
 
       it "allows args to be blank" do

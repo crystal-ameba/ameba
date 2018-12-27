@@ -50,6 +50,10 @@ module Ameba
   end
 
   struct ErrorRule < Rule::Base
+    properties do
+      description : String = "Always adds an error at 1:1"
+    end
+
     def test(source)
       issue_for({1, 1}, "This rule always adds an error")
     end
