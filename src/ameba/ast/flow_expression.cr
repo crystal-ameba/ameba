@@ -46,6 +46,7 @@ module Ameba::AST
     #
     #   a + 2 # => unreachable assign node
     # end
+    # ```
     def unreachable_nodes
       unreachable_nodes = [] of Crystal::ASTNode
 
