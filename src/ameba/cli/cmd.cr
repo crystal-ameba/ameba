@@ -8,7 +8,7 @@ module Ameba::Cli
   def run(args)
     opts = parse_args args
     config = Config.load opts.config, opts.colors?
-    config.files = opts.files
+    config.globs = opts.globs
 
     configure_formatter(config, opts)
     configure_rules(config, opts)
@@ -28,7 +28,7 @@ module Ameba::Cli
   private class Opts
     property config = Config::PATH
     property formatter : Symbol | String | Nil
-    property files : Array(String)?
+    property globs : Array(String)?
     property only : Array(String)?
     property except : Array(String)?
     property location_to_explain : NamedTuple(file: String, line: Int32, column: Int32)?
@@ -48,7 +48,7 @@ module Ameba::Cli
         if f.size == 1 && f.first =~ /.+:\d+:\d+/
           configure_explain_opts(f.first, opts)
         else
-          opts.files = f if f.any?
+          opts.globs = f if f.any?
         end
       end
 
@@ -121,7 +121,7 @@ module Ameba::Cli
   private def configure_explain_opts(loc, opts)
     location_to_explain = parse_explain_location(loc)
     opts.location_to_explain = location_to_explain
-    opts.files = [location_to_explain[:file]]
+    opts.globs = [location_to_explain[:file]]
     opts.formatter = :silent
   end
 

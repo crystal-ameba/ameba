@@ -18,7 +18,7 @@ Benchmark.ips do |x|
   ].each do |n|
     config = Ameba::Config.load
     config.formatter = Ameba::Formatter::BaseFormatter.new
-    config.files = get_files(n)
+    config.globs = get_files(n)
     s = n == 1 ? "" : "s"
     x.report("#{n} source#{s}") { Ameba.run config }
   end

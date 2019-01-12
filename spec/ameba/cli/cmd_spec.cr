@@ -114,9 +114,9 @@ module Ameba::Cli
         end
       end
 
-      it "accepts unknown args as files" do
+      it "accepts unknown args as globs" do
         c = Cli.parse_args %w(source1.cr source2.cr)
-        c.files.should eq %w(source1.cr source2.cr)
+        c.globs.should eq %w(source1.cr source2.cr)
       end
 
       it "accepts one unknown arg as explain location if it has correct format" do
@@ -132,7 +132,7 @@ module Ameba::Cli
       it "allows args to be blank" do
         c = Cli.parse_args [] of String
         c.formatter.should be_nil
-        c.files.should be_nil
+        c.globs.should be_nil
         c.only.should be_nil
         c.except.should be_nil
         c.config.should eq Config::PATH

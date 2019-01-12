@@ -12,28 +12,37 @@ module Ameba
       it "loads custom config" do
         config = Config.load config_sample
         config.should_not be_nil
-        config.files.should_not be_nil
+        config.globs.should_not be_nil
         config.formatter.should_not be_nil
       end
 
       it "loads default config" do
         config = Config.load
         config.should_not be_nil
-        config.files.should_not be_nil
+        config.globs.should_not be_nil
         config.formatter.should_not be_nil
       end
     end
 
-    describe "#files, #files=" do
+    describe "#globs, #globs=" do
       config = Config.load config_sample
 
-      it "holds source files" do
-        config.files.should contain "spec/ameba/config_spec.cr"
+      it "holds source globs" do
+        config.globs.should contain "spec/ameba/config_spec.cr"
       end
 
-      it "allows to set files" do
-        config.files = ["file.cr"]
-        config.files.should eq ["file.cr"]
+      it "allows to set globs" do
+        config.globs = ["file.cr"]
+        config.globs.should eq ["file.cr"]
+      end
+    end
+
+    describe "#sources" do
+      config = Config.load config_sample
+
+      it "returns list of sources" do
+        config.sources.size.should be > 0
+        config.sources.first.should be_a Source
       end
     end
 

@@ -1,4 +1,5 @@
 require "yaml"
+require "./glob_utils"
 
 # A configuration entry for `Ameba::Runner`.
 #
@@ -12,6 +13,8 @@ require "yaml"
 # By default config loads `.ameba.yml` file in a current directory.
 #
 class Ameba::Config
+  include GlobUtils
+
   AVAILABLE_FORMATTERS = {
     progress: Formatter::DotFormatter,
     todo:     Formatter::TODOFormatter,
@@ -23,7 +26,7 @@ class Ameba::Config
 
   PATH = ".ameba.yml"
   setter formatter : Formatter::BaseFormatter?
-  setter files : Array(String)?
+  setter globs : Array(String)?
   getter rules : Array(Rule::Base)
 
   @rule_groups : Hash(String, Array(Rule::Base))
@@ -60,16 +63,30 @@ class Ameba::Config
 
   # Returns a list of paths (with wildcards) to files.
   # Represents a list of sources to be inspected.
-  # If files are not set, it will return default list of files.
+  # If globs are not set, it will return default list of files.
   #
   # ```
   # config = Ameba::Config.load
-  # config.files = ["**/*.cr"]
-  # config.files
+  # config.globs = ["**/*.cr"]
+  # config.globs
   # ```
   #
-  def files
-    @files ||= default_files
+  def globs
+    @globs ||= default_files
+  end
+
+  # Returns a list of sources.
+  #
+  # ```
+  # config = Ameba::Config.load
+  # config.sources # => list of default sources
+  # config.globs = ["**/*.cr"]
+  # config.sources # => list of sources pointing to files found by the wildcards
+  # ```
+  #
+  def sources
+    find_files_by_globs(globs)
+      .map { |path| Source.new File.read(path), path }
   end
 
   # Returns a formatter to be used while inspecting files.

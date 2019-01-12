@@ -37,7 +37,7 @@ module Ameba
     # ```
     #
     def initialize(config : Config)
-      @sources = load_sources(config)
+      @sources = config.sources
       @formatter = config.formatter
       @rules = config.rules.select(&.enabled).reject!(&.special?)
 
@@ -114,14 +114,6 @@ module Ameba
       if (rule = @unneeded_disable_directive_rule) && rule.enabled
         rule.test(source)
       end
-    end
-
-    private def load_sources(config)
-      config.files.map do |wildcard|
-        wildcard += "/**/*.cr" if File.directory?(wildcard)
-        Dir[wildcard]
-      end.flatten
-        .map { |path| Source.new File.read(path), path }
     end
   end
 end
