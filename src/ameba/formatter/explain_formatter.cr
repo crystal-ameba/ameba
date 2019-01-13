@@ -5,7 +5,8 @@ module Ameba::Formatter
   # a specific location.
   class ExplainFormatter
     LINE_BREAK = "\n"
-    PREFIX     = "| ".colorize(:yellow)
+    HEADING    = "## "
+    PREFIX     = " "
 
     include Util
 
@@ -64,8 +65,8 @@ module Ameba::Formatter
     end
 
     private def output_title(title)
-      output << PREFIX << title.colorize(:yellow) << LINE_BREAK
-      output << PREFIX << LINE_BREAK
+      output << HEADING.colorize(:yellow) << title.colorize(:yellow) << LINE_BREAK
+      output << LINE_BREAK
     end
 
     private def output_paragraph(paragraph : String)
@@ -74,9 +75,9 @@ module Ameba::Formatter
 
     private def output_paragraph(paragraph : Array(String))
       paragraph.each do |line|
-        output << PREFIX << PREFIX << line << LINE_BREAK
+        output << PREFIX << line << LINE_BREAK
       end
-      output << PREFIX << LINE_BREAK
+      output << LINE_BREAK
     end
   end
 end
