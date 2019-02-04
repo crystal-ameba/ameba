@@ -59,7 +59,7 @@ Add this to your application's `shard.yml`:
 development_dependencies:
   ameba:
     github: veelenga/ameba
-    version: 0.9.0
+    version: ~> 0.9.0
 ```
 
 Build `bin/ameba` binary within your project directory while running `shards install`.
