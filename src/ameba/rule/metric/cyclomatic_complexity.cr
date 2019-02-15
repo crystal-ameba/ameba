@@ -3,17 +3,19 @@ module Ameba::Rule::Metric
 
     properties do
       enabled false
-      description "Disallows method with a cyclomatic complexity higher than `MaxComplexity`"
+      description "Disallows methods with a cyclomatic complexity higher than `MaxComplexity`"
       max_complexity 10
     end
 
     MSG = "Cyclomatic complexity too high [%d/%d]"
+
     def test(source)
       AST::NodeVisitor.new self, source
     end
 
     def test(source, node : Crystal::Def)
       complexity = CountingVisitor.new(node).count
+
       if complexity > max_complexity
         issue_for(node, MSG % [complexity, max_complexity])
       end
@@ -30,21 +32,13 @@ module Ameba::Rule::Metric
         @complexity
       end
 
-      def visit(node : Crystal::Or)
+      # Uses the same logic than rubocop. See
+      # https://github.com/rubocop-hq/rubocop/blob/master/lib/rubocop/cop/metrics/cyclomatic_complexity.rb#L21
+      {% for node in [:if, :while, :until, :for, :rescue, :when, :or, :and] %}
+      def visit(node : Crystal::{{ node.id.capitalize }})
         @complexity += 1
       end
-
-      def visit(node : Crystal::And)
-        @complexity += 1
-      end
-
-      def visit(node : Crystal::While)
-        @complexity += 1
-      end
-
-      def visit(node : Crystal::If)
-        @complexity += 1
-      end
+      {% end %}
 
       def visit(node : Crystal::ASTNode)
         true

@@ -12,7 +12,7 @@ module Ameba::Rule::Metric
       subject.catch(source).should be_valid
     end
 
-    it "a reports one issue for a super complex method" do
+    it "a reports one issue for a complex method" do
       subject.max_complexity = 5
       source = Source.new %(
         def hello(a, b, c)
@@ -34,7 +34,7 @@ module Ameba::Rule::Metric
       issue.rule.should eq subject
       issue.location.to_s.should eq "source.cr:1:1"
       issue.end_location.to_s.should eq "source.cr:12:3"
-      issue.message.should eq "Cyclomatic complexity too high [7/5]"
+      issue.message.should eq "Cyclomatic complexity too high [8/5]"
     end
   end
 end
