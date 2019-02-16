@@ -11,7 +11,6 @@ module Ameba::Rule::Metrics
   #
   struct CyclomaticComplexity < Base
     properties do
-      enabled false
       description "Disallows methods with a cyclomatic complexity higher than `MaxComplexity`"
       max_complexity 10
     end
