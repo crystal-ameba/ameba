@@ -18,61 +18,22 @@ module Ameba::AST
         visitor.count.should eq 1
       end
 
-      it "increases count for every conditional" do
-        node = Crystal::Parser.new("def hello; if true; end end").parse
+      {% for pair in [
+          {code: "if true; end", description: "conditional"},
+          {code: "while true; end", description: "while loop"},
+          {code: "until 1 < 2; end", description: "until loop"},
+          {code: "begin; rescue; end", description: "rescue"},
+          {code: "case 1 when 1; end", description: "when"},
+          {code: "true || false", description: "or"},
+          {code: "true && false", description: "and"},
+      ] %}
+      it "increases count for every {{ pair[:description].id }}" do
+        node = Crystal::Parser.new("def hello; {{ pair[:code].id }} end").parse
         visitor = CountingVisitor.new node
 
         visitor.count.should eq 2
       end
-
-      it "increases count for every while loop" do
-        node = Crystal::Parser.new("def hello; while true; end end").parse
-        visitor = CountingVisitor.new node
-
-        visitor.count.should eq 2
-      end
-
-      it "increases count for every until loop" do
-        node = Crystal::Parser.new("def hello; until a < 10; end end").parse
-        visitor = CountingVisitor.new node
-
-        visitor.count.should eq 2
-      end
-
-      it "increases count for every for loop" do
-        node = Crystal::Parser.new("def hello; while for a in 1..2; end end").parse
-        visitor = CountingVisitor.new node
-
-        visitor.count.should eq 2
-      end
-
-      it "increases count for every rescue" do
-        node = Crystal::Parser.new("def hello; begin; rescue; end end").parse
-        visitor = CountingVisitor.new node
-
-        visitor.count.should eq 2
-      end
-
-      it "increases count for every when" do
-        node = Crystal::Parser.new("def hello; case 1 when 1; end end").parse
-        visitor = CountingVisitor.new node
-
-        visitor.count.should eq 2
-      end
-
-      it "increases count for every or" do
-        node = Crystal::Parser.new("def hello; true || false end").parse
-        visitor = CountingVisitor.new node
-
-        visitor.count.should eq 2
-      end
-
-      it "increases count for every and" do
-        node = Crystal::Parser.new("def hello; true && false end").parse
-        visitor = CountingVisitor.new node
-
-        visitor.count.should eq 2
-      end
+      {% end %}
     end
   end
 end
