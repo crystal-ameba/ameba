@@ -19,14 +19,14 @@ module Ameba::AST
       end
 
       {% for pair in [
-          {code: "if true; end", description: "conditional"},
-          {code: "while true; end", description: "while loop"},
-          {code: "until 1 < 2; end", description: "until loop"},
-          {code: "begin; rescue; end", description: "rescue"},
-          {code: "case 1 when 1; end", description: "when"},
-          {code: "true || false", description: "or"},
-          {code: "true && false", description: "and"},
-      ] %}
+                       {code: "if true; end", description: "conditional"},
+                       {code: "while true; end", description: "while loop"},
+                       {code: "until 1 < 2; end", description: "until loop"},
+                       {code: "begin; rescue; end", description: "rescue"},
+                       {code: "case 1 when 1; end", description: "when"},
+                       {code: "true || false", description: "or"},
+                       {code: "true && false", description: "and"},
+                     ] %}
         it "increases count for every {{ pair[:description].id }}" do
           node = Crystal::Parser.new("def hello; {{ pair[:code].id }} end").parse
           visitor = CountingVisitor.new node
