@@ -34,10 +34,10 @@ module Ameba::Rule::Metric
 
       # Uses the same logic than rubocop. See
       # https://github.com/rubocop-hq/rubocop/blob/master/lib/rubocop/cop/metrics/cyclomatic_complexity.rb#L21
-      {% for node in [:if, :while, :until, :for, :rescue, :when, :or, :and] %}
-      def visit(node : Crystal::{{ node.id.capitalize }})
-        @complexity += 1
-      end
+      {% for node in %i(if while until for rescue when or and) %}
+        def visit(node : Crystal::{{ node.id.capitalize }})
+          @complexity += 1
+        end
       {% end %}
 
       def visit(node : Crystal::ASTNode)
