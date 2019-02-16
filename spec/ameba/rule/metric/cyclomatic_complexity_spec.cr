@@ -12,7 +12,7 @@ module Ameba::Rule::Metric
       subject.catch(source).should be_valid
     end
 
-    it "a reports one issue for a complex method" do
+    it "reports one issue for a complex method" do
       subject.max_complexity = 5
       source = Source.new %(
         def hello(a, b, c)
