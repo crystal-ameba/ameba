@@ -27,12 +27,12 @@ module Ameba::AST
           {code: "true || false", description: "or"},
           {code: "true && false", description: "and"},
       ] %}
-      it "increases count for every {{ pair[:description].id }}" do
-        node = Crystal::Parser.new("def hello; {{ pair[:code].id }} end").parse
-        visitor = CountingVisitor.new node
+        it "increases count for every {{ pair[:description].id }}" do
+          node = Crystal::Parser.new("def hello; {{ pair[:code].id }} end").parse
+          visitor = CountingVisitor.new node
 
-        visitor.count.should eq 2
-      end
+          visitor.count.should eq 2
+        end
       {% end %}
     end
   end
