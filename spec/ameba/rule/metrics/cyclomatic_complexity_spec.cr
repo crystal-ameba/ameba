@@ -1,6 +1,6 @@
 require "../../../spec_helper"
 
-module Ameba::Rule::Metric
+module Ameba::Rule::Metrics
   subject = CyclomaticComplexity.new
 
   describe CyclomaticComplexity do

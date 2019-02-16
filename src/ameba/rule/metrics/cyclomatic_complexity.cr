@@ -1,4 +1,4 @@
-module Ameba::Rule::Metric
+module Ameba::Rule::Metrics
   struct CyclomaticComplexity < Base
 
     properties do
