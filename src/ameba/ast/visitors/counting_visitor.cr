@@ -1,5 +1,5 @@
 module Ameba::AST
-  # AST Visitor that counts occurences of certain keywords
+  # AST Visitor that counts occurrences of certain keywords
   class CountingVisitor < Crystal::Visitor
     @complexity = 1
 

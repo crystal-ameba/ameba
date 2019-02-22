@@ -145,7 +145,7 @@ module Ameba::Rule::Lint
       ), %w(ArgumentError IndexError)
     end
 
-    it "fails if there are multipe shadowed exceptions in a type list" do
+    it "fails if there are multiple shadowed exceptions in a type list" do
       check_shadowed %(
         begin
         rescue Exception
