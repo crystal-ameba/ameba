@@ -14,7 +14,7 @@ module Ameba::Formatter
     getter location : Crystal::Location
 
     # Creates a new instance of ExplainFormatter.
-    # Accepts *output* which indicates the io where the explaination will be wrtitten to.
+    # Accepts *output* which indicates the io where the explanation will be wrtitten to.
     # Second argument is *location* which indicates the location to explain.
     #
     # ```
