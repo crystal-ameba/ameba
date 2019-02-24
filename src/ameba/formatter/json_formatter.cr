@@ -43,7 +43,7 @@ module Ameba::Formatter
   #             "column": 7,
   #             "line":   19,
   #           },
-  #           "location": {
+  #           "end_location": {
   #             "column": 9,
   #             "line":   19,
   #           },
