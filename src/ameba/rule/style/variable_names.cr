@@ -9,7 +9,7 @@ module Ameba::Rule::Style
   # _another_good_name = 3
   # ```
   #
-  # And these are invalid method names:
+  # And these are invalid variable names:
   #
   # ```
   # myBadNamedVar = 1
