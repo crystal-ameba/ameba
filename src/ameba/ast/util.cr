@@ -2,7 +2,29 @@
 module Ameba::AST::Util
   # Returns true if current `node` is a literal, false otherwise.
   def literal?(node)
-    node.try &.class.name.ends_with? "Literal"
+    case node
+    when Crystal::NilLiteral,
+         Crystal::BoolLiteral,
+         Crystal::NumberLiteral,
+         Crystal::CharLiteral,
+         Crystal::StringLiteral,
+         Crystal::SymbolLiteral,
+         Crystal::RegexLiteral,
+         Crystal::ProcLiteral,
+         Crystal::MacroLiteral
+      true
+    when Crystal::RangeLiteral
+      literal?(node.from) && literal?(node.to)
+    when Crystal::ArrayLiteral,
+         Crystal::TupleLiteral
+      node.elements.all? { |el| literal?(el) }
+    when Crystal::HashLiteral
+      node.entries.all? { |entry| literal?(entry.key) && literal?(entry.value) }
+    when Crystal::NamedTupleLiteral
+      node.entries.all? { |entry| literal?(entry.value) }
+    else
+      false
+    end
   end
 
   # Returns true if current `node` is a string literal, false otherwise.
