@@ -27,16 +27,6 @@ module Ameba::AST::Util
     end
   end
 
-  # Returns true if current `node` is a string literal, false otherwise.
-  def string_literal?(node)
-    node.is_a? Crystal::StringLiteral
-  end
-
-  # Returns true if current `node` is an exception handler, false otherwise.
-  def exception_handler?(node)
-    node.is_a? Crystal::ExceptionHandler
-  end
-
   # Returns a source code for the current node.
   # This method uses `node.location` and `node.end_location`
   # to determine and cut a piece of source of the node.

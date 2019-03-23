@@ -102,7 +102,7 @@ module Ameba::Rule::Style
 
     private def begin_exprs_in_handler?(handler)
       if (body = handler.body).is_a?(Crystal::Expressions)
-        exception_handler?(body.expressions.first)
+        body.expressions.first.is_a?(Crystal::ExceptionHandler)
       end
     end
 
