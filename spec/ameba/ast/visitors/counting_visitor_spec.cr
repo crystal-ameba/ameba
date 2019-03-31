@@ -18,6 +18,32 @@ module Ameba::AST
         visitor.count.should eq 1
       end
 
+      it "is 1 if there is Macro::For" do
+        code = %(
+          def initialize()
+            {% for c in ALL_NODES %}
+              true || false
+            {% end %}
+          end
+        )
+        node = Crystal::Parser.new(code).parse
+        visitor = CountingVisitor.new node
+        visitor.count.should eq 1
+      end
+
+      it "is 1 if there is Macro::If" do
+        code = %(
+          def initialize()
+            {% if foo.bar? %}
+              true || false
+            {% end %}
+          end
+        )
+        node = Crystal::Parser.new(code).parse
+        visitor = CountingVisitor.new node
+        visitor.count.should eq 1
+      end
+
       {% for pair in [
                        {code: "if true; end", description: "conditional"},
                        {code: "while true; end", description: "while loop"},
