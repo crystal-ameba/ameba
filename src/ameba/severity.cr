@@ -4,10 +4,6 @@ module Ameba
     Warning
     Refactoring
 
-    def self.default
-      Refactoring
-    end
-
     def self.from_name(name : String)
       case name.downcase
       when "error"
@@ -37,7 +33,7 @@ module Ameba
     end
 
     def self.to_yaml(value : Severity, yaml : YAML::Nodes::Builder)
-      yaml.scalar value.to_s
+      yaml.scalar value
     end
   end
 end

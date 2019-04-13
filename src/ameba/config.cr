@@ -227,6 +227,11 @@ class Ameba::Config
         {% properties["enabled".id] = {key: "Enabled", default: true, type: Bool} %}
       {% end %}
 
+      {% if properties["severity".id] == nil %}
+        {% default = @type.name.starts_with?("Ameba::Rule::Lint") ? "Severity::Warning".id : "Severity::Refactoring".id %}
+        {% properties["severity".id] = {key: "Severity", default: default, type: Severity, converter: SeverityYamlConverter} %}
+      {% end %}
+
       {% if properties["excluded".id] == nil %}
         {% properties["excluded".id] = {key: "Excluded", type: "Array(String)?".id} %}
       {% end %}
