@@ -193,6 +193,12 @@ class Ameba::Config
         {% key = name.camelcase.stringify %}
         {% value = df[:value] %}
         {% type = df[:type] %}
+        {% converter = nil %}
+
+        {% if key == "Severity" %}
+          {% type = Severity %}
+          {% converter = SeverityYamlConverter %}
+        {% end %}
 
         {% if type == nil %}
           {% if value.is_a? BoolLiteral %}
@@ -214,7 +220,7 @@ class Ameba::Config
           {% type = Nil if type == nil %}
         {% end %}
 
-        {% properties[name] = {key: key, default: value, type: type} %}
+        {% properties[name] = {key: key, default: value, type: type, converter: converter} %}
       {% end %}
 
       {% if properties["enabled".id] == nil %}
