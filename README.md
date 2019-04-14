@@ -34,12 +34,12 @@ Inspecting 107 files.
 ...............F.....................F....................................................................
 
 src/ameba/formatter/flycheck_formatter.cr:4:33
-Lint/UnusedArgument: Unused argument `location`
+[W] Lint/UnusedArgument: Unused argument `location`
 > source.issues.each do |e, location|
                             ^
 
 src/ameba/formatter/base_formatter.cr:12:7
-Lint/UselessAssign: Useless assignment to variable `s`
+[W] Lint/UselessAssign: Useless assignment to variable `s`
 > return s += issues.size
          ^
 
