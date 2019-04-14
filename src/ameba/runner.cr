@@ -17,6 +17,9 @@ module Ameba
     # A list of sources to run inspection on.
     getter sources : Array(Source)
 
+    # A level of severity to be reported.
+    @severity : Severity
+
     # A formatter to prepare report.
     @formatter : Formatter::BaseFormatter
 
@@ -39,6 +42,7 @@ module Ameba
     def initialize(config : Config)
       @sources = config.sources
       @formatter = config.formatter
+      @severity = config.severity
       @rules = config.rules.select(&.enabled).reject!(&.special?)
 
       @unneeded_disable_directive_rule =
@@ -47,7 +51,7 @@ module Ameba
     end
 
     # :nodoc:
-    protected def initialize(@rules, @sources, @formatter)
+    protected def initialize(@rules, @sources, @formatter, @severity)
     end
 
     # Performs the inspection. Iterates through all sources and test it using
@@ -98,7 +102,7 @@ module Ameba
     end
 
     # Indicates whether the last inspection successful or not.
-    # It returns true if no issues in sources found, false otherwise.
+    # It returns true if no issues matching severity in sources found, false otherwise.
     #
     # ```
     # runner = Ameba::Runner.new config
@@ -107,7 +111,9 @@ module Ameba
     # ```
     #
     def success?
-      @sources.all? &.valid?
+      @sources.all? do |source|
+        source.issues.none? { |issue| issue.rule.severity <= @severity }
+      end
     end
 
     private def check_unneeded_directives(source)

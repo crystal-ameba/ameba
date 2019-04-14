@@ -114,6 +114,29 @@ module Ameba::Cli
         end
       end
 
+      context "--fail-level" do
+        it "configures fail level Refactoring" do
+          c = Cli.parse_args %w(--fail-level refactoring)
+          c.fail_level.should eq Severity::Refactoring
+        end
+
+        it "configures fail level Warning" do
+          c = Cli.parse_args %w(--fail-level Warning)
+          c.fail_level.should eq Severity::Warning
+        end
+
+        it "configures fail level Error" do
+          c = Cli.parse_args %w(--fail-level error)
+          c.fail_level.should eq Severity::Error
+        end
+
+        it "raises if fail level is incorrect" do
+          expect_raises(Exception, "Incorrect severity name JohnDoe") do
+            Cli.parse_args %w(--fail-level JohnDoe)
+          end
+        end
+      end
+
       it "accepts unknown args as globs" do
         c = Cli.parse_args %w(source1.cr source2.cr)
         c.globs.should eq %w(source1.cr source2.cr)

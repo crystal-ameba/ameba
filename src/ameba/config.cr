@@ -28,6 +28,7 @@ class Ameba::Config
   setter formatter : Formatter::BaseFormatter?
   setter globs : Array(String)?
   getter rules : Array(Rule::Base)
+  property severity = Severity::Refactoring
 
   @rule_groups : Hash(String, Array(Rule::Base))
 
