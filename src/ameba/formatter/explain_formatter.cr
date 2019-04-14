@@ -57,7 +57,7 @@ module Ameba::Formatter
 
       if rule.responds_to?(:description)
         output_title "RULE INFO"
-        output_paragraph [rule.name, rule.description]
+        output_paragraph [rule.severity.to_s, rule.name, rule.description]
       end
 
       output_title "DETAILED DESCRIPTION"

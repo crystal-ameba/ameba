@@ -20,7 +20,10 @@ module Ameba::Rule::Lint
   # ```
   #
   struct Syntax < Base
-    getter description = "Reports invalid Crystal syntax."
+    properties do
+      description "Reports invalid Crystal syntax"
+      severity Severity::Error
+    end
 
     def test(source)
       source.ast

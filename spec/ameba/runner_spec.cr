@@ -13,6 +13,7 @@ module Ameba
 
   describe Runner do
     formatter = DummyFormatter.new
+    default_severity = Severity::Refactoring
 
     describe "#run" do
       it "returns self" do
@@ -49,7 +50,7 @@ module Ameba
           rules << rule
         end
 
-        Runner.new(all_rules, [source], formatter).run.success?.should be_true
+        Runner.new(all_rules, [source], formatter, default_severity).run.success?.should be_true
       end
 
       context "invalid syntax" do
@@ -57,7 +58,7 @@ module Ameba
           rules = [Rule::Lint::Syntax.new] of Rule::Base
           source = Source.new "def bad_syntax"
 
-          Runner.new(rules, [source], formatter).run
+          Runner.new(rules, [source], formatter, default_severity).run
           source.should_not be_valid
           source.issues.first.rule.name.should eq Rule::Lint::Syntax.rule_name
         end
@@ -70,7 +71,7 @@ module Ameba
               when my_bad_syntax
           )
 
-          Runner.new(rules, [source], formatter).run
+          Runner.new(rules, [source], formatter, default_severity).run
           source.should_not be_valid
           source.issues.size.should eq 1
         end
@@ -83,7 +84,7 @@ module Ameba
             a = 1 # ameba:disable LineLength
           )
 
-          Runner.new(rules, [source], formatter).run
+          Runner.new(rules, [source], formatter, default_severity).run
           source.should_not be_valid
           source.issues.first.rule.name.should eq Rule::Lint::UnneededDisableDirective.rule_name
         end
@@ -107,7 +108,7 @@ module Ameba
             a = 1
           ), "source.cr"
 
-        runner = Runner.new(rules, [source], formatter).run
+        runner = Runner.new(rules, [source], formatter, default_severity).run
         runner.explain({file: "source.cr", line: 1, column: 1}, io)
         io.to_s.should_not be_empty
       end
@@ -119,7 +120,7 @@ module Ameba
             a = 1
           ), "source.cr"
 
-        runner = Runner.new(rules, [source], formatter).run
+        runner = Runner.new(rules, [source], formatter, default_severity).run
         runner.explain({file: "source.cr", line: 1, column: 2}, io)
         io.to_s.should be_empty
       end
@@ -139,7 +140,15 @@ module Ameba
         s = Source.new %q(
           WrongConstant = 5
         )
-        Runner.new(rules, [s], formatter).run.success?.should be_false
+        Runner.new(rules, [s], formatter, default_severity).run.success?.should be_false
+      end
+
+      it "depends on the level of severity" do
+        rules = Rule.rules.map &.new.as(Rule::Base)
+        s = Source.new %q(WrongConstant = 5)
+        Runner.new(rules, [s], formatter, Severity::Error).run.success?.should be_true
+        Runner.new(rules, [s], formatter, Severity::Warning).run.success?.should be_true
+        Runner.new(rules, [s], formatter, Severity::Refactoring).run.success?.should be_false
       end
     end
   end

@@ -28,6 +28,7 @@ class Ameba::Config
   setter formatter : Formatter::BaseFormatter?
   setter globs : Array(String)?
   getter rules : Array(Rule::Base)
+  property severity = Severity::Refactoring
 
   @rule_groups : Hash(String, Array(Rule::Base))
 
@@ -193,6 +194,12 @@ class Ameba::Config
         {% key = name.camelcase.stringify %}
         {% value = df[:value] %}
         {% type = df[:type] %}
+        {% converter = nil %}
+
+        {% if key == "Severity" %}
+          {% type = Severity %}
+          {% converter = SeverityYamlConverter %}
+        {% end %}
 
         {% if type == nil %}
           {% if value.is_a? BoolLiteral %}
@@ -214,11 +221,16 @@ class Ameba::Config
           {% type = Nil if type == nil %}
         {% end %}
 
-        {% properties[name] = {key: key, default: value, type: type} %}
+        {% properties[name] = {key: key, default: value, type: type, converter: converter} %}
       {% end %}
 
       {% if properties["enabled".id] == nil %}
         {% properties["enabled".id] = {key: "Enabled", default: true, type: Bool} %}
+      {% end %}
+
+      {% if properties["severity".id] == nil %}
+        {% default = @type.name.starts_with?("Ameba::Rule::Lint") ? "Severity::Warning".id : "Severity::Refactoring".id %}
+        {% properties["severity".id] = {key: "Severity", default: default, type: Severity, converter: SeverityYamlConverter} %}
       {% end %}
 
       {% if properties["excluded".id] == nil %}

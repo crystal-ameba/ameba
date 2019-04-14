@@ -9,6 +9,7 @@ module Ameba::Cli
     opts = parse_args args
     config = Config.load opts.config, opts.colors?
     config.globs = opts.globs
+    config.severity = opts.fail_level.not_nil! if opts.fail_level
 
     configure_formatter(config, opts)
     configure_rules(config, opts)
@@ -32,6 +33,7 @@ module Ameba::Cli
     property only : Array(String)?
     property except : Array(String)?
     property location_to_explain : NamedTuple(file: String, line: Int32, column: Int32)?
+    property fail_level : Severity?
     property? all = false
     property? colors = true
     property? without_affected_code = false
@@ -80,6 +82,10 @@ module Ameba::Cli
         "Generate a configuration file acting as a TODO list") do
         opts.formatter = :todo
         opts.config = ""
+      end
+
+      parser.on("--fail-level SEVERITY", "Change the level of failure to exit. Defaults to Refactoring") do |level|
+        opts.fail_level = Severity.from_name(level)
       end
 
       parser.on("-e", "--explain PATH:line:column",

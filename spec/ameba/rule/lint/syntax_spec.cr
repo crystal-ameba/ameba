@@ -33,5 +33,9 @@ module Ameba::Rule::Lint
       issue.location.to_s.should eq "source.cr:1:11"
       issue.message.should eq "unexpected token: end (expected ';' or newline)"
     end
+
+    it "has highest severity" do
+      subject.severity.should eq Severity::Error
+    end
   end
 end

@@ -43,6 +43,10 @@ module Ameba
         create_todo.should contain "DummyRule"
       end
 
+      it "creates a todo with severity" do
+        create_todo.should contain "Refactoring"
+      end
+
       it "creates a todo with problems count" do
         create_todo.should contain "Problems found: 1"
       end
