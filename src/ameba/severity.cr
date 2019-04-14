@@ -21,16 +21,9 @@ module Ameba
     # ```
     #
     def self.from_name(name : String)
-      case name.downcase
-      when "error"
-        Error
-      when "warning"
-        Warning
-      when "refactoring"
-        Refactoring
-      else
-        raise "Incorrect severity name #{name}. Try one of #{Severity.values}"
-      end
+      parse(name)
+    rescue ArgumentError
+      raise "Incorrect severity name #{name}. Try one of #{Severity.values}"
     end
   end
 
