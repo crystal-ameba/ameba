@@ -4,6 +4,22 @@ module Ameba
     Warning
     Refactoring
 
+    # Returns a symbol uniquely indicating severity.
+    #
+    # ```
+    # Severity::Warning.symbol # => 'W'
+    # ```
+    def symbol
+      to_s[0]
+    end
+
+    # Creates Severity by the name.
+    #
+    # ```
+    # Severity.from_name('refactoring') # => Severity::Refactoring
+    # Severity.from_name('foo-bar')     # => Exception: Incorrect severity name..
+    # ```
+    #
     def self.from_name(name : String)
       case name.downcase
       when "error"
@@ -18,6 +34,7 @@ module Ameba
     end
   end
 
+  # Converter for `YAML.mapping` which converts severity enum to and from YAML.
   class SeverityYamlConverter
     def self.from_yaml(ctx : YAML::ParseContext, node : YAML::Nodes::Node)
       unless node.is_a?(YAML::Nodes::Scalar)

@@ -37,6 +37,14 @@ module Ameba
         result["sources"][0]["issues"][0]["rule_name"].should eq DummyRule.rule_name
       end
 
+      it "shows severity" do
+        s = Source.new ""
+        s.add_issue DummyRule.new, {1, 2}, "message"
+
+        result = get_result [s]
+        result["sources"][0]["issues"][0]["severity"].should eq "Refactoring"
+      end
+
       it "shows a message" do
         s = Source.new ""
         s.add_issue DummyRule.new, {1, 2}, "message"

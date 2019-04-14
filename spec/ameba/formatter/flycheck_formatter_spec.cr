@@ -22,7 +22,7 @@ module Ameba::Formatter
         subject = flycheck
         subject.source_finished s
         subject.output.to_s.should eq(
-          "source.cr:1:2: E: [#{DummyRule.rule_name}] message\n"
+          "source.cr:1:2: R: [#{DummyRule.rule_name}] message\n"
         )
       end
 
@@ -32,7 +32,7 @@ module Ameba::Formatter
         subject = flycheck
         subject.source_finished s
         subject.output.to_s.should eq(
-          "source.cr:1:2: E: [#{DummyRule.rule_name}] multi line\n"
+          "source.cr:1:2: R: [#{DummyRule.rule_name}] multi line\n"
         )
       end
 

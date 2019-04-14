@@ -2,6 +2,26 @@ require "../spec_helper"
 
 module Ameba
   describe Severity do
+    describe "#symbol" do
+      it "returns the symbol for each severity in the enum" do
+        Severity.values.each do |severity|
+          severity.symbol.should_not be_nil
+        end
+      end
+
+      it "returns symbol for Error" do
+        Severity::Error.symbol.should eq 'E'
+      end
+
+      it "returns symbol for Warning" do
+        Severity::Warning.symbol.should eq 'W'
+      end
+
+      it "returns symbol for Refactoring" do
+        Severity::Refactoring.symbol.should eq 'R'
+      end
+    end
+
     describe ".from_name" do
       it "creates error severity by name" do
         Severity.from_name("Error").should eq Severity::Error

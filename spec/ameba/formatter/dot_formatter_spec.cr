@@ -64,6 +64,19 @@ module Ameba::Formatter
           log.should contain "      \e[33m^\e[0m"
         end
 
+        it "writes severity" do
+          output.clear
+          s = Source.new(%(
+            a = 22
+            puts a
+          )).tap do |source|
+            source.add_issue(DummyRule.new, {1, 5}, "DummyRuleError")
+          end
+          subject.finished [s]
+          log = output.to_s
+          log.should contain "[R]"
+        end
+
         it "doesn't write affected code if it is disabled" do
           output.clear
           s = Source.new(%(
