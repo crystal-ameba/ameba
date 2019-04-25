@@ -150,6 +150,21 @@ module Ameba
         Runner.new(rules, [s], formatter, Severity::Warning).run.success?.should be_true
         Runner.new(rules, [s], formatter, Severity::Refactoring).run.success?.should be_false
       end
+
+      it "returns false if issue is disabled" do
+        rules = [NamedRule.new] of Rule::Base
+        source = Source.new %(
+          def foo
+            bar = 1 # ameba:disable #{NamedRule.name}
+          end
+        )
+        source.add_issue NamedRule.new, location: {2, 1},
+          message: "Useless assignment"
+
+        Runner
+          .new(rules, [source], formatter, default_severity)
+          .run.success?.should be_true
+      end
     end
   end
 end

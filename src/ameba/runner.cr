@@ -112,7 +112,9 @@ module Ameba
     #
     def success?
       @sources.all? do |source|
-        source.issues.none? { |issue| issue.rule.severity <= @severity }
+        source.issues
+          .reject(&.disabled?)
+          .none? { |issue| issue.rule.severity <= @severity }
       end
     end
 
