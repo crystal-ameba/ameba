@@ -22,22 +22,22 @@ module Ameba
       end
     end
 
-    describe ".from_name" do
+    describe ".parse" do
       it "creates error severity by name" do
-        Severity.from_name("Error").should eq Severity::Error
+        Severity.parse("Error").should eq Severity::Error
       end
 
       it "creates warning severity by name" do
-        Severity.from_name("Warning").should eq Severity::Warning
+        Severity.parse("Warning").should eq Severity::Warning
       end
 
       it "creates refactoring severity by name" do
-        Severity.from_name("Refactoring").should eq Severity::Refactoring
+        Severity.parse("Refactoring").should eq Severity::Refactoring
       end
 
       it "raises when name is incorrect" do
         expect_raises(Exception, "Incorrect severity name BadName. Try one of [Error, Warning, Refactoring]") do
-          Severity.from_name("BadName")
+          Severity.parse("BadName")
         end
       end
     end

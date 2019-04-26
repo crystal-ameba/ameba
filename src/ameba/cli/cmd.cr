@@ -85,7 +85,7 @@ module Ameba::Cli
       end
 
       parser.on("--fail-level SEVERITY", "Change the level of failure to exit. Defaults to Refactoring") do |level|
-        opts.fail_level = Severity.from_name(level)
+        opts.fail_level = Severity.parse(level)
       end
 
       parser.on("-e", "--explain PATH:line:column",

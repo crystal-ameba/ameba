@@ -16,14 +16,14 @@ module Ameba
     # Creates Severity by the name.
     #
     # ```
-    # Severity.from_name('refactoring') # => Severity::Refactoring
-    # Severity.from_name('foo-bar')     # => Exception: Incorrect severity name..
+    # Severity.parse('refactoring') # => Severity::Refactoring
+    # Severity.parse('foo-bar')     # => Exception: Incorrect severity name
     # ```
     #
-    def self.from_name(name : String)
-      parse(name)
+    def self.parse(name : String)
+      super name
     rescue ArgumentError
-      raise "Incorrect severity name #{name}. Try one of #{Severity.values}"
+      raise "Incorrect severity name #{name}. Try one of #{values}"
     end
   end
 
@@ -35,7 +35,7 @@ module Ameba
       end
 
       case value = node.value
-      when String then Severity.from_name(value)
+      when String then Severity.parse(value)
       when Nil    then nil
       else
         raise "Incorrect severity: #{value}"
