@@ -16,8 +16,8 @@ module Ameba
     # Creates Severity by the name.
     #
     # ```
-    # Severity.parse('refactoring') # => Severity::Refactoring
-    # Severity.parse('foo-bar')     # => Exception: Incorrect severity name
+    # Severity.parse("refactoring") # => Severity::Refactoring
+    # Severity.parse("foo-bar")     # => Exception: Incorrect severity name
     # ```
     #
     def self.parse(name : String)
