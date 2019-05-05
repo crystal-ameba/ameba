@@ -34,6 +34,13 @@ module Ameba::AST
   # ```
   #
   class NodeVisitor < BaseVisitor
+    @skip : Array(Crystal::ASTNode.class)?
+
+    def initialize(@rule, @source, skip = nil)
+      @skip = skip.try &.map { |el| el.as(Crystal::ASTNode.class) }
+      super @rule, @source
+    end
+
     {% for name in NODES %}
       # A visit callback for `Crystal::{{name}}` node.
       # Returns true meaning that child nodes will be traversed as well.
@@ -42,5 +49,10 @@ module Ameba::AST
         true
       end
     {% end %}
+
+    def visit(node)
+      return true unless (skip = @skip)
+      !skip.includes?(node.class)
+    end
   end
 end

@@ -41,7 +41,12 @@ module Ameba::Rule::Performance
     end
 
     def test(source)
-      AST::NodeVisitor.new self, source
+      AST::NodeVisitor.new self, source, skip: [
+        Crystal::Macro,
+        Crystal::MacroExpression,
+        Crystal::MacroIf,
+        Crystal::MacroFor,
+      ]
     end
 
     def test(source, node : Crystal::Call)

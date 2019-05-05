@@ -49,6 +49,15 @@ module Ameba::Rule::Performance
       end
     end
 
+    context "macro" do
+      it "doesn't report in macro scope" do
+        source = Source.new %(
+          {{[1, 2, 3].select { |v| v > 1 }.size}}
+        )
+        subject.catch(source).should be_valid
+      end
+    end
+
     it "reports rule, pos and message" do
       s = Source.new %(
         lines.split("\n").reject(&.empty?).size

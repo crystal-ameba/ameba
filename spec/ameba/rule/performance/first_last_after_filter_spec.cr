@@ -107,6 +107,15 @@ module Ameba::Rule::Performance
       issue.message.should eq "Use `reverse_each.find {...}` instead of `select {...}.last`"
     end
 
+    context "macro" do
+      it "doesn't report in macro scope" do
+        source = Source.new %(
+          {{[1, 2, 3].select { |e| e > 2  }.last }}
+        )
+        subject.catch(source).should be_valid
+      end
+    end
+
     it "reports a correct message for last?" do
       s = Source.new %(
         [1, 2, 3].select { |e| e > 2 }.last?

@@ -48,6 +48,15 @@ module Ameba::Rule::Performance
       end
     end
 
+    context "macro" do
+      it "reports in macro scope" do
+        source = Source.new %(
+          {{ [1, 2, 3].reject { |e| e > 2  }.any? }}
+        )
+        subject.catch(source).should_not be_valid
+      end
+    end
+
     it "reports rule, pos and message" do
       s = Source.new %(
         [1, 2, 3].reject { |e| e > 2 }.any?
