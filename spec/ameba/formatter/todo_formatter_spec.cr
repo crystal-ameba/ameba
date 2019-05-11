@@ -44,7 +44,7 @@ module Ameba
       end
 
       it "creates a todo with severity" do
-        create_todo.should contain "Refactoring"
+        create_todo.should contain "Convention"
       end
 
       it "creates a todo with problems count" do

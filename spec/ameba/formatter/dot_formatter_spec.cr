@@ -74,7 +74,7 @@ module Ameba::Formatter
           end
           subject.finished [s]
           log = output.to_s
-          log.should contain "[R]"
+          log.should contain "[C]"
         end
 
         it "doesn't write affected code if it is disabled" do

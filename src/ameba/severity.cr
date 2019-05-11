@@ -2,7 +2,7 @@ module Ameba
   enum Severity
     Error
     Warning
-    Refactoring
+    Convention
 
     # Returns a symbol uniquely indicating severity.
     #
@@ -16,8 +16,8 @@ module Ameba
     # Creates Severity by the name.
     #
     # ```
-    # Severity.parse("refactoring") # => Severity::Refactoring
-    # Severity.parse("foo-bar")     # => Exception: Incorrect severity name
+    # Severity.parse("convention") # => Severity::Convention
+    # Severity.parse("foo-bar")    # => Exception: Incorrect severity name
     # ```
     #
     def self.parse(name : String)

@@ -28,7 +28,7 @@ class Ameba::Config
   setter formatter : Formatter::BaseFormatter?
   setter globs : Array(String)?
   getter rules : Array(Rule::Base)
-  property severity = Severity::Refactoring
+  property severity = Severity::Convention
 
   @rule_groups : Hash(String, Array(Rule::Base))
 
@@ -229,7 +229,7 @@ class Ameba::Config
       {% end %}
 
       {% if properties["severity".id] == nil %}
-        {% default = @type.name.starts_with?("Ameba::Rule::Lint") ? "Severity::Warning".id : "Severity::Refactoring".id %}
+        {% default = @type.name.starts_with?("Ameba::Rule::Lint") ? "Severity::Warning".id : "Severity::Convention".id %}
         {% properties["severity".id] = {key: "Severity", default: default, type: Severity, converter: SeverityYamlConverter} %}
       {% end %}
 

@@ -42,7 +42,7 @@ module Ameba
         s.add_issue DummyRule.new, {1, 2}, "message"
 
         result = get_result [s]
-        result["sources"][0]["issues"][0]["severity"].should eq "Refactoring"
+        result["sources"][0]["issues"][0]["severity"].should eq "Convention"
       end
 
       it "shows a message" do

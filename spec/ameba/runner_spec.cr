@@ -13,7 +13,7 @@ module Ameba
 
   describe Runner do
     formatter = DummyFormatter.new
-    default_severity = Severity::Refactoring
+    default_severity = Severity::Convention
 
     describe "#run" do
       it "returns self" do
@@ -148,7 +148,7 @@ module Ameba
         s = Source.new %q(WrongConstant = 5)
         Runner.new(rules, [s], formatter, Severity::Error).run.success?.should be_true
         Runner.new(rules, [s], formatter, Severity::Warning).run.success?.should be_true
-        Runner.new(rules, [s], formatter, Severity::Refactoring).run.success?.should be_false
+        Runner.new(rules, [s], formatter, Severity::Convention).run.success?.should be_false
       end
 
       it "returns false if issue is disabled" do

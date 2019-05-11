@@ -25,7 +25,7 @@ module Ameba::Formatter
   #           },
   #           "message":   "Useless assignment to variable `a`",
   #           "rule_name": "UselessAssign",
-  #           "severity":  "Refactoring",
+  #           "severity":  "Convention",
   #         },
   #         {
   #           "location": {
@@ -50,7 +50,7 @@ module Ameba::Formatter
   #           },
   #           "message":   "Useless assignment to variable `a`",
   #           "rule_name": "UselessAssign",
-  #           "severity":  "Refactoring",
+  #           "severity":  "Convention",
   #         },
   #       ],
   #       "path": "src/ameba/formatter/json_formatter.cr",

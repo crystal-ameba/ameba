@@ -115,9 +115,9 @@ module Ameba::Cli
       end
 
       context "--fail-level" do
-        it "configures fail level Refactoring" do
-          c = Cli.parse_args %w(--fail-level refactoring)
-          c.fail_level.should eq Severity::Refactoring
+        it "configures fail level Convention" do
+          c = Cli.parse_args %w(--fail-level convention)
+          c.fail_level.should eq Severity::Convention
         end
 
         it "configures fail level Warning" do

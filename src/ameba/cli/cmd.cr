@@ -84,7 +84,7 @@ module Ameba::Cli
         opts.config = ""
       end
 
-      parser.on("--fail-level SEVERITY", "Change the level of failure to exit. Defaults to Refactoring") do |level|
+      parser.on("--fail-level SEVERITY", "Change the level of failure to exit. Defaults to Convention") do |level|
         opts.fail_level = Severity.parse(level)
       end
 

@@ -17,8 +17,8 @@ module Ameba
         Severity::Warning.symbol.should eq 'W'
       end
 
-      it "returns symbol for Refactoring" do
-        Severity::Refactoring.symbol.should eq 'R'
+      it "returns symbol for Convention" do
+        Severity::Convention.symbol.should eq 'C'
       end
     end
 
@@ -31,12 +31,12 @@ module Ameba
         Severity.parse("Warning").should eq Severity::Warning
       end
 
-      it "creates refactoring severity by name" do
-        Severity.parse("Refactoring").should eq Severity::Refactoring
+      it "creates convention severity by name" do
+        Severity.parse("Convention").should eq Severity::Convention
       end
 
       it "raises when name is incorrect" do
-        expect_raises(Exception, "Incorrect severity name BadName. Try one of [Error, Warning, Refactoring]") do
+        expect_raises(Exception, "Incorrect severity name BadName. Try one of [Error, Warning, Convention]") do
           Severity.parse("BadName")
         end
       end
@@ -63,14 +63,14 @@ module Ameba
         converted.severity.should eq Severity::Warning
       end
 
-      it "converts from yaml to Severity::Refactoring" do
-        yaml = {severity: "refactoring"}.to_yaml
+      it "converts from yaml to Severity::Convention" do
+        yaml = {severity: "convention"}.to_yaml
         converted = SeverityConvertable.from_yaml(yaml)
-        converted.severity.should eq Severity::Refactoring
+        converted.severity.should eq Severity::Convention
       end
 
       it "raises if severity is not a scalar" do
-        yaml = {severity: {refactoring: true}}.to_yaml
+        yaml = {severity: {convention: true}}.to_yaml
         expect_raises(Exception, "Severity must be a scalar") do
           SeverityConvertable.from_yaml(yaml)
         end
@@ -97,10 +97,10 @@ module Ameba
         converted.should eq "---\nseverity: Warning\n"
       end
 
-      it "converts Severity::Refactoring to yaml" do
-        yaml = {severity: "refactoring"}.to_yaml
+      it "converts Severity::Convention to yaml" do
+        yaml = {severity: "convention"}.to_yaml
         converted = SeverityConvertable.from_yaml(yaml).to_yaml
-        converted.should eq "---\nseverity: Refactoring\n"
+        converted.should eq "---\nseverity: Convention\n"
       end
     end
   end

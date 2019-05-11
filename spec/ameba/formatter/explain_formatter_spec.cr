@@ -50,7 +50,7 @@ module Ameba
         source = Source.new "a = 42", "source.cr"
         output = explanation(source)
         output.should contain "RULE INFO"
-        output.should contain "Refactoring"
+        output.should contain "Convention"
         output.should contain "Ameba/ErrorRule"
         output.should contain "Always adds an error at 1:1"
       end
