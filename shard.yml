@@ -12,7 +12,3 @@ targets:
 
 scripts:
   postinstall: make bin
-
-# https://github.com/crystal-lang/shards/pull/126
-executables:
-  - ameba
