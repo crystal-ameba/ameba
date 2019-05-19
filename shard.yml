@@ -12,3 +12,6 @@ targets:
 
 scripts:
   postinstall: make bin
+
+executables:
+  - ameba
