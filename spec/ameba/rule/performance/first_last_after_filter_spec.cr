@@ -36,6 +36,13 @@ module Ameba::Rule::Performance
       subject.catch(source).should_not be_valid
     end
 
+    it "does not report if there is selected followed by first with arguments" do
+      source = Source.new %(
+        [1, 2, 3].select { |n| n % 2 == 0 }.first(2)
+      )
+      subject.catch(source).should be_valid
+    end
+
     it "reports if there is select followed by first?" do
       source = Source.new %(
         [1, 2, 3].select { |e| e > 2 }.first?
