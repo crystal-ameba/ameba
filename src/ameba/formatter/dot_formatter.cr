@@ -10,7 +10,7 @@ module Ameba::Formatter
 
     # Reports a message when inspection is started.
     def started(sources)
-      @started_at = Time.now # Time.monotonic
+      @started_at = Time.utc # Time.monotonic
 
       output << started_message(sources.size)
     end
@@ -45,7 +45,7 @@ module Ameba::Formatter
         end
       end
 
-      output << finished_in_message(@started_at, Time.now) # Time.monotonic
+      output << finished_in_message(@started_at, Time.utc) # Time.monotonic
       output << final_message(sources, failed_sources)
     end
 

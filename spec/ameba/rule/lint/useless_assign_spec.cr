@@ -228,7 +228,7 @@ module Ameba::Rule::Lint
     it "does not report if global var" do
       s = Source.new %(
         def method
-          $? = 3
+          $1 = 3
         end
       )
       subject.catch(s).should be_valid

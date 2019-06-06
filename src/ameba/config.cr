@@ -50,8 +50,8 @@ class Ameba::Config
   # config = Ameba::Config.load
   # ```
   #
-  def self.load(path = PATH, colors? = true)
-    Colorize.enabled = colors?
+  def self.load(path = PATH, colors = true)
+    Colorize.enabled = colors
     content = File.exists?(path) ? File.read path : ""
     Config.new YAML.parse(content)
   rescue e
