@@ -1,6 +1,4 @@
 language: crystal
-crystal:
-  - nightly
 script:
   - make test
   - crystal tool format --check
