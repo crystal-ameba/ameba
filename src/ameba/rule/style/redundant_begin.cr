@@ -108,7 +108,7 @@ module Ameba::Rule::Style
 
     private def def_redundant_begin?(code)
       lexer = Crystal::Lexer.new code
-      in_body? = in_argument_list? = false
+      in_body = in_argument_list = false
       loop do
         token = lexer.next_token
 
@@ -116,16 +116,16 @@ module Ameba::Rule::Style
         when :EOF, :"->"
           break
         when :IDENT
-          return token.value == :begin if in_body?
+          return token.value == :begin if in_body
         when :"("
-          in_argument_list? = true
+          in_argument_list = true
         when :")"
-          in_argument_list? = false
+          in_argument_list = false
         when :NEWLINE
-          in_body? = true unless in_argument_list?
+          in_body = true unless in_argument_list
         when :SPACE
         else
-          return false if in_body?
+          return false if in_body
         end
       end
     end

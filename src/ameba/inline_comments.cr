@@ -94,11 +94,11 @@ module Ameba
     end
 
     private def commented_out?(line)
-      commented? = false
+      commented = false
 
       lexer = Crystal::Lexer.new(line).tap { |l| l.comments_enabled = true }
-      Tokenizer.new(lexer).run { |t| commented? = true if t.type == :COMMENT }
-      commented?
+      Tokenizer.new(lexer).run { |t| commented = true if t.type == :COMMENT }
+      commented
     end
   end
 end

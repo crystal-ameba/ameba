@@ -33,11 +33,11 @@ module Ameba::Rule::Lint
     end
 
     def test(source, node : Crystal::Call)
-      comparison? = %w(== != ===).includes?(node.name)
-      to_boolean? = node.args.first?.try &.is_a?(Crystal::BoolLiteral) ||
-                    node.obj.is_a?(Crystal::BoolLiteral)
+      comparison = %w(== != ===).includes?(node.name)
+      to_boolean = node.args.first?.try &.is_a?(Crystal::BoolLiteral) ||
+                   node.obj.is_a?(Crystal::BoolLiteral)
 
-      return unless comparison? && to_boolean?
+      return unless comparison && to_boolean
 
       issue_for node, MSG
     end

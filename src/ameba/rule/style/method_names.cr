@@ -53,9 +53,10 @@ module Ameba::Rule::Style
       return if (expected = node.name.underscore) == node.name
 
       line_number = node.location.try &.line_number
-      column_number = node.name_column_number
+      column_number = node.name_location.try &.column_number
 
       return unless line_number
+      return unless column_number
 
       issue_for(
         {line_number, column_number},
