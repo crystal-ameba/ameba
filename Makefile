@@ -14,6 +14,8 @@ install: build
 bin: build
 	mkdir -p $(SHARD_BIN)
 	cp ./bin/ameba $(SHARD_BIN)
+run_file:
+	cp -r ./bin/ameba.cr $(SHARD_BIN)
 test: build
 	$(CRYSTAL_BIN) spec
 	./bin/ameba --all

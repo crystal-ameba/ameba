@@ -73,7 +73,7 @@ install:
   - shards install
 script:
   - crystal spec
-  - bin/ameba
+  - crystal bin/ameba.cr
 ```
 
 Using this config Ameba will inspect files just after the specs run. Travis will also fail
