@@ -5,7 +5,7 @@ require "option_parser"
 module Ameba::Cli
   extend self
 
-  def run(args)
+  def run(args = ARGV)
     opts = parse_args args
     config = Config.load opts.config, opts.colors?
     config.globs = opts.globs

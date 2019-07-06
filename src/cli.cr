@@ -1,3 +1,3 @@
 require "./ameba/cli/cmd"
 
-Ameba::Cli.run(ARGV)
+Ameba::Cli.run
