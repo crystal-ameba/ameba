@@ -11,7 +11,8 @@ targets:
     main: src/cli.cr
 
 scripts:
-  postinstall: make bin
+  # TODO: remove pre-compiled executable in future releases
+  postinstall: make bin && make run_file
 
 executables:
   - ameba
