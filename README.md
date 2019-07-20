@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://gitcdn.link/repo/veelenga/bin/master/ameba/logo.png" width="200">
+  <img src="https://raw.githubusercontent.com/veelenga/bin/master/ameba/logo.png" width="800">
   <h3 align="center">Ameba</h3>
   <p align="center">Code style linter for Crystal<p>
   <p align="center">
