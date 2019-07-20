@@ -9,8 +9,8 @@
   </p>
   <p align="center">
     <a href="https://travis-ci.org/veelenga/ameba"><img src="https://travis-ci.org/veelenga/ameba.svg?branch=master"></a>
-    <a href="https://github.com/veelenga/ameba/releases"><img src="https://img.shields.io/github/release/veelenga/ameba.svg?maxAge=360"></a>
-    <a href="https://github.com/veelenga/ameba/blob/master/LICENSE"><img src="https://img.shields.io/github/license/veelenga/ameba.svg"></a>
+    <a href="https://github.com/crystal-ameba/ameba/releases"><img src="https://img.shields.io/github/release/crystal-ameba/ameba.svg?maxAge=360"></a>
+    <a href="https://github.com/crystal-ameba/ameba/blob/master/LICENSE"><img src="https://img.shields.io/github/license/crystal-ameba/ameba.svg"></a>
   <a href="https://gitter.im/veelenga/ameba?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge"><img src="https://badges.gitter.im/veelenga/ameba.svg"></a>
   </p>
 </p>
@@ -21,7 +21,7 @@ Ameba is a static code analysis tool for the Crystal language.
 It enforces a consistent [Crystal code style](https://crystal-lang.org/docs/conventions/coding_style.html),
 also catches code smells and wrong code constructions.
 
-See also [Roadmap](https://github.com/veelenga/ameba/wiki).
+See also [Roadmap](https://github.com/crystal-ameba/ameba/wiki).
 
 ## Usage
 
@@ -58,7 +58,7 @@ Add this to your application's `shard.yml`:
 ```yaml
 development_dependencies:
   ameba:
-    github: veelenga/ameba
+    github: crystal-ameba/ameba
     version: ~> 0.10.0
 ```
 
@@ -103,7 +103,7 @@ $ docker run -v $(pwd):/src ameba/ameba
 ### From sources
 
 ```sh
-$ git clone https://github.com/veelenga/ameba && cd ameba
+$ git clone https://github.com/crystal-ameba/ameba && cd ameba
 $ make install
 ```
 
@@ -155,9 +155,9 @@ time = Time.epoch(1483859302) # ameba:disable Style, Lint
 ## Editor integration
 
  * Vim: [vim-crystal](https://github.com/rhysd/vim-crystal), [Ale](https://github.com/w0rp/ale)
- * Emacs: [ameba.el](https://github.com/veelenga/ameba.el)
+ * Emacs: [ameba.el](https://github.com/crystal-ameba/ameba.el)
  * Sublime Text: [Sublime Linter Ameba](https://github.com/epergo/SublimeLinter-contrib-ameba)
- * VSCode: [vscode-crystal-ameba](https://github.com/veelenga/vscode-crystal-ameba)
+ * VSCode: [vscode-crystal-ameba](https://github.com/crystal-ameba/vscode-crystal-ameba)
 
 ## Credits & inspirations
 
