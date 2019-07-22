@@ -52,6 +52,7 @@ module Ameba
     def ast
       @ast ||=
         Crystal::Parser.new(code)
+          .tap { |parser| parser.wants_doc = true }
           .tap { |parser| parser.filename = @path }
           .parse
     end
