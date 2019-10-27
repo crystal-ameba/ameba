@@ -68,22 +68,32 @@ module Ameba
     #
     def run
       @formatter.started @sources
-      @sources.each do |source|
-        @formatter.source_started source
-
-        if @syntax_rule.catch(source).valid?
-          @rules.each do |rule|
-            next if rule.excluded?(source)
-            rule.test(source)
-          end
-          check_unneeded_directives(source)
+      channels = @sources.map { Channel(Nil).new }
+      @sources.each_with_index do |source, idx|
+        spawn do
+          run_source(source)
+          channels[idx].send(nil)
         end
-
-        @formatter.source_finished source
       end
+
+      channels.each { |c| c.receive }
       self
     ensure
       @formatter.finished @sources
+    end
+
+    private def run_source(source)
+      @formatter.source_started source
+
+      if @syntax_rule.catch(source).valid?
+        @rules.each do |rule|
+          next if rule.excluded?(source)
+          rule.test(source)
+        end
+        check_unneeded_directives(source)
+      end
+
+      @formatter.source_finished source
     end
 
     # Explains an issue at a specified *location*.
