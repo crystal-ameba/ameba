@@ -90,8 +90,9 @@ module Ameba::AST
     # false if not.
     def references?(variable : Variable)
       variable.references.any? do |reference|
-        reference.scope == self || inner_scopes.any?(&.references? variable)
-      end
+        reference.scope == self ||
+          inner_scopes.any?(&.references? variable)
+      end || variable.used_in_macro?
     end
 
     # Returns true if current scope is a def, false if not.
