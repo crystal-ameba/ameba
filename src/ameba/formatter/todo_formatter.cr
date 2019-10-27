@@ -41,8 +41,7 @@ module Ameba::Formatter
       Hash(Rule::Base, Array(Issue)).new.tap do |h|
         issues.each do |issue|
           next if issue.disabled? || issue.rule.is_a? Rule::Lint::Syntax
-          h[issue.rule] ||= Array(Issue).new
-          h[issue.rule] << issue
+          (h[issue.rule] ||= Array(Issue).new) << issue
         end
       end
     end

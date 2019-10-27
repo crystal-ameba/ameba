@@ -82,6 +82,7 @@ module Ameba
         s1 = Source.new "a = 1", "source1.cr"
         s2 = Source.new "a = 1", "source2.cr"
         s1.add_issue DummyRule.new, {1, 2}, "message1"
+        s1.add_issue NamedRule.new, {1, 2}, "message1"
         s1.add_issue DummyRule.new, {2, 2}, "message1"
         s2.add_issue DummyRule.new, {2, 2}, "message2"
 

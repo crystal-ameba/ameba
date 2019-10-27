@@ -106,7 +106,11 @@ module Ameba::Rule
     end
 
     def ==(other)
-      self.name == other.name
+      name == other.try &.name
+    end
+
+    def hash
+      name.hash
     end
 
     macro issue_for(*args)
