@@ -66,6 +66,11 @@ module Ameba::AST
     end
 
     # :nodoc:
+    def visit(node : Crystal::TypeOf)
+      on_scope_enter(node)
+    end
+
+    # :nodoc:
     def visit(node : Crystal::CStructOrUnionDef)
       on_scope_enter(node)
     end

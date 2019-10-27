@@ -831,6 +831,24 @@ module Ameba::Rule::Lint
       end
     end
 
+    context "typeof" do
+      it "reports useless assigments in typeof" do
+        s = Source.new %(
+          typeof(begin
+            foo = 1
+            bar = 2
+          end)
+        )
+        subject.catch(s).should_not be_valid
+        s.issues.size.should eq 2
+        s.issues.first.location.to_s.should eq ":2:3"
+        s.issues.first.message.should eq "Useless assignment to variable `foo`"
+
+        s.issues.last.location.to_s.should eq ":3:3"
+        s.issues.last.message.should eq "Useless assignment to variable `bar`"
+      end
+    end
+
     context "macro" do
       it "doesn't report if assignment is referenced in macro" do
         s = Source.new %(
