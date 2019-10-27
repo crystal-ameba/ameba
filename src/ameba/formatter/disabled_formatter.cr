@@ -1,5 +1,5 @@
 module Ameba::Formatter
-  # A formatter that shows all disabled line using inline directives.
+  # A formatter that shows all disabled lines by inline directives.
   class DisabledFormatter < BaseFormatter
     def finished(sources)
       output << "Disabled rules using inline directives: \n\n"
