@@ -76,6 +76,30 @@ module Ameba
         create_todo.should contain "Excluded:\n  - source.cr"
       end
 
+      context "with multiple issues" do
+        formatter = Formatter::TODOFormatter.new IO::Memory.new
+
+        s1 = Source.new "a = 1", "source1.cr"
+        s2 = Source.new "a = 1", "source2.cr"
+        s1.add_issue DummyRule.new, {1, 2}, "message1"
+        s1.add_issue DummyRule.new, {2, 2}, "message1"
+        s2.add_issue DummyRule.new, {2, 2}, "message2"
+
+        file = formatter.finished([s1, s2])
+        content = File.read(file.not_nil!.path)
+        content.should contain <<-CONTENT
+        # Problems found: 3
+        # Run `ameba --only Ameba/DummyRule` for details
+        Ameba/DummyRule:
+          Description: Dummy rule that does nothing.
+          Enabled: true
+          Severity: Convention
+          Excluded:
+          - source1.cr
+          - source2.cr
+        CONTENT
+      end
+
       context "when invalid syntax" do
         it "does generate todo file" do
           formatter = Formatter::TODOFormatter.new IO::Memory.new
