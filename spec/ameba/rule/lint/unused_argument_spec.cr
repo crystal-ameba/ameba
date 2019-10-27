@@ -228,6 +228,21 @@ module Ameba::Rule::Lint
         )
         subject.catch(s).should be_valid
       end
+
+      it "doesn't report used args in macro literals" do
+        s = Source.new %(
+          def print(f : Array(U)) forall U
+            f.size.times do |i|
+              {% if U == Float64 %}
+                puts f[i].round(3)
+              {% else %}
+                puts f[i]
+              {% end %}
+            end
+          end
+        )
+        subject.catch(s).should be_valid
+      end
     end
 
     context "properties" do

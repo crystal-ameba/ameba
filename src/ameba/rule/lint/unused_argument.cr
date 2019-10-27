@@ -55,7 +55,7 @@ module Ameba::Rule::Lint
 
     private def find_unused_arguments(source, scope)
       scope.arguments.each do |argument|
-        next if argument.ignored? || scope.references?(argument.variable)
+        next if argument.ignored? || scope.references?(argument.variable) || argument.variable.used_in_macro?
 
         name_suggestion = scope.node.is_a?(Crystal::Block) ? '_' : "_#{argument.name}"
         issue_for argument.node, MSG % {argument.name, name_suggestion}
