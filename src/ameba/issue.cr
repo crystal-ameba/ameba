@@ -18,5 +18,9 @@ module Ameba
     def disabled?
       status == :disabled
     end
+
+    def syntax?
+      rule.is_a?(Rule::Lint::Syntax)
+    end
   end
 end

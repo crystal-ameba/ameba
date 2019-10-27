@@ -3,29 +3,38 @@ module Ameba::Formatter
   # Basically, it takes all issues reported and disables corresponding rules
   # or excludes failed sources from these rules.
   class TODOFormatter < DotFormatter
-    @io : IO::FileDescriptor | IO::Memory
-
-    def initialize(@output = STDOUT, @io = File.new(Config::PATH, mode: "w"))
+    def initialize(@output = STDOUT)
     end
 
     def finished(sources)
       super
       issues = sources.map(&.issues).flatten
-      generate_todo_config issues if issues.any?
-      if (io = @io).is_a?(File)
-        @output << "Created #{io.path}\n"
+      unless issues.any? { |issue| !issue.disabled? }
+        @output << "No issues found. File is not generated.\n"
+        return
       end
+
+      if issues.any? { |issue| issue.syntax? }
+        @output << "Unable to generate TODO file. Please fix syntax issues.\n"
+        return
+      end
+
+      file = generate_todo_config issues
+      @output << "Created #{file.path}\n"
+      file
     end
 
     private def generate_todo_config(issues)
-      @io << header
+      file = File.new(Config::PATH, mode: "w")
+      file << header
       rule_issues_map(issues).each do |rule, rule_issues|
-        @io << "\n# Problems found: #{rule_issues.size}"
-        @io << "\n# Run `ameba --only #{rule.name}` for details"
-        @io << rule_todo(rule, rule_issues).gsub("---", "")
+        file << "\n# Problems found: #{rule_issues.size}"
+        file << "\n# Run `ameba --only #{rule.name}` for details"
+        file << rule_todo(rule, rule_issues).gsub("---", "")
       end
+      file
     ensure
-      @io.flush
+      file.close if file
     end
 
     private def rule_issues_map(issues)
