@@ -7,6 +7,7 @@ module Ameba::Formatter
     include Util
 
     @started_at : Time?
+    @mutex = Thread::Mutex.new
 
     # Reports a message when inspection is started.
     def started(sources)
@@ -18,12 +19,12 @@ module Ameba::Formatter
     # Reports a result of the inspection of a corresponding source.
     def source_finished(source : Source)
       sym = source.valid? ? ".".colorize(:green) : "F".colorize(:red)
-      output << sym
-      output.flush
+      @mutex.synchronize { output << sym }
     end
 
     # Reports a message when inspection is finished.
     def finished(sources)
+      output.flush
       output << "\n\n"
 
       show_affected_code = !config[:without_affected_code]?
@@ -38,7 +39,7 @@ module Ameba::Formatter
           output << "[#{issue.rule.severity.symbol}] #{issue.rule.name}: #{issue.message}\n".colorize(:red)
 
           if show_affected_code && (code = affected_code(source, location))
-            output << code
+            output << code.colorize(:default)
           end
 
           output << "\n"
@@ -51,15 +52,15 @@ module Ameba::Formatter
 
     private def started_message(size)
       if size == 1
-        "Inspecting 1 file.\n\n"
+        "Inspecting 1 file.\n\n".colorize(:default)
       else
-        "Inspecting #{size} files.\n\n"
+        "Inspecting #{size} files.\n\n".colorize(:default)
       end
     end
 
     private def finished_in_message(started, finished)
       if started && finished
-        "Finished in #{to_human(finished - started)} \n\n"
+        "Finished in #{to_human(finished - started)} \n\n".colorize(:default)
       end
     end
 
