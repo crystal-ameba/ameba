@@ -68,15 +68,23 @@ module Ameba
     #
     def run
       @formatter.started @sources
-      channels = @sources.map { Channel(Nil).new }
+      channels = @sources.map { Channel(Exception?).new }
       @sources.each_with_index do |source, idx|
+        channel = channels[idx]
         spawn do
           run_source(source)
-          channels[idx].send(nil)
+        rescue e
+          channel.send(e)
+        else
+          channel.send(nil)
         end
       end
 
-      channels.each { |c| c.receive }
+      channels.each do |c|
+        e = c.receive
+        raise e unless e.nil?
+      end
+
       self
     ensure
       @formatter.finished @sources

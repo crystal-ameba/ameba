@@ -53,6 +53,19 @@ module Ameba
         Runner.new(all_rules, [source], formatter, default_severity).run.success?.should be_true
       end
 
+      context "exception in rule" do
+        it "raises an exception raised in fiber while running a rule" do
+          rule = RaiseRule.new
+          rule.should_raise = true
+          rules = [rule] of Rule::Base
+          source = Source.new "", "source.cr"
+
+          expect_raises(Exception, "something went wrong") do
+            Runner.new(rules, [source], formatter, default_severity).run
+          end
+        end
+      end
+
       context "invalid syntax" do
         it "reports a syntax error" do
           rules = [Rule::Lint::Syntax.new] of Rule::Base

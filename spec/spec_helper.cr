@@ -81,6 +81,15 @@ module Ameba
     end
   end
 
+  # A rule that always raises an error
+  struct RaiseRule < Rule::Base
+    property should_raise = false
+
+    def test(source)
+      should_raise && raise "something went wrong"
+    end
+  end
+
   class DummyFormatter < Formatter::BaseFormatter
     property started_sources : Array(Source)?
     property finished_sources : Array(Source)?
