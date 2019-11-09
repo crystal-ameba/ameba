@@ -15,6 +15,22 @@
   </p>
 </p>
 
+- [About](#about)
+- [Usage](#usage)
+  * [Run in parallel](#run-in-parallel)
+- [Installation](#installation)
+  * [As a project dependency:](#as-a-project-dependency)
+  * [OS X](#os-x)
+  * [Docker](#docker)
+  * [From sources](#from-sources)
+- [Configuration](#configuration)
+  * [Only/Except](#onlyexcept)
+  * [Explanation](#explanation)
+  * [Inline disabling](#inline-disabling)
+- [Editor integration](#editor-integration)
+- [Credits & inspirations](#credits--inspirations)
+- [Contributors](#contributors)
+
 ## About
 
 Ameba is a static code analysis tool for the Crystal language.
@@ -47,6 +63,26 @@ Finished in 542.64 milliseconds
 
 129 inspected, 2 failures.
 
+```
+
+### Run in parallel
+
+Starting from 0.31.0 Crystal [supports parallelism](https://crystal-lang.org/2019/09/06/parallelism-in-crystal.html).
+It allows to run linting in parallel too.
+In order to take advantage of this feature you need to build ameba with preview_mt support:
+
+```
+$ crystal build src/cli.cr -Dpreview_mt -o bin/ameba
+$ make install
+```
+
+Some quick benchmark results measured while running Ameba on Crystal repo:
+
+```
+$ CRYSTAL_WORKERS=1 ameba #=> 29.11 seconds
+$ CRYSTAL_WORKERS=2 ameba #=> 19.49 seconds
+$ CRYSTAL_WORKERS=4 ameba #=> 13.48 seconds
+$ CRYSTAL_WORKERS=8 ameba #=> 10.14 seconds
 ```
 
 ## Installation
