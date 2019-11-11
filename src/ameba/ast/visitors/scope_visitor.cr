@@ -136,6 +136,11 @@ module Ameba::AST
     end
 
     # :nodoc:
+    def visit(node : Crystal::InstanceVar)
+      @current_scope.add_ivariable(node)
+    end
+
+    # :nodoc:
     def visit(node : Crystal::Var)
       variable = @current_scope.find_variable node.name
 

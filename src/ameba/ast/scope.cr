@@ -10,6 +10,9 @@ module Ameba::AST
     # Link to the arguments in current scope
     getter arguments = [] of Argument
 
+    # Link to the instance variables used in current scope
+    getter ivariables = [] of InstanceVariable
+
     # Link to the outer scope
     getter outer_scope : Scope?
 
@@ -44,9 +47,25 @@ module Ameba::AST
       variables << Variable.new(node, self)
     end
 
+    # Creates a new argument in the current scope.
+    #
+    # ```
+    # scope = Scope.new(class_node, nil)
+    # scope.add_argument(arg_node)
+    # ```
     def add_argument(node)
       add_variable Crystal::Var.new(node.name).at(node)
       arguments << Argument.new(node, variables.last)
+    end
+
+    # Adds a new instance variable to the current scope.
+    #
+    # ```
+    # scope = Scope.new(class_node, nil)
+    # scope.add_ivariable(ivar_node)
+    # ```
+    def add_ivariable(node)
+      ivariables << InstanceVariable.new(node)
     end
 
     # Returns variable by its name or nil if it does not exist.
@@ -73,6 +92,12 @@ module Ameba::AST
     # false if not.
     def block?
       node.is_a?(Crystal::Block) || node.is_a?(Crystal::ProcLiteral)
+    end
+
+    # Returns true instance variable assinged in this scope.
+    def assigns_ivar?(name)
+      arguments.find { |arg| arg.name == name } &&
+        ivariables.find { |var| var.name == "@#{name}" }
     end
 
     # Returns true if and only if current scope represents some

@@ -151,6 +151,16 @@ module Ameba::Rule::Lint
       subject.catch(source).should be_valid
     end
 
+    it "does not report if argument shadows an ivar assignment" do
+      s = Source.new %(
+        def bar(@foo)
+          @foo.try do |foo|
+          end
+        end
+      )
+      subject.catch(s).should be_valid
+    end
+
     it "reports rule, location and message" do
       source = Source.new %(
         foo = 1
