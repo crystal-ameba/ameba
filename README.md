@@ -27,7 +27,7 @@
   * [Only/Except](#onlyexcept)
   * [Explanation](#explanation)
   * [Inline disabling](#inline-disabling)
-- [Editor integration](#editor-integration)
+- [Editors & integrations](#editors--integrations)
 - [Credits & inspirations](#credits--inspirations)
 - [Contributors](#contributors)
 
@@ -188,12 +188,14 @@ time = Time.epoch(1483859302) # ameba:disable Style/LargeNumbers, Lint/UselessAs
 time = Time.epoch(1483859302) # ameba:disable Style, Lint
 ```
 
-## Editor integration
+## Editors & integrations
 
  * Vim: [vim-crystal](https://github.com/rhysd/vim-crystal), [Ale](https://github.com/w0rp/ale)
  * Emacs: [ameba.el](https://github.com/crystal-ameba/ameba.el)
  * Sublime Text: [Sublime Linter Ameba](https://github.com/epergo/SublimeLinter-contrib-ameba)
  * VSCode: [vscode-crystal-ameba](https://github.com/crystal-ameba/vscode-crystal-ameba)
+ * Codacy: [codacy-ameba](https://github.com/codacy/codacy-ameba)
+ * GitHub Actions: [github-action](https://github.com/crystal-ameba/github-action)
 
 ## Credits & inspirations
 
