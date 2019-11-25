@@ -71,14 +71,14 @@ Starting from 0.31.0 Crystal [supports parallelism](https://crystal-lang.org/201
 It allows to run linting in parallel too.
 In order to take advantage of this feature you need to build ameba with preview_mt support:
 
-```
+```sh
 $ crystal build src/cli.cr -Dpreview_mt -o bin/ameba
 $ make install
 ```
 
 Some quick benchmark results measured while running Ameba on Crystal repo:
 
-```
+```sh
 $ CRYSTAL_WORKERS=1 ameba #=> 29.11 seconds
 $ CRYSTAL_WORKERS=2 ameba #=> 19.49 seconds
 $ CRYSTAL_WORKERS=4 ameba #=> 13.48 seconds
@@ -155,7 +155,7 @@ Generate new file by running `ameba --gen-config`.
 One or more rules, or a one or more group of rules can be included or excluded
 via command line arguments:
 
-```
+```sh
 $ ameba --only   Lint/Syntax # runs only Lint/Syntax rule
 $ ameba --only   Style,Lint  # runs only rules from Style and Lint groups
 $ ameba --except Lint/Syntax # runs all rules except Lint/Syntax
@@ -170,7 +170,7 @@ and the reasoning by it being reported.
 To be convenient, you can just copy-paste the `PATH:line:column` string from the
 report and paste behind the `ameba` command to check it out.
 
-```
+```sh
 $ ameba crystal/command/format.cr:26:83           # show explanation for the issue
 $ ameba --explain crystal/command/format.cr:26:83 # same thing
 ```
