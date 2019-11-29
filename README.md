@@ -95,7 +95,7 @@ Add this to your application's `shard.yml`:
 development_dependencies:
   ameba:
     github: crystal-ameba/ameba
-    version: ~> 0.10.1
+    version: ~> 0.11.0
 ```
 
 Build `bin/ameba` binary within your project directory while running `shards install`.
