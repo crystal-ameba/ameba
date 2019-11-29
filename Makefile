@@ -15,7 +15,7 @@ bin: build
 	mkdir -p $(SHARD_BIN)
 	cp ./bin/ameba $(SHARD_BIN)
 run_file:
-	cp -n ./bin/ameba.cr $(SHARD_BIN)
+	cp -n ./bin/ameba.cr $(SHARD_BIN) || true
 test: build
 	$(CRYSTAL_BIN) spec
 	./bin/ameba --all
