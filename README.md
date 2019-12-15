@@ -199,8 +199,8 @@ time = Time.epoch(1483859302) # ameba:disable Style, Lint
 
 ## Credits & inspirations
 
-- [Crystal Language](crystal-lang.org)
-- [Rubocop](http://rubocop.readthedocs.io/en/latest/)
+- [Crystal Language](https://crystal-lang.org)
+- [Rubocop](https://rubocop.readthedocs.io/en/latest/)
 - [Credo](http://credo-ci.org/)
 - [Dogma](https://github.com/lpil/dogma)
 
