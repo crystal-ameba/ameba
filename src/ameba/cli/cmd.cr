@@ -8,7 +8,7 @@ module Ameba::Cli
   def run(args = ARGV)
     opts = parse_args args
     config = Config.load opts.config, opts.colors?
-    config.globs = opts.globs
+    config.globs = opts.globs.not_nil! if opts.globs
     config.severity = opts.fail_level.not_nil! if opts.fail_level
 
     configure_formatter(config, opts)

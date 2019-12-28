@@ -25,42 +25,15 @@ class Ameba::Config
   }
 
   PATH = ".ameba.yml"
+
+  DEFAULT_GLOBS = %w(
+    **/*.cr
+    !lib
+  )
+
   setter formatter : Formatter::BaseFormatter?
-  setter globs : Array(String)?
   getter rules : Array(Rule::Base)
   property severity = Severity::Convention
-
-  @rule_groups : Hash(String, Array(Rule::Base))
-
-  # Creates a new instance of `Ameba::Config` based on YAML parameters.
-  #
-  # `Config.load` uses this constructor to instantiate new config by YAML file.
-  protected def initialize(@config : YAML::Any)
-    @rules = Rule.rules.map &.new(config).as(Rule::Base)
-    @rule_groups = @rules.group_by &.group
-
-    if @config.as_h? && (name = @config["Formatter"]?.try &.["Name"]?)
-      self.formatter = name.to_s
-    end
-  end
-
-  # Loads YAML configuration file by `path`.
-  #
-  # ```
-  # config = Ameba::Config.load
-  # ```
-  #
-  def self.load(path = PATH, colors = true)
-    Colorize.enabled = colors
-    content = File.exists?(path) ? File.read path : ""
-    Config.new YAML.parse(content)
-  rescue e
-    raise "Config file is invalid: #{e.message}"
-  end
-
-  def self.formatter_names
-    AVAILABLE_FORMATTERS.keys.join("|")
-  end
 
   # Returns a list of paths (with wildcards) to files.
   # Represents a list of sources to be inspected.
@@ -71,9 +44,37 @@ class Ameba::Config
   # config.globs = ["**/*.cr"]
   # config.globs
   # ```
+  property globs : Array(String)
+
+  @rule_groups : Hash(String, Array(Rule::Base))
+
+  # Creates a new instance of `Ameba::Config` based on YAML parameters.
   #
-  def globs
-    @globs ||= default_files
+  # `Config.load` uses this constructor to instantiate new config by YAML file.
+  protected def initialize(config : YAML::Any)
+    @rules = Rule.rules.map &.new(config).as(Rule::Base)
+    @rule_groups = @rules.group_by &.group
+    @globs = load_globs(config)
+
+    self.formatter = load_formatter_name(config)
+  end
+
+  # Loads YAML configuration file by `path`.
+  #
+  # ```
+  # config = Ameba::Config.load
+  # ```
+  #
+  def self.load(path = PATH, colors = true)
+    Colorize.enabled = colors
+    content = File.exists?(path) ? File.read path : "{}"
+    Config.new YAML.parse(content)
+  rescue e
+    raise "Config file is invalid: #{e.message}"
+  end
+
+  def self.formatter_names
+    AVAILABLE_FORMATTERS.keys.join("|")
   end
 
   # Returns a list of sources.
@@ -100,7 +101,7 @@ class Ameba::Config
   # ```
   #
   def formatter
-    @formatter ||= default_formatter
+    @formatter ||= Formatter::DotFormatter.new
   end
 
   # Sets formatter by name.
@@ -158,12 +159,19 @@ class Ameba::Config
     end
   end
 
-  private def default_files
-    Dir["**/*.cr"].reject(&.starts_with? "lib/")
+  private def load_formatter_name(config)
+    name = config["Formatter"]?.try &.["Name"]?
+    name ? name.to_s : nil
   end
 
-  private def default_formatter
-    Formatter::DotFormatter.new
+  private def load_globs(config)
+    case globs = config["Globs"]?
+    when .nil?  then DEFAULT_GLOBS
+    when .as_s? then [globs.as_s]
+    when .as_a? then globs.as_a.map(&.as_s)
+    else
+      raise "incorrect 'Globs' section in a config file"
+    end
   end
 
   # :nodoc:
