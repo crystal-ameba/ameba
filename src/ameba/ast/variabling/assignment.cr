@@ -88,9 +88,9 @@ module Ameba::AST
     #
     # ```
     # collection.each do |__arg0|
-    #  a = __arg0[0]
-    #  b = __arg0[1]
-    #  puts(b)
+    #   a = __arg0[0]
+    #   b = __arg0[1]
+    #   puts(b)
     # end
     # ```
     #
