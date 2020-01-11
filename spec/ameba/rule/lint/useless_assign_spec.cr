@@ -225,6 +225,34 @@ module Ameba::Rule::Lint
       subject.catch(s).should be_valid
     end
 
+    context "when transformed" do
+      it "does not report if the first arg is transformed and not used" do
+        s = Source.new %(
+          collection.each do |(a, b)|
+            puts b
+          end
+        )
+        subject.catch(s).should be_valid
+      end
+
+      it "does not report if the second arg is transformed and not used" do
+        s = Source.new %(
+          collection.each do |(a, b)|
+            puts a
+          end
+        )
+        subject.catch(s).should be_valid
+      end
+
+      it "does not report if all transformed args are not used in a block" do
+        s = Source.new %(
+          collection.each do |(foo, bar), (baz, _qux), index, object|
+          end
+        )
+        subject.catch(s).should be_valid
+      end
+    end
+
     it "does not report if global var" do
       s = Source.new %(
         def method

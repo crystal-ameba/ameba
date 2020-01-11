@@ -42,7 +42,7 @@ module Ameba::Rule::Lint
         next if var.captured_by_block? || var.used_in_macro?
 
         var.assignments.each do |assign|
-          next if assign.referenced?
+          next if assign.referenced? || assign.transformed?
           issue_for assign.target_node, MSG % var.name
         end
       end
