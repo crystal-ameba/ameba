@@ -84,4 +84,20 @@ module Ameba::AST
       scope.block?.should be_false
     end
   end
+
+  describe "#macro?" do
+    it "returns true if Crystal::Macro" do
+      nodes = as_nodes %(
+        macro included
+        end
+      )
+      scope = Scope.new nodes.macro_nodes.first
+      scope.macro?.should be_true
+    end
+
+    it "returns false otherwise" do
+      scope = Scope.new as_node "a = 1"
+      scope.macro?.should be_false
+    end
+  end
 end

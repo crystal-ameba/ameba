@@ -94,6 +94,11 @@ module Ameba::AST
       node.is_a?(Crystal::Block) || node.is_a?(Crystal::ProcLiteral)
     end
 
+    # Returns true if currency scope represents a macro.
+    def macro?
+      node.is_a?(Crystal::Macro)
+    end
+
     # Returns true instance variable assinged in this scope.
     def assigns_ivar?(name)
       arguments.find { |arg| arg.name == name } &&

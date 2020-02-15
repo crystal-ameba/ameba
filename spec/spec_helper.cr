@@ -139,6 +139,7 @@ module Ameba
       Crystal::OpAssign,
       Crystal::MultiAssign,
       Crystal::Block,
+      Crystal::Macro,
       Crystal::Def,
       Crystal::If,
       Crystal::While,

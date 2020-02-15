@@ -174,5 +174,24 @@ module Ameba::Rule::Lint
       issue.end_location.should be_nil
       issue.message.should eq "Shadowing outer local variable `foo`"
     end
+
+    context "macro" do
+      it "does not report shadowed vars A" do
+        source = Source.new %(
+          macro included
+            def foo
+              {% for ivar in instance_vars %}
+                {% ann = ivar.annotation(Name) %}
+              {% end %}
+            end
+
+            def bar
+              {% instance_vars.reject { |ivar| ivar } %}
+            end
+          end
+        )
+        subject.catch(source).should be_valid
+      end
+    end
   end
 end
