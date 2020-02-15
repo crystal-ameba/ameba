@@ -1,7 +1,7 @@
 module Ameba
   # A module that utilizes inline comments parsing and processing logic.
   module InlineComments
-    COMMENT_DIRECTIVE_REGEX = Regex.new "# ameba : (\\w+) ([\\w\/, ]+)".gsub(" ", "\\s*")
+    COMMENT_DIRECTIVE_REGEX = Regex.new "# ameba : (\\w+) ([\\w/, ]+)".gsub(" ", "\\s*")
 
     # Available actions in the inline comments
     enum Action
