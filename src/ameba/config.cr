@@ -25,42 +25,15 @@ class Ameba::Config
   }
 
   PATH = ".ameba.yml"
+
+  DEFAULT_GLOBS = %w(
+    **/*.cr
+    !lib
+  )
+
   setter formatter : Formatter::BaseFormatter?
-  setter globs : Array(String)?
   getter rules : Array(Rule::Base)
   property severity = Severity::Convention
-
-  @rule_groups : Hash(String, Array(Rule::Base))
-
-  # Creates a new instance of `Ameba::Config` based on YAML parameters.
-  #
-  # `Config.load` uses this constructor to instantiate new config by YAML file.
-  protected def initialize(@config : YAML::Any)
-    @rules = Rule.rules.map &.new(config).as(Rule::Base)
-    @rule_groups = @rules.group_by &.group
-
-    if @config.as_h? && (name = @config["Formatter"]?.try &.["Name"]?)
-      self.formatter = name.to_s
-    end
-  end
-
-  # Loads YAML configuration file by `path`.
-  #
-  # ```
-  # config = Ameba::Config.load
-  # ```
-  #
-  def self.load(path = PATH, colors = true)
-    Colorize.enabled = colors
-    content = File.exists?(path) ? File.read path : ""
-    Config.new YAML.parse(content)
-  rescue e
-    raise "Config file is invalid: #{e.message}"
-  end
-
-  def self.formatter_names
-    AVAILABLE_FORMATTERS.keys.join("|")
-  end
 
   # Returns a list of paths (with wildcards) to files.
   # Represents a list of sources to be inspected.
@@ -71,22 +44,61 @@ class Ameba::Config
   # config.globs = ["**/*.cr"]
   # config.globs
   # ```
+  property globs : Array(String)
+
+  # Represents a list of paths to exclude from globs.
+  # Can have wildcards.
   #
-  def globs
-    @globs ||= default_files
+  # ```
+  # config = Ameba::Config.load
+  # config.excluded = ["spec", "src/server/*.cr"]
+  # ```
+  property excluded : Array(String)
+
+  @rule_groups : Hash(String, Array(Rule::Base))
+
+  # Creates a new instance of `Ameba::Config` based on YAML parameters.
+  #
+  # `Config.load` uses this constructor to instantiate new config by YAML file.
+  protected def initialize(config : YAML::Any)
+    @rules = Rule.rules.map &.new(config).as(Rule::Base)
+    @rule_groups = @rules.group_by &.group
+    @excluded = load_array_section(config, "Excluded")
+    @globs = load_array_section(config, "Globs", DEFAULT_GLOBS)
+
+    self.formatter = load_formatter_name(config)
   end
 
-  # Returns a list of sources.
+  # Loads YAML configuration file by `path`.
+  #
+  # ```
+  # config = Ameba::Config.load
+  # ```
+  #
+  def self.load(path = PATH, colors = true)
+    Colorize.enabled = colors
+    content = File.exists?(path) ? File.read path : "{}"
+    Config.new YAML.parse(content)
+  rescue e
+    raise "Config file is invalid: #{e.message}"
+  end
+
+  def self.formatter_names
+    AVAILABLE_FORMATTERS.keys.join("|")
+  end
+
+  # Returns a list of sources matching globs and excluded sections.
   #
   # ```
   # config = Ameba::Config.load
   # config.sources # => list of default sources
   # config.globs = ["**/*.cr"]
+  # config.excluded = ["spec"]
   # config.sources # => list of sources pointing to files found by the wildcards
   # ```
   #
   def sources
-    find_files_by_globs(globs)
+    (find_files_by_globs(globs) - find_files_by_globs(excluded))
       .map { |path| Source.new File.read(path), path }
   end
 
@@ -100,7 +112,7 @@ class Ameba::Config
   # ```
   #
   def formatter
-    @formatter ||= default_formatter
+    @formatter ||= Formatter::DotFormatter.new
   end
 
   # Sets formatter by name.
@@ -158,12 +170,19 @@ class Ameba::Config
     end
   end
 
-  private def default_files
-    Dir["**/*.cr"].reject(&.starts_with? "lib/")
+  private def load_formatter_name(config)
+    name = config["Formatter"]?.try &.["Name"]?
+    name ? name.to_s : nil
   end
 
-  private def default_formatter
-    Formatter::DotFormatter.new
+  private def load_array_section(config, section_name, default = [] of String)
+    case value = config[section_name]?
+    when .nil?  then default
+    when .as_s? then [value.to_s]
+    when .as_a? then value.as_a.map(&.as_s)
+    else
+      raise "incorrect '#{section_name}' section in a config files"
+    end
   end
 
   # :nodoc:
