@@ -104,6 +104,26 @@ module Ameba::Rule::Style
       end
     end
 
+    context "binary op" do
+      it "doesn't report if there is no return in the right binary op node" do
+        s = Source.new %(
+          def can_create?(a)
+            valid? && a > 0
+          end
+        )
+        subject.catch(s).should be_valid
+      end
+
+      it "reports if there is return in the right binary op node" do
+        s = Source.new %(
+          def can_create?(a)
+            valid? && return a > 0
+          end
+        )
+        subject.catch(s).should_not be_valid
+      end
+    end
+
     context "case" do
       it "reports if there are returns in whens" do
         s = Source.new %(

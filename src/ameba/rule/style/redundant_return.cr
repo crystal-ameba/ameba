@@ -119,6 +119,7 @@ module Ameba::Rule::Style
       when Crystal::Expressions         then check_expressions node
       when Crystal::If, Crystal::Unless then check_condition node
       when Crystal::Case                then check_case node
+      when Crystal::BinaryOp            then check_binary_op node
       when Crystal::ExceptionHandler    then check_exception_handler node
       end
     end
@@ -144,6 +145,10 @@ module Ameba::Rule::Style
     private def check_case(node)
       node.whens.each { |n| check_node n.body }
       check_node(node.else)
+    end
+
+    private def check_binary_op(node)
+      check_node(node.right)
     end
 
     private def check_exception_handler(node)
