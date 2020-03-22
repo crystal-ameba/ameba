@@ -42,6 +42,34 @@ module Ameba
           CONFIG
         expect_raises(Exception, "incorrect 'Globs' section in a config file") { Config.new(yml) }
       end
+
+      it "initializes excluded as string" do
+        yml = YAML.parse <<-CONFIG
+          ---
+          Excluded: spec
+          CONFIG
+        config = Config.new(yml)
+        config.excluded.should eq %w(spec)
+      end
+
+      it "initializes excluded as array" do
+        yml = YAML.parse <<-CONFIG
+          ---
+          Excluded:
+           - spec
+           - lib/*.cr
+          CONFIG
+        config = Config.new(yml)
+        config.excluded.should eq %w(spec lib/*.cr)
+      end
+
+      it "raises if Excluded has a wrong type" do
+        yml = YAML.parse <<-CONFIG
+          ---
+          Excluded: true
+          CONFIG
+        expect_raises(Exception, "incorrect 'Excluded' section in a config file") { Config.new(yml) }
+      end
     end
 
     describe ".load" do
@@ -73,12 +101,36 @@ module Ameba
       end
     end
 
+    describe "#excluded, #excluded=" do
+      config = Config.load config_sample
+
+      it "defaults to empty array" do
+        config.excluded.should be_empty
+      end
+
+      it "allows to set excluded" do
+        config.excluded = ["spec"]
+        config.excluded.should eq ["spec"]
+      end
+    end
+
     describe "#sources" do
       config = Config.load config_sample
 
       it "returns list of sources" do
         config.sources.size.should be > 0
         config.sources.first.should be_a Source
+        config.sources.any? { |s| s.fullpath == __FILE__ }.should be_true
+      end
+
+      it "returns a list of sources mathing globs" do
+        config.globs = %w(**/config_spec.cr)
+        config.sources.size.should eq(1)
+      end
+
+      it "returns a lisf of sources excluding 'Excluded'" do
+        config.excluded = %w(**/config_spec.cr)
+        config.sources.any? { |s| s.fullpath == __FILE__ }.should be_false
       end
     end
 

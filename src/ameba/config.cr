@@ -46,6 +46,15 @@ class Ameba::Config
   # ```
   property globs : Array(String)
 
+  # Represents a list of paths to exclude from globs.
+  # Can have wildcards.
+  #
+  # ```
+  # config = Ameba::Config.load
+  # config.excluded = ["spec", "src/server/*.cr"]
+  # ```
+  property excluded : Array(String)
+
   @rule_groups : Hash(String, Array(Rule::Base))
 
   # Creates a new instance of `Ameba::Config` based on YAML parameters.
@@ -54,7 +63,8 @@ class Ameba::Config
   protected def initialize(config : YAML::Any)
     @rules = Rule.rules.map &.new(config).as(Rule::Base)
     @rule_groups = @rules.group_by &.group
-    @globs = load_globs(config)
+    @excluded = load_array_section(config, "Excluded")
+    @globs = load_array_section(config, "Globs", DEFAULT_GLOBS)
 
     self.formatter = load_formatter_name(config)
   end
@@ -77,17 +87,18 @@ class Ameba::Config
     AVAILABLE_FORMATTERS.keys.join("|")
   end
 
-  # Returns a list of sources.
+  # Returns a list of sources matching globs and excluded sections.
   #
   # ```
   # config = Ameba::Config.load
   # config.sources # => list of default sources
   # config.globs = ["**/*.cr"]
+  # config.excluded = ["spec"]
   # config.sources # => list of sources pointing to files found by the wildcards
   # ```
   #
   def sources
-    find_files_by_globs(globs)
+    (find_files_by_globs(globs) - find_files_by_globs(excluded))
       .map { |path| Source.new File.read(path), path }
   end
 
@@ -164,13 +175,13 @@ class Ameba::Config
     name ? name.to_s : nil
   end
 
-  private def load_globs(config)
-    case globs = config["Globs"]?
-    when .nil?  then DEFAULT_GLOBS
-    when .as_s? then [globs.as_s]
-    when .as_a? then globs.as_a.map(&.as_s)
+  private def load_array_section(config, section_name, default = [] of String)
+    case value = config[section_name]?
+    when .nil? then default
+    when .as_s? then [value.to_s]
+    when .as_a? then value.as_a.map(&.as_s)
     else
-      raise "incorrect 'Globs' section in a config file"
+      raise "incorrect '#{section_name}' section in a config files"
     end
   end
 
