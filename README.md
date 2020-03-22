@@ -24,8 +24,9 @@
   * [Docker](#docker)
   * [From sources](#from-sources)
 - [Configuration](#configuration)
-  * [Only/Except](#onlyexcept)
-  * [Explanation](#explanation)
+  * [Sources](#sources)
+  * [Rules](#rules)
+  * [Explain issues](#explain-issues)
   * [Inline disabling](#inline-disabling)
 - [Editors & integrations](#editors--integrations)
 - [Credits & inspirations](#credits--inspirations)
@@ -150,7 +151,37 @@ It allows to configure rule properties, disable specific rules and exclude sourc
 
 Generate new file by running `ameba --gen-config`.
 
-### Only/Except
+### Sources
+
+**List of sources to run Ameba on can be configured globally via:**
+
+- `Globs` section - an array of wildcards (or paths) to include to the
+  inspection. Defaults to `%w(**/*.cr !lib)`, meaning it includes all project
+  files with `*.cr` extension except those which exist in `lib` folder.
+- `Excluded` section - an array of wildcards (or paths) to exclude from the
+  source list defined by `Globs`. Defaults to an empty array.
+
+In this example we define default globs and exclude `src/compiler` folder:
+
+``` yaml
+Globs:
+  - **/*.cr
+  - !lib
+  
+Excluded:
+  - src/compiler
+```
+
+**Specific sources can be excluded at rule level**:
+
+``` yaml
+Style/RedundantBegin:
+  Excluded:
+  - src/server/processor.cr
+  - src/server/api.cr
+```
+
+### Rules
 
 One or more rules, or a one or more group of rules can be included or excluded
 via command line arguments:
@@ -162,7 +193,14 @@ $ ameba --except Lint/Syntax # runs all rules except Lint/Syntax
 $ ameba --except Style,Lint  # runs all rules except rules in Style and Lint groups
 ```
 
-### Explanation
+Or through the configuration file:
+
+``` yaml
+Style/RedundantBegin:
+  Enabled: false
+```
+
+### Explain issues
 
 Ameba allows you to dig deeper into an issue, by showing you details about the issue
 and the reasoning by it being reported.
