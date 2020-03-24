@@ -6,6 +6,7 @@ module Ameba::AST
     Alias,
     Assign,
     Call,
+    Block,
     Case,
     ClassDef,
     ClassVar,

@@ -102,59 +102,19 @@ module Ameba::Rule::Style
 
     MSG = "Redundant `return` detected"
 
-    @source : Source?
-
     def test(source)
       AST::NodeVisitor.new self, source
     end
 
     def test(source, node : Crystal::Def)
-      @source = source
-      check_node(node.body)
+      AST::RedundantControlExpressionVisitor.new(self, source, node.body)
     end
 
-    private def check_node(node)
-      case node
-      when Crystal::Return              then check_return node
-      when Crystal::Expressions         then check_expressions node
-      when Crystal::If, Crystal::Unless then check_condition node
-      when Crystal::Case                then check_case node
-      when Crystal::BinaryOp            then check_binary_op node
-      when Crystal::ExceptionHandler    then check_exception_handler node
-      end
-    end
-
-    private def check_return(node)
+    def test(source, node : Crystal::Return, visitor : AST::RedundantControlExpressionVisitor)
       return if allow_multi_return && node.exp.is_a?(Crystal::TupleLiteral)
       return if allow_empty_return && (node.exp.nil? || node.exp.not_nil!.nop?)
 
-      @source.try &.add_issue self, node, MSG
-    end
-
-    private def check_expressions(node)
-      check_node node.expressions.last?
-    end
-
-    private def check_condition(node)
-      return if node.else.nil? || node.else.nop?
-
-      check_node(node.then)
-      check_node(node.else)
-    end
-
-    private def check_case(node)
-      node.whens.each { |n| check_node n.body }
-      check_node(node.else)
-    end
-
-    private def check_binary_op(node)
-      check_node(node.right)
-    end
-
-    private def check_exception_handler(node)
-      check_node node.body
-      check_node node.else
-      node.rescues.try &.each { |n| check_node n.body }
+      source.try &.add_issue self, node, MSG
     end
   end
 end
