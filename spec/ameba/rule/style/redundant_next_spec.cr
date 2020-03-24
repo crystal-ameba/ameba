@@ -11,16 +11,6 @@ module Ameba::Rule::Style
       subject.catch(s).should be_valid
     end
 
-    it "reports if there is redundant next in the block" do
-      s = Source.new %(
-        block do |v|
-          p v + 1
-          next
-        end
-      )
-      subject.catch(s).should_not be_valid
-    end
-
     it "reports if there is redundant next with argument in the block" do
       s = Source.new %(
         block do |v|
@@ -99,7 +89,7 @@ module Ameba::Rule::Style
         s = Source.new %(
           block do |a|
             a = 1
-            next
+            next a
           end
         )
         subject.catch(s).should_not be_valid
@@ -121,7 +111,7 @@ module Ameba::Rule::Style
       it "reports if there is redundant next in binary op" do
         s = Source.new %(
           block do |a|
-            a && next
+            a && next a
           end
         )
         subject.catch(s).should_not be_valid
@@ -136,7 +126,7 @@ module Ameba::Rule::Style
           block do |v|
             v + 1
           rescue e
-            next if v > 0
+            next v if v > 0
           end
         )
         subject.catch(s).should be_valid
@@ -150,7 +140,7 @@ module Ameba::Rule::Style
             next a + 2
           rescue Exception
             a + 2
-            next
+            next a
           end
         )
         subject.catch(s).should_not be_valid
@@ -174,6 +164,56 @@ module Ameba::Rule::Style
       issue.location.to_s.should eq "source.cr:2:3"
       issue.end_location.to_s.should eq "source.cr:2:12"
       issue.message.should eq "Redundant `next` detected"
+    end
+
+    context "properties" do
+      context "#allow_multi_next=" do
+        it "allows multi next statements by default" do
+          s = Source.new %(
+            block do |a, b|
+              next a, b
+            end
+          )
+          subject.catch(s).should be_valid
+        end
+
+        it "allows to configure multi next statements" do
+          s = Source.new %(
+            block do |a, b|
+              next a, b
+            end
+          )
+          rule = Rule::Style::RedundantNext.new
+          rule.allow_multi_next = false
+          rule.catch(s).should_not be_valid
+          s.issues.size.should eq 1
+          s.issues.first.location.to_s.should eq ":2:3"
+        end
+      end
+
+      context "#allow_empty_next" do
+        it "allows empty next statements by default" do
+          s = Source.new %(
+            block do
+              next
+            end
+          )
+          subject.catch(s).should be_valid
+        end
+
+        it "allows to configure empty next statements" do
+          s = Source.new %(
+            block do
+              next
+            end
+          )
+          rule = Rule::Style::RedundantNext.new
+          rule.allow_empty_next = false
+          rule.catch(s).should_not be_valid
+          s.issues.size.should eq 1
+          s.issues.first.location.to_s.should eq ":2:3"
+        end
+      end
     end
   end
 end
