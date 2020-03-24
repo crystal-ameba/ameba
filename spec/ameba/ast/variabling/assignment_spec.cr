@@ -8,14 +8,14 @@ module Ameba::AST
 
     describe "#initialize" do
       it "creates a new assignment with node and var" do
-        assignment = Assignment.new(node, variable)
+        assignment = Assignment.new(node, variable, scope)
         assignment.node.should_not be_nil
       end
     end
 
     describe "#reference=" do
       it "creates a new reference" do
-        assignment = Assignment.new(node, variable)
+        assignment = Assignment.new(node, variable, scope)
         assignment.referenced = true
         assignment.referenced?.should be_true
       end
@@ -23,18 +23,18 @@ module Ameba::AST
 
     describe "delegation" do
       it "delegates locations" do
-        assignment = Assignment.new(node, variable)
+        assignment = Assignment.new(node, variable, scope)
         assignment.location.should eq node.location
         assignment.end_location.should eq node.end_location
       end
 
       it "delegates to_s" do
-        assignment = Assignment.new(node, variable)
+        assignment = Assignment.new(node, variable, scope)
         assignment.to_s.should eq node.to_s
       end
 
       it "delegates scope" do
-        assignment = Assignment.new(node, variable)
+        assignment = Assignment.new(node, variable, scope)
         assignment.scope.should eq variable.scope
       end
     end
@@ -52,7 +52,7 @@ module Ameba::AST
 
         scope = Scope.new nodes.def_nodes.first
         variable = Variable.new(nodes.var_nodes.first, scope)
-        assignment = Assignment.new(nodes.assign_nodes.first, variable)
+        assignment = Assignment.new(nodes.assign_nodes.first, variable, scope)
         assignment.branch.should_not be_nil
         assignment.branch.not_nil!.node.class.should eq Crystal::Expressions
       end
@@ -69,7 +69,7 @@ module Ameba::AST
         )
         scope = Scope.new nodes.def_nodes.first
         variable = Variable.new(nodes.var_nodes.first, scope)
-        assignment = Assignment.new(nodes.assign_nodes.first, variable)
+        assignment = Assignment.new(nodes.assign_nodes.first, variable, scope)
         assignment.branch.should_not be_nil
         assignment.branch.not_nil!.node.class.should eq Crystal::Assign
       end
@@ -83,7 +83,7 @@ module Ameba::AST
 
         scope = Scope.new nodes.def_nodes.first
         variable = Variable.new(nodes.var_nodes.first, scope)
-        assignment = Assignment.new(nodes.assign_nodes.first, variable)
+        assignment = Assignment.new(nodes.assign_nodes.first, variable, scope)
         assignment.branch.should be_nil
       end
     end
@@ -98,7 +98,7 @@ module Ameba::AST
 
         scope = Scope.new nodes.def_nodes.first
         variable = Variable.new(nodes.var_nodes.first, scope)
-        assignment = Assignment.new(nodes.assign_nodes.first, variable)
+        assignment = Assignment.new(nodes.assign_nodes.first, variable, scope)
         assignment.transformed?.should be_false
       end
 
@@ -110,7 +110,7 @@ module Ameba::AST
 
         scope = Scope.new nodes.block_nodes.first
         variable = Variable.new(nodes.var_nodes.first, scope)
-        assignment = Assignment.new(nodes.assign_nodes.first, variable)
+        assignment = Assignment.new(nodes.assign_nodes.first, variable, scope)
         assignment.transformed?.should be_true
       end
     end
