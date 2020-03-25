@@ -30,10 +30,6 @@ module Ameba::Rule::Lint
 
     MSG = "%s always returns 0"
 
-    def test(source)
-      AST::NodeVisitor.new self, source
-    end
-
     def test(source, node : Crystal::Call)
       return unless node.name == "rand" &&
                     node.args.size == 1 &&

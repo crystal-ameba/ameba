@@ -50,10 +50,6 @@ module Ameba::Rule::Style
 
     MSG = "Favour if over unless with else"
 
-    def test(source)
-      AST::NodeVisitor.new self, source
-    end
-
     def test(source, node : Crystal::Unless)
       return if node.else.nop?
       issue_for node, MSG

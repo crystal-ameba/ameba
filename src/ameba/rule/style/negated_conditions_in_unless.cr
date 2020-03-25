@@ -34,10 +34,6 @@ module Ameba::Rule::Style
 
     MSG = "Avoid negated conditions in unless blocks"
 
-    def test(source)
-      AST::NodeVisitor.new self, source
-    end
-
     def test(source, node : Crystal::Unless)
       return unless negated_condition? node.cond
       issue_for node, MSG

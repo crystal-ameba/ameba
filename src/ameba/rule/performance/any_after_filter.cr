@@ -34,10 +34,6 @@ module Ameba::Rule::Performance
       description "Identifies usage of `any?` calls that follow filters."
     end
 
-    def test(source)
-      AST::NodeVisitor.new self, source
-    end
-
     def test(source, node : Crystal::Call)
       return unless node.name == ANY_NAME && (obj = node.obj)
 

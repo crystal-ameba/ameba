@@ -51,10 +51,6 @@ module Ameba::Rule::Lint
       issue_for cond, MSG
     end
 
-    def test(source)
-      AST::NodeVisitor.new self, source
-    end
-
     def test(source, node : Crystal::When)
       ConditionInWhenVisitor.new self, source, node
     end

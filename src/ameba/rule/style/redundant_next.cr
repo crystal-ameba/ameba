@@ -105,10 +105,6 @@ module Ameba::Rule::Style
 
     MSG = "Redundant `next` detected"
 
-    def test(source)
-      AST::NodeVisitor.new self, source
-    end
-
     def test(source, node : Crystal::Block)
       AST::RedundantControlExpressionVisitor.new(self, source, node.body)
     end

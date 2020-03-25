@@ -30,10 +30,6 @@ module Ameba::Rule::Lint
 
     MSG = "Literal value found in conditional"
 
-    def test(source)
-      AST::NodeVisitor.new self, source
-    end
-
     def check_node(source, node)
       return unless literal?(node.cond)
       issue_for node, MSG

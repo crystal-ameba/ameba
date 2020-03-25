@@ -64,10 +64,6 @@ module Ameba::Rule::Style
 
     MSG = "Redundant `begin` block detected"
 
-    def test(source)
-      AST::NodeVisitor.new self, source
-    end
-
     def test(source, node : Crystal::Def)
       return unless redundant_begin?(source, node)
 

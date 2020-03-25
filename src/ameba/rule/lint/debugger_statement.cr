@@ -18,10 +18,6 @@ module Ameba::Rule::Lint
 
     MSG = "Possible forgotten debugger statement detected"
 
-    def test(source)
-      AST::NodeVisitor.new self, source
-    end
-
     def test(source, node : Crystal::Call)
       return unless node.name == "debugger" &&
                     node.args.empty? &&

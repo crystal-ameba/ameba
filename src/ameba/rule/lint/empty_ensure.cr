@@ -46,10 +46,6 @@ module Ameba::Rule::Lint
 
     MSG = "Empty `ensure` block detected"
 
-    def test(source)
-      AST::NodeVisitor.new self, source
-    end
-
     def test(source, node : Crystal::ExceptionHandler)
       node_ensure = node.ensure
       return if node_ensure.nil? || !node_ensure.nop?

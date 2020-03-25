@@ -37,10 +37,6 @@ module Ameba::Rule::Style
 
     MSG = "Favour method name '%s?' over '%s'"
 
-    def test(source)
-      AST::NodeVisitor.new self, source
-    end
-
     def test(source, node : Crystal::Def)
       if node.name =~ /^(is|has)_(\w+)\?/
         alternative = $2

@@ -32,10 +32,6 @@ module Ameba::Rule::Lint
       description "Disallows redundant `with_index` calls"
     end
 
-    def test(source)
-      AST::NodeVisitor.new self, source
-    end
-
     def test(source, node : Crystal::Call)
       args, block = node.args, node.block
 

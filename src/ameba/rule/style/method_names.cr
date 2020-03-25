@@ -45,10 +45,6 @@ module Ameba::Rule::Style
 
     MSG = "Method name should be underscore-cased: %s, not %s"
 
-    def test(source)
-      AST::NodeVisitor.new self, source
-    end
-
     def test(source, node : Crystal::Def)
       return if (expected = node.name.underscore) == node.name
 

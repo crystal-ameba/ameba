@@ -28,10 +28,6 @@ module Ameba::Rule::Lint
 
     MSG = "Comparison to a boolean is pointless"
 
-    def test(source)
-      AST::NodeVisitor.new self, source
-    end
-
     def test(source, node : Crystal::Call)
       comparison = %w(== != ===).includes?(node.name)
       to_boolean = node.args.first?.try &.is_a?(Crystal::BoolLiteral) ||

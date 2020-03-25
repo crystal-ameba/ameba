@@ -33,10 +33,6 @@ module Ameba::Rule::Lint
       description "Disallows redundant `with_object` calls"
     end
 
-    def test(source)
-      AST::NodeVisitor.new self, source
-    end
-
     def test(source, node : Crystal::Call)
       return if node.name != "each_with_object" ||
                 node.args.size != 1 ||

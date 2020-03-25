@@ -30,10 +30,6 @@ module Ameba::Rule::Style
 
     MSG = "Var name should be underscore-cased: %s, not %s"
 
-    def test(source)
-      AST::NodeVisitor.new self, source
-    end
-
     private def check_node(source, node)
       return if (expected = node.name.underscore) == node.name
 

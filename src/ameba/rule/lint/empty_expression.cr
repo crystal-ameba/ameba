@@ -38,10 +38,6 @@ module Ameba::Rule::Lint
     MSG      = "Avoid empty expression %s"
     MSG_EXRS = "Avoid empty expressions"
 
-    def test(source)
-      AST::NodeVisitor.new self, source
-    end
-
     def test(source, node : Crystal::NilLiteral)
       exp = node_source(node, source.lines).try &.join
 

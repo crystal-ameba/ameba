@@ -17,10 +17,6 @@ module Ameba::Rule::Metrics
 
     MSG = "Cyclomatic complexity too high [%d/%d]"
 
-    def test(source)
-      AST::NodeVisitor.new self, source
-    end
-
     def test(source, node : Crystal::Def)
       complexity = AST::CountingVisitor.new(node).count
 

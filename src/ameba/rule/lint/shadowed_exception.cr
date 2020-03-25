@@ -41,10 +41,6 @@ module Ameba::Rule::Lint
 
     MSG = "Exception handler has shadowed exceptions: %s"
 
-    def test(source)
-      AST::NodeVisitor.new self, source
-    end
-
     def test(source, node : Crystal::ExceptionHandler)
       return unless excs = node.rescues
 

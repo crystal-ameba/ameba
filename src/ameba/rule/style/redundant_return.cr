@@ -102,10 +102,6 @@ module Ameba::Rule::Style
 
     MSG = "Redundant `return` detected"
 
-    def test(source)
-      AST::NodeVisitor.new self, source
-    end
-
     def test(source, node : Crystal::Def)
       AST::RedundantControlExpressionVisitor.new(self, source, node.body)
     end

@@ -25,10 +25,6 @@ module Ameba::Rule::Lint
 
     MSG = "Literal value found in interpolation"
 
-    def test(source)
-      AST::NodeVisitor.new self, source
-    end
-
     def test(source, node : Crystal::StringInterpolation)
       found = node.expressions.any? { |e| !e.is_a?(Crystal::StringLiteral) && literal?(e) }
       return unless found

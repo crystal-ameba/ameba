@@ -59,10 +59,6 @@ module Ameba::Rule::Style
 
     MSG = "Type name should be camelcased: %s, but it was %s"
 
-    def test(source)
-      AST::NodeVisitor.new self, source
-    end
-
     private def check_node(source, node)
       name = node.name.to_s
       expected = name.camelcase
