@@ -2,6 +2,24 @@ require "../spec_helper"
 
 module Ameba
   describe InlineComments do
+    describe InlineComments::COMMENT_DIRECTIVE_REGEX do
+      subject = InlineComments::COMMENT_DIRECTIVE_REGEX
+
+      it "allows to parse action and rule name" do
+        result = subject.match("#ameba:enable Group/RuleName")
+        result.should_not be_nil
+        result.not_nil![1].should eq "enable"
+        result.not_nil![2].should eq "Group/RuleName"
+      end
+
+      it "ignores the repeatable spaces" do
+        result = subject.match("# ameba  :  enable     Group/RuleName")
+        result.should_not be_nil
+        result.not_nil![1].should eq "enable"
+        result.not_nil![2].should eq "Group/RuleName"
+      end
+    end
+
     it "disables a rule with a comment directive" do
       s = Source.new %Q(
         # ameba:disable #{NamedRule.name}
