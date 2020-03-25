@@ -6,11 +6,14 @@ module Ameba::AST
     SUPER_NODE_NAME  = "super"
     RECORD_NODE_NAME = "record"
 
+    @scope_queue = [] of Scope
+
     @current_scope : Scope
 
     def initialize(@rule, @source)
       @current_scope = Scope.new(@source.ast) # top level scope
       @source.ast.accept self
+      @scope_queue.each { |scope| @rule.test @source, scope.node, scope }
     end
 
     private def on_scope_enter(node)
@@ -18,9 +21,9 @@ module Ameba::AST
     end
 
     private def on_scope_end(node)
-      @rule.test @source, node, @current_scope
+      @scope_queue << @current_scope
 
-      # go up, if this is not a top level scope
+      # go up if this is not a top level scope
       if outer_scope = @current_scope.outer_scope
         @current_scope = outer_scope
       end

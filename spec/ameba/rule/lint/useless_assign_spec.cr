@@ -921,23 +921,6 @@ module Ameba::Rule::Lint
         subject.catch(s).should be_valid
       end
 
-      it "reports if assignment is referenced in macro def in a different scope" do
-        s = Source.new %(
-          class Foo
-            def foo
-              x = 1
-            end
-          end
-
-          class Bar
-            macro macro_call
-              puts x
-            end
-          end
-        )
-        subject.catch(s).should_not be_valid
-      end
-
       it "doesn't report if assignment is referenced in a macro below" do
         s = Source.new %(
           class Foo

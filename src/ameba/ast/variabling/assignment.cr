@@ -16,18 +16,20 @@ module Ameba::AST
     # Branch of this assignment.
     getter branch : Branch?
 
+    # A scope assignment belongs to
+    getter scope : Scope
+
     delegate to_s, to: @node
     delegate location, to: @node
     delegate end_location, to: @node
-    delegate scope, to: @variable
 
     # Creates a new assignment.
     #
     # ```
-    # Assignment.new(node, variable)
+    # Assignment.new(node, variable, scope)
     # ```
     #
-    def initialize(@node, @variable)
+    def initialize(@node, @variable, @scope)
       if scope = @variable.scope
         @branch = Branch.of(@node, scope)
         @referenced = true if @variable.special? ||

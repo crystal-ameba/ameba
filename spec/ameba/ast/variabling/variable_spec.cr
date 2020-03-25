@@ -47,14 +47,14 @@ module Ameba::AST
 
       it "assigns the variable (creates a new assignment)" do
         variable = Variable.new(var_node, scope)
-        variable.assign(assign_node)
+        variable.assign(assign_node, scope)
         variable.assignments.any?.should be_true
       end
 
       it "can create multiple assignments" do
         variable = Variable.new(var_node, scope)
-        variable.assign(assign_node)
-        variable.assign(assign_node)
+        variable.assign(assign_node, scope)
+        variable.assign(assign_node, scope)
         variable.assignments.size.should eq 2
       end
     end
@@ -62,9 +62,18 @@ module Ameba::AST
     describe "#reference" do
       it "references the existed assignment" do
         variable = Variable.new(var_node, scope)
-        variable.assign(as_node "foo=1")
+        variable.assign(as_node("foo=1"), scope)
         variable.reference(var_node, scope)
         variable.references.any?.should be_true
+      end
+
+      it "adds a reference to the scope" do
+        scope = Scope.new as_node "foo = 1"
+        variable = Variable.new(var_node, scope)
+        variable.assign(as_node("foo=1"), scope)
+        variable.reference(var_node, scope)
+        scope.references.size.should eq 1
+        scope.references.first.node.to_s.should eq "foo"
       end
     end
 

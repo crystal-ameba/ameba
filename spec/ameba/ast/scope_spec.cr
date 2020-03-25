@@ -33,6 +33,20 @@ module Ameba::AST
     end
   end
 
+  describe "#references" do
+    it "can return an empty list of references" do
+      scope = Scope.new as_node("")
+      scope.references.should be_empty
+    end
+
+    it "allows to add variable references" do
+      scope = Scope.new as_node("")
+      nodes = as_nodes "a = 2"
+      scope.references << Reference.new(nodes.var_nodes.first, scope)
+      scope.references.size.should eq 1
+    end
+  end
+
   describe "#add_variable" do
     it "adds a new variable to the scope" do
       scope = Scope.new as_node("")
@@ -82,6 +96,21 @@ module Ameba::AST
     it "returns false otherwise" do
       scope = Scope.new as_node "a = 1"
       scope.block?.should be_false
+    end
+  end
+
+  describe "#spawn_block?" do
+    it "returns true if a node is a spawn block" do
+      nodes = as_nodes %(
+        spawn {}
+      )
+      scope = Scope.new nodes.block_nodes.first
+      scope.spawn_block?.should be_true
+    end
+
+    it "returns false otherwise" do
+      scope = Scope.new as_node "a = 1"
+      scope.spawn_block?.should be_false
     end
   end
 
