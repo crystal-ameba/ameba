@@ -42,6 +42,8 @@ module Ameba::Rule::Lint
         report source, node, "Remove redundant with_index"
       when "each_with_index"
         report source, node, "Use each instead of each_with_index"
+      else
+        # nop
       end
     end
 

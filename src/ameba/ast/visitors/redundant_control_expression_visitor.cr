@@ -28,6 +28,8 @@ module Ameba::AST
       when Crystal::Case                then traverse_case node
       when Crystal::BinaryOp            then traverse_binary_op node
       when Crystal::ExceptionHandler    then traverse_exception_handler node
+      else
+        # ok
       end
     end
 

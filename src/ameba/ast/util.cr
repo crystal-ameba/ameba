@@ -147,6 +147,8 @@ module Ameba::AST::Util
       true
     when Crystal::Call
       node.name == "loop" && node.args.size == 0 && node.obj.nil?
+    else
+      false
     end
   end
 end
