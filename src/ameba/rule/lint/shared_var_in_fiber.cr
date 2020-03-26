@@ -1,8 +1,8 @@
 module Ameba::Rule::Lint
-  # A rule that disallows using shared variables in fibers.
+  # A rule that disallows using shared variables in fibers,
+  # which are mutated during iterations.
   #
-  # Using a shared variable in the `spawn` block in most cases
-  # leads to unexpected behaviour and is undesired.
+  # In most cases it leads to unexpected behaviour and is undesired.
   #
   # For example, having this example:
   #
