@@ -52,6 +52,20 @@ module Ameba::Rule::Lint
       subject.catch(s).should_not be_valid
     end
 
+    it "doesn't report if Object#to_s is called with arguments" do
+      s = Source.new %q(
+        /\w #{name.to_s(io)}/
+      )
+      subject.catch(s).should be_valid
+    end
+
+    it "doesn't report if Object#to_s is called without receiver" do
+      s = Source.new %q(
+        /\w #{to_s}/
+      )
+      subject.catch(s).should be_valid
+    end
+
     it "reports rule, location and message" do
       s = Source.new %q(
         "Hello, #{name1.to_s}"
