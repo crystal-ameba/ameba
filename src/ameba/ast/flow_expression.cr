@@ -36,7 +36,7 @@ module Ameba::AST
     def initialize(@node, @in_loop)
     end
 
-    # Returns nodes which can't be reached because of a flow expression inside.
+    # Returns nodes which can't be reached because of a flow command inside.
     # For example:
     #
     # ```

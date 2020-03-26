@@ -70,9 +70,9 @@ module Ameba::AST::Util
   end
 
   # Returns true if node is a flow expression, false if not.
-  # Node represents a flow expression if it is full-filed by a flow command.
+  # Node represents a flow expression if it is full-filled by a flow command.
   #
-  # For example, this node is a flow expressions, because each branch contains
+  # For example, this node is a flow expression, because each branch contains
   # a flow command `return`:
   #
   # ```
