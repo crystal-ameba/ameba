@@ -29,13 +29,22 @@ module Ameba::Rule::Lint
     end
 
     it "reports rule, pos and message" do
-      s = Source.new %q("#{4}"), "source.cr"
+      s = Source.new %q(
+        "Hello, #{:world} from #{:ameba}"
+      ), "source.cr"
       subject.catch(s).should_not be_valid
+      s.issues.size.should eq 2
 
       issue = s.issues.first
       issue.rule.should_not be_nil
-      issue.location.to_s.should eq "source.cr:1:1"
-      issue.end_location.to_s.should eq "source.cr:1:6"
+      issue.location.to_s.should eq "source.cr:1:11"
+      issue.end_location.to_s.should eq "source.cr:1:16"
+      issue.message.should eq "Literal value found in interpolation"
+
+      issue = s.issues.last
+      issue.rule.should_not be_nil
+      issue.location.to_s.should eq "source.cr:1:26"
+      issue.end_location.to_s.should eq "source.cr:1:31"
       issue.message.should eq "Literal value found in interpolation"
     end
   end
