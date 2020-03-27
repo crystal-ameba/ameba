@@ -18,7 +18,7 @@ module Ameba::Rule::Lint
   # 3.times { puts channel.receive } # => # 3, 3, 3
   # ```
   #
-  # The problem is there is only one shared between fibers variable `i`
+  # The problem is there is only one shared between fibers variable `n`
   # and when `channel.receive` is executed its value is `3`.
   #
   # To solve this, the code above needs to be rewritten to the following:
