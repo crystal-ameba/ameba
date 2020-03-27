@@ -17,7 +17,7 @@ module Ameba::AST
         Crystal::NamedTupleLiteral.new,
         Crystal::NilLiteral.new,
         Crystal::NumberLiteral.new(42),
-        Crystal::RegexLiteral.new(Crystal::NilLiteral.new),
+        Crystal::RegexLiteral.new(Crystal::StringLiteral.new("")),
         Crystal::StringLiteral.new(""),
         Crystal::SymbolLiteral.new(""),
         Crystal::TupleLiteral.new([] of Crystal::ASTNode),

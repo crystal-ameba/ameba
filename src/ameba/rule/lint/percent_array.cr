@@ -49,6 +49,8 @@ module Ameba::Rule::Lint
             issue_for start_token.not_nil!, issue.not_nil!
           end
           issue = start_token = nil
+        else
+          # nop
         end
       end
     end
@@ -59,6 +61,8 @@ module Ameba::Rule::Lint
         check_array_entry entry, string_array_unwanted_symbols, "%w"
       when .starts_with? "%i"
         check_array_entry entry, symbol_array_unwanted_symbols, "%i"
+      else
+        # nop
       end
     end
 

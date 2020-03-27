@@ -76,6 +76,8 @@ module Ameba::Rule::Style
         redundant_begin_in_handler?(source, body, node)
       when Crystal::Expressions
         redundant_begin_in_expressions?(body)
+      else
+        # nop
       end
     end
 

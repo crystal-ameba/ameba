@@ -161,19 +161,21 @@ module Ameba::AST
 
     # :nodoc:
     def visit(node : Crystal::Call)
-      case @current_scope
-      when .def?
+      case
+      when @current_scope.def?
         if node.name == SUPER_NODE_NAME && node.args.empty?
           @current_scope.arguments.each do |arg|
             variable = arg.variable
             variable.reference(variable.node, @current_scope).explicit = false
           end
         end
-      when .top_level?
-        return false if record_macro?(node)
-      end
 
-      true
+        true
+      when @current_scope.top_level? && record_macro?(node)
+        false
+      else
+        true
+      end
     end
 
     private def record_macro?(node)

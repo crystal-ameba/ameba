@@ -59,6 +59,8 @@ module Ameba::AST
         end
       when Crystal::BinaryOp
         unreachable_nodes << current_node.right if flow_expression?(current_node.left, in_loop?)
+      else
+        # nop
       end
 
       unreachable_nodes
