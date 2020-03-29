@@ -8,7 +8,7 @@ deploy:
   provider: pages
   github_token: $GITHUB_TOKEN
   project_name: ameba
-  cleanup: false
+  skip_cleanup: true
   on:
     branch: master
   local_dir: docs
