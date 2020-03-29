@@ -4,6 +4,7 @@ module Ameba::AST
   # List of nodes to be visited by Ameba's rules.
   NODES = [
     Alias,
+    IsA,
     Assign,
     Call,
     Block,
