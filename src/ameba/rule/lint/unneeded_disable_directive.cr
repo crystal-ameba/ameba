@@ -3,7 +3,7 @@ module Ameba::Rule::Lint
   # For example, this is considered invalid:
   #
   # ```
-  # # ameba:disable PredicateName
+  # # ameba:disable Style/PredicateName
   # def comment?
   #   do_something
   # end
@@ -16,6 +16,13 @@ module Ameba::Rule::Lint
   # def comment?
   #   do_something
   # end
+  # ```
+  #
+  # YAML configuration example:
+  #
+  # ```
+  # Lint/UnneededDisableDirective
+  #   Enabled: true
   # ```
   #
   struct UnneededDisableDirective < Base
