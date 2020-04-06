@@ -1,7 +1,7 @@
 module Ameba
   # A module that utilizes inline comments parsing and processing logic.
   module InlineComments
-    COMMENT_DIRECTIVE_REGEX = Regex.new "# ameba : (\\w+) ([\\w/, ]+)".gsub(" ", "\\s*")
+    COMMENT_DIRECTIVE_REGEX = Regex.new "# ameba : (\\w+) ([\\w/, ]*)".gsub(" ", "\\s*")
 
     # Available actions in the inline comments
     enum Action
@@ -19,20 +19,20 @@ module Ameba
     # For example, here are two examples of disabled location:
     #
     # ```
-    # # ameba:disable LargeNumbers
+    # # ameba:disable Style/LargeNumbers
     # Time.epoch(1483859302)
     #
-    # Time.epoch(1483859302) # ameba:disable LargeNumbers
+    # Time.epoch(1483859302) # ameba:disable Style/LargeNumbers
     # ```
     #
     # But here are examples which are not considered as disabled location:
     #
     # ```
-    # # ameba:disable LargeNumbers
+    # # ameba:disable Style/LargeNumbers
     # #
     # Time.epoch(1483859302)
     #
-    # if use_epoch? # ameba:disable LargeNumbers
+    # if use_epoch? # ameba:disable Style/LargeNumbers
     #   Time.epoch(1483859302)
     # end
     # ```
