@@ -20,7 +20,7 @@ module Ameba::Rule::Lint
 
       issue = s.issues.first
       issue.message.should eq(
-        "Bad action in comment directive: 'foo'. Possible values: disable,enable"
+        "Bad action in comment directive: 'foo'. Possible values: disable, enable"
       )
       issue.location.to_s.should eq "source.cr:1:1"
       issue.end_location.to_s.should eq ""
@@ -35,7 +35,7 @@ module Ameba::Rule::Lint
 
       issue = s.issues.first
       issue.message.should eq(
-        "Such rules do not exist: 'BadRule1,BadRule2'"
+        "Such rules do not exist: BadRule1, BadRule2"
       )
       issue.location.to_s.should eq "source.cr:1:1"
       issue.end_location.to_s.should eq ""

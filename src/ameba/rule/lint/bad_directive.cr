@@ -23,7 +23,7 @@ module Ameba::Rule::Lint
       description "Reports bad comment directives"
     end
 
-    AVAILABLE_ACTIONS = InlineComments::Action.names.join(',', &.downcase)
+    AVAILABLE_ACTIONS = InlineComments::Action.names.map(&.downcase)
     ALL_RULE_NAMES    = Rule.rules.map(&.rule_name)
     ALL_GROUP_NAMES   = Rule.rules.map(&.group_name).uniq!
 
@@ -42,13 +42,13 @@ module Ameba::Rule::Lint
 
       issue_for token,
         "Bad action in comment directive: '%s'. Possible values: %s" % {
-          action, AVAILABLE_ACTIONS,
+          action, AVAILABLE_ACTIONS.join(", "),
         }
     end
 
     private def check_rules(source, token, rules)
-      return if (bad_names = rules - ALL_RULE_NAMES - ALL_GROUP_NAMES).empty?
-      issue_for token, "Such rules do not exist: '%s'" % bad_names.join(',')
+      bad_names = rules - ALL_RULE_NAMES - ALL_GROUP_NAMES
+      issue_for token, "Such rules do not exist: %s" % bad_names.join(", ") if bad_names.any?
     end
   end
 end
