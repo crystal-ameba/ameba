@@ -151,6 +151,17 @@ module Ameba::AST
         node.location == @node.location
     end
 
+    # Returns true if the variable is delcared before the `node`.
+    def declared_before?(node)
+      var_location, node_location = location, node.location
+
+      return if var_location.nil? || node_location.nil?
+
+      (var_location.line_number < node_location.line_number) ||
+        (var_location.line_number == node_location.line_number &&
+          var_location.column_number < node_location.column_number)
+    end
+
     private class MacroLiteralFinder < Crystal::Visitor
       @macro_literals = [] of Crystal::MacroLiteral
 

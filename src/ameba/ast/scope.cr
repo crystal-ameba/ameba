@@ -110,7 +110,7 @@ module Ameba::AST
       call.try(&.name) == "spawn"
     end
 
-    # Returns true if currency scope represents a macro.
+    # Returns true if current scope represents a macro.
     def macro?
       node.is_a?(Crystal::Macro)
     end

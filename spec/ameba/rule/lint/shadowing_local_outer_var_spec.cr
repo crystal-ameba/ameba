@@ -34,6 +34,14 @@ module Ameba::Rule::Lint
       subject.catch(source).should_not be_valid
     end
 
+    it "does not report outer vars declared below shadowed block" do
+      source = Source.new %(
+        methods = klass.methods.select { |m| m.annotation(MyAnn) }
+        m = methods.last
+      )
+      subject.catch(source).should be_valid
+    end
+
     it "reports if there is a shadowing in a proc" do
       source = Source.new %(
         def some_method
@@ -176,7 +184,7 @@ module Ameba::Rule::Lint
     end
 
     context "macro" do
-      it "does not report shadowed vars A" do
+      it "does not report shadowed vars in outer scope" do
         source = Source.new %(
           macro included
             def foo
@@ -189,6 +197,19 @@ module Ameba::Rule::Lint
               {% instance_vars.reject { |ivar| ivar } %}
             end
           end
+        )
+        subject.catch(source).should be_valid
+      end
+
+      it "does not report shadowed vars in macro withing the same scope" do
+        source = Source.new %(
+          {% methods = klass.methods.select { |m| m.annotation(MyAnn) } %}
+
+          {% for m, m_idx in methods %}
+            {% if d = m.annotation(MyAnn) %}
+              {% d %}
+            {% end %}
+          {% end %}
         )
         subject.catch(source).should be_valid
       end

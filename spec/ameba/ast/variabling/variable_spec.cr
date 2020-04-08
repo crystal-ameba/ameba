@@ -160,5 +160,42 @@ module Ameba::AST
         variable.eql?(variable.node).should be_true
       end
     end
+
+    describe "#declared_before?" do
+      it "is falsey if variable doesn't have location" do
+        var1 = Crystal::Var.new("foo")
+        var2 = Crystal::Var.new("bar").at(Crystal::Location.new(nil, 1, 2))
+        Variable.new(var1, scope).declared_before?(var2).should be_falsey
+      end
+
+      it "is falsey if node doesn't have location" do
+        var1 = Crystal::Var.new("foo").at(Crystal::Location.new(nil, 1, 2))
+        var2 = Crystal::Var.new("bar")
+        Variable.new(var1, scope).declared_before?(var2).should be_falsey
+      end
+
+      it "is true if var's line_number below the node" do
+        var1 = Crystal::Var.new("foo").at(Crystal::Location.new(nil, 1, 2))
+        var2 = Crystal::Var.new("bar").at(Crystal::Location.new(nil, 2, 2))
+        Variable.new(var1, scope).declared_before?(var2).should be_true
+      end
+
+      it "is true if var's column_number is after the node" do
+        var1 = Crystal::Var.new("foo").at(Crystal::Location.new(nil, 1, 2))
+        var2 = Crystal::Var.new("bar").at(Crystal::Location.new(nil, 1, 3))
+        Variable.new(var1, scope).declared_before?(var2).should be_true
+      end
+
+      it "is false if var's location is before the node" do
+        var1 = Crystal::Var.new("foo").at(Crystal::Location.new(nil, 2, 2))
+        var2 = Crystal::Var.new("bar").at(Crystal::Location.new(nil, 1, 3))
+        Variable.new(var1, scope).declared_before?(var2).should be_false
+      end
+
+      it "is false is the node is the same var" do
+        var = Crystal::Var.new("foo").at(Crystal::Location.new(nil, 2, 2))
+        Variable.new(var, scope).declared_before?(var).should be_false
+      end
+    end
   end
 end
