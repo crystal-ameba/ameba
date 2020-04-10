@@ -28,7 +28,7 @@ module Ameba::Rule::Lint
 
     it "reports if there are incorrect rule names" do
       s = Source.new %(
-        # ameba:enable BadRule1,BadRule2
+        # ameba:enable BadRule1, BadRule2
       ), "source.cr"
       subject.catch(s).should_not be_valid
       s.issues.size.should eq 1

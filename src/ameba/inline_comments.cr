@@ -1,7 +1,7 @@
 module Ameba
   # A module that utilizes inline comments parsing and processing logic.
   module InlineComments
-    COMMENT_DIRECTIVE_REGEX = Regex.new "# ameba : (\\w+) ([\\w/, ]*)".gsub(" ", "\\s*")
+    COMMENT_DIRECTIVE_REGEX = /# ameba:(?<action>\w+) (?<rules>\w+(?:\/\w+)?(?:,? \w+(?:\/\w+)?)*)/
 
     # Available actions in the inline comments
     enum Action
@@ -68,10 +68,10 @@ module Ameba
     #
     def parse_inline_directive(line)
       if directive = COMMENT_DIRECTIVE_REGEX.match(line)
-        return if commented_out?(line.gsub directive[0], "")
+        return if commented_out?(line.gsub(directive[0], ""))
         {
-          action: directive[1],
-          rules:  directive[2].split(/[\s,]/, remove_empty: true),
+          action: directive["action"],
+          rules:  directive["rules"].split(/[\s,]/, remove_empty: true),
         }
       end
     end
@@ -83,8 +83,8 @@ module Ameba
       end
     end
 
-    private def comment?(line)
-      return true if line.lstrip.starts_with? '#'
+    private def comment?(line : String)
+      line.lstrip.starts_with? '#'
     end
 
     private def line_disabled?(line, rule)
@@ -96,7 +96,7 @@ module Ameba
     private def commented_out?(line)
       commented = false
 
-      lexer = Crystal::Lexer.new(line).tap { |l| l.comments_enabled = true }
+      lexer = Crystal::Lexer.new(line).tap(&.comments_enabled = true)
       Tokenizer.new(lexer).run { |t| commented = true if t.type == :COMMENT }
       commented
     end

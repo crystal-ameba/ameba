@@ -6,17 +6,22 @@ module Ameba
       subject = InlineComments::COMMENT_DIRECTIVE_REGEX
 
       it "allows to parse action and rule name" do
-        result = subject.match("#ameba:enable Group/RuleName")
-        result.should_not be_nil
-        result.not_nil![1].should eq "enable"
-        result.not_nil![2].should eq "Group/RuleName"
+        result = subject.match("# ameba:enable Group/RuleName")
+        result = result.should_not be_nil
+        result["action"].should eq "enable"
+        result["rules"].should eq "Group/RuleName"
       end
 
-      it "ignores the repeatable spaces" do
+      it "parses multiple rules" do
+        result = subject.match("# ameba:enable Group/RuleName, OtherRule, Foo/Bar")
+        result = result.should_not be_nil
+        result["action"].should eq "enable"
+        result["rules"].should eq "Group/RuleName, OtherRule, Foo/Bar"
+      end
+
+      it "fails to parse directives with spaces" do
         result = subject.match("# ameba  :  enable     Group/RuleName")
-        result.should_not be_nil
-        result.not_nil![1].should eq "enable"
-        result.not_nil![2].should eq "Group/RuleName"
+        result.should be_nil
       end
     end
 
