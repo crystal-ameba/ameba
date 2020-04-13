@@ -11,8 +11,8 @@ module Ameba::Rule::Style
   # And these are invalid names:
   #
   # ```
-  # MyBadConstant = 1
-  # Wrong_NAME    = 2
+  # myBadConstant = 1
+  # Wrong_NAME = 2
   # ```
   #
   # YAML configuration example:
@@ -32,7 +32,9 @@ module Ameba::Rule::Style
     def test(source, node : Crystal::Assign)
       if (target = node.target).is_a? Crystal::Path
         name = target.names.first
-        return if (expected = name.upcase) == name
+        expected = name.upcase
+
+        return if expected == name || name.camelcase == name
 
         issue_for target, MSG % {expected, name}
       end

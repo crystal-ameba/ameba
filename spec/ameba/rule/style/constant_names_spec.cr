@@ -24,6 +24,8 @@ module Ameba
         def works(n : Int32)
         end
 
+        Log = ::Log.for("db")
+
         a = 1
         myVar = 2
         m_var = 3
@@ -31,21 +33,21 @@ module Ameba
       subject.catch(s).should be_valid
     end
 
-    it_reports_constant "MyBadConstant=1", "MYBADCONSTANT"
+    # it_reports_constant "MyBadConstant=1", "MYBADCONSTANT"
     it_reports_constant "Wrong_NAME=2", "WRONG_NAME"
     it_reports_constant "Wrong_Name=3", "WRONG_NAME"
 
     it "reports rule, pos and message" do
       s = Source.new %(
-        Const = 1
+        Const_Name = 1
       ), "source.cr"
       subject.catch(s).should_not be_valid
       issue = s.issues.first
       issue.rule.should_not be_nil
       issue.location.to_s.should eq "source.cr:1:1"
-      issue.end_location.to_s.should eq "source.cr:1:5"
+      issue.end_location.to_s.should eq "source.cr:1:10"
       issue.message.should eq(
-        "Constant name should be screaming-cased: CONST, not Const"
+        "Constant name should be screaming-cased: CONST_NAME, not Const_Name"
       )
     end
   end
