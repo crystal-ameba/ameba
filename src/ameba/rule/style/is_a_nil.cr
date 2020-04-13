@@ -23,6 +23,7 @@ module Ameba::Rule::Style
   struct IsANil < Base
     properties do
       description "Disallows calls to `is_a?(Nil)` in favor of `nil?`"
+      enabled false
     end
 
     MSG            = "Use `nil?` instead of `is_a?(Nil)`"
