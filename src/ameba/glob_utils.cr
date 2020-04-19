@@ -25,7 +25,7 @@ module Ameba
       globs.map do |glob|
         glob += "/**/*.cr" if File.directory?(glob)
         Dir[glob]
-      end.flatten
+      end.flatten.uniq!
     end
 
     private def rejected_globs(globs)
