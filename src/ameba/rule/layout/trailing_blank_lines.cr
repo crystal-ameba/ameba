@@ -13,7 +13,7 @@ module Ameba::Rule::Layout
       description "Disallows trailing blank lines"
     end
 
-    MSG               = "Blank lines detected at the end of the file"
+    MSG               = "Unnecessary blank line detected at the end of the file"
     MSG_FINAL_NEWLINE = "Final newline missing"
 
     def test(source)

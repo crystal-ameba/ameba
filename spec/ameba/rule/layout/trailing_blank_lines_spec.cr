@@ -5,7 +5,7 @@ module Ameba::Rule::Layout
 
   describe TrailingBlankLines do
     it "passes if there is a blank line at the end of a source" do
-      source = Source.new "a = 1\n ", normalize: false
+      source = Source.new "a = 1\n", normalize: false
       subject.catch(source).should be_valid
     end
 
@@ -19,8 +19,8 @@ module Ameba::Rule::Layout
       subject.catch(source).should_not be_valid
     end
 
-    it "fails if there more thrn one blank line at the end of a source" do
-      source = Source.new "a = 1\n \n ", normalize: false
+    it "fails if there more then one blank line at the end of a source" do
+      source = Source.new "a = 1\n \n", normalize: false
       subject.catch(source).should_not be_valid
     end
 
@@ -29,16 +29,16 @@ module Ameba::Rule::Layout
       subject.catch(source).should_not be_valid
     end
 
-    context "when blank lines has been detected" do
+    context "when unnecessary blank line has been detected" do
       it "reports rule, pos and message" do
-        source = Source.new "a = 1\n\n ", "source.cr", normalize: false
+        source = Source.new "a = 1\n\n", "source.cr", normalize: false
         subject.catch(source).should_not be_valid
 
         issue = source.issues.first
         issue.rule.should_not be_nil
         issue.location.to_s.should eq "source.cr:2:1"
         issue.end_location.should be_nil
-        issue.message.should eq "Blank lines detected at the end of the file"
+        issue.message.should eq "Unnecessary blank line detected at the end of the file"
       end
     end
 
