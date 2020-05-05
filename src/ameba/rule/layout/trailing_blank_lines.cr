@@ -23,7 +23,7 @@ module Ameba::Rule::Layout
       return if source_lines_size == 1 && last_source_line.empty?
 
       last_line_not_empty = !last_source_line.strip.empty?
-      if source.lines.size >= 1 && (source_lines.last(2).join.strip.empty? || last_line_not_empty)
+      if source_lines_size >= 1 && (source_lines.last(2).join.strip.empty? || last_line_not_empty)
         issue_for({source_lines_size - 1, 1}, last_line_not_empty ? MSG_FINAL_NEWLINE : MSG)
       end
     end
