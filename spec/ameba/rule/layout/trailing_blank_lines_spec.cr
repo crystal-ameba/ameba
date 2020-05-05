@@ -38,7 +38,7 @@ module Ameba::Rule::Layout
         issue.rule.should_not be_nil
         issue.location.to_s.should eq "source.cr:2:1"
         issue.end_location.should be_nil
-        issue.message.should eq "Unnecessary blank line detected at the end of the file"
+        issue.message.should eq "Excessive trailing newline detected"
       end
     end
 
@@ -51,7 +51,7 @@ module Ameba::Rule::Layout
         issue.rule.should_not be_nil
         issue.location.to_s.should eq "source.cr:0:1"
         issue.end_location.should be_nil
-        issue.message.should eq "Final newline missing"
+        issue.message.should eq "Trailing newline missing"
       end
     end
   end
