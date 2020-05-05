@@ -20,9 +20,8 @@ module Ameba
     private def normalize_source(code, separator = "\n")
       lines = code.split(separator)
 
-      # remove unneeded first and last blank lines if any
+      # remove unneeded first blank lines if any
       lines.shift if lines[0].blank? && lines.size > 1
-      lines.pop if lines[-1].blank? && lines.size > 1
 
       # find the minimum indentation
       min_indent = lines.min_of do |line|
