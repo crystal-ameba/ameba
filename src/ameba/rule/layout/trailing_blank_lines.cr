@@ -14,7 +14,7 @@ module Ameba::Rule::Layout
     end
 
     MSG               = "Unnecessary blank line detected at the end of the file"
-    MSG_FINAL_NEWLINE = "Final newline missing"
+    MSG_FINAL_NEWLINE = "Trailing newline missing"
 
     def test(source)
       source_lines = source.lines
