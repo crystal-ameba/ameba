@@ -56,7 +56,7 @@ module Ameba::Cli
 
       parser.on("-c", "--config PATH",
         "Specify a configuration file") do |path|
-        opts.config = path
+        opts.config = path unless opts.config.empty?
       end
 
       parser.on("-f", "--format FORMATTER",
