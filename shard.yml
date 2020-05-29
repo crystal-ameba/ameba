@@ -16,3 +16,7 @@ scripts:
 
 executables:
   - ameba
+
+dependencies:
+  yaml_mapping:
+    github: crystal-lang/yaml_mapping.cr

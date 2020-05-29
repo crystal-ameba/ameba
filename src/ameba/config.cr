@@ -1,4 +1,5 @@
 require "yaml"
+require "yaml_mapping"
 require "./glob_utils"
 
 # A configuration entry for `Ameba::Runner`.
