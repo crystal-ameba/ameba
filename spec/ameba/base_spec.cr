@@ -1,18 +1,12 @@
 require "../spec_helper"
 
 module Ameba::Rule
-  struct NoProperties < Rule::Base
-    def test(source)
-    end
-  end
-
   describe Base do
     context ".rules" do
       it "returns a list of all rules" do
         rules = Rule.rules
         rules.should_not be_nil
         rules.should contain DummyRule
-        rules.should contain NoProperties
       end
     end
 
@@ -29,12 +23,6 @@ module Ameba::Rule
 
       it "has excluded property" do
         subject.excluded.should be_nil
-      end
-    end
-
-    describe "when a rule does not have defined properties" do
-      it "is enabled by default" do
-        NoProperties.new.enabled.should be_true
       end
     end
 
@@ -80,7 +68,7 @@ module Ameba::Rule
       end
 
       it "returns false if rule has a different name" do
-        DummyRule.new.should_not eq(NoProperties.new)
+        DummyRule.new.should_not eq(ScopeRule.new)
       end
     end
   end

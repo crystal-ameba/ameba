@@ -37,10 +37,7 @@ module Ameba
 
   struct NamedRule < Rule::Base
     properties do
-      description : String = "A rule with a custom name."
-    end
-
-    def test(source)
+      description "A rule with a custom name."
     end
 
     def self.name
@@ -50,7 +47,7 @@ module Ameba
 
   struct ErrorRule < Rule::Base
     properties do
-      description : String = "Always adds an error at 1:1"
+      description "Always adds an error at 1:1"
     end
 
     def test(source)
@@ -59,9 +56,11 @@ module Ameba
   end
 
   struct ScopeRule < Rule::Base
+    @[YAML::Field(ignore: true)]
     getter scopes = [] of AST::Scope
 
-    def test(source)
+    properties do
+      description "Internal rule to test scopes"
     end
 
     def test(source, node : Crystal::ASTNode, scope : AST::Scope)
@@ -70,9 +69,11 @@ module Ameba
   end
 
   struct FlowExpressionRule < Rule::Base
+    @[YAML::Field(ignore: true)]
     getter expressions = [] of AST::FlowExpression
 
-    def test(source)
+    properties do
+      description "Internal rule to test flow expressions"
     end
 
     def test(source, node, flow_expression : AST::FlowExpression)
@@ -81,9 +82,11 @@ module Ameba
   end
 
   struct RedundantControlExpressionRule < Rule::Base
+    @[YAML::Field(ignore: true)]
     getter nodes = [] of Crystal::ASTNode
 
-    def test(source)
+    properties do
+      description "Internal rule to test redundant control expressions"
     end
 
     def test(source, node, visitor : AST::RedundantControlExpressionVisitor)
@@ -94,6 +97,10 @@ module Ameba
   # A rule that always raises an error
   struct RaiseRule < Rule::Base
     property should_raise = false
+
+    properties do
+      description "Internal rule that always raises"
+    end
 
     def test(source)
       should_raise && raise "something went wrong"
