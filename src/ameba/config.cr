@@ -241,28 +241,32 @@ class Ameba::Config
         {% end %}
 
         {% properties[name] = {key: key, default: value, type: type, converter: converter} %}
+
+        @[YAML::Field(key: {{key}}, converter: {{converter}}, type: {{type}})]
+        property {{name}} : {{type}} = {{value}}
       {% end %}
 
       {% if properties["enabled".id] == nil %}
-        {% properties["enabled".id] = {key: "Enabled", default: true, type: Bool} %}
+        @[YAML::Field(key: "Enabled")]
+        property enabled = true
       {% end %}
 
       {% if properties["severity".id] == nil %}
-        {% default = @type.name.starts_with?("Ameba::Rule::Lint") ? "Severity::Warning".id : "Severity::Convention".id %}
-        {% properties["severity".id] = {key: "Severity", default: default, type: Severity, converter: SeverityYamlConverter} %}
+        {% default = @type.name.starts_with?("Ameba::Rule::Lint") ? "Ameba::Severity::Warning".id : "Ameba::Severity::Convention".id %}
+        @[YAML::Field(key: "Severity", converter: Ameba::SeverityYamlConverter)]
+        property severity = {{default}}
       {% end %}
 
       {% if properties["excluded".id] == nil %}
-        {% properties["excluded".id] = {key: "Excluded", type: "Array(String)?".id} %}
+        @[YAML::Field(key: "Excluded")]
+        property excluded : Array(String)?
       {% end %}
-
-      YAML.mapping({{properties}})
     end
 
     macro included
       macro inherited
-        # allow creating rules without properties
-        properties {}
+        include YAML::Serializable
+        include YAML::Serializable::Strict
 
         def self.new(config = nil)
           if (raw = config.try &.raw).is_a? Hash

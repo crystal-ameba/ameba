@@ -22,7 +22,7 @@ module Ameba::Rule::Lint
   struct Syntax < Base
     properties do
       description "Reports invalid Crystal syntax"
-      severity Severity::Error
+      severity Ameba::Severity::Error
     end
 
     def test(source)

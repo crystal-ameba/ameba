@@ -44,9 +44,10 @@ module Ameba
   end
 
   struct SeverityConvertable
-    YAML.mapping(
-      severity: {type: Severity, converter: SeverityYamlConverter}
-    )
+    include YAML::Serializable
+
+    @[YAML::Field(converter: Ameba::SeverityYamlConverter)]
+    property severity : Severity
   end
 
   describe SeverityYamlConverter do

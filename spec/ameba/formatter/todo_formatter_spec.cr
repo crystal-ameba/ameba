@@ -93,11 +93,11 @@ module Ameba
         # Run `ameba --only Ameba/DummyRule` for details
         Ameba/DummyRule:
           Description: Dummy rule that does nothing.
-          Enabled: true
-          Severity: Convention
           Excluded:
           - source1.cr
           - source2.cr
+          Enabled: true
+          Severity: Convention
         CONTENT
       end
 
