@@ -21,7 +21,6 @@ module Ameba::Rule::Lint
   struct BadDirective < Base
     properties do
       description "Reports bad comment directives"
-      enabled false
     end
 
     AVAILABLE_ACTIONS = InlineComments::Action.names.map(&.downcase)
