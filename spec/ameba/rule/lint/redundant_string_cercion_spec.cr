@@ -66,6 +66,13 @@ module Ameba::Rule::Lint
       subject.catch(s).should be_valid
     end
 
+    it "doesn't report if Object#to_s is called with named args" do
+      s = Source.new %q(
+        "0x#{250.to_s base: 16}"
+      )
+      subject.catch(s).should be_valid
+    end
+
     it "reports rule, location and message" do
       s = Source.new %q(
         "Hello, #{name1.to_s}"
