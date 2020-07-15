@@ -114,19 +114,30 @@ module Ameba::AST
     end
   end
 
-  describe "#macro?" do
+  describe "#in_macro?" do
     it "returns true if Crystal::Macro" do
       nodes = as_nodes %(
         macro included
         end
       )
       scope = Scope.new nodes.macro_nodes.first
-      scope.macro?.should be_true
+      scope.in_macro?.should be_true
+    end
+
+    it "returns true if node is nested to Crystal::Macro" do
+      nodes = as_nodes %(
+        macro included
+          {{@type.each do |type| a = type end}}
+        end
+      )
+      outer_scope = Scope.new nodes.macro_nodes.first
+      scope = Scope.new nodes.block_nodes.first, outer_scope
+      scope.in_macro?.should be_true
     end
 
     it "returns false otherwise" do
       scope = Scope.new as_node "a = 1"
-      scope.macro?.should be_false
+      scope.in_macro?.should be_false
     end
   end
 end

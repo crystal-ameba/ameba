@@ -110,9 +110,9 @@ module Ameba::AST
       call.try(&.name) == "spawn"
     end
 
-    # Returns true if current scope represents a macro.
-    def macro?
-      node.is_a?(Crystal::Macro)
+    # Returns true if current scope sits inside a macro.
+    def in_macro?
+      node.is_a?(Crystal::Macro) || !!outer_scope.try(&.in_macro?)
     end
 
     # Returns true instance variable assinged in this scope.

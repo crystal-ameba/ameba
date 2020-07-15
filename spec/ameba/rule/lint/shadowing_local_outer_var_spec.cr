@@ -213,6 +213,29 @@ module Ameba::Rule::Lint
         )
         subject.catch(source).should be_valid
       end
+
+      it "does not report shadowed vars withing nested macro" do
+        source = Source.new %(
+          module Foo
+            macro included
+              def foo
+                {% for ann in instance_vars %}
+                  {% pos_args = ann.args.empty? ? "Tuple.new".id : ann.args %}
+                {% end %}
+              end
+
+              def bar
+                {{@type.instance_vars.map do |ivar|
+                    ivar.annotations(Name).each do |ann|
+                      puts ann.args
+                    end
+                  end}}
+              end
+            end
+          end
+        )
+        subject.catch(source).should be_valid
+      end
     end
   end
 end
