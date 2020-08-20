@@ -54,6 +54,14 @@ module Ameba::Rule::Lint
       subject.catch(s).should_not be_valid
     end
 
+    it "does not report ignored assigments" do
+      s = Source.new %(
+        payload, _header = decode
+        puts payload
+      )
+      subject.catch(s).should be_valid
+    end
+
     it "reports a useless assignment in a proc inside a block" do
       s = Source.new %(
         def method
