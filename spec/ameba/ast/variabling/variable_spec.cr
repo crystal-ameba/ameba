@@ -140,6 +140,23 @@ module Ameba::AST
       end
     end
 
+    describe "#ignored?" do
+      it "is true if variable is ignored" do
+        variable = Variable.new(Crystal::Var.new("_var"), scope)
+        variable.ignored?.should be_true
+      end
+
+      it "is false if variable is not ignored" do
+        variable = Variable.new(Crystal::Var.new("v_ar"), scope)
+        variable.ignored?.should be_false
+      end
+
+      it "is true if variable is a black hole" do
+        variable = Variable.new(Crystal::Var.new("_"), scope)
+        variable.ignored?.should be_true
+      end
+    end
+
     describe "#eql?" do
       var = Crystal::Var.new("foo").at(Crystal::Location.new(nil, 1, 2))
       variable = Variable.new var, scope

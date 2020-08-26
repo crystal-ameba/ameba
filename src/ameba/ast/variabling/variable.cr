@@ -143,6 +143,11 @@ module Ameba::AST
       end
     end
 
+    # Returns true if the name starts with '_', false if not.
+    def ignored?
+      name.starts_with? '_'
+    end
+
     # Returns true if the `node` represents exactly
     # the same Crystal node as `@node`.
     def eql?(node)
