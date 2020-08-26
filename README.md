@@ -137,6 +137,8 @@ To use the resulting image on a local source folder, mount the current (or targe
 $ docker run -v $(pwd):/src crystal-ameba/ameba
 ```
 
+Also available on DockerHub: https://hub.docker.com/r/veelenga/ameba
+
 ### From sources
 
 ```sh
