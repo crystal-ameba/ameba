@@ -128,13 +128,13 @@ $ brew install ameba
 Build the image:
 
 ```sh
-$ docker build -t ameba/ameba .
+$ docker build -t crystal-ameba/ameba .
 ```
 
 To use the resulting image on a local source folder, mount the current (or target) directory into `/src`:
 
 ```sh
-$ docker run -v $(pwd):/src ameba/ameba
+$ docker run -v $(pwd):/src crystal-ameba/ameba
 ```
 
 ### From sources
