@@ -60,6 +60,24 @@ module Ameba::AST
           "          end",
         ])
       end
+
+      it "does not report source of node which has incorrect location" do
+        s = %q(
+          module MyModule
+            macro conditional_error_for_inline_callbacks
+              \{%
+                raise ""
+              %}
+            end
+
+            macro before_save(x = nil)
+            end
+          end
+        )
+        node = as_nodes(s).nil_literal_nodes.first
+        source = subject.node_source node, s.split("\n")
+        source.should be_nil
+      end
     end
 
     describe "#flow_command?" do

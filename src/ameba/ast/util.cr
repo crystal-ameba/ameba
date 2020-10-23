@@ -40,7 +40,8 @@ module Ameba::AST::Util
     node_lines = code_lines[line..end_line]
     first_line, last_line = node_lines[0]?, node_lines[-1]?
 
-    return unless first_line && last_line
+    return if first_line.nil? || last_line.nil?
+    return if first_line.size < column # compiler reports incorrection location
 
     node_lines[0] = first_line.sub(0...column, "")
 
@@ -48,6 +49,8 @@ module Ameba::AST::Util
       end_column = end_column - column
       last_line = node_lines[0]
     end
+
+    return if last_line.size < end_column + 1
     node_lines[-1] = last_line.sub(end_column + 1...last_line.size, "")
 
     node_lines

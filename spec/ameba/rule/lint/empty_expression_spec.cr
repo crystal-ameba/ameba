@@ -95,6 +95,22 @@ module Ameba
       end
     )
 
+    it "does not report emtpy expression in macro" do
+      s = Source.new %q(
+        module MyModule
+          macro conditional_error_for_inline_callbacks
+            \{%
+              raise ""
+            %}
+          end
+
+          macro before_save(x = nil)
+          end
+        end
+      )
+      subject.catch(s).should be_valid
+    end
+
     it "reports rule, location and message" do
       s = Source.new %(
         if ()

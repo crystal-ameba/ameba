@@ -151,6 +151,7 @@ module Ameba
 
   class TestNodeVisitor < Crystal::Visitor
     NODES = [
+      Crystal::NilLiteral,
       Crystal::Var,
       Crystal::Assign,
       Crystal::OpAssign,
