@@ -33,6 +33,7 @@ module Ameba::Rule::Lint
 
     properties do
       description "Disallows empty expressions"
+      enabled false
     end
 
     MSG      = "Avoid empty expression %s"
