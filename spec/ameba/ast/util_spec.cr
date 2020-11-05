@@ -1,4 +1,5 @@
 require "../../spec_helper"
+require "semantic_version"
 
 module Ameba::AST
   struct Test
@@ -76,7 +77,12 @@ module Ameba::AST
         )
         node = as_nodes(s).nil_literal_nodes.first
         source = subject.node_source node, s.split("\n")
-        source.should be_nil
+
+        if SemanticVersion.parse(Crystal::VERSION) <= SemanticVersion.parse("0.35.1")
+          source.should be_nil
+        else
+          source.should eq %w(nil)
+        end
       end
     end
 
