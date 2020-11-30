@@ -10,7 +10,6 @@ jobs:
 
 install:
   - shards install
-  #  --ignore-crystal-version
 
 script:
   - make test
