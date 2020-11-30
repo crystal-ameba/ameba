@@ -9,7 +9,8 @@ jobs:
     - crystal: nightly
 
 install:
-  - shards install --ignore-crystal-version
+  - shards install
+  #  --ignore-crystal-version
 
 script:
   - make test
