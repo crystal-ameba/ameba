@@ -5,7 +5,7 @@ SHARD_BIN ?= ../../bin
 
 build: bin/ameba
 bin/ameba:
-	$(SHARDS_BIN) build $(CRFLAGS) --ignore-crystal-version
+	$(SHARDS_BIN) build $(CRFLAGS)
 clean:
 	rm -f ./bin/ameba ./bin/ameba.dwarf
 install: build
@@ -17,5 +17,5 @@ bin: build
 run_file:
 	cp -n ./bin/ameba.cr $(SHARD_BIN) || true
 test: build
-	$(CRYSTAL_BIN) spec --ignore-crystal-version
+	$(CRYSTAL_BIN) spec
 	./bin/ameba --all
