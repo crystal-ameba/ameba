@@ -5,7 +5,7 @@ jobs:
       - image: crystallang/crystal:nightly
     steps:
       - checkout
-      - run: shards install
+      - run: shards install --ignore-crystal-version
       - run:
           name: run tests
           command: |
