@@ -1,0 +1,24 @@
+version: 2
+jobs:
+  build:
+    docker:
+      - image: crystallang/crystal:nightly
+    steps:
+      - checkout
+      - run: shards install
+      - run:
+          name: run tests
+          command: |
+            mkdir -p test-results/spec
+            crystal -v > test-results/crystal_version.txt
+            scripts/version_info > test-results/app_version.txt
+            time scripts/test > test-results/spec/results.txt
+            time scripts/test_junit_format
+
+      # collect reports
+      - store_test_results:
+          path: test-results
+
+      - store_artifacts:
+          path: test-results
+          destination: test-results
