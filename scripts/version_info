@@ -1,3 +1,0 @@
-#!/usr/bin/env bash
-
-crystal eval 'require "./src/spectator"; puts "Spectator version: #{Spectator::VERSION}"'

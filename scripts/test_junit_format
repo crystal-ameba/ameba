@@ -1,3 +1,0 @@
-#!/usr/bin/env bash
-
-crystal spec --release --no-debug --time --error-trace --no-color --junit_output test-results/results
