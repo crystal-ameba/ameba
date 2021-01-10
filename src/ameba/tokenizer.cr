@@ -53,8 +53,7 @@ module Ameba
       false
     end
 
-    private def run_normal_state(lexer, break_on_rcurly = false,
-                                 &block : Crystal::Token -> _)
+    private def run_normal_state(lexer, break_on_rcurly = false, &block : Crystal::Token -> _)
       loop do
         token = @lexer.next_token
         block.call token

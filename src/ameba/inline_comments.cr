@@ -89,8 +89,10 @@ module Ameba
 
     private def line_disabled?(line, rule)
       return false unless directive = parse_inline_directive(line)
-      Action.parse?(directive[:action]).try(&.disable?) &&
-        (directive[:rules].includes?(rule.name) || directive[:rules].includes?(rule.group))
+      return false unless Action.parse?(directive[:action]).try(&.disable?)
+
+      directive[:rules].includes?(rule.name) ||
+        directive[:rules].includes?(rule.group)
     end
 
     private def commented_out?(line)

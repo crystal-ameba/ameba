@@ -95,7 +95,7 @@ module Ameba::Rule
     def excluded?(source)
       excluded.try &.any? do |path|
         source.matches_path?(path) ||
-          Dir.glob(path).any? { |glob| source.matches_path? glob }
+          Dir.glob(path).any? { |glob| source.matches_path?(glob) }
       end
     end
 
@@ -123,11 +123,11 @@ module Ameba::Rule
     end
 
     protected def self.rule_name
-      name.gsub("Ameba::Rule::", "").gsub("::", "/")
+      name.gsub("Ameba::Rule::", "").gsub("::", '/')
     end
 
     protected def self.group_name
-      rule_name.split("/")[0...-1].join("/")
+      rule_name.split('/')[0...-1].join('/')
     end
 
     protected def self.subclasses
@@ -157,7 +157,7 @@ module Ameba::Rule
     def self.parsed_doc
       source = File.read(path_to_source_file)
       nodes = Crystal::Parser.new(source).tap(&.wants_doc = true).parse
-      type_name = rule_name.split("/").last?
+      type_name = rule_name.split('/').last?
       DocFinder.new(nodes, type_name).doc
     end
 

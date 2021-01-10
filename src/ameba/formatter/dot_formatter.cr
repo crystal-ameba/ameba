@@ -35,14 +35,17 @@ module Ameba::Formatter
           next if issue.disabled?
           next if (location = issue.location).nil?
 
-          output << "#{location}\n".colorize(:cyan)
-          output << "[#{issue.rule.severity.symbol}] #{issue.rule.name}: #{issue.message}\n".colorize(:red)
+          output.puts location.colorize(:cyan)
+          output.puts \
+            "[#{issue.rule.severity.symbol}] " \
+            "#{issue.rule.name}: " \
+            "#{issue.message}".colorize(:red)
 
           if show_affected_code && (code = affected_code(source, location))
             output << code.colorize(:default)
           end
 
-          output << "\n"
+          output << '\n'
         end
       end
 

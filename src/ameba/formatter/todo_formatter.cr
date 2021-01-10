@@ -8,19 +8,20 @@ module Ameba::Formatter
 
     def finished(sources)
       super
+
       issues = sources.flat_map(&.issues)
       unless issues.any? { |issue| !issue.disabled? }
-        @output << "No issues found. File is not generated.\n"
+        @output.puts "No issues found. File is not generated."
         return
       end
 
-      if issues.any? { |issue| issue.syntax? }
-        @output << "Unable to generate TODO file. Please fix syntax issues.\n"
+      if issues.any?(&.syntax?)
+        @output.puts "Unable to generate TODO file. Please fix syntax issues."
         return
       end
 
       file = generate_todo_config issues
-      @output << "Created #{file.path}\n"
+      @output.puts "Created #{file.path}"
       file
     end
 

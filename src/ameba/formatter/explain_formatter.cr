@@ -4,9 +4,8 @@ module Ameba::Formatter
   # A formatter that shows the detailed explanation of the issue at
   # a specific location.
   class ExplainFormatter
-    LINE_BREAK = "\n"
-    HEADING    = "## "
-    PREFIX     = " "
+    HEADING = "## "
+    PREFIX  = " "
 
     include Util
 
@@ -65,19 +64,19 @@ module Ameba::Formatter
     end
 
     private def output_title(title)
-      output << HEADING.colorize(:yellow) << title.colorize(:yellow) << LINE_BREAK
-      output << LINE_BREAK
+      output << HEADING.colorize(:yellow) << title.colorize(:yellow) << '\n'
+      output << '\n'
     end
 
     private def output_paragraph(paragraph : String)
-      output_paragraph(paragraph.split(LINE_BREAK))
+      output_paragraph(paragraph.split('\n'))
     end
 
     private def output_paragraph(paragraph : Array(String))
       paragraph.each do |line|
-        output << PREFIX << line << LINE_BREAK
+        output << PREFIX << line << '\n'
       end
-      output << LINE_BREAK
+      output << '\n'
     end
   end
 end

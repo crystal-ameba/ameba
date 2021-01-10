@@ -50,7 +50,6 @@ module Ameba
           .find &.name.==(Rule::Lint::UnneededDisableDirective.rule_name)
     end
 
-    # :nodoc:
     protected def initialize(@rules, @sources, @formatter, @severity)
     end
 
@@ -80,9 +79,8 @@ module Ameba
         end
       end
 
-      channels.each do |c|
-        e = c.receive
-        raise e unless e.nil?
+      channels.each do |chan|
+        chan.receive.try { |e| raise e }
       end
 
       self

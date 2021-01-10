@@ -31,7 +31,6 @@ class Ameba::Config
     !lib
   )
 
-  setter formatter : Formatter::BaseFormatter?
   getter rules : Array(Rule::Base)
   property severity = Severity::Convention
 
@@ -66,7 +65,9 @@ class Ameba::Config
     @excluded = load_array_section(config, "Excluded")
     @globs = load_array_section(config, "Globs", DEFAULT_GLOBS)
 
-    self.formatter = load_formatter_name(config)
+    if formatter_name = load_formatter_name(config)
+      self.formatter = formatter_name
+    end
   end
 
   # Loads YAML configuration file by `path`.
@@ -84,7 +85,7 @@ class Ameba::Config
   end
 
   def self.formatter_names
-    AVAILABLE_FORMATTERS.keys.join("|")
+    AVAILABLE_FORMATTERS.keys.join('|')
   end
 
   # Returns a list of sources matching globs and excluded sections.
@@ -111,8 +112,8 @@ class Ameba::Config
   # config.formatter
   # ```
   #
-  def formatter
-    @formatter ||= Formatter::DotFormatter.new
+  property formatter : Formatter::BaseFormatter do
+    Formatter::DotFormatter.new
   end
 
   # Sets formatter by name.
@@ -138,7 +139,7 @@ class Ameba::Config
   # ```
   #
   def update_rule(name, enabled = true, excluded = nil)
-    index = @rules.index { |r| r.name == name }
+    index = @rules.index { |rule| rule.name == name }
     raise ArgumentError.new("Rule `#{name}` does not exist") unless index
 
     rule = @rules[index]
@@ -172,7 +173,7 @@ class Ameba::Config
 
   private def load_formatter_name(config)
     name = config["Formatter"]?.try &.["Name"]?
-    name ? name.to_s : nil
+    name.try(&.to_s)
   end
 
   private def load_array_section(config, section_name, default = [] of String)
