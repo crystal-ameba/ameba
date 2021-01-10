@@ -1,22 +1,70 @@
 module Ameba::Formatter
   module Util
-    def affected_code(source, location, max_length = 100, placeholder = " ...", prompt = "> ")
-      line, column = location.line_number, location.column_number
-      affected_line = source.lines[line - 1]?.presence
+    def affected_code(source, location, context_lines = 3, max_length = 100, placeholder = " ...", prompt = "> ")
+      lines = source.lines
+      lineno, column =
+        location.line_number, location.column_number
 
-      return unless affected_line
+      return unless affected_line = lines[lineno - 1]?.presence
 
-      if affected_line.size > max_length && column < max_length
-        affected_line = affected_line[0, max_length - placeholder.size - 1] + placeholder
+      trim_line = Proc(String, String).new do |line|
+        if line.size > max_length
+          line = line[0, max_length - placeholder.size - 1] + placeholder
+        end
+        line
       end
 
-      stripped = affected_line.lstrip
-      position = column - (affected_line.size - stripped.size) + prompt.size
+      if column < max_length
+        affected_line = trim_line.call(affected_line)
+      end
+
+      show_context = context_lines > 0
+      if show_context
+        pre_context, post_context = %w[], %w[]
+
+        lines.each_with_index do |line, i|
+          case i + 1
+          when lineno - context_lines...lineno
+            pre_context << trim_line.call(line)
+          when lineno
+            #
+          when lineno + 1..lineno + context_lines
+            post_context << trim_line.call(line)
+          end
+        end
+
+        # remove empty lines at the beginning/end
+        pre_context.shift? unless pre_context.first?.presence
+        post_context.pop? unless post_context.last?.presence
+      end
 
       String.build do |str|
-        str << prompt << stripped << '\n'
-        str << " " * (position - 1)
-        str << "^".colorize(:yellow)
+        if show_context
+          pre_context.try &.each do |line|
+            str << prompt
+            str.puts(line.colorize(:dark_gray))
+          end
+
+          str << prompt
+          str.puts(affected_line.colorize(:white))
+
+          str << " " * (prompt.size + column - 1)
+          str.puts("^".colorize(:yellow))
+
+          post_context.try &.each do |line|
+            str << prompt
+            str.puts(line.colorize(:dark_gray))
+          end
+        else
+          stripped = affected_line.lstrip
+          position = column - (affected_line.size - stripped.size) + prompt.size
+
+          str << prompt
+          str.puts(stripped)
+
+          str << " " * (position - 1)
+          str << "^".colorize(:yellow)
+        end
       end
     end
   end
