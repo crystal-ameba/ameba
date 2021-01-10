@@ -8,7 +8,7 @@ module Ameba::Formatter
 
     def finished(sources)
       super
-      issues = sources.map(&.issues).flatten
+      issues = sources.flat_map(&.issues)
       unless issues.any? { |issue| !issue.disabled? }
         @output << "No issues found. File is not generated.\n"
         return
@@ -57,10 +57,9 @@ module Ameba::Formatter
     end
 
     private def rule_todo(rule, issues)
-      rule.excluded =
-        issues.map(&.location.try &.filename.try &.to_s)
-          .compact
-          .uniq!
+      rule.excluded = issues
+        .compact_map(&.location.try &.filename.try &.to_s)
+        .uniq!
 
       {rule.name => rule}.to_yaml
     end
