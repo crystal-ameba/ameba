@@ -68,8 +68,6 @@ module Ameba
           break
         when :"}"
           break if break_on_rcurly
-        else
-          # go on
         end
       end
     end
@@ -86,8 +84,6 @@ module Ameba
           run_normal_state lexer, break_on_rcurly: true, &block
         when :EOF
           break
-        else
-          # go on
         end
       end
     end
@@ -102,8 +98,6 @@ module Ameba
           break
         when :EOF
           break
-        else
-          # go on
         end
       end
     end
