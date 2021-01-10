@@ -42,6 +42,16 @@ module Ameba::Cli
         c.except.should eq %w(RULE1 RULE2)
       end
 
+      it "defaults rules? flag to false" do
+        c = Cli.parse_args %w(file.cr)
+        c.rules?.should eq false
+      end
+
+      it "accepts --rules flag" do
+        c = Cli.parse_args %w(--rules)
+        c.rules?.should eq true
+      end
+
       it "defaults all? flag to false" do
         c = Cli.parse_args %w(file.cr)
         c.all?.should eq false

@@ -14,6 +14,10 @@ module Ameba::Cli
     configure_formatter(config, opts)
     configure_rules(config, opts)
 
+    if opts.rules?
+      print_rules(config)
+    end
+
     runner = Ameba.run(config)
 
     if location = opts.location_to_explain
@@ -34,6 +38,7 @@ module Ameba::Cli
     property except : Array(String)?
     property location_to_explain : NamedTuple(file: String, line: Int32, column: Int32)?
     property fail_level : Severity?
+    property? rules = false
     property? all = false
     property? colors = true
     property? without_affected_code = false
@@ -44,7 +49,8 @@ module Ameba::Cli
       parser.banner = "Usage: ameba [options] [file1 file2 ...]"
 
       parser.on("-v", "--version", "Print version") { print_version }
-      parser.on("-h", "--help", "Show this help") { show_help parser }
+      parser.on("-h", "--help", "Show this help") { print_help(parser) }
+      parser.on("-r", "--rules", "Show all available rules") { opts.rules = true }
       parser.on("-s", "--silent", "Disable output") { opts.formatter = :silent }
       parser.unknown_args do |f|
         if f.size == 1 && f.first =~ /.+:\d+:\d+/
@@ -145,8 +151,18 @@ module Ameba::Cli
     exit 0
   end
 
-  private def show_help(parser)
+  private def print_help(parser)
     puts parser
+    exit 0
+  end
+
+  private def print_rules(config)
+    config.rules.each do |rule|
+      puts \
+        "#{rule.name.colorize(:white)} " \
+        "[#{rule.severity.symbol.to_s.colorize(:green)}] - " \
+        "#{rule.description.colorize(:dark_gray)}"
+    end
     exit 0
   end
 end
