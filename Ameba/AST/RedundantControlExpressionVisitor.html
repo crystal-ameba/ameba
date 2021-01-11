@@ -1,0 +1,792 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="generator" content="Crystal Docs 0.35.1">
+<meta name="crystal_docs.project_version" content="0.13.3-dev">
+<meta name="crystal_docs.project_name" content="ameba">
+
+
+
+<link href="../../css/style.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="../../js/doc.js"></script>
+
+  <meta name="repository-name" content="ameba">
+  <title>Ameba::AST::RedundantControlExpressionVisitor - ameba 0.13.3-dev</title>
+  <script type="text/javascript">
+    CrystalDocs.base_path = "../../";
+  </script>
+</head>
+<body>
+
+<svg class="hidden">
+  <symbol id="octicon-link" viewBox="0 0 16 16">
+    <path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path>
+  </symbol>
+</svg>
+<div class="sidebar">
+  <div class="sidebar-header">
+    <div class="search-box">
+      <input type="search" class="search-input" placeholder="Search..." spellcheck="false" aria-label="Search">
+    </div>
+
+    <div class="project-summary">
+      <h1 class="project-name">
+        <a href="../../index.html">
+          ameba
+        </a>
+      </h1>
+
+      <span class="project-version">
+        0.13.3-dev
+      </span>
+    </div>
+  </div>
+
+  <div class="search-results hidden">
+    <ul class="search-list"></ul>
+  </div>
+
+  <div class="types-list">
+    <ul>
+  
+  <li class="parent open current" data-id="ameba/Ameba" data-name="ameba">
+      <a href="../../Ameba.html">Ameba</a>
+      
+        <ul>
+  
+  <li class="parent open current" data-id="ameba/Ameba/AST" data-name="ameba::ast">
+      <a href="../../Ameba/AST.html">AST</a>
+      
+        <ul>
+  
+  <li class=" " data-id="ameba/Ameba/AST/Argument" data-name="ameba::ast::argument">
+      <a href="../../Ameba/AST/Argument.html">Argument</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/AST/Assignment" data-name="ameba::ast::assignment">
+      <a href="../../Ameba/AST/Assignment.html">Assignment</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/AST/BaseVisitor" data-name="ameba::ast::basevisitor">
+      <a href="../../Ameba/AST/BaseVisitor.html">BaseVisitor</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/AST/Branch" data-name="ameba::ast::branch">
+      <a href="../../Ameba/AST/Branch.html">Branch</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/AST/Branchable" data-name="ameba::ast::branchable">
+      <a href="../../Ameba/AST/Branchable.html">Branchable</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/AST/CountingVisitor" data-name="ameba::ast::countingvisitor">
+      <a href="../../Ameba/AST/CountingVisitor.html">CountingVisitor</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/AST/FlowExpression" data-name="ameba::ast::flowexpression">
+      <a href="../../Ameba/AST/FlowExpression.html">FlowExpression</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/AST/FlowExpressionVisitor" data-name="ameba::ast::flowexpressionvisitor">
+      <a href="../../Ameba/AST/FlowExpressionVisitor.html">FlowExpressionVisitor</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/AST/InstanceVariable" data-name="ameba::ast::instancevariable">
+      <a href="../../Ameba/AST/InstanceVariable.html">InstanceVariable</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/AST/NodeVisitor" data-name="ameba::ast::nodevisitor">
+      <a href="../../Ameba/AST/NodeVisitor.html">NodeVisitor</a>
+      
+    </li>
+  
+  <li class=" current" data-id="ameba/Ameba/AST/RedundantControlExpressionVisitor" data-name="ameba::ast::redundantcontrolexpressionvisitor">
+      <a href="../../Ameba/AST/RedundantControlExpressionVisitor.html">RedundantControlExpressionVisitor</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/AST/Reference" data-name="ameba::ast::reference">
+      <a href="../../Ameba/AST/Reference.html">Reference</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/AST/Scope" data-name="ameba::ast::scope">
+      <a href="../../Ameba/AST/Scope.html">Scope</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/AST/ScopeVisitor" data-name="ameba::ast::scopevisitor">
+      <a href="../../Ameba/AST/ScopeVisitor.html">ScopeVisitor</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/AST/Util" data-name="ameba::ast::util">
+      <a href="../../Ameba/AST/Util.html">Util</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/AST/Variable" data-name="ameba::ast::variable">
+      <a href="../../Ameba/AST/Variable.html">Variable</a>
+      
+    </li>
+  
+</ul>
+
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/Config" data-name="ameba::config">
+      <a href="../../Ameba/Config.html">Config</a>
+      
+    </li>
+  
+  <li class="parent " data-id="ameba/Ameba/Formatter" data-name="ameba::formatter">
+      <a href="../../Ameba/Formatter.html">Formatter</a>
+      
+        <ul>
+  
+  <li class=" " data-id="ameba/Ameba/Formatter/BaseFormatter" data-name="ameba::formatter::baseformatter">
+      <a href="../../Ameba/Formatter/BaseFormatter.html">BaseFormatter</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/Formatter/DisabledFormatter" data-name="ameba::formatter::disabledformatter">
+      <a href="../../Ameba/Formatter/DisabledFormatter.html">DisabledFormatter</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/Formatter/DotFormatter" data-name="ameba::formatter::dotformatter">
+      <a href="../../Ameba/Formatter/DotFormatter.html">DotFormatter</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/Formatter/ExplainFormatter" data-name="ameba::formatter::explainformatter">
+      <a href="../../Ameba/Formatter/ExplainFormatter.html">ExplainFormatter</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/Formatter/FlycheckFormatter" data-name="ameba::formatter::flycheckformatter">
+      <a href="../../Ameba/Formatter/FlycheckFormatter.html">FlycheckFormatter</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/Formatter/JSONFormatter" data-name="ameba::formatter::jsonformatter">
+      <a href="../../Ameba/Formatter/JSONFormatter.html">JSONFormatter</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/Formatter/TODOFormatter" data-name="ameba::formatter::todoformatter">
+      <a href="../../Ameba/Formatter/TODOFormatter.html">TODOFormatter</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/Formatter/Util" data-name="ameba::formatter::util">
+      <a href="../../Ameba/Formatter/Util.html">Util</a>
+      
+    </li>
+  
+</ul>
+
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/GlobUtils" data-name="ameba::globutils">
+      <a href="../../Ameba/GlobUtils.html">GlobUtils</a>
+      
+    </li>
+  
+  <li class="parent " data-id="ameba/Ameba/InlineComments" data-name="ameba::inlinecomments">
+      <a href="../../Ameba/InlineComments.html">InlineComments</a>
+      
+        <ul>
+  
+  <li class=" " data-id="ameba/Ameba/InlineComments/Action" data-name="ameba::inlinecomments::action">
+      <a href="../../Ameba/InlineComments/Action.html">Action</a>
+      
+    </li>
+  
+</ul>
+
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/Issue" data-name="ameba::issue">
+      <a href="../../Ameba/Issue.html">Issue</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/Reportable" data-name="ameba::reportable">
+      <a href="../../Ameba/Reportable.html">Reportable</a>
+      
+    </li>
+  
+  <li class="parent " data-id="ameba/Ameba/Rule" data-name="ameba::rule">
+      <a href="../../Ameba/Rule.html">Rule</a>
+      
+        <ul>
+  
+  <li class=" " data-id="ameba/Ameba/Rule/Base" data-name="ameba::rule::base">
+      <a href="../../Ameba/Rule/Base.html">Base</a>
+      
+    </li>
+  
+  <li class="parent " data-id="ameba/Ameba/Rule/Layout" data-name="ameba::rule::layout">
+      <a href="../../Ameba/Rule/Layout.html">Layout</a>
+      
+        <ul>
+  
+  <li class=" " data-id="ameba/Ameba/Rule/Layout/LineLength" data-name="ameba::rule::layout::linelength">
+      <a href="../../Ameba/Rule/Layout/LineLength.html">LineLength</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/Rule/Layout/TrailingBlankLines" data-name="ameba::rule::layout::trailingblanklines">
+      <a href="../../Ameba/Rule/Layout/TrailingBlankLines.html">TrailingBlankLines</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/Rule/Layout/TrailingWhitespace" data-name="ameba::rule::layout::trailingwhitespace">
+      <a href="../../Ameba/Rule/Layout/TrailingWhitespace.html">TrailingWhitespace</a>
+      
+    </li>
+  
+</ul>
+
+      
+    </li>
+  
+  <li class="parent " data-id="ameba/Ameba/Rule/Lint" data-name="ameba::rule::lint">
+      <a href="../../Ameba/Rule/Lint.html">Lint</a>
+      
+        <ul>
+  
+  <li class=" " data-id="ameba/Ameba/Rule/Lint/BadDirective" data-name="ameba::rule::lint::baddirective">
+      <a href="../../Ameba/Rule/Lint/BadDirective.html">BadDirective</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/Rule/Lint/ComparisonToBoolean" data-name="ameba::rule::lint::comparisontoboolean">
+      <a href="../../Ameba/Rule/Lint/ComparisonToBoolean.html">ComparisonToBoolean</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/Rule/Lint/DebuggerStatement" data-name="ameba::rule::lint::debuggerstatement">
+      <a href="../../Ameba/Rule/Lint/DebuggerStatement.html">DebuggerStatement</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/Rule/Lint/EmptyEnsure" data-name="ameba::rule::lint::emptyensure">
+      <a href="../../Ameba/Rule/Lint/EmptyEnsure.html">EmptyEnsure</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/Rule/Lint/EmptyExpression" data-name="ameba::rule::lint::emptyexpression">
+      <a href="../../Ameba/Rule/Lint/EmptyExpression.html">EmptyExpression</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/Rule/Lint/EmptyLoop" data-name="ameba::rule::lint::emptyloop">
+      <a href="../../Ameba/Rule/Lint/EmptyLoop.html">EmptyLoop</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/Rule/Lint/HashDuplicatedKey" data-name="ameba::rule::lint::hashduplicatedkey">
+      <a href="../../Ameba/Rule/Lint/HashDuplicatedKey.html">HashDuplicatedKey</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/Rule/Lint/LiteralInCondition" data-name="ameba::rule::lint::literalincondition">
+      <a href="../../Ameba/Rule/Lint/LiteralInCondition.html">LiteralInCondition</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/Rule/Lint/LiteralInInterpolation" data-name="ameba::rule::lint::literalininterpolation">
+      <a href="../../Ameba/Rule/Lint/LiteralInInterpolation.html">LiteralInInterpolation</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/Rule/Lint/PercentArrays" data-name="ameba::rule::lint::percentarrays">
+      <a href="../../Ameba/Rule/Lint/PercentArrays.html">PercentArrays</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/Rule/Lint/RandZero" data-name="ameba::rule::lint::randzero">
+      <a href="../../Ameba/Rule/Lint/RandZero.html">RandZero</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/Rule/Lint/RedundantStringCoercion" data-name="ameba::rule::lint::redundantstringcoercion">
+      <a href="../../Ameba/Rule/Lint/RedundantStringCoercion.html">RedundantStringCoercion</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/Rule/Lint/RedundantWithIndex" data-name="ameba::rule::lint::redundantwithindex">
+      <a href="../../Ameba/Rule/Lint/RedundantWithIndex.html">RedundantWithIndex</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/Rule/Lint/RedundantWithObject" data-name="ameba::rule::lint::redundantwithobject">
+      <a href="../../Ameba/Rule/Lint/RedundantWithObject.html">RedundantWithObject</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/Rule/Lint/ShadowedArgument" data-name="ameba::rule::lint::shadowedargument">
+      <a href="../../Ameba/Rule/Lint/ShadowedArgument.html">ShadowedArgument</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/Rule/Lint/ShadowedException" data-name="ameba::rule::lint::shadowedexception">
+      <a href="../../Ameba/Rule/Lint/ShadowedException.html">ShadowedException</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/Rule/Lint/ShadowingOuterLocalVar" data-name="ameba::rule::lint::shadowingouterlocalvar">
+      <a href="../../Ameba/Rule/Lint/ShadowingOuterLocalVar.html">ShadowingOuterLocalVar</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/Rule/Lint/SharedVarInFiber" data-name="ameba::rule::lint::sharedvarinfiber">
+      <a href="../../Ameba/Rule/Lint/SharedVarInFiber.html">SharedVarInFiber</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/Rule/Lint/Syntax" data-name="ameba::rule::lint::syntax">
+      <a href="../../Ameba/Rule/Lint/Syntax.html">Syntax</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/Rule/Lint/UnneededDisableDirective" data-name="ameba::rule::lint::unneededdisabledirective">
+      <a href="../../Ameba/Rule/Lint/UnneededDisableDirective.html">UnneededDisableDirective</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/Rule/Lint/UnreachableCode" data-name="ameba::rule::lint::unreachablecode">
+      <a href="../../Ameba/Rule/Lint/UnreachableCode.html">UnreachableCode</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/Rule/Lint/UnusedArgument" data-name="ameba::rule::lint::unusedargument">
+      <a href="../../Ameba/Rule/Lint/UnusedArgument.html">UnusedArgument</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/Rule/Lint/UselessAssign" data-name="ameba::rule::lint::uselessassign">
+      <a href="../../Ameba/Rule/Lint/UselessAssign.html">UselessAssign</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/Rule/Lint/UselessConditionInWhen" data-name="ameba::rule::lint::uselessconditioninwhen">
+      <a href="../../Ameba/Rule/Lint/UselessConditionInWhen.html">UselessConditionInWhen</a>
+      
+    </li>
+  
+</ul>
+
+      
+    </li>
+  
+  <li class="parent " data-id="ameba/Ameba/Rule/Metrics" data-name="ameba::rule::metrics">
+      <a href="../../Ameba/Rule/Metrics.html">Metrics</a>
+      
+        <ul>
+  
+  <li class=" " data-id="ameba/Ameba/Rule/Metrics/CyclomaticComplexity" data-name="ameba::rule::metrics::cyclomaticcomplexity">
+      <a href="../../Ameba/Rule/Metrics/CyclomaticComplexity.html">CyclomaticComplexity</a>
+      
+    </li>
+  
+</ul>
+
+      
+    </li>
+  
+  <li class="parent " data-id="ameba/Ameba/Rule/Performance" data-name="ameba::rule::performance">
+      <a href="../../Ameba/Rule/Performance.html">Performance</a>
+      
+        <ul>
+  
+  <li class=" " data-id="ameba/Ameba/Rule/Performance/AnyAfterFilter" data-name="ameba::rule::performance::anyafterfilter">
+      <a href="../../Ameba/Rule/Performance/AnyAfterFilter.html">AnyAfterFilter</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/Rule/Performance/FirstLastAfterFilter" data-name="ameba::rule::performance::firstlastafterfilter">
+      <a href="../../Ameba/Rule/Performance/FirstLastAfterFilter.html">FirstLastAfterFilter</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/Rule/Performance/SizeAfterFilter" data-name="ameba::rule::performance::sizeafterfilter">
+      <a href="../../Ameba/Rule/Performance/SizeAfterFilter.html">SizeAfterFilter</a>
+      
+    </li>
+  
+</ul>
+
+      
+    </li>
+  
+  <li class="parent " data-id="ameba/Ameba/Rule/Style" data-name="ameba::rule::style">
+      <a href="../../Ameba/Rule/Style.html">Style</a>
+      
+        <ul>
+  
+  <li class=" " data-id="ameba/Ameba/Rule/Style/ConstantNames" data-name="ameba::rule::style::constantnames">
+      <a href="../../Ameba/Rule/Style/ConstantNames.html">ConstantNames</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/Rule/Style/IsANil" data-name="ameba::rule::style::isanil">
+      <a href="../../Ameba/Rule/Style/IsANil.html">IsANil</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/Rule/Style/LargeNumbers" data-name="ameba::rule::style::largenumbers">
+      <a href="../../Ameba/Rule/Style/LargeNumbers.html">LargeNumbers</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/Rule/Style/MethodNames" data-name="ameba::rule::style::methodnames">
+      <a href="../../Ameba/Rule/Style/MethodNames.html">MethodNames</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/Rule/Style/NegatedConditionsInUnless" data-name="ameba::rule::style::negatedconditionsinunless">
+      <a href="../../Ameba/Rule/Style/NegatedConditionsInUnless.html">NegatedConditionsInUnless</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/Rule/Style/PredicateName" data-name="ameba::rule::style::predicatename">
+      <a href="../../Ameba/Rule/Style/PredicateName.html">PredicateName</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/Rule/Style/RedundantBegin" data-name="ameba::rule::style::redundantbegin">
+      <a href="../../Ameba/Rule/Style/RedundantBegin.html">RedundantBegin</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/Rule/Style/RedundantNext" data-name="ameba::rule::style::redundantnext">
+      <a href="../../Ameba/Rule/Style/RedundantNext.html">RedundantNext</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/Rule/Style/RedundantReturn" data-name="ameba::rule::style::redundantreturn">
+      <a href="../../Ameba/Rule/Style/RedundantReturn.html">RedundantReturn</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/Rule/Style/TypeNames" data-name="ameba::rule::style::typenames">
+      <a href="../../Ameba/Rule/Style/TypeNames.html">TypeNames</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/Rule/Style/UnlessElse" data-name="ameba::rule::style::unlesselse">
+      <a href="../../Ameba/Rule/Style/UnlessElse.html">UnlessElse</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/Rule/Style/VariableNames" data-name="ameba::rule::style::variablenames">
+      <a href="../../Ameba/Rule/Style/VariableNames.html">VariableNames</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/Rule/Style/WhileTrue" data-name="ameba::rule::style::whiletrue">
+      <a href="../../Ameba/Rule/Style/WhileTrue.html">WhileTrue</a>
+      
+    </li>
+  
+</ul>
+
+      
+    </li>
+  
+</ul>
+
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/Runner" data-name="ameba::runner">
+      <a href="../../Ameba/Runner.html">Runner</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/Severity" data-name="ameba::severity">
+      <a href="../../Ameba/Severity.html">Severity</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/SeverityYamlConverter" data-name="ameba::severityyamlconverter">
+      <a href="../../Ameba/SeverityYamlConverter.html">SeverityYamlConverter</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/Source" data-name="ameba::source">
+      <a href="../../Ameba/Source.html">Source</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/Tokenizer" data-name="ameba::tokenizer">
+      <a href="../../Ameba/Tokenizer.html">Tokenizer</a>
+      
+    </li>
+  
+</ul>
+
+      
+    </li>
+  
+</ul>
+
+  </div>
+</div>
+
+
+<div class="main-content">
+<h1 class="type-name">
+
+  <span class="kind">class</span> Ameba::AST::RedundantControlExpressionVisitor
+
+</h1>
+
+
+  <ul class="superclass-hierarchy"><li class="superclass"><a href="../../Ameba/AST/RedundantControlExpressionVisitor.html">Ameba::AST::RedundantControlExpressionVisitor</a></li><li class="superclass">Reference</li><li class="superclass">Object</li></ul>
+
+
+
+
+  <h2>
+    <a id="overview" class="anchor" href="#overview">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>
+    Overview
+  </h2>
+
+  <p>A class that utilizes a logic to traverse AST nodes and
+fire a source test callback if a redundant <code>Crystal::ControlExpression</code>
+is reached.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <h2>
+    <a id="defined-in" class="anchor" href="#defined-in">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>
+    Defined in:
+  </h2>
+  
+
+
+
+
+
+  <h2>
+    <a id="constructors" class="anchor" href="#constructors">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>
+    Constructors
+  </h2>
+  <ul class="list-summary">
+    
+      <li class="entry-summary">
+        <a href="#new(rule,source,node)-class-method" class="signature"><strong>.new</strong>(rule, source, node)</a>
+        
+      </li>
+    
+  </ul>
+
+
+
+
+
+  <h2>
+    <a id="instance-method-summary" class="anchor" href="#instance-method-summary">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>
+    Instance Method Summary
+  </h2>
+  <ul class="list-summary">
+    
+      <li class="entry-summary">
+        <a href="#node:Crystal::ASTNode-instance-method" class="signature"><strong>#node</strong> : Crystal::ASTNode</a>
+        
+          <div class="summary"><p>A node to run traversal on.</p></div>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#rule:Rule::Base-instance-method" class="signature"><strong>#rule</strong> : Rule::Base</a>
+        
+          <div class="summary"><p>A corresponding rule that uses this visitor.</p></div>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#source:Source-instance-method" class="signature"><strong>#source</strong> : Source</a>
+        
+          <div class="summary"><p>A source that needs to be traversed.</p></div>
+        
+      </li>
+    
+  </ul>
+
+
+
+
+
+<div class="methods-inherited">
+  
+    
+
+
+    
+
+
+    
+
+
+  
+    
+
+
+    
+
+
+    
+
+
+  
+</div>
+
+
+  <h2>
+    <a id="constructor-detail" class="anchor" href="#constructor-detail">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>
+    Constructor Detail
+  </h2>
+  
+    <div class="entry-detail" id="new(rule,source,node)-class-method">
+      <div class="signature">
+        
+        def self.<strong>new</strong>(rule, source, node)
+
+        <a class="method-permalink" href="#new(rule,source,node)-class-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+      </div>
+    </div>
+  
+
+
+
+
+
+  <h2>
+    <a id="instance-method-detail" class="anchor" href="#instance-method-detail">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>
+    Instance Method Detail
+  </h2>
+  
+    <div class="entry-detail" id="node:Crystal::ASTNode-instance-method">
+      <div class="signature">
+        
+        def <strong>node</strong> : Crystal::ASTNode
+
+        <a class="method-permalink" href="#node:Crystal::ASTNode-instance-method">#</a>
+      </div>
+      
+        <div class="doc">
+          
+          <p>A node to run traversal on.</p>
+        </div>
+      
+      <br/>
+      <div>
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="rule:Rule::Base-instance-method">
+      <div class="signature">
+        
+        def <strong>rule</strong> : <a href="../../Ameba/Rule/Base.html">Rule::Base</a>
+
+        <a class="method-permalink" href="#rule:Rule::Base-instance-method">#</a>
+      </div>
+      
+        <div class="doc">
+          
+          <p>A corresponding rule that uses this visitor.</p>
+        </div>
+      
+      <br/>
+      <div>
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="source:Source-instance-method">
+      <div class="signature">
+        
+        def <strong>source</strong> : <a href="../../Ameba/Source.html">Source</a>
+
+        <a class="method-permalink" href="#source:Source-instance-method">#</a>
+      </div>
+      
+        <div class="doc">
+          
+          <p>A source that needs to be traversed.</p>
+        </div>
+      
+      <br/>
+      <div>
+        
+      </div>
+    </div>
+  
+
+
+
+
+</div>
+
+</body>
+</html>
