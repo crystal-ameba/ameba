@@ -22,10 +22,10 @@ module Ameba
     # ```
     #
     def expand(globs)
-      globs.map do |glob|
+      globs.flat_map do |glob|
         glob += "/**/*.cr" if File.directory?(glob)
         Dir[glob]
-      end.flatten.uniq!
+      end.uniq!
     end
 
     private def rejected_globs(globs)

@@ -72,12 +72,12 @@ module Ameba::Cli
 
       parser.on("--only RULE1,RULE2,...",
         "Run only given rules (or groups)") do |rules|
-        opts.only = rules.split ","
+        opts.only = rules.split(',')
       end
 
       parser.on("--except RULE1,RULE2,...",
         "Disable the given rules (or groups)") do |rules|
-        opts.except = rules.split ","
+        opts.except = rules.split(',')
       end
 
       parser.on("--all", "Enables all available rules") do
@@ -90,7 +90,8 @@ module Ameba::Cli
         opts.config = ""
       end
 
-      parser.on("--fail-level SEVERITY", "Change the level of failure to exit. Defaults to Convention") do |level|
+      parser.on("--fail-level SEVERITY",
+        "Change the level of failure to exit. Defaults to Convention") do |level|
         opts.fail_level = Severity.parse(level)
       end
 
@@ -113,13 +114,13 @@ module Ameba::Cli
   end
 
   private def configure_rules(config, opts)
-    if only = opts.only
-      config.rules.map! { |r| r.enabled = false; r }
+    case
+    when only = opts.only
+      config.rules.map! &.tap(&.enabled = false)
       config.update_rules(only, enabled: true)
-    elsif opts.all?
-      config.rules.map! { |r| r.enabled = true; r }
+    when opts.all?
+      config.rules.map! &.tap(&.enabled = true)
     end
-
     config.update_rules(opts.except, enabled: false)
   end
 
@@ -127,7 +128,8 @@ module Ameba::Cli
     if name = opts.formatter
       config.formatter = name
     end
-    config.formatter.config[:without_affected_code] = opts.without_affected_code?
+    config.formatter.config[:without_affected_code] =
+      opts.without_affected_code?
   end
 
   private def configure_explain_opts(loc, opts)
@@ -138,10 +140,15 @@ module Ameba::Cli
   end
 
   private def parse_explain_location(arg)
-    location = arg.split(":", remove_empty: true).map &.strip
+    location = arg.split(':', remove_empty: true).map! &.strip
     raise ArgumentError.new unless location.size === 3
+
     file, line, column = location
-    {file: file, line: line.to_i, column: column.to_i}
+    {
+      file:   file,
+      line:   line.to_i,
+      column: column.to_i,
+    }
   rescue
     raise "location should have PATH:line:column format"
   end
