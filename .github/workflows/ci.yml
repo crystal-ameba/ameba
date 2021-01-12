@@ -1,0 +1,42 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+    branches:
+      # Branches from forks have the form 'user:branch-name' so we only run
+      # this job on pull_request events for branches that look like fork
+      # branches. Without this we would end up running this job twice for non
+      # forked PRs, once for the push and then once for opening the PR.
+      - "**:**"
+  schedule:
+    - cron: "0 3 * * 1" # Every monday at 3 AM
+
+jobs:
+  test:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+        crystal: [latest, nightly]
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - name: Install Crystal
+        uses: oprypin/install-crystal@v1
+        with:
+          crystal: ${{ matrix.crystal }}
+
+      - name: Download source
+        uses: actions/checkout@v2
+
+      - name: Install dependencies
+        run: shards install
+        env:
+          SHARDS_OPTS: --ignore-crystal-version
+
+      - name: Run specs
+        run: make test
+
+      - name: Check formatting
+        run: crystal tool format --check
