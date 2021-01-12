@@ -49,7 +49,7 @@ module Ameba::Formatter
         @location.to_s.colorize(:cyan).to_s,
       ]
 
-      if affected_code = affected_code(source, @location)
+      if affected_code = affected_code(source, @location, context_lines: 3)
         output_title "AFFECTED CODE"
         output_paragraph affected_code
       end
