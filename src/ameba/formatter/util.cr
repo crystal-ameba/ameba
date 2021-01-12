@@ -1,5 +1,9 @@
 module Ameba::Formatter
   module Util
+    def deansify(message : String?) : String?
+      message.try &.gsub(/\x1b[^m]*m/, "").presence
+    end
+
     def affected_code(source, location, context_lines = 0, max_length = 100, placeholder = " ...", prompt = "> ")
       lines = source.lines
       lineno, column =
