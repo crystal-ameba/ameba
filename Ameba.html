@@ -3,28 +3,28 @@
 <head>
   <meta charset="utf-8" />
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="generator" content="Crystal Docs 0.35.1">
-<meta name="crystal_docs.project_version" content="0.13.3-dev">
+<meta name="generator" content="Crystal Docs 0.34.0">
+<meta name="crystal_docs.project_version" content="master">
 <meta name="crystal_docs.project_name" content="ameba">
-
 
 
 <link href="css/style.css" rel="stylesheet" type="text/css" />
 <script type="text/javascript" src="js/doc.js"></script>
-
-  <meta name="repository-name" content="ameba">
-  <title>Ameba - ameba 0.13.3-dev</title>
-  <script type="text/javascript">
-    CrystalDocs.base_path = "";
-  </script>
-</head>
-<body>
 
 <svg class="hidden">
   <symbol id="octicon-link" viewBox="0 0 16 16">
     <path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path>
   </symbol>
 </svg>
+
+  <meta id="repository-name" content="ameba">
+  <title>Ameba - ameba master</title>
+  <script type="text/javascript">
+    CrystalDocs.base_path = "";
+  </script>
+</head>
+<body>
+
 <div class="sidebar">
   <div class="sidebar-header">
     <div class="search-box">
@@ -39,12 +39,12 @@
       </h1>
 
       <span class="project-version">
-        0.13.3-dev
+        master
       </span>
     </div>
   </div>
 
-  <div class="search-results hidden">
+  <div class="search-results" class="hidden">
     <ul class="search-list"></ul>
   </div>
 
@@ -576,11 +576,11 @@
 
 <p>To run the linter with default parameters:</p>
 
-<pre><code class="language-crystal"><span class="t">Ameba</span>.run</code></pre>
+<pre><code><span class="t">Ameba</span>.run</code></pre>
 
 <p>To configure and run it:</p>
 
-<pre><code class="language-crystal">config <span class="o">=</span> <span class="t">Ameba</span><span class="t">::</span><span class="t">Config</span>.load
+<pre><code>config <span class="o">=</span> <span class="t">Ameba</span><span class="t">::</span><span class="t">Config</span>.load
 config.formatter <span class="o">=</span> formatter
 config.files <span class="o">=</span> file_paths
 
@@ -622,6 +622,69 @@ config.files <span class="o">=</span> file_paths
     Defined in:
   </h2>
   
+    
+      <a href="https://github.com/crystal-ameba/ameba/blob/bedf3a68/src/ameba.cr#L24" target="_blank">
+        ameba.cr
+      </a>
+    
+    <br/>
+  
+    
+      <a href="https://github.com/crystal-ameba/ameba/blob/bedf3a68/src/ameba/glob_utils.cr#L1" target="_blank">
+        ameba/glob_utils.cr
+      </a>
+    
+    <br/>
+  
+    
+      <a href="https://github.com/crystal-ameba/ameba/blob/bedf3a68/src/ameba/inline_comments.cr#L1" target="_blank">
+        ameba/inline_comments.cr
+      </a>
+    
+    <br/>
+  
+    
+      <a href="https://github.com/crystal-ameba/ameba/blob/bedf3a68/src/ameba/issue.cr#L1" target="_blank">
+        ameba/issue.cr
+      </a>
+    
+    <br/>
+  
+    
+      <a href="https://github.com/crystal-ameba/ameba/blob/bedf3a68/src/ameba/reportable.cr#L1" target="_blank">
+        ameba/reportable.cr
+      </a>
+    
+    <br/>
+  
+    
+      <a href="https://github.com/crystal-ameba/ameba/blob/bedf3a68/src/ameba/runner.cr#L1" target="_blank">
+        ameba/runner.cr
+      </a>
+    
+    <br/>
+  
+    
+      <a href="https://github.com/crystal-ameba/ameba/blob/bedf3a68/src/ameba/severity.cr#L1" target="_blank">
+        ameba/severity.cr
+      </a>
+    
+    <br/>
+  
+    
+      <a href="https://github.com/crystal-ameba/ameba/blob/bedf3a68/src/ameba/source.cr#L1" target="_blank">
+        ameba/source.cr
+      </a>
+    
+    <br/>
+  
+    
+      <a href="https://github.com/crystal-ameba/ameba/blob/bedf3a68/src/ameba/tokenizer.cr#L3" target="_blank">
+        ameba/tokenizer.cr
+      </a>
+    
+    <br/>
+  
 
 
 
@@ -638,7 +701,7 @@ config.files <span class="o">=</span> file_paths
   <dl>
     
       <dt class="entry-const" id="VERSION">
-        <strong>VERSION</strong> = <code>{{ (<span class="s">`shards version \&quot;/home/travis/build/crystal-ameba/ameba/src\&quot;`</span>).chomp.stringify }}</code>
+        <strong>VERSION</strong> = <code>{{ (<span class="s">`shards version \&quot;/home/runner/work/ameba/ameba/src\&quot;`</span>).chomp.stringify }}</code>
       </dt>
       
     
@@ -706,12 +769,14 @@ Can be configured via <code>config</code> parameter.</p>
 
 <p>Examples:</p>
 
-<pre><code class="language-crystal"><span class="t">Ameba</span>.run
+<pre><code><span class="t">Ameba</span>.run
 <span class="t">Ameba</span>.run config</code></pre>
         </div>
       
       <br/>
       <div>
+        
+          [<a href="https://github.com/crystal-ameba/ameba/blob/bedf3a68/src/ameba.cr#L39" target="_blank">View source</a>]
         
       </div>
     </div>

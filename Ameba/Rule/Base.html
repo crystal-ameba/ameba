@@ -3,28 +3,28 @@
 <head>
   <meta charset="utf-8" />
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="generator" content="Crystal Docs 0.35.1">
-<meta name="crystal_docs.project_version" content="0.13.3-dev">
+<meta name="generator" content="Crystal Docs 0.34.0">
+<meta name="crystal_docs.project_version" content="master">
 <meta name="crystal_docs.project_name" content="ameba">
-
 
 
 <link href="../../css/style.css" rel="stylesheet" type="text/css" />
 <script type="text/javascript" src="../../js/doc.js"></script>
-
-  <meta name="repository-name" content="ameba">
-  <title>Ameba::Rule::Base - ameba 0.13.3-dev</title>
-  <script type="text/javascript">
-    CrystalDocs.base_path = "../../";
-  </script>
-</head>
-<body>
 
 <svg class="hidden">
   <symbol id="octicon-link" viewBox="0 0 16 16">
     <path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path>
   </symbol>
 </svg>
+
+  <meta id="repository-name" content="ameba">
+  <title>Ameba::Rule::Base - ameba master</title>
+  <script type="text/javascript">
+    CrystalDocs.base_path = "../../";
+  </script>
+</head>
+<body>
+
 <div class="sidebar">
   <div class="sidebar-header">
     <div class="search-box">
@@ -39,12 +39,12 @@
       </h1>
 
       <span class="project-version">
-        0.13.3-dev
+        master
       </span>
     </div>
   </div>
 
-  <div class="search-results hidden">
+  <div class="search-results" class="hidden">
     <ul class="search-list"></ul>
   </div>
 
@@ -577,7 +577,7 @@
   <p>Represents a base of all rules. In other words, all rules
 inherits from this struct:</p>
 
-<pre><code class="language-crystal"><span class="k">struct</span> <span class="t">MyRule</span> <span class="o">&lt;</span> <span class="t">Ameba</span><span class="t">::</span><span class="t">Rule</span><span class="t">::</span><span class="t">Base</span>
+<pre><code><span class="k">struct</span> <span class="t">MyRule</span> <span class="o">&lt;</span> <span class="t">Ameba</span><span class="t">::</span><span class="t">Rule</span><span class="t">::</span><span class="t">Base</span>
   <span class="k">def</span> <span class="m">test</span>(source)
     <span class="k">if</span> invalid?(source)
       issue_for line, column, <span class="s">&quot;Something wrong.&quot;</span>
@@ -728,6 +728,13 @@ that are tested by this rule, it should add an issue.</p>
 </a>
     Defined in:
   </h2>
+  
+    
+      <a href="https://github.com/crystal-ameba/ameba/blob/bedf3a68/src/ameba/rule/base.cr#L30" target="_blank">
+        ameba/rule/base.cr
+      </a>
+    
+    <br/>
   
 
 
@@ -933,6 +940,8 @@ that are tested by this rule, it should add an issue.</p>
       <br/>
       <div>
         
+          [<a href="https://github.com/crystal-ameba/ameba/blob/bedf3a68/src/ameba/rule/base.cr#L30" target="_blank">View source</a>]
+        
       </div>
     </div>
   
@@ -960,7 +969,7 @@ that are tested by this rule, it should add an issue.</p>
           
           <p>Returns documentation for this rule if any.</p>
 
-<pre><code class="language-crystal"><span class="k">module</span> <span class="t">Ameba</span>
+<pre><code><span class="k">module</span> <span class="t">Ameba</span>
   <span class="c"># This is a test rule.</span>
   <span class="c"># Does nothing.</span>
   <span class="k">struct</span> <span class="t">MyRule</span> <span class="o">&lt;</span> <span class="t">Ameba</span><span class="t">::</span><span class="t">Rule</span><span class="t">::</span><span class="t">Base</span>
@@ -974,6 +983,8 @@ that are tested by this rule, it should add an issue.</p>
       
       <br/>
       <div>
+        
+          [<a href="https://github.com/crystal-ameba/ameba/blob/bedf3a68/src/ameba/rule/base.cr#L157" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1006,12 +1017,12 @@ that are tested by this rule, it should add an issue.</p>
           
           <p>Returns <code>true</code> if this struct is equal to <em>other</em>.</p>
 
-<p>Both structs' instance vars are compared to each other. Thus, two
+<p>Both structs's instance vars are compared to each other. Thus, two
 structs are considered equal if each of their instance variables are
 equal. Subclasses should override this method to provide specific
 equality semantics.</p>
 
-<pre><code class="language-crystal"><span class="k">struct</span> <span class="t">Point</span>
+<pre><code><span class="k">struct</span> <span class="t">Point</span>
   <span class="k">def</span> <span class="m">initialize</span>(@x : <span class="t">Int32</span>, @y : <span class="t">Int32</span>)
   <span class="k">end</span>
 <span class="k">end</span>
@@ -1026,6 +1037,8 @@ p1 <span class="o">==</span> p3 <span class="c"># =&gt; false</span></code></pre
       
       <br/>
       <div>
+        
+          [<a href="https://github.com/crystal-ameba/ameba/blob/bedf3a68/src/ameba/rule/base.cr#L113" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1043,12 +1056,14 @@ p1 <span class="o">==</span> p3 <span class="c"># =&gt; false</span></code></pre
           <p>A convenient addition to <code><a href="../../Ameba/Rule/Base.html#test(source:Source,node:Crystal::ASTNode,*opts)-instance-method">#test</a></code> method that does the same
 but returns a passed in <code>source</code> as an addition.</p>
 
-<pre><code class="language-crystal">source <span class="o">=</span> <span class="t">MyRule</span>.<span class="k">new</span>.catch(source)
+<pre><code>source <span class="o">=</span> <span class="t">MyRule</span>.<span class="k">new</span>.catch(source)
 source.valid?</code></pre>
         </div>
       
       <br/>
       <div>
+        
+          [<a href="https://github.com/crystal-ameba/ameba/blob/bedf3a68/src/ameba/rule/base.cr#L54" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1067,11 +1082,13 @@ source.valid?</code></pre>
 It searches for a path in <code>excluded</code> property which matches
 the one of the given source.</p>
 
-<pre><code class="language-crystal">my_rule.excluded?(source) <span class="c"># =&gt; true or false</span></code></pre>
+<pre><code>my_rule.excluded?(source) <span class="c"># =&gt; true or false</span></code></pre>
         </div>
       
       <br/>
       <div>
+        
+          [<a href="https://github.com/crystal-ameba/ameba/blob/bedf3a68/src/ameba/rule/base.cr#L95" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1088,7 +1105,7 @@ the one of the given source.</p>
           
           <p>Returns a group this rule belong to.</p>
 
-<pre><code class="language-crystal"><span class="k">struct</span> <span class="t">MyGroup</span><span class="t">::</span><span class="t">MyRule</span> <span class="o">&lt;</span> <span class="t">Ameba</span><span class="t">::</span><span class="t">Rule</span><span class="t">::</span><span class="t">Base</span>
+<pre><code><span class="k">struct</span> <span class="t">MyGroup</span><span class="t">::</span><span class="t">MyRule</span> <span class="o">&lt;</span> <span class="t">Ameba</span><span class="t">::</span><span class="t">Rule</span><span class="t">::</span><span class="t">Base</span>
   <span class="c"># ...</span>
 <span class="k">end</span>
 
@@ -1097,6 +1114,8 @@ the one of the given source.</p>
       
       <br/>
       <div>
+        
+          [<a href="https://github.com/crystal-ameba/ameba/blob/bedf3a68/src/ameba/rule/base.cr#L83" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1117,7 +1136,7 @@ the one of the given source.</p>
           
           <p>Generates an <code>UInt64</code> hash value for this object.</p>
 
-<p>This method must have the property that <code>a == b</code> implies <code>a.hash == b.hash</code>.</p>
+<p>This method must have the property that <code>a == b</code> implies <code>a<a href="../../Ameba/Rule/Base.html#hash-instance-method">.hash</a> == b<a href="../../Ameba/Rule/Base.html#hash-instance-method">.hash</a></code>.</p>
 
 <p>The hash value is used along with <code><a href="../../Ameba/Rule/Base.html#==(other)-instance-method">#==</a></code> by the <code>Hash</code> class to determine if two objects
 reference the same hash key.</p>
@@ -1128,6 +1147,8 @@ though usually the macro <code>def_hash</code> can be used to generate this meth
       
       <br/>
       <div>
+        
+          [<a href="https://github.com/crystal-ameba/ameba/blob/bedf3a68/src/ameba/rule/base.cr#L117" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1144,7 +1165,7 @@ though usually the macro <code>def_hash</code> can be used to generate this meth
           
           <p>Returns a name of this rule, which is basically a class name.</p>
 
-<pre><code class="language-crystal"><span class="k">struct</span> <span class="t">MyRule</span> <span class="o">&lt;</span> <span class="t">Ameba</span><span class="t">::</span><span class="t">Rule</span><span class="t">::</span><span class="t">Base</span>
+<pre><code><span class="k">struct</span> <span class="t">MyRule</span> <span class="o">&lt;</span> <span class="t">Ameba</span><span class="t">::</span><span class="t">Rule</span><span class="t">::</span><span class="t">Base</span>
   <span class="k">def</span> <span class="m">test</span>(source)
   <span class="k">end</span>
 <span class="k">end</span>
@@ -1154,6 +1175,8 @@ though usually the macro <code>def_hash</code> can be used to generate this meth
       
       <br/>
       <div>
+        
+          [<a href="https://github.com/crystal-ameba/ameba/blob/bedf3a68/src/ameba/rule/base.cr#L69" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1171,11 +1194,13 @@ though usually the macro <code>def_hash</code> can be used to generate this meth
           <p>Returns true if this rule is special and behaves differently than
 usual rules.</p>
 
-<pre><code class="language-crystal">my_rule.special? <span class="c"># =&gt; true or false</span></code></pre>
+<pre><code>my_rule.special? <span class="c"># =&gt; true or false</span></code></pre>
         </div>
       
       <br/>
       <div>
+        
+          [<a href="https://github.com/crystal-ameba/ameba/blob/bedf3a68/src/ameba/rule/base.cr#L109" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1190,6 +1215,8 @@ usual rules.</p>
       
       <br/>
       <div>
+        
+          [<a href="https://github.com/crystal-ameba/ameba/blob/bedf3a68/src/ameba/rule/base.cr#L42" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1213,6 +1240,8 @@ Must be overriten for other type of rules.</p>
       
       <br/>
       <div>
+        
+          [<a href="https://github.com/crystal-ameba/ameba/blob/bedf3a68/src/ameba/rule/base.cr#L38" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1239,6 +1268,8 @@ Must be overriten for other type of rules.</p>
       
       <br/>
       <div>
+        
+          [<a href="https://github.com/crystal-ameba/ameba/blob/bedf3a68/src/ameba/rule/base.cr#L121" target="_blank">View source</a>]
         
       </div>
     </div>

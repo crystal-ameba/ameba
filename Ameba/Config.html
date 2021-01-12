@@ -3,28 +3,28 @@
 <head>
   <meta charset="utf-8" />
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="generator" content="Crystal Docs 0.35.1">
-<meta name="crystal_docs.project_version" content="0.13.3-dev">
+<meta name="generator" content="Crystal Docs 0.34.0">
+<meta name="crystal_docs.project_version" content="master">
 <meta name="crystal_docs.project_name" content="ameba">
-
 
 
 <link href="../css/style.css" rel="stylesheet" type="text/css" />
 <script type="text/javascript" src="../js/doc.js"></script>
-
-  <meta name="repository-name" content="ameba">
-  <title>Ameba::Config - ameba 0.13.3-dev</title>
-  <script type="text/javascript">
-    CrystalDocs.base_path = "../";
-  </script>
-</head>
-<body>
 
 <svg class="hidden">
   <symbol id="octicon-link" viewBox="0 0 16 16">
     <path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path>
   </symbol>
 </svg>
+
+  <meta id="repository-name" content="ameba">
+  <title>Ameba::Config - ameba master</title>
+  <script type="text/javascript">
+    CrystalDocs.base_path = "../";
+  </script>
+</head>
+<body>
+
 <div class="sidebar">
   <div class="sidebar-header">
     <div class="search-box">
@@ -39,12 +39,12 @@
       </h1>
 
       <span class="project-version">
-        0.13.3-dev
+        master
       </span>
     </div>
   </div>
 
-  <div class="search-results hidden">
+  <div class="search-results" class="hidden">
     <ul class="search-list"></ul>
   </div>
 
@@ -578,7 +578,7 @@
 
 <p>Config can be loaded from configuration YAML file and adjusted.</p>
 
-<pre><code class="language-crystal">config <span class="o">=</span> <span class="t">Config</span>.load
+<pre><code>config <span class="o">=</span> <span class="t">Config</span>.load
 config.formatter <span class="o">=</span> my_formatter</code></pre>
 
 <p>By default config loads <code>.ameba.yml</code> file in a current directory.</p>
@@ -618,6 +618,13 @@ config.formatter <span class="o">=</span> my_formatter</code></pre>
 </a>
     Defined in:
   </h2>
+  
+    
+      <a href="https://github.com/crystal-ameba/ameba/blob/bedf3a68/src/ameba/config.cr#L15" target="_blank">
+        ameba/config.cr
+      </a>
+    
+    <br/>
   
 
 
@@ -851,6 +858,8 @@ config.formatter <span class="o">=</span> my_formatter</code></pre>
       <br/>
       <div>
         
+          [<a href="https://github.com/crystal-ameba/ameba/blob/bedf3a68/src/ameba/config.cr#L86" target="_blank">View source</a>]
+        
       </div>
     </div>
   
@@ -866,11 +875,13 @@ config.formatter <span class="o">=</span> my_formatter</code></pre>
           
           <p>Loads YAML configuration file by <code>path</code>.</p>
 
-<pre><code class="language-crystal">config <span class="o">=</span> <span class="t">Ameba</span><span class="t">::</span><span class="t">Config</span>.load</code></pre>
+<pre><code>config <span class="o">=</span> <span class="t">Ameba</span><span class="t">::</span><span class="t">Config</span>.load</code></pre>
         </div>
       
       <br/>
       <div>
+        
+          [<a href="https://github.com/crystal-ameba/ameba/blob/bedf3a68/src/ameba/config.cr#L78" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -900,12 +911,14 @@ config.formatter <span class="o">=</span> my_formatter</code></pre>
           <p>Represents a list of paths to exclude from globs.
 Can have wildcards.</p>
 
-<pre><code class="language-crystal">config <span class="o">=</span> <span class="t">Ameba</span><span class="t">::</span><span class="t">Config</span>.load
+<pre><code>config <span class="o">=</span> <span class="t">Ameba</span><span class="t">::</span><span class="t">Config</span>.load
 config.excluded <span class="o">=</span> [<span class="s">&quot;spec&quot;</span>, <span class="s">&quot;src/server/*.cr&quot;</span>]</code></pre>
         </div>
       
       <br/>
       <div>
+        
+          [<a href="https://github.com/crystal-ameba/ameba/blob/bedf3a68/src/ameba/config.cr#L56" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -923,12 +936,14 @@ config.excluded <span class="o">=</span> [<span class="s">&quot;spec&quot;</span
           <p>Represents a list of paths to exclude from globs.
 Can have wildcards.</p>
 
-<pre><code class="language-crystal">config <span class="o">=</span> <span class="t">Ameba</span><span class="t">::</span><span class="t">Config</span>.load
+<pre><code>config <span class="o">=</span> <span class="t">Ameba</span><span class="t">::</span><span class="t">Config</span>.load
 config.excluded <span class="o">=</span> [<span class="s">&quot;spec&quot;</span>, <span class="s">&quot;src/server/*.cr&quot;</span>]</code></pre>
         </div>
       
       <br/>
       <div>
+        
+          [<a href="https://github.com/crystal-ameba/ameba/blob/bedf3a68/src/ameba/config.cr#L56" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -946,13 +961,15 @@ config.excluded <span class="o">=</span> [<span class="s">&quot;spec&quot;</span
           <p>Returns a formatter to be used while inspecting files.
 If formatter is not set, it will return default formatter.</p>
 
-<pre><code class="language-crystal">config <span class="o">=</span> <span class="t">Ameba</span><span class="t">::</span><span class="t">Config</span>.load
+<pre><code>config <span class="o">=</span> <span class="t">Ameba</span><span class="t">::</span><span class="t">Config</span>.load
 config.formatter <span class="o">=</span> custom_formatter
 config.formatter</code></pre>
         </div>
       
       <br/>
       <div>
+        
+          [<a href="https://github.com/crystal-ameba/ameba/blob/bedf3a68/src/ameba/config.cr#L114" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -967,6 +984,8 @@ config.formatter</code></pre>
       
       <br/>
       <div>
+        
+          [<a href="https://github.com/crystal-ameba/ameba/blob/bedf3a68/src/ameba/config.cr#L34" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -983,12 +1002,14 @@ config.formatter</code></pre>
           
           <p>Sets formatter by name.</p>
 
-<pre><code class="language-crystal">config <span class="o">=</span> <span class="t">Ameba</span><span class="t">::</span><span class="t">Config</span>.load
+<pre><code>config <span class="o">=</span> <span class="t">Ameba</span><span class="t">::</span><span class="t">Config</span>.load
 config.formatter <span class="o">=</span> <span class="n">:progress</span></code></pre>
         </div>
       
       <br/>
       <div>
+        
+          [<a href="https://github.com/crystal-ameba/ameba/blob/bedf3a68/src/ameba/config.cr#L125" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1007,13 +1028,15 @@ config.formatter <span class="o">=</span> <span class="n">:progress</span></code
 Represents a list of sources to be inspected.
 If globs are not set, it will return default list of files.</p>
 
-<pre><code class="language-crystal">config <span class="o">=</span> <span class="t">Ameba</span><span class="t">::</span><span class="t">Config</span>.load
+<pre><code>config <span class="o">=</span> <span class="t">Ameba</span><span class="t">::</span><span class="t">Config</span>.load
 config.globs <span class="o">=</span> [<span class="s">&quot;**/*.cr&quot;</span>]
 config.globs</code></pre>
         </div>
       
       <br/>
       <div>
+        
+          [<a href="https://github.com/crystal-ameba/ameba/blob/bedf3a68/src/ameba/config.cr#L47" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1032,13 +1055,15 @@ config.globs</code></pre>
 Represents a list of sources to be inspected.
 If globs are not set, it will return default list of files.</p>
 
-<pre><code class="language-crystal">config <span class="o">=</span> <span class="t">Ameba</span><span class="t">::</span><span class="t">Config</span>.load
+<pre><code>config <span class="o">=</span> <span class="t">Ameba</span><span class="t">::</span><span class="t">Config</span>.load
 config.globs <span class="o">=</span> [<span class="s">&quot;**/*.cr&quot;</span>]
 config.globs</code></pre>
         </div>
       
       <br/>
       <div>
+        
+          [<a href="https://github.com/crystal-ameba/ameba/blob/bedf3a68/src/ameba/config.cr#L47" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1054,6 +1079,8 @@ config.globs</code></pre>
       <br/>
       <div>
         
+          [<a href="https://github.com/crystal-ameba/ameba/blob/bedf3a68/src/ameba/config.cr#L35" target="_blank">View source</a>]
+        
       </div>
     </div>
   
@@ -1068,6 +1095,8 @@ config.globs</code></pre>
       <br/>
       <div>
         
+          [<a href="https://github.com/crystal-ameba/ameba/blob/bedf3a68/src/ameba/config.cr#L36" target="_blank">View source</a>]
+        
       </div>
     </div>
   
@@ -1081,6 +1110,8 @@ config.globs</code></pre>
       
       <br/>
       <div>
+        
+          [<a href="https://github.com/crystal-ameba/ameba/blob/bedf3a68/src/ameba/config.cr#L36" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1097,7 +1128,7 @@ config.globs</code></pre>
           
           <p>Returns a list of sources matching globs and excluded sections.</p>
 
-<pre><code class="language-crystal">config <span class="o">=</span> <span class="t">Ameba</span><span class="t">::</span><span class="t">Config</span>.load
+<pre><code>config <span class="o">=</span> <span class="t">Ameba</span><span class="t">::</span><span class="t">Config</span>.load
 config.sources <span class="c"># =&gt; list of default sources</span>
 config.globs <span class="o">=</span> [<span class="s">&quot;**/*.cr&quot;</span>]
 config.excluded <span class="o">=</span> [<span class="s">&quot;spec&quot;</span>]
@@ -1106,6 +1137,8 @@ config.sources <span class="c"># =&gt; list of sources pointing to files found b
       
       <br/>
       <div>
+        
+          [<a href="https://github.com/crystal-ameba/ameba/blob/bedf3a68/src/ameba/config.cr#L100" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1122,12 +1155,14 @@ config.sources <span class="c"># =&gt; list of sources pointing to files found b
           
           <p>Updates rule properties.</p>
 
-<pre><code class="language-crystal">config <span class="o">=</span> <span class="t">Ameba</span><span class="t">::</span><span class="t">Config</span>.load
+<pre><code>config <span class="o">=</span> <span class="t">Ameba</span><span class="t">::</span><span class="t">Config</span>.load
 config.update_rule <span class="s">&quot;MyRuleName&quot;</span>, enabled: <span class="n">false</span></code></pre>
         </div>
       
       <br/>
       <div>
+        
+          [<a href="https://github.com/crystal-ameba/ameba/blob/bedf3a68/src/ameba/config.cr#L140" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1144,16 +1179,18 @@ config.update_rule <span class="s">&quot;MyRuleName&quot;</span>, enabled: <span
           
           <p>Updates rules properties.</p>
 
-<pre><code class="language-crystal">config <span class="o">=</span> <span class="t">Ameba</span><span class="t">::</span><span class="t">Config</span>.load
+<pre><code>config <span class="o">=</span> <span class="t">Ameba</span><span class="t">::</span><span class="t">Config</span>.load
 config.update_rules <span class="s">%w(Rule1 Rule2)</span>, enabled: <span class="n">true</span></code></pre>
 
 <p>also it allows to update groups of rules:</p>
 
-<pre><code class="language-crystal">config.update_rules <span class="s">%w(Group1 Group2)</span>, enabled: <span class="n">true</span></code></pre>
+<pre><code>config.update_rules <span class="s">%w(Group1 Group2)</span>, enabled: <span class="n">true</span></code></pre>
         </div>
       
       <br/>
       <div>
+        
+          [<a href="https://github.com/crystal-ameba/ameba/blob/bedf3a68/src/ameba/config.cr#L163" target="_blank">View source</a>]
         
       </div>
     </div>

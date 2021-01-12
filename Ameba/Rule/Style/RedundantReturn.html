@@ -3,28 +3,28 @@
 <head>
   <meta charset="utf-8" />
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="generator" content="Crystal Docs 0.35.1">
-<meta name="crystal_docs.project_version" content="0.13.3-dev">
+<meta name="generator" content="Crystal Docs 0.34.0">
+<meta name="crystal_docs.project_version" content="master">
 <meta name="crystal_docs.project_name" content="ameba">
-
 
 
 <link href="../../../css/style.css" rel="stylesheet" type="text/css" />
 <script type="text/javascript" src="../../../js/doc.js"></script>
-
-  <meta name="repository-name" content="ameba">
-  <title>Ameba::Rule::Style::RedundantReturn - ameba 0.13.3-dev</title>
-  <script type="text/javascript">
-    CrystalDocs.base_path = "../../../";
-  </script>
-</head>
-<body>
 
 <svg class="hidden">
   <symbol id="octicon-link" viewBox="0 0 16 16">
     <path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path>
   </symbol>
 </svg>
+
+  <meta id="repository-name" content="ameba">
+  <title>Ameba::Rule::Style::RedundantReturn - ameba master</title>
+  <script type="text/javascript">
+    CrystalDocs.base_path = "../../../";
+  </script>
+</head>
+<body>
+
 <div class="sidebar">
   <div class="sidebar-header">
     <div class="search-box">
@@ -39,12 +39,12 @@
       </h1>
 
       <span class="project-version">
-        0.13.3-dev
+        master
       </span>
     </div>
   </div>
 
-  <div class="search-results hidden">
+  <div class="search-results" class="hidden">
     <ul class="search-list"></ul>
   </div>
 
@@ -578,11 +578,11 @@
 
 <p>For example, this is considered invalid:</p>
 
-<pre><code class="language-crystal"><span class="k">def</span> <span class="m">foo</span>
+<pre><code><span class="k">def</span> <span class="m">foo</span>
   <span class="k">return</span> <span class="n">:bar</span>
 <span class="k">end</span></code></pre>
 
-<pre><code class="language-crystal"><span class="k">def</span> <span class="m">bar</span>(arg)
+<pre><code><span class="k">def</span> <span class="m">bar</span>(arg)
   <span class="k">case</span> arg
   <span class="k">when</span> .<span class="k">nil?</span>
     <span class="k">return</span> <span class="s">&quot;nil&quot;</span>
@@ -595,11 +595,11 @@
 
 <p>And has to be written as the following:</p>
 
-<pre><code class="language-crystal"><span class="k">def</span> <span class="m">foo</span>
+<pre><code><span class="k">def</span> <span class="m">foo</span>
   <span class="n">:bar</span>
 <span class="k">end</span></code></pre>
 
-<pre><code class="language-crystal"><span class="k">def</span> <span class="m">bar</span>(arg)
+<pre><code><span class="k">def</span> <span class="m">bar</span>(arg)
   <span class="k">case</span> arg
   <span class="k">when</span> .<span class="k">nil?</span>
     <span class="s">&quot;nil&quot;</span>
@@ -621,13 +621,13 @@
 <p>Allows end-user to configure whether to report or not the return statements
 which return tuple literals i.e.</p>
 
-<pre><code class="language-crystal"><span class="k">def</span> <span class="m">method</span>(a, b)
+<pre><code><span class="k">def</span> <span class="m">method</span>(a, b)
   <span class="k">return</span> a, b
 <span class="k">end</span></code></pre>
 
 <p>If this param equals to <code>false</code>, the method above has to be written as:</p>
 
-<pre><code class="language-crystal"><span class="k">def</span> <span class="m">method</span>(a, b)
+<pre><code><span class="k">def</span> <span class="m">method</span>(a, b)
   {a, b}
 <span class="k">end</span></code></pre>
 
@@ -636,14 +636,14 @@ which return tuple literals i.e.</p>
 <p>Allows end-user to configure whether to report or not the return statements
 without arguments. Sometimes such returns are used to return the <code>nil</code> value explicitly.</p>
 
-<pre><code class="language-crystal"><span class="k">def</span> <span class="m">method</span>
+<pre><code><span class="k">def</span> <span class="m">method</span>
   @foo <span class="o">=</span> <span class="n">:empty</span>
   <span class="k">return</span>
 <span class="k">end</span></code></pre>
 
 <p>If this param equals to <code>false</code>, the method above has to be written as:</p>
 
-<pre><code class="language-crystal"><span class="k">def</span> <span class="m">method</span>
+<pre><code><span class="k">def</span> <span class="m">method</span>
   @foo <span class="o">=</span> <span class="n">:empty</span>
   <span class="n">nil</span>
 <span class="k">end</span></code></pre>
@@ -654,10 +654,10 @@ without arguments. Sometimes such returns are used to return the <code>nil</code
   </svg>
 </a>YAML config example</h3>
 
-<pre><code class="language-crystal">Style/RedundantReturn:
+<pre><code><span class="t">Style</span><span class="s">/RedundantReturn:
   Enabled: true
   AllowMutliReturn: true
-  AllowEmptyReturn: true</code></pre>
+  AllowEmptyReturn: true</span></code></pre>
 
 
 
@@ -696,6 +696,13 @@ without arguments. Sometimes such returns are used to return the <code>nil</code
 </a>
     Defined in:
   </h2>
+  
+    
+      <a href="https://github.com/crystal-ameba/ameba/blob/bedf3a68/src/ameba/rule/style/redundant_return.cr#L96" target="_blank">
+        ameba/rule/style/redundant_return.cr
+      </a>
+    
+    <br/>
   
 
 
@@ -1009,11 +1016,11 @@ without arguments. Sometimes such returns are used to return the <code>nil</code
 
 <p>For example, this is considered invalid:</p>
 
-<pre><code class="language-crystal"><span class="k">def</span> <span class="m">foo</span>
+<pre><code><span class="k">def</span> <span class="m">foo</span>
   <span class="k">return</span> <span class="n">:bar</span>
 <span class="k">end</span></code></pre>
 
-<pre><code class="language-crystal"><span class="k">def</span> <span class="m">bar</span>(arg)
+<pre><code><span class="k">def</span> <span class="m">bar</span>(arg)
   <span class="k">case</span> arg
   <span class="k">when</span> .<span class="k">nil?</span>
     <span class="k">return</span> <span class="s">&quot;nil&quot;</span>
@@ -1026,11 +1033,11 @@ without arguments. Sometimes such returns are used to return the <code>nil</code
 
 <p>And has to be written as the following:</p>
 
-<pre><code class="language-crystal"><span class="k">def</span> <span class="m">foo</span>
+<pre><code><span class="k">def</span> <span class="m">foo</span>
   <span class="n">:bar</span>
 <span class="k">end</span></code></pre>
 
-<pre><code class="language-crystal"><span class="k">def</span> <span class="m">bar</span>(arg)
+<pre><code><span class="k">def</span> <span class="m">bar</span>(arg)
   <span class="k">case</span> arg
   <span class="k">when</span> .<span class="k">nil?</span>
     <span class="s">&quot;nil&quot;</span>
@@ -1052,13 +1059,13 @@ without arguments. Sometimes such returns are used to return the <code>nil</code
 <p>Allows end-user to configure whether to report or not the return statements
 which return tuple literals i.e.</p>
 
-<pre><code class="language-crystal"><span class="k">def</span> <span class="m">method</span>(a, b)
+<pre><code><span class="k">def</span> <span class="m">method</span>(a, b)
   <span class="k">return</span> a, b
 <span class="k">end</span></code></pre>
 
 <p>If this param equals to <code>false</code>, the method above has to be written as:</p>
 
-<pre><code class="language-crystal"><span class="k">def</span> <span class="m">method</span>(a, b)
+<pre><code><span class="k">def</span> <span class="m">method</span>(a, b)
   {a, b}
 <span class="k">end</span></code></pre>
 
@@ -1067,14 +1074,14 @@ which return tuple literals i.e.</p>
 <p>Allows end-user to configure whether to report or not the return statements
 without arguments. Sometimes such returns are used to return the <code>nil</code> value explicitly.</p>
 
-<pre><code class="language-crystal"><span class="k">def</span> <span class="m">method</span>
+<pre><code><span class="k">def</span> <span class="m">method</span>
   @foo <span class="o">=</span> <span class="n">:empty</span>
   <span class="k">return</span>
 <span class="k">end</span></code></pre>
 
 <p>If this param equals to <code>false</code>, the method above has to be written as:</p>
 
-<pre><code class="language-crystal"><span class="k">def</span> <span class="m">method</span>
+<pre><code><span class="k">def</span> <span class="m">method</span>
   @foo <span class="o">=</span> <span class="n">:empty</span>
   <span class="n">nil</span>
 <span class="k">end</span></code></pre>
@@ -1085,14 +1092,16 @@ without arguments. Sometimes such returns are used to return the <code>nil</code
   </svg>
 </a>YAML config example</h3>
 
-<pre><code class="language-crystal">Style/RedundantReturn:
+<pre><code><span class="t">Style</span><span class="s">/RedundantReturn:
   Enabled: true
   AllowMutliReturn: true
-  AllowEmptyReturn: true</code></pre>
+  AllowEmptyReturn: true</span></code></pre>
         </div>
       
       <br/>
       <div>
+        
+          [<a href="https://github.com/crystal-ameba/ameba/blob/bedf3a68/src/ameba/rule/style/redundant_return.cr#L96" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1290,6 +1299,8 @@ without arguments. Sometimes such returns are used to return the <code>nil</code
       <br/>
       <div>
         
+          [<a href="https://github.com/crystal-ameba/ameba/blob/bedf3a68/src/ameba/rule/style/redundant_return.cr#L109" target="_blank">View source</a>]
+        
       </div>
     </div>
   
@@ -1303,6 +1314,8 @@ without arguments. Sometimes such returns are used to return the <code>nil</code
       
       <br/>
       <div>
+        
+          [<a href="https://github.com/crystal-ameba/ameba/blob/bedf3a68/src/ameba/rule/style/redundant_return.cr#L105" target="_blank">View source</a>]
         
       </div>
     </div>

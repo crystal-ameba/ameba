@@ -3,28 +3,28 @@
 <head>
   <meta charset="utf-8" />
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="generator" content="Crystal Docs 0.35.1">
-<meta name="crystal_docs.project_version" content="0.13.3-dev">
+<meta name="generator" content="Crystal Docs 0.34.0">
+<meta name="crystal_docs.project_version" content="master">
 <meta name="crystal_docs.project_name" content="ameba">
-
 
 
 <link href="../../../css/style.css" rel="stylesheet" type="text/css" />
 <script type="text/javascript" src="../../../js/doc.js"></script>
-
-  <meta name="repository-name" content="ameba">
-  <title>Ameba::Rule::Style::ConstantNames - ameba 0.13.3-dev</title>
-  <script type="text/javascript">
-    CrystalDocs.base_path = "../../../";
-  </script>
-</head>
-<body>
 
 <svg class="hidden">
   <symbol id="octicon-link" viewBox="0 0 16 16">
     <path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path>
   </symbol>
 </svg>
+
+  <meta id="repository-name" content="ameba">
+  <title>Ameba::Rule::Style::ConstantNames - ameba master</title>
+  <script type="text/javascript">
+    CrystalDocs.base_path = "../../../";
+  </script>
+</head>
+<body>
+
 <div class="sidebar">
   <div class="sidebar-header">
     <div class="search-box">
@@ -39,12 +39,12 @@
       </h1>
 
       <span class="project-version">
-        0.13.3-dev
+        master
       </span>
     </div>
   </div>
 
-  <div class="search-results hidden">
+  <div class="search-results" class="hidden">
     <ul class="search-list"></ul>
   </div>
 
@@ -578,18 +578,18 @@
 
 <p>For example, these constant names are considered valid:</p>
 
-<pre><code class="language-crystal"><span class="t">LUCKY_NUMBERS</span>     <span class="o">=</span> [<span class="n">3</span>, <span class="n">7</span>, <span class="n">11</span>]
+<pre><code><span class="t">LUCKY_NUMBERS</span>     <span class="o">=</span> [<span class="n">3</span>, <span class="n">7</span>, <span class="n">11</span>]
 <span class="t">DOCUMENTATION_URL</span> <span class="o">=</span> <span class="s">&quot;http://crystal-lang.org/docs&quot;</span></code></pre>
 
 <p>And these are invalid names:</p>
 
-<pre><code class="language-crystal">myBadConstant <span class="o">=</span> <span class="n">1</span>
+<pre><code>myBadConstant <span class="o">=</span> <span class="n">1</span>
 <span class="t">Wrong_NAME</span> <span class="o">=</span> <span class="n">2</span></code></pre>
 
 <p>YAML configuration example:</p>
 
-<pre><code class="language-crystal">Style/ConstantNames:
-  Enabled: true</code></pre>
+<pre><code><span class="t">Style</span><span class="s">/ConstantNames:
+  Enabled: true</span></code></pre>
 
 
 
@@ -628,6 +628,13 @@
 </a>
     Defined in:
   </h2>
+  
+    
+      <a href="https://github.com/crystal-ameba/ameba/blob/bedf3a68/src/ameba/rule/style/constant_names.cr#L25" target="_blank">
+        ameba/rule/style/constant_names.cr
+      </a>
+    
+    <br/>
   
 
 
@@ -916,22 +923,24 @@
 
 <p>For example, these constant names are considered valid:</p>
 
-<pre><code class="language-crystal"><span class="t">LUCKY_NUMBERS</span>     <span class="o">=</span> [<span class="n">3</span>, <span class="n">7</span>, <span class="n">11</span>]
+<pre><code><span class="t">LUCKY_NUMBERS</span>     <span class="o">=</span> [<span class="n">3</span>, <span class="n">7</span>, <span class="n">11</span>]
 <span class="t">DOCUMENTATION_URL</span> <span class="o">=</span> <span class="s">&quot;http://crystal-lang.org/docs&quot;</span></code></pre>
 
 <p>And these are invalid names:</p>
 
-<pre><code class="language-crystal">myBadConstant <span class="o">=</span> <span class="n">1</span>
+<pre><code>myBadConstant <span class="o">=</span> <span class="n">1</span>
 <span class="t">Wrong_NAME</span> <span class="o">=</span> <span class="n">2</span></code></pre>
 
 <p>YAML configuration example:</p>
 
-<pre><code class="language-crystal">Style/ConstantNames:
-  Enabled: true</code></pre>
+<pre><code><span class="t">Style</span><span class="s">/ConstantNames:
+  Enabled: true</span></code></pre>
         </div>
       
       <br/>
       <div>
+        
+          [<a href="https://github.com/crystal-ameba/ameba/blob/bedf3a68/src/ameba/rule/style/constant_names.cr#L25" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1072,6 +1081,8 @@
       
       <br/>
       <div>
+        
+          [<a href="https://github.com/crystal-ameba/ameba/blob/bedf3a68/src/ameba/rule/style/constant_names.cr#L32" target="_blank">View source</a>]
         
       </div>
     </div>
