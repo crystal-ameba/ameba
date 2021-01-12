@@ -1,6 +1,6 @@
 module Ameba::Formatter
   module Util
-    def affected_code(source, location, context_lines = 3, max_length = 100, placeholder = " ...", prompt = "> ")
+    def affected_code(source, location, context_lines = 0, max_length = 100, placeholder = " ...", prompt = "> ")
       lines = source.lines
       lineno, column =
         location.line_number, location.column_number
