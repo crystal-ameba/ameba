@@ -33,15 +33,15 @@ module Ameba::Rule::Lint
       description "Disallows redundant `with_object` calls"
     end
 
+    MSG = "Use `each` instead of `each_with_object`"
+
     def test(source, node : Crystal::Call)
       return if node.name != "each_with_object" ||
                 node.args.size != 1 ||
                 node.block.nil? ||
                 with_index_arg?(node.block.not_nil!)
 
-      issue_for node.name_location,
-        node.name_end_location,
-        "Use each instead of each_with_object"
+      issue_for node.name_location, node.name_end_location, MSG
     end
 
     private def with_index_arg?(block : Crystal::Block)
