@@ -33,7 +33,7 @@ module Ameba::Rule::Performance
   #
   struct SizeAfterFilter < Base
     SIZE_NAME = "size"
-    MSG       = "Use `count {...}` instead of `%s {...}.#{SIZE_NAME}`."
+    MSG       = "Use `count {...}` instead of `%s {...}.size`."
 
     properties do
       filter_names : Array(String) = %w(select reject)

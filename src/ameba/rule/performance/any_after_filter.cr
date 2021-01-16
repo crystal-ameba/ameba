@@ -27,7 +27,7 @@ module Ameba::Rule::Performance
   #
   struct AnyAfterFilter < Base
     ANY_NAME = "any?"
-    MSG      = "Use `#{ANY_NAME} {...}` instead of `%s {...}.#{ANY_NAME}`"
+    MSG      = "Use `any? {...}` instead of `%s {...}.any?`"
 
     properties do
       filter_names : Array(String) = %w(select reject)
