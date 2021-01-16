@@ -36,9 +36,10 @@ module Ameba::Rule::Performance
 
     def test(source, node : Crystal::Call)
       return unless node.name == ANY_NAME && (obj = node.obj)
+      return unless obj.is_a?(Crystal::Call)
+      return if obj.block.nil? || !node.block.nil?
 
-      if node.block.nil? && obj.is_a?(Crystal::Call) &&
-         filter_names.includes?(obj.name) && !obj.block.nil?
+      if filter_names.includes?(obj.name)
         issue_for obj.name_location, node.name_end_location, MSG % obj.name
       end
     end

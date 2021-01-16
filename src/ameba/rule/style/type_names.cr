@@ -62,7 +62,7 @@ module Ameba::Rule::Style
     private def check_node(source, node)
       name = node.name.to_s
       expected = name.camelcase
-      return if expected == name
+      return if name == expected
 
       issue_for node, MSG % {expected, name}
     end

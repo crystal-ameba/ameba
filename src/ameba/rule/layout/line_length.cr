@@ -20,9 +20,7 @@ module Ameba::Rule::Layout
 
     def test(source)
       source.lines.each_with_index do |line, index|
-        next unless line.size > max_length
-
-        issue_for({index + 1, max_length + 1}, MSG)
+        issue_for({index + 1, max_length + 1}, MSG) if line.size > max_length
       end
     end
   end

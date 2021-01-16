@@ -48,7 +48,9 @@ module Ameba::Rule::Lint
 
     private def check_rules(source, token, rules)
       bad_names = rules - ALL_RULE_NAMES - ALL_GROUP_NAMES
-      issue_for token, "Such rules do not exist: %s" % bad_names.join(", ") unless bad_names.empty?
+      return if bad_names.empty?
+
+      issue_for token, "Such rules do not exist: %s" % bad_names.join(", ")
     end
   end
 end

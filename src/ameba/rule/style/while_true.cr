@@ -34,8 +34,7 @@ module Ameba::Rule::Style
     MSG = "While statement using true literal as condition"
 
     def test(source, node : Crystal::While)
-      return unless node.cond.true_literal?
-      issue_for node, MSG
+      issue_for node, MSG if node.cond.true_literal?
     end
   end
 end

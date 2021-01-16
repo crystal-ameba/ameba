@@ -28,7 +28,7 @@ module Ameba::Rule::Lint
     MSG = "Duplicated keys in hash literal: %s"
 
     def test(source, node : Crystal::HashLiteral)
-      return unless (keys = duplicated_keys(node.entries)).any?
+      return if (keys = duplicated_keys(node.entries)).empty?
 
       issue_for node, MSG % keys.join(", ")
     end

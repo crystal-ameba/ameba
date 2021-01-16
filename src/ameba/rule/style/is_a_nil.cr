@@ -32,7 +32,9 @@ module Ameba::Rule::Style
       return if node.nil_check?
 
       const = node.const
-      issue_for const, MSG if const.is_a?(Crystal::Path) && const.names == PATH_NIL_NAMES
+      return unless const.is_a?(Crystal::Path) && const.names == PATH_NIL_NAMES
+
+      issue_for const, MSG
     end
   end
 end

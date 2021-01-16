@@ -77,7 +77,7 @@ module Ameba::Rule::Lint
       declared_in = variable.assignments.first?.try &.branch
 
       variable.assignments
-        .reject { |assign| assign.scope.spawn_block? }
+        .reject(&.scope.spawn_block?)
         .any? do |assign|
           assign.branch.try(&.in_loop?) && assign.branch != declared_in
         end

@@ -51,7 +51,7 @@ module Ameba::Rule::Style
       line_number = node.location.try &.line_number
       column_number = node.name_location.try &.column_number
 
-      return if line_number.nil? || column_number.nil?
+      return unless line_number && column_number
 
       issue_for(
         {line_number, column_number},

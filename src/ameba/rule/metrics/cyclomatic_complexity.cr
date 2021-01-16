@@ -21,17 +21,18 @@ module Ameba::Rule::Metrics
       complexity = AST::CountingVisitor.new(node).count
 
       if complexity > max_complexity && (location = node.name_location)
-        issue_for(
-          location,
-          def_name_end_location(node),
-          MSG % {complexity, max_complexity}
-        )
+        issue_for location, def_name_end_location(node), MSG % {
+          complexity, max_complexity,
+        }
       end
     end
 
     private def def_name_end_location(node)
       return unless location = node.name_location
-      line_number, column_number = location.line_number, location.column_number
+
+      line_number, column_number =
+        location.line_number, location.column_number
+
       Crystal::Location.new(location.filename, line_number, column_number + node.name.size)
     end
   end

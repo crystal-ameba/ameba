@@ -34,7 +34,7 @@ module Ameba::Rule::Style
         name = target.names.first
         expected = name.upcase
 
-        return if expected == name || name.camelcase == name
+        return if name.in?(expected, name.camelcase)
 
         issue_for target, MSG % {expected, name}
       end
