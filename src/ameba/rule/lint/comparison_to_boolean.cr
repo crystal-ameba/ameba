@@ -19,7 +19,6 @@ module Ameba::Rule::Lint
   # Lint/ComparisonToBoolean:
   #   Enabled: true
   # ```
-  #
   struct ComparisonToBoolean < Base
     properties do
       enabled false

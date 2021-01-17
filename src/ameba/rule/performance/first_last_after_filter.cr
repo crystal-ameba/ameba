@@ -23,7 +23,6 @@ module Ameba::Rule::Performance
   #   FilterNames:
   #     - select
   # ```
-  #
   struct FirstLastAfterFilter < Base
     CALL_NAMES  = %w(first last first? last?)
     MSG         = "Use `find {...}` instead of `%s {...}.%s`"

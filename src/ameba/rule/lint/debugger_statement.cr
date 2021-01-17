@@ -10,7 +10,6 @@ module Ameba::Rule::Lint
   # Lint/DebuggerStatement:
   #   Enabled: true
   # ```
-  #
   struct DebuggerStatement < Base
     properties do
       description "Disallows calls to debugger"

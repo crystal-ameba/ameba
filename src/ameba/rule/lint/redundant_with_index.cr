@@ -26,7 +26,6 @@ module Ameba::Rule::Lint
   # Lint/RedundantWithIndex:
   #   Enabled: true
   # ```
-  #
   struct RedundantWithIndex < Base
     properties do
       description "Disallows redundant `with_index` calls"

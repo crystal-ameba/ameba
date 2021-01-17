@@ -7,7 +7,6 @@ module Ameba::Rule::Layout
   # Layout/TrailingWhitespace:
   #   Enabled: true
   # ```
-  #
   struct TrailingWhitespace < Base
     properties do
       description "Disallows trailing whitespaces"

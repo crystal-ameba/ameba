@@ -24,7 +24,6 @@ module Ameba::Rule::Lint
   # Lint/UnneededDisableDirective
   #   Enabled: true
   # ```
-  #
   struct UnneededDisableDirective < Base
     properties do
       description "Reports unneeded disable directives in comments"

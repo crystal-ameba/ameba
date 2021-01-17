@@ -41,7 +41,6 @@ module Ameba::Rule::Lint
   # Lint/UnreachableCode:
   #   Enabled: true
   # ```
-  #
   struct UnreachableCode < Base
     include AST::Util
 

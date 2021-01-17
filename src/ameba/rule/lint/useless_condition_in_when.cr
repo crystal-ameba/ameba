@@ -30,7 +30,6 @@ module Ameba::Rule::Lint
   # Lint/UselessConditionInWhen:
   #   Enabled: true
   # ```
-  #
   struct UselessConditionInWhen < Base
     properties do
       description "Disallows useless conditions in when"

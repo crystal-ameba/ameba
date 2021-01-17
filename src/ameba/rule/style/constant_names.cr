@@ -21,7 +21,6 @@ module Ameba::Rule::Style
   # Style/ConstantNames:
   #   Enabled: true
   # ```
-  #
   struct ConstantNames < Base
     properties do
       description "Enforces constant names to be in screaming case"

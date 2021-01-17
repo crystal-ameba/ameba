@@ -19,7 +19,6 @@ module Ameba::Rule::Lint
   # Lint/HashDuplicatedKey:
   #   Enabled: true
   # ```
-  #
   struct HashDuplicatedKey < Base
     properties do
       description "Disallows duplicated keys in hash literals"

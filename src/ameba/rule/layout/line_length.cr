@@ -8,7 +8,6 @@ module Ameba::Rule::Layout
   #   Enabled: true
   #   MaxLength: 100
   # ```
-  #
   struct LineLength < Base
     properties do
       enabled false

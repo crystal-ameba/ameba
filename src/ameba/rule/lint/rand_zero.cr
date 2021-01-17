@@ -22,7 +22,6 @@ module Ameba::Rule::Lint
   # Lint/RandZero:
   #   Enabled: true
   # ```
-  #
   struct RandZero < Base
     properties do
       description "Disallows rand zero calls"

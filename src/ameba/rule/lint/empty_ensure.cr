@@ -38,7 +38,6 @@ module Ameba::Rule::Lint
   # Lint/EmptyEnsure
   #   Enabled: true
   # ```
-  #
   struct EmptyEnsure < Base
     properties do
       description "Disallows empty ensure statement"

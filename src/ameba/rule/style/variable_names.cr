@@ -22,7 +22,6 @@ module Ameba::Rule::Style
   # Style/VariableNames:
   #   Enabled: true
   # ```
-  #
   struct VariableNames < Base
     properties do
       description "Enforces variable names to be in underscored case"

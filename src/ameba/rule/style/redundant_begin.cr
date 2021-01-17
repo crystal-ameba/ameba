@@ -55,7 +55,6 @@ module Ameba::Rule::Style
   # Style/RedundantBegin:
   #   Enabled: true
   # ```
-  #
   struct RedundantBegin < Base
     include AST::Util
     properties do

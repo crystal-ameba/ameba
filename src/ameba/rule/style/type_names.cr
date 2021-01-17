@@ -51,7 +51,6 @@ module Ameba::Rule::Style
   # Style/TypeNames:
   #   Enabled: true
   # ```
-  #
   struct TypeNames < Base
     properties do
       description "Enforces type names in camelcase manner"
