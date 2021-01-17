@@ -97,7 +97,6 @@ module Ameba::AST::Util
   # ```
   #
   # That's because not all branches return(i.e. `else` is missing).
-  #
   def flow_expression?(node, in_loop = false)
     return true if flow_command? node, in_loop
 

@@ -20,7 +20,6 @@ require "./ameba/formatter/*"
 #
 # Ameba.run config
 # ```
-#
 module Ameba
   extend self
 
@@ -35,7 +34,6 @@ module Ameba
   # Ameba.run
   # Ameba.run config
   # ```
-  #
   def run(config = Config.load)
     Runner.new(config).run
   end

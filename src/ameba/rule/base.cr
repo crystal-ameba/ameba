@@ -26,7 +26,6 @@ module Ameba::Rule
   # Enforces rules to implement an abstract `#test` method which
   # is designed to test the source passed in. If source has issues
   # that are tested by this rule, it should add an issue.
-  #
   abstract struct Base
     include Config::RuleConfig
 
@@ -185,7 +184,6 @@ module Ameba::Rule
   # ```
   # Ameba::Rule.rules # => [Rule1, Rule2, ....]
   # ```
-  #
   def self.rules
     Base.subclasses
   end
