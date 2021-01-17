@@ -31,13 +31,13 @@ module Ameba::Rule::Performance
   #     - reject
   # ```
   struct SizeAfterFilter < Base
-    SIZE_NAME = "size"
-    MSG       = "Use `count {...}` instead of `%s {...}.size`."
-
     properties do
       filter_names : Array(String) = %w(select reject)
       description "Identifies usage of `size` calls that follow filter"
     end
+
+    SIZE_NAME = "size"
+    MSG       = "Use `count {...}` instead of `%s {...}.size`."
 
     def test(source)
       AST::NodeVisitor.new self, source, skip: [

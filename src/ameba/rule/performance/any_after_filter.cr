@@ -25,13 +25,13 @@ module Ameba::Rule::Performance
   #     - reject
   # ```
   struct AnyAfterFilter < Base
-    ANY_NAME = "any?"
-    MSG      = "Use `any? {...}` instead of `%s {...}.any?`"
-
     properties do
       filter_names : Array(String) = %w(select reject)
       description "Identifies usage of `any?` calls that follow filters."
     end
+
+    ANY_NAME = "any?"
+    MSG      = "Use `any? {...}` instead of `%s {...}.any?`"
 
     def test(source, node : Crystal::Call)
       return unless node.name == ANY_NAME && (obj = node.obj)

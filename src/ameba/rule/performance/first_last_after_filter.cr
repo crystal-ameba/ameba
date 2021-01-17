@@ -24,14 +24,14 @@ module Ameba::Rule::Performance
   #     - select
   # ```
   struct FirstLastAfterFilter < Base
-    CALL_NAMES  = %w(first last first? last?)
-    MSG         = "Use `find {...}` instead of `%s {...}.%s`"
-    MSG_REVERSE = "Use `reverse_each.find {...}` instead of `%s {...}.%s`"
-
     properties do
       filter_names : Array(String) = %w(select)
       description "Identifies usage of `first/last/first?/last?` calls that follow filters."
     end
+
+    CALL_NAMES  = %w(first last first? last?)
+    MSG         = "Use `find {...}` instead of `%s {...}.%s`"
+    MSG_REVERSE = "Use `reverse_each.find {...}` instead of `%s {...}.%s`"
 
     def test(source)
       AST::NodeVisitor.new self, source, skip: [

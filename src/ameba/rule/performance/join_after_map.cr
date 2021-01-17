@@ -20,13 +20,13 @@ module Ameba::Rule::Performance
   #   Enabled: true
   # ```
   struct JoinAfterMap < Base
-    MAP_NAME  = "map"
-    JOIN_NAME = "join"
-    MSG       = "Use `join(separator) {...}` instead of `map {...}.join(separator)`"
-
     properties do
       description "Identifies usage of `join` calls that follow `map`."
     end
+
+    MAP_NAME  = "map"
+    JOIN_NAME = "join"
+    MSG       = "Use `join(separator) {...}` instead of `map {...}.join(separator)`"
 
     def test(source)
       AST::NodeVisitor.new self, source, skip: [
