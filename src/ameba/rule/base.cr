@@ -26,7 +26,6 @@ module Ameba::Rule
   # Enforces rules to implement an abstract `#test` method which
   # is designed to test the source passed in. If source has issues
   # that are tested by this rule, it should add an issue.
-  #
   abstract struct Base
     include Config::RuleConfig
 
@@ -51,7 +50,7 @@ module Ameba::Rule
     # source.valid?
     # ```
     def catch(source : Source)
-      source.tap { |s| test s }
+      source.tap { test source }
     end
 
     # Returns a name of this rule, which is basically a class name.
@@ -151,8 +150,11 @@ module Ameba::Rule
     # ```
     def self.parsed_doc
       source = File.read(path_to_source_file)
-      nodes = Crystal::Parser.new(source).tap(&.wants_doc = true).parse
+      nodes = Crystal::Parser.new(source)
+        .tap(&.wants_doc = true)
+        .parse
       type_name = rule_name.split('/').last?
+
       DocFinder.new(nodes, type_name).doc
     end
 
@@ -185,7 +187,6 @@ module Ameba::Rule
   # ```
   # Ameba::Rule.rules # => [Rule1, Rule2, ....]
   # ```
-  #
   def self.rules
     Base.subclasses
   end

@@ -75,7 +75,6 @@ class Ameba::Config
   # ```
   # config = Ameba::Config.load
   # ```
-  #
   def self.load(path = PATH, colors = true)
     Colorize.enabled = colors
     content = File.exists?(path) ? File.read path : "{}"
@@ -97,7 +96,6 @@ class Ameba::Config
   # config.excluded = ["spec"]
   # config.sources # => list of sources pointing to files found by the wildcards
   # ```
-  #
   def sources
     (find_files_by_globs(globs) - find_files_by_globs(excluded))
       .map { |path| Source.new File.read(path), path }
@@ -122,7 +120,6 @@ class Ameba::Config
   # config = Ameba::Config.load
   # config.formatter = :progress
   # ```
-  #
   def formatter=(name : String | Symbol)
     if f = AVAILABLE_FORMATTERS[name]?
       @formatter = f.new
@@ -137,7 +134,6 @@ class Ameba::Config
   # config = Ameba::Config.load
   # config.update_rule "MyRuleName", enabled: false
   # ```
-  #
   def update_rule(name, enabled = true, excluded = nil)
     index = @rules.index { |rule| rule.name == name }
     raise ArgumentError.new("Rule `#{name}` does not exist") unless index
@@ -160,7 +156,6 @@ class Ameba::Config
   # ```
   # config.update_rules %w(Group1 Group2), enabled: true
   # ```
-  #
   def update_rules(names, **args)
     names.try &.each do |name|
       if group = @rule_groups[name]?
