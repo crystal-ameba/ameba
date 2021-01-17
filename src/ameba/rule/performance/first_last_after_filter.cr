@@ -23,7 +23,6 @@ module Ameba::Rule::Performance
   #   FilterNames:
   #     - select
   # ```
-  #
   struct FirstLastAfterFilter < Base
     CALL_NAMES  = %w(first last first? last?)
     MSG         = "Use `find {...}` instead of `%s {...}.%s`"
@@ -45,10 +44,10 @@ module Ameba::Rule::Performance
 
     def test(source, node : Crystal::Call)
       return unless CALL_NAMES.includes?(node.name) && (obj = node.obj)
-      return if node.args.any?
+      return unless obj.is_a?(Crystal::Call)
+      return if obj.block.nil? || !node.block.nil? || node.args.any?
 
-      if node.block.nil? && obj.is_a?(Crystal::Call) &&
-         filter_names.includes?(obj.name) && !obj.block.nil?
+      if filter_names.includes?(obj.name)
         message = node.name.includes?(CALL_NAMES.first) ? MSG : MSG_REVERSE
         issue_for obj.name_location, node.name_end_location, message % {obj.name, node.name}
       end

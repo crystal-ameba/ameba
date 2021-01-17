@@ -19,7 +19,6 @@ module Ameba::Rule::Lint
   # Lint/HashDuplicatedKey:
   #   Enabled: true
   # ```
-  #
   struct HashDuplicatedKey < Base
     properties do
       description "Disallows duplicated keys in hash literals"
@@ -28,7 +27,7 @@ module Ameba::Rule::Lint
     MSG = "Duplicated keys in hash literal: %s"
 
     def test(source, node : Crystal::HashLiteral)
-      return unless (keys = duplicated_keys(node.entries)).any?
+      return if (keys = duplicated_keys(node.entries)).empty?
 
       issue_for node, MSG % keys.join(", ")
     end
@@ -36,7 +35,7 @@ module Ameba::Rule::Lint
     private def duplicated_keys(entries)
       entries.map(&.key)
         .group_by(&.itself)
-        .select { |_, v| v.size > 1 }
+        .tap(&.select! { |_, v| v.size > 1 })
         .map { |k, _| k }
     end
   end

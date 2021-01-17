@@ -26,7 +26,6 @@ module Ameba::Rule::Style
   # Style/NegatedConditionsInUnless:
   #   Enabled: true
   # ```
-  #
   struct NegatedConditionsInUnless < Base
     properties do
       description "Disallows negated conditions in unless"
@@ -35,8 +34,7 @@ module Ameba::Rule::Style
     MSG = "Avoid negated conditions in unless blocks"
 
     def test(source, node : Crystal::Unless)
-      return unless negated_condition? node.cond
-      issue_for node, MSG
+      issue_for node, MSG if negated_condition?(node.cond)
     end
 
     private def negated_condition?(node)

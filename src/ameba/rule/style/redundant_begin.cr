@@ -55,7 +55,6 @@ module Ameba::Rule::Style
   # Style/RedundantBegin:
   #   Enabled: true
   # ```
-  #
   struct RedundantBegin < Base
     include AST::Util
     properties do
@@ -65,9 +64,7 @@ module Ameba::Rule::Style
     MSG = "Redundant `begin` block detected"
 
     def test(source, node : Crystal::Def)
-      return unless redundant_begin?(source, node)
-
-      issue_for node, MSG
+      issue_for node, MSG if redundant_begin?(source, node)
     end
 
     private def redundant_begin?(source, node)

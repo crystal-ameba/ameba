@@ -42,7 +42,6 @@ module Ameba::Rule::Style
   # Style/UnlessElse:
   #   Enabled: true
   # ```
-  #
   struct UnlessElse < Base
     properties do
       description "Disallows the use of an `else` block with the `unless`"
@@ -51,8 +50,7 @@ module Ameba::Rule::Style
     MSG = "Favour if over unless with else"
 
     def test(source, node : Crystal::Unless)
-      return if node.else.nop?
-      issue_for node, MSG
+      issue_for node, MSG unless node.else.nop?
     end
   end
 end

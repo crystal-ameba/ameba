@@ -21,7 +21,6 @@ module Ameba::Rule::Style
   # Style/ConstantNames:
   #   Enabled: true
   # ```
-  #
   struct ConstantNames < Base
     properties do
       description "Enforces constant names to be in screaming case"
@@ -34,7 +33,7 @@ module Ameba::Rule::Style
         name = target.names.first
         expected = name.upcase
 
-        return if expected == name || name.camelcase == name
+        return if name.in?(expected, name.camelcase)
 
         issue_for target, MSG % {expected, name}
       end

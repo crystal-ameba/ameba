@@ -20,7 +20,6 @@ module Ameba::Rule::Lint
   # Lint/RedundantStringCoersion
   #   Enabled: true
   # ```
-  #
   struct RedundantStringCoercion < Base
     include AST::Util
 

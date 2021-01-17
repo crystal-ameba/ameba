@@ -19,7 +19,6 @@ module Ameba::Rule::Lint
   # Lint/ComparisonToBoolean:
   #   Enabled: true
   # ```
-  #
   struct ComparisonToBoolean < Base
     properties do
       enabled false
@@ -33,9 +32,7 @@ module Ameba::Rule::Lint
       to_boolean = node.args.first?.try &.is_a?(Crystal::BoolLiteral) ||
                    node.obj.is_a?(Crystal::BoolLiteral)
 
-      return unless comparison && to_boolean
-
-      issue_for node, MSG
+      issue_for node, MSG if comparison && to_boolean
     end
   end
 end

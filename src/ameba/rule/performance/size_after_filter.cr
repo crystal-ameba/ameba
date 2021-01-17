@@ -30,10 +30,9 @@ module Ameba::Rule::Performance
   #     - select
   #     - reject
   # ```
-  #
   struct SizeAfterFilter < Base
     SIZE_NAME = "size"
-    MSG       = "Use `count {...}` instead of `%s {...}.#{SIZE_NAME}`."
+    MSG       = "Use `count {...}` instead of `%s {...}.size`."
 
     properties do
       filter_names : Array(String) = %w(select reject)
@@ -51,9 +50,10 @@ module Ameba::Rule::Performance
 
     def test(source, node : Crystal::Call)
       return unless node.name == SIZE_NAME && (obj = node.obj)
+      return unless obj.is_a?(Crystal::Call)
+      return if obj.block.nil?
 
-      if obj.is_a?(Crystal::Call) &&
-         filter_names.includes?(obj.name) && !obj.block.nil?
+      if filter_names.includes?(obj.name)
         issue_for obj.name_location, node.name_end_location, MSG % obj.name
       end
     end

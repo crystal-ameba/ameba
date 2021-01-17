@@ -24,7 +24,6 @@ module Ameba::Rule::Lint
   # Lint/UnneededDisableDirective
   #   Enabled: true
   # ```
-  #
   struct UnneededDisableDirective < Base
     properties do
       description "Reports unneeded disable directives in comments"
@@ -47,11 +46,12 @@ module Ameba::Rule::Lint
       return unless directive[:action] == "disable"
 
       directive[:rules].reject do |rule_name|
+        next if rule_name == self.name
         source.issues.any? do |issue|
           issue.rule.name == rule_name &&
             issue.disabled? &&
             issue_at_location?(source, issue, location)
-        end && rule_name != self.name
+        end
       end
     end
 

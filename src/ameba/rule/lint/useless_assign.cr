@@ -25,7 +25,6 @@ module Ameba::Rule::Lint
   # Lint/UselessAssign:
   #   Enabled: true
   # ```
-  #
   struct UselessAssign < Base
     properties do
       description "Disallows useless variable assignments"

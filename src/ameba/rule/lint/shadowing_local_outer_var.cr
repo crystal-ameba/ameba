@@ -30,7 +30,6 @@ module Ameba::Rule::Lint
   # Lint/ShadowingOuterLocalVar:
   #   Enabled: true
   # ```
-  #
   struct ShadowingOuterLocalVar < Base
     properties do
       description "Disallows the usage of the same name as outer local variables" \

@@ -26,7 +26,6 @@ module Ameba::Rule::Style
   #   Enabled: true
   #   IntMinDigits: 5 # i.e. integers higher than 9999
   # ```
-  #
   struct LargeNumbers < Base
     properties do
       description "Disallows usage of large numbers without underscore"
@@ -53,7 +52,7 @@ module Ameba::Rule::Style
     end
 
     private def allowed?(_sign, value, fraction, _suffix)
-      return true if !fraction.nil? && fraction.size > 3
+      return true if fraction && fraction.size > 3
 
       digits = value.chars.select &.to_s.=~ /[0-9]/
       digits.size >= int_min_digits
@@ -71,7 +70,7 @@ module Ameba::Rule::Style
         value.chars.reject(&.== '_').each_slice(by) do |slice|
           slices << (yield slice).join
         end
-      end.join("_")
+      end.join('_')
     end
 
     private def parse_number(value)
