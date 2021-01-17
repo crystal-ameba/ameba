@@ -38,7 +38,6 @@ module Ameba
     #
     # Ameba::Runner.new config
     # ```
-    #
     def initialize(config : Config)
       @sources = config.sources
       @formatter = config.formatter
@@ -64,7 +63,6 @@ module Ameba
     # runner = Ameba::Runner.new config
     # runner.run # => returns runner again
     # ```
-    #
     def run
       @formatter.started @sources
       channels = @sources.map { Channel(Exception?).new }
@@ -112,7 +110,6 @@ module Ameba
     # runner.run
     # runner.explain({file: file, line: l, column: c})
     # ```
-    #
     def explain(location, output = STDOUT)
       Formatter::ExplainFormatter.new(output, location).finished @sources
     end
@@ -125,7 +122,6 @@ module Ameba
     # runner.run
     # runner.success? # => true or false
     # ```
-    #
     def success?
       @sources.all? do |source|
         source.issues

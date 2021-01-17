@@ -19,7 +19,6 @@ module Ameba
     # path = "./src/source.cr"
     # Ameba::Source.new File.read(path), path
     # ```
-    #
     def initialize(@code, @path = "")
     end
 

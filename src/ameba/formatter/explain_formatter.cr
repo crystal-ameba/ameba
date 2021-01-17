@@ -20,7 +20,6 @@ module Ameba::Formatter
     # ExplainFormatter.new output,
     #   {file: path, line: line_number, column: column_number}
     # ```
-    #
     def initialize(@output, loc)
       @location = Crystal::Location.new(loc[:file], loc[:line], loc[:column])
     end

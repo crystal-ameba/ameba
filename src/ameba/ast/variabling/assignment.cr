@@ -28,7 +28,6 @@ module Ameba::AST
     # ```
     # Assignment.new(node, variable, scope)
     # ```
-    #
     def initialize(@node, @variable, @scope)
       if scope = @variable.scope
         @branch = Branch.of(@node, scope)
@@ -95,7 +94,6 @@ module Ameba::AST
     #   puts(b)
     # end
     # ```
-    #
     def transformed?
       return false unless (assign = node).is_a?(Crystal::Assign)
       return false unless (value = assign.value).is_a?(Crystal::Call)

@@ -18,7 +18,6 @@ module Ameba
     # source = Ameba::Source.new code, path
     # Ameba::Tokenizer.new(source)
     # ```
-    #
     def initialize(source)
       @lexer = Crystal::Lexer.new source.code
       @lexer.count_whitespace = true
@@ -33,7 +32,6 @@ module Ameba
     # lexer = Crystal::Lexer.new(code)
     # Ameba::Tokenizer.new(lexer)
     # ```
-    #
     def initialize(@lexer : Crystal::Lexer)
     end
 
@@ -44,7 +42,6 @@ module Ameba
     #   puts token
     # end
     # ```
-    #
     def run(&block : Crystal::Token -> _)
       run_normal_state @lexer, &block
       true

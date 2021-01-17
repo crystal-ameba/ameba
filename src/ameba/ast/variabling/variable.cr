@@ -27,7 +27,6 @@ module Ameba::AST
     # ```
     # Variable.new(node, scope)
     # ```
-    #
     def initialize(@node, @scope)
     end
 
@@ -45,7 +44,6 @@ module Ameba::AST
     # variable.assign(node2)
     # variable.assignment.size # => 2
     # ```
-    #
     def assign(node, scope)
       assignments << Assignment.new(node, self, scope)
 
@@ -69,7 +67,6 @@ module Ameba::AST
     # variable = Variable.new(node, scope)
     # variable.reference(var_node, some_scope)
     # ```
-    #
     def reference(node : Crystal::Var, scope : Scope)
       Reference.new(node, scope).tap do |reference|
         references << reference

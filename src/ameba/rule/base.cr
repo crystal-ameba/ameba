@@ -50,7 +50,6 @@ module Ameba::Rule
     # source = MyRule.new.catch(source)
     # source.valid?
     # ```
-    #
     def catch(source : Source)
       source.tap { |s| test s }
     end
@@ -65,7 +64,6 @@ module Ameba::Rule
     #
     # MyRule.new.name # => "MyRule"
     # ```
-    #
     def name
       {{@type}}.rule_name
     end
@@ -79,7 +77,6 @@ module Ameba::Rule
     #
     # MyGroup::MyRule.new.group # => "MyGroup"
     # ```
-    #
     def group
       {{@type}}.group_name
     end
@@ -91,7 +88,6 @@ module Ameba::Rule
     # ```
     # my_rule.excluded?(source) # => true or false
     # ```
-    #
     def excluded?(source)
       excluded.try &.any? do |path|
         source.matches_path?(path) ||
@@ -105,7 +101,6 @@ module Ameba::Rule
     # ```
     # my_rule.special? # => true or false
     # ```
-    #
     def special?
       name.in?(SPECIAL)
     end

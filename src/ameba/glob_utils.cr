@@ -7,7 +7,6 @@ module Ameba
     # ```
     # find_files_by_globs(["**/*.cr", "!lib"])
     # ```
-    #
     def find_files_by_globs(globs)
       rejected = rejected_globs(globs)
       selected = globs - rejected
@@ -20,7 +19,6 @@ module Ameba
     # ```
     # expand(["spec/*.cr", "src"]) # => all files in src folder + first level specs
     # ```
-    #
     def expand(globs)
       globs.flat_map do |glob|
         glob += "/**/*.cr" if File.directory?(glob)

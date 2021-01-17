@@ -23,7 +23,6 @@ module Ameba
     # Severity.parse("convention") # => Severity::Convention
     # Severity.parse("foo-bar")    # => Exception: Incorrect severity name
     # ```
-    #
     def self.parse(name : String)
       super name
     rescue ArgumentError

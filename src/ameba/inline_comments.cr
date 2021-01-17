@@ -36,7 +36,6 @@ module Ameba
     #   Time.epoch(1483859302)
     # end
     # ```
-    #
     def location_disabled?(location, rule)
       return false if rule.name.in?(Rule::SPECIAL)
       return false unless line_number = location.try &.line_number.try &.- 1
@@ -65,7 +64,6 @@ module Ameba
     # line = "# # ameba:disable Rule1, Rule2"
     # parse_inline_directive(line) # => nil
     # ```
-    #
     def parse_inline_directive(line)
       if directive = COMMENT_DIRECTIVE_REGEX.match(line)
         return if commented_out?(line.gsub(directive[0], ""))
