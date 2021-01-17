@@ -57,6 +57,7 @@ module Ameba::Rule::Style
   # ```
   struct RedundantBegin < Base
     include AST::Util
+
     properties do
       description "Disallows redundant begin blocks"
     end
@@ -102,6 +103,7 @@ module Ameba::Rule::Style
     private def def_redundant_begin?(code)
       lexer = Crystal::Lexer.new code
       in_body = in_argument_list = false
+
       loop do
         token = lexer.next_token
 
@@ -117,6 +119,7 @@ module Ameba::Rule::Style
         when :NEWLINE
           in_body = true unless in_argument_list
         when :SPACE
+          # ignore
         else
           return false if in_body
         end

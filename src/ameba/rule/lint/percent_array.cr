@@ -26,6 +26,7 @@ module Ameba::Rule::Lint
   struct PercentArrays < Base
     properties do
       description "Disallows some unwanted symbols in percent array literals"
+
       string_array_unwanted_symbols %(,")
       symbol_array_unwanted_symbols %(,:)
     end

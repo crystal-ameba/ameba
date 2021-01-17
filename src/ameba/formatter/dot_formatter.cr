@@ -89,11 +89,11 @@ module Ameba::Formatter
 
     private def final_message(sources, failed_sources)
       total = sources.size
-      failures = failed_sources.map { |f| f.issues.size }.sum
+      failures = failed_sources.sum(&.issues.size)
       color = failures == 0 ? :green : :red
       s = failures != 1 ? "s" : ""
 
-      "#{total} inspected, #{failures} failure#{s}.\n".colorize color
+      "#{total} inspected, #{failures} failure#{s}.\n".colorize(color)
     end
   end
 end

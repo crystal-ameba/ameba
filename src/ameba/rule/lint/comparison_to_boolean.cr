@@ -30,7 +30,7 @@ module Ameba::Rule::Lint
 
     def test(source, node : Crystal::Call)
       comparison = node.name.in?(OP_NAMES)
-      to_boolean = node.args.first?.try &.is_a?(Crystal::BoolLiteral) ||
+      to_boolean = node.args.first?.try(&.is_a?(Crystal::BoolLiteral)) ||
                    node.obj.is_a?(Crystal::BoolLiteral)
 
       issue_for node, MSG if comparison && to_boolean

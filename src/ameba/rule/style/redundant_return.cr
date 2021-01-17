@@ -96,6 +96,7 @@ module Ameba::Rule::Style
   struct RedundantReturn < Base
     properties do
       description "Reports redundant return expressions"
+
       allow_multi_return true
       allow_empty_return true
     end

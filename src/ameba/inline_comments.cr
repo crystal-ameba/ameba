@@ -38,7 +38,7 @@ module Ameba
     # ```
     #
     def location_disabled?(location, rule)
-      return false if Rule::SPECIAL.includes?(rule.name)
+      return false if rule.name.in?(Rule::SPECIAL)
       return false unless line_number = location.try &.line_number.try &.- 1
       return false unless line = lines[line_number]?
 

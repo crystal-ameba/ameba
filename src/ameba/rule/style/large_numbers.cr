@@ -28,9 +28,9 @@ module Ameba::Rule::Style
   # ```
   struct LargeNumbers < Base
     properties do
+      enabled false
       description "Disallows usage of large numbers without underscore"
       int_min_digits 5
-      enabled false
     end
 
     MSG = "Large numbers should be written with underscores: %s"
@@ -82,7 +82,7 @@ module Ameba::Rule::Style
     end
 
     private def parse_sign(value)
-      if "+-".includes?(value[0])
+      if value[0].in?('+', '-')
         sign = value[0]
         value = value[1..-1]
       end
@@ -90,7 +90,7 @@ module Ameba::Rule::Style
     end
 
     private def parse_suffix(value)
-      if pos = (value =~ /e/ || value =~ /_?(i|u|f)/)
+      if pos = (value =~ /(e|_?(i|u|f))/)
         suffix = value[pos..-1]
         value = value[0..pos - 1]
       end

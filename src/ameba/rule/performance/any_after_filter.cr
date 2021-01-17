@@ -26,8 +26,8 @@ module Ameba::Rule::Performance
   # ```
   struct AnyAfterFilter < Base
     properties do
-      filter_names : Array(String) = %w(select reject)
       description "Identifies usage of `any?` calls that follow filters."
+      filter_names : Array(String) = %w(select reject)
     end
 
     ANY_NAME = "any?"
@@ -36,7 +36,7 @@ module Ameba::Rule::Performance
     def test(source, node : Crystal::Call)
       return unless node.name == ANY_NAME && (obj = node.obj)
       return unless obj.is_a?(Crystal::Call) && obj.block && node.block.nil?
-      return unless filter_names.includes?(obj.name)
+      return unless obj.name.in?(filter_names)
 
       issue_for obj.name_location, node.name_end_location, MSG % obj.name
     end

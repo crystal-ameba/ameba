@@ -25,8 +25,8 @@ module Ameba::Rule::Performance
   # ```
   struct FirstLastAfterFilter < Base
     properties do
-      filter_names : Array(String) = %w(select)
       description "Identifies usage of `first/last/first?/last?` calls that follow filters."
+      filter_names : Array(String) = %w(select)
     end
 
     CALL_NAMES  = %w(first last first? last?)
@@ -43,10 +43,10 @@ module Ameba::Rule::Performance
     end
 
     def test(source, node : Crystal::Call)
-      return unless CALL_NAMES.includes?(node.name) && (obj = node.obj)
+      return unless node.name.in?(CALL_NAMES) && (obj = node.obj)
       return unless obj.is_a?(Crystal::Call) && obj.block
       return if !node.block.nil? || node.args.any?
-      return unless filter_names.includes?(obj.name)
+      return unless obj.name.in?(filter_names)
 
       message = node.name.includes?(CALL_NAMES.first) ? MSG : MSG_REVERSE
       issue_for obj.name_location, node.name_end_location, message % {obj.name, node.name}

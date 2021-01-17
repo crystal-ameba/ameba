@@ -107,11 +107,11 @@ module Ameba::Rule
     # ```
     #
     def special?
-      SPECIAL.includes? name
+      name.in?(SPECIAL)
     end
 
     def ==(other)
-      name == other.try &.name
+      name == other.try(&.name)
     end
 
     def hash

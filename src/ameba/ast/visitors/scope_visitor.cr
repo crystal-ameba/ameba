@@ -7,7 +7,6 @@ module Ameba::AST
     RECORD_NODE_NAME = "record"
 
     @scope_queue = [] of Scope
-
     @current_scope : Scope
 
     def initialize(@rule, @source)
@@ -169,7 +168,6 @@ module Ameba::AST
             variable.reference(variable.node, @current_scope).explicit = false
           end
         end
-
         true
       when @current_scope.top_level? && record_macro?(node)
         false

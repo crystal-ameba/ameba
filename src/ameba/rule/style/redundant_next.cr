@@ -99,6 +99,7 @@ module Ameba::Rule::Style
   struct RedundantNext < Base
     properties do
       description "Reports redundant next expressions"
+
       allow_multi_next true
       allow_empty_next true
     end

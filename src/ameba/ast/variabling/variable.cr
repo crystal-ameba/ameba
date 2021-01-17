@@ -175,7 +175,7 @@ module Ameba::AST
       end
 
       def references?(node : Crystal::Var)
-        @macro_literals.any? { |literal| literal.value.includes? node.name }
+        @macro_literals.any?(&.value.includes?(node.name))
       end
 
       def visit(node : Crystal::ASTNode)
@@ -190,7 +190,7 @@ module Ameba::AST
     private def update_assign_reference!
       if @assign_before_reference.nil? &&
          references.size <= assignments.size &&
-         assignments.none? { |ass| ass.op_assign? }
+         assignments.none?(&.op_assign?)
         @assign_before_reference = assignments.find { |ass| !ass.in_branch? }.try &.node
       end
     end

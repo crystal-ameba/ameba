@@ -32,8 +32,8 @@ module Ameba::Rule::Performance
   # ```
   struct SizeAfterFilter < Base
     properties do
-      filter_names : Array(String) = %w(select reject)
       description "Identifies usage of `size` calls that follow filter"
+      filter_names : Array(String) = %w(select reject)
     end
 
     SIZE_NAME = "size"
@@ -51,7 +51,7 @@ module Ameba::Rule::Performance
     def test(source, node : Crystal::Call)
       return unless node.name == SIZE_NAME && (obj = node.obj)
       return unless obj.is_a?(Crystal::Call) && obj.block
-      return unless filter_names.includes?(obj.name)
+      return unless obj.name.in?(filter_names)
 
       issue_for obj.name_location, node.name_end_location, MSG % obj.name
     end

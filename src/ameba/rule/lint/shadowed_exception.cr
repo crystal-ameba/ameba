@@ -51,7 +51,7 @@ module Ameba::Rule::Lint
       previous_exceptions = [] of String
 
       exceptions.reduce([] of String) do |shadowed, excs|
-        excs = excs ? excs.map(&.to_s) : ["Exception"]
+        excs = excs.try(&.map(&.to_s)) || %w[Exception]
 
         if exception_found
           shadowed.concat excs

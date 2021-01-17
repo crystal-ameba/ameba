@@ -18,7 +18,6 @@ module Ameba::AST
       if flow_expression?(node, in_loop?)
         @rule.test @source, node, FlowExpression.new(node, in_loop?)
       end
-
       true
     end
 
