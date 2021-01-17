@@ -49,7 +49,7 @@ module Ameba::AST
     # a ||= 1
     # ```
     def op_assign?
-      node.is_a? Crystal::OpAssign
+      node.is_a?(Crystal::OpAssign)
     end
 
     # Returns true if this assignment is in a branch, false if not.

@@ -26,8 +26,8 @@ module Ameba::Rule::Lint
   struct PercentArrays < Base
     properties do
       description "Disallows some unwanted symbols in percent array literals"
-      string_array_unwanted_symbols ",\""
-      symbol_array_unwanted_symbols ",:"
+      string_array_unwanted_symbols %(,")
+      symbol_array_unwanted_symbols %(,:)
     end
 
     MSG = "Symbols `%s` may be unwanted in %s array literals"
@@ -62,8 +62,7 @@ module Ameba::Rule::Lint
     end
 
     private def check_array_entry(entry, symbols, literal)
-      return unless entry =~ /[#{symbols}]/
-      MSG % {symbols, literal}
+      MSG % {symbols, literal} if entry =~ /[#{symbols}]/
     end
   end
 end

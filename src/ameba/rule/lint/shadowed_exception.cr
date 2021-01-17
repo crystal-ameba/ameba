@@ -41,11 +41,10 @@ module Ameba::Rule::Lint
     MSG = "Exception handler has shadowed exceptions: %s"
 
     def test(source, node : Crystal::ExceptionHandler)
-      return unless excs = node.rescues
+      return unless excs = node.rescues.try &.map(&.types)
+      return if (excs = shadowed excs).empty?
 
-      if (excs = shadowed excs.map(&.types)).any?
-        issue_for node, MSG % excs.join(", ")
-      end
+      issue_for node, MSG % excs.join(", ")
     end
 
     private def shadowed(exceptions, exception_found = false)

@@ -33,7 +33,7 @@ module Ameba::Rule::Lint
       return unless node.name == "rand" &&
                     node.args.size == 1 &&
                     (arg = node.args.first) &&
-                    (arg.is_a? Crystal::NumberLiteral) &&
+                    arg.is_a?(Crystal::NumberLiteral) &&
                     (value = arg.value) &&
                     value.in?("0", "1")
 

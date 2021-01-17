@@ -91,8 +91,8 @@ module Ameba::AST
         next if consumed_branches.includes?(assignment.branch)
         assignment.referenced = true
 
-        break unless assignment.branch
-        consumed_branches << assignment.branch.not_nil!
+        break unless branch = assignment.branch
+        consumed_branches << branch
       end
     end
 

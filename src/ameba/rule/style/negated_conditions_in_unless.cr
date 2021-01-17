@@ -42,7 +42,7 @@ module Ameba::Rule::Style
       when Crystal::BinaryOp
         negated_condition?(node.left) || negated_condition?(node.right)
       when Crystal::Expressions
-        node.expressions.any? { |e| negated_condition? e }
+        node.expressions.any? { |e| negated_condition?(e) }
       when Crystal::Not
         true
       else

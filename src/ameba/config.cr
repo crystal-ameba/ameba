@@ -270,7 +270,7 @@ class Ameba::Config
         include YAML::Serializable::Strict
 
         def self.new(config = nil)
-          if (raw = config.try &.raw).is_a? Hash
+          if (raw = config.try &.raw).is_a?(Hash)
             yaml = raw[rule_name]?.try &.to_yaml
           end
           from_yaml yaml || "{}"

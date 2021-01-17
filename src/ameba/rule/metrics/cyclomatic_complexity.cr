@@ -20,9 +20,8 @@ module Ameba::Rule::Metrics
       complexity = AST::CountingVisitor.new(node).count
 
       if complexity > max_complexity && (location = node.name_location)
-        issue_for location, def_name_end_location(node), MSG % {
-          complexity, max_complexity,
-        }
+        issue_for location, def_name_end_location(node),
+          MSG % {complexity, max_complexity}
       end
     end
 
