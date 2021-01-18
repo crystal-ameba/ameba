@@ -1,13 +1,14 @@
 require "../../../spec_helper"
 
 module Ameba::Rule::Performance
-  subject = JoinAfterMap.new
+  subject = MapInsteadOfBlock.new
 
-  describe JoinAfterMap do
+  describe MapInsteadOfBlock do
     it "passes if there is no potential performance improvements" do
       source = Source.new %(
         (1..3).join(&.to_s)
-        (1..3).join('.', &.to_s)
+        (1..3).sum(&.*(2))
+        (1..3).product(&.*(2))
       )
       subject.catch(source).should be_valid
     end
@@ -52,7 +53,7 @@ module Ameba::Rule::Performance
       issue.rule.should_not be_nil
       issue.location.to_s.should eq "source.cr:1:8"
       issue.end_location.to_s.should eq "source.cr:1:24"
-      issue.message.should eq "Use `join(separator) {...}` instead of `map {...}.join(separator)`"
+      issue.message.should eq "Use `join {...}` instead of `map {...}.join`"
     end
   end
 end

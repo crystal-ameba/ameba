@@ -1,32 +1,35 @@
 module Ameba::Rule::Performance
-  # This rule is used to identify usage of `join` calls that follow `map`.
+  # This rule is used to identify usage of `join/sum/product` calls
+  # that follow `map`.
   #
   # For example, this is considered inefficient:
   #
   # ```
   # (1..3).map(&.to_s).join('.')
+  # (1..3).map(&.*(2)).sum
   # ```
   #
   # And can be written as this:
   #
   # ```
   # (1..3).join('.', &.to_s)
+  # (1..3).sum(&.*(2))
   # ```
   #
   # YAML configuration example:
   #
   # ```
-  # Performance/JoinAfterMap
+  # Performance/MapInsteadOfBlock
   #   Enabled: true
   # ```
-  struct JoinAfterMap < Base
+  struct MapInsteadOfBlock < Base
     properties do
-      description "Identifies usage of `join` calls that follow `map`."
+      description "Identifies usage of `join/sum/product` calls that follow `map`."
     end
 
-    MAP_NAME  = "map"
-    JOIN_NAME = "join"
-    MSG       = "Use `join(separator) {...}` instead of `map {...}.join(separator)`"
+    CALL_NAMES = %w(join sum product)
+    MAP_NAME   = "map"
+    MSG        = "Use `%s {...}` instead of `map {...}.%s`"
 
     def test(source)
       AST::NodeVisitor.new self, source, skip: [
@@ -38,11 +41,12 @@ module Ameba::Rule::Performance
     end
 
     def test(source, node : Crystal::Call)
-      return unless node.name == JOIN_NAME && (obj = node.obj)
+      return unless node.name.in?(CALL_NAMES) && (obj = node.obj)
       return unless obj.is_a?(Crystal::Call) && obj.block
       return unless obj.name == MAP_NAME
 
-      issue_for obj.name_location, node.name_end_location, MSG
+      issue_for obj.name_location, node.name_end_location,
+        MSG % {node.name, node.name}
     end
   end
 end
