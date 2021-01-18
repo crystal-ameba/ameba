@@ -24,7 +24,7 @@ module Ameba::Rule::Lint
   #   IgnoreBlocks: false
   #   IgnoreProcs: false
   # ```
-  struct UnusedArgument < Base
+  class UnusedArgument < Base
     properties do
       description "Disallows unused arguments"
 

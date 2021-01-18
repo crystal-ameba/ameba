@@ -49,7 +49,7 @@ module Ameba::Rule::Lint
   # Lint/SharedVarInFiber:
   #   Enabled: true
   # ```
-  struct SharedVarInFiber < Base
+  class SharedVarInFiber < Base
     properties do
       description "Disallows shared variables in fibers."
     end

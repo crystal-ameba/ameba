@@ -26,7 +26,7 @@ module Ameba::Rule::Style
   #   Enabled: true
   #   IntMinDigits: 5 # i.e. integers higher than 9999
   # ```
-  struct LargeNumbers < Base
+  class LargeNumbers < Base
     properties do
       enabled false
       description "Disallows usage of large numbers without underscore"

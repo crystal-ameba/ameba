@@ -96,7 +96,7 @@ module Ameba::Rule::Style
   #   AllowMultiNext: true
   #   AllowEmptyNext: true
   # ```
-  struct RedundantNext < Base
+  class RedundantNext < Base
     properties do
       description "Reports redundant next expressions"
 

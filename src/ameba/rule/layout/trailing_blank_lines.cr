@@ -7,7 +7,7 @@ module Ameba::Rule::Layout
   # Layout/TrailingBlankLines:
   #   Enabled: true
   # ```
-  struct TrailingBlankLines < Base
+  class TrailingBlankLines < Base
     properties do
       description "Disallows trailing blank lines"
     end

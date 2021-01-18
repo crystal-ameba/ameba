@@ -17,7 +17,7 @@ module Ameba::Rule::Lint
   # Lint/BadDirective:
   #   Enabled: true
   # ```
-  struct BadDirective < Base
+  class BadDirective < Base
     properties do
       description "Reports bad comment directives"
     end

@@ -30,7 +30,7 @@ module Ameba::Rule::Performance
   #     - select
   #     - reject
   # ```
-  struct SizeAfterFilter < Base
+  class SizeAfterFilter < Base
     properties do
       description "Identifies usage of `size` calls that follow filter"
       filter_names : Array(String) = %w(select reject)

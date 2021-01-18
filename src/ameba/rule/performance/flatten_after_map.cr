@@ -19,7 +19,7 @@ module Ameba::Rule::Performance
   # Performance/FlattenAfterMap
   #   Enabled: true
   # ```
-  struct FlattenAfterMap < Base
+  class FlattenAfterMap < Base
     properties do
       description "Identifies usage of `flatten` calls that follow `map`."
     end

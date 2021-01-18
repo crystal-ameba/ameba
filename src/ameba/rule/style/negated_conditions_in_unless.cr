@@ -26,7 +26,7 @@ module Ameba::Rule::Style
   # Style/NegatedConditionsInUnless:
   #   Enabled: true
   # ```
-  struct NegatedConditionsInUnless < Base
+  class NegatedConditionsInUnless < Base
     properties do
       description "Disallows negated conditions in unless"
     end

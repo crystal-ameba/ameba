@@ -37,7 +37,7 @@ module Ameba::Rule::Style
   # Style/MethodNames:
   #   Enabled: true
   # ```
-  struct MethodNames < Base
+  class MethodNames < Base
     properties do
       description "Enforces method names to be in underscored case"
     end

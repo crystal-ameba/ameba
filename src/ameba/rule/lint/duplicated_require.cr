@@ -13,7 +13,7 @@ module Ameba::Rule::Lint
   # Lint/DuplicatedRequire:
   #   Enabled: true
   # ```
-  struct DuplicatedRequire < Base
+  class DuplicatedRequire < Base
     properties do
       description "Reports duplicated require statements"
     end

@@ -23,7 +23,7 @@ module Ameba::Rule::Performance
   #   FilterNames:
   #     - select
   # ```
-  struct FirstLastAfterFilter < Base
+  class FirstLastAfterFilter < Base
     properties do
       description "Identifies usage of `first/last/first?/last?` calls that follow filters."
       filter_names : Array(String) = %w(select)

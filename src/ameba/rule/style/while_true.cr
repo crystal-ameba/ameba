@@ -25,7 +25,7 @@ module Ameba::Rule::Style
   # Style/WhileTrue:
   #   Enabled: true
   # ```
-  struct WhileTrue < Base
+  class WhileTrue < Base
     properties do
       description "Disallows while statements with a true literal as condition"
     end

@@ -18,7 +18,7 @@ module Ameba::Rule::Lint
   # rescue e : Exception
   # end
   # ```
-  struct Syntax < Base
+  class Syntax < Base
     properties do
       description "Reports invalid Crystal syntax"
       severity Ameba::Severity::Error
