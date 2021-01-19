@@ -27,7 +27,7 @@ module Ameba::Rule::Lint
   # Lint/EmptyExpression:
   #   Enabled: true
   # ```
-  struct EmptyExpression < Base
+  class EmptyExpression < Base
     include AST::Util
 
     properties do

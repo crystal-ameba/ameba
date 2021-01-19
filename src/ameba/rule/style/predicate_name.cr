@@ -28,7 +28,7 @@ module Ameba::Rule::Style
   # Style/PredicateName:
   #   Enabled: true
   # ```
-  struct PredicateName < Base
+  class PredicateName < Base
     properties do
       enabled false
       description "Disallows tautological predicate names"

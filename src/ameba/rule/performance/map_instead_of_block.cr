@@ -22,7 +22,7 @@ module Ameba::Rule::Performance
   # Performance/MapInsteadOfBlock
   #   Enabled: true
   # ```
-  struct MapInsteadOfBlock < Base
+  class MapInsteadOfBlock < Base
     properties do
       description "Identifies usage of `join/sum/product` calls that follow `map`."
     end

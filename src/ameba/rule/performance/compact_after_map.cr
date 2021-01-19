@@ -19,7 +19,7 @@ module Ameba::Rule::Performance
   # Performance/CompactAfterMap
   #   Enabled: true
   # ```
-  struct CompactAfterMap < Base
+  class CompactAfterMap < Base
     properties do
       description "Identifies usage of `compact` calls that follow `map`."
     end

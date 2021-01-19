@@ -3,7 +3,7 @@ require "../src/ameba"
 
 module Ameba
   # Dummy Rule which does nothing.
-  struct DummyRule < Rule::Base
+  class DummyRule < Rule::Base
     properties do
       description : String = "Dummy rule that does nothing."
     end
@@ -35,7 +35,7 @@ module Ameba
     end
   end
 
-  struct NamedRule < Rule::Base
+  class NamedRule < Rule::Base
     properties do
       description "A rule with a custom name."
     end
@@ -45,7 +45,7 @@ module Ameba
     end
   end
 
-  struct ErrorRule < Rule::Base
+  class ErrorRule < Rule::Base
     properties do
       description "Always adds an error at 1:1"
     end
@@ -55,7 +55,7 @@ module Ameba
     end
   end
 
-  struct ScopeRule < Rule::Base
+  class ScopeRule < Rule::Base
     @[YAML::Field(ignore: true)]
     getter scopes = [] of AST::Scope
 
@@ -68,7 +68,7 @@ module Ameba
     end
   end
 
-  struct FlowExpressionRule < Rule::Base
+  class FlowExpressionRule < Rule::Base
     @[YAML::Field(ignore: true)]
     getter expressions = [] of AST::FlowExpression
 
@@ -81,7 +81,7 @@ module Ameba
     end
   end
 
-  struct RedundantControlExpressionRule < Rule::Base
+  class RedundantControlExpressionRule < Rule::Base
     @[YAML::Field(ignore: true)]
     getter nodes = [] of Crystal::ASTNode
 
@@ -95,7 +95,7 @@ module Ameba
   end
 
   # A rule that always raises an error
-  struct RaiseRule < Rule::Base
+  class RaiseRule < Rule::Base
     property should_raise = false
 
     properties do

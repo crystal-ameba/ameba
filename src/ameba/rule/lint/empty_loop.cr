@@ -37,7 +37,7 @@ module Ameba::Rule::Lint
   # Lint/EmptyLoop:
   #   Enabled: true
   # ```
-  struct EmptyLoop < Base
+  class EmptyLoop < Base
     include AST::Util
 
     properties do

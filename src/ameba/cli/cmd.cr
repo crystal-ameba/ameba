@@ -121,16 +121,10 @@ module Ameba::Cli
   private def configure_rules(config, opts)
     case
     when only = opts.only
-      config.rules.map! do |rule|
-        rule.enabled = false
-        rule
-      end
+      config.rules.each(&.enabled = false)
       config.update_rules(only, enabled: true)
     when opts.all?
-      config.rules.map! do |rule|
-        rule.enabled = true
-        rule
-      end
+      config.rules.each(&.enabled = true)
     end
     config.update_rules(opts.except, enabled: false)
   end

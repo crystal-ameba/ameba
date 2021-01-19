@@ -33,7 +33,7 @@ module Ameba::Rule::Lint
   # Lint/ShadowedException:
   #   Enabled: true
   # ```
-  struct ShadowedException < Base
+  class ShadowedException < Base
     properties do
       description "Disallows rescued exception that get shadowed"
     end

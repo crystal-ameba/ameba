@@ -10,7 +10,7 @@ module Ameba::Rule
   # inherits from this struct:
   #
   # ```
-  # struct MyRule < Ameba::Rule::Base
+  # class MyRule < Ameba::Rule::Base
   #   def test(source)
   #     if invalid?(source)
   #       issue_for line, column, "Something wrong."
@@ -26,7 +26,7 @@ module Ameba::Rule
   # Enforces rules to implement an abstract `#test` method which
   # is designed to test the source passed in. If source has issues
   # that are tested by this rule, it should add an issue.
-  abstract struct Base
+  abstract class Base
     include Config::RuleConfig
 
     # This method is designed to test the source passed in. If source has issues
@@ -56,7 +56,7 @@ module Ameba::Rule
     # Returns a name of this rule, which is basically a class name.
     #
     # ```
-    # struct MyRule < Ameba::Rule::Base
+    # class MyRule < Ameba::Rule::Base
     #   def test(source)
     #   end
     # end
@@ -70,7 +70,7 @@ module Ameba::Rule
     # Returns a group this rule belong to.
     #
     # ```
-    # struct MyGroup::MyRule < Ameba::Rule::Base
+    # class MyGroup::MyRule < Ameba::Rule::Base
     #   # ...
     # end
     #
@@ -140,7 +140,7 @@ module Ameba::Rule
     # module Ameba
     #   # This is a test rule.
     #   # Does nothing.
-    #   struct MyRule < Ameba::Rule::Base
+    #   class MyRule < Ameba::Rule::Base
     #     def test(source)
     #     end
     #   end

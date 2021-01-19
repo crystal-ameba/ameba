@@ -8,7 +8,7 @@ module Ameba::Rule::Layout
   #   Enabled: true
   #   MaxLength: 100
   # ```
-  struct LineLength < Base
+  class LineLength < Base
     properties do
       enabled false
       description "Disallows lines longer than `MaxLength` number of symbols"

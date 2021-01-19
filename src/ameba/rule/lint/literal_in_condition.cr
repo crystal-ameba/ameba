@@ -19,7 +19,7 @@ module Ameba::Rule::Lint
   # Lint/LiteralInCondition:
   #   Enabled: true
   # ```
-  struct LiteralInCondition < Base
+  class LiteralInCondition < Base
     include AST::Util
 
     properties do

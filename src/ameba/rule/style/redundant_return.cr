@@ -93,7 +93,7 @@ module Ameba::Rule::Style
   #   AllowMutliReturn: true
   #   AllowEmptyReturn: true
   # ```
-  struct RedundantReturn < Base
+  class RedundantReturn < Base
     properties do
       description "Reports redundant return expressions"
 

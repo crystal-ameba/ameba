@@ -27,7 +27,7 @@ module Ameba::Rule::Lint
   # Lint/RedundantWithObject:
   #   Enabled: true
   # ```
-  struct RedundantWithObject < Base
+  class RedundantWithObject < Base
     properties do
       description "Disallows redundant `with_object` calls"
     end

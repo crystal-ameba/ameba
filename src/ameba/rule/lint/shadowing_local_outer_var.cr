@@ -30,7 +30,7 @@ module Ameba::Rule::Lint
   # Lint/ShadowingOuterLocalVar:
   #   Enabled: true
   # ```
-  struct ShadowingOuterLocalVar < Base
+  class ShadowingOuterLocalVar < Base
     properties do
       description "Disallows the usage of the same name as outer local variables" \
                   " for block or proc arguments."
