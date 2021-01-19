@@ -611,7 +611,7 @@
   </h2>
   
     
-      <a href="https://github.com/crystal-ameba/ameba/blob/6d41beba/src/ameba/reportable.cr#L3" target="_blank">
+      <a href="https://github.com/crystal-ameba/ameba/blob/4958fa23/src/ameba/reportable.cr#L3" target="_blank">
         ameba/reportable.cr
       </a>
     
@@ -637,16 +637,16 @@
   <ul class="list-summary">
     
       <li class="entry-summary">
-        <a href="#add_issue(rule,location:Tuple(Int32,Int32),end_location:Tuple(Int32,Int32),message,**args)-instance-method" class="signature"><strong>#add_issue</strong>(rule, location : Tuple(Int32, Int32), end_location : Tuple(Int32, Int32), message, **args)</a>
+        <a href="#add_issue(rule,location:Crystal::Location?,end_location:Crystal::Location?,message,status=nil)-instance-method" class="signature"><strong>#add_issue</strong>(rule, location : Crystal::Location?, end_location : Crystal::Location?, message, status = <span class="n">nil</span>)</a>
         
-          <div class="summary"><p>Adds a new issue for <em>location</em> and <em>end_location</em> defined by line and column numbers.</p></div>
+          <div class="summary"><p>Adds a new issue to the list of issues.</p></div>
         
       </li>
     
       <li class="entry-summary">
-        <a href="#add_issue(rule,location,end_location,message,status=nil)-instance-method" class="signature"><strong>#add_issue</strong>(rule, location, end_location, message, status = <span class="n">nil</span>)</a>
+        <a href="#add_issue(rule,location:Tuple(Int32,Int32),end_location:Tuple(Int32,Int32),message,**args)-instance-method" class="signature"><strong>#add_issue</strong>(rule, location : Tuple(Int32, Int32), end_location : Tuple(Int32, Int32), message, **args)</a>
         
-          <div class="summary"><p>Adds a new issue to the list of issues.</p></div>
+          <div class="summary"><p>Adds a new issue for <em>location</em> and <em>end_location</em> defined by line and column numbers.</p></div>
         
       </li>
     
@@ -709,6 +709,27 @@
     Instance Method Detail
   </h2>
   
+    <div class="entry-detail" id="add_issue(rule,location:Crystal::Location?,end_location:Crystal::Location?,message,status=nil)-instance-method">
+      <div class="signature">
+        
+        def <strong>add_issue</strong>(rule, location : Crystal::Location?, end_location : Crystal::Location?, message, status = <span class="n">nil</span>)
+
+        <a class="method-permalink" href="#add_issue(rule,location:Crystal::Location?,end_location:Crystal::Location?,message,status=nil)-instance-method">#</a>
+      </div>
+      
+        <div class="doc">
+          
+          <p>Adds a new issue to the list of issues.</p>
+        </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/crystal-ameba/ameba/blob/4958fa23/src/ameba/reportable.cr#L8" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
     <div class="entry-detail" id="add_issue(rule,location:Tuple(Int32,Int32),end_location:Tuple(Int32,Int32),message,**args)-instance-method">
       <div class="signature">
         
@@ -725,28 +746,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/6d41beba/src/ameba/reportable.cr#L30" target="_blank">View source</a>]
-        
-      </div>
-    </div>
-  
-    <div class="entry-detail" id="add_issue(rule,location,end_location,message,status=nil)-instance-method">
-      <div class="signature">
-        
-        def <strong>add_issue</strong>(rule, location, end_location, message, status = <span class="n">nil</span>)
-
-        <a class="method-permalink" href="#add_issue(rule,location,end_location,message,status=nil)-instance-method">#</a>
-      </div>
-      
-        <div class="doc">
-          
-          <p>Adds a new issue to the list of issues.</p>
-        </div>
-      
-      <br/>
-      <div>
-        
-          [<a href="https://github.com/crystal-ameba/ameba/blob/6d41beba/src/ameba/reportable.cr#L8" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/4958fa23/src/ameba/reportable.cr#L30" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -767,7 +767,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/6d41beba/src/ameba/reportable.cr#L24" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/4958fa23/src/ameba/reportable.cr#L24" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -788,7 +788,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/6d41beba/src/ameba/reportable.cr#L14" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/4958fa23/src/ameba/reportable.cr#L14" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -809,7 +809,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/6d41beba/src/ameba/reportable.cr#L19" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/4958fa23/src/ameba/reportable.cr#L19" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -830,7 +830,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/6d41beba/src/ameba/reportable.cr#L5" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/4958fa23/src/ameba/reportable.cr#L5" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -851,7 +851,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/6d41beba/src/ameba/reportable.cr#L37" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/4958fa23/src/ameba/reportable.cr#L37" target="_blank">View source</a>]
         
       </div>
     </div>
