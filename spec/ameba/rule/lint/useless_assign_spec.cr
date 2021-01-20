@@ -944,6 +944,66 @@ module Ameba::Rule::Lint
         )
         subject.catch(s).should be_valid
       end
+
+      it "doesn't report if assignment is referenced in a macro expression as string" do
+        s = Source.new %(
+          foo = 1
+          puts {{ "foo".id }}
+        )
+        subject.catch(s).should be_valid
+      end
+
+      it "doesn't report if assignement is referenced in for macro in exp" do
+        s = Source.new %(
+          foo = 22
+
+          {% for x in %w(foo) %}
+            add({{x.id}})
+          {% end %}
+        )
+        subject.catch(s).should be_valid
+      end
+
+      it "doesn't report if assignement is referenced in for macro in body" do
+        s = Source.new %(
+          foo = 22
+
+          {% for x in %w(bar) %}
+            puts {{ "foo".id }}
+          {% end %}
+        )
+        subject.catch(s).should be_valid
+      end
+
+      it "doesn't report if assignement is referenced in if macro in cond" do
+        s = Source.new %(
+          foo = 22
+          {% if "foo".id %}
+          {% end %}
+        )
+        subject.catch(s).should be_valid
+      end
+
+      it "doesn't report if assignement is referenced in if macro in then" do
+        s = Source.new %(
+          foo = 22
+          {% if true %}
+             puts {{ "foo".id }}
+          {% end %}
+        )
+        subject.catch(s).should be_valid
+      end
+
+      it "doesn't report if assignement is referenced in if macro in else" do
+        s = Source.new %(
+          foo = 22
+          {% if true %}
+          {% else %}
+             puts {{ "foo".id }}
+          {% end %}
+        )
+        subject.catch(s).should be_valid
+      end
     end
 
     context "uninitialized" do
