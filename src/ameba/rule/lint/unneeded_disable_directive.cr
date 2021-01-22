@@ -36,7 +36,7 @@ module Ameba::Rule::Lint
         next unless token.type == :COMMENT
         next unless directive = source.parse_inline_directive(token.value.to_s)
         next unless names = unneeded_disables(source, directive, token.location)
-        next unless names.any?
+        next if names.empty?
 
         issue_for token, MSG % names.join(", ")
       end
