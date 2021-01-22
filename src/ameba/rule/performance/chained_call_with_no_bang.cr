@@ -25,7 +25,7 @@ module Ameba::Rule::Performance
   # YAML configuration example:
   #
   # ```
-  # Performance/ChainedCallsWithNoBang
+  # Performance/ChainedCallWithNoBang
   #   Enabled: true
   #   CallNames:
   #     - uniq
@@ -34,7 +34,7 @@ module Ameba::Rule::Performance
   #     - shuffle
   #     - reverse
   # ```
-  class ChainedCallsWithNoBang < Base
+  class ChainedCallWithNoBang < Base
     properties do
       description "Identifies usage of chained calls not utilizing the bang method variants."
 
