@@ -47,9 +47,9 @@ module Ameba::Rule::Performance
     # All these methods are allocating a new object
     ALLOCATING_METHOD_NAMES = %w(
       keys values values_at map map_with_index flat_map compact_map
-      flatten compact select reject combinations permutations sample
-      transpose invert group_by chunks tally merge chars clone
-      captures named_captures
+      flatten compact select reject sample group_by chunks tally merge
+      combinations repeated_combinations permutations repeated_permutations
+      transpose invert chars captures named_captures clone
     )
 
     MSG = "Use bang method variant `%s!` after chained `%s` call"
