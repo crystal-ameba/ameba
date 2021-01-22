@@ -1,9 +1,9 @@
 require "../../../spec_helper"
 
 module Ameba::Rule::Performance
-  subject = ChainedCallsWithNoBang.new
+  subject = ChainedCallWithNoBang.new
 
-  describe ChainedCallsWithNoBang do
+  describe ChainedCallWithNoBang do
     it "passes if there is no potential performance improvements" do
       source = Source.new %(
         (1..3).select { |e| e > 1 }.sort!
@@ -35,7 +35,7 @@ module Ameba::Rule::Performance
         source = Source.new %(
           [1, 2, 3].select { |e| e > 2 }.reverse
         )
-        rule = ChainedCallsWithNoBang.new
+        rule = ChainedCallWithNoBang.new
         rule.call_names = %w(uniq)
         rule.catch(source).should be_valid
       end
