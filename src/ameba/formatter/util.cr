@@ -4,7 +4,7 @@ module Ameba::Formatter
       message.try &.gsub(/\x1b[^m]*m/, "").presence
     end
 
-    def affected_code(source, location, context_lines = 0, max_length = 100, placeholder = " ...", prompt = "> ")
+    def affected_code(source, location, end_location = nil, context_lines = 0, max_length = 100, placeholder = " ...", prompt = "> ")
       lines = source.lines
       lineno, column =
         location.line_number, location.column_number
@@ -44,6 +44,9 @@ module Ameba::Formatter
 
       String.build do |str|
         if show_context
+          position = prompt.size + column
+          position -= 1
+
           pre_context.try &.each do |line|
             str << prompt
             str.puts(line.colorize(:dark_gray))
@@ -52,8 +55,22 @@ module Ameba::Formatter
           str << prompt
           str.puts(affected_line.colorize(:white))
 
-          str << " " * (prompt.size + column - 1)
-          str.puts("^".colorize(:yellow))
+          str << (" " * position)
+          str << "^".colorize(:yellow)
+
+          if end_location
+            end_lineno = end_location.line_number
+            end_column = end_location.column_number
+
+            if end_lineno == lineno && end_column > column
+              end_position = end_column - column
+              end_position -= 1
+
+              str << ("-" * end_position).colorize(:dark_gray)
+              str << "^".colorize(:yellow)
+            end
+          end
+          str.puts
 
           post_context.try &.each do |line|
             str << prompt
@@ -62,12 +79,26 @@ module Ameba::Formatter
         else
           stripped = affected_line.lstrip
           position = column - (affected_line.size - stripped.size) + prompt.size
+          position -= 1
 
           str << prompt
           str.puts(stripped)
 
-          str << " " * (position - 1)
+          str << (" " * position)
           str << "^".colorize(:yellow)
+
+          if end_location
+            end_lineno = end_location.line_number
+            end_column = end_location.column_number
+
+            if end_lineno == lineno && end_column > column
+              end_position = end_column - column
+              end_position -= 1
+
+              str << ("-" * end_position).colorize(:dark_gray)
+              str << "^".colorize(:yellow)
+            end
+          end
         end
       end
     end

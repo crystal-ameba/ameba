@@ -20,35 +20,36 @@ module Ameba::Formatter
     # ExplainFormatter.new output,
     #   {file: path, line: line_number, column: column_number}
     # ```
-    def initialize(@output, loc)
-      @location = Crystal::Location.new(loc[:file], loc[:line], loc[:column])
+    def initialize(@output, location)
+      @location = Crystal::Location.new(location[:file], location[:line], location[:column])
     end
 
     # Reports the explainations at the *@location*.
     def finished(sources)
-      source = sources.find { |s| s.path == @location.filename }
-
+      source = sources.find(&.path.==(@location.filename))
       return unless source
 
-      source.issues.each do |issue|
-        if (location = issue.location) &&
-           location.line_number == @location.line_number &&
-           location.column_number == @location.column_number
-          explain(source, issue)
-        end
-      end
+      issue = source.issues.find(&.location.==(@location))
+      return unless issue
+
+      explain(source, issue)
     end
 
     private def explain(source, issue)
       rule = issue.rule
 
+      location, end_location =
+        issue.location, issue.end_location
+
+      return unless location
+
       output_title "ISSUE INFO"
       output_paragraph [
         issue.message.colorize(:red).to_s,
-        @location.to_s.colorize(:cyan).to_s,
+        location.to_s.colorize(:cyan).to_s,
       ]
 
-      if affected_code = affected_code(source, @location, context_lines: 3)
+      if affected_code = affected_code(source, location, end_location, context_lines: 3)
         output_title "AFFECTED CODE"
         output_paragraph affected_code
       end
@@ -68,7 +69,7 @@ module Ameba::Formatter
     end
 
     private def output_paragraph(paragraph : String)
-      output_paragraph(paragraph.split('\n'))
+      output_paragraph(paragraph.lines)
     end
 
     private def output_paragraph(paragraph : Array(String))
