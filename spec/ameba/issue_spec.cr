@@ -42,9 +42,22 @@ module Ameba
         location: nil,
         end_location: nil,
         message: "",
-        status: :enabled
+        status: :disabled
 
-      issue.status.should eq :enabled
+      issue.status.should eq Issue::Status::Disabled
+      issue.disabled?.should be_true
+      issue.enabled?.should be_false
+    end
+
+    it "sets status to :enabled by default" do
+      issue = Issue.new rule: DummyRule.new,
+        location: nil,
+        end_location: nil,
+        message: ""
+
+      issue.status.should eq Issue::Status::Enabled
+      issue.enabled?.should be_true
+      issue.disabled?.should be_false
     end
   end
 end
