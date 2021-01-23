@@ -44,7 +44,7 @@ module Ameba
 
     # Returns `true` if the list of not disabled issues is empty, `false` otherwise.
     def valid?
-      issues.reject(&.disabled?).empty?
+      issues.none?(&.enabled?)
     end
   end
 end
