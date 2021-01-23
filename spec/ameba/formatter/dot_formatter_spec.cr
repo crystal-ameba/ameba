@@ -60,7 +60,7 @@ module Ameba::Formatter
           end
           subject.finished [s]
           log = output.to_s
-          log.should contain "> a = 22"
+          log.should contain "> \e[97ma = 22"
           log.should contain "      \e[33m^\e[0m"
         end
 

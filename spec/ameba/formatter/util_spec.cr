@@ -23,7 +23,7 @@ module Ameba::Formatter
         )
         location = Crystal::Location.new("filename", 1, 1)
         subject.deansify(subject.affected_code(source, location))
-          .should eq "> a = 1\n  ^"
+          .should eq "> a = 1\n  ^\n"
       end
 
       it "returns correct line if it is found" do
