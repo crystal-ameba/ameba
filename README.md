@@ -46,7 +46,7 @@ Run `ameba` binary within your project directory to catch code issues:
 
 ```sh
 $ ameba
-Inspecting 107 files.
+Inspecting 107 files
 
 ...............F.....................F....................................................................
 
@@ -61,9 +61,7 @@ src/ameba/formatter/base_formatter.cr:12:7
          ^
 
 Finished in 542.64 milliseconds
-
-129 inspected, 2 failures.
-
+129 inspected, 2 failures
 ```
 
 ### Run in parallel

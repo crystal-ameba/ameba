@@ -8,7 +8,7 @@ module Ameba::Formatter
     describe "#started" do
       it "writes started message" do
         subject.started [Source.new ""]
-        output.to_s.should eq "Inspecting 1 file.\n\n"
+        output.to_s.should eq "Inspecting 1 file\n\n"
       end
     end
 
@@ -29,7 +29,7 @@ module Ameba::Formatter
     describe "#finished" do
       it "writes a final message" do
         subject.finished [Source.new ""]
-        output.to_s.should contain "1 inspected, 0 failures."
+        output.to_s.should contain "1 inspected, 0 failures"
       end
 
       it "writes the elapsed time" do
@@ -45,7 +45,7 @@ module Ameba::Formatter
           end
           subject.finished [s]
           log = output.to_s
-          log.should contain "1 inspected, 2 failures."
+          log.should contain "1 inspected, 2 failures"
           log.should contain "DummyRuleError"
           log.should contain "NamedRuleError"
         end
@@ -99,7 +99,7 @@ module Ameba::Formatter
           s.add_issue(DummyRule.new, location: {1, 1},
             message: "DummyRuleError", status: :disabled)
           subject.finished [s]
-          output.to_s.should contain "1 inspected, 0 failures."
+          output.to_s.should contain "1 inspected, 0 failures"
         end
       end
     end
