@@ -4,7 +4,7 @@ module Ameba::Formatter
       message.try &.gsub(/\x1b[^m]*m/, "").presence
     end
 
-    def trim(str, max_length = 100, ellipsis = " ...")
+    def trim(str, max_length = 120, ellipsis = " ...")
       if (str.size - ellipsis.size) > max_length
         str = str[0, max_length]
         if str.size > ellipsis.size
@@ -40,7 +40,7 @@ module Ameba::Formatter
       {pre_context, post_context}
     end
 
-    def affected_code(source, location, end_location = nil, context_lines = 0, max_length = 100, ellipsis = " ...", prompt = "> ")
+    def affected_code(source, location, end_location = nil, context_lines = 0, max_length = 120, ellipsis = " ...", prompt = "> ")
       lines = source.lines
       lineno, column =
         location.line_number, location.column_number
