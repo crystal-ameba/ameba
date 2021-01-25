@@ -4,9 +4,7 @@ module Ameba
   describe Severity do
     describe "#symbol" do
       it "returns the symbol for each severity in the enum" do
-        Severity.values.each do |severity|
-          severity.symbol.should_not be_nil
-        end
+        Severity.values.each(&.symbol.should_not(be_nil))
       end
 
       it "returns symbol for Error" do
