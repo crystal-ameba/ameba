@@ -4,7 +4,7 @@
   <p align="center">Code style linter for Crystal<p>
   <p align="center">
     <sup>
-      <i> (a single-celled animal that catches food and moves about by extending fingerlike projections of protoplasm) </i>
+      <i>(a single-celled animal that catches food and moves about by extending fingerlike projections of protoplasm)</i>
     </sup>
   </p>
   <p align="center">
@@ -35,7 +35,7 @@
 ## About
 
 Ameba is a static code analysis tool for the Crystal language.
-It enforces a consistent [Crystal code style](https://crystal-lang.org/docs/conventions/coding_style.html),
+It enforces a consistent [Crystal code style](https://crystal-lang.org/reference/conventions/coding_style.html),
 also catches code smells and wrong code constructions.
 
 See also [Roadmap](https://github.com/crystal-ameba/ameba/wiki).
@@ -46,7 +46,7 @@ Run `ameba` binary within your project directory to catch code issues:
 
 ```sh
 $ ameba
-Inspecting 107 files.
+Inspecting 107 files
 
 ...............F.....................F....................................................................
 
@@ -61,9 +61,7 @@ src/ameba/formatter/base_formatter.cr:12:7
          ^
 
 Finished in 542.64 milliseconds
-
-129 inspected, 2 failures.
-
+129 inspected, 2 failures
 ```
 
 ### Run in parallel

@@ -1,22 +1,31 @@
 module Ameba
   # Represents an issue reported by Ameba.
-  record Issue,
+  struct Issue
+    enum Status
+      Enabled
+      Disabled
+    end
+
     # A rule that triggers this issue.
-    rule : Rule::Base,
+    getter rule : Rule::Base
 
     # Location of the issue.
-    location : Crystal::Location?,
+    getter location : Crystal::Location?
 
     # End location of the issue.
-    end_location : Crystal::Location?,
+    getter end_location : Crystal::Location?
 
     # Issue message.
-    message : String,
+    getter message : String
 
     # Issue status.
-    status : Symbol? do
-    def disabled?
-      status == :disabled
+    getter status : Status
+
+    delegate :enabled?, :disabled?,
+      to: status
+
+    def initialize(@rule, @location, @end_location, @message, status : Status? = nil)
+      @status = status || Status::Enabled
     end
 
     def syntax?

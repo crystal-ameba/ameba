@@ -6,14 +6,15 @@ module Ameba::Formatter
   class DotFormatter < BaseFormatter
     include Util
 
-    @started_at : Time?
+    @started_at : Time::Span?
     @mutex = Thread::Mutex.new
 
     # Reports a message when inspection is started.
     def started(sources)
-      @started_at = Time.utc # Time.monotonic
+      @started_at = Time.monotonic
 
-      output << started_message(sources.size)
+      output.puts started_message(sources.size)
+      output.puts
     end
 
     # Reports a result of the inspection of a corresponding source.
@@ -41,29 +42,29 @@ module Ameba::Formatter
             "#{issue.rule.name}: " \
             "#{issue.message}".colorize(:red)
 
-          if show_affected_code && (code = affected_code(source, location))
+          if show_affected_code && (code = affected_code(source, location, issue.end_location))
             output << code.colorize(:default)
           end
 
-          output << '\n'
+          output.puts
         end
       end
 
-      output << finished_in_message(@started_at, Time.utc) # Time.monotonic
-      output << final_message(sources, failed_sources)
+      output.puts finished_in_message(@started_at, Time.monotonic)
+      output.puts final_message(sources, failed_sources)
     end
 
     private def started_message(size)
       if size == 1
-        "Inspecting 1 file.\n\n".colorize(:default)
+        "Inspecting 1 file".colorize(:default)
       else
-        "Inspecting #{size} files.\n\n".colorize(:default)
+        "Inspecting #{size} files".colorize(:default)
       end
     end
 
     private def finished_in_message(started, finished)
       if started && finished
-        "Finished in #{to_human(finished - started)} \n\n".colorize(:default)
+        "Finished in #{to_human(finished - started)}".colorize(:default)
       end
     end
 
@@ -93,7 +94,7 @@ module Ameba::Formatter
       color = failures == 0 ? :green : :red
       s = failures != 1 ? "s" : ""
 
-      "#{total} inspected, #{failures} failure#{s}.\n".colorize(color)
+      "#{total} inspected, #{failures} failure#{s}".colorize(color)
     end
   end
 end
