@@ -51,7 +51,7 @@ module Ameba::AST
     it "adds a new variable to the scope" do
       scope = Scope.new as_node("")
       scope.add_variable(Crystal::Var.new "foo")
-      scope.variables.any?.should be_true
+      scope.variables.empty?.should be_false
     end
   end
 

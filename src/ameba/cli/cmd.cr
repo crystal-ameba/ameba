@@ -61,7 +61,7 @@ module Ameba::Cli
         if f.size == 1 && f.first =~ /.+:\d+:\d+/
           configure_explain_opts(f.first, opts)
         else
-          opts.globs = f if f.any?
+          opts.globs = f unless f.empty?
         end
       end
 

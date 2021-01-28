@@ -58,7 +58,7 @@ module Ameba::AST
     # variable.referenced? # => true
     # ```
     def referenced?
-      references.any?
+      !references.empty?
     end
 
     # Creates a reference to this variable in some scope.
