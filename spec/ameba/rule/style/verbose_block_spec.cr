@@ -90,6 +90,21 @@ module Ameba::Rule::Style
           .catch(source).should_not be_valid
       end
 
+      it "#max_line_length" do
+        source = Source.new %(
+          (1..3).tap &.tap &.tap &.tap &.tap &.tap &.tap do |i|
+            i.to_s.reverse.strip.blank?
+          end
+        )
+        rule = VerboseBlock.new
+        rule
+          .tap(&.max_line_length = 60)
+          .catch(source).should be_valid
+        rule
+          .tap(&.max_line_length = nil)
+          .catch(source).should_not be_valid
+      end
+
       it "#max_length" do
         source = Source.new %(
           (1..3).tap { |i| i.to_s.split.reverse.join.strip.blank? }

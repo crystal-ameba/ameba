@@ -23,6 +23,7 @@ module Ameba::Rule::Style
   #   ExcludeCallsWithBlocks: false
   #   ExcludeOperators: false
   #   ExcludeSetters: false
+  #   MaxLineLength: ~
   #   MaxLength: 50 # use ~ to disable
   # ```
   class VerboseBlock < Base
@@ -34,6 +35,7 @@ module Ameba::Rule::Style
       exclude_operators false
       exclude_setters false
 
+      max_line_length : Int32? = nil # 100
       max_length : Int32? = 50
     end
 
@@ -64,6 +66,16 @@ module Ameba::Rule::Style
     protected def valid_length?(code)
       if max_length = self.max_length
         return code.size <= max_length
+      end
+      true
+    end
+
+    protected def valid_line_length?(node, code)
+      if max_line_length = self.max_line_length
+        if location = node.name_location
+          final_line_length = location.column_number + code.size
+          return final_line_length <= max_line_length
+        end
       end
       true
     end
@@ -141,6 +153,7 @@ module Ameba::Rule::Style
       call_code =
         call_code(node, body)
 
+      return unless valid_line_length?(node, call_code)
       return unless valid_length?(call_code)
 
       issue_for node.name_location, node.end_location,
