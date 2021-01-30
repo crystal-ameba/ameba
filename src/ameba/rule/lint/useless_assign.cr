@@ -39,7 +39,7 @@ module Ameba::Rule::Lint
 
     def test(source, node, scope : AST::Scope)
       scope.variables.each do |var|
-        next if var.captured_by_block? || var.used_in_macro? || var.ignored?
+        next if var.ignored? || var.used_in_macro? || var.captured_by_block?
 
         var.assignments.each do |assign|
           next if assign.referenced? || assign.transformed?

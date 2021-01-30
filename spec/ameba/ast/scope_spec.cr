@@ -47,6 +47,68 @@ module Ameba::AST
     end
   end
 
+  describe "#references?" do
+    it "returns true if current scope references variable" do
+      nodes = as_nodes %(
+        def method
+          a = 2
+          block do
+            3.times { |i| a = a + i }
+          end
+        end
+      )
+      scope = Scope.new nodes.def_nodes.first
+      var_node = nodes.var_nodes.first
+      scope.add_variable var_node
+      scope.inner_scopes << Scope.new(nodes.block_nodes.first, scope)
+
+      variable = Variable.new(var_node, scope)
+      variable.reference nodes.var_nodes.first, scope.inner_scopes.first
+
+      scope.references?(variable).should be_true
+    end
+
+    it "returns false if inner scopes are not checked" do
+      nodes = as_nodes %(
+        def method
+          a = 2
+          block do
+            3.times { |i| a = a + i }
+          end
+        end
+      )
+      scope = Scope.new nodes.def_nodes.first
+      var_node = nodes.var_nodes.first
+      scope.add_variable var_node
+      scope.inner_scopes << Scope.new(nodes.block_nodes.first, scope)
+
+      variable = Variable.new(var_node, scope)
+      variable.reference nodes.var_nodes.first, scope.inner_scopes.first
+
+      scope.references?(variable, check_inner_scopes: false).should be_false
+    end
+
+    it "returns false if current scope does not reference variable" do
+      nodes = as_nodes %(
+        def method
+          a = 2
+          block do
+            b = 3
+            3.times { |i| b = b + i }
+          end
+        end
+      )
+      scope = Scope.new nodes.def_nodes.first
+      var_node = nodes.var_nodes.first
+      scope.add_variable var_node
+      scope.inner_scopes << Scope.new(nodes.block_nodes.first, scope)
+
+      variable = Variable.new(var_node, scope)
+
+      scope.inner_scopes.first.references?(variable).should be_false
+    end
+  end
+
   describe "#add_variable" do
     it "adds a new variable to the scope" do
       scope = Scope.new as_node("")

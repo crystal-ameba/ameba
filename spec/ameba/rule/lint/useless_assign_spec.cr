@@ -1006,6 +1006,47 @@ module Ameba::Rule::Lint
       end
     end
 
+    it "does not report if variable is referenced and there is a deep level scope" do
+      s = Source.new %(
+        response = JSON.build do |json|
+          json.object do
+            json.object do
+              json.object do
+                json.object do
+                  json.object do
+                    json.object do
+                      json.object do
+                        json.object do
+                          json.object do
+                            json.object do
+                              json.object do
+                                json.object do
+                                  json.object do
+                                    json.object do
+                                      anything
+                                    end
+                                  end
+                                end
+                              end
+                            end
+                          end
+                        end
+                      end
+                    end
+                  end
+                end
+              end
+            end
+          end
+        end
+
+        response = JSON.parse(response)
+        response = prepare(response)
+        response
+       )
+      subject.catch(s).should be_valid
+    end
+
     context "uninitialized" do
       it "reports if uninitialized assignment is not referenced at a top level" do
         s = Source.new %(
