@@ -1023,7 +1023,9 @@ module Ameba::Rule::Lint
                                 json.object do
                                   json.object do
                                     json.object do
-                                      anything
+                                      json.object do
+                                        anything
+                                      end
                                     end
                                   end
                                 end
@@ -1041,7 +1043,6 @@ module Ameba::Rule::Lint
         end
 
         response = JSON.parse(response)
-        response = prepare(response)
         response
        )
       subject.catch(s).should be_valid
