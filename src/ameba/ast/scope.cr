@@ -134,10 +134,10 @@ module Ameba::AST
 
     # Returns true if current scope (or any of inner scopes) references variable,
     # false if not.
-    def references?(variable : Variable)
+    def references?(variable : Variable, check_inner_scopes = true)
       variable.references.any? do |reference|
-        reference.scope == self ||
-          inner_scopes.any?(&.references? variable)
+        return true if reference.scope == self
+        check_inner_scopes && inner_scopes.any?(&.references?(variable))
       end || variable.used_in_macro?
     end
 

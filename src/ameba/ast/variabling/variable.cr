@@ -113,7 +113,7 @@ module Ameba::AST
     # ```
     def captured_by_block?(scope = @scope)
       scope.inner_scopes.each do |inner_scope|
-        return true if inner_scope.block? && inner_scope.references?(self)
+        return true if inner_scope.block? && inner_scope.references?(self, check_inner_scopes: false)
         return true if captured_by_block?(inner_scope)
       end
 
