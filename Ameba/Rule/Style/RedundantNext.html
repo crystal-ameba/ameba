@@ -3,21 +3,16 @@
 <head>
   <meta charset="utf-8" />
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="generator" content="Crystal Docs 0.34.0">
+<meta name="generator" content="Crystal Docs 0.35.1">
 <meta name="crystal_docs.project_version" content="master">
 <meta name="crystal_docs.project_name" content="ameba">
+
 
 
 <link href="../../../css/style.css" rel="stylesheet" type="text/css" />
 <script type="text/javascript" src="../../../js/doc.js"></script>
 
-<svg class="hidden">
-  <symbol id="octicon-link" viewBox="0 0 16 16">
-    <path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path>
-  </symbol>
-</svg>
-
-  <meta id="repository-name" content="ameba">
+  <meta name="repository-name" content="ameba">
   <title>Ameba::Rule::Style::RedundantNext - ameba master</title>
   <script type="text/javascript">
     CrystalDocs.base_path = "../../../";
@@ -25,6 +20,11 @@
 </head>
 <body>
 
+<svg class="hidden">
+  <symbol id="octicon-link" viewBox="0 0 16 16">
+    <path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path>
+  </symbol>
+</svg>
 <div class="sidebar">
   <div class="sidebar-header">
     <div class="search-box">
@@ -44,7 +44,7 @@
     </div>
   </div>
 
-  <div class="search-results" class="hidden">
+  <div class="search-results hidden">
     <ul class="search-list"></ul>
   </div>
 
@@ -581,11 +581,11 @@ into the node which is the last in a block.</p>
 
 <p>For example, this is considered invalid:</p>
 
-<pre><code>block <span class="k">do</span> <span class="o">|</span>v<span class="o">|</span>
+<pre><code class="language-crystal">block <span class="k">do</span> <span class="o">|</span>v<span class="o">|</span>
   <span class="k">next</span> v <span class="o">+</span> <span class="n">1</span>
 <span class="k">end</span></code></pre>
 
-<pre><code>block <span class="k">do</span> <span class="o">|</span>v<span class="o">|</span>
+<pre><code class="language-crystal">block <span class="k">do</span> <span class="o">|</span>v<span class="o">|</span>
   <span class="k">case</span> v
   <span class="k">when</span> .<span class="k">nil?</span>
     <span class="k">next</span> <span class="s">&quot;nil&quot;</span>
@@ -598,11 +598,11 @@ into the node which is the last in a block.</p>
 
 <p>And has to be written as the following:</p>
 
-<pre><code>block <span class="k">do</span> <span class="o">|</span>v<span class="o">|</span>
+<pre><code class="language-crystal">block <span class="k">do</span> <span class="o">|</span>v<span class="o">|</span>
   v <span class="o">+</span> <span class="n">1</span>
 <span class="k">end</span></code></pre>
 
-<pre><code>block <span class="k">do</span> <span class="o">|</span>v<span class="o">|</span>
+<pre><code class="language-crystal">block <span class="k">do</span> <span class="o">|</span>v<span class="o">|</span>
   <span class="k">case</span> arg
   <span class="k">when</span> .<span class="k">nil?</span>
     <span class="s">&quot;nil&quot;</span>
@@ -624,13 +624,13 @@ into the node which is the last in a block.</p>
 <p>Allows end-user to configure whether to report or not the next statements
 which yield tuple literals i.e.</p>
 
-<pre><code>block <span class="k">do</span>
+<pre><code class="language-crystal">block <span class="k">do</span>
   <span class="k">next</span> a, b
 <span class="k">end</span></code></pre>
 
 <p>If this param equals to <code>false</code>, the block above will be forced to be written as:</p>
 
-<pre><code>block <span class="k">do</span>
+<pre><code class="language-crystal">block <span class="k">do</span>
   {a, b}
 <span class="k">end</span></code></pre>
 
@@ -639,14 +639,14 @@ which yield tuple literals i.e.</p>
 <p>Allows end-user to configure whether to report or not the next statements
 without arguments. Sometimes such statements are used to yild the <code>nil</code> value explicitly.</p>
 
-<pre><code>block <span class="k">do</span>
+<pre><code class="language-crystal">block <span class="k">do</span>
   @foo <span class="o">=</span> <span class="n">:empty</span>
   <span class="k">next</span>
 <span class="k">end</span></code></pre>
 
 <p>If this param equals to <code>false</code>, the block above will be forced to be written as:</p>
 
-<pre><code>block <span class="k">do</span>
+<pre><code class="language-crystal">block <span class="k">do</span>
   @foo <span class="o">=</span> <span class="n">:empty</span>
   <span class="n">nil</span>
 <span class="k">end</span></code></pre>
@@ -657,10 +657,10 @@ without arguments. Sometimes such statements are used to yild the <code>nil</cod
   </svg>
 </a>YAML config example</h3>
 
-<pre><code><span class="t">Style</span><span class="s">/RedundantNext:
+<pre><code class="language-crystal">Style/RedundantNext:
   Enabled: true
   AllowMultiNext: true
-  AllowEmptyNext: true</span></code></pre>
+  AllowEmptyNext: true</code></pre>
 
 
 
@@ -701,7 +701,7 @@ without arguments. Sometimes such statements are used to yild the <code>nil</cod
   </h2>
   
     
-      <a href="https://github.com/crystal-ameba/ameba/blob/d28f9f75/src/ameba/rule/style/redundant_next.cr#L99" target="_blank">
+      <a href="https://github.com/crystal-ameba/ameba/blob/51b0a07e/src/ameba/rule/style/redundant_next.cr#L99" target="_blank">
         ameba/rule/style/redundant_next.cr
       </a>
     
@@ -1022,11 +1022,11 @@ into the node which is the last in a block.</p>
 
 <p>For example, this is considered invalid:</p>
 
-<pre><code>block <span class="k">do</span> <span class="o">|</span>v<span class="o">|</span>
+<pre><code class="language-crystal">block <span class="k">do</span> <span class="o">|</span>v<span class="o">|</span>
   <span class="k">next</span> v <span class="o">+</span> <span class="n">1</span>
 <span class="k">end</span></code></pre>
 
-<pre><code>block <span class="k">do</span> <span class="o">|</span>v<span class="o">|</span>
+<pre><code class="language-crystal">block <span class="k">do</span> <span class="o">|</span>v<span class="o">|</span>
   <span class="k">case</span> v
   <span class="k">when</span> .<span class="k">nil?</span>
     <span class="k">next</span> <span class="s">&quot;nil&quot;</span>
@@ -1039,11 +1039,11 @@ into the node which is the last in a block.</p>
 
 <p>And has to be written as the following:</p>
 
-<pre><code>block <span class="k">do</span> <span class="o">|</span>v<span class="o">|</span>
+<pre><code class="language-crystal">block <span class="k">do</span> <span class="o">|</span>v<span class="o">|</span>
   v <span class="o">+</span> <span class="n">1</span>
 <span class="k">end</span></code></pre>
 
-<pre><code>block <span class="k">do</span> <span class="o">|</span>v<span class="o">|</span>
+<pre><code class="language-crystal">block <span class="k">do</span> <span class="o">|</span>v<span class="o">|</span>
   <span class="k">case</span> arg
   <span class="k">when</span> .<span class="k">nil?</span>
     <span class="s">&quot;nil&quot;</span>
@@ -1065,13 +1065,13 @@ into the node which is the last in a block.</p>
 <p>Allows end-user to configure whether to report or not the next statements
 which yield tuple literals i.e.</p>
 
-<pre><code>block <span class="k">do</span>
+<pre><code class="language-crystal">block <span class="k">do</span>
   <span class="k">next</span> a, b
 <span class="k">end</span></code></pre>
 
 <p>If this param equals to <code>false</code>, the block above will be forced to be written as:</p>
 
-<pre><code>block <span class="k">do</span>
+<pre><code class="language-crystal">block <span class="k">do</span>
   {a, b}
 <span class="k">end</span></code></pre>
 
@@ -1080,14 +1080,14 @@ which yield tuple literals i.e.</p>
 <p>Allows end-user to configure whether to report or not the next statements
 without arguments. Sometimes such statements are used to yild the <code>nil</code> value explicitly.</p>
 
-<pre><code>block <span class="k">do</span>
+<pre><code class="language-crystal">block <span class="k">do</span>
   @foo <span class="o">=</span> <span class="n">:empty</span>
   <span class="k">next</span>
 <span class="k">end</span></code></pre>
 
 <p>If this param equals to <code>false</code>, the block above will be forced to be written as:</p>
 
-<pre><code>block <span class="k">do</span>
+<pre><code class="language-crystal">block <span class="k">do</span>
   @foo <span class="o">=</span> <span class="n">:empty</span>
   <span class="n">nil</span>
 <span class="k">end</span></code></pre>
@@ -1098,16 +1098,16 @@ without arguments. Sometimes such statements are used to yild the <code>nil</cod
   </svg>
 </a>YAML config example</h3>
 
-<pre><code><span class="t">Style</span><span class="s">/RedundantNext:
+<pre><code class="language-crystal">Style/RedundantNext:
   Enabled: true
   AllowMultiNext: true
-  AllowEmptyNext: true</span></code></pre>
+  AllowEmptyNext: true</code></pre>
         </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/d28f9f75/src/ameba/rule/style/redundant_next.cr#L99" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/51b0a07e/src/ameba/rule/style/redundant_next.cr#L99" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1305,7 +1305,7 @@ without arguments. Sometimes such statements are used to yild the <code>nil</cod
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/d28f9f75/src/ameba/rule/style/redundant_next.cr#L112" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/51b0a07e/src/ameba/rule/style/redundant_next.cr#L112" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1321,7 +1321,7 @@ without arguments. Sometimes such statements are used to yild the <code>nil</cod
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/d28f9f75/src/ameba/rule/style/redundant_next.cr#L108" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/51b0a07e/src/ameba/rule/style/redundant_next.cr#L108" target="_blank">View source</a>]
         
       </div>
     </div>
