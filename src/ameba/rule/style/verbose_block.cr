@@ -117,7 +117,22 @@ module Ameba::Rule::Style
       CALL_PATTERN % {call.name, args, name}
     end
 
-    # ameba:disable Metrics/CyclomaticComplexity
+    protected def issue_for_valid(source, call : Crystal::Call, body : Crystal::Call)
+      return if exclude_calls_with_block && body.block
+      return if exclude_multiple_line_blocks && !same_location_lines?(call, body)
+      return if exclude_operators && operator?(body.name)
+      return if exclude_setters && setter?(body.name)
+
+      call_code =
+        call_code(call, body)
+
+      return unless valid_line_length?(call, call_code)
+      return unless valid_length?(call_code)
+
+      issue_for call.name_location, call.end_location,
+        MSG % call_code
+    end
+
     def test(source, node : Crystal::Call)
       # we are interested only in calls with block taking a single argument
       #
@@ -145,19 +160,8 @@ module Ameba::Rule::Style
       # we skip auto-generated blocks - `(1..3).any?(&.odd?)`
       return if arg.name.starts_with?("__arg")
 
-      return if exclude_calls_with_block && body.block
-      return if exclude_multiple_line_blocks && !same_location_lines?(node, body)
-      return if exclude_operators && operator?(body.name)
-      return if exclude_setters && setter?(body.name)
-
-      call_code =
-        call_code(node, body)
-
-      return unless valid_line_length?(node, call_code)
-      return unless valid_length?(call_code)
-
-      issue_for node.name_location, node.end_location,
-        MSG % call_code
+      # add issue if the given nodes pass all of the checks
+      issue_for_valid source, node, body
     end
   end
 end
