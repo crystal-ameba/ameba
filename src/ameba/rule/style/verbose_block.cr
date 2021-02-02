@@ -80,6 +80,27 @@ module Ameba::Rule::Style
       true
     end
 
+    protected def reference_count(node, obj : Crystal::Var)
+      i = 0
+      case node
+      when Crystal::Call
+        i += reference_count(node.obj, obj)
+        i += reference_count(node.block, obj)
+
+        node.args.each do |arg|
+          i += reference_count(arg, obj)
+        end
+        node.named_args.try &.each do |arg|
+          i += reference_count(arg.value, obj)
+        end
+      when Crystal::Block
+        i += reference_count(node.body, obj)
+      when Crystal::Var
+        i += 1 if node == obj
+      end
+      i
+    end
+
     protected def node_to_s(node : Crystal::Call)
       case name = node.name
       when "[]"
@@ -143,6 +164,11 @@ module Ameba::Rule::Style
       # ```
       return unless (block = node.block) && block.args.size == 1
 
+      arg = block.args.first
+
+      # we skip auto-generated blocks - `(1..3).any?(&.odd?)`
+      return if arg.name.starts_with?("__arg")
+
       # we filter out the blocks that are of call type - `i.to_i64.odd?`
       return unless (body = block.body).is_a?(Crystal::Call)
 
@@ -155,10 +181,10 @@ module Ameba::Rule::Style
       return unless obj.is_a?(Crystal::Var)
 
       # only calls with a first argument used as a receiver are the valid game
-      return unless (arg = block.args.first) == obj
+      return unless obj == arg
 
-      # we skip auto-generated blocks - `(1..3).any?(&.odd?)`
-      return if arg.name.starts_with?("__arg")
+      # we bail out if the block node include the block argument
+      return if reference_count(body, arg) > 1
 
       # add issue if the given nodes pass all of the checks
       issue_for_valid source, node, body

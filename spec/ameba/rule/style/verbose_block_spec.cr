@@ -14,6 +14,18 @@ module Ameba::Rule::Style
       subject.catch(source).should be_valid
     end
 
+    it "passes if the block argument is used within the body" do
+      source = Source.new %(
+        (1..3).map { |i| i * i }
+        (1..3).map { |j| j * j.to_i64 }
+        (1..3).map { |k| k.to_i64 * k }
+        (1..3).map { |l| l.to_i64 * l.to_i64 }
+        (1..3).map { |m| m.to_s[start: m.to_i64, count: 3]? }
+        (1..3).map { |n| n.to_s.split.map { |z| n.to_i * z.to_i }.join }
+      )
+      subject.catch(source).should be_valid
+    end
+
     it "reports if there is a call with a collapsible block" do
       source = Source.new %(
         (1..3).any? { |i| i.odd? }
