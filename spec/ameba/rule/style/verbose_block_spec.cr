@@ -76,6 +76,20 @@ module Ameba::Rule::Style
           .catch(source).should_not be_valid
       end
 
+      it "#exclude_prefix_operators" do
+        source = Source.new %(
+          (1..3).sum { |i| +i }
+          (1..3).sum { |i| -i }
+        )
+        rule = VerboseBlock.new
+        rule
+          .tap(&.exclude_prefix_operators = true)
+          .catch(source).should be_valid
+        rule
+          .tap(&.exclude_prefix_operators = false)
+          .catch(source).should_not be_valid
+      end
+
       it "#exclude_operators" do
         source = Source.new %(
           (1..3).sum { |i| i * 2 }

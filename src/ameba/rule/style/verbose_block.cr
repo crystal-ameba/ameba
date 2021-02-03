@@ -21,6 +21,7 @@ module Ameba::Rule::Style
   #   Enabled: true
   #   ExcludeMultipleLineBlocks: true
   #   ExcludeCallsWithBlocks: false
+  #   ExcludePrefixOperators: true
   #   ExcludeOperators: false
   #   ExcludeSetters: false
   #   MaxLineLength: ~
@@ -32,6 +33,7 @@ module Ameba::Rule::Style
 
       exclude_calls_with_block true
       exclude_multiple_line_blocks false
+      exclude_prefix_operators true
       exclude_operators false
       exclude_setters false
 
@@ -49,8 +51,13 @@ module Ameba::Rule::Style
       a_location.line_number == b_location.line_number
     end
 
-    private OPERATOR_CHARS =
+    private PREFIX_OPERATORS = {"+", "-"}
+    private OPERATOR_CHARS   =
       {'[', ']', '!', '=', '>', '<', '~', '+', '-', '*', '/', '%', '^', '|', '&'}
+
+    protected def prefix_operator?(node)
+      node.name.in?(PREFIX_OPERATORS) && node.args.empty?
+    end
 
     protected def operator?(name)
       name.each_char do |char|
@@ -138,9 +145,11 @@ module Ameba::Rule::Style
       CALL_PATTERN % {call.name, args, name}
     end
 
+    # ameba:disable Metrics/CyclomaticComplexity
     protected def issue_for_valid(source, call : Crystal::Call, body : Crystal::Call)
       return if exclude_calls_with_block && body.block
       return if exclude_multiple_line_blocks && !same_location_lines?(call, body)
+      return if exclude_prefix_operators && prefix_operator?(body)
       return if exclude_operators && operator?(body.name)
       return if exclude_setters && setter?(body.name)
 
