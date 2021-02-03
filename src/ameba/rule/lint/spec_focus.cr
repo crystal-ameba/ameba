@@ -53,7 +53,7 @@ module Ameba::Rule::Lint
     SPEC_ITEM_NAMES = %w(describe context it pending)
 
     def test(source)
-      return unless source.path.ends_with?("_spec.cr")
+      return unless source.spec?
 
       AST::NodeVisitor.new self, source
     end

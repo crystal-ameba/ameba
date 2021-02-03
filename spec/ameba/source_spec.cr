@@ -23,6 +23,18 @@ module Ameba
       end
     end
 
+    describe "#spec?" do
+      it "returns true if the source is a spec file" do
+        s = Source.new "", "./source_spec.cr"
+        s.spec?.should be_true
+      end
+
+      it "returns false if the source is not a spec file" do
+        s = Source.new "", "./source.cr"
+        s.spec?.should be_false
+      end
+    end
+
     describe "#matches_path?" do
       it "returns true if source's path is matched" do
         s = Source.new "", "source.cr"
