@@ -108,25 +108,48 @@ module Ameba::Rule::Style
       i
     end
 
-    protected def node_to_s(node : Crystal::Call)
-      case name = node.name
-      when "[]"
-        name = "[#{node.args.join ", "}]"
-      when "[]?"
-        name = "[#{node.args.join ", "}]?"
-      when "[]="
-        unless node.args.empty?
-          name = "[#{node.args[..-2].join ", "}]=(#{node.args.last})"
+    protected def args_to_s(io : IO, node : Crystal::Call, skip_last_arg = false)
+      node.args.dup.tap do |args|
+        args.pop? if skip_last_arg
+        args.join io, ", "
+        node.named_args.try do |named_args|
+          io << ", " unless args.empty? || named_args.empty?
+          named_args.join io, ", " do |arg, inner_io|
+            inner_io << arg.name << ": " << arg.value
+          end
         end
-      else
-        name += "(#{node.args.join ", "})" unless node.args.empty?
-        name += " {...}" if node.block
       end
-      name
+    end
+
+    protected def node_to_s(node : Crystal::Call)
+      String.build do |str|
+        case name = node.name
+        when "[]"
+          str << '['
+          args_to_s(str, node)
+          str << ']'
+        when "[]?"
+          str << '['
+          args_to_s(str, node)
+          str << "]?"
+        when "[]="
+          str << '['
+          args_to_s(str, node, skip_last_arg: true)
+          str << "]=(" << node.args.last? << ')'
+        else
+          str << name
+          if !node.args.empty? || (node.named_args && !node.named_args.try(&.empty?))
+            str << '('
+            args_to_s(str, node)
+            str << ')'
+          end
+          str << " {...}" if node.block
+        end
+      end
     end
 
     protected def call_code(call, body)
-      args = call.args.join ", " unless call.args.empty?
+      args = String.build { |io| args_to_s(io, call) }.presence
       args += ", " if args
 
       call_chain = %w[].tap do |arr|

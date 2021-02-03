@@ -154,6 +154,44 @@ module Ameba::Rule::Style
       end
     end
 
+    it "reports call args and named_args" do
+      short_block_variants = {
+        %|map(&.to_s.[start: 0.to_i64, count: 3]?)|,
+        %|map(&.to_s.[0.to_i64, count: 3]?)|,
+        %|map(&.to_s.[0.to_i64, 3]?)|,
+        %|map(&.to_s.[start: 0.to_i64, count: 3]=("foo"))|,
+        %|map(&.to_s.[0.to_i64, count: 3]=("foo"))|,
+        %|map(&.to_s.[0.to_i64, 3]=("foo"))|,
+        %|map(&.to_s.camelcase(lower: true))|,
+        %|map(&.to_s.camelcase)|,
+        %|map(&.to_s.gsub('_', '-'))|,
+        %|map(&.in?(*{1, 2, 3}, **{foo: :bar}))|,
+        %|map(&.in?(1, *foo, 3, **bar))|,
+        %|join(separator: '.', &.to_s)|,
+      }
+
+      source = Source.new path: "source.cr", code: %(
+        (1..3).map { |i| i.to_s[start: 0.to_i64, count: 3]? }
+        (1..3).map { |i| i.to_s[0.to_i64, count: 3]? }
+        (1..3).map { |i| i.to_s[0.to_i64, 3]? }
+        (1..3).map { |i| i.to_s[start: 0.to_i64, count: 3] = "foo" }
+        (1..3).map { |i| i.to_s[0.to_i64, count: 3] = "foo" }
+        (1..3).map { |i| i.to_s[0.to_i64, 3] = "foo" }
+        (1..3).map { |i| i.to_s.camelcase(lower: true) }
+        (1..3).map { |i| i.to_s.camelcase }
+        (1..3).map { |i| i.to_s.gsub('_', '-') }
+        (1..3).map { |i| i.in?(*{1, 2, 3}, **{foo: :bar}) }
+        (1..3).map { |i| i.in?(1, *foo, 3, **bar) }
+        (1..3).join(separator: '.') { |i| i.to_s }
+      )
+      subject.catch(source).should_not be_valid
+      source.issues.size.should eq(short_block_variants.size)
+
+      source.issues.each_with_index do |issue, i|
+        issue.message.should eq(VerboseBlock::MSG % short_block_variants[i])
+      end
+    end
+
     it "reports rule, pos and message" do
       source = Source.new path: "source.cr", code: %(
         (1..3).any? { |i| i.odd? }
