@@ -110,19 +110,20 @@ module Ameba::AST
     # ```
     def captured_by_block?(scope = @scope)
       scope.inner_scopes.each do |inner_scope|
-        return true if inner_scope.block? && inner_scope.references?(self)
+        return true if inner_scope.block? && inner_scope.references?(self, check_inner_scopes: false)
         return true if captured_by_block?(inner_scope)
       end
 
       false
     end
 
-    # Returns true if current variable potentially referenced in a macro literal,
+    # Returns true if current variable potentially referenced in a macro,
     # false if not.
     def used_in_macro?(scope = @scope)
       scope.inner_scopes.each do |inner_scope|
-        return true if MacroLiteralFinder.new(inner_scope.node).references? node
+        return true if MacroReferenceFinder.new(inner_scope.node, node.name).references
       end
+      return true if MacroReferenceFinder.new(scope.node, node.name).references
       return true if (outer_scope = scope.outer_scope) && used_in_macro?(outer_scope)
       false
     end
@@ -164,10 +165,10 @@ module Ameba::AST
           var_location.column_number < node_location.column_number)
     end
 
-    private class MacroLiteralFinder < Crystal::Visitor
-      @macro_literals = [] of Crystal::MacroLiteral
+    private class MacroReferenceFinder < Crystal::Visitor
+      property references = false
 
-      def initialize(node)
+      def initialize(node, @reference : String = reference)
         node.accept self
       end
 
@@ -180,7 +181,23 @@ module Ameba::AST
       end
 
       def visit(node : Crystal::MacroLiteral)
-        @macro_literals << node
+        !(self.references ||= node.value.includes?(@reference))
+      end
+
+      def visit(node : Crystal::MacroExpression)
+        !(self.references ||= node.exp.to_s.includes?(@reference))
+      end
+
+      def visit(node : Crystal::MacroFor)
+        exp, body = node.exp, node.body
+        !(self.references ||= exp.to_s.includes?(@reference) ||
+                              body.to_s.includes?(@reference))
+      end
+
+      def visit(node : Crystal::MacroIf)
+        !(self.references ||= node.cond.to_s.includes?(@reference) ||
+                              node.then.to_s.includes?(@reference) ||
+                              node.else.to_s.includes?(@reference))
       end
     end
 
