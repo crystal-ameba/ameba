@@ -8,8 +8,12 @@ module Ameba::Rule::Style
       source = Source.new %(
         (1..3).any?(&.odd?)
         (1..3).join('.', &.to_s)
+        (1..3).each_with_index { |i, idx| i * idx }
         (1..3).map { |i| typeof(i) }
         (1..3).map { |i| i || 0 }
+        (1..3).map { |i| :foo }
+        (1..3).map { |i| :foo.to_s.split.join('.') }
+        (1..3).map { :foo }
       )
       subject.catch(source).should be_valid
     end

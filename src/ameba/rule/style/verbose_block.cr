@@ -210,7 +210,6 @@ module Ameba::Rule::Style
       while obj.is_a?(Crystal::Call)
         obj = obj.obj
       end
-      return unless obj.is_a?(Crystal::Var)
 
       # only calls with a first argument used as a receiver are the valid game
       return unless obj == arg
