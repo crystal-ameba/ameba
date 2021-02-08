@@ -126,7 +126,7 @@ module Ameba
       @sources.all? do |source|
         source.issues
           .reject(&.disabled?)
-          .none? { |issue| issue.rule.severity <= @severity }
+          .none?(&.rule.severity.<=(@severity))
       end
     end
 

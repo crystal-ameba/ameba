@@ -11,7 +11,7 @@ module Ameba
       rejected = rejected_globs(globs)
       selected = globs - rejected
 
-      expand(selected) - expand(rejected.map! { |p| p[1..-1] })
+      expand(selected) - expand(rejected.map!(&.[1..-1]))
     end
 
     # Expands globs. Globs can point to files or even directories.

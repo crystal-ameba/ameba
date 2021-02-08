@@ -78,7 +78,7 @@ module Ameba::AST
     # scope.find_variable("foo")
     # ```
     def find_variable(name : String)
-      variables.find { |v| v.name == name } || outer_scope.try &.find_variable(name)
+      variables.find(&.name.==(name)) || outer_scope.try &.find_variable(name)
     end
 
     # Creates a new assignment for the variable.
