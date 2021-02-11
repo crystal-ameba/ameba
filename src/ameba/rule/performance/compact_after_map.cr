@@ -16,7 +16,7 @@ module Ameba::Rule::Performance
   # YAML configuration example:
   #
   # ```
-  # Performance/CompactAfterMap
+  # Performance/CompactAfterMap:
   #   Enabled: true
   # ```
   class CompactAfterMap < Base
