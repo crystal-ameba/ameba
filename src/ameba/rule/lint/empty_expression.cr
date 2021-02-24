@@ -27,13 +27,12 @@ module Ameba::Rule::Lint
   # Lint/EmptyExpression:
   #   Enabled: true
   # ```
-  #
-  struct EmptyExpression < Base
+  class EmptyExpression < Base
     include AST::Util
 
     properties do
-      description "Disallows empty expressions"
       enabled false
+      description "Disallows empty expressions"
     end
 
     MSG      = "Avoid empty expression %s"
@@ -41,8 +40,7 @@ module Ameba::Rule::Lint
 
     def test(source, node : Crystal::NilLiteral)
       exp = node_source(node, source.lines).try &.join
-
-      return if exp.nil? || exp == "nil"
+      return if exp.in?(nil, "nil")
 
       issue_for node, MSG % exp
     end

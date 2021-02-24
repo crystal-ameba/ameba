@@ -33,8 +33,7 @@ module Ameba::Rule::Lint
   # Lint/ShadowedException:
   #   Enabled: true
   # ```
-  #
-  struct ShadowedException < Base
+  class ShadowedException < Base
     properties do
       description "Disallows rescued exception that get shadowed"
     end
@@ -42,18 +41,17 @@ module Ameba::Rule::Lint
     MSG = "Exception handler has shadowed exceptions: %s"
 
     def test(source, node : Crystal::ExceptionHandler)
-      return unless excs = node.rescues
+      return unless excs = node.rescues.try &.map(&.types)
+      return if (excs = shadowed excs).empty?
 
-      if (excs = shadowed excs.map(&.types)).any?
-        issue_for node, MSG % excs.join(", ")
-      end
+      issue_for node, MSG % excs.join(", ")
     end
 
     private def shadowed(exceptions, exception_found = false)
       previous_exceptions = [] of String
 
       exceptions.reduce([] of String) do |shadowed, excs|
-        excs = excs ? excs.map(&.to_s) : ["Exception"]
+        excs = excs.try(&.map(&.to_s)) || %w[Exception]
 
         if exception_found
           shadowed.concat excs

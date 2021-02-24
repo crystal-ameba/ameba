@@ -8,11 +8,20 @@ module Ameba::Cli
   def run(args = ARGV)
     opts = parse_args args
     config = Config.load opts.config, opts.colors?
-    config.globs = opts.globs.not_nil! if opts.globs
-    config.severity = opts.fail_level.not_nil! if opts.fail_level
+
+    if globs = opts.globs
+      config.globs = globs
+    end
+    if fail_level = opts.fail_level
+      config.severity = fail_level
+    end
 
     configure_formatter(config, opts)
     configure_rules(config, opts)
+
+    if opts.rules?
+      print_rules(config)
+    end
 
     runner = Ameba.run(config)
 
@@ -34,6 +43,7 @@ module Ameba::Cli
     property except : Array(String)?
     property location_to_explain : NamedTuple(file: String, line: Int32, column: Int32)?
     property fail_level : Severity?
+    property? rules = false
     property? all = false
     property? colors = true
     property? without_affected_code = false
@@ -44,13 +54,14 @@ module Ameba::Cli
       parser.banner = "Usage: ameba [options] [file1 file2 ...]"
 
       parser.on("-v", "--version", "Print version") { print_version }
-      parser.on("-h", "--help", "Show this help") { show_help parser }
+      parser.on("-h", "--help", "Show this help") { print_help(parser) }
+      parser.on("-r", "--rules", "Show all available rules") { opts.rules = true }
       parser.on("-s", "--silent", "Disable output") { opts.formatter = :silent }
       parser.unknown_args do |f|
         if f.size == 1 && f.first =~ /.+:\d+:\d+/
           configure_explain_opts(f.first, opts)
         else
-          opts.globs = f if f.any?
+          opts.globs = f unless f.empty?
         end
       end
 
@@ -66,12 +77,12 @@ module Ameba::Cli
 
       parser.on("--only RULE1,RULE2,...",
         "Run only given rules (or groups)") do |rules|
-        opts.only = rules.split ","
+        opts.only = rules.split(',')
       end
 
       parser.on("--except RULE1,RULE2,...",
         "Disable the given rules (or groups)") do |rules|
-        opts.except = rules.split ","
+        opts.except = rules.split(',')
       end
 
       parser.on("--all", "Enables all available rules") do
@@ -84,7 +95,8 @@ module Ameba::Cli
         opts.config = ""
       end
 
-      parser.on("--fail-level SEVERITY", "Change the level of failure to exit. Defaults to Convention") do |level|
+      parser.on("--fail-level SEVERITY",
+        "Change the level of failure to exit. Defaults to Convention") do |level|
         opts.fail_level = Severity.parse(level)
       end
 
@@ -107,13 +119,13 @@ module Ameba::Cli
   end
 
   private def configure_rules(config, opts)
-    if only = opts.only
-      config.rules.map! { |r| r.enabled = false; r }
+    case
+    when only = opts.only
+      config.rules.each(&.enabled = false)
       config.update_rules(only, enabled: true)
-    elsif opts.all?
-      config.rules.map! { |r| r.enabled = true; r }
+    when opts.all?
+      config.rules.each(&.enabled = true)
     end
-
     config.update_rules(opts.except, enabled: false)
   end
 
@@ -121,7 +133,8 @@ module Ameba::Cli
     if name = opts.formatter
       config.formatter = name
     end
-    config.formatter.config[:without_affected_code] = opts.without_affected_code?
+    config.formatter.config[:without_affected_code] =
+      opts.without_affected_code?
   end
 
   private def configure_explain_opts(loc, opts)
@@ -132,10 +145,15 @@ module Ameba::Cli
   end
 
   private def parse_explain_location(arg)
-    location = arg.split(":", remove_empty: true).map &.strip
+    location = arg.split(':', remove_empty: true).map! &.strip
     raise ArgumentError.new unless location.size === 3
+
     file, line, column = location
-    {file: file, line: line.to_i, column: column.to_i}
+    {
+      file:   file,
+      line:   line.to_i,
+      column: column.to_i,
+    }
   rescue
     raise "location should have PATH:line:column format"
   end
@@ -145,8 +163,18 @@ module Ameba::Cli
     exit 0
   end
 
-  private def show_help(parser)
+  private def print_help(parser)
     puts parser
+    exit 0
+  end
+
+  private def print_rules(config)
+    config.rules.each do |rule|
+      puts \
+        "#{rule.name.colorize(:white)} " \
+        "[#{rule.severity.symbol.to_s.colorize(:green)}] - " \
+        "#{rule.description.colorize(:dark_gray)}"
+    end
     exit 0
   end
 end

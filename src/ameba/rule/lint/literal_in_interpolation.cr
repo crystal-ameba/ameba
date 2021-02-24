@@ -15,8 +15,7 @@ module Ameba::Rule::Lint
   # Lint/LiteralInInterpolation
   #   Enabled: true
   # ```
-  #
-  struct LiteralInInterpolation < Base
+  class LiteralInInterpolation < Base
     include AST::Util
 
     properties do

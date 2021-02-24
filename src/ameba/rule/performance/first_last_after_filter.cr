@@ -23,16 +23,15 @@ module Ameba::Rule::Performance
   #   FilterNames:
   #     - select
   # ```
-  #
-  struct FirstLastAfterFilter < Base
+  class FirstLastAfterFilter < Base
+    properties do
+      description "Identifies usage of `first/last/first?/last?` calls that follow filters."
+      filter_names : Array(String) = %w(select)
+    end
+
     CALL_NAMES  = %w(first last first? last?)
     MSG         = "Use `find {...}` instead of `%s {...}.%s`"
     MSG_REVERSE = "Use `reverse_each.find {...}` instead of `%s {...}.%s`"
-
-    properties do
-      filter_names : Array(String) = %w(select)
-      description "Identifies usage of `first/last/first?/last?` calls that follow filters."
-    end
 
     def test(source)
       AST::NodeVisitor.new self, source, skip: [
@@ -44,14 +43,13 @@ module Ameba::Rule::Performance
     end
 
     def test(source, node : Crystal::Call)
-      return unless CALL_NAMES.includes?(node.name) && (obj = node.obj)
-      return if node.args.any?
+      return unless node.name.in?(CALL_NAMES) && (obj = node.obj)
+      return unless obj.is_a?(Crystal::Call) && obj.block
+      return unless node.block.nil? && node.args.empty?
+      return unless obj.name.in?(filter_names)
 
-      if node.block.nil? && obj.is_a?(Crystal::Call) &&
-         filter_names.includes?(obj.name) && !obj.block.nil?
-        message = node.name.includes?(CALL_NAMES.first) ? MSG : MSG_REVERSE
-        issue_for obj.name_location, node.name_end_location, message % {obj.name, node.name}
-      end
+      message = node.name.includes?(CALL_NAMES.first) ? MSG : MSG_REVERSE
+      issue_for obj.name_location, node.name_end_location, message % {obj.name, node.name}
     end
   end
 end

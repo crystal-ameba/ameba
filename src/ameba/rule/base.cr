@@ -10,7 +10,7 @@ module Ameba::Rule
   # inherits from this struct:
   #
   # ```
-  # struct MyRule < Ameba::Rule::Base
+  # class MyRule < Ameba::Rule::Base
   #   def test(source)
   #     if invalid?(source)
   #       issue_for line, column, "Something wrong."
@@ -26,8 +26,7 @@ module Ameba::Rule
   # Enforces rules to implement an abstract `#test` method which
   # is designed to test the source passed in. If source has issues
   # that are tested by this rule, it should add an issue.
-  #
-  abstract struct Base
+  abstract class Base
     include Config::RuleConfig
 
     # This method is designed to test the source passed in. If source has issues
@@ -50,22 +49,20 @@ module Ameba::Rule
     # source = MyRule.new.catch(source)
     # source.valid?
     # ```
-    #
     def catch(source : Source)
-      source.tap { |s| test s }
+      source.tap { test source }
     end
 
     # Returns a name of this rule, which is basically a class name.
     #
     # ```
-    # struct MyRule < Ameba::Rule::Base
+    # class MyRule < Ameba::Rule::Base
     #   def test(source)
     #   end
     # end
     #
     # MyRule.new.name # => "MyRule"
     # ```
-    #
     def name
       {{@type}}.rule_name
     end
@@ -73,13 +70,12 @@ module Ameba::Rule
     # Returns a group this rule belong to.
     #
     # ```
-    # struct MyGroup::MyRule < Ameba::Rule::Base
+    # class MyGroup::MyRule < Ameba::Rule::Base
     #   # ...
     # end
     #
     # MyGroup::MyRule.new.group # => "MyGroup"
     # ```
-    #
     def group
       {{@type}}.group_name
     end
@@ -91,11 +87,10 @@ module Ameba::Rule
     # ```
     # my_rule.excluded?(source) # => true or false
     # ```
-    #
     def excluded?(source)
       excluded.try &.any? do |path|
         source.matches_path?(path) ||
-          Dir.glob(path).any? { |glob| source.matches_path? glob }
+          Dir.glob(path).any? { |glob| source.matches_path?(glob) }
       end
     end
 
@@ -105,13 +100,12 @@ module Ameba::Rule
     # ```
     # my_rule.special? # => true or false
     # ```
-    #
     def special?
-      SPECIAL.includes? name
+      name.in?(SPECIAL)
     end
 
     def ==(other)
-      name == other.try &.name
+      name == other.try(&.name)
     end
 
     def hash
@@ -123,11 +117,11 @@ module Ameba::Rule
     end
 
     protected def self.rule_name
-      name.gsub("Ameba::Rule::", "").gsub("::", "/")
+      name.gsub("Ameba::Rule::", "").gsub("::", '/')
     end
 
     protected def self.group_name
-      rule_name.split("/")[0...-1].join("/")
+      rule_name.split('/')[0...-1].join('/')
     end
 
     protected def self.subclasses
@@ -146,7 +140,7 @@ module Ameba::Rule
     # module Ameba
     #   # This is a test rule.
     #   # Does nothing.
-    #   struct MyRule < Ameba::Rule::Base
+    #   class MyRule < Ameba::Rule::Base
     #     def test(source)
     #     end
     #   end
@@ -156,8 +150,11 @@ module Ameba::Rule
     # ```
     def self.parsed_doc
       source = File.read(path_to_source_file)
-      nodes = Crystal::Parser.new(source).tap(&.wants_doc = true).parse
-      type_name = rule_name.split("/").last?
+      nodes = Crystal::Parser.new(source)
+        .tap(&.wants_doc = true)
+        .parse
+      type_name = rule_name.split('/').last?
+
       DocFinder.new(nodes, type_name).doc
     end
 
@@ -190,7 +187,6 @@ module Ameba::Rule
   # ```
   # Ameba::Rule.rules # => [Rule1, Rule2, ....]
   # ```
-  #
   def self.rules
     Base.subclasses
   end

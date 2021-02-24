@@ -30,15 +30,14 @@ module Ameba::Rule::Performance
   #     - select
   #     - reject
   # ```
-  #
-  struct SizeAfterFilter < Base
-    SIZE_NAME = "size"
-    MSG       = "Use `count {...}` instead of `%s {...}.#{SIZE_NAME}`."
-
+  class SizeAfterFilter < Base
     properties do
-      filter_names : Array(String) = %w(select reject)
       description "Identifies usage of `size` calls that follow filter"
+      filter_names : Array(String) = %w(select reject)
     end
+
+    SIZE_NAME = "size"
+    MSG       = "Use `count {...}` instead of `%s {...}.size`."
 
     def test(source)
       AST::NodeVisitor.new self, source, skip: [
@@ -51,11 +50,10 @@ module Ameba::Rule::Performance
 
     def test(source, node : Crystal::Call)
       return unless node.name == SIZE_NAME && (obj = node.obj)
+      return unless obj.is_a?(Crystal::Call) && obj.block
+      return unless obj.name.in?(filter_names)
 
-      if obj.is_a?(Crystal::Call) &&
-         filter_names.includes?(obj.name) && !obj.block.nil?
-        issue_for obj.name_location, node.name_end_location, MSG % obj.name
-      end
+      issue_for obj.name_location, node.name_end_location, MSG % obj.name
     end
   end
 end

@@ -7,8 +7,7 @@ module Ameba::Rule::Layout
   # Layout/TrailingBlankLines:
   #   Enabled: true
   # ```
-  #
-  struct TrailingBlankLines < Base
+  class TrailingBlankLines < Base
     properties do
       description "Disallows trailing blank lines"
     end
@@ -24,9 +23,9 @@ module Ameba::Rule::Layout
       source_lines_size = source_lines.size
       return if source_lines_size == 1 && last_source_line.empty?
 
-      last_line_not_empty = !last_source_line.empty?
-      if source_lines_size >= 1 && (source_lines.last(2).join.strip.empty? || last_line_not_empty)
-        issue_for({source_lines_size - 1, 1}, last_line_not_empty ? MSG_FINAL_NEWLINE : MSG)
+      last_line_empty = last_source_line.empty?
+      if source_lines_size >= 1 && (source_lines.last(2).join.blank? || !last_line_empty)
+        issue_for({source_lines_size - 1, 1}, last_line_empty ? MSG : MSG_FINAL_NEWLINE)
       end
     end
   end

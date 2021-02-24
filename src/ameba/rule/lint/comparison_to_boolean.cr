@@ -19,23 +19,21 @@ module Ameba::Rule::Lint
   # Lint/ComparisonToBoolean:
   #   Enabled: true
   # ```
-  #
-  struct ComparisonToBoolean < Base
+  class ComparisonToBoolean < Base
     properties do
       enabled false
       description "Disallows comparison to booleans"
     end
 
-    MSG = "Comparison to a boolean is pointless"
+    MSG      = "Comparison to a boolean is pointless"
+    OP_NAMES = %w(== != ===)
 
     def test(source, node : Crystal::Call)
-      comparison = %w(== != ===).includes?(node.name)
-      to_boolean = node.args.first?.try &.is_a?(Crystal::BoolLiteral) ||
+      comparison = node.name.in?(OP_NAMES)
+      to_boolean = node.args.first?.try(&.is_a?(Crystal::BoolLiteral)) ||
                    node.obj.is_a?(Crystal::BoolLiteral)
 
-      return unless comparison && to_boolean
-
-      issue_for node, MSG
+      issue_for node, MSG if comparison && to_boolean
     end
   end
 end

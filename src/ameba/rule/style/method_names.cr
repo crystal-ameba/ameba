@@ -37,8 +37,7 @@ module Ameba::Rule::Style
   # Style/MethodNames:
   #   Enabled: true
   # ```
-  #
-  struct MethodNames < Base
+  class MethodNames < Base
     properties do
       description "Enforces method names to be in underscored case"
     end
@@ -51,7 +50,7 @@ module Ameba::Rule::Style
       line_number = node.location.try &.line_number
       column_number = node.name_location.try &.column_number
 
-      return if line_number.nil? || column_number.nil?
+      return unless line_number && column_number
 
       issue_for(
         {line_number, column_number},

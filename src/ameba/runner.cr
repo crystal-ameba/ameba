@@ -38,7 +38,6 @@ module Ameba
     #
     # Ameba::Runner.new config
     # ```
-    #
     def initialize(config : Config)
       @sources = config.sources
       @formatter = config.formatter
@@ -50,7 +49,6 @@ module Ameba
           .find &.name.==(Rule::Lint::UnneededDisableDirective.rule_name)
     end
 
-    # :nodoc:
     protected def initialize(@rules, @sources, @formatter, @severity)
     end
 
@@ -65,7 +63,6 @@ module Ameba
     # runner = Ameba::Runner.new config
     # runner.run # => returns runner again
     # ```
-    #
     def run
       @formatter.started @sources
       channels = @sources.map { Channel(Exception?).new }
@@ -80,9 +77,8 @@ module Ameba
         end
       end
 
-      channels.each do |c|
-        e = c.receive
-        raise e unless e.nil?
+      channels.each do |chan|
+        chan.receive.try { |e| raise e }
       end
 
       self
@@ -114,7 +110,6 @@ module Ameba
     # runner.run
     # runner.explain({file: file, line: l, column: c})
     # ```
-    #
     def explain(location, output = STDOUT)
       Formatter::ExplainFormatter.new(output, location).finished @sources
     end
@@ -127,12 +122,11 @@ module Ameba
     # runner.run
     # runner.success? # => true or false
     # ```
-    #
     def success?
       @sources.all? do |source|
         source.issues
           .reject(&.disabled?)
-          .none? { |issue| issue.rule.severity <= @severity }
+          .none?(&.rule.severity.<=(@severity))
       end
     end
 

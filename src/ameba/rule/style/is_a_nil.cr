@@ -4,7 +4,7 @@ module Ameba::Rule::Style
   # This is considered bad:
   #
   # ```
-  # var.is_a? Nil
+  # var.is_a?(Nil)
   # ```
   #
   # And needs to be written as:
@@ -19,8 +19,7 @@ module Ameba::Rule::Style
   # Style/IsANil:
   #   Enabled: true
   # ```
-  #
-  struct IsANil < Base
+  class IsANil < Base
     properties do
       description "Disallows calls to `is_a?(Nil)` in favor of `nil?`"
     end
@@ -32,7 +31,10 @@ module Ameba::Rule::Style
       return if node.nil_check?
 
       const = node.const
-      issue_for const, MSG if const.is_a?(Crystal::Path) && const.names == PATH_NIL_NAMES
+      return unless const.is_a?(Crystal::Path)
+      return unless const.names == PATH_NIL_NAMES
+
+      issue_for const, MSG
     end
   end
 end

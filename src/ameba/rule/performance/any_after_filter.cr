@@ -24,23 +24,21 @@ module Ameba::Rule::Performance
   #     - select
   #     - reject
   # ```
-  #
-  struct AnyAfterFilter < Base
-    ANY_NAME = "any?"
-    MSG      = "Use `#{ANY_NAME} {...}` instead of `%s {...}.#{ANY_NAME}`"
-
+  class AnyAfterFilter < Base
     properties do
-      filter_names : Array(String) = %w(select reject)
       description "Identifies usage of `any?` calls that follow filters."
+      filter_names : Array(String) = %w(select reject)
     end
+
+    ANY_NAME = "any?"
+    MSG      = "Use `any? {...}` instead of `%s {...}.any?`"
 
     def test(source, node : Crystal::Call)
       return unless node.name == ANY_NAME && (obj = node.obj)
+      return unless obj.is_a?(Crystal::Call) && obj.block && node.block.nil?
+      return unless obj.name.in?(filter_names)
 
-      if node.block.nil? && obj.is_a?(Crystal::Call) &&
-         filter_names.includes?(obj.name) && !obj.block.nil?
-        issue_for obj.name_location, node.name_end_location, MSG % obj.name
-      end
+      issue_for obj.name_location, node.name_end_location, MSG % obj.name
     end
   end
 end

@@ -7,8 +7,7 @@ module Ameba::Rule::Layout
   # Layout/TrailingWhitespace:
   #   Enabled: true
   # ```
-  #
-  struct TrailingWhitespace < Base
+  class TrailingWhitespace < Base
     properties do
       description "Disallows trailing whitespaces"
     end
@@ -17,8 +16,7 @@ module Ameba::Rule::Layout
 
     def test(source)
       source.lines.each_with_index do |line, index|
-        next unless line =~ /\s$/
-        issue_for({index + 1, line.size}, MSG)
+        issue_for({index + 1, line.size}, MSG) if line =~ /\s$/
       end
     end
   end

@@ -30,8 +30,7 @@ module Ameba::Rule::Lint
   # Lint/UselessConditionInWhen:
   #   Enabled: true
   # ```
-  #
-  struct UselessConditionInWhen < Base
+  class UselessConditionInWhen < Base
     properties do
       description "Disallows useless conditions in when"
     end
@@ -43,10 +42,7 @@ module Ameba::Rule::Lint
     # simple implementation in future.
     protected def check_node(source, when_node, cond)
       cond_s = cond.to_s
-      return if when_node
-                  .conds
-                  .map(&.to_s)
-                  .none? { |c| c == cond_s }
+      return if when_node.conds.none?(&.to_s.==(cond_s))
 
       issue_for cond, MSG
     end

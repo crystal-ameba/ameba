@@ -20,8 +20,7 @@ module Ameba::Rule::Lint
   # Lint/RedundantStringCoersion
   #   Enabled: true
   # ```
-  #
-  struct RedundantStringCoercion < Base
+  class RedundantStringCoercion < Base
     include AST::Util
 
     properties do
@@ -31,7 +30,9 @@ module Ameba::Rule::Lint
     MSG = "Redundant use of `Object#to_s` in interpolation"
 
     def test(source, node : Crystal::StringInterpolation)
-      string_coercion_nodes(node).each { |n| issue_for n.name_location, n.end_location, MSG }
+      string_coercion_nodes(node).each do |n|
+        issue_for n.name_location, n.end_location, MSG
+      end
     end
 
     private def string_coercion_nodes(node)

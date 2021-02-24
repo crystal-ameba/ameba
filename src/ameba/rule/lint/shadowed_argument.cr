@@ -35,8 +35,7 @@ module Ameba::Rule::Lint
   # Lint/ShadowedArgument:
   #   Enabled: true
   # ```
-  #
-  struct ShadowedArgument < Base
+  class ShadowedArgument < Base
     properties do
       description "Disallows shadowed arguments"
     end

@@ -21,8 +21,7 @@ module Ameba::Rule::Style
   # Style/ConstantNames:
   #   Enabled: true
   # ```
-  #
-  struct ConstantNames < Base
+  class ConstantNames < Base
     properties do
       description "Enforces constant names to be in screaming case"
     end
@@ -30,11 +29,11 @@ module Ameba::Rule::Style
     MSG = "Constant name should be screaming-cased: %s, not %s"
 
     def test(source, node : Crystal::Assign)
-      if (target = node.target).is_a? Crystal::Path
+      if (target = node.target).is_a?(Crystal::Path)
         name = target.names.first
         expected = name.upcase
 
-        return if expected == name || name.camelcase == name
+        return if name.in?(expected, name.camelcase)
 
         issue_for target, MSG % {expected, name}
       end

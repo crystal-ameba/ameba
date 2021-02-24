@@ -77,7 +77,7 @@ module Ameba::Rule::Lint
       issue.rule.should_not be_nil
       issue.location.to_s.should eq "source.cr:2:14"
       issue.end_location.to_s.should eq "source.cr:2:30"
-      issue.message.should eq "Use each instead of each_with_object"
+      issue.message.should eq "Use `each` instead of `each_with_object`"
     end
   end
 end

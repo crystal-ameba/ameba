@@ -23,12 +23,12 @@ module Ameba::Rule::Lint
   #   StringArrayUnwantedSymbols: ',"'
   #   SymbolArrayUnwantedSymbols: ',:'
   # ```
-  #
-  struct PercentArrays < Base
+  class PercentArrays < Base
     properties do
       description "Disallows some unwanted symbols in percent array literals"
-      string_array_unwanted_symbols ",\""
-      symbol_array_unwanted_symbols ",:"
+
+      string_array_unwanted_symbols %(,")
+      symbol_array_unwanted_symbols %(,:)
     end
 
     MSG = "Symbols `%s` may be unwanted in %s array literals"
@@ -49,8 +49,6 @@ module Ameba::Rule::Lint
             issue_for start_token.not_nil!, issue.not_nil!
           end
           issue = start_token = nil
-        else
-          # nop
         end
       end
     end
@@ -61,14 +59,11 @@ module Ameba::Rule::Lint
         check_array_entry entry, string_array_unwanted_symbols, "%w"
       when .starts_with? "%i"
         check_array_entry entry, symbol_array_unwanted_symbols, "%i"
-      else
-        # nop
       end
     end
 
     private def check_array_entry(entry, symbols, literal)
-      return unless entry =~ /[#{symbols}]/
-      MSG % {symbols, literal}
+      MSG % {symbols, literal} if entry =~ /[#{symbols}]/
     end
   end
 end

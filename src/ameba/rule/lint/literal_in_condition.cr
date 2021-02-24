@@ -19,8 +19,7 @@ module Ameba::Rule::Lint
   # Lint/LiteralInCondition:
   #   Enabled: true
   # ```
-  #
-  struct LiteralInCondition < Base
+  class LiteralInCondition < Base
     include AST::Util
 
     properties do
@@ -31,8 +30,7 @@ module Ameba::Rule::Lint
     MSG = "Literal value found in conditional"
 
     def check_node(source, node)
-      return unless literal?(node.cond)
-      issue_for node, MSG
+      issue_for node, MSG if literal?(node.cond)
     end
 
     def test(source, node : Crystal::If)

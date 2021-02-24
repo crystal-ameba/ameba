@@ -31,7 +31,6 @@ class Ameba::Config
     !lib
   )
 
-  setter formatter : Formatter::BaseFormatter?
   getter rules : Array(Rule::Base)
   property severity = Severity::Convention
 
@@ -66,7 +65,9 @@ class Ameba::Config
     @excluded = load_array_section(config, "Excluded")
     @globs = load_array_section(config, "Globs", DEFAULT_GLOBS)
 
-    self.formatter = load_formatter_name(config)
+    if formatter_name = load_formatter_name(config)
+      self.formatter = formatter_name
+    end
   end
 
   # Loads YAML configuration file by `path`.
@@ -74,7 +75,6 @@ class Ameba::Config
   # ```
   # config = Ameba::Config.load
   # ```
-  #
   def self.load(path = PATH, colors = true)
     Colorize.enabled = colors
     content = File.exists?(path) ? File.read path : "{}"
@@ -84,7 +84,7 @@ class Ameba::Config
   end
 
   def self.formatter_names
-    AVAILABLE_FORMATTERS.keys.join("|")
+    AVAILABLE_FORMATTERS.keys.join('|')
   end
 
   # Returns a list of sources matching globs and excluded sections.
@@ -96,7 +96,6 @@ class Ameba::Config
   # config.excluded = ["spec"]
   # config.sources # => list of sources pointing to files found by the wildcards
   # ```
-  #
   def sources
     (find_files_by_globs(globs) - find_files_by_globs(excluded))
       .map { |path| Source.new File.read(path), path }
@@ -111,8 +110,8 @@ class Ameba::Config
   # config.formatter
   # ```
   #
-  def formatter
-    @formatter ||= Formatter::DotFormatter.new
+  property formatter : Formatter::BaseFormatter do
+    Formatter::DotFormatter.new
   end
 
   # Sets formatter by name.
@@ -121,7 +120,6 @@ class Ameba::Config
   # config = Ameba::Config.load
   # config.formatter = :progress
   # ```
-  #
   def formatter=(name : String | Symbol)
     if f = AVAILABLE_FORMATTERS[name]?
       @formatter = f.new
@@ -136,15 +134,13 @@ class Ameba::Config
   # config = Ameba::Config.load
   # config.update_rule "MyRuleName", enabled: false
   # ```
-  #
   def update_rule(name, enabled = true, excluded = nil)
-    index = @rules.index { |r| r.name == name }
-    raise ArgumentError.new("Rule `#{name}` does not exist") unless index
+    rule = @rules.find(&.name.==(name))
+    raise ArgumentError.new("Rule `#{name}` does not exist") unless rule
 
-    rule = @rules[index]
-    rule.enabled = enabled
-    rule.excluded = excluded
-    @rules[index] = rule
+    rule
+      .tap(&.enabled = enabled)
+      .tap(&.excluded = excluded)
   end
 
   # Updates rules properties.
@@ -159,20 +155,22 @@ class Ameba::Config
   # ```
   # config.update_rules %w(Group1 Group2), enabled: true
   # ```
-  #
-  def update_rules(names, **args)
+  def update_rules(names, enabled = true, excluded = nil)
     names.try &.each do |name|
-      if group = @rule_groups[name]?
-        group.each { |rule| update_rule(rule.name, **args) }
+      if rules = @rule_groups[name]?
+        rules.each do |rule|
+          rule.enabled = enabled
+          rule.excluded = excluded
+        end
       else
-        update_rule name, **args
+        update_rule name, enabled, excluded
       end
     end
   end
 
   private def load_formatter_name(config)
     name = config["Formatter"]?.try &.["Name"]?
-    name ? name.to_s : nil
+    name.try(&.to_s)
   end
 
   private def load_array_section(config, section_name, default = [] of String)
@@ -269,7 +267,7 @@ class Ameba::Config
         include YAML::Serializable::Strict
 
         def self.new(config = nil)
-          if (raw = config.try &.raw).is_a? Hash
+          if (raw = config.try &.raw).is_a?(Hash)
             yaml = raw[rule_name]?.try &.to_yaml
           end
           from_yaml yaml || "{}"

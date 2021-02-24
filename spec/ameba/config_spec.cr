@@ -120,7 +120,7 @@ module Ameba
       it "returns list of sources" do
         config.sources.size.should be > 0
         config.sources.first.should be_a Source
-        config.sources.any? { |s| s.fullpath == __FILE__ }.should be_true
+        config.sources.any?(&.fullpath.==(__FILE__)).should be_true
       end
 
       it "returns a list of sources mathing globs" do
@@ -130,7 +130,7 @@ module Ameba
 
       it "returns a lisf of sources excluding 'Excluded'" do
         config.excluded = %w(**/config_spec.cr)
-        config.sources.any? { |s| s.fullpath == __FILE__ }.should be_false
+        config.sources.any?(&.fullpath.==(__FILE__)).should be_false
       end
     end
 

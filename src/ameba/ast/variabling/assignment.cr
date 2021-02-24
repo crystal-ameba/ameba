@@ -28,7 +28,6 @@ module Ameba::AST
     # ```
     # Assignment.new(node, variable, scope)
     # ```
-    #
     def initialize(@node, @variable, @scope)
       if scope = @variable.scope
         @branch = Branch.of(@node, scope)
@@ -49,7 +48,7 @@ module Ameba::AST
     # a ||= 1
     # ```
     def op_assign?
-      node.is_a? Crystal::OpAssign
+      node.is_a?(Crystal::OpAssign)
     end
 
     # Returns true if this assignment is in a branch, false if not.
@@ -95,7 +94,6 @@ module Ameba::AST
     #   puts(b)
     # end
     # ```
-    #
     def transformed?
       return false unless (assign = node).is_a?(Crystal::Assign)
       return false unless (value = assign.value).is_a?(Crystal::Call)

@@ -18,7 +18,6 @@ module Ameba
     # source = Ameba::Source.new code, path
     # Ameba::Tokenizer.new(source)
     # ```
-    #
     def initialize(source)
       @lexer = Crystal::Lexer.new source.code
       @lexer.count_whitespace = true
@@ -33,7 +32,6 @@ module Ameba
     # lexer = Crystal::Lexer.new(code)
     # Ameba::Tokenizer.new(lexer)
     # ```
-    #
     def initialize(@lexer : Crystal::Lexer)
     end
 
@@ -44,7 +42,6 @@ module Ameba
     #   puts token
     # end
     # ```
-    #
     def run(&block : Crystal::Token -> _)
       run_normal_state @lexer, &block
       true
@@ -53,8 +50,7 @@ module Ameba
       false
     end
 
-    private def run_normal_state(lexer, break_on_rcurly = false,
-                                 &block : Crystal::Token -> _)
+    private def run_normal_state(lexer, break_on_rcurly = false, &block : Crystal::Token -> _)
       loop do
         token = @lexer.next_token
         block.call token
@@ -68,8 +64,6 @@ module Ameba
           break
         when :"}"
           break if break_on_rcurly
-        else
-          # go on
         end
       end
     end
@@ -86,8 +80,6 @@ module Ameba
           run_normal_state lexer, break_on_rcurly: true, &block
         when :EOF
           break
-        else
-          # go on
         end
       end
     end
@@ -102,8 +94,6 @@ module Ameba
           break
         when :EOF
           break
-        else
-          # go on
         end
       end
     end

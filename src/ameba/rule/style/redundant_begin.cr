@@ -55,9 +55,9 @@ module Ameba::Rule::Style
   # Style/RedundantBegin:
   #   Enabled: true
   # ```
-  #
-  struct RedundantBegin < Base
+  class RedundantBegin < Base
     include AST::Util
+
     properties do
       description "Disallows redundant begin blocks"
     end
@@ -65,9 +65,7 @@ module Ameba::Rule::Style
     MSG = "Redundant `begin` block detected"
 
     def test(source, node : Crystal::Def)
-      return unless redundant_begin?(source, node)
-
-      issue_for node, MSG
+      issue_for node, MSG if redundant_begin?(source, node)
     end
 
     private def redundant_begin?(source, node)
@@ -76,8 +74,6 @@ module Ameba::Rule::Style
         redundant_begin_in_handler?(source, body, node)
       when Crystal::Expressions
         redundant_begin_in_expressions?(body)
-      else
-        # nop
       end
     end
 
@@ -88,7 +84,7 @@ module Ameba::Rule::Style
     private def redundant_begin_in_handler?(source, handler, node)
       return false if begin_exprs_in_handler?(handler) || inner_handler?(handler)
 
-      code = node_source(node, source.lines).try &.join("\n")
+      code = node_source(node, source.lines).try &.join('\n')
       def_redundant_begin? code if code
     rescue
       false
@@ -107,6 +103,7 @@ module Ameba::Rule::Style
     private def def_redundant_begin?(code)
       lexer = Crystal::Lexer.new code
       in_body = in_argument_list = false
+
       loop do
         token = lexer.next_token
 
@@ -122,6 +119,7 @@ module Ameba::Rule::Style
         when :NEWLINE
           in_body = true unless in_argument_list
         when :SPACE
+          # ignore
         else
           return false if in_body
         end

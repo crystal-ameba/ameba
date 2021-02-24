@@ -78,7 +78,7 @@ module Ameba::AST
     # scope.find_variable("foo")
     # ```
     def find_variable(name : String)
-      variables.find { |v| v.name == name } || outer_scope.try &.find_variable(name)
+      variables.find(&.name.==(name)) || outer_scope.try &.find_variable(name)
     end
 
     # Creates a new assignment for the variable.
@@ -117,8 +117,8 @@ module Ameba::AST
 
     # Returns true instance variable assinged in this scope.
     def assigns_ivar?(name)
-      arguments.find { |arg| arg.name == name } &&
-        ivariables.find { |var| var.name == "@#{name}" }
+      arguments.find(&.name.== name) &&
+        ivariables.find(&.name.== "@#{name}")
     end
 
     # Returns true if and only if current scope represents some
@@ -143,7 +143,7 @@ module Ameba::AST
 
     # Returns true if current scope is a def, false if not.
     def def?
-      node.is_a? Crystal::Def
+      node.is_a?(Crystal::Def)
     end
 
     # Returns true if this scope is a top level scope, false if not.
@@ -173,7 +173,7 @@ module Ameba::AST
     # the same Crystal node as `@node`.
     def eql?(node)
       node == @node &&
-        !node.location.nil? &&
+        node.location &&
         node.location == @node.location
     end
   end

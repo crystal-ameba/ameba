@@ -44,7 +44,6 @@ module Ameba::AST
     #   end
     # end
     # ```
-    #
     def in_loop?
       @parent.loop?
     end

@@ -26,8 +26,7 @@ module Ameba::Rule::Lint
   # Lint/RedundantWithIndex:
   #   Enabled: true
   # ```
-  #
-  struct RedundantWithIndex < Base
+  class RedundantWithIndex < Base
     properties do
       description "Disallows redundant `with_index` calls"
     end
@@ -35,15 +34,14 @@ module Ameba::Rule::Lint
     def test(source, node : Crystal::Call)
       args, block = node.args, node.block
 
-      return if args.size > 1 || block.nil? || with_index_arg?(block.not_nil!)
+      return if block.nil? || args.size > 1
+      return if with_index_arg?(block)
 
       case node.name
       when "with_index"
         report source, node, "Remove redundant with_index"
       when "each_with_index"
         report source, node, "Use each instead of each_with_index"
-      else
-        # nop
       end
     end
 

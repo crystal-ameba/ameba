@@ -40,7 +40,7 @@ module Ameba::AST
     @skip : Array(Crystal::ASTNode.class)?
 
     def initialize(@rule, @source, skip = nil)
-      @skip = skip.try &.map { |el| el.as(Crystal::ASTNode.class) }
+      @skip = skip.try &.map(&.as(Crystal::ASTNode.class))
       super @rule, @source
     end
 
@@ -54,7 +54,7 @@ module Ameba::AST
     {% end %}
 
     def visit(node)
-      return true unless (skip = @skip)
+      return true unless skip = @skip
       !skip.includes?(node.class)
     end
   end

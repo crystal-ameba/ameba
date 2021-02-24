@@ -9,8 +9,12 @@ module Ameba
     # ```
     # Severity::Warning.symbol # => 'W'
     # ```
-    def symbol
-      to_s[0]
+    def symbol : Char
+      case self
+      in Error      then 'E'
+      in Warning    then 'W'
+      in Convention then 'C'
+      end
     end
 
     # Creates Severity by the name.
@@ -19,7 +23,6 @@ module Ameba
     # Severity.parse("convention") # => Severity::Convention
     # Severity.parse("foo-bar")    # => Exception: Incorrect severity name
     # ```
-    #
     def self.parse(name : String)
       super name
     rescue ArgumentError
