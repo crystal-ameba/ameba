@@ -131,6 +131,11 @@
       
     </li>
   
+  <li class=" " data-id="ameba/Ameba/AST/TopLevelNodesVisitor" data-name="ameba::ast::toplevelnodesvisitor">
+      <a href="../Ameba/AST/TopLevelNodesVisitor.html">TopLevelNodesVisitor</a>
+      
+    </li>
+  
   <li class=" " data-id="ameba/Ameba/AST/Util" data-name="ameba::ast::util">
       <a href="../Ameba/AST/Util.html">Util</a>
       
@@ -221,8 +226,18 @@
       
     </li>
   
-  <li class=" " data-id="ameba/Ameba/Issue" data-name="ameba::issue">
+  <li class="parent " data-id="ameba/Ameba/Issue" data-name="ameba::issue">
       <a href="../Ameba/Issue.html">Issue</a>
+      
+        <ul>
+  
+  <li class=" " data-id="ameba/Ameba/Issue/Status" data-name="ameba::issue::status">
+      <a href="../Ameba/Issue/Status.html">Status</a>
+      
+    </li>
+  
+</ul>
+
       
     </li>
   
@@ -283,6 +298,11 @@
   
   <li class=" " data-id="ameba/Ameba/Rule/Lint/DebuggerStatement" data-name="ameba::rule::lint::debuggerstatement">
       <a href="../Ameba/Rule/Lint/DebuggerStatement.html">DebuggerStatement</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/Rule/Lint/DuplicatedRequire" data-name="ameba::rule::lint::duplicatedrequire">
+      <a href="../Ameba/Rule/Lint/DuplicatedRequire.html">DuplicatedRequire</a>
       
     </li>
   
@@ -361,6 +381,11 @@
       
     </li>
   
+  <li class=" " data-id="ameba/Ameba/Rule/Lint/SpecFocus" data-name="ameba::rule::lint::specfocus">
+      <a href="../Ameba/Rule/Lint/SpecFocus.html">SpecFocus</a>
+      
+    </li>
+  
   <li class=" " data-id="ameba/Ameba/Rule/Lint/Syntax" data-name="ameba::rule::lint::syntax">
       <a href="../Ameba/Rule/Lint/Syntax.html">Syntax</a>
       
@@ -421,8 +446,33 @@
       
     </li>
   
+  <li class=" " data-id="ameba/Ameba/Rule/Performance/AnyInsteadOfEmpty" data-name="ameba::rule::performance::anyinsteadofempty">
+      <a href="../Ameba/Rule/Performance/AnyInsteadOfEmpty.html">AnyInsteadOfEmpty</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/Rule/Performance/ChainedCallWithNoBang" data-name="ameba::rule::performance::chainedcallwithnobang">
+      <a href="../Ameba/Rule/Performance/ChainedCallWithNoBang.html">ChainedCallWithNoBang</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/Rule/Performance/CompactAfterMap" data-name="ameba::rule::performance::compactaftermap">
+      <a href="../Ameba/Rule/Performance/CompactAfterMap.html">CompactAfterMap</a>
+      
+    </li>
+  
   <li class=" " data-id="ameba/Ameba/Rule/Performance/FirstLastAfterFilter" data-name="ameba::rule::performance::firstlastafterfilter">
       <a href="../Ameba/Rule/Performance/FirstLastAfterFilter.html">FirstLastAfterFilter</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/Rule/Performance/FlattenAfterMap" data-name="ameba::rule::performance::flattenaftermap">
+      <a href="../Ameba/Rule/Performance/FlattenAfterMap.html">FlattenAfterMap</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/Rule/Performance/MapInsteadOfBlock" data-name="ameba::rule::performance::mapinsteadofblock">
+      <a href="../Ameba/Rule/Performance/MapInsteadOfBlock.html">MapInsteadOfBlock</a>
       
     </li>
   
@@ -443,6 +493,11 @@
   
   <li class=" " data-id="ameba/Ameba/Rule/Style/ConstantNames" data-name="ameba::rule::style::constantnames">
       <a href="../Ameba/Rule/Style/ConstantNames.html">ConstantNames</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/Rule/Style/IsAFilter" data-name="ameba::rule::style::isafilter">
+      <a href="../Ameba/Rule/Style/IsAFilter.html">IsAFilter</a>
       
     </li>
   
@@ -498,6 +553,11 @@
   
   <li class=" " data-id="ameba/Ameba/Rule/Style/VariableNames" data-name="ameba::rule::style::variablenames">
       <a href="../Ameba/Rule/Style/VariableNames.html">VariableNames</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/Rule/Style/VerboseBlock" data-name="ameba::rule::style::verboseblock">
+      <a href="../Ameba/Rule/Style/VerboseBlock.html">VerboseBlock</a>
       
     </li>
   
@@ -616,7 +676,7 @@ Has path, lines of code and issues reported by rules.</p>
   </h2>
   
     
-      <a href="https://github.com/crystal-ameba/ameba/blob/51b0a07e/src/ameba/source.cr#L4" target="_blank">
+      <a href="https://github.com/crystal-ameba/ameba/blob/d8c32f00/src/ameba/source.cr#L4" target="_blank">
         ameba/source.cr
       </a>
     
@@ -638,7 +698,7 @@ Has path, lines of code and issues reported by rules.</p>
   <ul class="list-summary">
     
       <li class="entry-summary">
-        <a href="#new(code:String,path=&quot;&quot;)-class-method" class="signature"><strong>.new</strong>(code : String, path = <span class="s">&quot;&quot;</span>)</a>
+        <a href="#new(code,path=&quot;&quot;)-class-method" class="signature"><strong>.new</strong>(code, path = <span class="s">&quot;&quot;</span>)</a>
         
           <div class="summary"><p>Creates a new source by <code><a href="../Ameba/Source.html#code:String-instance-method">#code</a></code> and <code><a href="../Ameba/Source.html#path:String-instance-method">#path</a></code>.</p></div>
         
@@ -689,7 +749,7 @@ Has path, lines of code and issues reported by rules.</p>
       <li class="entry-summary">
         <a href="#matches_path?(filepath)-instance-method" class="signature"><strong>#matches_path?</strong>(filepath)</a>
         
-          <div class="summary"><p>Returns true if <em>filepath</em> matches the source's path, false if it does not.</p></div>
+          <div class="summary"><p>Returns <code>true</code> if <em>filepath</em> matches the source's path, <code>false</code> if it does not.</p></div>
         
       </li>
     
@@ -697,6 +757,13 @@ Has path, lines of code and issues reported by rules.</p>
         <a href="#path:String-instance-method" class="signature"><strong>#path</strong> : String</a>
         
           <div class="summary"><p>Path to the source file.</p></div>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#spec?-instance-method" class="signature"><strong>#spec?</strong></a>
+        
+          <div class="summary"><p>Returns <code>true</code> if the source is a spec file, <code>false</code> otherwise.</p></div>
         
       </li>
     
@@ -713,8 +780,8 @@ Has path, lines of code and issues reported by rules.</p>
   <h3>Instance methods inherited from module <code><a href="../Ameba/Reportable.html">Ameba::Reportable</a></code></h3>
   
   
-    <a href="../Ameba/Reportable.html#add_issue(rule,location:Crystal::Location?,end_location:Crystal::Location?,message,status=nil)-instance-method" class="tooltip">
-      <span>add_issue(rule, location : Crystal::Location?, end_location : Crystal::Location?, message, status = <span class="n">nil</span>)<br/>add_issue(rule, location : Tuple(Int32, Int32), end_location : Tuple(Int32, Int32), message, **args)<br/>add_issue(rule, location : Tuple(Int32, Int32), message, **args)<br/>add_issue(rule, node : Crystal::ASTNode, message, **args)<br/>add_issue(rule, token : Crystal::Token, message, **args)</span>
+    <a href="../Ameba/Reportable.html#add_issue(rule,location:Tuple(Int32,Int32),message,status:Issue::Status?=nil):Issue-instance-method" class="tooltip">
+      <span>add_issue(rule, location : Tuple(Int32, Int32), message, status : Issue::Status? = <span class="n">nil</span>) : Issue<br/>add_issue(rule, node : Crystal::ASTNode, message, status : Issue::Status? = <span class="n">nil</span>) : Issue<br/>add_issue(rule, token : Crystal::Token, message, status : Issue::Status? = <span class="n">nil</span>) : Issue<br/>add_issue(rule, location : Tuple(Int32, Int32), end_location : Tuple(Int32, Int32), message, status : Issue::Status? = <span class="n">nil</span>) : Issue<br/>add_issue(rule, location, end_location, message, status : Issue::Status? = <span class="n">nil</span>) : Issue</span>
     add_issue</a>, 
     
   
@@ -798,12 +865,12 @@ Has path, lines of code and issues reported by rules.</p>
     Constructor Detail
   </h2>
   
-    <div class="entry-detail" id="new(code:String,path=&quot;&quot;)-class-method">
+    <div class="entry-detail" id="new(code,path=&quot;&quot;)-class-method">
       <div class="signature">
         
-        def self.<strong>new</strong>(code : String, path = <span class="s">&quot;&quot;</span>)
+        def self.<strong>new</strong>(code, path = <span class="s">&quot;&quot;</span>)
 
-        <a class="method-permalink" href="#new(code:String,path=&quot;&quot;)-class-method">#</a>
+        <a class="method-permalink" href="#new(code,path=&quot;&quot;)-class-method">#</a>
       </div>
       
         <div class="doc">
@@ -819,7 +886,7 @@ Has path, lines of code and issues reported by rules.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/51b0a07e/src/ameba/source.cr#L27" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/d8c32f00/src/ameba/source.cr#L22" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -857,7 +924,7 @@ source.ast</code></pre>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/51b0a07e/src/ameba/source.cr#L52" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/d8c32f00/src/ameba/source.cr#L45" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -878,7 +945,7 @@ source.ast</code></pre>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/51b0a07e/src/ameba/source.cr#L12" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/d8c32f00/src/ameba/source.cr#L12" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -894,7 +961,7 @@ source.ast</code></pre>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/51b0a07e/src/ameba/source.cr#L60" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/d8c32f00/src/ameba/source.cr#L52" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -922,7 +989,7 @@ source.lines <span class="c"># =&gt; [&quot;a = 1&quot;, &quot;b = 2&quot;]</spa
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/51b0a07e/src/ameba/source.cr#L41" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/d8c32f00/src/ameba/source.cr#L36" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -937,13 +1004,13 @@ source.lines <span class="c"># =&gt; [&quot;a = 1&quot;, &quot;b = 2&quot;]</spa
       
         <div class="doc">
           
-          <p>Returns true if <em>filepath</em> matches the source's path, false if it does not.</p>
+          <p>Returns <code>true</code> if <em>filepath</em> matches the source's path, <code>false</code> if it does not.</p>
         </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/51b0a07e/src/ameba/source.cr#L65" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/d8c32f00/src/ameba/source.cr#L62" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -964,7 +1031,28 @@ source.lines <span class="c"># =&gt; [&quot;a = 1&quot;, &quot;b = 2&quot;]</spa
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/51b0a07e/src/ameba/source.cr#L9" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/d8c32f00/src/ameba/source.cr#L9" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="spec?-instance-method">
+      <div class="signature">
+        
+        def <strong>spec?</strong>
+
+        <a class="method-permalink" href="#spec?-instance-method">#</a>
+      </div>
+      
+        <div class="doc">
+          
+          <p>Returns <code>true</code> if the source is a spec file, <code>false</code> otherwise.</p>
+        </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/crystal-ameba/ameba/blob/d8c32f00/src/ameba/source.cr#L57" target="_blank">View source</a>]
         
       </div>
     </div>
