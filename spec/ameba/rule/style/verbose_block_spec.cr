@@ -84,6 +84,7 @@ module Ameba::Rule::Style
         source = Source.new %(
           (1..3).sum { |i| +i }
           (1..3).sum { |i| -i }
+          (1..3).sum { |i| ~i }
         )
         rule = VerboseBlock.new
         rule
