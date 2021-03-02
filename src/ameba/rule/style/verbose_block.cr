@@ -51,7 +51,7 @@ module Ameba::Rule::Style
       a_location.line_number == b_location.line_number
     end
 
-    private PREFIX_OPERATORS = {"+", "-"}
+    private PREFIX_OPERATORS = {"+", "-", "~"}
     private OPERATOR_CHARS   =
       {'[', ']', '!', '=', '>', '<', '~', '+', '-', '*', '/', '%', '^', '|', '&'}
 
