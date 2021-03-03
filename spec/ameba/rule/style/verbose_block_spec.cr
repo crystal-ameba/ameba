@@ -128,6 +128,7 @@ module Ameba::Rule::Style
           end
         )
         rule = VerboseBlock.new
+          .tap(&.exclude_multiple_line_blocks = false)
         rule
           .tap(&.max_line_length = 60)
           .catch(source).should be_valid

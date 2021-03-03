@@ -20,7 +20,7 @@ module Ameba::Rule::Style
   # Style/VerboseBlock:
   #   Enabled: true
   #   ExcludeMultipleLineBlocks: true
-  #   ExcludeCallsWithBlocks: false
+  #   ExcludeCallsWithBlocks: true
   #   ExcludePrefixOperators: true
   #   ExcludeOperators: false
   #   ExcludeSetters: false
@@ -31,8 +31,8 @@ module Ameba::Rule::Style
     properties do
       description "Identifies usage of collapsible single expression blocks."
 
+      exclude_multiple_line_blocks true
       exclude_calls_with_block true
-      exclude_multiple_line_blocks false
       exclude_prefix_operators true
       exclude_operators false
       exclude_setters false
