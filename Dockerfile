@@ -1,11 +1,11 @@
-FROM alpine:3.12 as builder
+FROM alpine:latest as builder
 RUN apk add --update crystal shards openssl-dev yaml-dev musl-dev make
 RUN mkdir /ameba
 WORKDIR /ameba
 COPY . /ameba/
 RUN make clean && make
 
-FROM alpine:3.12
+FROM alpine:latest
 RUN apk add --update openssl yaml pcre gc libevent libgcc
 RUN mkdir /src
 WORKDIR /src

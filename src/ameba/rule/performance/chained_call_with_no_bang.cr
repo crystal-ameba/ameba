@@ -25,7 +25,7 @@ module Ameba::Rule::Performance
   # YAML configuration example:
   #
   # ```
-  # Performance/ChainedCallWithNoBang
+  # Performance/ChainedCallWithNoBang:
   #   Enabled: true
   #   CallNames:
   #     - uniq

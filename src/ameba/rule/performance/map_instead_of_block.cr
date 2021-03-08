@@ -19,7 +19,7 @@ module Ameba::Rule::Performance
   # YAML configuration example:
   #
   # ```
-  # Performance/MapInsteadOfBlock
+  # Performance/MapInsteadOfBlock:
   #   Enabled: true
   # ```
   class MapInsteadOfBlock < Base

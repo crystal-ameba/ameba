@@ -16,7 +16,7 @@ module Ameba::Rule::Performance
   # YAML configuration example:
   #
   # ```
-  # Performance/FlattenAfterMap
+  # Performance/FlattenAfterMap:
   #   Enabled: true
   # ```
   class FlattenAfterMap < Base
