@@ -89,9 +89,11 @@ module Ameba::Rule::Style
         rule = VerboseBlock.new
         rule
           .tap(&.exclude_prefix_operators = true)
+          .tap(&.exclude_operators = true)
           .catch(source).should be_valid
         rule
           .tap(&.exclude_prefix_operators = false)
+          .tap(&.exclude_operators = false)
           .catch(source).should_not be_valid
       end
 
@@ -165,9 +167,6 @@ module Ameba::Rule::Style
         %|map(&.to_s.[start: 0.to_i64, count: 3]?)|,
         %|map(&.to_s.[0.to_i64, count: 3]?)|,
         %|map(&.to_s.[0.to_i64, 3]?)|,
-        %|map(&.to_s.[start: 0.to_i64, count: 3]=("foo"))|,
-        %|map(&.to_s.[0.to_i64, count: 3]=("foo"))|,
-        %|map(&.to_s.[0.to_i64, 3]=("foo"))|,
         %|map(&.to_s.camelcase(lower: true))|,
         %|map(&.to_s.camelcase)|,
         %|map(&.to_s.gsub('_', '-'))|,
@@ -180,9 +179,6 @@ module Ameba::Rule::Style
         (1..3).map { |i| i.to_s[start: 0.to_i64, count: 3]? }
         (1..3).map { |i| i.to_s[0.to_i64, count: 3]? }
         (1..3).map { |i| i.to_s[0.to_i64, 3]? }
-        (1..3).map { |i| i.to_s[start: 0.to_i64, count: 3] = "foo" }
-        (1..3).map { |i| i.to_s[0.to_i64, count: 3] = "foo" }
-        (1..3).map { |i| i.to_s[0.to_i64, 3] = "foo" }
         (1..3).map { |i| i.to_s.camelcase(lower: true) }
         (1..3).map { |i| i.to_s.camelcase }
         (1..3).map { |i| i.to_s.gsub('_', '-') }
