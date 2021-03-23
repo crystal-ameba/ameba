@@ -26,6 +26,15 @@ module Ameba::Rule::Style
       subject.catch(source).should_not be_valid
     end
 
+    it "does not report if there .is_a? call within block with multiple arguments" do
+      source = Source.new %(
+        t.all? { |_, v| v.is_a?(String) }
+        t.all? { |foo, bar| foo.is_a?(String) }
+        t.all? { |foo, bar| bar.is_a?(String) }
+      )
+      subject.catch(source).should be_valid
+    end
+
     context "properties" do
       it "allows to configure filter_names" do
         source = Source.new %(
