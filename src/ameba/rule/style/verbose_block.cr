@@ -22,7 +22,7 @@ module Ameba::Rule::Style
   #   ExcludeMultipleLineBlocks: true
   #   ExcludeCallsWithBlocks: true
   #   ExcludePrefixOperators: true
-  #   ExcludeOperators: false
+  #   ExcludeOperators: true
   #   ExcludeSetters: false
   #   MaxLineLength: ~
   #   MaxLength: 50 # use ~ to disable
@@ -34,7 +34,7 @@ module Ameba::Rule::Style
       exclude_multiple_line_blocks true
       exclude_calls_with_block true
       exclude_prefix_operators true
-      exclude_operators false
+      exclude_operators true
       exclude_setters false
 
       max_line_length : Int32? = nil # 100

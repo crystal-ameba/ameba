@@ -92,6 +92,7 @@ module Ameba::Rule::Style
           .catch(source).should be_valid
         rule
           .tap(&.exclude_prefix_operators = false)
+          .tap(&.exclude_operators = false)
           .catch(source).should_not be_valid
       end
 
@@ -190,7 +191,10 @@ module Ameba::Rule::Style
         (1..3).map { |i| i.in?(1, *foo, 3, **bar) }
         (1..3).join(separator: '.') { |i| i.to_s }
       )
-      subject.catch(source).should_not be_valid
+      rule = VerboseBlock.new
+      rule
+        .tap(&.exclude_operators = false)
+        .catch(source).should_not be_valid
       source.issues.size.should eq(short_block_variants.size)
 
       source.issues.each_with_index do |issue, i|
