@@ -34,3 +34,19 @@ jobs:
 
       - name: Check formatting
         run: crystal tool format --check
+
+  testfreebsd:
+    runs-on: macos-latest
+    name: Test (freebsd)
+    steps:
+    - uses: actions/checkout@v2
+    - name: Install Crystal and test
+      id: test
+      uses: vmactions/freebsd-vm@v0.1.2
+      with:
+        usesh: true
+        prepare: pkg install -y crystal shards
+        run: |
+          shards install
+          make test
+          crystal tool format --check
