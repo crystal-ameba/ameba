@@ -10,7 +10,7 @@ targets:
 
 scripts:
   # TODO: remove pre-compiled executable in future releases
-  postinstall: make bin && make run_file
+  postinstall: shards build && cp bin/ameba ../../bin/ && cp -n bin/ameba.cr ../../bin/
 
 executables:
   - ameba
