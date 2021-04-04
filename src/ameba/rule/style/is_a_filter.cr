@@ -46,6 +46,15 @@ module Ameba::Rule::Style
 
     MSG = "Use `%s(%s)` instead of `%s {...}`"
 
+    def test(source)
+      AST::NodeVisitor.new self, source, skip: [
+        Crystal::Macro,
+        Crystal::MacroExpression,
+        Crystal::MacroIf,
+        Crystal::MacroFor,
+      ]
+    end
+
     def test(source, node : Crystal::Call)
       return unless node.name.in?(filter_names)
       return unless (block = node.block)
