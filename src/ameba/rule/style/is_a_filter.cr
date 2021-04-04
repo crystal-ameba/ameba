@@ -61,6 +61,7 @@ module Ameba::Rule::Style
       return unless (body = block.body).is_a?(Crystal::IsA)
       return unless (path = body.const).is_a?(Crystal::Path)
       return unless body.obj.is_a?(Crystal::Var)
+      return if block.args.size > 1
 
       name = path.names.join("::")
       name = "::#{name}" if path.global? && !body.nil_check?
