@@ -1,5 +1,5 @@
-CRYSTAL_BIN ?= $(shell which crystal)
-SHARDS_BIN ?= $(shell which shards)
+CRYSTAL_BIN ?= crystal
+SHARDS_BIN ?= shards
 PREFIX ?= /usr/local
 SHARD_BIN ?= ../../bin
 
