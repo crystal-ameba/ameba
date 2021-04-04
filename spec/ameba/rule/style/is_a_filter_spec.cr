@@ -38,11 +38,11 @@ module Ameba::Rule::Style
     end
 
     context "macro" do
-      it "reports in macro scope" do
+      it "doesn't report in macro scope" do
         source = Source.new %(
           {{ [1, 2, nil].reject(&.nil?) }}
         )
-        subject.catch(source).should_not be_valid
+        subject.catch(source).should be_valid
       end
     end
 
