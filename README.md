@@ -17,6 +17,7 @@
 
 - [About](#about)
 - [Usage](#usage)
+  * [Watch a tutorial](#watch-a-tutorial)
   * [Run in parallel](#run-in-parallel)
 - [Installation](#installation)
   * [As a project dependency:](#as-a-project-dependency)
@@ -63,6 +64,12 @@ src/ameba/formatter/base_formatter.cr:12:7
 Finished in 542.64 milliseconds
 129 inspected, 2 failures
 ```
+
+### Watch a tutorial
+
+<a href="https://luckycasts.com/videos/ameba"><img src="https://i.imgur.com/uOETQlM.png" title="Write Better Crystal Code with the Ameba Shard" width="500" /></a>
+
+[🎬 &nbsp; Watch the LuckyCast showing how to use Ameba](https://luckycasts.com/videos/ameba)
 
 ### Run in parallel
 
