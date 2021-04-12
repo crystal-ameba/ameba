@@ -634,18 +634,16 @@
     Overview
   </h2>
 
-  <p>This rule is used to identify usage of <code>join/sum/product</code> calls
+  <p>This rule is used to identify usage of <code>sum/product</code> calls
 that follow <code>map</code>.</p>
 
 <p>For example, this is considered inefficient:</p>
 
-<pre><code class="language-crystal">(<span class="n">1</span>..<span class="n">3</span>).map(<span class="o">&amp;</span>.to_s).join(<span class="s">&#39;.&#39;</span>)
-(<span class="n">1</span>..<span class="n">3</span>).map(<span class="o">&amp;</span>.<span class="o">*</span>(<span class="n">2</span>)).sum</code></pre>
+<pre><code class="language-crystal">(<span class="n">1</span>..<span class="n">3</span>).map(<span class="o">&amp;</span>.<span class="o">*</span>(<span class="n">2</span>)).sum</code></pre>
 
 <p>And can be written as this:</p>
 
-<pre><code class="language-crystal">(<span class="n">1</span>..<span class="n">3</span>).join(<span class="s">&#39;.&#39;</span>, <span class="o">&amp;</span>.to_s)
-(<span class="n">1</span>..<span class="n">3</span>).sum(<span class="o">&amp;</span>.<span class="o">*</span>(<span class="n">2</span>))</code></pre>
+<pre><code class="language-crystal">(<span class="n">1</span>..<span class="n">3</span>).sum(<span class="o">&amp;</span>.<span class="o">*</span>(<span class="n">2</span>))</code></pre>
 
 <p>YAML configuration example:</p>
 
@@ -691,7 +689,7 @@ that follow <code>map</code>.</p>
   </h2>
   
     
-      <a href="https://github.com/crystal-ameba/ameba/blob/9a25214b/src/ameba/rule/performance/map_instead_of_block.cr#L25" target="_blank">
+      <a href="https://github.com/crystal-ameba/ameba/blob/ecbea0b4/src/ameba/rule/performance/map_instead_of_block.cr#L23" target="_blank">
         ameba/rule/performance/map_instead_of_block.cr
       </a>
     
@@ -713,7 +711,7 @@ that follow <code>map</code>.</p>
   <dl>
     
       <dt class="entry-const" id="CALL_NAMES">
-        <strong>CALL_NAMES</strong> = <code>[<span class="s">&quot;join&quot;</span>, <span class="s">&quot;sum&quot;</span>, <span class="s">&quot;product&quot;</span>] <span class="k">of</span> <span class="t">::</span><span class="t">String</span></code>
+        <strong>CALL_NAMES</strong> = <code>[<span class="s">&quot;sum&quot;</span>, <span class="s">&quot;product&quot;</span>] <span class="k">of</span> <span class="t">::</span><span class="t">String</span></code>
       </dt>
       
     
@@ -749,7 +747,7 @@ that follow <code>map</code>.</p>
       <li class="entry-summary">
         <a href="#new(config=nil)-class-method" class="signature"><strong>.new</strong>(config = <span class="n">nil</span>)</a>
         
-          <div class="summary"><p>This rule is used to identify usage of <code>join/sum/product</code> calls that follow <code>map</code>.</p></div>
+          <div class="summary"><p>This rule is used to identify usage of <code>sum/product</code> calls that follow <code>map</code>.</p></div>
         
       </li>
     
@@ -785,7 +783,7 @@ that follow <code>map</code>.</p>
       </li>
     
       <li class="entry-summary">
-        <a href="#enabled=(enabled:Bool)-instance-method" class="signature"><strong>#enabled=</strong>(enabled : Bool)</a>
+        <a href="#enabled=(enabled)-instance-method" class="signature"><strong>#enabled=</strong>(enabled)</a>
         
       </li>
     
@@ -976,18 +974,16 @@ that follow <code>map</code>.</p>
       
         <div class="doc">
           
-          <p>This rule is used to identify usage of <code>join/sum/product</code> calls
+          <p>This rule is used to identify usage of <code>sum/product</code> calls
 that follow <code>map</code>.</p>
 
 <p>For example, this is considered inefficient:</p>
 
-<pre><code class="language-crystal">(<span class="n">1</span>..<span class="n">3</span>).map(<span class="o">&amp;</span>.to_s).join(<span class="s">&#39;.&#39;</span>)
-(<span class="n">1</span>..<span class="n">3</span>).map(<span class="o">&amp;</span>.<span class="o">*</span>(<span class="n">2</span>)).sum</code></pre>
+<pre><code class="language-crystal">(<span class="n">1</span>..<span class="n">3</span>).map(<span class="o">&amp;</span>.<span class="o">*</span>(<span class="n">2</span>)).sum</code></pre>
 
 <p>And can be written as this:</p>
 
-<pre><code class="language-crystal">(<span class="n">1</span>..<span class="n">3</span>).join(<span class="s">&#39;.&#39;</span>, <span class="o">&amp;</span>.to_s)
-(<span class="n">1</span>..<span class="n">3</span>).sum(<span class="o">&amp;</span>.<span class="o">*</span>(<span class="n">2</span>))</code></pre>
+<pre><code class="language-crystal">(<span class="n">1</span>..<span class="n">3</span>).sum(<span class="o">&amp;</span>.<span class="o">*</span>(<span class="n">2</span>))</code></pre>
 
 <p>YAML configuration example:</p>
 
@@ -998,7 +994,7 @@ that follow <code>map</code>.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/9a25214b/src/ameba/rule/performance/map_instead_of_block.cr#L25" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/ecbea0b4/src/ameba/rule/performance/map_instead_of_block.cr#L23" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1059,12 +1055,12 @@ that follow <code>map</code>.</p>
       </div>
     </div>
   
-    <div class="entry-detail" id="enabled=(enabled:Bool)-instance-method">
+    <div class="entry-detail" id="enabled=(enabled)-instance-method">
       <div class="signature">
         
-        def <strong>enabled=</strong>(enabled : Bool)
+        def <strong>enabled=</strong>(enabled)
 
-        <a class="method-permalink" href="#enabled=(enabled:Bool)-instance-method">#</a>
+        <a class="method-permalink" href="#enabled=(enabled)-instance-method">#</a>
       </div>
       
       <br/>
@@ -1140,7 +1136,7 @@ that follow <code>map</code>.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/9a25214b/src/ameba/rule/performance/map_instead_of_block.cr#L44" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/ecbea0b4/src/ameba/rule/performance/map_instead_of_block.cr#L41" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1156,7 +1152,7 @@ that follow <code>map</code>.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/9a25214b/src/ameba/rule/performance/map_instead_of_block.cr#L35" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/ecbea0b4/src/ameba/rule/performance/map_instead_of_block.cr#L32" target="_blank">View source</a>]
         
       </div>
     </div>
