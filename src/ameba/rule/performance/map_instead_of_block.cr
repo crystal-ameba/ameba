@@ -22,7 +22,6 @@ module Ameba::Rule::Performance
   # ```
   class MapInsteadOfBlock < Base
     properties do
-      enabled false
       description "Identifies usage of `sum/product` calls that follow `map`."
     end
 
