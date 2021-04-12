@@ -1,18 +1,16 @@
 module Ameba::Rule::Performance
-  # This rule is used to identify usage of `join/sum/product` calls
+  # This rule is used to identify usage of `sum/product` calls
   # that follow `map`.
   #
   # For example, this is considered inefficient:
   #
   # ```
-  # (1..3).map(&.to_s).join('.')
   # (1..3).map(&.*(2)).sum
   # ```
   #
   # And can be written as this:
   #
   # ```
-  # (1..3).join('.', &.to_s)
   # (1..3).sum(&.*(2))
   # ```
   #
@@ -24,11 +22,10 @@ module Ameba::Rule::Performance
   # ```
   class MapInsteadOfBlock < Base
     properties do
-      enabled false
-      description "Identifies usage of `join/sum/product` calls that follow `map`."
+      description "Identifies usage of `sum/product` calls that follow `map`."
     end
 
-    CALL_NAMES = %w(join sum product)
+    CALL_NAMES = %w(sum product)
     MAP_NAME   = "map"
     MSG        = "Use `%s {...}` instead of `map {...}.%s`"
 
