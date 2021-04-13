@@ -69,7 +69,7 @@ Finished in 542.64 milliseconds
 
 <a href="https://luckycasts.com/videos/ameba"><img src="https://i.imgur.com/uOETQlM.png" title="Write Better Crystal Code with the Ameba Shard" width="500" /></a>
 
-[🎬 &nbsp; Watch the LuckyCast showing how to use Ameba](https://luckycasts.com/videos/ameba)
+[🎬 Watch the LuckyCast showing how to use Ameba](https://luckycasts.com/videos/ameba)
 
 ### Run in parallel
 
