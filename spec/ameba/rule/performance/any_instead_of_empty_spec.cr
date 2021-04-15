@@ -21,6 +21,13 @@ module Ameba::Rule::Performance
       subject.catch(source).should_not be_valid
     end
 
+    it "does not report if source is a spec" do
+      source = Source.new %(
+        [1, 2, 3].any?
+      ), "source_spec.cr"
+      subject.catch(source).should be_valid
+    end
+
     context "macro" do
       it "reports in macro scope" do
         source = Source.new %(

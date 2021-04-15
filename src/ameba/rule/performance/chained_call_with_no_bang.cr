@@ -1,3 +1,5 @@
+require "./base"
+
 module Ameba::Rule::Performance
   # This rule is used to identify usage of chained calls not utilizing
   # the bang method variants.

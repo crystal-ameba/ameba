@@ -8,6 +8,17 @@ module Ameba::Rule
         rules.should_not be_nil
         rules.should contain DummyRule
       end
+
+      it "contains rules across all the available groups" do
+        Rule.rules.map(&.group_name).uniq!.reject!(&.empty?).sort.should eq %w(
+          Ameba
+          Layout
+          Lint
+          Metrics
+          Performance
+          Style
+        )
+      end
     end
 
     context "properties" do

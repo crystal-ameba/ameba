@@ -18,6 +18,13 @@ module Ameba::Rule::Performance
       subject.catch(source).should_not be_valid
     end
 
+    it "does not report is source is a spec" do
+      source = Source.new %(
+        %w[Alice Bob].map(&.chars).flatten
+      ), "source_spec.cr"
+      subject.catch(source).should be_valid
+    end
+
     context "macro" do
       it "doesn't report in macro scope" do
         source = Source.new %(

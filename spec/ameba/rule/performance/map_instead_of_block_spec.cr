@@ -19,6 +19,13 @@ module Ameba::Rule::Performance
       subject.catch(source).should_not be_valid
     end
 
+    it "does not report if source is a spec" do
+      source = Source.new %(
+        (1..3).map(&.to_s).join
+      ), "source_spec.cr"
+      subject.catch(source).should be_valid
+    end
+
     it "reports if there is map followed by sum without a block (with argument)" do
       source = Source.new %(
         (1..3).map(&.to_u64).sum(0)

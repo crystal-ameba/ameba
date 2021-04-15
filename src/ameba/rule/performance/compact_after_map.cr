@@ -1,3 +1,5 @@
+require "./base"
+
 module Ameba::Rule::Performance
   # This rule is used to identify usage of `compact` calls that follow `map`.
   #

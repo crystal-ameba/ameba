@@ -128,6 +128,16 @@ module Ameba::Rule
       {{ @type.subclasses }}
     end
 
+    protected def self.abstract?
+      {{ @type.abstract? }}
+    end
+
+    protected def self.inherited_rules
+      subclasses.each_with_object([] of Base.class) do |klass, obj|
+        klass.abstract? ? obj.concat(klass.inherited_rules) : (obj << klass)
+      end
+    end
+
     macro inherited
       protected def self.path_to_source_file
         __FILE__
@@ -188,6 +198,6 @@ module Ameba::Rule
   # Ameba::Rule.rules # => [Rule1, Rule2, ....]
   # ```
   def self.rules
-    Base.subclasses
+    Base.inherited_rules
   end
 end
