@@ -236,6 +236,21 @@ module Ameba::Rule::Lint
         )
         subject.catch(source).should be_valid
       end
+
+      it "does not report scoped vars to MacroFor" do
+        source = Source.new %(
+          struct Test
+            def test
+              {% for ivar in @type.instance_vars %}
+                {% var_type = ivar %}
+              {% end %}
+
+              {% ["a", "b"].map { |ivar| puts ivar } %}
+            end
+          end
+        )
+        subject.catch(source).should be_valid
+      end
     end
   end
 end
