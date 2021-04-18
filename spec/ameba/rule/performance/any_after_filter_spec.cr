@@ -22,6 +22,13 @@ module Ameba::Rule::Performance
       subject.catch(source).should_not be_valid
     end
 
+    it "does not report if source is a spec" do
+      source = Source.new %(
+        [1, 2, 3].select { |e| e > 2 }.any?
+      ), "source_spec.cr"
+      subject.catch(source).should be_valid
+    end
+
     it "reports if there is reject followed by any? without a block" do
       source = Source.new %(
         [1, 2, 3].reject { |e| e > 2 }.any?

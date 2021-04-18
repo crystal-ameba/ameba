@@ -7,6 +7,7 @@ module Ameba
     config.globs = files
 
     config.update_rule ErrorRule.rule_name, enabled: false
+    config.update_rule PerfRule.rule_name, enabled: false
 
     Runner.new(config)
   end

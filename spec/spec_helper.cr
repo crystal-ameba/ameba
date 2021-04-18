@@ -107,6 +107,16 @@ module Ameba
     end
   end
 
+  class PerfRule < Rule::Performance::Base
+    properties do
+      description : String = "Sample performance rule"
+    end
+
+    def test(source)
+      issue_for({1, 1}, "Poor performance")
+    end
+  end
+
   class DummyFormatter < Formatter::BaseFormatter
     property started_sources : Array(Source)?
     property finished_sources : Array(Source)?
