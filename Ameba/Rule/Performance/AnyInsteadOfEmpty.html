@@ -451,6 +451,11 @@
       
     </li>
   
+  <li class=" " data-id="ameba/Ameba/Rule/Performance/Base" data-name="ameba::rule::performance::base">
+      <a href="../../../Ameba/Rule/Performance/Base.html">Base</a>
+      
+    </li>
+  
   <li class=" " data-id="ameba/Ameba/Rule/Performance/ChainedCallWithNoBang" data-name="ameba::rule::performance::chainedcallwithnobang">
       <a href="../../../Ameba/Rule/Performance/ChainedCallWithNoBang.html">ChainedCallWithNoBang</a>
       
@@ -620,7 +625,7 @@
 </h1>
 
 
-  <ul class="superclass-hierarchy"><li class="superclass"><a href="../../../Ameba/Rule/Performance/AnyInsteadOfEmpty.html">Ameba::Rule::Performance::AnyInsteadOfEmpty</a></li><li class="superclass"><a href="../../../Ameba/Rule/Base.html">Ameba::Rule::Base</a></li><li class="superclass">Reference</li><li class="superclass">Object</li></ul>
+  <ul class="superclass-hierarchy"><li class="superclass"><a href="../../../Ameba/Rule/Performance/AnyInsteadOfEmpty.html">Ameba::Rule::Performance::AnyInsteadOfEmpty</a></li><li class="superclass"><a href="../../../Ameba/Rule/Performance/Base.html">Ameba::Rule::Performance::Base</a></li><li class="superclass"><a href="../../../Ameba/Rule/Base.html">Ameba::Rule::Base</a></li><li class="superclass">Reference</li><li class="superclass">Object</li></ul>
 
 
 
@@ -694,7 +699,7 @@ one value present.</p>
   </h2>
   
     
-      <a href="https://github.com/crystal-ameba/ameba/blob/7c586eb9/src/ameba/rule/performance/any_instead_of_empty.cr#L28" target="_blank">
+      <a href="https://github.com/crystal-ameba/ameba/blob/cd18c6a0/src/ameba/rule/performance/any_instead_of_empty.cr#L30" target="_blank">
         ameba/rule/performance/any_instead_of_empty.cr
       </a>
     
@@ -741,6 +746,8 @@ one value present.</p>
     
       <li class="entry-summary">
         <a href="#new(ctx:YAML::ParseContext,node:YAML::Nodes::Node)-class-method" class="signature"><strong>.new</strong>(ctx : YAML::ParseContext, node : YAML::Nodes::Node)</a>
+        
+          <div class="summary"><p>This rule is used to identify usage of arg-less <code>Enumerable#any?</code> calls.</p></div>
         
       </li>
     
@@ -819,6 +826,54 @@ one value present.</p>
 
 
 <div class="methods-inherited">
+  
+    
+
+
+    
+
+
+    
+
+
+  
+    
+
+
+    
+
+
+    
+
+
+  
+    
+
+  <h3>Instance methods inherited from class <code><a href="../../../Ameba/Rule/Performance/Base.html">Ameba::Rule::Performance::Base</a></code></h3>
+  
+  
+    <a href="../../../Ameba/Rule/Performance/Base.html#catch(source:Source)-instance-method" class="tooltip">
+      <span>catch(source : Source)</span>
+    catch</a>
+    
+  
+
+
+    
+
+  <h3>Constructor methods inherited from class <code><a href="../../../Ameba/Rule/Performance/Base.html">Ameba::Rule::Performance::Base</a></code></h3>
+  
+  
+    <a href="../../../Ameba/Rule/Performance/Base.html#new(ctx:YAML::ParseContext,node:YAML::Nodes::Node)-class-method" class="tooltip">
+      <span>new(ctx : YAML::ParseContext, node : YAML::Nodes::Node)<br/>new(config = <span class="n">nil</span>)</span>
+    new</a>
+    
+  
+
+
+    
+
+
   
     
 
@@ -953,6 +1008,30 @@ one value present.</p>
         <a class="method-permalink" href="#new(ctx:YAML::ParseContext,node:YAML::Nodes::Node)-class-method">#</a>
       </div>
       
+        <div class="doc">
+          
+          <p>This rule is used to identify usage of arg-less <code>Enumerable#any?</code> calls.</p>
+
+<p>Using <code>Enumerable#any?</code> instead of <code>Enumerable#empty?</code> might lead to an
+unexpected results (like <code>[nil, false].any? # => false</code>). In some cases
+it also might be less efficient, since it iterates until the block will
+return a <em>truthy</em> value, instead of just checking if there's at least
+one value present.</p>
+
+<p>For example, this is considered invalid:</p>
+
+<pre><code class="language-crystal">[<span class="n">1</span>, <span class="n">2</span>, <span class="n">3</span>].any?</code></pre>
+
+<p>And it should be written as this:</p>
+
+<pre><code class="language-crystal"><span class="o">!</span>[<span class="n">1</span>, <span class="n">2</span>, <span class="n">3</span>].empty?</code></pre>
+
+<p>YAML configuration example:</p>
+
+<pre><code class="language-crystal">Performance/AnyInsteadOfEmpty:
+  Enabled: true</code></pre>
+        </div>
+      
       <br/>
       <div>
         
@@ -994,7 +1073,7 @@ one value present.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/7c586eb9/src/ameba/rule/performance/any_instead_of_empty.cr#L28" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/cd18c6a0/src/ameba/rule/performance/any_instead_of_empty.cr#L30" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1136,7 +1215,7 @@ one value present.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/7c586eb9/src/ameba/rule/performance/any_instead_of_empty.cr#L36" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/cd18c6a0/src/ameba/rule/performance/any_instead_of_empty.cr#L38" target="_blank">View source</a>]
         
       </div>
     </div>

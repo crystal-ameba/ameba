@@ -451,6 +451,11 @@
       
     </li>
   
+  <li class=" " data-id="ameba/Ameba/Rule/Performance/Base" data-name="ameba::rule::performance::base">
+      <a href="../../../Ameba/Rule/Performance/Base.html">Base</a>
+      
+    </li>
+  
   <li class=" " data-id="ameba/Ameba/Rule/Performance/ChainedCallWithNoBang" data-name="ameba::rule::performance::chainedcallwithnobang">
       <a href="../../../Ameba/Rule/Performance/ChainedCallWithNoBang.html">ChainedCallWithNoBang</a>
       
@@ -620,7 +625,7 @@
 </h1>
 
 
-  <ul class="superclass-hierarchy"><li class="superclass"><a href="../../../Ameba/Rule/Performance/SizeAfterFilter.html">Ameba::Rule::Performance::SizeAfterFilter</a></li><li class="superclass"><a href="../../../Ameba/Rule/Base.html">Ameba::Rule::Base</a></li><li class="superclass">Reference</li><li class="superclass">Object</li></ul>
+  <ul class="superclass-hierarchy"><li class="superclass"><a href="../../../Ameba/Rule/Performance/SizeAfterFilter.html">Ameba::Rule::Performance::SizeAfterFilter</a></li><li class="superclass"><a href="../../../Ameba/Rule/Performance/Base.html">Ameba::Rule::Performance::Base</a></li><li class="superclass"><a href="../../../Ameba/Rule/Base.html">Ameba::Rule::Base</a></li><li class="superclass">Reference</li><li class="superclass">Object</li></ul>
 
 
 
@@ -699,7 +704,7 @@
   </h2>
   
     
-      <a href="https://github.com/crystal-ameba/ameba/blob/7c586eb9/src/ameba/rule/performance/size_after_filter.cr#L33" target="_blank">
+      <a href="https://github.com/crystal-ameba/ameba/blob/cd18c6a0/src/ameba/rule/performance/size_after_filter.cr#L35" target="_blank">
         ameba/rule/performance/size_after_filter.cr
       </a>
     
@@ -746,6 +751,8 @@
     
       <li class="entry-summary">
         <a href="#new(ctx:YAML::ParseContext,node:YAML::Nodes::Node)-class-method" class="signature"><strong>.new</strong>(ctx : YAML::ParseContext, node : YAML::Nodes::Node)</a>
+        
+          <div class="summary"><p>This rule is used to identify usage of <code>size</code> calls that follow filter.</p></div>
         
       </li>
     
@@ -839,6 +846,54 @@
 
 
 <div class="methods-inherited">
+  
+    
+
+
+    
+
+
+    
+
+
+  
+    
+
+
+    
+
+
+    
+
+
+  
+    
+
+  <h3>Instance methods inherited from class <code><a href="../../../Ameba/Rule/Performance/Base.html">Ameba::Rule::Performance::Base</a></code></h3>
+  
+  
+    <a href="../../../Ameba/Rule/Performance/Base.html#catch(source:Source)-instance-method" class="tooltip">
+      <span>catch(source : Source)</span>
+    catch</a>
+    
+  
+
+
+    
+
+  <h3>Constructor methods inherited from class <code><a href="../../../Ameba/Rule/Performance/Base.html">Ameba::Rule::Performance::Base</a></code></h3>
+  
+  
+    <a href="../../../Ameba/Rule/Performance/Base.html#new(ctx:YAML::ParseContext,node:YAML::Nodes::Node)-class-method" class="tooltip">
+      <span>new(ctx : YAML::ParseContext, node : YAML::Nodes::Node)<br/>new(config = <span class="n">nil</span>)</span>
+    new</a>
+    
+  
+
+
+    
+
+
   
     
 
@@ -973,6 +1028,35 @@
         <a class="method-permalink" href="#new(ctx:YAML::ParseContext,node:YAML::Nodes::Node)-class-method">#</a>
       </div>
       
+        <div class="doc">
+          
+          <p>This rule is used to identify usage of <code>size</code> calls that follow filter.</p>
+
+<p>For example, this is considered invalid:</p>
+
+<pre><code class="language-crystal">[<span class="n">1</span>, <span class="n">2</span>, <span class="n">3</span>].<span class="k">select</span> { <span class="o">|</span>e<span class="o">|</span> e <span class="o">&gt;</span> <span class="n">2</span> }.size
+[<span class="n">1</span>, <span class="n">2</span>, <span class="n">3</span>].reject { <span class="o">|</span>e<span class="o">|</span> e <span class="o">&lt;</span> <span class="n">2</span> }.size
+[<span class="n">1</span>, <span class="n">2</span>, <span class="n">3</span>].<span class="k">select</span>(<span class="o">&amp;</span>.<span class="o">&lt;</span> <span class="n">2</span>).size
+[<span class="n">0</span>, <span class="n">1</span>, <span class="n">2</span>].<span class="k">select</span>(<span class="o">&amp;</span>.zero?).size
+[<span class="n">0</span>, <span class="n">1</span>, <span class="n">2</span>].reject(<span class="o">&amp;</span>.zero?).size</code></pre>
+
+<p>And it should be written as this:</p>
+
+<pre><code class="language-crystal">[<span class="n">1</span>, <span class="n">2</span>, <span class="n">3</span>].count { <span class="o">|</span>e<span class="o">|</span> e <span class="o">&gt;</span> <span class="n">2</span> }
+[<span class="n">1</span>, <span class="n">2</span>, <span class="n">3</span>].count { <span class="o">|</span>e<span class="o">|</span> e <span class="o">&gt;=</span> <span class="n">2</span> }
+[<span class="n">1</span>, <span class="n">2</span>, <span class="n">3</span>].count(<span class="o">&amp;</span>.<span class="o">&lt;</span> <span class="n">2</span>)
+[<span class="n">0</span>, <span class="n">1</span>, <span class="n">2</span>].count(<span class="o">&amp;</span>.zero?)
+[<span class="n">0</span>, <span class="n">1</span>, <span class="n">2</span>].count(<span class="o">&amp;</span>.<span class="o">!=</span> <span class="n">0</span>)</code></pre>
+
+<p>YAML configuration example:</p>
+
+<pre><code class="language-crystal">Performance/SizeAfterFilter:
+  Enabled: true
+  FilterNames:
+    - select
+    - reject</code></pre>
+        </div>
+      
       <br/>
       <div>
         
@@ -1019,7 +1103,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/7c586eb9/src/ameba/rule/performance/size_after_filter.cr#L33" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/cd18c6a0/src/ameba/rule/performance/size_after_filter.cr#L35" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1189,7 +1273,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/7c586eb9/src/ameba/rule/performance/size_after_filter.cr#L51" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/cd18c6a0/src/ameba/rule/performance/size_after_filter.cr#L53" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1205,7 +1289,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/7c586eb9/src/ameba/rule/performance/size_after_filter.cr#L42" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/cd18c6a0/src/ameba/rule/performance/size_after_filter.cr#L44" target="_blank">View source</a>]
         
       </div>
     </div>
