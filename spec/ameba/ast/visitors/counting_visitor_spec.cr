@@ -48,8 +48,8 @@ module Ameba::AST
         code = %(
           def hello(a : Int32 | Int64 | Float32 | Float64)
             case a
-            in Int32 then "int32"
-            in Int64 then "int64"
+            in Int32   then "int32"
+            in Int64   then "int64"
             in Float32 then "float32"
             in Float64 then "float64"
             end
