@@ -32,10 +32,12 @@ module Ameba::AST
 
     # :nodoc:
     def visit(node : Crystal::Case)
+      return true if macro_condition
+
       # Count the complexity of an exhaustive `Case` as 1
       # Otherwise count the number of `When`s
-      case_complexity = node.exhaustive? ? 1 : node.whens.size
-      @complexity += case_complexity unless macro_condition
+      @complexity += node.exhaustive? ? 1 : node.whens.size
+
       true
     end
 
