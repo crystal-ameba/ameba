@@ -44,14 +44,33 @@ module Ameba::AST
         visitor.count.should eq 1
       end
 
+      it "increases count for every exhaustive case" do
+        code = %(
+          def hello(a : Int32 | Int64 | Float32 | Float64)
+            case a
+            in Int32 then "int32"
+            in Int64 then "int64"
+            in Float32 then "float32"
+            in Float64 then "float64"
+            end
+          end
+        )
+        node = Crystal::Parser.new(code).parse
+        visitor = CountingVisitor.new node
+        visitor.count.should eq 2
+      end
+
       {% for pair in [
                        {code: "if true; end", description: "conditional"},
                        {code: "while true; end", description: "while loop"},
                        {code: "until 1 < 2; end", description: "until loop"},
                        {code: "begin; rescue; end", description: "rescue"},
-                       {code: "case 1 when 1; end", description: "when"},
                        {code: "true || false", description: "or"},
                        {code: "true && false", description: "and"},
+                       {
+                         code:        "a : String | Int32 = 1; case a when true; end",
+                         description: "inexhaustive when",
+                       },
                      ] %}
         it "increases count for every {{ pair[:description].id }}" do
           node = Crystal::Parser.new("def hello; {{ pair[:code].id }} end").parse

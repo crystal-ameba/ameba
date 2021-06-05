@@ -23,12 +23,21 @@ module Ameba::AST
     # Uses the same logic than rubocop. See
     # https://github.com/rubocop-hq/rubocop/blob/master/lib/rubocop/cop/metrics/cyclomatic_complexity.rb#L21
     # Except "for", because crystal doesn't have a "for" loop.
-    {% for node in %i(if while until rescue when or and) %}
+    {% for node in %i(if while until rescue or and) %}
       # :nodoc:
       def visit(node : Crystal::{{ node.id.capitalize }})
         @complexity += 1 unless macro_condition
       end
     {% end %}
+
+    # :nodoc:
+    def visit(node : Crystal::Case)
+      # Count the complexity of an exhaustive `Case` as 1
+      # Otherwise count the number of `When`s
+      case_complexity = node.exhaustive? ? 1 : node.whens.size
+      @complexity += case_complexity unless macro_condition
+      true
+    end
 
     def visit(node : Crystal::MacroIf | Crystal::MacroFor)
       @macro_condition = true
