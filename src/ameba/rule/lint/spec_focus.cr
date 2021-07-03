@@ -4,7 +4,7 @@ module Ameba::Rule::Lint
   # In specs `focus: true` is mainly used to focus on a spec
   # item locally during development. However, if such change
   # is committed, it silently runs only focused spec on all
-  # other enviroment, which is undesired.
+  # other environment, which is undesired.
   #
   # This is considered bad:
   #
