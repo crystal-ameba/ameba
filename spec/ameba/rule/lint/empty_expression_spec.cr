@@ -95,7 +95,7 @@ module Ameba
       end
     )
 
-    it "does not report emtpy expression in macro" do
+    it "does not report empty expression in macro" do
       s = Source.new %q(
         module MyModule
           macro conditional_error_for_inline_callbacks

@@ -154,7 +154,7 @@ module Ameba::AST
         node.location == @node.location
     end
 
-    # Returns true if the variable is delcared before the `node`.
+    # Returns true if the variable is declared before the `node`.
     def declared_before?(node)
       var_location, node_location = location, node.location
 

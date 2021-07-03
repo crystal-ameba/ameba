@@ -201,7 +201,7 @@ module Ameba::Rule::Lint
         subject.catch(source).should be_valid
       end
 
-      it "does not report shadowed vars in macro withing the same scope" do
+      it "does not report shadowed vars in macro within the same scope" do
         source = Source.new %(
           {% methods = klass.methods.select { |m| m.annotation(MyAnn) } %}
 
@@ -214,7 +214,7 @@ module Ameba::Rule::Lint
         subject.catch(source).should be_valid
       end
 
-      it "does not report shadowed vars withing nested macro" do
+      it "does not report shadowed vars within nested macro" do
         source = Source.new %(
           module Foo
             macro included
