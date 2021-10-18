@@ -62,32 +62,5 @@ module Ameba
     def matches_path?(filepath)
       path == filepath || path == File.expand_path(filepath)
     end
-
-    def text_in_range(location, end_location)
-      return "" if location == end_location
-
-      location, end_location = end_location, location if location > end_location
-      line_index = location.line_number - 1
-      column_index = location.column_number - 1
-      end_line_index = end_location.line_number - 1
-      end_column_index = end_location.column_number - 1
-      return lines[line_index][column_index..end_column_index] if line_index == end_line_index
-
-      text_lines = lines[line_index..end_line_index]
-
-      if column_index < text_lines[0].size
-        text_lines[0] = text_lines[0][column_index..]
-      else
-        text_lines.shift
-      end
-
-      if end_column_index > 0
-        text_lines[-1] = text_lines[-1][..end_column_index]
-      else
-        text_lines.pop
-      end
-
-      text_lines.join('\n')
-    end
   end
 end

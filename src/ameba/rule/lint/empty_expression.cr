@@ -39,7 +39,7 @@ module Ameba::Rule::Lint
     MSG_EXRS = "Avoid empty expressions"
 
     def test(source, node : Crystal::NilLiteral)
-      exp = node_source(node, source.lines).try &.join
+      exp = node_source(node, source.lines)
       return if exp.in?(nil, "nil")
 
       issue_for node, MSG % exp

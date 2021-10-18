@@ -35,6 +35,11 @@ module Ameba::AST::Util
 
     return unless loc && end_loc
 
+    source_between(loc, end_loc, code_lines)
+  end
+
+  # Returns the source code from *loc* to *end_loc* (inclusive).
+  def source_between(loc, end_loc, code_lines) : String?
     line, column = loc.line_number - 1, loc.column_number - 1
     end_line, end_column = end_loc.line_number - 1, end_loc.column_number - 1
     node_lines = code_lines[line..end_line]
@@ -53,7 +58,7 @@ module Ameba::AST::Util
     return if last_line.size < end_column + 1
     node_lines[-1] = last_line.sub(end_column + 1...last_line.size, "")
 
-    node_lines
+    node_lines.join('\n')
   end
 
   # Returns true if node is a flow command, false - otherwise.
