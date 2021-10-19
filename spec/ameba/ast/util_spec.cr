@@ -44,7 +44,7 @@ module Ameba::AST
         )
         node = Crystal::Parser.new(s).parse
         source = subject.node_source node, s.split("\n")
-        source.should eq ["a = 1"]
+        source.should eq "a = 1"
       end
 
       it "returns original source of multiline node" do
@@ -55,11 +55,11 @@ module Ameba::AST
         )
         node = Crystal::Parser.new(s).parse
         source = subject.node_source node, s.split("\n")
-        source.should eq([
-          "if ()",
-          "            :ok",
-          "          end",
-        ])
+        source.should eq <<-CRYSTAL
+          if ()
+                      :ok
+                    end
+          CRYSTAL
       end
 
       it "does not report source of node which has incorrect location" do
@@ -81,7 +81,7 @@ module Ameba::AST
         if SemanticVersion.parse(Crystal::VERSION) <= SemanticVersion.parse("0.35.1")
           source.should be_nil
         else
-          source.should eq %w(nil)
+          source.should eq "nil"
         end
       end
     end
