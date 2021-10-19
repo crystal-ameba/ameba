@@ -13,7 +13,7 @@
 <script type="text/javascript" src="../../../js/doc.js"></script>
 
   <meta name="repository-name" content="ameba">
-  <title>Ameba::Rule::Performance::Base - ameba master</title>
+  <title>Ameba::Rule::Lint::AmbiguousAssignment - ameba master</title>
   <script type="text/javascript">
     CrystalDocs.base_path = "../../../";
   </script>
@@ -281,12 +281,12 @@
       
     </li>
   
-  <li class="parent " data-id="ameba/Ameba/Rule/Lint" data-name="ameba::rule::lint">
+  <li class="parent open current" data-id="ameba/Ameba/Rule/Lint" data-name="ameba::rule::lint">
       <a href="../../../Ameba/Rule/Lint.html">Lint</a>
       
         <ul>
   
-  <li class=" " data-id="ameba/Ameba/Rule/Lint/AmbiguousAssignment" data-name="ameba::rule::lint::ambiguousassignment">
+  <li class=" current" data-id="ameba/Ameba/Rule/Lint/AmbiguousAssignment" data-name="ameba::rule::lint::ambiguousassignment">
       <a href="../../../Ameba/Rule/Lint/AmbiguousAssignment.html">AmbiguousAssignment</a>
       
     </li>
@@ -441,7 +441,7 @@
       
     </li>
   
-  <li class="parent open current" data-id="ameba/Ameba/Rule/Performance" data-name="ameba::rule::performance">
+  <li class="parent " data-id="ameba/Ameba/Rule/Performance" data-name="ameba::rule::performance">
       <a href="../../../Ameba/Rule/Performance.html">Performance</a>
       
         <ul>
@@ -456,7 +456,7 @@
       
     </li>
   
-  <li class=" current" data-id="ameba/Ameba/Rule/Performance/Base" data-name="ameba::rule::performance::base">
+  <li class=" " data-id="ameba/Ameba/Rule/Performance/Base" data-name="ameba::rule::performance::base">
       <a href="../../../Ameba/Rule/Performance/Base.html">Base</a>
       
     </li>
@@ -625,12 +625,12 @@
 <div class="main-content">
 <h1 class="type-name">
 
-  <span class="kind">abstract class</span> Ameba::Rule::Performance::Base
+  <span class="kind">class</span> Ameba::Rule::Lint::AmbiguousAssignment
 
 </h1>
 
 
-  <ul class="superclass-hierarchy"><li class="superclass"><a href="../../../Ameba/Rule/Performance/Base.html">Ameba::Rule::Performance::Base</a></li><li class="superclass"><a href="../../../Ameba/Rule/Base.html">Ameba::Rule::Base</a></li><li class="superclass">Reference</li><li class="superclass">Object</li></ul>
+  <ul class="superclass-hierarchy"><li class="superclass"><a href="../../../Ameba/Rule/Lint/AmbiguousAssignment.html">Ameba::Rule::Lint::AmbiguousAssignment</a></li><li class="superclass"><a href="../../../Ameba/Rule/Base.html">Ameba::Rule::Base</a></li><li class="superclass">Reference</li><li class="superclass">Object</li></ul>
 
 
 
@@ -644,7 +644,19 @@
     Overview
   </h2>
 
-  <p>A general base class for performance rules.</p>
+  <p>This rule checks for mistyped shorthand assignments.</p>
+<pre><code class="language-crystal"><span class="c"># bad</span>
+x <span class="o">=</span><span class="o">-</span> y
+x <span class="o">=</span><span class="o">+</span> y
+x <span class="o">=</span><span class="o">!</span> y
+
+<span class="c"># good</span>
+x -= y <span class="c"># or x = -y</span>
+x += y <span class="c"># or x = +y</span>
+x <span class="o">!=</span> y <span class="c"># or x = !y</span></code></pre>
+<p>YAML configuration example:</p>
+<pre><code class="language-crystal">Lint/AmbiguousAssignment:
+  Enabled: true</code></pre>
 
 
 
@@ -660,6 +672,8 @@
   </h2>
   <ul class="other-types-list">
     
+      <li class="other-type"><a href="../../../Ameba/AST/Util.html">Ameba::AST::Util</a></li>
+    
       <li class="other-type">YAML::Serializable</li>
     
       <li class="other-type">YAML::Serializable::Strict</li>
@@ -669,34 +683,6 @@
 
 
 
-
-  <h2>
-    <a id="direct-known-subclasses" class="anchor" href="#direct-known-subclasses">
-  <svg class="octicon-link" aria-hidden="true">
-    <use href="#octicon-link"/>
-  </svg>
-</a>
-    Direct Known Subclasses
-  </h2>
-  <ul class="other-types-list">
-    
-      <li class="other-type"><a href="../../../Ameba/Rule/Performance/AnyAfterFilter.html">Ameba::Rule::Performance::AnyAfterFilter</a></li>
-    
-      <li class="other-type"><a href="../../../Ameba/Rule/Performance/AnyInsteadOfEmpty.html">Ameba::Rule::Performance::AnyInsteadOfEmpty</a></li>
-    
-      <li class="other-type"><a href="../../../Ameba/Rule/Performance/ChainedCallWithNoBang.html">Ameba::Rule::Performance::ChainedCallWithNoBang</a></li>
-    
-      <li class="other-type"><a href="../../../Ameba/Rule/Performance/CompactAfterMap.html">Ameba::Rule::Performance::CompactAfterMap</a></li>
-    
-      <li class="other-type"><a href="../../../Ameba/Rule/Performance/FirstLastAfterFilter.html">Ameba::Rule::Performance::FirstLastAfterFilter</a></li>
-    
-      <li class="other-type"><a href="../../../Ameba/Rule/Performance/FlattenAfterMap.html">Ameba::Rule::Performance::FlattenAfterMap</a></li>
-    
-      <li class="other-type"><a href="../../../Ameba/Rule/Performance/MapInsteadOfBlock.html">Ameba::Rule::Performance::MapInsteadOfBlock</a></li>
-    
-      <li class="other-type"><a href="../../../Ameba/Rule/Performance/SizeAfterFilter.html">Ameba::Rule::Performance::SizeAfterFilter</a></li>
-    
-  </ul>
 
 
 
@@ -713,14 +699,38 @@
   </h2>
   
     
-      <a href="https://github.com/crystal-ameba/ameba/blob/48b15b9b/src/ameba/rule/performance/base.cr#L5" target="_blank">
-        ameba/rule/performance/base.cr
+      <a href="https://github.com/crystal-ameba/ameba/blob/48b15b9b/src/ameba/rule/lint/ambiguous_assignment.cr#L20" target="_blank">
+        ameba/rule/lint/ambiguous_assignment.cr
       </a>
     
     <br/>
   
 
 
+
+  
+    <h2>
+      <a id="constant-summary" class="anchor" href="#constant-summary">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>
+      Constant Summary
+    </h2>
+  
+  <dl>
+    
+      <dt class="entry-const" id="MISTAKES">
+        <strong>MISTAKES</strong> = <code>{<span class="s">&quot;=-&quot;</span> => <span class="s">&quot;-=&quot;</span>, <span class="s">&quot;=+&quot;</span> => <span class="s">&quot;+=&quot;</span>, <span class="s">&quot;=!&quot;</span> => <span class="s">&quot;!=&quot;</span>}</code>
+      </dt>
+      
+    
+      <dt class="entry-const" id="MSG">
+        <strong>MSG</strong> = <code><span class="s">&quot;Suspicious assignment detected. Did you mean `%s`?&quot;</span></code>
+      </dt>
+      
+    
+  </dl>
 
 
 
@@ -742,7 +752,7 @@
       <li class="entry-summary">
         <a href="#new%28config%3Dnil%29-class-method" class="signature"><strong>.new</strong>(config = <span class="n">nil</span>)</a>
         
-          <div class="summary"><p>A general base class for performance rules.</p></div>
+          <div class="summary"><p>This rule checks for mistyped shorthand assignments.</p></div>
         
       </li>
     
@@ -763,9 +773,47 @@
   <ul class="list-summary">
     
       <li class="entry-summary">
-        <a href="#catch%28source%3ASource%29-instance-method" class="signature"><strong>#catch</strong>(source : Source)</a>
+        <a href="#description%3AString-instance-method" class="signature"><strong>#description</strong> : String</a>
         
-          <div class="summary"><p>A convenient addition to <code>#test</code> method that does the same but returns a passed in <code>source</code> as an addition.</p></div>
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#description%3D%28description%3AString%29-instance-method" class="signature"><strong>#description=</strong>(description : String)</a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#enabled%3ABool-instance-method" class="signature"><strong>#enabled</strong> : Bool</a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#enabled%3D%28enabled%29-instance-method" class="signature"><strong>#enabled=</strong>(enabled)</a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#excluded%3AArray%28String%29%3F-instance-method" class="signature"><strong>#excluded</strong> : Array(String)?</a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#excluded%3D%28excluded%3AArray%28String%29%3F%29-instance-method" class="signature"><strong>#excluded=</strong>(excluded : Array(String)?)</a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#severity%3AAmeba%3A%3ASeverity-instance-method" class="signature"><strong>#severity</strong> : Ameba::Severity</a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#severity%3D%28severity%29-instance-method" class="signature"><strong>#severity=</strong>(severity)</a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#test%28source%2Cnode%3ACrystal%3A%3AAssign%29-instance-method" class="signature"><strong>#test</strong>(source, node : Crystal::Assign)</a>
         
       </li>
     
@@ -776,6 +824,65 @@
 
 
 <div class="methods-inherited">
+  
+    
+
+  <h3>Instance methods inherited from module <code><a href="../../../Ameba/AST/Util.html">Ameba::AST::Util</a></code></h3>
+  
+  
+    <a href="../../../Ameba/AST/Util.html#abort%3F%28node%29-instance-method" class="tooltip">
+      <span>abort?(node)</span>
+    abort?</a>, 
+    
+  
+    <a href="../../../Ameba/AST/Util.html#exit%3F%28node%29-instance-method" class="tooltip">
+      <span>exit?(node)</span>
+    exit?</a>, 
+    
+  
+    <a href="../../../Ameba/AST/Util.html#flow_command%3F%28node%2Cin_loop%29-instance-method" class="tooltip">
+      <span>flow_command?(node, in_loop)</span>
+    flow_command?</a>, 
+    
+  
+    <a href="../../../Ameba/AST/Util.html#flow_expression%3F%28node%2Cin_loop%3Dfalse%29-instance-method" class="tooltip">
+      <span>flow_expression?(node, in_loop = <span class="n">false</span>)</span>
+    flow_expression?</a>, 
+    
+  
+    <a href="../../../Ameba/AST/Util.html#literal%3F%28node%29-instance-method" class="tooltip">
+      <span>literal?(node)</span>
+    literal?</a>, 
+    
+  
+    <a href="../../../Ameba/AST/Util.html#loop%3F%28node%29-instance-method" class="tooltip">
+      <span>loop?(node)</span>
+    loop?</a>, 
+    
+  
+    <a href="../../../Ameba/AST/Util.html#node_source%28node%2Ccode_lines%29-instance-method" class="tooltip">
+      <span>node_source(node, code_lines)</span>
+    node_source</a>, 
+    
+  
+    <a href="../../../Ameba/AST/Util.html#raise%3F%28node%29-instance-method" class="tooltip">
+      <span>raise?(node)</span>
+    raise?</a>, 
+    
+  
+    <a href="../../../Ameba/AST/Util.html#source_between%28loc%2Cend_loc%2Ccode_lines%29%3AString%3F-instance-method" class="tooltip">
+      <span>source_between(loc, end_loc, code_lines) : String?</span>
+    source_between</a>
+    
+  
+
+
+    
+
+
+    
+
+
   
     
 
@@ -926,13 +1033,25 @@
       
         <div class="doc">
           
-          <p>A general base class for performance rules.</p>
+          <p>This rule checks for mistyped shorthand assignments.</p>
+<pre><code class="language-crystal"><span class="c"># bad</span>
+x <span class="o">=</span><span class="o">-</span> y
+x <span class="o">=</span><span class="o">+</span> y
+x <span class="o">=</span><span class="o">!</span> y
+
+<span class="c"># good</span>
+x -= y <span class="c"># or x = -y</span>
+x += y <span class="c"># or x = +y</span>
+x <span class="o">!=</span> y <span class="c"># or x = !y</span></code></pre>
+<p>YAML configuration example:</p>
+<pre><code class="language-crystal">Lint/AmbiguousAssignment:
+  Enabled: true</code></pre>
         </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/48b15b9b/src/ameba/rule/performance/base.cr#L5" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/48b15b9b/src/ameba/rule/lint/ambiguous_assignment.cr#L20" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -951,30 +1070,130 @@
     Instance Method Detail
   </h2>
   
-    <div class="entry-detail" id="catch(source:Source)-instance-method">
+    <div class="entry-detail" id="description:String-instance-method">
       <div class="signature">
         
-        def <strong>catch</strong>(source : <a href="../../../Ameba/Source.html">Source</a>)
+        def <strong>description</strong> : String
 
-        <a class="method-permalink" href="#catch%28source%3ASource%29-instance-method">#</a>
+        <a class="method-permalink" href="#description%3AString-instance-method">#</a>
       </div>
-      
-        <div class="doc">
-          
-            <div class="doc-inherited">
-              Description copied from class <a href="../../../Ameba/Rule/Base.html">Ameba::Rule::Base</a>
-            </div>
-          
-          <p>A convenient addition to <code>#test</code> method that does the same
-but returns a passed in <code>source</code> as an addition.</p>
-<pre><code class="language-crystal">source <span class="o">=</span> <span class="t">MyRule</span>.<span class="k">new</span>.catch(source)
-source.valid?</code></pre>
-        </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/48b15b9b/src/ameba/rule/performance/base.cr#L6" target="_blank">View source</a>]
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="description=(description:String)-instance-method">
+      <div class="signature">
+        
+        def <strong>description=</strong>(description : String)
+
+        <a class="method-permalink" href="#description%3D%28description%3AString%29-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="enabled:Bool-instance-method">
+      <div class="signature">
+        
+        def <strong>enabled</strong> : Bool
+
+        <a class="method-permalink" href="#enabled%3ABool-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="enabled=(enabled)-instance-method">
+      <div class="signature">
+        
+        def <strong>enabled=</strong>(enabled)
+
+        <a class="method-permalink" href="#enabled%3D%28enabled%29-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="excluded:Array(String)?-instance-method">
+      <div class="signature">
+        
+        def <strong>excluded</strong> : Array(String)?
+
+        <a class="method-permalink" href="#excluded%3AArray%28String%29%3F-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="excluded=(excluded:Array(String)?)-instance-method">
+      <div class="signature">
+        
+        def <strong>excluded=</strong>(excluded : Array(String)?)
+
+        <a class="method-permalink" href="#excluded%3D%28excluded%3AArray%28String%29%3F%29-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="severity:Ameba::Severity-instance-method">
+      <div class="signature">
+        
+        def <strong>severity</strong> : <a href="../../../Ameba/Severity.html">Ameba::Severity</a>
+
+        <a class="method-permalink" href="#severity%3AAmeba%3A%3ASeverity-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="severity=(severity)-instance-method">
+      <div class="signature">
+        
+        def <strong>severity=</strong>(severity)
+
+        <a class="method-permalink" href="#severity%3D%28severity%29-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="test(source,node:Crystal::Assign)-instance-method">
+      <div class="signature">
+        
+        def <strong>test</strong>(source, node : Crystal::Assign)
+
+        <a class="method-permalink" href="#test%28source%2Cnode%3ACrystal%3A%3AAssign%29-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/crystal-ameba/ameba/blob/48b15b9b/src/ameba/rule/lint/ambiguous_assignment.cr#L35" target="_blank">View source</a>]
         
       </div>
     </div>

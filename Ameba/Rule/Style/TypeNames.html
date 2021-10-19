@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="generator" content="Crystal Docs 0.36.1">
+<meta name="generator" content="Crystal Docs 1.1.1">
 <meta name="crystal_docs.project_version" content="master">
 <meta name="crystal_docs.project_name" content="ameba">
 
@@ -285,6 +285,11 @@
       <a href="../../../Ameba/Rule/Lint.html">Lint</a>
       
         <ul>
+  
+  <li class=" " data-id="ameba/Ameba/Rule/Lint/AmbiguousAssignment" data-name="ameba::rule::lint::ambiguousassignment">
+      <a href="../../../Ameba/Rule/Lint/AmbiguousAssignment.html">AmbiguousAssignment</a>
+      
+    </li>
   
   <li class=" " data-id="ameba/Ameba/Rule/Lint/BadDirective" data-name="ameba::rule::lint::baddirective">
       <a href="../../../Ameba/Rule/Lint/BadDirective.html">BadDirective</a>
@@ -640,9 +645,7 @@
   </h2>
 
   <p>A rule that enforces type names in camelcase manner.</p>
-
 <p>For example, these are considered valid:</p>
-
 <pre><code class="language-crystal"><span class="k">class</span> <span class="t">ParseError</span> <span class="o">&lt;</span> <span class="t">Exception</span>
 <span class="k">end</span>
 
@@ -661,9 +664,7 @@
 
 <span class="k">enum</span> <span class="t">Time</span><span class="t">::</span><span class="t">DayOfWeek</span>
 <span class="k">end</span></code></pre>
-
 <p>And these are invalid type names</p>
-
 <pre><code class="language-crystal"><span class="k">class</span> <span class="t">My_class</span>
 <span class="k">end</span>
 
@@ -680,9 +681,7 @@
 
 <span class="k">enum</span> <span class="t">Time_enum</span><span class="t">::</span><span class="t">Day_of_week</span>
 <span class="k">end</span></code></pre>
-
 <p>YAML configuration example:</p>
-
 <pre><code class="language-crystal">Style/TypeNames:
   Enabled: true</code></pre>
 
@@ -725,7 +724,7 @@
   </h2>
   
     
-      <a href="https://github.com/crystal-ameba/ameba/blob/9a91e42b/src/ameba/rule/style/type_names.cr#L54" target="_blank">
+      <a href="https://github.com/crystal-ameba/ameba/blob/48b15b9b/src/ameba/rule/style/type_names.cr#L54" target="_blank">
         ameba/rule/style/type_names.cr
       </a>
     
@@ -766,12 +765,12 @@
   <ul class="list-summary">
     
       <li class="entry-summary">
-        <a href="#new(ctx:YAML::ParseContext,node:YAML::Nodes::Node)-class-method" class="signature"><strong>.new</strong>(ctx : YAML::ParseContext, node : YAML::Nodes::Node)</a>
+        <a href="#new%28ctx%3AYAML%3A%3AParseContext%2Cnode%3AYAML%3A%3ANodes%3A%3ANode%29-class-method" class="signature"><strong>.new</strong>(ctx : YAML::ParseContext, node : YAML::Nodes::Node)</a>
         
       </li>
     
       <li class="entry-summary">
-        <a href="#new(config=nil)-class-method" class="signature"><strong>.new</strong>(config = <span class="n">nil</span>)</a>
+        <a href="#new%28config%3Dnil%29-class-method" class="signature"><strong>.new</strong>(config = <span class="n">nil</span>)</a>
         
           <div class="summary"><p>A rule that enforces type names in camelcase manner.</p></div>
         
@@ -794,67 +793,67 @@
   <ul class="list-summary">
     
       <li class="entry-summary">
-        <a href="#description:String-instance-method" class="signature"><strong>#description</strong> : String</a>
+        <a href="#description%3AString-instance-method" class="signature"><strong>#description</strong> : String</a>
         
       </li>
     
       <li class="entry-summary">
-        <a href="#description=(description:String)-instance-method" class="signature"><strong>#description=</strong>(description : String)</a>
+        <a href="#description%3D%28description%3AString%29-instance-method" class="signature"><strong>#description=</strong>(description : String)</a>
         
       </li>
     
       <li class="entry-summary">
-        <a href="#enabled:Bool-instance-method" class="signature"><strong>#enabled</strong> : Bool</a>
+        <a href="#enabled%3ABool-instance-method" class="signature"><strong>#enabled</strong> : Bool</a>
         
       </li>
     
       <li class="entry-summary">
-        <a href="#enabled=(enabled)-instance-method" class="signature"><strong>#enabled=</strong>(enabled)</a>
+        <a href="#enabled%3D%28enabled%29-instance-method" class="signature"><strong>#enabled=</strong>(enabled)</a>
         
       </li>
     
       <li class="entry-summary">
-        <a href="#excluded:Array(String)?-instance-method" class="signature"><strong>#excluded</strong> : Array(String)?</a>
+        <a href="#excluded%3AArray%28String%29%3F-instance-method" class="signature"><strong>#excluded</strong> : Array(String)?</a>
         
       </li>
     
       <li class="entry-summary">
-        <a href="#excluded=(excluded:Array(String)?)-instance-method" class="signature"><strong>#excluded=</strong>(excluded : Array(String)?)</a>
+        <a href="#excluded%3D%28excluded%3AArray%28String%29%3F%29-instance-method" class="signature"><strong>#excluded=</strong>(excluded : Array(String)?)</a>
         
       </li>
     
       <li class="entry-summary">
-        <a href="#severity:Ameba::Severity-instance-method" class="signature"><strong>#severity</strong> : Ameba::Severity</a>
+        <a href="#severity%3AAmeba%3A%3ASeverity-instance-method" class="signature"><strong>#severity</strong> : Ameba::Severity</a>
         
       </li>
     
       <li class="entry-summary">
-        <a href="#severity=(severity)-instance-method" class="signature"><strong>#severity=</strong>(severity)</a>
+        <a href="#severity%3D%28severity%29-instance-method" class="signature"><strong>#severity=</strong>(severity)</a>
         
       </li>
     
       <li class="entry-summary">
-        <a href="#test(source,node:Crystal::ClassDef)-instance-method" class="signature"><strong>#test</strong>(source, node : Crystal::ClassDef)</a>
+        <a href="#test%28source%2Cnode%3ACrystal%3A%3AClassDef%29-instance-method" class="signature"><strong>#test</strong>(source, node : Crystal::ClassDef)</a>
         
       </li>
     
       <li class="entry-summary">
-        <a href="#test(source,node:Crystal::Alias)-instance-method" class="signature"><strong>#test</strong>(source, node : Crystal::Alias)</a>
+        <a href="#test%28source%2Cnode%3ACrystal%3A%3AAlias%29-instance-method" class="signature"><strong>#test</strong>(source, node : Crystal::Alias)</a>
         
       </li>
     
       <li class="entry-summary">
-        <a href="#test(source,node:Crystal::LibDef)-instance-method" class="signature"><strong>#test</strong>(source, node : Crystal::LibDef)</a>
+        <a href="#test%28source%2Cnode%3ACrystal%3A%3ALibDef%29-instance-method" class="signature"><strong>#test</strong>(source, node : Crystal::LibDef)</a>
         
       </li>
     
       <li class="entry-summary">
-        <a href="#test(source,node:Crystal::EnumDef)-instance-method" class="signature"><strong>#test</strong>(source, node : Crystal::EnumDef)</a>
+        <a href="#test%28source%2Cnode%3ACrystal%3A%3AEnumDef%29-instance-method" class="signature"><strong>#test</strong>(source, node : Crystal::EnumDef)</a>
         
       </li>
     
       <li class="entry-summary">
-        <a href="#test(source,node:Crystal::ModuleDef)-instance-method" class="signature"><strong>#test</strong>(source, node : Crystal::ModuleDef)</a>
+        <a href="#test%28source%2Cnode%3ACrystal%3A%3AModuleDef%29-instance-method" class="signature"><strong>#test</strong>(source, node : Crystal::ModuleDef)</a>
         
       </li>
     
@@ -891,17 +890,17 @@
   <h3>Instance methods inherited from class <code><a href="../../../Ameba/Rule/Base.html">Ameba::Rule::Base</a></code></h3>
   
   
-    <a href="../../../Ameba/Rule/Base.html#==(other)-instance-method" class="tooltip">
+    <a href="../../../Ameba/Rule/Base.html#%3D%3D%28other%29-instance-method" class="tooltip">
       <span>==(other)</span>
     ==</a>, 
     
   
-    <a href="../../../Ameba/Rule/Base.html#catch(source:Source)-instance-method" class="tooltip">
+    <a href="../../../Ameba/Rule/Base.html#catch%28source%3ASource%29-instance-method" class="tooltip">
       <span>catch(source : Source)</span>
     catch</a>, 
     
   
-    <a href="../../../Ameba/Rule/Base.html#excluded?(source)-instance-method" class="tooltip">
+    <a href="../../../Ameba/Rule/Base.html#excluded%3F%28source%29-instance-method" class="tooltip">
       <span>excluded?(source)</span>
     excluded?</a>, 
     
@@ -921,12 +920,12 @@
     name</a>, 
     
   
-    <a href="../../../Ameba/Rule/Base.html#special?-instance-method" class="tooltip">
+    <a href="../../../Ameba/Rule/Base.html#special%3F-instance-method" class="tooltip">
       <span>special?</span>
     special?</a>, 
     
   
-    <a href="../../../Ameba/Rule/Base.html#test(source:Source,node:Crystal::ASTNode,*opts)-instance-method" class="tooltip">
+    <a href="../../../Ameba/Rule/Base.html#test%28source%3ASource%2Cnode%3ACrystal%3A%3AASTNode%2C%2Aopts%29-instance-method" class="tooltip">
       <span>test(source : Source, node : Crystal::ASTNode, *opts)<br/>test(source : Source)</span>
     test</a>
     
@@ -996,7 +995,7 @@
         
         def self.<strong>new</strong>(ctx : YAML::ParseContext, node : YAML::Nodes::Node)
 
-        <a class="method-permalink" href="#new(ctx:YAML::ParseContext,node:YAML::Nodes::Node)-class-method">#</a>
+        <a class="method-permalink" href="#new%28ctx%3AYAML%3A%3AParseContext%2Cnode%3AYAML%3A%3ANodes%3A%3ANode%29-class-method">#</a>
       </div>
       
       <br/>
@@ -1010,15 +1009,13 @@
         
         def self.<strong>new</strong>(config = <span class="n">nil</span>)
 
-        <a class="method-permalink" href="#new(config=nil)-class-method">#</a>
+        <a class="method-permalink" href="#new%28config%3Dnil%29-class-method">#</a>
       </div>
       
         <div class="doc">
           
           <p>A rule that enforces type names in camelcase manner.</p>
-
 <p>For example, these are considered valid:</p>
-
 <pre><code class="language-crystal"><span class="k">class</span> <span class="t">ParseError</span> <span class="o">&lt;</span> <span class="t">Exception</span>
 <span class="k">end</span>
 
@@ -1037,9 +1034,7 @@
 
 <span class="k">enum</span> <span class="t">Time</span><span class="t">::</span><span class="t">DayOfWeek</span>
 <span class="k">end</span></code></pre>
-
 <p>And these are invalid type names</p>
-
 <pre><code class="language-crystal"><span class="k">class</span> <span class="t">My_class</span>
 <span class="k">end</span>
 
@@ -1056,9 +1051,7 @@
 
 <span class="k">enum</span> <span class="t">Time_enum</span><span class="t">::</span><span class="t">Day_of_week</span>
 <span class="k">end</span></code></pre>
-
 <p>YAML configuration example:</p>
-
 <pre><code class="language-crystal">Style/TypeNames:
   Enabled: true</code></pre>
         </div>
@@ -1066,7 +1059,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/9a91e42b/src/ameba/rule/style/type_names.cr#L54" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/48b15b9b/src/ameba/rule/style/type_names.cr#L54" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1090,7 +1083,7 @@
         
         def <strong>description</strong> : String
 
-        <a class="method-permalink" href="#description:String-instance-method">#</a>
+        <a class="method-permalink" href="#description%3AString-instance-method">#</a>
       </div>
       
       <br/>
@@ -1104,7 +1097,7 @@
         
         def <strong>description=</strong>(description : String)
 
-        <a class="method-permalink" href="#description=(description:String)-instance-method">#</a>
+        <a class="method-permalink" href="#description%3D%28description%3AString%29-instance-method">#</a>
       </div>
       
       <br/>
@@ -1118,7 +1111,7 @@
         
         def <strong>enabled</strong> : Bool
 
-        <a class="method-permalink" href="#enabled:Bool-instance-method">#</a>
+        <a class="method-permalink" href="#enabled%3ABool-instance-method">#</a>
       </div>
       
       <br/>
@@ -1132,7 +1125,7 @@
         
         def <strong>enabled=</strong>(enabled)
 
-        <a class="method-permalink" href="#enabled=(enabled)-instance-method">#</a>
+        <a class="method-permalink" href="#enabled%3D%28enabled%29-instance-method">#</a>
       </div>
       
       <br/>
@@ -1146,7 +1139,7 @@
         
         def <strong>excluded</strong> : Array(String)?
 
-        <a class="method-permalink" href="#excluded:Array(String)?-instance-method">#</a>
+        <a class="method-permalink" href="#excluded%3AArray%28String%29%3F-instance-method">#</a>
       </div>
       
       <br/>
@@ -1160,7 +1153,7 @@
         
         def <strong>excluded=</strong>(excluded : Array(String)?)
 
-        <a class="method-permalink" href="#excluded=(excluded:Array(String)?)-instance-method">#</a>
+        <a class="method-permalink" href="#excluded%3D%28excluded%3AArray%28String%29%3F%29-instance-method">#</a>
       </div>
       
       <br/>
@@ -1174,7 +1167,7 @@
         
         def <strong>severity</strong> : <a href="../../../Ameba/Severity.html">Ameba::Severity</a>
 
-        <a class="method-permalink" href="#severity:Ameba::Severity-instance-method">#</a>
+        <a class="method-permalink" href="#severity%3AAmeba%3A%3ASeverity-instance-method">#</a>
       </div>
       
       <br/>
@@ -1188,7 +1181,7 @@
         
         def <strong>severity=</strong>(severity)
 
-        <a class="method-permalink" href="#severity=(severity)-instance-method">#</a>
+        <a class="method-permalink" href="#severity%3D%28severity%29-instance-method">#</a>
       </div>
       
       <br/>
@@ -1202,13 +1195,13 @@
         
         def <strong>test</strong>(source, node : Crystal::ClassDef)
 
-        <a class="method-permalink" href="#test(source,node:Crystal::ClassDef)-instance-method">#</a>
+        <a class="method-permalink" href="#test%28source%2Cnode%3ACrystal%3A%3AClassDef%29-instance-method">#</a>
       </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/9a91e42b/src/ameba/rule/style/type_names.cr#L69" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/48b15b9b/src/ameba/rule/style/type_names.cr#L69" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1218,13 +1211,13 @@
         
         def <strong>test</strong>(source, node : Crystal::Alias)
 
-        <a class="method-permalink" href="#test(source,node:Crystal::Alias)-instance-method">#</a>
+        <a class="method-permalink" href="#test%28source%2Cnode%3ACrystal%3A%3AAlias%29-instance-method">#</a>
       </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/9a91e42b/src/ameba/rule/style/type_names.cr#L73" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/48b15b9b/src/ameba/rule/style/type_names.cr#L73" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1234,13 +1227,13 @@
         
         def <strong>test</strong>(source, node : Crystal::LibDef)
 
-        <a class="method-permalink" href="#test(source,node:Crystal::LibDef)-instance-method">#</a>
+        <a class="method-permalink" href="#test%28source%2Cnode%3ACrystal%3A%3ALibDef%29-instance-method">#</a>
       </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/9a91e42b/src/ameba/rule/style/type_names.cr#L77" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/48b15b9b/src/ameba/rule/style/type_names.cr#L77" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1250,13 +1243,13 @@
         
         def <strong>test</strong>(source, node : Crystal::EnumDef)
 
-        <a class="method-permalink" href="#test(source,node:Crystal::EnumDef)-instance-method">#</a>
+        <a class="method-permalink" href="#test%28source%2Cnode%3ACrystal%3A%3AEnumDef%29-instance-method">#</a>
       </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/9a91e42b/src/ameba/rule/style/type_names.cr#L81" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/48b15b9b/src/ameba/rule/style/type_names.cr#L81" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1266,13 +1259,13 @@
         
         def <strong>test</strong>(source, node : Crystal::ModuleDef)
 
-        <a class="method-permalink" href="#test(source,node:Crystal::ModuleDef)-instance-method">#</a>
+        <a class="method-permalink" href="#test%28source%2Cnode%3ACrystal%3A%3AModuleDef%29-instance-method">#</a>
       </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/9a91e42b/src/ameba/rule/style/type_names.cr#L85" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/48b15b9b/src/ameba/rule/style/type_names.cr#L85" target="_blank">View source</a>]
         
       </div>
     </div>

@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="generator" content="Crystal Docs 0.36.1">
+<meta name="generator" content="Crystal Docs 1.1.1">
 <meta name="crystal_docs.project_version" content="master">
 <meta name="crystal_docs.project_name" content="ameba">
 
@@ -285,6 +285,11 @@
       <a href="../Ameba/Rule/Lint.html">Lint</a>
       
         <ul>
+  
+  <li class=" " data-id="ameba/Ameba/Rule/Lint/AmbiguousAssignment" data-name="ameba::rule::lint::ambiguousassignment">
+      <a href="../Ameba/Rule/Lint/AmbiguousAssignment.html">AmbiguousAssignment</a>
+      
+    </li>
   
   <li class=" " data-id="ameba/Ameba/Rule/Lint/BadDirective" data-name="ameba::rule::lint::baddirective">
       <a href="../Ameba/Rule/Lint/BadDirective.html">BadDirective</a>
@@ -640,7 +645,6 @@
   </h2>
 
   <p>Represents Crystal syntax tokenizer based on <code>Crystal::Lexer</code>.</p>
-
 <pre><code class="language-crystal">source <span class="o">=</span> <span class="t">Ameba</span><span class="t">::</span><span class="t">Source</span>.<span class="k">new</span> code, path
 tokenizer <span class="o">=</span> <span class="t">Ameba</span><span class="t">::</span><span class="t">Tokenizer</span>.<span class="k">new</span>(source)
 tokenizer.run <span class="k">do</span> <span class="o">|</span>token<span class="o">|</span>
@@ -670,7 +674,7 @@ tokenizer.run <span class="k">do</span> <span class="o">|</span>token<span class
   </h2>
   
     
-      <a href="https://github.com/crystal-ameba/ameba/blob/9a91e42b/src/ameba/tokenizer.cr#L14" target="_blank">
+      <a href="https://github.com/crystal-ameba/ameba/blob/48b15b9b/src/ameba/tokenizer.cr#L14" target="_blank">
         ameba/tokenizer.cr
       </a>
     
@@ -692,14 +696,14 @@ tokenizer.run <span class="k">do</span> <span class="o">|</span>token<span class
   <ul class="list-summary">
     
       <li class="entry-summary">
-        <a href="#new(lexer:Crystal::Lexer)-class-method" class="signature"><strong>.new</strong>(lexer : Crystal::Lexer)</a>
+        <a href="#new%28lexer%3ACrystal%3A%3ALexer%29-class-method" class="signature"><strong>.new</strong>(lexer : Crystal::Lexer)</a>
         
           <div class="summary"><p>Instantiates Tokenizer using a <code>lexer</code>.</p></div>
         
       </li>
     
       <li class="entry-summary">
-        <a href="#new(source)-class-method" class="signature"><strong>.new</strong>(source)</a>
+        <a href="#new%28source%29-class-method" class="signature"><strong>.new</strong>(source)</a>
         
           <div class="summary"><p>Instantiates Tokenizer using a <code>source</code>.</p></div>
         
@@ -722,7 +726,7 @@ tokenizer.run <span class="k">do</span> <span class="o">|</span>token<span class
   <ul class="list-summary">
     
       <li class="entry-summary">
-        <a href="#run(&block:Crystal::Token-%3E_)-instance-method" class="signature"><strong>#run</strong>(&block : Crystal::Token -> _)</a>
+        <a href="#run%28%26block%3ACrystal%3A%3AToken-%3E_%29-instance-method" class="signature"><strong>#run</strong>(&block : Crystal::Token -> _)</a>
         
           <div class="summary"><p>Runs the tokenizer and yields each token as a block argument.</p></div>
         
@@ -773,13 +777,12 @@ tokenizer.run <span class="k">do</span> <span class="o">|</span>token<span class
         
         def self.<strong>new</strong>(lexer : Crystal::Lexer)
 
-        <a class="method-permalink" href="#new(lexer:Crystal::Lexer)-class-method">#</a>
+        <a class="method-permalink" href="#new%28lexer%3ACrystal%3A%3ALexer%29-class-method">#</a>
       </div>
       
         <div class="doc">
           
           <p>Instantiates Tokenizer using a <code>lexer</code>.</p>
-
 <pre><code class="language-crystal">lexer <span class="o">=</span> <span class="t">Crystal</span><span class="t">::</span><span class="t">Lexer</span>.<span class="k">new</span>(code)
 <span class="t">Ameba</span><span class="t">::</span><span class="t">Tokenizer</span>.<span class="k">new</span>(lexer)</code></pre>
         </div>
@@ -787,7 +790,7 @@ tokenizer.run <span class="k">do</span> <span class="o">|</span>token<span class
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/9a91e42b/src/ameba/tokenizer.cr#L35" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/48b15b9b/src/ameba/tokenizer.cr#L35" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -797,13 +800,12 @@ tokenizer.run <span class="k">do</span> <span class="o">|</span>token<span class
         
         def self.<strong>new</strong>(source)
 
-        <a class="method-permalink" href="#new(source)-class-method">#</a>
+        <a class="method-permalink" href="#new%28source%29-class-method">#</a>
       </div>
       
         <div class="doc">
           
           <p>Instantiates Tokenizer using a <code>source</code>.</p>
-
 <pre><code class="language-crystal">source <span class="o">=</span> <span class="t">Ameba</span><span class="t">::</span><span class="t">Source</span>.<span class="k">new</span> code, path
 <span class="t">Ameba</span><span class="t">::</span><span class="t">Tokenizer</span>.<span class="k">new</span>(source)</code></pre>
         </div>
@@ -811,7 +813,7 @@ tokenizer.run <span class="k">do</span> <span class="o">|</span>token<span class
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/9a91e42b/src/ameba/tokenizer.cr#L21" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/48b15b9b/src/ameba/tokenizer.cr#L21" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -830,18 +832,17 @@ tokenizer.run <span class="k">do</span> <span class="o">|</span>token<span class
     Instance Method Detail
   </h2>
   
-    <div class="entry-detail" id="run(&block:Crystal::Token->_)-instance-method">
+    <div class="entry-detail" id="run(&amp;block:Crystal::Token-&gt;_)-instance-method">
       <div class="signature">
         
         def <strong>run</strong>(&block : Crystal::Token -> _)
 
-        <a class="method-permalink" href="#run(&block:Crystal::Token-%3E_)-instance-method">#</a>
+        <a class="method-permalink" href="#run%28%26block%3ACrystal%3A%3AToken-%3E_%29-instance-method">#</a>
       </div>
       
         <div class="doc">
           
           <p>Runs the tokenizer and yields each token as a block argument.</p>
-
 <pre><code class="language-crystal"><span class="t">Ameba</span><span class="t">::</span><span class="t">Tokenizer</span>.<span class="k">new</span>(source).run <span class="k">do</span> <span class="o">|</span>token<span class="o">|</span>
   puts token
 <span class="k">end</span></code></pre>
@@ -850,7 +851,7 @@ tokenizer.run <span class="k">do</span> <span class="o">|</span>token<span class
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/9a91e42b/src/ameba/tokenizer.cr#L45" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/48b15b9b/src/ameba/tokenizer.cr#L45" target="_blank">View source</a>]
         
       </div>
     </div>

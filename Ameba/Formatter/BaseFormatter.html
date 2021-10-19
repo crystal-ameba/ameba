@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="generator" content="Crystal Docs 0.36.1">
+<meta name="generator" content="Crystal Docs 1.1.1">
 <meta name="crystal_docs.project_version" content="master">
 <meta name="crystal_docs.project_name" content="ameba">
 
@@ -285,6 +285,11 @@
       <a href="../../Ameba/Rule/Lint.html">Lint</a>
       
         <ul>
+  
+  <li class=" " data-id="ameba/Ameba/Rule/Lint/AmbiguousAssignment" data-name="ameba::rule::lint::ambiguousassignment">
+      <a href="../../Ameba/Rule/Lint/AmbiguousAssignment.html">AmbiguousAssignment</a>
+      
+    </li>
   
   <li class=" " data-id="ameba/Ameba/Rule/Lint/BadDirective" data-name="ameba::rule::lint::baddirective">
       <a href="../../Ameba/Rule/Lint/BadDirective.html">BadDirective</a>
@@ -639,7 +644,7 @@
     Overview
   </h2>
 
-  <p>A base formatter for all formatters. It uses <code><a href="../../Ameba/Formatter/BaseFormatter.html#output:IO::FileDescriptor%7CIO::Memory-instance-method">#output</a></code> IO
+  <p>A base formatter for all formatters. It uses <code><a href="../../Ameba/Formatter/BaseFormatter.html#output%3AIO%3A%3AFileDescriptor%7CIO%3A%3AMemory-instance-method">#output</a></code> IO
 to report results and also implements stub methods for
 callbacks in <code><a href="../../Ameba/Runner.html#run-instance-method">Ameba::Runner#run</a></code> method.</p>
 
@@ -686,7 +691,7 @@ callbacks in <code><a href="../../Ameba/Runner.html#run-instance-method">Ameba::
   </h2>
   
     
-      <a href="https://github.com/crystal-ameba/ameba/blob/9a91e42b/src/ameba/formatter/base_formatter.cr#L8" target="_blank">
+      <a href="https://github.com/crystal-ameba/ameba/blob/48b15b9b/src/ameba/formatter/base_formatter.cr#L8" target="_blank">
         ameba/formatter/base_formatter.cr
       </a>
     
@@ -708,7 +713,7 @@ callbacks in <code><a href="../../Ameba/Runner.html#run-instance-method">Ameba::
   <ul class="list-summary">
     
       <li class="entry-summary">
-        <a href="#new(output=STDOUT)-class-method" class="signature"><strong>.new</strong>(output = <span class="t">STDOUT</span>)</a>
+        <a href="#new%28output%3DSTDOUT%29-class-method" class="signature"><strong>.new</strong>(output = <span class="t">STDOUT</span>)</a>
         
       </li>
     
@@ -729,40 +734,40 @@ callbacks in <code><a href="../../Ameba/Runner.html#run-instance-method">Ameba::
   <ul class="list-summary">
     
       <li class="entry-summary">
-        <a href="#config:Hash(Symbol,Bool%7CString)-instance-method" class="signature"><strong>#config</strong> : Hash(Symbol, Bool | String)</a>
+        <a href="#config%3AHash%28Symbol%2CBool%7CString%29-instance-method" class="signature"><strong>#config</strong> : Hash(Symbol, Bool | String)</a>
         
       </li>
     
       <li class="entry-summary">
-        <a href="#finished(sources)-instance-method" class="signature"><strong>#finished</strong>(sources)</a>
+        <a href="#finished%28sources%29-instance-method" class="signature"><strong>#finished</strong>(sources)</a>
         
           <div class="summary"><p>Callback that indicates when inspection is finished.</p></div>
         
       </li>
     
       <li class="entry-summary">
-        <a href="#output:IO::FileDescriptor%7CIO::Memory-instance-method" class="signature"><strong>#output</strong> : IO::FileDescriptor | IO::Memory</a>
+        <a href="#output%3AIO%3A%3AFileDescriptor%7CIO%3A%3AMemory-instance-method" class="signature"><strong>#output</strong> : IO::FileDescriptor | IO::Memory</a>
         
           <div class="summary"><p><span class="flag orange">TODO</span>  allow other IOs</p></div>
         
       </li>
     
       <li class="entry-summary">
-        <a href="#source_finished(source:Source)-instance-method" class="signature"><strong>#source_finished</strong>(source : Source)</a>
+        <a href="#source_finished%28source%3ASource%29-instance-method" class="signature"><strong>#source_finished</strong>(source : Source)</a>
         
           <div class="summary"><p>Callback that indicates when source inspection is finished.</p></div>
         
       </li>
     
       <li class="entry-summary">
-        <a href="#source_started(source:Source)-instance-method" class="signature"><strong>#source_started</strong>(source : Source)</a>
+        <a href="#source_started%28source%3ASource%29-instance-method" class="signature"><strong>#source_started</strong>(source : Source)</a>
         
           <div class="summary"><p>Callback that indicates when source inspection is finished.</p></div>
         
       </li>
     
       <li class="entry-summary">
-        <a href="#started(sources)-instance-method" class="signature"><strong>#started</strong>(sources)</a>
+        <a href="#started%28sources%29-instance-method" class="signature"><strong>#started</strong>(sources)</a>
         
           <div class="summary"><p>Callback that indicates when inspecting is started.</p></div>
         
@@ -813,13 +818,13 @@ callbacks in <code><a href="../../Ameba/Runner.html#run-instance-method">Ameba::
         
         def self.<strong>new</strong>(output = <span class="t">STDOUT</span>)
 
-        <a class="method-permalink" href="#new(output=STDOUT)-class-method">#</a>
+        <a class="method-permalink" href="#new%28output%3DSTDOUT%29-class-method">#</a>
       </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/9a91e42b/src/ameba/formatter/base_formatter.cr#L13" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/48b15b9b/src/ameba/formatter/base_formatter.cr#L13" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -843,13 +848,13 @@ callbacks in <code><a href="../../Ameba/Runner.html#run-instance-method">Ameba::
         
         def <strong>config</strong> : Hash(Symbol, Bool | String)
 
-        <a class="method-permalink" href="#config:Hash(Symbol,Bool%7CString)-instance-method">#</a>
+        <a class="method-permalink" href="#config%3AHash%28Symbol%2CBool%7CString%29-instance-method">#</a>
       </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/9a91e42b/src/ameba/formatter/base_formatter.cr#L11" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/48b15b9b/src/ameba/formatter/base_formatter.cr#L11" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -859,7 +864,7 @@ callbacks in <code><a href="../../Ameba/Runner.html#run-instance-method">Ameba::
         
         def <strong>finished</strong>(sources)
 
-        <a class="method-permalink" href="#finished(sources)-instance-method">#</a>
+        <a class="method-permalink" href="#finished%28sources%29-instance-method">#</a>
       </div>
       
         <div class="doc">
@@ -871,7 +876,7 @@ A list of inspected sources is passed as an argument.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/9a91e42b/src/ameba/formatter/base_formatter.cr#L30" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/48b15b9b/src/ameba/formatter/base_formatter.cr#L30" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -881,7 +886,7 @@ A list of inspected sources is passed as an argument.</p>
         
         def <strong>output</strong> : IO::FileDescriptor | IO::Memory
 
-        <a class="method-permalink" href="#output:IO::FileDescriptor%7CIO::Memory-instance-method">#</a>
+        <a class="method-permalink" href="#output%3AIO%3A%3AFileDescriptor%7CIO%3A%3AMemory-instance-method">#</a>
       </div>
       
         <div class="doc">
@@ -892,7 +897,7 @@ A list of inspected sources is passed as an argument.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/9a91e42b/src/ameba/formatter/base_formatter.cr#L10" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/48b15b9b/src/ameba/formatter/base_formatter.cr#L10" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -902,7 +907,7 @@ A list of inspected sources is passed as an argument.</p>
         
         def <strong>source_finished</strong>(source : <a href="../../Ameba/Source.html">Source</a>)
 
-        <a class="method-permalink" href="#source_finished(source:Source)-instance-method">#</a>
+        <a class="method-permalink" href="#source_finished%28source%3ASource%29-instance-method">#</a>
       </div>
       
         <div class="doc">
@@ -914,7 +919,7 @@ A corresponding source is passed as an argument.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/9a91e42b/src/ameba/formatter/base_formatter.cr#L22" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/48b15b9b/src/ameba/formatter/base_formatter.cr#L22" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -924,7 +929,7 @@ A corresponding source is passed as an argument.</p>
         
         def <strong>source_started</strong>(source : <a href="../../Ameba/Source.html">Source</a>)
 
-        <a class="method-permalink" href="#source_started(source:Source)-instance-method">#</a>
+        <a class="method-permalink" href="#source_started%28source%3ASource%29-instance-method">#</a>
       </div>
       
         <div class="doc">
@@ -936,7 +941,7 @@ A corresponding source is passed as an argument.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/9a91e42b/src/ameba/formatter/base_formatter.cr#L26" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/48b15b9b/src/ameba/formatter/base_formatter.cr#L26" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -946,7 +951,7 @@ A corresponding source is passed as an argument.</p>
         
         def <strong>started</strong>(sources)
 
-        <a class="method-permalink" href="#started(sources)-instance-method">#</a>
+        <a class="method-permalink" href="#started%28sources%29-instance-method">#</a>
       </div>
       
         <div class="doc">
@@ -958,7 +963,7 @@ A list of sources to inspect is passed as an argument.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/9a91e42b/src/ameba/formatter/base_formatter.cr#L18" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/48b15b9b/src/ameba/formatter/base_formatter.cr#L18" target="_blank">View source</a>]
         
       </div>
     </div>

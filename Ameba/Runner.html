@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="generator" content="Crystal Docs 0.36.1">
+<meta name="generator" content="Crystal Docs 1.1.1">
 <meta name="crystal_docs.project_version" content="master">
 <meta name="crystal_docs.project_name" content="ameba">
 
@@ -285,6 +285,11 @@
       <a href="../Ameba/Rule/Lint.html">Lint</a>
       
         <ul>
+  
+  <li class=" " data-id="ameba/Ameba/Rule/Lint/AmbiguousAssignment" data-name="ameba::rule::lint::ambiguousassignment">
+      <a href="../Ameba/Rule/Lint/AmbiguousAssignment.html">AmbiguousAssignment</a>
+      
+    </li>
   
   <li class=" " data-id="ameba/Ameba/Rule/Lint/BadDirective" data-name="ameba::rule::lint::baddirective">
       <a href="../Ameba/Rule/Lint/BadDirective.html">BadDirective</a>
@@ -643,7 +648,6 @@
 Holds a list of rules to do inspection based on,
 list of sources to run inspection on and a formatter
 to prepare a report.</p>
-
 <pre><code class="language-crystal">config <span class="o">=</span> <span class="t">Ameba</span><span class="t">::</span><span class="t">Config</span>.load
 runner <span class="o">=</span> <span class="t">Ameba</span><span class="t">::</span><span class="t">Runner</span>.<span class="k">new</span> config
 runner.run.success? <span class="c"># =&gt; true or false</span></code></pre>
@@ -671,7 +675,7 @@ runner.run.success? <span class="c"># =&gt; true or false</span></code></pre>
   </h2>
   
     
-      <a href="https://github.com/crystal-ameba/ameba/blob/9a91e42b/src/ameba/runner.cr#L13" target="_blank">
+      <a href="https://github.com/crystal-ameba/ameba/blob/48b15b9b/src/ameba/runner.cr#L13" target="_blank">
         ameba/runner.cr
       </a>
     
@@ -693,7 +697,7 @@ runner.run.success? <span class="c"># =&gt; true or false</span></code></pre>
   <ul class="list-summary">
     
       <li class="entry-summary">
-        <a href="#new(config:Config)-class-method" class="signature"><strong>.new</strong>(config : Config)</a>
+        <a href="#new%28config%3AConfig%29-class-method" class="signature"><strong>.new</strong>(config : Config)</a>
         
           <div class="summary"><p>Instantiates a runner using a <code>config</code>.</p></div>
         
@@ -716,7 +720,7 @@ runner.run.success? <span class="c"># =&gt; true or false</span></code></pre>
   <ul class="list-summary">
     
       <li class="entry-summary">
-        <a href="#explain(location,output=STDOUT)-instance-method" class="signature"><strong>#explain</strong>(location, output = <span class="t">STDOUT</span>)</a>
+        <a href="#explain%28location%2Coutput%3DSTDOUT%29-instance-method" class="signature"><strong>#explain</strong>(location, output = <span class="t">STDOUT</span>)</a>
         
           <div class="summary"><p>Explains an issue at a specified <em>location</em>.</p></div>
         
@@ -730,14 +734,14 @@ runner.run.success? <span class="c"># =&gt; true or false</span></code></pre>
       </li>
     
       <li class="entry-summary">
-        <a href="#sources:Array(Source)-instance-method" class="signature"><strong>#sources</strong> : Array(Source)</a>
+        <a href="#sources%3AArray%28Source%29-instance-method" class="signature"><strong>#sources</strong> : Array(Source)</a>
         
           <div class="summary"><p>A list of sources to run inspection on.</p></div>
         
       </li>
     
       <li class="entry-summary">
-        <a href="#success?-instance-method" class="signature"><strong>#success?</strong></a>
+        <a href="#success%3F-instance-method" class="signature"><strong>#success?</strong></a>
         
           <div class="summary"><p>Indicates whether the last inspection successful or not.</p></div>
         
@@ -788,13 +792,12 @@ runner.run.success? <span class="c"># =&gt; true or false</span></code></pre>
         
         def self.<strong>new</strong>(config : <a href="../Ameba/Config.html">Config</a>)
 
-        <a class="method-permalink" href="#new(config:Config)-class-method">#</a>
+        <a class="method-permalink" href="#new%28config%3AConfig%29-class-method">#</a>
       </div>
       
         <div class="doc">
           
           <p>Instantiates a runner using a <code>config</code>.</p>
-
 <pre><code class="language-crystal">config <span class="o">=</span> <span class="t">Ameba</span><span class="t">::</span><span class="t">Config</span>.load
 config.files <span class="o">=</span> files
 config.formatter <span class="o">=</span> formatter
@@ -805,7 +808,7 @@ config.formatter <span class="o">=</span> formatter
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/9a91e42b/src/ameba/runner.cr#L41" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/48b15b9b/src/ameba/runner.cr#L41" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -829,16 +832,14 @@ config.formatter <span class="o">=</span> formatter
         
         def <strong>explain</strong>(location, output = <span class="t">STDOUT</span>)
 
-        <a class="method-permalink" href="#explain(location,output=STDOUT)-instance-method">#</a>
+        <a class="method-permalink" href="#explain%28location%2Coutput%3DSTDOUT%29-instance-method">#</a>
       </div>
       
         <div class="doc">
           
           <p>Explains an issue at a specified <em>location</em>.</p>
-
 <p>Runner should perform inspection before doing the explain.
 This is necessary to be able to find the issue at a specified location.</p>
-
 <pre><code class="language-crystal">runner <span class="o">=</span> <span class="t">Ameba</span><span class="t">::</span><span class="t">Runner</span>.<span class="k">new</span> config
 runner.run
 runner.explain({file: file, line: l, column: c})</code></pre>
@@ -847,7 +848,7 @@ runner.explain({file: file, line: l, column: c})</code></pre>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/9a91e42b/src/ameba/runner.cr#L113" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/48b15b9b/src/ameba/runner.cr#L113" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -865,10 +866,8 @@ runner.explain({file: file, line: l, column: c})</code></pre>
           <p>Performs the inspection. Iterates through all sources and test it using
 list of rules. If a specific rule fails on a specific source, it adds
 an issue to that source.</p>
-
 <p>This action also notifies formatter when inspection is started/finished,
 and when a specific source started/finished to be inspected.</p>
-
 <pre><code class="language-crystal">runner <span class="o">=</span> <span class="t">Ameba</span><span class="t">::</span><span class="t">Runner</span>.<span class="k">new</span> config
 runner.run <span class="c"># =&gt; returns runner again</span></code></pre>
         </div>
@@ -876,7 +875,7 @@ runner.run <span class="c"># =&gt; returns runner again</span></code></pre>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/9a91e42b/src/ameba/runner.cr#L66" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/48b15b9b/src/ameba/runner.cr#L66" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -886,7 +885,7 @@ runner.run <span class="c"># =&gt; returns runner again</span></code></pre>
         
         def <strong>sources</strong> : Array(<a href="../Ameba/Source.html">Source</a>)
 
-        <a class="method-permalink" href="#sources:Array(Source)-instance-method">#</a>
+        <a class="method-permalink" href="#sources%3AArray%28Source%29-instance-method">#</a>
       </div>
       
         <div class="doc">
@@ -897,7 +896,7 @@ runner.run <span class="c"># =&gt; returns runner again</span></code></pre>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/9a91e42b/src/ameba/runner.cr#L18" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/48b15b9b/src/ameba/runner.cr#L18" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -907,14 +906,13 @@ runner.run <span class="c"># =&gt; returns runner again</span></code></pre>
         
         def <strong>success?</strong>
 
-        <a class="method-permalink" href="#success?-instance-method">#</a>
+        <a class="method-permalink" href="#success%3F-instance-method">#</a>
       </div>
       
         <div class="doc">
           
           <p>Indicates whether the last inspection successful or not.
 It returns true if no issues matching severity in sources found, false otherwise.</p>
-
 <pre><code class="language-crystal">runner <span class="o">=</span> <span class="t">Ameba</span><span class="t">::</span><span class="t">Runner</span>.<span class="k">new</span> config
 runner.run
 runner.success? <span class="c"># =&gt; true or false</span></code></pre>
@@ -923,7 +921,7 @@ runner.success? <span class="c"># =&gt; true or false</span></code></pre>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/9a91e42b/src/ameba/runner.cr#L125" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/48b15b9b/src/ameba/runner.cr#L125" target="_blank">View source</a>]
         
       </div>
     </div>

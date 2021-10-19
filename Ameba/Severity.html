@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="generator" content="Crystal Docs 0.36.1">
+<meta name="generator" content="Crystal Docs 1.1.1">
 <meta name="crystal_docs.project_version" content="master">
 <meta name="crystal_docs.project_name" content="ameba">
 
@@ -285,6 +285,11 @@
       <a href="../Ameba/Rule/Lint.html">Lint</a>
       
         <ul>
+  
+  <li class=" " data-id="ameba/Ameba/Rule/Lint/AmbiguousAssignment" data-name="ameba::rule::lint::ambiguousassignment">
+      <a href="../Ameba/Rule/Lint/AmbiguousAssignment.html">AmbiguousAssignment</a>
+      
+    </li>
   
   <li class=" " data-id="ameba/Ameba/Rule/Lint/BadDirective" data-name="ameba::rule::lint::baddirective">
       <a href="../Ameba/Rule/Lint/BadDirective.html">BadDirective</a>
@@ -651,7 +656,7 @@
   </h2>
   
     
-      <a href="https://github.com/crystal-ameba/ameba/blob/9a91e42b/src/ameba/severity.cr#L2" target="_blank">
+      <a href="https://github.com/crystal-ameba/ameba/blob/48b15b9b/src/ameba/severity.cr#L2" target="_blank">
         ameba/severity.cr
       </a>
     
@@ -704,7 +709,7 @@
   <ul class="list-summary">
     
       <li class="entry-summary">
-        <a href="#parse(name:String)-class-method" class="signature"><strong>.parse</strong>(name : String)</a>
+        <a href="#parse%28name%3AString%29-class-method" class="signature"><strong>.parse</strong>(name : String)</a>
         
           <div class="summary"><p>Creates Severity by the name.</p></div>
         
@@ -725,24 +730,24 @@
   <ul class="list-summary">
     
       <li class="entry-summary">
-        <a href="#convention?-instance-method" class="signature"><strong>#convention?</strong></a>
+        <a href="#convention%3F-instance-method" class="signature"><strong>#convention?</strong></a>
         
       </li>
     
       <li class="entry-summary">
-        <a href="#error?-instance-method" class="signature"><strong>#error?</strong></a>
+        <a href="#error%3F-instance-method" class="signature"><strong>#error?</strong></a>
         
       </li>
     
       <li class="entry-summary">
-        <a href="#symbol:Char-instance-method" class="signature"><strong>#symbol</strong> : Char</a>
+        <a href="#symbol%3AChar-instance-method" class="signature"><strong>#symbol</strong> : Char</a>
         
           <div class="summary"><p>Returns a symbol uniquely indicating severity.</p></div>
         
       </li>
     
       <li class="entry-summary">
-        <a href="#warning?-instance-method" class="signature"><strong>#warning?</strong></a>
+        <a href="#warning%3F-instance-method" class="signature"><strong>#warning?</strong></a>
         
       </li>
     
@@ -813,13 +818,12 @@
         
         def self.<strong>parse</strong>(name : String)
 
-        <a class="method-permalink" href="#parse(name:String)-class-method">#</a>
+        <a class="method-permalink" href="#parse%28name%3AString%29-class-method">#</a>
       </div>
       
         <div class="doc">
           
           <p>Creates Severity by the name.</p>
-
 <pre><code class="language-crystal"><span class="t">Severity</span>.parse(<span class="s">&quot;convention&quot;</span>) <span class="c"># =&gt; Severity::Convention</span>
 <span class="t">Severity</span>.parse(<span class="s">&quot;foo-bar&quot;</span>)    <span class="c"># =&gt; Exception: Incorrect severity name</span></code></pre>
         </div>
@@ -827,7 +831,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/9a91e42b/src/ameba/severity.cr#L26" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/48b15b9b/src/ameba/severity.cr#L26" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -849,13 +853,13 @@
         
         def <strong>convention?</strong>
 
-        <a class="method-permalink" href="#convention?-instance-method">#</a>
+        <a class="method-permalink" href="#convention%3F-instance-method">#</a>
       </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/9a91e42b/src/ameba/severity.cr#L5" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/48b15b9b/src/ameba/severity.cr#L5" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -865,13 +869,13 @@
         
         def <strong>error?</strong>
 
-        <a class="method-permalink" href="#error?-instance-method">#</a>
+        <a class="method-permalink" href="#error%3F-instance-method">#</a>
       </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/9a91e42b/src/ameba/severity.cr#L3" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/48b15b9b/src/ameba/severity.cr#L3" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -881,20 +885,19 @@
         
         def <strong>symbol</strong> : Char
 
-        <a class="method-permalink" href="#symbol:Char-instance-method">#</a>
+        <a class="method-permalink" href="#symbol%3AChar-instance-method">#</a>
       </div>
       
         <div class="doc">
           
           <p>Returns a symbol uniquely indicating severity.</p>
-
 <pre><code class="language-crystal"><span class="t">Severity</span><span class="t">::</span><span class="t">Warning</span>.symbol <span class="c"># =&gt; &#39;W&#39;</span></code></pre>
         </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/9a91e42b/src/ameba/severity.cr#L12" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/48b15b9b/src/ameba/severity.cr#L12" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -904,13 +907,13 @@
         
         def <strong>warning?</strong>
 
-        <a class="method-permalink" href="#warning?-instance-method">#</a>
+        <a class="method-permalink" href="#warning%3F-instance-method">#</a>
       </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/9a91e42b/src/ameba/severity.cr#L4" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/48b15b9b/src/ameba/severity.cr#L4" target="_blank">View source</a>]
         
       </div>
     </div>

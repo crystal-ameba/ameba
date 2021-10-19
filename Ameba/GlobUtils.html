@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="generator" content="Crystal Docs 0.36.1">
+<meta name="generator" content="Crystal Docs 1.1.1">
 <meta name="crystal_docs.project_version" content="master">
 <meta name="crystal_docs.project_name" content="ameba">
 
@@ -285,6 +285,11 @@
       <a href="../Ameba/Rule/Lint.html">Lint</a>
       
         <ul>
+  
+  <li class=" " data-id="ameba/Ameba/Rule/Lint/AmbiguousAssignment" data-name="ameba::rule::lint::ambiguousassignment">
+      <a href="../Ameba/Rule/Lint/AmbiguousAssignment.html">AmbiguousAssignment</a>
+      
+    </li>
   
   <li class=" " data-id="ameba/Ameba/Rule/Lint/BadDirective" data-name="ameba::rule::lint::baddirective">
       <a href="../Ameba/Rule/Lint/BadDirective.html">BadDirective</a>
@@ -676,7 +681,7 @@
   </h2>
   
     
-      <a href="https://github.com/crystal-ameba/ameba/blob/9a91e42b/src/ameba/glob_utils.cr#L3" target="_blank">
+      <a href="https://github.com/crystal-ameba/ameba/blob/48b15b9b/src/ameba/glob_utils.cr#L3" target="_blank">
         ameba/glob_utils.cr
       </a>
     
@@ -702,14 +707,14 @@
   <ul class="list-summary">
     
       <li class="entry-summary">
-        <a href="#expand(globs)-instance-method" class="signature"><strong>#expand</strong>(globs)</a>
+        <a href="#expand%28globs%29-instance-method" class="signature"><strong>#expand</strong>(globs)</a>
         
           <div class="summary"><p>Expands globs.</p></div>
         
       </li>
     
       <li class="entry-summary">
-        <a href="#find_files_by_globs(globs)-instance-method" class="signature"><strong>#find_files_by_globs</strong>(globs)</a>
+        <a href="#find_files_by_globs%28globs%29-instance-method" class="signature"><strong>#find_files_by_globs</strong>(globs)</a>
         
           <div class="summary"><p>Returns all files that match specified globs.</p></div>
         
@@ -744,20 +749,19 @@
         
         def <strong>expand</strong>(globs)
 
-        <a class="method-permalink" href="#expand(globs)-instance-method">#</a>
+        <a class="method-permalink" href="#expand%28globs%29-instance-method">#</a>
       </div>
       
         <div class="doc">
           
           <p>Expands globs. Globs can point to files or even directories.</p>
-
 <pre><code class="language-crystal">expand([<span class="s">&quot;spec/*.cr&quot;</span>, <span class="s">&quot;src&quot;</span>]) <span class="c"># =&gt; all files in src folder + first level specs</span></code></pre>
         </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/9a91e42b/src/ameba/glob_utils.cr#L22" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/48b15b9b/src/ameba/glob_utils.cr#L22" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -767,21 +771,20 @@
         
         def <strong>find_files_by_globs</strong>(globs)
 
-        <a class="method-permalink" href="#find_files_by_globs(globs)-instance-method">#</a>
+        <a class="method-permalink" href="#find_files_by_globs%28globs%29-instance-method">#</a>
       </div>
       
         <div class="doc">
           
           <p>Returns all files that match specified globs.
 Globs can have wildcards or be rejected:</p>
-
 <pre><code class="language-crystal">find_files_by_globs([<span class="s">&quot;**/*.cr&quot;</span>, <span class="s">&quot;!lib&quot;</span>])</code></pre>
         </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/9a91e42b/src/ameba/glob_utils.cr#L10" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/48b15b9b/src/ameba/glob_utils.cr#L10" target="_blank">View source</a>]
         
       </div>
     </div>

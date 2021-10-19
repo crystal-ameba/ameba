@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="generator" content="Crystal Docs 0.36.1">
+<meta name="generator" content="Crystal Docs 1.1.1">
 <meta name="crystal_docs.project_version" content="master">
 <meta name="crystal_docs.project_name" content="ameba">
 
@@ -285,6 +285,11 @@
       <a href="../../Ameba/Rule/Lint.html">Lint</a>
       
         <ul>
+  
+  <li class=" " data-id="ameba/Ameba/Rule/Lint/AmbiguousAssignment" data-name="ameba::rule::lint::ambiguousassignment">
+      <a href="../../Ameba/Rule/Lint/AmbiguousAssignment.html">AmbiguousAssignment</a>
+      
+    </li>
   
   <li class=" " data-id="ameba/Ameba/Rule/Lint/BadDirective" data-name="ameba::rule::lint::baddirective">
       <a href="../../Ameba/Rule/Lint/BadDirective.html">BadDirective</a>
@@ -665,7 +670,7 @@ can characterize the source (i.e. require statements, modules etc.)</p>
   </h2>
   
     
-      <a href="https://github.com/crystal-ameba/ameba/blob/9a91e42b/src/ameba/ast/visitors/top_level_nodes_visitor.cr#L4" target="_blank">
+      <a href="https://github.com/crystal-ameba/ameba/blob/48b15b9b/src/ameba/ast/visitors/top_level_nodes_visitor.cr#L4" target="_blank">
         ameba/ast/visitors/top_level_nodes_visitor.cr
       </a>
     
@@ -687,7 +692,7 @@ can characterize the source (i.e. require statements, modules etc.)</p>
   <ul class="list-summary">
     
       <li class="entry-summary">
-        <a href="#new(scope:Crystal::ASTNode)-class-method" class="signature"><strong>.new</strong>(scope : Crystal::ASTNode)</a>
+        <a href="#new%28scope%3ACrystal%3A%3AASTNode%29-class-method" class="signature"><strong>.new</strong>(scope : Crystal::ASTNode)</a>
         
           <div class="summary"><p>Creates a new instance of visitor</p></div>
         
@@ -710,19 +715,19 @@ can characterize the source (i.e. require statements, modules etc.)</p>
   <ul class="list-summary">
     
       <li class="entry-summary">
-        <a href="#require_nodes:Array(Crystal::Require)-instance-method" class="signature"><strong>#require_nodes</strong> : Array(Crystal::Require)</a>
+        <a href="#require_nodes%3AArray%28Crystal%3A%3ARequire%29-instance-method" class="signature"><strong>#require_nodes</strong> : Array(Crystal::Require)</a>
         
       </li>
     
       <li class="entry-summary">
-        <a href="#visit(node:Crystal::Expressions)-instance-method" class="signature"><strong>#visit</strong>(node : Crystal::Expressions)</a>
+        <a href="#visit%28node%3ACrystal%3A%3AExpressions%29-instance-method" class="signature"><strong>#visit</strong>(node : Crystal::Expressions)</a>
         
           <div class="summary"><p>If a top level node is Crystal::Expressions traverse the children.</p></div>
         
       </li>
     
       <li class="entry-summary">
-        <a href="#visit(node:Crystal::ASTNode)-instance-method" class="signature"><strong>#visit</strong>(node : Crystal::ASTNode)</a>
+        <a href="#visit%28node%3ACrystal%3A%3AASTNode%29-instance-method" class="signature"><strong>#visit</strong>(node : Crystal::ASTNode)</a>
         
           <div class="summary"><p>A general visit method for rest of the nodes.</p></div>
         
@@ -783,7 +788,7 @@ can characterize the source (i.e. require statements, modules etc.)</p>
         
         def self.<strong>new</strong>(scope : Crystal::ASTNode)
 
-        <a class="method-permalink" href="#new(scope:Crystal::ASTNode)-class-method">#</a>
+        <a class="method-permalink" href="#new%28scope%3ACrystal%3A%3AASTNode%29-class-method">#</a>
       </div>
       
         <div class="doc">
@@ -794,7 +799,7 @@ can characterize the source (i.e. require statements, modules etc.)</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/9a91e42b/src/ameba/ast/visitors/top_level_nodes_visitor.cr#L8" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/48b15b9b/src/ameba/ast/visitors/top_level_nodes_visitor.cr#L8" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -818,13 +823,13 @@ can characterize the source (i.e. require statements, modules etc.)</p>
         
         def <strong>require_nodes</strong> : Array(Crystal::Require)
 
-        <a class="method-permalink" href="#require_nodes:Array(Crystal::Require)-instance-method">#</a>
+        <a class="method-permalink" href="#require_nodes%3AArray%28Crystal%3A%3ARequire%29-instance-method">#</a>
       </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/9a91e42b/src/ameba/ast/visitors/top_level_nodes_visitor.cr#L5" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/48b15b9b/src/ameba/ast/visitors/top_level_nodes_visitor.cr#L5" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -834,7 +839,7 @@ can characterize the source (i.e. require statements, modules etc.)</p>
         
         def <strong>visit</strong>(node : Crystal::Expressions)
 
-        <a class="method-permalink" href="#visit(node:Crystal::Expressions)-instance-method">#</a>
+        <a class="method-permalink" href="#visit%28node%3ACrystal%3A%3AExpressions%29-instance-method">#</a>
       </div>
       
         <div class="doc">
@@ -845,7 +850,7 @@ can characterize the source (i.e. require statements, modules etc.)</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/9a91e42b/src/ameba/ast/visitors/top_level_nodes_visitor.cr#L18" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/48b15b9b/src/ameba/ast/visitors/top_level_nodes_visitor.cr#L18" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -855,7 +860,7 @@ can characterize the source (i.e. require statements, modules etc.)</p>
         
         def <strong>visit</strong>(node : Crystal::ASTNode)
 
-        <a class="method-permalink" href="#visit(node:Crystal::ASTNode)-instance-method">#</a>
+        <a class="method-permalink" href="#visit%28node%3ACrystal%3A%3AASTNode%29-instance-method">#</a>
       </div>
       
         <div class="doc">
@@ -867,7 +872,7 @@ Returns false meaning all child nodes will not be traversed.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/9a91e42b/src/ameba/ast/visitors/top_level_nodes_visitor.cr#L24" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/48b15b9b/src/ameba/ast/visitors/top_level_nodes_visitor.cr#L24" target="_blank">View source</a>]
         
       </div>
     </div>

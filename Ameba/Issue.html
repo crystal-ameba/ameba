@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="generator" content="Crystal Docs 0.36.1">
+<meta name="generator" content="Crystal Docs 1.1.1">
 <meta name="crystal_docs.project_version" content="master">
 <meta name="crystal_docs.project_name" content="ameba">
 
@@ -285,6 +285,11 @@
       <a href="../Ameba/Rule/Lint.html">Lint</a>
       
         <ul>
+  
+  <li class=" " data-id="ameba/Ameba/Rule/Lint/AmbiguousAssignment" data-name="ameba::rule::lint::ambiguousassignment">
+      <a href="../Ameba/Rule/Lint/AmbiguousAssignment.html">AmbiguousAssignment</a>
+      
+    </li>
   
   <li class=" " data-id="ameba/Ameba/Rule/Lint/BadDirective" data-name="ameba::rule::lint::baddirective">
       <a href="../Ameba/Rule/Lint/BadDirective.html">BadDirective</a>
@@ -664,7 +669,7 @@
   </h2>
   
     
-      <a href="https://github.com/crystal-ameba/ameba/blob/9a91e42b/src/ameba/issue.cr#L3" target="_blank">
+      <a href="https://github.com/crystal-ameba/ameba/blob/48b15b9b/src/ameba/issue.cr#L3" target="_blank">
         ameba/issue.cr
       </a>
     
@@ -686,7 +691,7 @@
   <ul class="list-summary">
     
       <li class="entry-summary">
-        <a href="#new(rule,location,end_location,message,status:Status?=nil)-class-method" class="signature"><strong>.new</strong>(rule, location, end_location, message, status : Status? = <span class="n">nil</span>)</a>
+        <a href="#new%28rule%2Clocation%2Cend_location%2Cmessage%2Cstatus%3AStatus%3F%3Dnil%29-class-method" class="signature"><strong>.new</strong>(rule, location, end_location, message, status : Status? = <span class="n">nil</span>)</a>
         
       </li>
     
@@ -707,62 +712,62 @@
   <ul class="list-summary">
     
       <li class="entry-summary">
-        <a href="#disabled?(*args,**options)-instance-method" class="signature"><strong>#disabled?</strong>(*args, **options)</a>
+        <a href="#disabled%3F%28%2Aargs%2C%2A%2Aoptions%29-instance-method" class="signature"><strong>#disabled?</strong>(*args, **options)</a>
         
       </li>
     
       <li class="entry-summary">
-        <a href="#disabled?(*args,**options,&)-instance-method" class="signature"><strong>#disabled?</strong>(*args, **options, &)</a>
+        <a href="#disabled%3F%28%2Aargs%2C%2A%2Aoptions%2C%26%29-instance-method" class="signature"><strong>#disabled?</strong>(*args, **options, &)</a>
         
       </li>
     
       <li class="entry-summary">
-        <a href="#enabled?(*args,**options)-instance-method" class="signature"><strong>#enabled?</strong>(*args, **options)</a>
+        <a href="#enabled%3F%28%2Aargs%2C%2A%2Aoptions%29-instance-method" class="signature"><strong>#enabled?</strong>(*args, **options)</a>
         
       </li>
     
       <li class="entry-summary">
-        <a href="#enabled?(*args,**options,&)-instance-method" class="signature"><strong>#enabled?</strong>(*args, **options, &)</a>
+        <a href="#enabled%3F%28%2Aargs%2C%2A%2Aoptions%2C%26%29-instance-method" class="signature"><strong>#enabled?</strong>(*args, **options, &)</a>
         
       </li>
     
       <li class="entry-summary">
-        <a href="#end_location:Crystal::Location?-instance-method" class="signature"><strong>#end_location</strong> : Crystal::Location?</a>
+        <a href="#end_location%3ACrystal%3A%3ALocation%3F-instance-method" class="signature"><strong>#end_location</strong> : Crystal::Location?</a>
         
           <div class="summary"><p>End location of the issue.</p></div>
         
       </li>
     
       <li class="entry-summary">
-        <a href="#location:Crystal::Location?-instance-method" class="signature"><strong>#location</strong> : Crystal::Location?</a>
+        <a href="#location%3ACrystal%3A%3ALocation%3F-instance-method" class="signature"><strong>#location</strong> : Crystal::Location?</a>
         
           <div class="summary"><p>Location of the issue.</p></div>
         
       </li>
     
       <li class="entry-summary">
-        <a href="#message:String-instance-method" class="signature"><strong>#message</strong> : String</a>
+        <a href="#message%3AString-instance-method" class="signature"><strong>#message</strong> : String</a>
         
           <div class="summary"><p>Issue message.</p></div>
         
       </li>
     
       <li class="entry-summary">
-        <a href="#rule:Rule::Base-instance-method" class="signature"><strong>#rule</strong> : Rule::Base</a>
+        <a href="#rule%3ARule%3A%3ABase-instance-method" class="signature"><strong>#rule</strong> : Rule::Base</a>
         
           <div class="summary"><p>A rule that triggers this issue.</p></div>
         
       </li>
     
       <li class="entry-summary">
-        <a href="#status:Status-instance-method" class="signature"><strong>#status</strong> : Status</a>
+        <a href="#status%3AStatus-instance-method" class="signature"><strong>#status</strong> : Status</a>
         
           <div class="summary"><p>Issue status.</p></div>
         
       </li>
     
       <li class="entry-summary">
-        <a href="#syntax?-instance-method" class="signature"><strong>#syntax?</strong></a>
+        <a href="#syntax%3F-instance-method" class="signature"><strong>#syntax?</strong></a>
         
       </li>
     
@@ -821,13 +826,13 @@
         
         def self.<strong>new</strong>(rule, location, end_location, message, status : <a href="../Ameba/Issue/Status.html">Status</a>? = <span class="n">nil</span>)
 
-        <a class="method-permalink" href="#new(rule,location,end_location,message,status:Status?=nil)-class-method">#</a>
+        <a class="method-permalink" href="#new%28rule%2Clocation%2Cend_location%2Cmessage%2Cstatus%3AStatus%3F%3Dnil%29-class-method">#</a>
       </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/9a91e42b/src/ameba/issue.cr#L27" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/48b15b9b/src/ameba/issue.cr#L27" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -851,29 +856,29 @@
         
         def <strong>disabled?</strong>(*args, **options)
 
-        <a class="method-permalink" href="#disabled?(*args,**options)-instance-method">#</a>
+        <a class="method-permalink" href="#disabled%3F%28%2Aargs%2C%2A%2Aoptions%29-instance-method">#</a>
       </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/9a91e42b/src/ameba/issue.cr#L24" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/48b15b9b/src/ameba/issue.cr#L24" target="_blank">View source</a>]
         
       </div>
     </div>
   
-    <div class="entry-detail" id="disabled?(*args,**options,&)-instance-method">
+    <div class="entry-detail" id="disabled?(*args,**options,&amp;)-instance-method">
       <div class="signature">
         
         def <strong>disabled?</strong>(*args, **options, &)
 
-        <a class="method-permalink" href="#disabled?(*args,**options,&)-instance-method">#</a>
+        <a class="method-permalink" href="#disabled%3F%28%2Aargs%2C%2A%2Aoptions%2C%26%29-instance-method">#</a>
       </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/9a91e42b/src/ameba/issue.cr#L24" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/48b15b9b/src/ameba/issue.cr#L24" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -883,29 +888,29 @@
         
         def <strong>enabled?</strong>(*args, **options)
 
-        <a class="method-permalink" href="#enabled?(*args,**options)-instance-method">#</a>
+        <a class="method-permalink" href="#enabled%3F%28%2Aargs%2C%2A%2Aoptions%29-instance-method">#</a>
       </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/9a91e42b/src/ameba/issue.cr#L24" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/48b15b9b/src/ameba/issue.cr#L24" target="_blank">View source</a>]
         
       </div>
     </div>
   
-    <div class="entry-detail" id="enabled?(*args,**options,&)-instance-method">
+    <div class="entry-detail" id="enabled?(*args,**options,&amp;)-instance-method">
       <div class="signature">
         
         def <strong>enabled?</strong>(*args, **options, &)
 
-        <a class="method-permalink" href="#enabled?(*args,**options,&)-instance-method">#</a>
+        <a class="method-permalink" href="#enabled%3F%28%2Aargs%2C%2A%2Aoptions%2C%26%29-instance-method">#</a>
       </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/9a91e42b/src/ameba/issue.cr#L24" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/48b15b9b/src/ameba/issue.cr#L24" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -915,7 +920,7 @@
         
         def <strong>end_location</strong> : Crystal::Location?
 
-        <a class="method-permalink" href="#end_location:Crystal::Location?-instance-method">#</a>
+        <a class="method-permalink" href="#end_location%3ACrystal%3A%3ALocation%3F-instance-method">#</a>
       </div>
       
         <div class="doc">
@@ -926,7 +931,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/9a91e42b/src/ameba/issue.cr#L16" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/48b15b9b/src/ameba/issue.cr#L16" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -936,7 +941,7 @@
         
         def <strong>location</strong> : Crystal::Location?
 
-        <a class="method-permalink" href="#location:Crystal::Location?-instance-method">#</a>
+        <a class="method-permalink" href="#location%3ACrystal%3A%3ALocation%3F-instance-method">#</a>
       </div>
       
         <div class="doc">
@@ -947,7 +952,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/9a91e42b/src/ameba/issue.cr#L13" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/48b15b9b/src/ameba/issue.cr#L13" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -957,7 +962,7 @@
         
         def <strong>message</strong> : String
 
-        <a class="method-permalink" href="#message:String-instance-method">#</a>
+        <a class="method-permalink" href="#message%3AString-instance-method">#</a>
       </div>
       
         <div class="doc">
@@ -968,7 +973,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/9a91e42b/src/ameba/issue.cr#L19" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/48b15b9b/src/ameba/issue.cr#L19" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -978,7 +983,7 @@
         
         def <strong>rule</strong> : <a href="../Ameba/Rule/Base.html">Rule::Base</a>
 
-        <a class="method-permalink" href="#rule:Rule::Base-instance-method">#</a>
+        <a class="method-permalink" href="#rule%3ARule%3A%3ABase-instance-method">#</a>
       </div>
       
         <div class="doc">
@@ -989,7 +994,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/9a91e42b/src/ameba/issue.cr#L10" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/48b15b9b/src/ameba/issue.cr#L10" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -999,7 +1004,7 @@
         
         def <strong>status</strong> : <a href="../Ameba/Issue/Status.html">Status</a>
 
-        <a class="method-permalink" href="#status:Status-instance-method">#</a>
+        <a class="method-permalink" href="#status%3AStatus-instance-method">#</a>
       </div>
       
         <div class="doc">
@@ -1010,7 +1015,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/9a91e42b/src/ameba/issue.cr#L22" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/48b15b9b/src/ameba/issue.cr#L22" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1020,13 +1025,13 @@
         
         def <strong>syntax?</strong>
 
-        <a class="method-permalink" href="#syntax?-instance-method">#</a>
+        <a class="method-permalink" href="#syntax%3F-instance-method">#</a>
       </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/9a91e42b/src/ameba/issue.cr#L31" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/48b15b9b/src/ameba/issue.cr#L31" target="_blank">View source</a>]
         
       </div>
     </div>

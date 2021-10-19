@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="generator" content="Crystal Docs 0.36.1">
+<meta name="generator" content="Crystal Docs 1.1.1">
 <meta name="crystal_docs.project_version" content="master">
 <meta name="crystal_docs.project_name" content="ameba">
 
@@ -285,6 +285,11 @@
       <a href="../../Ameba/Rule/Lint.html">Lint</a>
       
         <ul>
+  
+  <li class=" " data-id="ameba/Ameba/Rule/Lint/AmbiguousAssignment" data-name="ameba::rule::lint::ambiguousassignment">
+      <a href="../../Ameba/Rule/Lint/AmbiguousAssignment.html">AmbiguousAssignment</a>
+      
+    </li>
   
   <li class=" " data-id="ameba/Ameba/Rule/Lint/BadDirective" data-name="ameba::rule::lint::baddirective">
       <a href="../../Ameba/Rule/Lint/BadDirective.html">BadDirective</a>
@@ -666,7 +671,7 @@ the variable from its reference.</p>
   </h2>
   
     
-      <a href="https://github.com/crystal-ameba/ameba/blob/9a91e42b/src/ameba/ast/variabling/reference.cr#L7" target="_blank">
+      <a href="https://github.com/crystal-ameba/ameba/blob/48b15b9b/src/ameba/ast/variabling/reference.cr#L7" target="_blank">
         ameba/ast/variabling/reference.cr
       </a>
     
@@ -692,12 +697,12 @@ the variable from its reference.</p>
   <ul class="list-summary">
     
       <li class="entry-summary">
-        <a href="#explicit=(explicit)-instance-method" class="signature"><strong>#explicit=</strong>(explicit)</a>
+        <a href="#explicit%3D%28explicit%29-instance-method" class="signature"><strong>#explicit=</strong>(explicit)</a>
         
       </li>
     
       <li class="entry-summary">
-        <a href="#explicit?:Bool-instance-method" class="signature"><strong>#explicit?</strong> : Bool</a>
+        <a href="#explicit%3F%3ABool-instance-method" class="signature"><strong>#explicit?</strong> : Bool</a>
         
       </li>
     
@@ -714,102 +719,102 @@ the variable from its reference.</p>
   <h3>Instance methods inherited from class <code><a href="../../Ameba/AST/Variable.html">Ameba::AST::Variable</a></code></h3>
   
   
-    <a href="../../Ameba/AST/Variable.html#assign(node,scope)-instance-method" class="tooltip">
+    <a href="../../Ameba/AST/Variable.html#assign%28node%2Cscope%29-instance-method" class="tooltip">
       <span>assign(node, scope)</span>
     assign</a>, 
     
   
-    <a href="../../Ameba/AST/Variable.html#assign_before_reference:Crystal::ASTNode?-instance-method" class="tooltip">
+    <a href="../../Ameba/AST/Variable.html#assign_before_reference%3ACrystal%3A%3AASTNode%3F-instance-method" class="tooltip">
       <span>assign_before_reference : Crystal::ASTNode?</span>
     assign_before_reference</a>, 
     
   
-    <a href="../../Ameba/AST/Variable.html#assignments:Array(Ameba::AST::Assignment)-instance-method" class="tooltip">
+    <a href="../../Ameba/AST/Variable.html#assignments%3AArray%28Ameba%3A%3AAST%3A%3AAssignment%29-instance-method" class="tooltip">
       <span>assignments : Array(Ameba::AST::Assignment)</span>
     assignments</a>, 
     
   
-    <a href="../../Ameba/AST/Variable.html#captured_by_block?(scope=@scope)-instance-method" class="tooltip">
+    <a href="../../Ameba/AST/Variable.html#captured_by_block%3F%28scope%3D%40scope%29-instance-method" class="tooltip">
       <span>captured_by_block?(scope = @scope)</span>
     captured_by_block?</a>, 
     
   
-    <a href="../../Ameba/AST/Variable.html#declared_before?(node)-instance-method" class="tooltip">
+    <a href="../../Ameba/AST/Variable.html#declared_before%3F%28node%29-instance-method" class="tooltip">
       <span>declared_before?(node)</span>
     declared_before?</a>, 
     
   
-    <a href="../../Ameba/AST/Variable.html#end_location(*args,**options)-instance-method" class="tooltip">
+    <a href="../../Ameba/AST/Variable.html#end_location%28%2Aargs%2C%2A%2Aoptions%29-instance-method" class="tooltip">
       <span>end_location(*args, **options)<br/>end_location(*args, **options, &)</span>
     end_location</a>, 
     
   
-    <a href="../../Ameba/AST/Variable.html#eql?(node)-instance-method" class="tooltip">
+    <a href="../../Ameba/AST/Variable.html#eql%3F%28node%29-instance-method" class="tooltip">
       <span>eql?(node)</span>
     eql?</a>, 
     
   
-    <a href="../../Ameba/AST/Variable.html#ignored?-instance-method" class="tooltip">
+    <a href="../../Ameba/AST/Variable.html#ignored%3F-instance-method" class="tooltip">
       <span>ignored?</span>
     ignored?</a>, 
     
   
-    <a href="../../Ameba/AST/Variable.html#location(*args,**options)-instance-method" class="tooltip">
+    <a href="../../Ameba/AST/Variable.html#location%28%2Aargs%2C%2A%2Aoptions%29-instance-method" class="tooltip">
       <span>location(*args, **options)<br/>location(*args, **options, &)</span>
     location</a>, 
     
   
-    <a href="../../Ameba/AST/Variable.html#name(*args,**options)-instance-method" class="tooltip">
+    <a href="../../Ameba/AST/Variable.html#name%28%2Aargs%2C%2A%2Aoptions%29-instance-method" class="tooltip">
       <span>name(*args, **options)<br/>name(*args, **options, &)</span>
     name</a>, 
     
   
-    <a href="../../Ameba/AST/Variable.html#node:Crystal::Var-instance-method" class="tooltip">
+    <a href="../../Ameba/AST/Variable.html#node%3ACrystal%3A%3AVar-instance-method" class="tooltip">
       <span>node : Crystal::Var</span>
     node</a>, 
     
   
-    <a href="../../Ameba/AST/Variable.html#reference(node:Crystal::Var,scope:Scope)-instance-method" class="tooltip">
+    <a href="../../Ameba/AST/Variable.html#reference%28node%3ACrystal%3A%3AVar%2Cscope%3AScope%29-instance-method" class="tooltip">
       <span>reference(node : Crystal::Var, scope : Scope)</span>
     reference</a>, 
     
   
-    <a href="../../Ameba/AST/Variable.html#reference_assignments!-instance-method" class="tooltip">
+    <a href="../../Ameba/AST/Variable.html#reference_assignments%21-instance-method" class="tooltip">
       <span>reference_assignments!</span>
     reference_assignments!</a>, 
     
   
-    <a href="../../Ameba/AST/Variable.html#referenced?-instance-method" class="tooltip">
+    <a href="../../Ameba/AST/Variable.html#referenced%3F-instance-method" class="tooltip">
       <span>referenced?</span>
     referenced?</a>, 
     
   
-    <a href="../../Ameba/AST/Variable.html#references:Array(Ameba::AST::Reference)-instance-method" class="tooltip">
+    <a href="../../Ameba/AST/Variable.html#references%3AArray%28Ameba%3A%3AAST%3A%3AReference%29-instance-method" class="tooltip">
       <span>references : Array(Ameba::AST::Reference)</span>
     references</a>, 
     
   
-    <a href="../../Ameba/AST/Variable.html#scope:Scope-instance-method" class="tooltip">
+    <a href="../../Ameba/AST/Variable.html#scope%3AScope-instance-method" class="tooltip">
       <span>scope : Scope</span>
     scope</a>, 
     
   
-    <a href="../../Ameba/AST/Variable.html#special?-instance-method" class="tooltip">
+    <a href="../../Ameba/AST/Variable.html#special%3F-instance-method" class="tooltip">
       <span>special?</span>
     special?</a>, 
     
   
-    <a href="../../Ameba/AST/Variable.html#target_of?(assign)-instance-method" class="tooltip">
+    <a href="../../Ameba/AST/Variable.html#target_of%3F%28assign%29-instance-method" class="tooltip">
       <span>target_of?(assign)</span>
     target_of?</a>, 
     
   
-    <a href="../../Ameba/AST/Variable.html#to_s(*args,**options)-instance-method" class="tooltip">
+    <a href="../../Ameba/AST/Variable.html#to_s%28%2Aargs%2C%2A%2Aoptions%29-instance-method" class="tooltip">
       <span>to_s(*args, **options)<br/>to_s(*args, **options, &)</span>
     to_s</a>, 
     
   
-    <a href="../../Ameba/AST/Variable.html#used_in_macro?(scope=@scope)-instance-method" class="tooltip">
+    <a href="../../Ameba/AST/Variable.html#used_in_macro%3F%28scope%3D%40scope%29-instance-method" class="tooltip">
       <span>used_in_macro?(scope = @scope)</span>
     used_in_macro?</a>
     
@@ -821,7 +826,7 @@ the variable from its reference.</p>
   <h3>Constructor methods inherited from class <code><a href="../../Ameba/AST/Variable.html">Ameba::AST::Variable</a></code></h3>
   
   
-    <a href="../../Ameba/AST/Variable.html#new(node,scope)-class-method" class="tooltip">
+    <a href="../../Ameba/AST/Variable.html#new%28node%2Cscope%29-class-method" class="tooltip">
       <span>new(node, scope)</span>
     new</a>
     
@@ -873,13 +878,13 @@ the variable from its reference.</p>
         
         def <strong>explicit=</strong>(explicit)
 
-        <a class="method-permalink" href="#explicit=(explicit)-instance-method">#</a>
+        <a class="method-permalink" href="#explicit%3D%28explicit%29-instance-method">#</a>
       </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/9a91e42b/src/ameba/ast/variabling/reference.cr#L8" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/48b15b9b/src/ameba/ast/variabling/reference.cr#L8" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -889,13 +894,13 @@ the variable from its reference.</p>
         
         def <strong>explicit?</strong> : Bool
 
-        <a class="method-permalink" href="#explicit?:Bool-instance-method">#</a>
+        <a class="method-permalink" href="#explicit%3F%3ABool-instance-method">#</a>
       </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/9a91e42b/src/ameba/ast/variabling/reference.cr#L8" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/48b15b9b/src/ameba/ast/variabling/reference.cr#L8" target="_blank">View source</a>]
         
       </div>
     </div>

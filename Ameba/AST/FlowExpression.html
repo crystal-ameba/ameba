@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="generator" content="Crystal Docs 0.36.1">
+<meta name="generator" content="Crystal Docs 1.1.1">
 <meta name="crystal_docs.project_version" content="master">
 <meta name="crystal_docs.project_name" content="ameba">
 
@@ -285,6 +285,11 @@
       <a href="../../Ameba/Rule/Lint.html">Lint</a>
       
         <ul>
+  
+  <li class=" " data-id="ameba/Ameba/Rule/Lint/AmbiguousAssignment" data-name="ameba::rule::lint::ambiguousassignment">
+      <a href="../../Ameba/Rule/Lint/AmbiguousAssignment.html">AmbiguousAssignment</a>
+      
+    </li>
   
   <li class=" " data-id="ameba/Ameba/Rule/Lint/BadDirective" data-name="ameba::rule::lint::baddirective">
       <a href="../../Ameba/Rule/Lint/BadDirective.html">BadDirective</a>
@@ -641,13 +646,11 @@
 
   <p>Represents a flow expression in Crystal code.
 For example,</p>
-
 <pre><code class="language-crystal"><span class="k">def</span> <span class="m">foobar</span>
   a <span class="o">=</span> <span class="n">3</span>
   <span class="k">return</span> <span class="n">42</span> <span class="c"># =&gt; flow expression</span>
   a <span class="o">+</span> <span class="n">1</span>
 <span class="k">end</span></code></pre>
-
 <p>Flow expression contains an actual node of a control expression and
 a parent node, which allows easily search through the related statement
 (i.e. find unreachable code)</p>
@@ -689,7 +692,7 @@ a parent node, which allows easily search through the related statement
   </h2>
   
     
-      <a href="https://github.com/crystal-ameba/ameba/blob/9a91e42b/src/ameba/ast/flow_expression.cr#L18" target="_blank">
+      <a href="https://github.com/crystal-ameba/ameba/blob/48b15b9b/src/ameba/ast/flow_expression.cr#L18" target="_blank">
         ameba/ast/flow_expression.cr
       </a>
     
@@ -711,7 +714,7 @@ a parent node, which allows easily search through the related statement
   <ul class="list-summary">
     
       <li class="entry-summary">
-        <a href="#new(node,in_loop)-class-method" class="signature"><strong>.new</strong>(node, in_loop)</a>
+        <a href="#new%28node%2Cin_loop%29-class-method" class="signature"><strong>.new</strong>(node, in_loop)</a>
         
           <div class="summary"><p>Creates a new flow expression.</p></div>
         
@@ -734,46 +737,46 @@ a parent node, which allows easily search through the related statement
   <ul class="list-summary">
     
       <li class="entry-summary">
-        <a href="#end_location(*args,**options)-instance-method" class="signature"><strong>#end_location</strong>(*args, **options)</a>
+        <a href="#end_location%28%2Aargs%2C%2A%2Aoptions%29-instance-method" class="signature"><strong>#end_location</strong>(*args, **options)</a>
         
       </li>
     
       <li class="entry-summary">
-        <a href="#end_location(*args,**options,&)-instance-method" class="signature"><strong>#end_location</strong>(*args, **options, &)</a>
+        <a href="#end_location%28%2Aargs%2C%2A%2Aoptions%2C%26%29-instance-method" class="signature"><strong>#end_location</strong>(*args, **options, &)</a>
         
       </li>
     
       <li class="entry-summary">
-        <a href="#in_loop?:Bool-instance-method" class="signature"><strong>#in_loop?</strong> : Bool</a>
+        <a href="#in_loop%3F%3ABool-instance-method" class="signature"><strong>#in_loop?</strong> : Bool</a>
         
           <div class="summary"><p>Is true only if some of the nodes parents is a loop.</p></div>
         
       </li>
     
       <li class="entry-summary">
-        <a href="#location(*args,**options)-instance-method" class="signature"><strong>#location</strong>(*args, **options)</a>
+        <a href="#location%28%2Aargs%2C%2A%2Aoptions%29-instance-method" class="signature"><strong>#location</strong>(*args, **options)</a>
         
       </li>
     
       <li class="entry-summary">
-        <a href="#location(*args,**options,&)-instance-method" class="signature"><strong>#location</strong>(*args, **options, &)</a>
+        <a href="#location%28%2Aargs%2C%2A%2Aoptions%2C%26%29-instance-method" class="signature"><strong>#location</strong>(*args, **options, &)</a>
         
       </li>
     
       <li class="entry-summary">
-        <a href="#node:Crystal::ASTNode-instance-method" class="signature"><strong>#node</strong> : Crystal::ASTNode</a>
+        <a href="#node%3ACrystal%3A%3AASTNode-instance-method" class="signature"><strong>#node</strong> : Crystal::ASTNode</a>
         
           <div class="summary"><p>The actual node of the flow expression.</p></div>
         
       </li>
     
       <li class="entry-summary">
-        <a href="#to_s(*args,**options)-instance-method" class="signature"><strong>#to_s</strong>(*args, **options)</a>
+        <a href="#to_s%28%2Aargs%2C%2A%2Aoptions%29-instance-method" class="signature"><strong>#to_s</strong>(*args, **options)</a>
         
       </li>
     
       <li class="entry-summary">
-        <a href="#to_s(*args,**options,&)-instance-method" class="signature"><strong>#to_s</strong>(*args, **options, &)</a>
+        <a href="#to_s%28%2Aargs%2C%2A%2Aoptions%2C%26%29-instance-method" class="signature"><strong>#to_s</strong>(*args, **options, &)</a>
         
       </li>
     
@@ -797,44 +800,49 @@ a parent node, which allows easily search through the related statement
   <h3>Instance methods inherited from module <code><a href="../../Ameba/AST/Util.html">Ameba::AST::Util</a></code></h3>
   
   
-    <a href="../../Ameba/AST/Util.html#abort?(node)-instance-method" class="tooltip">
+    <a href="../../Ameba/AST/Util.html#abort%3F%28node%29-instance-method" class="tooltip">
       <span>abort?(node)</span>
     abort?</a>, 
     
   
-    <a href="../../Ameba/AST/Util.html#exit?(node)-instance-method" class="tooltip">
+    <a href="../../Ameba/AST/Util.html#exit%3F%28node%29-instance-method" class="tooltip">
       <span>exit?(node)</span>
     exit?</a>, 
     
   
-    <a href="../../Ameba/AST/Util.html#flow_command?(node,in_loop)-instance-method" class="tooltip">
+    <a href="../../Ameba/AST/Util.html#flow_command%3F%28node%2Cin_loop%29-instance-method" class="tooltip">
       <span>flow_command?(node, in_loop)</span>
     flow_command?</a>, 
     
   
-    <a href="../../Ameba/AST/Util.html#flow_expression?(node,in_loop=false)-instance-method" class="tooltip">
+    <a href="../../Ameba/AST/Util.html#flow_expression%3F%28node%2Cin_loop%3Dfalse%29-instance-method" class="tooltip">
       <span>flow_expression?(node, in_loop = <span class="n">false</span>)</span>
     flow_expression?</a>, 
     
   
-    <a href="../../Ameba/AST/Util.html#literal?(node)-instance-method" class="tooltip">
+    <a href="../../Ameba/AST/Util.html#literal%3F%28node%29-instance-method" class="tooltip">
       <span>literal?(node)</span>
     literal?</a>, 
     
   
-    <a href="../../Ameba/AST/Util.html#loop?(node)-instance-method" class="tooltip">
+    <a href="../../Ameba/AST/Util.html#loop%3F%28node%29-instance-method" class="tooltip">
       <span>loop?(node)</span>
     loop?</a>, 
     
   
-    <a href="../../Ameba/AST/Util.html#node_source(node,code_lines)-instance-method" class="tooltip">
+    <a href="../../Ameba/AST/Util.html#node_source%28node%2Ccode_lines%29-instance-method" class="tooltip">
       <span>node_source(node, code_lines)</span>
     node_source</a>, 
     
   
-    <a href="../../Ameba/AST/Util.html#raise?(node)-instance-method" class="tooltip">
+    <a href="../../Ameba/AST/Util.html#raise%3F%28node%29-instance-method" class="tooltip">
       <span>raise?(node)</span>
-    raise?</a>
+    raise?</a>, 
+    
+  
+    <a href="../../Ameba/AST/Util.html#source_between%28loc%2Cend_loc%2Ccode_lines%29%3AString%3F-instance-method" class="tooltip">
+      <span>source_between(loc, end_loc, code_lines) : String?</span>
+    source_between</a>
     
   
 
@@ -883,20 +891,19 @@ a parent node, which allows easily search through the related statement
         
         def self.<strong>new</strong>(node, in_loop)
 
-        <a class="method-permalink" href="#new(node,in_loop)-class-method">#</a>
+        <a class="method-permalink" href="#new%28node%2Cin_loop%29-class-method">#</a>
       </div>
       
         <div class="doc">
           
           <p>Creates a new flow expression.</p>
-
 <pre><code class="language-crystal"><span class="t">FlowExpression</span>.<span class="k">new</span>(node, parent_node)</code></pre>
         </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/9a91e42b/src/ameba/ast/flow_expression.cr#L36" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/48b15b9b/src/ameba/ast/flow_expression.cr#L36" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -920,29 +927,29 @@ a parent node, which allows easily search through the related statement
         
         def <strong>end_location</strong>(*args, **options)
 
-        <a class="method-permalink" href="#end_location(*args,**options)-instance-method">#</a>
+        <a class="method-permalink" href="#end_location%28%2Aargs%2C%2A%2Aoptions%29-instance-method">#</a>
       </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/9a91e42b/src/ameba/ast/flow_expression.cr#L29" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/48b15b9b/src/ameba/ast/flow_expression.cr#L29" target="_blank">View source</a>]
         
       </div>
     </div>
   
-    <div class="entry-detail" id="end_location(*args,**options,&)-instance-method">
+    <div class="entry-detail" id="end_location(*args,**options,&amp;)-instance-method">
       <div class="signature">
         
         def <strong>end_location</strong>(*args, **options, &)
 
-        <a class="method-permalink" href="#end_location(*args,**options,&)-instance-method">#</a>
+        <a class="method-permalink" href="#end_location%28%2Aargs%2C%2A%2Aoptions%2C%26%29-instance-method">#</a>
       </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/9a91e42b/src/ameba/ast/flow_expression.cr#L29" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/48b15b9b/src/ameba/ast/flow_expression.cr#L29" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -952,7 +959,7 @@ a parent node, which allows easily search through the related statement
         
         def <strong>in_loop?</strong> : Bool
 
-        <a class="method-permalink" href="#in_loop?:Bool-instance-method">#</a>
+        <a class="method-permalink" href="#in_loop%3F%3ABool-instance-method">#</a>
       </div>
       
         <div class="doc">
@@ -963,7 +970,7 @@ a parent node, which allows easily search through the related statement
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/9a91e42b/src/ameba/ast/flow_expression.cr#L22" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/48b15b9b/src/ameba/ast/flow_expression.cr#L22" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -973,29 +980,29 @@ a parent node, which allows easily search through the related statement
         
         def <strong>location</strong>(*args, **options)
 
-        <a class="method-permalink" href="#location(*args,**options)-instance-method">#</a>
+        <a class="method-permalink" href="#location%28%2Aargs%2C%2A%2Aoptions%29-instance-method">#</a>
       </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/9a91e42b/src/ameba/ast/flow_expression.cr#L28" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/48b15b9b/src/ameba/ast/flow_expression.cr#L28" target="_blank">View source</a>]
         
       </div>
     </div>
   
-    <div class="entry-detail" id="location(*args,**options,&)-instance-method">
+    <div class="entry-detail" id="location(*args,**options,&amp;)-instance-method">
       <div class="signature">
         
         def <strong>location</strong>(*args, **options, &)
 
-        <a class="method-permalink" href="#location(*args,**options,&)-instance-method">#</a>
+        <a class="method-permalink" href="#location%28%2Aargs%2C%2A%2Aoptions%2C%26%29-instance-method">#</a>
       </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/9a91e42b/src/ameba/ast/flow_expression.cr#L28" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/48b15b9b/src/ameba/ast/flow_expression.cr#L28" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1005,7 +1012,7 @@ a parent node, which allows easily search through the related statement
         
         def <strong>node</strong> : Crystal::ASTNode
 
-        <a class="method-permalink" href="#node:Crystal::ASTNode-instance-method">#</a>
+        <a class="method-permalink" href="#node%3ACrystal%3A%3AASTNode-instance-method">#</a>
       </div>
       
         <div class="doc">
@@ -1016,7 +1023,7 @@ a parent node, which allows easily search through the related statement
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/9a91e42b/src/ameba/ast/flow_expression.cr#L25" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/48b15b9b/src/ameba/ast/flow_expression.cr#L25" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1026,29 +1033,29 @@ a parent node, which allows easily search through the related statement
         
         def <strong>to_s</strong>(*args, **options)
 
-        <a class="method-permalink" href="#to_s(*args,**options)-instance-method">#</a>
+        <a class="method-permalink" href="#to_s%28%2Aargs%2C%2A%2Aoptions%29-instance-method">#</a>
       </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/9a91e42b/src/ameba/ast/flow_expression.cr#L27" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/48b15b9b/src/ameba/ast/flow_expression.cr#L27" target="_blank">View source</a>]
         
       </div>
     </div>
   
-    <div class="entry-detail" id="to_s(*args,**options,&)-instance-method">
+    <div class="entry-detail" id="to_s(*args,**options,&amp;)-instance-method">
       <div class="signature">
         
         def <strong>to_s</strong>(*args, **options, &)
 
-        <a class="method-permalink" href="#to_s(*args,**options,&)-instance-method">#</a>
+        <a class="method-permalink" href="#to_s%28%2Aargs%2C%2A%2Aoptions%2C%26%29-instance-method">#</a>
       </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/9a91e42b/src/ameba/ast/flow_expression.cr#L27" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/48b15b9b/src/ameba/ast/flow_expression.cr#L27" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1065,7 +1072,6 @@ a parent node, which allows easily search through the related statement
           
           <p>Returns nodes which can't be reached because of a flow command inside.
 For example:</p>
-
 <pre><code class="language-crystal"><span class="k">def</span> <span class="m">foobar</span>
   a <span class="o">=</span> <span class="n">1</span>
   <span class="k">return</span> <span class="n">42</span>
@@ -1077,7 +1083,7 @@ For example:</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/9a91e42b/src/ameba/ast/flow_expression.cr#L50" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/48b15b9b/src/ameba/ast/flow_expression.cr#L50" target="_blank">View source</a>]
         
       </div>
     </div>

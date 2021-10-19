@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="generator" content="Crystal Docs 0.36.1">
+<meta name="generator" content="Crystal Docs 1.1.1">
 <meta name="crystal_docs.project_version" content="master">
 <meta name="crystal_docs.project_name" content="ameba">
 
@@ -285,6 +285,11 @@
       <a href="../../Ameba/Rule/Lint.html">Lint</a>
       
         <ul>
+  
+  <li class=" " data-id="ameba/Ameba/Rule/Lint/AmbiguousAssignment" data-name="ameba::rule::lint::ambiguousassignment">
+      <a href="../../Ameba/Rule/Lint/AmbiguousAssignment.html">AmbiguousAssignment</a>
+      
+    </li>
   
   <li class=" " data-id="ameba/Ameba/Rule/Lint/BadDirective" data-name="ameba::rule::lint::baddirective">
       <a href="../../Ameba/Rule/Lint/BadDirective.html">BadDirective</a>
@@ -640,9 +645,7 @@
   </h2>
 
   <p>A formatter that produces the result in a json format.</p>
-
 <p>Example:</p>
-
 <pre><code class="language-crystal">{
   <span class="s">&quot;metadata&quot;</span>: {
     <span class="s">&quot;ameba_version&quot;</span>:   <span class="s">&quot;x.x.x&quot;</span>,
@@ -722,7 +725,7 @@
   </h2>
   
     
-      <a href="https://github.com/crystal-ameba/ameba/blob/9a91e42b/src/ameba/formatter/json_formatter.cr#L66" target="_blank">
+      <a href="https://github.com/crystal-ameba/ameba/blob/48b15b9b/src/ameba/formatter/json_formatter.cr#L66" target="_blank">
         ameba/formatter/json_formatter.cr
       </a>
     
@@ -744,7 +747,7 @@
   <ul class="list-summary">
     
       <li class="entry-summary">
-        <a href="#new(output=STDOUT)-class-method" class="signature"><strong>.new</strong>(output = <span class="t">STDOUT</span>)</a>
+        <a href="#new%28output%3DSTDOUT%29-class-method" class="signature"><strong>.new</strong>(output = <span class="t">STDOUT</span>)</a>
         
       </li>
     
@@ -765,21 +768,21 @@
   <ul class="list-summary">
     
       <li class="entry-summary">
-        <a href="#finished(sources)-instance-method" class="signature"><strong>#finished</strong>(sources)</a>
+        <a href="#finished%28sources%29-instance-method" class="signature"><strong>#finished</strong>(sources)</a>
         
           <div class="summary"><p>Callback that indicates when inspection is finished.</p></div>
         
       </li>
     
       <li class="entry-summary">
-        <a href="#source_finished(source:Source)-instance-method" class="signature"><strong>#source_finished</strong>(source : Source)</a>
+        <a href="#source_finished%28source%3ASource%29-instance-method" class="signature"><strong>#source_finished</strong>(source : Source)</a>
         
           <div class="summary"><p>Callback that indicates when source inspection is finished.</p></div>
         
       </li>
     
       <li class="entry-summary">
-        <a href="#started(sources)-instance-method" class="signature"><strong>#started</strong>(sources)</a>
+        <a href="#started%28sources%29-instance-method" class="signature"><strong>#started</strong>(sources)</a>
         
           <div class="summary"><p>Callback that indicates when inspecting is started.</p></div>
         
@@ -798,32 +801,32 @@
   <h3>Instance methods inherited from class <code><a href="../../Ameba/Formatter/BaseFormatter.html">Ameba::Formatter::BaseFormatter</a></code></h3>
   
   
-    <a href="../../Ameba/Formatter/BaseFormatter.html#config:Hash(Symbol,Bool%7CString)-instance-method" class="tooltip">
+    <a href="../../Ameba/Formatter/BaseFormatter.html#config%3AHash%28Symbol%2CBool%7CString%29-instance-method" class="tooltip">
       <span>config : Hash(Symbol, Bool | String)</span>
     config</a>, 
     
   
-    <a href="../../Ameba/Formatter/BaseFormatter.html#finished(sources)-instance-method" class="tooltip">
+    <a href="../../Ameba/Formatter/BaseFormatter.html#finished%28sources%29-instance-method" class="tooltip">
       <span>finished(sources)</span>
     finished</a>, 
     
   
-    <a href="../../Ameba/Formatter/BaseFormatter.html#output:IO::FileDescriptor%7CIO::Memory-instance-method" class="tooltip">
+    <a href="../../Ameba/Formatter/BaseFormatter.html#output%3AIO%3A%3AFileDescriptor%7CIO%3A%3AMemory-instance-method" class="tooltip">
       <span>output : IO::FileDescriptor | IO::Memory</span>
     output</a>, 
     
   
-    <a href="../../Ameba/Formatter/BaseFormatter.html#source_finished(source:Source)-instance-method" class="tooltip">
+    <a href="../../Ameba/Formatter/BaseFormatter.html#source_finished%28source%3ASource%29-instance-method" class="tooltip">
       <span>source_finished(source : Source)</span>
     source_finished</a>, 
     
   
-    <a href="../../Ameba/Formatter/BaseFormatter.html#source_started(source:Source)-instance-method" class="tooltip">
+    <a href="../../Ameba/Formatter/BaseFormatter.html#source_started%28source%3ASource%29-instance-method" class="tooltip">
       <span>source_started(source : Source)</span>
     source_started</a>, 
     
   
-    <a href="../../Ameba/Formatter/BaseFormatter.html#started(sources)-instance-method" class="tooltip">
+    <a href="../../Ameba/Formatter/BaseFormatter.html#started%28sources%29-instance-method" class="tooltip">
       <span>started(sources)</span>
     started</a>
     
@@ -835,7 +838,7 @@
   <h3>Constructor methods inherited from class <code><a href="../../Ameba/Formatter/BaseFormatter.html">Ameba::Formatter::BaseFormatter</a></code></h3>
   
   
-    <a href="../../Ameba/Formatter/BaseFormatter.html#new(output=STDOUT)-class-method" class="tooltip">
+    <a href="../../Ameba/Formatter/BaseFormatter.html#new%28output%3DSTDOUT%29-class-method" class="tooltip">
       <span>new(output = <span class="t">STDOUT</span>)</span>
     new</a>
     
@@ -883,13 +886,13 @@
         
         def self.<strong>new</strong>(output = <span class="t">STDOUT</span>)
 
-        <a class="method-permalink" href="#new(output=STDOUT)-class-method">#</a>
+        <a class="method-permalink" href="#new%28output%3DSTDOUT%29-class-method">#</a>
       </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/9a91e42b/src/ameba/formatter/json_formatter.cr#L67" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/48b15b9b/src/ameba/formatter/json_formatter.cr#L67" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -913,7 +916,7 @@
         
         def <strong>finished</strong>(sources)
 
-        <a class="method-permalink" href="#finished(sources)-instance-method">#</a>
+        <a class="method-permalink" href="#finished%28sources%29-instance-method">#</a>
       </div>
       
         <div class="doc">
@@ -929,7 +932,7 @@ A list of inspected sources is passed as an argument.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/9a91e42b/src/ameba/formatter/json_formatter.cr#L87" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/48b15b9b/src/ameba/formatter/json_formatter.cr#L87" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -939,7 +942,7 @@ A list of inspected sources is passed as an argument.</p>
         
         def <strong>source_finished</strong>(source : <a href="../../Ameba/Source.html">Source</a>)
 
-        <a class="method-permalink" href="#source_finished(source:Source)-instance-method">#</a>
+        <a class="method-permalink" href="#source_finished%28source%3ASource%29-instance-method">#</a>
       </div>
       
         <div class="doc">
@@ -955,7 +958,7 @@ A corresponding source is passed as an argument.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/9a91e42b/src/ameba/formatter/json_formatter.cr#L75" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/48b15b9b/src/ameba/formatter/json_formatter.cr#L75" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -965,7 +968,7 @@ A corresponding source is passed as an argument.</p>
         
         def <strong>started</strong>(sources)
 
-        <a class="method-permalink" href="#started(sources)-instance-method">#</a>
+        <a class="method-permalink" href="#started%28sources%29-instance-method">#</a>
       </div>
       
         <div class="doc">
@@ -981,7 +984,7 @@ A list of sources to inspect is passed as an argument.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/9a91e42b/src/ameba/formatter/json_formatter.cr#L71" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/48b15b9b/src/ameba/formatter/json_formatter.cr#L71" target="_blank">View source</a>]
         
       </div>
     </div>

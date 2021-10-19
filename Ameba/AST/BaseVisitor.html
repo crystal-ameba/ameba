@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="generator" content="Crystal Docs 0.36.1">
+<meta name="generator" content="Crystal Docs 1.1.1">
 <meta name="crystal_docs.project_version" content="master">
 <meta name="crystal_docs.project_name" content="ameba">
 
@@ -285,6 +285,11 @@
       <a href="../../Ameba/Rule/Lint.html">Lint</a>
       
         <ul>
+  
+  <li class=" " data-id="ameba/Ameba/Rule/Lint/AmbiguousAssignment" data-name="ameba::rule::lint::ambiguousassignment">
+      <a href="../../Ameba/Rule/Lint/AmbiguousAssignment.html">AmbiguousAssignment</a>
+      
+    </li>
   
   <li class=" " data-id="ameba/Ameba/Rule/Lint/BadDirective" data-name="ameba::rule::lint::baddirective">
       <a href="../../Ameba/Rule/Lint/BadDirective.html">BadDirective</a>
@@ -682,7 +687,7 @@
   </h2>
   
     
-      <a href="https://github.com/crystal-ameba/ameba/blob/9a91e42b/src/ameba/ast/visitors/base_visitor.cr#L6" target="_blank">
+      <a href="https://github.com/crystal-ameba/ameba/blob/48b15b9b/src/ameba/ast/visitors/base_visitor.cr#L6" target="_blank">
         ameba/ast/visitors/base_visitor.cr
       </a>
     
@@ -704,7 +709,7 @@
   <ul class="list-summary">
     
       <li class="entry-summary">
-        <a href="#new(rule,source)-class-method" class="signature"><strong>.new</strong>(rule, source)</a>
+        <a href="#new%28rule%2Csource%29-class-method" class="signature"><strong>.new</strong>(rule, source)</a>
         
           <div class="summary"><p>Creates instance of this visitor.</p></div>
         
@@ -727,7 +732,7 @@
   <ul class="list-summary">
     
       <li class="entry-summary">
-        <a href="#visit(node:Crystal::ASTNode)-instance-method" class="signature"><strong>#visit</strong>(node : Crystal::ASTNode)</a>
+        <a href="#visit%28node%3ACrystal%3A%3AASTNode%29-instance-method" class="signature"><strong>#visit</strong>(node : Crystal::ASTNode)</a>
         
           <div class="summary"><p>A main visit method that accepts <code>Crystal::ASTNode</code>.</p></div>
         
@@ -788,20 +793,19 @@
         
         def self.<strong>new</strong>(rule, source)
 
-        <a class="method-permalink" href="#new(rule,source)-class-method">#</a>
+        <a class="method-permalink" href="#new%28rule%2Csource%29-class-method">#</a>
       </div>
       
         <div class="doc">
           
           <p>Creates instance of this visitor.</p>
-
 <pre><code class="language-crystal">visitor <span class="o">=</span> <span class="t">Ameba</span><span class="t">::</span><span class="t">AST</span><span class="t">::</span><span class="t">NodeVisitor</span>.<span class="k">new</span>(rule, source)</code></pre>
         </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/9a91e42b/src/ameba/ast/visitors/base_visitor.cr#L18" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/48b15b9b/src/ameba/ast/visitors/base_visitor.cr#L18" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -825,7 +829,7 @@
         
         def <strong>visit</strong>(node : Crystal::ASTNode)
 
-        <a class="method-permalink" href="#visit(node:Crystal::ASTNode)-instance-method">#</a>
+        <a class="method-permalink" href="#visit%28node%3ACrystal%3A%3AASTNode%29-instance-method">#</a>
       </div>
       
         <div class="doc">
@@ -837,7 +841,7 @@ Returns true meaning all child nodes will be traversed.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/9a91e42b/src/ameba/ast/visitors/base_visitor.cr#L24" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/48b15b9b/src/ameba/ast/visitors/base_visitor.cr#L24" target="_blank">View source</a>]
         
       </div>
     </div>

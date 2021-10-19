@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="generator" content="Crystal Docs 0.36.1">
+<meta name="generator" content="Crystal Docs 1.1.1">
 <meta name="crystal_docs.project_version" content="master">
 <meta name="crystal_docs.project_name" content="ameba">
 
@@ -285,6 +285,11 @@
       <a href="../../Ameba/Rule/Lint.html">Lint</a>
       
         <ul>
+  
+  <li class=" " data-id="ameba/Ameba/Rule/Lint/AmbiguousAssignment" data-name="ameba::rule::lint::ambiguousassignment">
+      <a href="../../Ameba/Rule/Lint/AmbiguousAssignment.html">AmbiguousAssignment</a>
+      
+    </li>
   
   <li class=" " data-id="ameba/Ameba/Rule/Lint/BadDirective" data-name="ameba::rule::lint::baddirective">
       <a href="../../Ameba/Rule/Lint/BadDirective.html">BadDirective</a>
@@ -679,7 +684,7 @@ Holds the var node and variable assigments.</p>
   </h2>
   
     
-      <a href="https://github.com/crystal-ameba/ameba/blob/9a91e42b/src/ameba/ast/variabling/variable.cr#L4" target="_blank">
+      <a href="https://github.com/crystal-ameba/ameba/blob/48b15b9b/src/ameba/ast/variabling/variable.cr#L4" target="_blank">
         ameba/ast/variabling/variable.cr
       </a>
     
@@ -701,7 +706,7 @@ Holds the var node and variable assigments.</p>
   <ul class="list-summary">
     
       <li class="entry-summary">
-        <a href="#new(node,scope)-class-method" class="signature"><strong>.new</strong>(node, scope)</a>
+        <a href="#new%28node%2Cscope%29-class-method" class="signature"><strong>.new</strong>(node, scope)</a>
         
           <div class="summary"><p>Creates a new variable(in the scope).</p></div>
         
@@ -724,152 +729,152 @@ Holds the var node and variable assigments.</p>
   <ul class="list-summary">
     
       <li class="entry-summary">
-        <a href="#assign(node,scope)-instance-method" class="signature"><strong>#assign</strong>(node, scope)</a>
+        <a href="#assign%28node%2Cscope%29-instance-method" class="signature"><strong>#assign</strong>(node, scope)</a>
         
           <div class="summary"><p>Assigns the variable (creates a new assignment).</p></div>
         
       </li>
     
       <li class="entry-summary">
-        <a href="#assign_before_reference:Crystal::ASTNode?-instance-method" class="signature"><strong>#assign_before_reference</strong> : Crystal::ASTNode?</a>
+        <a href="#assign_before_reference%3ACrystal%3A%3AASTNode%3F-instance-method" class="signature"><strong>#assign_before_reference</strong> : Crystal::ASTNode?</a>
         
           <div class="summary"><p>Node of the first assignment which can be available before any reference.</p></div>
         
       </li>
     
       <li class="entry-summary">
-        <a href="#assignments:Array(Ameba::AST::Assignment)-instance-method" class="signature"><strong>#assignments</strong> : Array(Ameba::AST::Assignment)</a>
+        <a href="#assignments%3AArray%28Ameba%3A%3AAST%3A%3AAssignment%29-instance-method" class="signature"><strong>#assignments</strong> : Array(Ameba::AST::Assignment)</a>
         
           <div class="summary"><p>List of the assigments of this variable.</p></div>
         
       </li>
     
       <li class="entry-summary">
-        <a href="#captured_by_block?(scope=@scope)-instance-method" class="signature"><strong>#captured_by_block?</strong>(scope = @scope)</a>
+        <a href="#captured_by_block%3F%28scope%3D%40scope%29-instance-method" class="signature"><strong>#captured_by_block?</strong>(scope = @scope)</a>
         
           <div class="summary"><p>Returns true if the current var is referenced in in the block.</p></div>
         
       </li>
     
       <li class="entry-summary">
-        <a href="#declared_before?(node)-instance-method" class="signature"><strong>#declared_before?</strong>(node)</a>
+        <a href="#declared_before%3F%28node%29-instance-method" class="signature"><strong>#declared_before?</strong>(node)</a>
         
-          <div class="summary"><p>Returns true if the variable is declared before the <code><a href="../../Ameba/AST/Variable.html#node:Crystal::Var-instance-method">#node</a></code>.</p></div>
-        
-      </li>
-    
-      <li class="entry-summary">
-        <a href="#end_location(*args,**options)-instance-method" class="signature"><strong>#end_location</strong>(*args, **options)</a>
+          <div class="summary"><p>Returns true if the variable is declared before the <code><a href="../../Ameba/AST/Variable.html#node%3ACrystal%3A%3AVar-instance-method">#node</a></code>.</p></div>
         
       </li>
     
       <li class="entry-summary">
-        <a href="#end_location(*args,**options,&)-instance-method" class="signature"><strong>#end_location</strong>(*args, **options, &)</a>
+        <a href="#end_location%28%2Aargs%2C%2A%2Aoptions%29-instance-method" class="signature"><strong>#end_location</strong>(*args, **options)</a>
         
       </li>
     
       <li class="entry-summary">
-        <a href="#eql?(node)-instance-method" class="signature"><strong>#eql?</strong>(node)</a>
-        
-          <div class="summary"><p>Returns true if the <code><a href="../../Ameba/AST/Variable.html#node:Crystal::Var-instance-method">#node</a></code> represents exactly the same Crystal node as <code>@node</code>.</p></div>
+        <a href="#end_location%28%2Aargs%2C%2A%2Aoptions%2C%26%29-instance-method" class="signature"><strong>#end_location</strong>(*args, **options, &)</a>
         
       </li>
     
       <li class="entry-summary">
-        <a href="#ignored?-instance-method" class="signature"><strong>#ignored?</strong></a>
+        <a href="#eql%3F%28node%29-instance-method" class="signature"><strong>#eql?</strong>(node)</a>
+        
+          <div class="summary"><p>Returns true if the <code><a href="../../Ameba/AST/Variable.html#node%3ACrystal%3A%3AVar-instance-method">#node</a></code> represents exactly the same Crystal node as <code>@node</code>.</p></div>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#ignored%3F-instance-method" class="signature"><strong>#ignored?</strong></a>
         
           <div class="summary"><p>Returns true if the name starts with '_', false if not.</p></div>
         
       </li>
     
       <li class="entry-summary">
-        <a href="#location(*args,**options)-instance-method" class="signature"><strong>#location</strong>(*args, **options)</a>
+        <a href="#location%28%2Aargs%2C%2A%2Aoptions%29-instance-method" class="signature"><strong>#location</strong>(*args, **options)</a>
         
       </li>
     
       <li class="entry-summary">
-        <a href="#location(*args,**options,&)-instance-method" class="signature"><strong>#location</strong>(*args, **options, &)</a>
+        <a href="#location%28%2Aargs%2C%2A%2Aoptions%2C%26%29-instance-method" class="signature"><strong>#location</strong>(*args, **options, &)</a>
         
       </li>
     
       <li class="entry-summary">
-        <a href="#name(*args,**options)-instance-method" class="signature"><strong>#name</strong>(*args, **options)</a>
+        <a href="#name%28%2Aargs%2C%2A%2Aoptions%29-instance-method" class="signature"><strong>#name</strong>(*args, **options)</a>
         
       </li>
     
       <li class="entry-summary">
-        <a href="#name(*args,**options,&)-instance-method" class="signature"><strong>#name</strong>(*args, **options, &)</a>
+        <a href="#name%28%2Aargs%2C%2A%2Aoptions%2C%26%29-instance-method" class="signature"><strong>#name</strong>(*args, **options, &)</a>
         
       </li>
     
       <li class="entry-summary">
-        <a href="#node:Crystal::Var-instance-method" class="signature"><strong>#node</strong> : Crystal::Var</a>
+        <a href="#node%3ACrystal%3A%3AVar-instance-method" class="signature"><strong>#node</strong> : Crystal::Var</a>
         
           <div class="summary"><p>The actual var node.</p></div>
         
       </li>
     
       <li class="entry-summary">
-        <a href="#reference(node:Crystal::Var,scope:Scope)-instance-method" class="signature"><strong>#reference</strong>(node : Crystal::Var, scope : Scope)</a>
+        <a href="#reference%28node%3ACrystal%3A%3AVar%2Cscope%3AScope%29-instance-method" class="signature"><strong>#reference</strong>(node : Crystal::Var, scope : Scope)</a>
         
           <div class="summary"><p>Creates a reference to this variable in some scope.</p></div>
         
       </li>
     
       <li class="entry-summary">
-        <a href="#reference_assignments!-instance-method" class="signature"><strong>#reference_assignments!</strong></a>
+        <a href="#reference_assignments%21-instance-method" class="signature"><strong>#reference_assignments!</strong></a>
         
           <div class="summary"><p>Reference variable's assignments.</p></div>
         
       </li>
     
       <li class="entry-summary">
-        <a href="#referenced?-instance-method" class="signature"><strong>#referenced?</strong></a>
+        <a href="#referenced%3F-instance-method" class="signature"><strong>#referenced?</strong></a>
         
           <div class="summary"><p>Returns true if variable has any reference.</p></div>
         
       </li>
     
       <li class="entry-summary">
-        <a href="#references:Array(Ameba::AST::Reference)-instance-method" class="signature"><strong>#references</strong> : Array(Ameba::AST::Reference)</a>
+        <a href="#references%3AArray%28Ameba%3A%3AAST%3A%3AReference%29-instance-method" class="signature"><strong>#references</strong> : Array(Ameba::AST::Reference)</a>
         
           <div class="summary"><p>List of the references of this variable.</p></div>
         
       </li>
     
       <li class="entry-summary">
-        <a href="#scope:Scope-instance-method" class="signature"><strong>#scope</strong> : Scope</a>
+        <a href="#scope%3AScope-instance-method" class="signature"><strong>#scope</strong> : Scope</a>
         
           <div class="summary"><p>Scope of this variable.</p></div>
         
       </li>
     
       <li class="entry-summary">
-        <a href="#special?-instance-method" class="signature"><strong>#special?</strong></a>
+        <a href="#special%3F-instance-method" class="signature"><strong>#special?</strong></a>
         
           <div class="summary"><p>Returns true if it is a special variable, i.e <code>$?</code>.</p></div>
         
       </li>
     
       <li class="entry-summary">
-        <a href="#target_of?(assign)-instance-method" class="signature"><strong>#target_of?</strong>(assign)</a>
+        <a href="#target_of%3F%28assign%29-instance-method" class="signature"><strong>#target_of?</strong>(assign)</a>
         
           <div class="summary"><p>Returns true if the variable is a target (on the left) of the assignment, false otherwise.</p></div>
         
       </li>
     
       <li class="entry-summary">
-        <a href="#to_s(*args,**options)-instance-method" class="signature"><strong>#to_s</strong>(*args, **options)</a>
+        <a href="#to_s%28%2Aargs%2C%2A%2Aoptions%29-instance-method" class="signature"><strong>#to_s</strong>(*args, **options)</a>
         
       </li>
     
       <li class="entry-summary">
-        <a href="#to_s(*args,**options,&)-instance-method" class="signature"><strong>#to_s</strong>(*args, **options, &)</a>
+        <a href="#to_s%28%2Aargs%2C%2A%2Aoptions%2C%26%29-instance-method" class="signature"><strong>#to_s</strong>(*args, **options, &)</a>
         
       </li>
     
       <li class="entry-summary">
-        <a href="#used_in_macro?(scope=@scope)-instance-method" class="signature"><strong>#used_in_macro?</strong>(scope = @scope)</a>
+        <a href="#used_in_macro%3F%28scope%3D%40scope%29-instance-method" class="signature"><strong>#used_in_macro?</strong>(scope = @scope)</a>
         
           <div class="summary"><p>Returns true if current variable potentially referenced in a macro, false if not.</p></div>
         
@@ -920,20 +925,19 @@ Holds the var node and variable assigments.</p>
         
         def self.<strong>new</strong>(node, scope)
 
-        <a class="method-permalink" href="#new(node,scope)-class-method">#</a>
+        <a class="method-permalink" href="#new%28node%2Cscope%29-class-method">#</a>
       </div>
       
         <div class="doc">
           
           <p>Creates a new variable(in the scope).</p>
-
 <pre><code class="language-crystal"><span class="t">Variable</span>.<span class="k">new</span>(node, scope)</code></pre>
         </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/9a91e42b/src/ameba/ast/variabling/variable.cr#L30" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/48b15b9b/src/ameba/ast/variabling/variable.cr#L30" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -957,14 +961,13 @@ Holds the var node and variable assigments.</p>
         
         def <strong>assign</strong>(node, scope)
 
-        <a class="method-permalink" href="#assign(node,scope)-instance-method">#</a>
+        <a class="method-permalink" href="#assign%28node%2Cscope%29-instance-method">#</a>
       </div>
       
         <div class="doc">
           
           <p>Assigns the variable (creates a new assignment).
 Variable may have multiple assignments.</p>
-
 <pre><code class="language-crystal">variable <span class="o">=</span> <span class="t">Variable</span>.<span class="k">new</span>(node, scope)
 variable.assign(node1)
 variable.assign(node2)
@@ -974,7 +977,7 @@ variable.assignment.size <span class="c"># =&gt; 2</span></code></pre>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/9a91e42b/src/ameba/ast/variabling/variable.cr#L47" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/48b15b9b/src/ameba/ast/variabling/variable.cr#L47" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -984,7 +987,7 @@ variable.assignment.size <span class="c"># =&gt; 2</span></code></pre>
         
         def <strong>assign_before_reference</strong> : Crystal::ASTNode?
 
-        <a class="method-permalink" href="#assign_before_reference:Crystal::ASTNode?-instance-method">#</a>
+        <a class="method-permalink" href="#assign_before_reference%3ACrystal%3A%3AASTNode%3F-instance-method">#</a>
       </div>
       
         <div class="doc">
@@ -995,7 +998,7 @@ variable.assignment.size <span class="c"># =&gt; 2</span></code></pre>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/9a91e42b/src/ameba/ast/variabling/variable.cr#L18" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/48b15b9b/src/ameba/ast/variabling/variable.cr#L18" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1005,7 +1008,7 @@ variable.assignment.size <span class="c"># =&gt; 2</span></code></pre>
         
         def <strong>assignments</strong> : Array(<a href="../../Ameba/AST/Assignment.html">Ameba::AST::Assignment</a>)
 
-        <a class="method-permalink" href="#assignments:Array(Ameba::AST::Assignment)-instance-method">#</a>
+        <a class="method-permalink" href="#assignments%3AArray%28Ameba%3A%3AAST%3A%3AAssignment%29-instance-method">#</a>
       </div>
       
         <div class="doc">
@@ -1016,7 +1019,7 @@ variable.assignment.size <span class="c"># =&gt; 2</span></code></pre>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/9a91e42b/src/ameba/ast/variabling/variable.cr#L6" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/48b15b9b/src/ameba/ast/variabling/variable.cr#L6" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1026,7 +1029,7 @@ variable.assignment.size <span class="c"># =&gt; 2</span></code></pre>
         
         def <strong>captured_by_block?</strong>(scope = @scope)
 
-        <a class="method-permalink" href="#captured_by_block?(scope=@scope)-instance-method">#</a>
+        <a class="method-permalink" href="#captured_by_block%3F%28scope%3D%40scope%29-instance-method">#</a>
       </div>
       
         <div class="doc">
@@ -1034,12 +1037,9 @@ variable.assignment.size <span class="c"># =&gt; 2</span></code></pre>
           <p>Returns true if the current var is referenced in
 in the block. For example this variable is captured
 by block:</p>
-
 <pre><code class="language-crystal">a <span class="o">=</span> <span class="n">1</span>
 <span class="n">3</span>.times { <span class="o">|</span>i<span class="o">|</span> a <span class="o">=</span> a <span class="o">+</span> i }</code></pre>
-
 <p>And this variable is not captured by block.</p>
-
 <pre><code class="language-crystal">i <span class="o">=</span> <span class="n">1</span>
 <span class="n">3</span>.times { <span class="o">|</span>i<span class="o">|</span> i <span class="o">+</span> <span class="n">1</span> }</code></pre>
         </div>
@@ -1047,7 +1047,7 @@ by block:</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/9a91e42b/src/ameba/ast/variabling/variable.cr#L111" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/48b15b9b/src/ameba/ast/variabling/variable.cr#L111" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1057,18 +1057,18 @@ by block:</p>
         
         def <strong>declared_before?</strong>(node)
 
-        <a class="method-permalink" href="#declared_before?(node)-instance-method">#</a>
+        <a class="method-permalink" href="#declared_before%3F%28node%29-instance-method">#</a>
       </div>
       
         <div class="doc">
           
-          <p>Returns true if the variable is declared before the <code><a href="../../Ameba/AST/Variable.html#node:Crystal::Var-instance-method">#node</a></code>.</p>
+          <p>Returns true if the variable is declared before the <code><a href="../../Ameba/AST/Variable.html#node%3ACrystal%3A%3AVar-instance-method">#node</a></code>.</p>
         </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/9a91e42b/src/ameba/ast/variabling/variable.cr#L158" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/48b15b9b/src/ameba/ast/variabling/variable.cr#L158" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1078,29 +1078,29 @@ by block:</p>
         
         def <strong>end_location</strong>(*args, **options)
 
-        <a class="method-permalink" href="#end_location(*args,**options)-instance-method">#</a>
+        <a class="method-permalink" href="#end_location%28%2Aargs%2C%2A%2Aoptions%29-instance-method">#</a>
       </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/9a91e42b/src/ameba/ast/variabling/variable.cr#L21" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/48b15b9b/src/ameba/ast/variabling/variable.cr#L21" target="_blank">View source</a>]
         
       </div>
     </div>
   
-    <div class="entry-detail" id="end_location(*args,**options,&)-instance-method">
+    <div class="entry-detail" id="end_location(*args,**options,&amp;)-instance-method">
       <div class="signature">
         
         def <strong>end_location</strong>(*args, **options, &)
 
-        <a class="method-permalink" href="#end_location(*args,**options,&)-instance-method">#</a>
+        <a class="method-permalink" href="#end_location%28%2Aargs%2C%2A%2Aoptions%2C%26%29-instance-method">#</a>
       </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/9a91e42b/src/ameba/ast/variabling/variable.cr#L21" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/48b15b9b/src/ameba/ast/variabling/variable.cr#L21" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1110,19 +1110,19 @@ by block:</p>
         
         def <strong>eql?</strong>(node)
 
-        <a class="method-permalink" href="#eql?(node)-instance-method">#</a>
+        <a class="method-permalink" href="#eql%3F%28node%29-instance-method">#</a>
       </div>
       
         <div class="doc">
           
-          <p>Returns true if the <code><a href="../../Ameba/AST/Variable.html#node:Crystal::Var-instance-method">#node</a></code> represents exactly
+          <p>Returns true if the <code><a href="../../Ameba/AST/Variable.html#node%3ACrystal%3A%3AVar-instance-method">#node</a></code> represents exactly
 the same Crystal node as <code>@node</code>.</p>
         </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/9a91e42b/src/ameba/ast/variabling/variable.cr#L151" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/48b15b9b/src/ameba/ast/variabling/variable.cr#L151" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1132,7 +1132,7 @@ the same Crystal node as <code>@node</code>.</p>
         
         def <strong>ignored?</strong>
 
-        <a class="method-permalink" href="#ignored?-instance-method">#</a>
+        <a class="method-permalink" href="#ignored%3F-instance-method">#</a>
       </div>
       
         <div class="doc">
@@ -1143,7 +1143,7 @@ the same Crystal node as <code>@node</code>.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/9a91e42b/src/ameba/ast/variabling/variable.cr#L145" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/48b15b9b/src/ameba/ast/variabling/variable.cr#L145" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1153,29 +1153,29 @@ the same Crystal node as <code>@node</code>.</p>
         
         def <strong>location</strong>(*args, **options)
 
-        <a class="method-permalink" href="#location(*args,**options)-instance-method">#</a>
+        <a class="method-permalink" href="#location%28%2Aargs%2C%2A%2Aoptions%29-instance-method">#</a>
       </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/9a91e42b/src/ameba/ast/variabling/variable.cr#L20" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/48b15b9b/src/ameba/ast/variabling/variable.cr#L20" target="_blank">View source</a>]
         
       </div>
     </div>
   
-    <div class="entry-detail" id="location(*args,**options,&)-instance-method">
+    <div class="entry-detail" id="location(*args,**options,&amp;)-instance-method">
       <div class="signature">
         
         def <strong>location</strong>(*args, **options, &)
 
-        <a class="method-permalink" href="#location(*args,**options,&)-instance-method">#</a>
+        <a class="method-permalink" href="#location%28%2Aargs%2C%2A%2Aoptions%2C%26%29-instance-method">#</a>
       </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/9a91e42b/src/ameba/ast/variabling/variable.cr#L20" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/48b15b9b/src/ameba/ast/variabling/variable.cr#L20" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1185,29 +1185,29 @@ the same Crystal node as <code>@node</code>.</p>
         
         def <strong>name</strong>(*args, **options)
 
-        <a class="method-permalink" href="#name(*args,**options)-instance-method">#</a>
+        <a class="method-permalink" href="#name%28%2Aargs%2C%2A%2Aoptions%29-instance-method">#</a>
       </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/9a91e42b/src/ameba/ast/variabling/variable.cr#L22" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/48b15b9b/src/ameba/ast/variabling/variable.cr#L22" target="_blank">View source</a>]
         
       </div>
     </div>
   
-    <div class="entry-detail" id="name(*args,**options,&)-instance-method">
+    <div class="entry-detail" id="name(*args,**options,&amp;)-instance-method">
       <div class="signature">
         
         def <strong>name</strong>(*args, **options, &)
 
-        <a class="method-permalink" href="#name(*args,**options,&)-instance-method">#</a>
+        <a class="method-permalink" href="#name%28%2Aargs%2C%2A%2Aoptions%2C%26%29-instance-method">#</a>
       </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/9a91e42b/src/ameba/ast/variabling/variable.cr#L22" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/48b15b9b/src/ameba/ast/variabling/variable.cr#L22" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1217,7 +1217,7 @@ the same Crystal node as <code>@node</code>.</p>
         
         def <strong>node</strong> : Crystal::Var
 
-        <a class="method-permalink" href="#node:Crystal::Var-instance-method">#</a>
+        <a class="method-permalink" href="#node%3ACrystal%3A%3AVar-instance-method">#</a>
       </div>
       
         <div class="doc">
@@ -1228,7 +1228,7 @@ the same Crystal node as <code>@node</code>.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/9a91e42b/src/ameba/ast/variabling/variable.cr#L12" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/48b15b9b/src/ameba/ast/variabling/variable.cr#L12" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1238,13 +1238,12 @@ the same Crystal node as <code>@node</code>.</p>
         
         def <strong>reference</strong>(node : Crystal::Var, scope : <a href="../../Ameba/AST/Scope.html">Scope</a>)
 
-        <a class="method-permalink" href="#reference(node:Crystal::Var,scope:Scope)-instance-method">#</a>
+        <a class="method-permalink" href="#reference%28node%3ACrystal%3A%3AVar%2Cscope%3AScope%29-instance-method">#</a>
       </div>
       
         <div class="doc">
           
           <p>Creates a reference to this variable in some scope.</p>
-
 <pre><code class="language-crystal">variable <span class="o">=</span> <span class="t">Variable</span>.<span class="k">new</span>(node, scope)
 variable.reference(var_node, some_scope)</code></pre>
         </div>
@@ -1252,7 +1251,7 @@ variable.reference(var_node, some_scope)</code></pre>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/9a91e42b/src/ameba/ast/variabling/variable.cr#L70" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/48b15b9b/src/ameba/ast/variabling/variable.cr#L70" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1262,13 +1261,12 @@ variable.reference(var_node, some_scope)</code></pre>
         
         def <strong>reference_assignments!</strong>
 
-        <a class="method-permalink" href="#reference_assignments!-instance-method">#</a>
+        <a class="method-permalink" href="#reference_assignments%21-instance-method">#</a>
       </div>
       
         <div class="doc">
           
           <p>Reference variable's assignments.</p>
-
 <pre><code class="language-crystal">variable <span class="o">=</span> <span class="t">Variable</span>.<span class="k">new</span>(node, scope)
 variable.assign(assign_node)
 variable.reference_assignments!</code></pre>
@@ -1277,7 +1275,7 @@ variable.reference_assignments!</code></pre>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/9a91e42b/src/ameba/ast/variabling/variable.cr#L84" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/48b15b9b/src/ameba/ast/variabling/variable.cr#L84" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1287,13 +1285,12 @@ variable.reference_assignments!</code></pre>
         
         def <strong>referenced?</strong>
 
-        <a class="method-permalink" href="#referenced?-instance-method">#</a>
+        <a class="method-permalink" href="#referenced%3F-instance-method">#</a>
       </div>
       
         <div class="doc">
           
           <p>Returns true if variable has any reference.</p>
-
 <pre><code class="language-crystal">variable <span class="o">=</span> <span class="t">Variable</span>.<span class="k">new</span>(node, scope)
 variable.reference(var_node)
 variable.referenced? <span class="c"># =&gt; true</span></code></pre>
@@ -1302,7 +1299,7 @@ variable.referenced? <span class="c"># =&gt; true</span></code></pre>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/9a91e42b/src/ameba/ast/variabling/variable.cr#L60" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/48b15b9b/src/ameba/ast/variabling/variable.cr#L60" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1312,7 +1309,7 @@ variable.referenced? <span class="c"># =&gt; true</span></code></pre>
         
         def <strong>references</strong> : Array(<a href="../../Ameba/AST/Reference.html">Ameba::AST::Reference</a>)
 
-        <a class="method-permalink" href="#references:Array(Ameba::AST::Reference)-instance-method">#</a>
+        <a class="method-permalink" href="#references%3AArray%28Ameba%3A%3AAST%3A%3AReference%29-instance-method">#</a>
       </div>
       
         <div class="doc">
@@ -1323,7 +1320,7 @@ variable.referenced? <span class="c"># =&gt; true</span></code></pre>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/9a91e42b/src/ameba/ast/variabling/variable.cr#L9" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/48b15b9b/src/ameba/ast/variabling/variable.cr#L9" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1333,7 +1330,7 @@ variable.referenced? <span class="c"># =&gt; true</span></code></pre>
         
         def <strong>scope</strong> : <a href="../../Ameba/AST/Scope.html">Scope</a>
 
-        <a class="method-permalink" href="#scope:Scope-instance-method">#</a>
+        <a class="method-permalink" href="#scope%3AScope-instance-method">#</a>
       </div>
       
         <div class="doc">
@@ -1344,7 +1341,7 @@ variable.referenced? <span class="c"># =&gt; true</span></code></pre>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/9a91e42b/src/ameba/ast/variabling/variable.cr#L15" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/48b15b9b/src/ameba/ast/variabling/variable.cr#L15" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1354,7 +1351,7 @@ variable.referenced? <span class="c"># =&gt; true</span></code></pre>
         
         def <strong>special?</strong>
 
-        <a class="method-permalink" href="#special?-instance-method">#</a>
+        <a class="method-permalink" href="#special%3F-instance-method">#</a>
       </div>
       
         <div class="doc">
@@ -1365,7 +1362,7 @@ variable.referenced? <span class="c"># =&gt; true</span></code></pre>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/9a91e42b/src/ameba/ast/variabling/variable.cr#L34" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/48b15b9b/src/ameba/ast/variabling/variable.cr#L34" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1375,7 +1372,7 @@ variable.referenced? <span class="c"># =&gt; true</span></code></pre>
         
         def <strong>target_of?</strong>(assign)
 
-        <a class="method-permalink" href="#target_of?(assign)-instance-method">#</a>
+        <a class="method-permalink" href="#target_of%3F%28assign%29-instance-method">#</a>
       </div>
       
         <div class="doc">
@@ -1387,7 +1384,7 @@ false otherwise.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/9a91e42b/src/ameba/ast/variabling/variable.cr#L133" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/48b15b9b/src/ameba/ast/variabling/variable.cr#L133" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1397,29 +1394,29 @@ false otherwise.</p>
         
         def <strong>to_s</strong>(*args, **options)
 
-        <a class="method-permalink" href="#to_s(*args,**options)-instance-method">#</a>
+        <a class="method-permalink" href="#to_s%28%2Aargs%2C%2A%2Aoptions%29-instance-method">#</a>
       </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/9a91e42b/src/ameba/ast/variabling/variable.cr#L23" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/48b15b9b/src/ameba/ast/variabling/variable.cr#L23" target="_blank">View source</a>]
         
       </div>
     </div>
   
-    <div class="entry-detail" id="to_s(*args,**options,&)-instance-method">
+    <div class="entry-detail" id="to_s(*args,**options,&amp;)-instance-method">
       <div class="signature">
         
         def <strong>to_s</strong>(*args, **options, &)
 
-        <a class="method-permalink" href="#to_s(*args,**options,&)-instance-method">#</a>
+        <a class="method-permalink" href="#to_s%28%2Aargs%2C%2A%2Aoptions%2C%26%29-instance-method">#</a>
       </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/9a91e42b/src/ameba/ast/variabling/variable.cr#L23" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/48b15b9b/src/ameba/ast/variabling/variable.cr#L23" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1429,7 +1426,7 @@ false otherwise.</p>
         
         def <strong>used_in_macro?</strong>(scope = @scope)
 
-        <a class="method-permalink" href="#used_in_macro?(scope=@scope)-instance-method">#</a>
+        <a class="method-permalink" href="#used_in_macro%3F%28scope%3D%40scope%29-instance-method">#</a>
       </div>
       
         <div class="doc">
@@ -1441,7 +1438,7 @@ false if not.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/9a91e42b/src/ameba/ast/variabling/variable.cr#L122" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/48b15b9b/src/ameba/ast/variabling/variable.cr#L122" target="_blank">View source</a>]
         
       </div>
     </div>

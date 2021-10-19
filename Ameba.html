@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="generator" content="Crystal Docs 0.36.1">
+<meta name="generator" content="Crystal Docs 1.1.1">
 <meta name="crystal_docs.project_version" content="master">
 <meta name="crystal_docs.project_name" content="ameba">
 
@@ -285,6 +285,11 @@
       <a href="Ameba/Rule/Lint.html">Lint</a>
       
         <ul>
+  
+  <li class=" " data-id="ameba/Ameba/Rule/Lint/AmbiguousAssignment" data-name="ameba::rule::lint::ambiguousassignment">
+      <a href="Ameba/Rule/Lint/AmbiguousAssignment.html">AmbiguousAssignment</a>
+      
+    </li>
   
   <li class=" " data-id="ameba/Ameba/Rule/Lint/BadDirective" data-name="ameba::rule::lint::baddirective">
       <a href="Ameba/Rule/Lint/BadDirective.html">BadDirective</a>
@@ -638,13 +643,9 @@
   </h2>
 
   <p>Ameba's entry module.</p>
-
 <p>To run the linter with default parameters:</p>
-
 <pre><code class="language-crystal"><span class="t">Ameba</span>.run</code></pre>
-
 <p>To configure and run it:</p>
-
 <pre><code class="language-crystal">config <span class="o">=</span> <span class="t">Ameba</span><span class="t">::</span><span class="t">Config</span>.load
 config.formatter <span class="o">=</span> formatter
 config.files <span class="o">=</span> file_paths
@@ -688,63 +689,63 @@ config.files <span class="o">=</span> file_paths
   </h2>
   
     
-      <a href="https://github.com/crystal-ameba/ameba/blob/9a91e42b/src/ameba.cr#L23" target="_blank">
+      <a href="https://github.com/crystal-ameba/ameba/blob/48b15b9b/src/ameba.cr#L23" target="_blank">
         ameba.cr
       </a>
     
     <br/>
   
     
-      <a href="https://github.com/crystal-ameba/ameba/blob/9a91e42b/src/ameba/glob_utils.cr#L1" target="_blank">
+      <a href="https://github.com/crystal-ameba/ameba/blob/48b15b9b/src/ameba/glob_utils.cr#L1" target="_blank">
         ameba/glob_utils.cr
       </a>
     
     <br/>
   
     
-      <a href="https://github.com/crystal-ameba/ameba/blob/9a91e42b/src/ameba/inline_comments.cr#L1" target="_blank">
+      <a href="https://github.com/crystal-ameba/ameba/blob/48b15b9b/src/ameba/inline_comments.cr#L1" target="_blank">
         ameba/inline_comments.cr
       </a>
     
     <br/>
   
     
-      <a href="https://github.com/crystal-ameba/ameba/blob/9a91e42b/src/ameba/issue.cr#L1" target="_blank">
+      <a href="https://github.com/crystal-ameba/ameba/blob/48b15b9b/src/ameba/issue.cr#L1" target="_blank">
         ameba/issue.cr
       </a>
     
     <br/>
   
     
-      <a href="https://github.com/crystal-ameba/ameba/blob/9a91e42b/src/ameba/reportable.cr#L1" target="_blank">
+      <a href="https://github.com/crystal-ameba/ameba/blob/48b15b9b/src/ameba/reportable.cr#L1" target="_blank">
         ameba/reportable.cr
       </a>
     
     <br/>
   
     
-      <a href="https://github.com/crystal-ameba/ameba/blob/9a91e42b/src/ameba/runner.cr#L1" target="_blank">
+      <a href="https://github.com/crystal-ameba/ameba/blob/48b15b9b/src/ameba/runner.cr#L1" target="_blank">
         ameba/runner.cr
       </a>
     
     <br/>
   
     
-      <a href="https://github.com/crystal-ameba/ameba/blob/9a91e42b/src/ameba/severity.cr#L1" target="_blank">
+      <a href="https://github.com/crystal-ameba/ameba/blob/48b15b9b/src/ameba/severity.cr#L1" target="_blank">
         ameba/severity.cr
       </a>
     
     <br/>
   
     
-      <a href="https://github.com/crystal-ameba/ameba/blob/9a91e42b/src/ameba/source.cr#L1" target="_blank">
+      <a href="https://github.com/crystal-ameba/ameba/blob/48b15b9b/src/ameba/source.cr#L1" target="_blank">
         ameba/source.cr
       </a>
     
     <br/>
   
     
-      <a href="https://github.com/crystal-ameba/ameba/blob/9a91e42b/src/ameba/tokenizer.cr#L3" target="_blank">
+      <a href="https://github.com/crystal-ameba/ameba/blob/48b15b9b/src/ameba/tokenizer.cr#L3" target="_blank">
         ameba/tokenizer.cr
       </a>
     
@@ -789,7 +790,7 @@ config.files <span class="o">=</span> file_paths
   <ul class="list-summary">
     
       <li class="entry-summary">
-        <a href="#run(config=Config.load)-instance-method" class="signature"><strong>#run</strong>(config = <span class="t">Config</span>.load)</a>
+        <a href="#run%28config%3DConfig.load%29-instance-method" class="signature"><strong>#run</strong>(config = <span class="t">Config</span>.load)</a>
         
           <div class="summary"><p>Initializes <code><a href="Ameba/Runner.html">Ameba::Runner</a></code> and runs it.</p></div>
         
@@ -824,16 +825,14 @@ config.files <span class="o">=</span> file_paths
         
         def <strong>run</strong>(config = <span class="t">Config</span>.load)
 
-        <a class="method-permalink" href="#run(config=Config.load)-instance-method">#</a>
+        <a class="method-permalink" href="#run%28config%3DConfig.load%29-instance-method">#</a>
       </div>
       
         <div class="doc">
           
           <p>Initializes <code><a href="Ameba/Runner.html">Ameba::Runner</a></code> and runs it.
 Can be configured via <code>config</code> parameter.</p>
-
 <p>Examples:</p>
-
 <pre><code class="language-crystal"><span class="t">Ameba</span>.run
 <span class="t">Ameba</span>.run config</code></pre>
         </div>
@@ -841,7 +840,7 @@ Can be configured via <code>config</code> parameter.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/9a91e42b/src/ameba.cr#L37" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/48b15b9b/src/ameba.cr#L37" target="_blank">View source</a>]
         
       </div>
     </div>

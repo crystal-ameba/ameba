@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="generator" content="Crystal Docs 0.36.1">
+<meta name="generator" content="Crystal Docs 1.1.1">
 <meta name="crystal_docs.project_version" content="master">
 <meta name="crystal_docs.project_name" content="ameba">
 
@@ -285,6 +285,11 @@
       <a href="../../../Ameba/Rule/Lint.html">Lint</a>
       
         <ul>
+  
+  <li class=" " data-id="ameba/Ameba/Rule/Lint/AmbiguousAssignment" data-name="ameba::rule::lint::ambiguousassignment">
+      <a href="../../../Ameba/Rule/Lint/AmbiguousAssignment.html">AmbiguousAssignment</a>
+      
+    </li>
   
   <li class=" " data-id="ameba/Ameba/Rule/Lint/BadDirective" data-name="ameba::rule::lint::baddirective">
       <a href="../../../Ameba/Rule/Lint/BadDirective.html">BadDirective</a>
@@ -641,17 +646,11 @@
 
   <p>This rule is used to identify usage of <code>sum/product</code> calls
 that follow <code>map</code>.</p>
-
 <p>For example, this is considered inefficient:</p>
-
 <pre><code class="language-crystal">(<span class="n">1</span>..<span class="n">3</span>).map(<span class="o">&amp;</span>.<span class="o">*</span>(<span class="n">2</span>)).sum</code></pre>
-
 <p>And can be written as this:</p>
-
 <pre><code class="language-crystal">(<span class="n">1</span>..<span class="n">3</span>).sum(<span class="o">&amp;</span>.<span class="o">*</span>(<span class="n">2</span>))</code></pre>
-
 <p>YAML configuration example:</p>
-
 <pre><code class="language-crystal">Performance/MapInsteadOfBlock:
   Enabled: true</code></pre>
 
@@ -694,7 +693,7 @@ that follow <code>map</code>.</p>
   </h2>
   
     
-      <a href="https://github.com/crystal-ameba/ameba/blob/9a91e42b/src/ameba/rule/performance/map_instead_of_block.cr#L25" target="_blank">
+      <a href="https://github.com/crystal-ameba/ameba/blob/48b15b9b/src/ameba/rule/performance/map_instead_of_block.cr#L25" target="_blank">
         ameba/rule/performance/map_instead_of_block.cr
       </a>
     
@@ -745,14 +744,14 @@ that follow <code>map</code>.</p>
   <ul class="list-summary">
     
       <li class="entry-summary">
-        <a href="#new(ctx:YAML::ParseContext,node:YAML::Nodes::Node)-class-method" class="signature"><strong>.new</strong>(ctx : YAML::ParseContext, node : YAML::Nodes::Node)</a>
+        <a href="#new%28ctx%3AYAML%3A%3AParseContext%2Cnode%3AYAML%3A%3ANodes%3A%3ANode%29-class-method" class="signature"><strong>.new</strong>(ctx : YAML::ParseContext, node : YAML::Nodes::Node)</a>
         
           <div class="summary"><p>This rule is used to identify usage of <code>sum/product</code> calls that follow <code>map</code>.</p></div>
         
       </li>
     
       <li class="entry-summary">
-        <a href="#new(config=nil)-class-method" class="signature"><strong>.new</strong>(config = <span class="n">nil</span>)</a>
+        <a href="#new%28config%3Dnil%29-class-method" class="signature"><strong>.new</strong>(config = <span class="n">nil</span>)</a>
         
           <div class="summary"><p>This rule is used to identify usage of <code>sum/product</code> calls that follow <code>map</code>.</p></div>
         
@@ -775,52 +774,52 @@ that follow <code>map</code>.</p>
   <ul class="list-summary">
     
       <li class="entry-summary">
-        <a href="#description:String-instance-method" class="signature"><strong>#description</strong> : String</a>
+        <a href="#description%3AString-instance-method" class="signature"><strong>#description</strong> : String</a>
         
       </li>
     
       <li class="entry-summary">
-        <a href="#description=(description:String)-instance-method" class="signature"><strong>#description=</strong>(description : String)</a>
+        <a href="#description%3D%28description%3AString%29-instance-method" class="signature"><strong>#description=</strong>(description : String)</a>
         
       </li>
     
       <li class="entry-summary">
-        <a href="#enabled:Bool-instance-method" class="signature"><strong>#enabled</strong> : Bool</a>
+        <a href="#enabled%3ABool-instance-method" class="signature"><strong>#enabled</strong> : Bool</a>
         
       </li>
     
       <li class="entry-summary">
-        <a href="#enabled=(enabled)-instance-method" class="signature"><strong>#enabled=</strong>(enabled)</a>
+        <a href="#enabled%3D%28enabled%29-instance-method" class="signature"><strong>#enabled=</strong>(enabled)</a>
         
       </li>
     
       <li class="entry-summary">
-        <a href="#excluded:Array(String)?-instance-method" class="signature"><strong>#excluded</strong> : Array(String)?</a>
+        <a href="#excluded%3AArray%28String%29%3F-instance-method" class="signature"><strong>#excluded</strong> : Array(String)?</a>
         
       </li>
     
       <li class="entry-summary">
-        <a href="#excluded=(excluded:Array(String)?)-instance-method" class="signature"><strong>#excluded=</strong>(excluded : Array(String)?)</a>
+        <a href="#excluded%3D%28excluded%3AArray%28String%29%3F%29-instance-method" class="signature"><strong>#excluded=</strong>(excluded : Array(String)?)</a>
         
       </li>
     
       <li class="entry-summary">
-        <a href="#severity:Ameba::Severity-instance-method" class="signature"><strong>#severity</strong> : Ameba::Severity</a>
+        <a href="#severity%3AAmeba%3A%3ASeverity-instance-method" class="signature"><strong>#severity</strong> : Ameba::Severity</a>
         
       </li>
     
       <li class="entry-summary">
-        <a href="#severity=(severity)-instance-method" class="signature"><strong>#severity=</strong>(severity)</a>
+        <a href="#severity%3D%28severity%29-instance-method" class="signature"><strong>#severity=</strong>(severity)</a>
         
       </li>
     
       <li class="entry-summary">
-        <a href="#test(source,node:Crystal::Call)-instance-method" class="signature"><strong>#test</strong>(source, node : Crystal::Call)</a>
+        <a href="#test%28source%2Cnode%3ACrystal%3A%3ACall%29-instance-method" class="signature"><strong>#test</strong>(source, node : Crystal::Call)</a>
         
       </li>
     
       <li class="entry-summary">
-        <a href="#test(source)-instance-method" class="signature"><strong>#test</strong>(source)</a>
+        <a href="#test%28source%29-instance-method" class="signature"><strong>#test</strong>(source)</a>
         
       </li>
     
@@ -857,7 +856,7 @@ that follow <code>map</code>.</p>
   <h3>Instance methods inherited from class <code><a href="../../../Ameba/Rule/Performance/Base.html">Ameba::Rule::Performance::Base</a></code></h3>
   
   
-    <a href="../../../Ameba/Rule/Performance/Base.html#catch(source:Source)-instance-method" class="tooltip">
+    <a href="../../../Ameba/Rule/Performance/Base.html#catch%28source%3ASource%29-instance-method" class="tooltip">
       <span>catch(source : Source)</span>
     catch</a>
     
@@ -869,7 +868,7 @@ that follow <code>map</code>.</p>
   <h3>Constructor methods inherited from class <code><a href="../../../Ameba/Rule/Performance/Base.html">Ameba::Rule::Performance::Base</a></code></h3>
   
   
-    <a href="../../../Ameba/Rule/Performance/Base.html#new(ctx:YAML::ParseContext,node:YAML::Nodes::Node)-class-method" class="tooltip">
+    <a href="../../../Ameba/Rule/Performance/Base.html#new%28ctx%3AYAML%3A%3AParseContext%2Cnode%3AYAML%3A%3ANodes%3A%3ANode%29-class-method" class="tooltip">
       <span>new(ctx : YAML::ParseContext, node : YAML::Nodes::Node)<br/>new(config = <span class="n">nil</span>)</span>
     new</a>
     
@@ -905,17 +904,17 @@ that follow <code>map</code>.</p>
   <h3>Instance methods inherited from class <code><a href="../../../Ameba/Rule/Base.html">Ameba::Rule::Base</a></code></h3>
   
   
-    <a href="../../../Ameba/Rule/Base.html#==(other)-instance-method" class="tooltip">
+    <a href="../../../Ameba/Rule/Base.html#%3D%3D%28other%29-instance-method" class="tooltip">
       <span>==(other)</span>
     ==</a>, 
     
   
-    <a href="../../../Ameba/Rule/Base.html#catch(source:Source)-instance-method" class="tooltip">
+    <a href="../../../Ameba/Rule/Base.html#catch%28source%3ASource%29-instance-method" class="tooltip">
       <span>catch(source : Source)</span>
     catch</a>, 
     
   
-    <a href="../../../Ameba/Rule/Base.html#excluded?(source)-instance-method" class="tooltip">
+    <a href="../../../Ameba/Rule/Base.html#excluded%3F%28source%29-instance-method" class="tooltip">
       <span>excluded?(source)</span>
     excluded?</a>, 
     
@@ -935,12 +934,12 @@ that follow <code>map</code>.</p>
     name</a>, 
     
   
-    <a href="../../../Ameba/Rule/Base.html#special?-instance-method" class="tooltip">
+    <a href="../../../Ameba/Rule/Base.html#special%3F-instance-method" class="tooltip">
       <span>special?</span>
     special?</a>, 
     
   
-    <a href="../../../Ameba/Rule/Base.html#test(source:Source,node:Crystal::ASTNode,*opts)-instance-method" class="tooltip">
+    <a href="../../../Ameba/Rule/Base.html#test%28source%3ASource%2Cnode%3ACrystal%3A%3AASTNode%2C%2Aopts%29-instance-method" class="tooltip">
       <span>test(source : Source, node : Crystal::ASTNode, *opts)<br/>test(source : Source)</span>
     test</a>
     
@@ -1010,24 +1009,18 @@ that follow <code>map</code>.</p>
         
         def self.<strong>new</strong>(ctx : YAML::ParseContext, node : YAML::Nodes::Node)
 
-        <a class="method-permalink" href="#new(ctx:YAML::ParseContext,node:YAML::Nodes::Node)-class-method">#</a>
+        <a class="method-permalink" href="#new%28ctx%3AYAML%3A%3AParseContext%2Cnode%3AYAML%3A%3ANodes%3A%3ANode%29-class-method">#</a>
       </div>
       
         <div class="doc">
           
           <p>This rule is used to identify usage of <code>sum/product</code> calls
 that follow <code>map</code>.</p>
-
 <p>For example, this is considered inefficient:</p>
-
 <pre><code class="language-crystal">(<span class="n">1</span>..<span class="n">3</span>).map(<span class="o">&amp;</span>.<span class="o">*</span>(<span class="n">2</span>)).sum</code></pre>
-
 <p>And can be written as this:</p>
-
 <pre><code class="language-crystal">(<span class="n">1</span>..<span class="n">3</span>).sum(<span class="o">&amp;</span>.<span class="o">*</span>(<span class="n">2</span>))</code></pre>
-
 <p>YAML configuration example:</p>
-
 <pre><code class="language-crystal">Performance/MapInsteadOfBlock:
   Enabled: true</code></pre>
         </div>
@@ -1043,24 +1036,18 @@ that follow <code>map</code>.</p>
         
         def self.<strong>new</strong>(config = <span class="n">nil</span>)
 
-        <a class="method-permalink" href="#new(config=nil)-class-method">#</a>
+        <a class="method-permalink" href="#new%28config%3Dnil%29-class-method">#</a>
       </div>
       
         <div class="doc">
           
           <p>This rule is used to identify usage of <code>sum/product</code> calls
 that follow <code>map</code>.</p>
-
 <p>For example, this is considered inefficient:</p>
-
 <pre><code class="language-crystal">(<span class="n">1</span>..<span class="n">3</span>).map(<span class="o">&amp;</span>.<span class="o">*</span>(<span class="n">2</span>)).sum</code></pre>
-
 <p>And can be written as this:</p>
-
 <pre><code class="language-crystal">(<span class="n">1</span>..<span class="n">3</span>).sum(<span class="o">&amp;</span>.<span class="o">*</span>(<span class="n">2</span>))</code></pre>
-
 <p>YAML configuration example:</p>
-
 <pre><code class="language-crystal">Performance/MapInsteadOfBlock:
   Enabled: true</code></pre>
         </div>
@@ -1068,7 +1055,7 @@ that follow <code>map</code>.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/9a91e42b/src/ameba/rule/performance/map_instead_of_block.cr#L25" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/48b15b9b/src/ameba/rule/performance/map_instead_of_block.cr#L25" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1092,7 +1079,7 @@ that follow <code>map</code>.</p>
         
         def <strong>description</strong> : String
 
-        <a class="method-permalink" href="#description:String-instance-method">#</a>
+        <a class="method-permalink" href="#description%3AString-instance-method">#</a>
       </div>
       
       <br/>
@@ -1106,7 +1093,7 @@ that follow <code>map</code>.</p>
         
         def <strong>description=</strong>(description : String)
 
-        <a class="method-permalink" href="#description=(description:String)-instance-method">#</a>
+        <a class="method-permalink" href="#description%3D%28description%3AString%29-instance-method">#</a>
       </div>
       
       <br/>
@@ -1120,7 +1107,7 @@ that follow <code>map</code>.</p>
         
         def <strong>enabled</strong> : Bool
 
-        <a class="method-permalink" href="#enabled:Bool-instance-method">#</a>
+        <a class="method-permalink" href="#enabled%3ABool-instance-method">#</a>
       </div>
       
       <br/>
@@ -1134,7 +1121,7 @@ that follow <code>map</code>.</p>
         
         def <strong>enabled=</strong>(enabled)
 
-        <a class="method-permalink" href="#enabled=(enabled)-instance-method">#</a>
+        <a class="method-permalink" href="#enabled%3D%28enabled%29-instance-method">#</a>
       </div>
       
       <br/>
@@ -1148,7 +1135,7 @@ that follow <code>map</code>.</p>
         
         def <strong>excluded</strong> : Array(String)?
 
-        <a class="method-permalink" href="#excluded:Array(String)?-instance-method">#</a>
+        <a class="method-permalink" href="#excluded%3AArray%28String%29%3F-instance-method">#</a>
       </div>
       
       <br/>
@@ -1162,7 +1149,7 @@ that follow <code>map</code>.</p>
         
         def <strong>excluded=</strong>(excluded : Array(String)?)
 
-        <a class="method-permalink" href="#excluded=(excluded:Array(String)?)-instance-method">#</a>
+        <a class="method-permalink" href="#excluded%3D%28excluded%3AArray%28String%29%3F%29-instance-method">#</a>
       </div>
       
       <br/>
@@ -1176,7 +1163,7 @@ that follow <code>map</code>.</p>
         
         def <strong>severity</strong> : <a href="../../../Ameba/Severity.html">Ameba::Severity</a>
 
-        <a class="method-permalink" href="#severity:Ameba::Severity-instance-method">#</a>
+        <a class="method-permalink" href="#severity%3AAmeba%3A%3ASeverity-instance-method">#</a>
       </div>
       
       <br/>
@@ -1190,7 +1177,7 @@ that follow <code>map</code>.</p>
         
         def <strong>severity=</strong>(severity)
 
-        <a class="method-permalink" href="#severity=(severity)-instance-method">#</a>
+        <a class="method-permalink" href="#severity%3D%28severity%29-instance-method">#</a>
       </div>
       
       <br/>
@@ -1204,13 +1191,13 @@ that follow <code>map</code>.</p>
         
         def <strong>test</strong>(source, node : Crystal::Call)
 
-        <a class="method-permalink" href="#test(source,node:Crystal::Call)-instance-method">#</a>
+        <a class="method-permalink" href="#test%28source%2Cnode%3ACrystal%3A%3ACall%29-instance-method">#</a>
       </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/9a91e42b/src/ameba/rule/performance/map_instead_of_block.cr#L43" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/48b15b9b/src/ameba/rule/performance/map_instead_of_block.cr#L43" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1220,13 +1207,13 @@ that follow <code>map</code>.</p>
         
         def <strong>test</strong>(source)
 
-        <a class="method-permalink" href="#test(source)-instance-method">#</a>
+        <a class="method-permalink" href="#test%28source%29-instance-method">#</a>
       </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/9a91e42b/src/ameba/rule/performance/map_instead_of_block.cr#L34" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/48b15b9b/src/ameba/rule/performance/map_instead_of_block.cr#L34" target="_blank">View source</a>]
         
       </div>
     </div>

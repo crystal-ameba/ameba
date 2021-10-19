@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="generator" content="Crystal Docs 0.36.1">
+<meta name="generator" content="Crystal Docs 1.1.1">
 <meta name="crystal_docs.project_version" content="master">
 <meta name="crystal_docs.project_name" content="ameba">
 
@@ -285,6 +285,11 @@
       <a href="../../Ameba/Rule/Lint.html">Lint</a>
       
         <ul>
+  
+  <li class=" " data-id="ameba/Ameba/Rule/Lint/AmbiguousAssignment" data-name="ameba::rule::lint::ambiguousassignment">
+      <a href="../../Ameba/Rule/Lint/AmbiguousAssignment.html">AmbiguousAssignment</a>
+      
+    </li>
   
   <li class=" " data-id="ameba/Ameba/Rule/Lint/BadDirective" data-name="ameba::rule::lint::baddirective">
       <a href="../../Ameba/Rule/Lint/BadDirective.html">BadDirective</a>
@@ -642,7 +647,6 @@
   <p>Represents the branch in Crystal code.
 Branch is a part of a branchable statement.
 For example, the branchable if statement contains 3 branches:</p>
-
 <pre><code class="language-crystal"><span class="k">if</span> a <span class="o">=</span> something <span class="c"># --&gt; Branch A</span>
   a <span class="o">=</span> <span class="n">1</span>          <span class="c"># --&gt; Branch B</span>
   put a <span class="k">if</span> <span class="k">out</span>   <span class="c"># --&gt; Branch C</span>
@@ -673,7 +677,7 @@ For example, the branchable if statement contains 3 branches:</p>
   </h2>
   
     
-      <a href="https://github.com/crystal-ameba/ameba/blob/9a91e42b/src/ameba/ast/branch.cr#L15" target="_blank">
+      <a href="https://github.com/crystal-ameba/ameba/blob/48b15b9b/src/ameba/ast/branch.cr#L15" target="_blank">
         ameba/ast/branch.cr
       </a>
     
@@ -695,7 +699,7 @@ For example, the branchable if statement contains 3 branches:</p>
   <ul class="list-summary">
     
       <li class="entry-summary">
-        <a href="#new(node,parent)-class-method" class="signature"><strong>.new</strong>(node, parent)</a>
+        <a href="#new%28node%2Cparent%29-class-method" class="signature"><strong>.new</strong>(node, parent)</a>
         
           <div class="summary"><p>Creates a new branch.</p></div>
         
@@ -716,14 +720,14 @@ For example, the branchable if statement contains 3 branches:</p>
   <ul class="list-summary">
     
       <li class="entry-summary">
-        <a href="#of(node:Crystal::ASTNode,parent_node:Crystal::ASTNode)-class-method" class="signature"><strong>.of</strong>(node : Crystal::ASTNode, parent_node : Crystal::ASTNode)</a>
+        <a href="#of%28node%3ACrystal%3A%3AASTNode%2Cparent_node%3ACrystal%3A%3AASTNode%29-class-method" class="signature"><strong>.of</strong>(node : Crystal::ASTNode, parent_node : Crystal::ASTNode)</a>
         
           <div class="summary"><p>Constructs a new branch based on the node some parent scope.</p></div>
         
       </li>
     
       <li class="entry-summary">
-        <a href="#of(node:Crystal::ASTNode,scope:Scope)-class-method" class="signature"><strong>.of</strong>(node : Crystal::ASTNode, scope : Scope)</a>
+        <a href="#of%28node%3ACrystal%3A%3AASTNode%2Cscope%3AScope%29-class-method" class="signature"><strong>.of</strong>(node : Crystal::ASTNode, scope : Scope)</a>
         
           <div class="summary"><p>Constructs a new branch based on the node in scope.</p></div>
         
@@ -744,67 +748,67 @@ For example, the branchable if statement contains 3 branches:</p>
   <ul class="list-summary">
     
       <li class="entry-summary">
-        <a href="#==(other:self)-instance-method" class="signature"><strong>#==</strong>(other : <span class="k">self</span>)</a>
+        <a href="#%3D%3D%28other%3Aself%29-instance-method" class="signature"><strong>#==</strong>(other : <span class="k">self</span>)</a>
         
           <div class="summary"><p>Returns <code>true</code> if this reference is the same as <em>other</em>.</p></div>
         
       </li>
     
       <li class="entry-summary">
-        <a href="#end_location(*args,**options)-instance-method" class="signature"><strong>#end_location</strong>(*args, **options)</a>
+        <a href="#end_location%28%2Aargs%2C%2A%2Aoptions%29-instance-method" class="signature"><strong>#end_location</strong>(*args, **options)</a>
         
       </li>
     
       <li class="entry-summary">
-        <a href="#end_location(*args,**options,&)-instance-method" class="signature"><strong>#end_location</strong>(*args, **options, &)</a>
+        <a href="#end_location%28%2Aargs%2C%2A%2Aoptions%2C%26%29-instance-method" class="signature"><strong>#end_location</strong>(*args, **options, &)</a>
         
       </li>
     
       <li class="entry-summary">
-        <a href="#hash(hasher)-instance-method" class="signature"><strong>#hash</strong>(hasher)</a>
+        <a href="#hash%28hasher%29-instance-method" class="signature"><strong>#hash</strong>(hasher)</a>
         
           <div class="summary"><p>See <code>Object#hash(hasher)</code></p></div>
         
       </li>
     
       <li class="entry-summary">
-        <a href="#in_loop?-instance-method" class="signature"><strong>#in_loop?</strong></a>
+        <a href="#in_loop%3F-instance-method" class="signature"><strong>#in_loop?</strong></a>
         
           <div class="summary"><p>Returns true if current branch is in a loop, false - otherwise.</p></div>
         
       </li>
     
       <li class="entry-summary">
-        <a href="#location(*args,**options)-instance-method" class="signature"><strong>#location</strong>(*args, **options)</a>
+        <a href="#location%28%2Aargs%2C%2A%2Aoptions%29-instance-method" class="signature"><strong>#location</strong>(*args, **options)</a>
         
       </li>
     
       <li class="entry-summary">
-        <a href="#location(*args,**options,&)-instance-method" class="signature"><strong>#location</strong>(*args, **options, &)</a>
+        <a href="#location%28%2Aargs%2C%2A%2Aoptions%2C%26%29-instance-method" class="signature"><strong>#location</strong>(*args, **options, &)</a>
         
       </li>
     
       <li class="entry-summary">
-        <a href="#node:Crystal::ASTNode-instance-method" class="signature"><strong>#node</strong> : Crystal::ASTNode</a>
+        <a href="#node%3ACrystal%3A%3AASTNode-instance-method" class="signature"><strong>#node</strong> : Crystal::ASTNode</a>
         
           <div class="summary"><p>The actual branch node.</p></div>
         
       </li>
     
       <li class="entry-summary">
-        <a href="#parent:Branchable-instance-method" class="signature"><strong>#parent</strong> : Branchable</a>
+        <a href="#parent%3ABranchable-instance-method" class="signature"><strong>#parent</strong> : Branchable</a>
         
           <div class="summary"><p>The parent branchable.</p></div>
         
       </li>
     
       <li class="entry-summary">
-        <a href="#to_s(*args,**options)-instance-method" class="signature"><strong>#to_s</strong>(*args, **options)</a>
+        <a href="#to_s%28%2Aargs%2C%2A%2Aoptions%29-instance-method" class="signature"><strong>#to_s</strong>(*args, **options)</a>
         
       </li>
     
       <li class="entry-summary">
-        <a href="#to_s(*args,**options,&)-instance-method" class="signature"><strong>#to_s</strong>(*args, **options, &)</a>
+        <a href="#to_s%28%2Aargs%2C%2A%2Aoptions%2C%26%29-instance-method" class="signature"><strong>#to_s</strong>(*args, **options, &)</a>
         
       </li>
     
@@ -853,20 +857,19 @@ For example, the branchable if statement contains 3 branches:</p>
         
         def self.<strong>new</strong>(node, parent)
 
-        <a class="method-permalink" href="#new(node,parent)-class-method">#</a>
+        <a class="method-permalink" href="#new%28node%2Cparent%29-class-method">#</a>
       </div>
       
         <div class="doc">
           
           <p>Creates a new branch.</p>
-
 <pre><code class="language-crystal"><span class="t">Branch</span>.<span class="k">new</span>(if_node)</code></pre>
         </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/9a91e42b/src/ameba/ast/branch.cr#L33" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/48b15b9b/src/ameba/ast/branch.cr#L33" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -888,20 +891,19 @@ For example, the branchable if statement contains 3 branches:</p>
         
         def self.<strong>of</strong>(node : Crystal::ASTNode, parent_node : Crystal::ASTNode)
 
-        <a class="method-permalink" href="#of(node:Crystal::ASTNode,parent_node:Crystal::ASTNode)-class-method">#</a>
+        <a class="method-permalink" href="#of%28node%3ACrystal%3A%3AASTNode%2Cparent_node%3ACrystal%3A%3AASTNode%29-class-method">#</a>
       </div>
       
         <div class="doc">
           
           <p>Constructs a new branch based on the node some parent scope.</p>
-
 <pre><code class="language-crystal"><span class="t">Branch</span>.<span class="k">of</span>(assign_node, def_node)</code></pre>
         </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/9a91e42b/src/ameba/ast/branch.cr#L65" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/48b15b9b/src/ameba/ast/branch.cr#L65" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -911,20 +913,19 @@ For example, the branchable if statement contains 3 branches:</p>
         
         def self.<strong>of</strong>(node : Crystal::ASTNode, scope : <a href="../../Ameba/AST/Scope.html">Scope</a>)
 
-        <a class="method-permalink" href="#of(node:Crystal::ASTNode,scope:Scope)-class-method">#</a>
+        <a class="method-permalink" href="#of%28node%3ACrystal%3A%3AASTNode%2Cscope%3AScope%29-class-method">#</a>
       </div>
       
         <div class="doc">
           
           <p>Constructs a new branch based on the node in scope.</p>
-
 <pre><code class="language-crystal"><span class="t">Branch</span>.<span class="k">of</span>(assign_node, scope)</code></pre>
         </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/9a91e42b/src/ameba/ast/branch.cr#L56" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/48b15b9b/src/ameba/ast/branch.cr#L56" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -946,7 +947,7 @@ For example, the branchable if statement contains 3 branches:</p>
         
         def <strong>==</strong>(other : <span class="k">self</span>)
 
-        <a class="method-permalink" href="#==(other:self)-instance-method">#</a>
+        <a class="method-permalink" href="#%3D%3D%28other%3Aself%29-instance-method">#</a>
       </div>
       
         <div class="doc">
@@ -969,29 +970,29 @@ For example, the branchable if statement contains 3 branches:</p>
         
         def <strong>end_location</strong>(*args, **options)
 
-        <a class="method-permalink" href="#end_location(*args,**options)-instance-method">#</a>
+        <a class="method-permalink" href="#end_location%28%2Aargs%2C%2A%2Aoptions%29-instance-method">#</a>
       </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/9a91e42b/src/ameba/ast/branch.cr#L24" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/48b15b9b/src/ameba/ast/branch.cr#L24" target="_blank">View source</a>]
         
       </div>
     </div>
   
-    <div class="entry-detail" id="end_location(*args,**options,&)-instance-method">
+    <div class="entry-detail" id="end_location(*args,**options,&amp;)-instance-method">
       <div class="signature">
         
         def <strong>end_location</strong>(*args, **options, &)
 
-        <a class="method-permalink" href="#end_location(*args,**options,&)-instance-method">#</a>
+        <a class="method-permalink" href="#end_location%28%2Aargs%2C%2A%2Aoptions%2C%26%29-instance-method">#</a>
       </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/9a91e42b/src/ameba/ast/branch.cr#L24" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/48b15b9b/src/ameba/ast/branch.cr#L24" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1001,7 +1002,7 @@ For example, the branchable if statement contains 3 branches:</p>
         
         def <strong>hash</strong>(hasher)
 
-        <a class="method-permalink" href="#hash(hasher)-instance-method">#</a>
+        <a class="method-permalink" href="#hash%28hasher%29-instance-method">#</a>
       </div>
       
         <div class="doc">
@@ -1024,14 +1025,13 @@ For example, the branchable if statement contains 3 branches:</p>
         
         def <strong>in_loop?</strong>
 
-        <a class="method-permalink" href="#in_loop?-instance-method">#</a>
+        <a class="method-permalink" href="#in_loop%3F-instance-method">#</a>
       </div>
       
         <div class="doc">
           
           <p>Returns true if current branch is in a loop, false - otherwise.
 For example, this branch is in a loop:</p>
-
 <pre><code class="language-crystal"><span class="k">while</span> <span class="n">true</span>
   handle_input <span class="c"># this branch is in a loop</span>
   <span class="k">if</span> wrong_input
@@ -1043,7 +1043,7 @@ For example, this branch is in a loop:</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/9a91e42b/src/ameba/ast/branch.cr#L47" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/48b15b9b/src/ameba/ast/branch.cr#L47" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1053,29 +1053,29 @@ For example, this branch is in a loop:</p>
         
         def <strong>location</strong>(*args, **options)
 
-        <a class="method-permalink" href="#location(*args,**options)-instance-method">#</a>
+        <a class="method-permalink" href="#location%28%2Aargs%2C%2A%2Aoptions%29-instance-method">#</a>
       </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/9a91e42b/src/ameba/ast/branch.cr#L23" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/48b15b9b/src/ameba/ast/branch.cr#L23" target="_blank">View source</a>]
         
       </div>
     </div>
   
-    <div class="entry-detail" id="location(*args,**options,&)-instance-method">
+    <div class="entry-detail" id="location(*args,**options,&amp;)-instance-method">
       <div class="signature">
         
         def <strong>location</strong>(*args, **options, &)
 
-        <a class="method-permalink" href="#location(*args,**options,&)-instance-method">#</a>
+        <a class="method-permalink" href="#location%28%2Aargs%2C%2A%2Aoptions%2C%26%29-instance-method">#</a>
       </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/9a91e42b/src/ameba/ast/branch.cr#L23" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/48b15b9b/src/ameba/ast/branch.cr#L23" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1085,7 +1085,7 @@ For example, this branch is in a loop:</p>
         
         def <strong>node</strong> : Crystal::ASTNode
 
-        <a class="method-permalink" href="#node:Crystal::ASTNode-instance-method">#</a>
+        <a class="method-permalink" href="#node%3ACrystal%3A%3AASTNode-instance-method">#</a>
       </div>
       
         <div class="doc">
@@ -1096,7 +1096,7 @@ For example, this branch is in a loop:</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/9a91e42b/src/ameba/ast/branch.cr#L17" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/48b15b9b/src/ameba/ast/branch.cr#L17" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1106,7 +1106,7 @@ For example, this branch is in a loop:</p>
         
         def <strong>parent</strong> : <a href="../../Ameba/AST/Branchable.html">Branchable</a>
 
-        <a class="method-permalink" href="#parent:Branchable-instance-method">#</a>
+        <a class="method-permalink" href="#parent%3ABranchable-instance-method">#</a>
       </div>
       
         <div class="doc">
@@ -1117,7 +1117,7 @@ For example, this branch is in a loop:</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/9a91e42b/src/ameba/ast/branch.cr#L20" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/48b15b9b/src/ameba/ast/branch.cr#L20" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1127,29 +1127,29 @@ For example, this branch is in a loop:</p>
         
         def <strong>to_s</strong>(*args, **options)
 
-        <a class="method-permalink" href="#to_s(*args,**options)-instance-method">#</a>
+        <a class="method-permalink" href="#to_s%28%2Aargs%2C%2A%2Aoptions%29-instance-method">#</a>
       </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/9a91e42b/src/ameba/ast/branch.cr#L22" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/48b15b9b/src/ameba/ast/branch.cr#L22" target="_blank">View source</a>]
         
       </div>
     </div>
   
-    <div class="entry-detail" id="to_s(*args,**options,&)-instance-method">
+    <div class="entry-detail" id="to_s(*args,**options,&amp;)-instance-method">
       <div class="signature">
         
         def <strong>to_s</strong>(*args, **options, &)
 
-        <a class="method-permalink" href="#to_s(*args,**options,&)-instance-method">#</a>
+        <a class="method-permalink" href="#to_s%28%2Aargs%2C%2A%2Aoptions%2C%26%29-instance-method">#</a>
       </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/9a91e42b/src/ameba/ast/branch.cr#L22" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/48b15b9b/src/ameba/ast/branch.cr#L22" target="_blank">View source</a>]
         
       </div>
     </div>

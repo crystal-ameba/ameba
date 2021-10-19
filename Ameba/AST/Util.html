@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="generator" content="Crystal Docs 0.36.1">
+<meta name="generator" content="Crystal Docs 1.1.1">
 <meta name="crystal_docs.project_version" content="master">
 <meta name="crystal_docs.project_name" content="ameba">
 
@@ -285,6 +285,11 @@
       <a href="../../Ameba/Rule/Lint.html">Lint</a>
       
         <ul>
+  
+  <li class=" " data-id="ameba/Ameba/Rule/Lint/AmbiguousAssignment" data-name="ameba::rule::lint::ambiguousassignment">
+      <a href="../../Ameba/Rule/Lint/AmbiguousAssignment.html">AmbiguousAssignment</a>
+      
+    </li>
   
   <li class=" " data-id="ameba/Ameba/Rule/Lint/BadDirective" data-name="ameba::rule::lint::baddirective">
       <a href="../../Ameba/Rule/Lint/BadDirective.html">BadDirective</a>
@@ -665,6 +670,8 @@
     
       <li class="other-type"><a href="../../Ameba/AST/FlowExpressionVisitor.html">Ameba::AST::FlowExpressionVisitor</a></li>
     
+      <li class="other-type"><a href="../../Ameba/Rule/Lint/AmbiguousAssignment.html">Ameba::Rule::Lint::AmbiguousAssignment</a></li>
+    
       <li class="other-type"><a href="../../Ameba/Rule/Lint/EmptyExpression.html">Ameba::Rule::Lint::EmptyExpression</a></li>
     
       <li class="other-type"><a href="../../Ameba/Rule/Lint/EmptyLoop.html">Ameba::Rule::Lint::EmptyLoop</a></li>
@@ -694,7 +701,7 @@
   </h2>
   
     
-      <a href="https://github.com/crystal-ameba/ameba/blob/9a91e42b/src/ameba/ast/util.cr#L2" target="_blank">
+      <a href="https://github.com/crystal-ameba/ameba/blob/48b15b9b/src/ameba/ast/util.cr#L2" target="_blank">
         ameba/ast/util.cr
       </a>
     
@@ -720,58 +727,65 @@
   <ul class="list-summary">
     
       <li class="entry-summary">
-        <a href="#abort?(node)-instance-method" class="signature"><strong>#abort?</strong>(node)</a>
+        <a href="#abort%3F%28node%29-instance-method" class="signature"><strong>#abort?</strong>(node)</a>
         
           <div class="summary"><p>Returns true if node represents <code>abort</code> method call.</p></div>
         
       </li>
     
       <li class="entry-summary">
-        <a href="#exit?(node)-instance-method" class="signature"><strong>#exit?</strong>(node)</a>
+        <a href="#exit%3F%28node%29-instance-method" class="signature"><strong>#exit?</strong>(node)</a>
         
           <div class="summary"><p>Returns true if node represents <code>exit</code> method call.</p></div>
         
       </li>
     
       <li class="entry-summary">
-        <a href="#flow_command?(node,in_loop)-instance-method" class="signature"><strong>#flow_command?</strong>(node, in_loop)</a>
+        <a href="#flow_command%3F%28node%2Cin_loop%29-instance-method" class="signature"><strong>#flow_command?</strong>(node, in_loop)</a>
         
           <div class="summary"><p>Returns true if node is a flow command, false - otherwise.</p></div>
         
       </li>
     
       <li class="entry-summary">
-        <a href="#flow_expression?(node,in_loop=false)-instance-method" class="signature"><strong>#flow_expression?</strong>(node, in_loop = <span class="n">false</span>)</a>
+        <a href="#flow_expression%3F%28node%2Cin_loop%3Dfalse%29-instance-method" class="signature"><strong>#flow_expression?</strong>(node, in_loop = <span class="n">false</span>)</a>
         
           <div class="summary"><p>Returns true if node is a flow expression, false if not.</p></div>
         
       </li>
     
       <li class="entry-summary">
-        <a href="#literal?(node)-instance-method" class="signature"><strong>#literal?</strong>(node)</a>
+        <a href="#literal%3F%28node%29-instance-method" class="signature"><strong>#literal?</strong>(node)</a>
         
           <div class="summary"><p>Returns true if current <code>node</code> is a literal, false otherwise.</p></div>
         
       </li>
     
       <li class="entry-summary">
-        <a href="#loop?(node)-instance-method" class="signature"><strong>#loop?</strong>(node)</a>
+        <a href="#loop%3F%28node%29-instance-method" class="signature"><strong>#loop?</strong>(node)</a>
         
           <div class="summary"><p>Returns true if node represents a loop.</p></div>
         
       </li>
     
       <li class="entry-summary">
-        <a href="#node_source(node,code_lines)-instance-method" class="signature"><strong>#node_source</strong>(node, code_lines)</a>
+        <a href="#node_source%28node%2Ccode_lines%29-instance-method" class="signature"><strong>#node_source</strong>(node, code_lines)</a>
         
           <div class="summary"><p>Returns a source code for the current node.</p></div>
         
       </li>
     
       <li class="entry-summary">
-        <a href="#raise?(node)-instance-method" class="signature"><strong>#raise?</strong>(node)</a>
+        <a href="#raise%3F%28node%29-instance-method" class="signature"><strong>#raise?</strong>(node)</a>
         
           <div class="summary"><p>Returns true if node represents <code>raise</code> method call.</p></div>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#source_between%28loc%2Cend_loc%2Ccode_lines%29%3AString%3F-instance-method" class="signature"><strong>#source_between</strong>(loc, end_loc, code_lines) : String?</a>
+        
+          <div class="summary"><p>Returns the source code from <em>loc</em> to <em>end_loc</em> (inclusive).</p></div>
         
       </li>
     
@@ -804,7 +818,7 @@
         
         def <strong>abort?</strong>(node)
 
-        <a class="method-permalink" href="#abort?(node)-instance-method">#</a>
+        <a class="method-permalink" href="#abort%3F%28node%29-instance-method">#</a>
       </div>
       
         <div class="doc">
@@ -815,7 +829,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/9a91e42b/src/ameba/ast/util.cr#L140" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/48b15b9b/src/ameba/ast/util.cr#L145" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -825,7 +839,7 @@
         
         def <strong>exit?</strong>(node)
 
-        <a class="method-permalink" href="#exit?(node)-instance-method">#</a>
+        <a class="method-permalink" href="#exit%3F%28node%29-instance-method">#</a>
       </div>
       
         <div class="doc">
@@ -836,7 +850,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/9a91e42b/src/ameba/ast/util.cr#L134" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/48b15b9b/src/ameba/ast/util.cr#L139" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -846,7 +860,7 @@
         
         def <strong>flow_command?</strong>(node, in_loop)
 
-        <a class="method-permalink" href="#flow_command?(node,in_loop)-instance-method">#</a>
+        <a class="method-permalink" href="#flow_command%3F%28node%2Cin_loop%29-instance-method">#</a>
       </div>
       
         <div class="doc">
@@ -859,7 +873,7 @@ or special call node that interrupts execution (i.e. raise, exit, abort).</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/9a91e42b/src/ameba/ast/util.cr#L62" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/48b15b9b/src/ameba/ast/util.cr#L67" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -869,17 +883,15 @@ or special call node that interrupts execution (i.e. raise, exit, abort).</p>
         
         def <strong>flow_expression?</strong>(node, in_loop = <span class="n">false</span>)
 
-        <a class="method-permalink" href="#flow_expression?(node,in_loop=false)-instance-method">#</a>
+        <a class="method-permalink" href="#flow_expression%3F%28node%2Cin_loop%3Dfalse%29-instance-method">#</a>
       </div>
       
         <div class="doc">
           
           <p>Returns true if node is a flow expression, false if not.
 Node represents a flow expression if it is full-filled by a flow command.</p>
-
 <p>For example, this node is a flow expression, because each branch contains
 a flow command <code>return</code>:</p>
-
 <pre><code class="language-crystal"><span class="k">if</span> a <span class="o">&gt;</span> <span class="n">0</span>
   <span class="k">return</span> <span class="n">:positive</span>
 <span class="k">elsif</span> a <span class="o">&lt;</span> <span class="n">0</span>
@@ -887,20 +899,17 @@ a flow command <code>return</code>:</p>
 <span class="k">else</span>
   <span class="k">return</span> <span class="n">:zero</span>
 <span class="k">end</span></code></pre>
-
 <p>This node is a not a flow expression:</p>
-
 <pre><code class="language-crystal"><span class="k">if</span> a <span class="o">&gt;</span> <span class="n">0</span>
   <span class="k">return</span> <span class="n">:positive</span>
 <span class="k">end</span></code></pre>
-
 <p>That's because not all branches return(i.e. <code>else</code> is missing).</p>
         </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/9a91e42b/src/ameba/ast/util.cr#L100" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/48b15b9b/src/ameba/ast/util.cr#L105" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -910,7 +919,7 @@ a flow command <code>return</code>:</p>
         
         def <strong>literal?</strong>(node)
 
-        <a class="method-permalink" href="#literal?(node)-instance-method">#</a>
+        <a class="method-permalink" href="#literal%3F%28node%29-instance-method">#</a>
       </div>
       
         <div class="doc">
@@ -921,7 +930,7 @@ a flow command <code>return</code>:</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/9a91e42b/src/ameba/ast/util.cr#L4" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/48b15b9b/src/ameba/ast/util.cr#L4" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -931,7 +940,7 @@ a flow command <code>return</code>:</p>
         
         def <strong>loop?</strong>(node)
 
-        <a class="method-permalink" href="#loop?(node)-instance-method">#</a>
+        <a class="method-permalink" href="#loop%3F%28node%29-instance-method">#</a>
       </div>
       
         <div class="doc">
@@ -942,7 +951,7 @@ a flow command <code>return</code>:</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/9a91e42b/src/ameba/ast/util.cr#L146" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/48b15b9b/src/ameba/ast/util.cr#L151" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -952,7 +961,7 @@ a flow command <code>return</code>:</p>
         
         def <strong>node_source</strong>(node, code_lines)
 
-        <a class="method-permalink" href="#node_source(node,code_lines)-instance-method">#</a>
+        <a class="method-permalink" href="#node_source%28node%2Ccode_lines%29-instance-method">#</a>
       </div>
       
         <div class="doc">
@@ -965,7 +974,7 @@ to determine and cut a piece of source of the node.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/9a91e42b/src/ameba/ast/util.cr#L33" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/48b15b9b/src/ameba/ast/util.cr#L33" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -975,7 +984,7 @@ to determine and cut a piece of source of the node.</p>
         
         def <strong>raise?</strong>(node)
 
-        <a class="method-permalink" href="#raise?(node)-instance-method">#</a>
+        <a class="method-permalink" href="#raise%3F%28node%29-instance-method">#</a>
       </div>
       
         <div class="doc">
@@ -986,7 +995,28 @@ to determine and cut a piece of source of the node.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/9a91e42b/src/ameba/ast/util.cr#L128" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/48b15b9b/src/ameba/ast/util.cr#L133" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="source_between(loc,end_loc,code_lines):String?-instance-method">
+      <div class="signature">
+        
+        def <strong>source_between</strong>(loc, end_loc, code_lines) : String?
+
+        <a class="method-permalink" href="#source_between%28loc%2Cend_loc%2Ccode_lines%29%3AString%3F-instance-method">#</a>
+      </div>
+      
+        <div class="doc">
+          
+          <p>Returns the source code from <em>loc</em> to <em>end_loc</em> (inclusive).</p>
+        </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/crystal-ameba/ameba/blob/48b15b9b/src/ameba/ast/util.cr#L42" target="_blank">View source</a>]
         
       </div>
     </div>

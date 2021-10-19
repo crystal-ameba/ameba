@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="generator" content="Crystal Docs 0.36.1">
+<meta name="generator" content="Crystal Docs 1.1.1">
 <meta name="crystal_docs.project_version" content="master">
 <meta name="crystal_docs.project_name" content="ameba">
 
@@ -285,6 +285,11 @@
       <a href="Ameba/Rule/Lint.html">Lint</a>
       
         <ul>
+  
+  <li class=" " data-id="ameba/Ameba/Rule/Lint/AmbiguousAssignment" data-name="ameba::rule::lint::ambiguousassignment">
+      <a href="Ameba/Rule/Lint/AmbiguousAssignment.html">AmbiguousAssignment</a>
+      
+    </li>
   
   <li class=" " data-id="ameba/Ameba/Rule/Lint/BadDirective" data-name="ameba::rule::lint::baddirective">
       <a href="Ameba/Rule/Lint/BadDirective.html">BadDirective</a>
@@ -618,40 +623,49 @@
 
 
 <div class="main-content">
-<ul><li><a href="#about">About</a></li><li><a href="#usage">Usage</a></li></ul>
-
-<ul><li><a href="#watch-a-tutorial">Watch a tutorial</a></li><li><a href="#run-in-parallel">Run in parallel</a></li></ul></ul>
-
-<ul><li><a href="#installation">Installation</a></li></ul>
-
-<ul><li><a href="#as-a-project-dependency">As a project dependency:</a></li><li><a href="#os-x">OS X</a></li><li><a href="#docker">Docker</a></li><li><a href="#from-sources">From sources</a></li></ul></ul>
-
-<ul><li><a href="#configuration">Configuration</a></li></ul>
-
-<ul><li><a href="#sources">Sources</a></li><li><a href="#rules">Rules</a></li><li><a href="#explain-issues">Explain issues</a></li><li><a href="#inline-disabling">Inline disabling</a></li></ul></ul>
-
-<ul><li><a href="#editors--integrations">Editors & integrations</a></li><li><a href="#credits--inspirations">Credits & inspirations</a></li><li><a href="#contributors">Contributors</a></li></ul>
-
+<ul>
+<li><a href="#about">About</a></li>
+<li><a href="#usage">Usage</a>
+<ul>
+<li><a href="#watch-a-tutorial">Watch a tutorial</a></li>
+<li><a href="#run-in-parallel">Run in parallel</a></li>
+</ul>
+</li>
+<li><a href="#installation">Installation</a>
+<ul>
+<li><a href="#as-a-project-dependency">As a project dependency:</a></li>
+<li><a href="#os-x">OS X</a></li>
+<li><a href="#docker">Docker</a></li>
+<li><a href="#from-sources">From sources</a></li>
+</ul>
+</li>
+<li><a href="#configuration">Configuration</a>
+<ul>
+<li><a href="#sources">Sources</a></li>
+<li><a href="#rules">Rules</a></li>
+<li><a href="#explain-issues">Explain issues</a></li>
+<li><a href="#inline-disabling">Inline disabling</a></li>
+</ul>
+</li>
+<li><a href="#editors--integrations">Editors &amp; integrations</a></li>
+<li><a href="#credits--inspirations">Credits &amp; inspirations</a></li>
+<li><a href="#contributors">Contributors</a></li>
+</ul>
 <h2><a id="about" class="anchor" href="#about">
   <svg class="octicon-link" aria-hidden="true">
     <use href="#octicon-link"/>
   </svg>
 </a>About</h2>
-
 <p>Ameba is a static code analysis tool for the Crystal language.
 It enforces a consistent <a href="https://crystal-lang.org/reference/conventions/coding_style.html">Crystal code style</a>,
 also catches code smells and wrong code constructions.</p>
-
 <p>See also <a href="https://github.com/crystal-ameba/ameba/wiki">Roadmap</a>.</p>
-
 <h2><a id="usage" class="anchor" href="#usage">
   <svg class="octicon-link" aria-hidden="true">
     <use href="#octicon-link"/>
   </svg>
 </a>Usage</h2>
-
 <p>Run <code>ameba</code> binary within your project directory to catch code issues:</p>
-
 <pre><code class="language-sh">$ ameba
 Inspecting 107 files
 
@@ -659,68 +673,54 @@ Inspecting 107 files
 
 src/ameba/formatter/flycheck_formatter.cr:4:33
 [W] Lint/UnusedArgument: Unused argument `location`
-> source.issues.each do |e, location|
+&gt; source.issues.each do |e, location|
                             ^
 
 src/ameba/formatter/base_formatter.cr:12:7
 [W] Lint/UselessAssign: Useless assignment to variable `s`
-> return s += issues.size
+&gt; return s += issues.size
          ^
 
 Finished in 542.64 milliseconds
 129 inspected, 2 failures</code></pre>
-
 <h3><a id="watch-a-tutorial" class="anchor" href="#watch-a-tutorial">
   <svg class="octicon-link" aria-hidden="true">
     <use href="#octicon-link"/>
   </svg>
 </a>Watch a tutorial</h3>
-
 <p><a href="https://luckycasts.com/videos/ameba">🎬 Watch the LuckyCast showing how to use Ameba</a></p>
-
 <h3><a id="run-in-parallel" class="anchor" href="#run-in-parallel">
   <svg class="octicon-link" aria-hidden="true">
     <use href="#octicon-link"/>
   </svg>
 </a>Run in parallel</h3>
-
 <p>Starting from 0.31.0 Crystal <a href="https://crystal-lang.org/2019/09/06/parallelism-in-crystal.html">supports parallelism</a>.
 It allows to run linting in parallel too.
 In order to take advantage of this feature you need to build ameba with preview_mt support:</p>
-
 <pre><code class="language-sh">$ crystal build src/cli.cr -Dpreview_mt -o bin/ameba
 $ make install</code></pre>
-
 <p>Some quick benchmark results measured while running Ameba on Crystal repo:</p>
-
-<pre><code class="language-sh">$ CRYSTAL_WORKERS=1 ameba #=> 29.11 seconds
-$ CRYSTAL_WORKERS=2 ameba #=> 19.49 seconds
-$ CRYSTAL_WORKERS=4 ameba #=> 13.48 seconds
-$ CRYSTAL_WORKERS=8 ameba #=> 10.14 seconds</code></pre>
-
+<pre><code class="language-sh">$ CRYSTAL_WORKERS=1 ameba #=&gt; 29.11 seconds
+$ CRYSTAL_WORKERS=2 ameba #=&gt; 19.49 seconds
+$ CRYSTAL_WORKERS=4 ameba #=&gt; 13.48 seconds
+$ CRYSTAL_WORKERS=8 ameba #=&gt; 10.14 seconds</code></pre>
 <h2><a id="installation" class="anchor" href="#installation">
   <svg class="octicon-link" aria-hidden="true">
     <use href="#octicon-link"/>
   </svg>
 </a>Installation</h2>
-
 <h3><a id="as-a-project-dependency" class="anchor" href="#as-a-project-dependency">
   <svg class="octicon-link" aria-hidden="true">
     <use href="#octicon-link"/>
   </svg>
 </a>As a project dependency:</h3>
-
 <p>Add this to your application's <code>shard.yml</code>:</p>
-
 <pre><code class="language-yaml">development_dependencies:
   ameba:
     github: crystal-ameba/ameba
-    version: ~> 0.13.0</code></pre>
-
+    version: ~&gt; 0.13.0</code></pre>
 <p>Build <code>bin/ameba</code> binary within your project directory while running <code>shards install</code>.</p>
-
 <p>You may also want to use it on <a href="travis-ci.org">Travis</a>:</p>
-
 <pre><code class="language-yaml"># .travis.yml
 language: crystal
 install:
@@ -728,156 +728,134 @@ install:
 script:
   - crystal spec
   - crystal bin/ameba.cr</code></pre>
-
 <p>Using this config Ameba will inspect files just after the specs run. Travis will also fail
 the build if some problems detected.</p>
-
 <h3><a id="os-x" class="anchor" href="#os-x">
   <svg class="octicon-link" aria-hidden="true">
     <use href="#octicon-link"/>
   </svg>
 </a>OS X</h3>
-
 <pre><code class="language-sh">$ brew tap veelenga/tap
 $ brew install ameba</code></pre>
-
 <h3><a id="docker" class="anchor" href="#docker">
   <svg class="octicon-link" aria-hidden="true">
     <use href="#octicon-link"/>
   </svg>
 </a>Docker</h3>
-
 <p>Build the image:</p>
-
 <pre><code class="language-sh">$ docker build -t crystal-ameba/ameba .</code></pre>
-
 <p>To use the resulting image on a local source folder, mount the current (or target) directory into <code>/src</code>:</p>
-
 <pre><code class="language-sh">$ docker run -v $(pwd):/src crystal-ameba/ameba</code></pre>
-
 <p>Also available on DockerHub: https://hub.docker.com/r/veelenga/ameba</p>
-
 <h3><a id="from-sources" class="anchor" href="#from-sources">
   <svg class="octicon-link" aria-hidden="true">
     <use href="#octicon-link"/>
   </svg>
 </a>From sources</h3>
-
-<pre><code class="language-sh">$ git clone https://github.com/crystal-ameba/ameba && cd ameba
+<pre><code class="language-sh">$ git clone https://github.com/crystal-ameba/ameba &amp;&amp; cd ameba
 $ make install</code></pre>
-
 <h2><a id="configuration" class="anchor" href="#configuration">
   <svg class="octicon-link" aria-hidden="true">
     <use href="#octicon-link"/>
   </svg>
 </a>Configuration</h2>
-
 <p>Default configuration file is <code>.ameba.yml</code>.
 It allows to configure rule properties, disable specific rules and exclude sources from the rules.</p>
-
 <p>Generate new file by running <code>ameba --gen-config</code>.</p>
-
 <h3><a id="sources" class="anchor" href="#sources">
   <svg class="octicon-link" aria-hidden="true">
     <use href="#octicon-link"/>
   </svg>
 </a>Sources</h3>
-
 <p><strong>List of sources to run Ameba on can be configured globally via:</strong></p>
-
-<ul><li><code>Globs</code> section - an array of wildcards (or paths) to include to the
-  inspection. Defaults to <code>%w(**/*.cr !lib)</code>, meaning it includes all project
-  files with <code>*.cr</code> extension except those which exist in <code>lib</code> folder.</li><li><code>Excluded</code> section - an array of wildcards (or paths) to exclude from the
-  source list defined by <code>Globs</code>. Defaults to an empty array.</li></ul>
-
+<ul>
+<li><code>Globs</code> section - an array of wildcards (or paths) to include to the
+inspection. Defaults to <code>%w(**/*.cr !lib)</code>, meaning it includes all project
+files with <code>*.cr</code> extension except those which exist in <code>lib</code> folder.</li>
+<li><code>Excluded</code> section - an array of wildcards (or paths) to exclude from the
+source list defined by <code>Globs</code>. Defaults to an empty array.</li>
+</ul>
 <p>In this example we define default globs and exclude <code>src/compiler</code> folder:</p>
-
 <pre><code class="language-yaml">Globs:
   - **/*.cr
   - !lib
 
 Excluded:
   - src/compiler</code></pre>
-
 <p><strong>Specific sources can be excluded at rule level</strong>:</p>
-
 <pre><code class="language-yaml">Style/RedundantBegin:
   Excluded:
   - src/server/processor.cr
   - src/server/api.cr</code></pre>
-
 <h3><a id="rules" class="anchor" href="#rules">
   <svg class="octicon-link" aria-hidden="true">
     <use href="#octicon-link"/>
   </svg>
 </a>Rules</h3>
-
 <p>One or more rules, or a one or more group of rules can be included or excluded
 via command line arguments:</p>
-
 <pre><code class="language-sh">$ ameba --only   Lint/Syntax # runs only Lint/Syntax rule
 $ ameba --only   Style,Lint  # runs only rules from Style and Lint groups
 $ ameba --except Lint/Syntax # runs all rules except Lint/Syntax
 $ ameba --except Style,Lint  # runs all rules except rules in Style and Lint groups</code></pre>
-
 <p>Or through the configuration file:</p>
-
 <pre><code class="language-yaml">Style/RedundantBegin:
   Enabled: false</code></pre>
-
 <h3><a id="explain-issues" class="anchor" href="#explain-issues">
   <svg class="octicon-link" aria-hidden="true">
     <use href="#octicon-link"/>
   </svg>
 </a>Explain issues</h3>
-
 <p>Ameba allows you to dig deeper into an issue, by showing you details about the issue
 and the reasoning by it being reported.</p>
-
 <p>To be convenient, you can just copy-paste the <code>PATH:line:column</code> string from the
 report and paste behind the <code>ameba</code> command to check it out.</p>
-
 <pre><code class="language-sh">$ ameba crystal/command/format.cr:26:83           # show explanation for the issue
 $ ameba --explain crystal/command/format.cr:26:83 # same thing</code></pre>
-
 <h3><a id="inline-disabling" class="anchor" href="#inline-disabling">
   <svg class="octicon-link" aria-hidden="true">
     <use href="#octicon-link"/>
   </svg>
 </a>Inline disabling</h3>
-
 <p>One or more rules or one or more group of rules can be disabled using inline directives:</p>
-
 <pre><code class="language-crystal"><span class="c"># ameba:disable Style/LargeNumbers</span>
 time <span class="o">=</span> <span class="t">Time</span>.epoch(<span class="n">1483859302</span>)
 
 time <span class="o">=</span> <span class="t">Time</span>.epoch(<span class="n">1483859302</span>) <span class="c"># ameba:disable Style/LargeNumbers, Lint/UselessAssign</span>
 
 time <span class="o">=</span> <span class="t">Time</span>.epoch(<span class="n">1483859302</span>) <span class="c"># ameba:disable Style, Lint</span></code></pre>
-
 <h2><a id="editors-integrations" class="anchor" href="#editors-integrations">
   <svg class="octicon-link" aria-hidden="true">
     <use href="#octicon-link"/>
   </svg>
-</a>Editors & integrations</h2>
-
-<ul><li>Vim: <a href="https://github.com/rhysd/vim-crystal">vim-crystal</a>, <a href="https://github.com/w0rp/ale">Ale</a></li><li>Emacs: <a href="https://github.com/crystal-ameba/ameba.el">ameba.el</a></li><li>Sublime Text: <a href="https://github.com/epergo/SublimeLinter-contrib-ameba">Sublime Linter Ameba</a></li><li>VSCode: <a href="https://github.com/crystal-ameba/vscode-crystal-ameba">vscode-crystal-ameba</a></li><li>Codacy: <a href="https://github.com/codacy/codacy-ameba">codacy-ameba</a></li><li>GitHub Actions: <a href="https://github.com/crystal-ameba/github-action">github-action</a></li></ul>
-
+</a>Editors &amp; integrations</h2>
+<ul>
+<li>Vim: <a href="https://github.com/rhysd/vim-crystal">vim-crystal</a>, <a href="https://github.com/w0rp/ale">Ale</a></li>
+<li>Emacs: <a href="https://github.com/crystal-ameba/ameba.el">ameba.el</a></li>
+<li>Sublime Text: <a href="https://github.com/epergo/SublimeLinter-contrib-ameba">Sublime Linter Ameba</a></li>
+<li>VSCode: <a href="https://github.com/crystal-ameba/vscode-crystal-ameba">vscode-crystal-ameba</a></li>
+<li>Codacy: <a href="https://github.com/codacy/codacy-ameba">codacy-ameba</a></li>
+<li>GitHub Actions: <a href="https://github.com/crystal-ameba/github-action">github-action</a></li>
+</ul>
 <h2><a id="credits-inspirations" class="anchor" href="#credits-inspirations">
   <svg class="octicon-link" aria-hidden="true">
     <use href="#octicon-link"/>
   </svg>
-</a>Credits & inspirations</h2>
-
-<ul><li><a href="https://crystal-lang.org">Crystal Language</a></li><li><a href="https://rubocop.readthedocs.io/en/latest/">Rubocop</a></li><li><a href="http://credo-ci.org/">Credo</a></li><li><a href="https://github.com/lpil/dogma">Dogma</a></li></ul>
-
+</a>Credits &amp; inspirations</h2>
+<ul>
+<li><a href="https://crystal-lang.org">Crystal Language</a></li>
+<li><a href="https://rubocop.readthedocs.io/en/latest/">Rubocop</a></li>
+<li><a href="http://credo-ci.org/">Credo</a></li>
+<li><a href="https://github.com/lpil/dogma">Dogma</a></li>
+</ul>
 <h2><a id="contributors" class="anchor" href="#contributors">
   <svg class="octicon-link" aria-hidden="true">
     <use href="#octicon-link"/>
   </svg>
 </a>Contributors</h2>
-
-<ul><li><a href="https://github.com/veelenga">veelenga</a> Vitalii Elenhaupt - creator, maintainer</li></ul>
+<ul>
+<li><a href="https://github.com/veelenga">veelenga</a> Vitalii Elenhaupt - creator, maintainer</li>
+</ul>
 </div>
 </body>
 </html>

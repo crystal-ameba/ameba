@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="generator" content="Crystal Docs 0.36.1">
+<meta name="generator" content="Crystal Docs 1.1.1">
 <meta name="crystal_docs.project_version" content="master">
 <meta name="crystal_docs.project_name" content="ameba">
 
@@ -285,6 +285,11 @@
       <a href="../Ameba/Rule/Lint.html">Lint</a>
       
         <ul>
+  
+  <li class=" " data-id="ameba/Ameba/Rule/Lint/AmbiguousAssignment" data-name="ameba::rule::lint::ambiguousassignment">
+      <a href="../Ameba/Rule/Lint/AmbiguousAssignment.html">AmbiguousAssignment</a>
+      
+    </li>
   
   <li class=" " data-id="ameba/Ameba/Rule/Lint/BadDirective" data-name="ameba::rule::lint::baddirective">
       <a href="../Ameba/Rule/Lint/BadDirective.html">BadDirective</a>
@@ -640,12 +645,9 @@
   </h2>
 
   <p>A configuration entry for <code><a href="../Ameba/Runner.html">Ameba::Runner</a></code>.</p>
-
 <p>Config can be loaded from configuration YAML file and adjusted.</p>
-
 <pre><code class="language-crystal">config <span class="o">=</span> <span class="t">Config</span>.load
 config.formatter <span class="o">=</span> my_formatter</code></pre>
-
 <p>By default config loads <code>.ameba.yml</code> file in a current directory.</p>
 
 
@@ -685,7 +687,7 @@ config.formatter <span class="o">=</span> my_formatter</code></pre>
   </h2>
   
     
-      <a href="https://github.com/crystal-ameba/ameba/blob/9a91e42b/src/ameba/config.cr#L15" target="_blank">
+      <a href="https://github.com/crystal-ameba/ameba/blob/48b15b9b/src/ameba/config.cr#L15" target="_blank">
         ameba/config.cr
       </a>
     
@@ -743,7 +745,7 @@ config.formatter <span class="o">=</span> my_formatter</code></pre>
       </li>
     
       <li class="entry-summary">
-        <a href="#load(path=PATH,colors=true)-class-method" class="signature"><strong>.load</strong>(path = <span class="t">PATH</span>, colors = <span class="n">true</span>)</a>
+        <a href="#load%28path%3DPATH%2Ccolors%3Dtrue%29-class-method" class="signature"><strong>.load</strong>(path = <span class="t">PATH</span>, colors = <span class="n">true</span>)</a>
         
           <div class="summary"><p>Loads YAML configuration file by <code>path</code>.</p></div>
         
@@ -764,66 +766,66 @@ config.formatter <span class="o">=</span> my_formatter</code></pre>
   <ul class="list-summary">
     
       <li class="entry-summary">
-        <a href="#excluded:Array(String)-instance-method" class="signature"><strong>#excluded</strong> : Array(String)</a>
+        <a href="#excluded%3AArray%28String%29-instance-method" class="signature"><strong>#excluded</strong> : Array(String)</a>
         
           <div class="summary"><p>Represents a list of paths to exclude from globs.</p></div>
         
       </li>
     
       <li class="entry-summary">
-        <a href="#excluded=(excluded:Array(String))-instance-method" class="signature"><strong>#excluded=</strong>(excluded : Array(String))</a>
+        <a href="#excluded%3D%28excluded%3AArray%28String%29%29-instance-method" class="signature"><strong>#excluded=</strong>(excluded : Array(String))</a>
         
           <div class="summary"><p>Represents a list of paths to exclude from globs.</p></div>
         
       </li>
     
       <li class="entry-summary">
-        <a href="#formatter:Formatter::BaseFormatter-instance-method" class="signature"><strong>#formatter</strong> : Formatter::BaseFormatter</a>
+        <a href="#formatter%3AFormatter%3A%3ABaseFormatter-instance-method" class="signature"><strong>#formatter</strong> : Formatter::BaseFormatter</a>
         
           <div class="summary"><p>Returns a formatter to be used while inspecting files.</p></div>
         
       </li>
     
       <li class="entry-summary">
-        <a href="#formatter=(name:String%7CSymbol)-instance-method" class="signature"><strong>#formatter=</strong>(name : String | Symbol)</a>
+        <a href="#formatter%3D%28name%3AString%7CSymbol%29-instance-method" class="signature"><strong>#formatter=</strong>(name : String | Symbol)</a>
         
           <div class="summary"><p>Sets formatter by name.</p></div>
         
       </li>
     
       <li class="entry-summary">
-        <a href="#formatter=(formatter:Formatter::BaseFormatter)-instance-method" class="signature"><strong>#formatter=</strong>(formatter : Formatter::BaseFormatter)</a>
+        <a href="#formatter%3D%28formatter%3AFormatter%3A%3ABaseFormatter%29-instance-method" class="signature"><strong>#formatter=</strong>(formatter : Formatter::BaseFormatter)</a>
         
           <div class="summary"><p>Returns a formatter to be used while inspecting files.</p></div>
         
       </li>
     
       <li class="entry-summary">
-        <a href="#globs:Array(String)-instance-method" class="signature"><strong>#globs</strong> : Array(String)</a>
+        <a href="#globs%3AArray%28String%29-instance-method" class="signature"><strong>#globs</strong> : Array(String)</a>
         
           <div class="summary"><p>Returns a list of paths (with wildcards) to files.</p></div>
         
       </li>
     
       <li class="entry-summary">
-        <a href="#globs=(globs:Array(String))-instance-method" class="signature"><strong>#globs=</strong>(globs : Array(String))</a>
+        <a href="#globs%3D%28globs%3AArray%28String%29%29-instance-method" class="signature"><strong>#globs=</strong>(globs : Array(String))</a>
         
           <div class="summary"><p>Returns a list of paths (with wildcards) to files.</p></div>
         
       </li>
     
       <li class="entry-summary">
-        <a href="#rules:Array(Rule::Base)-instance-method" class="signature"><strong>#rules</strong> : Array(Rule::Base)</a>
+        <a href="#rules%3AArray%28Rule%3A%3ABase%29-instance-method" class="signature"><strong>#rules</strong> : Array(Rule::Base)</a>
         
       </li>
     
       <li class="entry-summary">
-        <a href="#severity:Ameba::Severity-instance-method" class="signature"><strong>#severity</strong> : Ameba::Severity</a>
+        <a href="#severity%3AAmeba%3A%3ASeverity-instance-method" class="signature"><strong>#severity</strong> : Ameba::Severity</a>
         
       </li>
     
       <li class="entry-summary">
-        <a href="#severity=(severity)-instance-method" class="signature"><strong>#severity=</strong>(severity)</a>
+        <a href="#severity%3D%28severity%29-instance-method" class="signature"><strong>#severity=</strong>(severity)</a>
         
       </li>
     
@@ -835,14 +837,14 @@ config.formatter <span class="o">=</span> my_formatter</code></pre>
       </li>
     
       <li class="entry-summary">
-        <a href="#update_rule(name,enabled=true,excluded=nil)-instance-method" class="signature"><strong>#update_rule</strong>(name, enabled = <span class="n">true</span>, excluded = <span class="n">nil</span>)</a>
+        <a href="#update_rule%28name%2Cenabled%3Dtrue%2Cexcluded%3Dnil%29-instance-method" class="signature"><strong>#update_rule</strong>(name, enabled = <span class="n">true</span>, excluded = <span class="n">nil</span>)</a>
         
           <div class="summary"><p>Updates rule properties.</p></div>
         
       </li>
     
       <li class="entry-summary">
-        <a href="#update_rules(names,enabled=true,excluded=nil)-instance-method" class="signature"><strong>#update_rules</strong>(names, enabled = <span class="n">true</span>, excluded = <span class="n">nil</span>)</a>
+        <a href="#update_rules%28names%2Cenabled%3Dtrue%2Cexcluded%3Dnil%29-instance-method" class="signature"><strong>#update_rules</strong>(names, enabled = <span class="n">true</span>, excluded = <span class="n">nil</span>)</a>
         
           <div class="summary"><p>Updates rules properties.</p></div>
         
@@ -861,12 +863,12 @@ config.formatter <span class="o">=</span> my_formatter</code></pre>
   <h3>Instance methods inherited from module <code><a href="../Ameba/GlobUtils.html">Ameba::GlobUtils</a></code></h3>
   
   
-    <a href="../Ameba/GlobUtils.html#expand(globs)-instance-method" class="tooltip">
+    <a href="../Ameba/GlobUtils.html#expand%28globs%29-instance-method" class="tooltip">
       <span>expand(globs)</span>
     expand</a>, 
     
   
-    <a href="../Ameba/GlobUtils.html#find_files_by_globs(globs)-instance-method" class="tooltip">
+    <a href="../Ameba/GlobUtils.html#find_files_by_globs%28globs%29-instance-method" class="tooltip">
       <span>find_files_by_globs(globs)</span>
     find_files_by_globs</a>
     
@@ -925,7 +927,7 @@ config.formatter <span class="o">=</span> my_formatter</code></pre>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/9a91e42b/src/ameba/config.cr#L86" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/48b15b9b/src/ameba/config.cr#L86" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -935,20 +937,19 @@ config.formatter <span class="o">=</span> my_formatter</code></pre>
         
         def self.<strong>load</strong>(path = <span class="t">PATH</span>, colors = <span class="n">true</span>)
 
-        <a class="method-permalink" href="#load(path=PATH,colors=true)-class-method">#</a>
+        <a class="method-permalink" href="#load%28path%3DPATH%2Ccolors%3Dtrue%29-class-method">#</a>
       </div>
       
         <div class="doc">
           
           <p>Loads YAML configuration file by <code>path</code>.</p>
-
 <pre><code class="language-crystal">config <span class="o">=</span> <span class="t">Ameba</span><span class="t">::</span><span class="t">Config</span>.load</code></pre>
         </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/9a91e42b/src/ameba/config.cr#L78" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/48b15b9b/src/ameba/config.cr#L78" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -970,14 +971,13 @@ config.formatter <span class="o">=</span> my_formatter</code></pre>
         
         def <strong>excluded</strong> : Array(String)
 
-        <a class="method-permalink" href="#excluded:Array(String)-instance-method">#</a>
+        <a class="method-permalink" href="#excluded%3AArray%28String%29-instance-method">#</a>
       </div>
       
         <div class="doc">
           
           <p>Represents a list of paths to exclude from globs.
 Can have wildcards.</p>
-
 <pre><code class="language-crystal">config <span class="o">=</span> <span class="t">Ameba</span><span class="t">::</span><span class="t">Config</span>.load
 config.excluded <span class="o">=</span> [<span class="s">&quot;spec&quot;</span>, <span class="s">&quot;src/server/*.cr&quot;</span>]</code></pre>
         </div>
@@ -985,7 +985,7 @@ config.excluded <span class="o">=</span> [<span class="s">&quot;spec&quot;</span
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/9a91e42b/src/ameba/config.cr#L55" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/48b15b9b/src/ameba/config.cr#L55" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -995,14 +995,13 @@ config.excluded <span class="o">=</span> [<span class="s">&quot;spec&quot;</span
         
         def <strong>excluded=</strong>(excluded : Array(String))
 
-        <a class="method-permalink" href="#excluded=(excluded:Array(String))-instance-method">#</a>
+        <a class="method-permalink" href="#excluded%3D%28excluded%3AArray%28String%29%29-instance-method">#</a>
       </div>
       
         <div class="doc">
           
           <p>Represents a list of paths to exclude from globs.
 Can have wildcards.</p>
-
 <pre><code class="language-crystal">config <span class="o">=</span> <span class="t">Ameba</span><span class="t">::</span><span class="t">Config</span>.load
 config.excluded <span class="o">=</span> [<span class="s">&quot;spec&quot;</span>, <span class="s">&quot;src/server/*.cr&quot;</span>]</code></pre>
         </div>
@@ -1010,7 +1009,7 @@ config.excluded <span class="o">=</span> [<span class="s">&quot;spec&quot;</span
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/9a91e42b/src/ameba/config.cr#L55" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/48b15b9b/src/ameba/config.cr#L55" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1020,14 +1019,13 @@ config.excluded <span class="o">=</span> [<span class="s">&quot;spec&quot;</span
         
         def <strong>formatter</strong> : <a href="../Ameba/Formatter/BaseFormatter.html">Formatter::BaseFormatter</a>
 
-        <a class="method-permalink" href="#formatter:Formatter::BaseFormatter-instance-method">#</a>
+        <a class="method-permalink" href="#formatter%3AFormatter%3A%3ABaseFormatter-instance-method">#</a>
       </div>
       
         <div class="doc">
           
           <p>Returns a formatter to be used while inspecting files.
 If formatter is not set, it will return default formatter.</p>
-
 <pre><code class="language-crystal">config <span class="o">=</span> <span class="t">Ameba</span><span class="t">::</span><span class="t">Config</span>.load
 config.formatter <span class="o">=</span> custom_formatter
 config.formatter</code></pre>
@@ -1036,7 +1034,7 @@ config.formatter</code></pre>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/9a91e42b/src/ameba/config.cr#L113" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/48b15b9b/src/ameba/config.cr#L113" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1046,13 +1044,12 @@ config.formatter</code></pre>
         
         def <strong>formatter=</strong>(name : String | Symbol)
 
-        <a class="method-permalink" href="#formatter=(name:String%7CSymbol)-instance-method">#</a>
+        <a class="method-permalink" href="#formatter%3D%28name%3AString%7CSymbol%29-instance-method">#</a>
       </div>
       
         <div class="doc">
           
           <p>Sets formatter by name.</p>
-
 <pre><code class="language-crystal">config <span class="o">=</span> <span class="t">Ameba</span><span class="t">::</span><span class="t">Config</span>.load
 config.formatter <span class="o">=</span> <span class="n">:progress</span></code></pre>
         </div>
@@ -1060,7 +1057,7 @@ config.formatter <span class="o">=</span> <span class="n">:progress</span></code
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/9a91e42b/src/ameba/config.cr#L123" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/48b15b9b/src/ameba/config.cr#L123" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1070,14 +1067,13 @@ config.formatter <span class="o">=</span> <span class="n">:progress</span></code
         
         def <strong>formatter=</strong>(formatter : <a href="../Ameba/Formatter/BaseFormatter.html">Formatter::BaseFormatter</a>)
 
-        <a class="method-permalink" href="#formatter=(formatter:Formatter::BaseFormatter)-instance-method">#</a>
+        <a class="method-permalink" href="#formatter%3D%28formatter%3AFormatter%3A%3ABaseFormatter%29-instance-method">#</a>
       </div>
       
         <div class="doc">
           
           <p>Returns a formatter to be used while inspecting files.
 If formatter is not set, it will return default formatter.</p>
-
 <pre><code class="language-crystal">config <span class="o">=</span> <span class="t">Ameba</span><span class="t">::</span><span class="t">Config</span>.load
 config.formatter <span class="o">=</span> custom_formatter
 config.formatter</code></pre>
@@ -1086,7 +1082,7 @@ config.formatter</code></pre>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/9a91e42b/src/ameba/config.cr#L113" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/48b15b9b/src/ameba/config.cr#L113" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1096,7 +1092,7 @@ config.formatter</code></pre>
         
         def <strong>globs</strong> : Array(String)
 
-        <a class="method-permalink" href="#globs:Array(String)-instance-method">#</a>
+        <a class="method-permalink" href="#globs%3AArray%28String%29-instance-method">#</a>
       </div>
       
         <div class="doc">
@@ -1104,7 +1100,6 @@ config.formatter</code></pre>
           <p>Returns a list of paths (with wildcards) to files.
 Represents a list of sources to be inspected.
 If globs are not set, it will return default list of files.</p>
-
 <pre><code class="language-crystal">config <span class="o">=</span> <span class="t">Ameba</span><span class="t">::</span><span class="t">Config</span>.load
 config.globs <span class="o">=</span> [<span class="s">&quot;**/*.cr&quot;</span>]
 config.globs</code></pre>
@@ -1113,7 +1108,7 @@ config.globs</code></pre>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/9a91e42b/src/ameba/config.cr#L46" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/48b15b9b/src/ameba/config.cr#L46" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1123,7 +1118,7 @@ config.globs</code></pre>
         
         def <strong>globs=</strong>(globs : Array(String))
 
-        <a class="method-permalink" href="#globs=(globs:Array(String))-instance-method">#</a>
+        <a class="method-permalink" href="#globs%3D%28globs%3AArray%28String%29%29-instance-method">#</a>
       </div>
       
         <div class="doc">
@@ -1131,7 +1126,6 @@ config.globs</code></pre>
           <p>Returns a list of paths (with wildcards) to files.
 Represents a list of sources to be inspected.
 If globs are not set, it will return default list of files.</p>
-
 <pre><code class="language-crystal">config <span class="o">=</span> <span class="t">Ameba</span><span class="t">::</span><span class="t">Config</span>.load
 config.globs <span class="o">=</span> [<span class="s">&quot;**/*.cr&quot;</span>]
 config.globs</code></pre>
@@ -1140,7 +1134,7 @@ config.globs</code></pre>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/9a91e42b/src/ameba/config.cr#L46" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/48b15b9b/src/ameba/config.cr#L46" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1150,13 +1144,13 @@ config.globs</code></pre>
         
         def <strong>rules</strong> : Array(<a href="../Ameba/Rule/Base.html">Rule::Base</a>)
 
-        <a class="method-permalink" href="#rules:Array(Rule::Base)-instance-method">#</a>
+        <a class="method-permalink" href="#rules%3AArray%28Rule%3A%3ABase%29-instance-method">#</a>
       </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/9a91e42b/src/ameba/config.cr#L34" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/48b15b9b/src/ameba/config.cr#L34" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1166,13 +1160,13 @@ config.globs</code></pre>
         
         def <strong>severity</strong> : <a href="../Ameba/Severity.html">Ameba::Severity</a>
 
-        <a class="method-permalink" href="#severity:Ameba::Severity-instance-method">#</a>
+        <a class="method-permalink" href="#severity%3AAmeba%3A%3ASeverity-instance-method">#</a>
       </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/9a91e42b/src/ameba/config.cr#L35" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/48b15b9b/src/ameba/config.cr#L35" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1182,13 +1176,13 @@ config.globs</code></pre>
         
         def <strong>severity=</strong>(severity)
 
-        <a class="method-permalink" href="#severity=(severity)-instance-method">#</a>
+        <a class="method-permalink" href="#severity%3D%28severity%29-instance-method">#</a>
       </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/9a91e42b/src/ameba/config.cr#L35" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/48b15b9b/src/ameba/config.cr#L35" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1204,7 +1198,6 @@ config.globs</code></pre>
         <div class="doc">
           
           <p>Returns a list of sources matching globs and excluded sections.</p>
-
 <pre><code class="language-crystal">config <span class="o">=</span> <span class="t">Ameba</span><span class="t">::</span><span class="t">Config</span>.load
 config.sources <span class="c"># =&gt; list of default sources</span>
 config.globs <span class="o">=</span> [<span class="s">&quot;**/*.cr&quot;</span>]
@@ -1215,7 +1208,7 @@ config.sources <span class="c"># =&gt; list of sources pointing to files found b
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/9a91e42b/src/ameba/config.cr#L99" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/48b15b9b/src/ameba/config.cr#L99" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1225,13 +1218,12 @@ config.sources <span class="c"># =&gt; list of sources pointing to files found b
         
         def <strong>update_rule</strong>(name, enabled = <span class="n">true</span>, excluded = <span class="n">nil</span>)
 
-        <a class="method-permalink" href="#update_rule(name,enabled=true,excluded=nil)-instance-method">#</a>
+        <a class="method-permalink" href="#update_rule%28name%2Cenabled%3Dtrue%2Cexcluded%3Dnil%29-instance-method">#</a>
       </div>
       
         <div class="doc">
           
           <p>Updates rule properties.</p>
-
 <pre><code class="language-crystal">config <span class="o">=</span> <span class="t">Ameba</span><span class="t">::</span><span class="t">Config</span>.load
 config.update_rule <span class="s">&quot;MyRuleName&quot;</span>, enabled: <span class="n">false</span></code></pre>
         </div>
@@ -1239,7 +1231,7 @@ config.update_rule <span class="s">&quot;MyRuleName&quot;</span>, enabled: <span
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/9a91e42b/src/ameba/config.cr#L137" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/48b15b9b/src/ameba/config.cr#L137" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1249,25 +1241,22 @@ config.update_rule <span class="s">&quot;MyRuleName&quot;</span>, enabled: <span
         
         def <strong>update_rules</strong>(names, enabled = <span class="n">true</span>, excluded = <span class="n">nil</span>)
 
-        <a class="method-permalink" href="#update_rules(names,enabled=true,excluded=nil)-instance-method">#</a>
+        <a class="method-permalink" href="#update_rules%28names%2Cenabled%3Dtrue%2Cexcluded%3Dnil%29-instance-method">#</a>
       </div>
       
         <div class="doc">
           
           <p>Updates rules properties.</p>
-
 <pre><code class="language-crystal">config <span class="o">=</span> <span class="t">Ameba</span><span class="t">::</span><span class="t">Config</span>.load
 config.update_rules <span class="s">%w(Rule1 Rule2)</span>, enabled: <span class="n">true</span></code></pre>
-
 <p>also it allows to update groups of rules:</p>
-
 <pre><code class="language-crystal">config.update_rules <span class="s">%w(Group1 Group2)</span>, enabled: <span class="n">true</span></code></pre>
         </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/9a91e42b/src/ameba/config.cr#L158" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/48b15b9b/src/ameba/config.cr#L158" target="_blank">View source</a>]
         
       </div>
     </div>

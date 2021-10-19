@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="generator" content="Crystal Docs 0.36.1">
+<meta name="generator" content="Crystal Docs 1.1.1">
 <meta name="crystal_docs.project_version" content="master">
 <meta name="crystal_docs.project_name" content="ameba">
 
@@ -285,6 +285,11 @@
       <a href="../../Ameba/Rule/Lint.html">Lint</a>
       
         <ul>
+  
+  <li class=" " data-id="ameba/Ameba/Rule/Lint/AmbiguousAssignment" data-name="ameba::rule::lint::ambiguousassignment">
+      <a href="../../Ameba/Rule/Lint/AmbiguousAssignment.html">AmbiguousAssignment</a>
+      
+    </li>
   
   <li class=" " data-id="ameba/Ameba/Rule/Lint/BadDirective" data-name="ameba::rule::lint::baddirective">
       <a href="../../Ameba/Rule/Lint/BadDirective.html">BadDirective</a>
@@ -641,7 +646,6 @@
 
   <p>Represents a base of all rules. In other words, all rules
 inherits from this struct:</p>
-
 <pre><code class="language-crystal"><span class="k">class</span> <span class="t">MyRule</span> <span class="o">&lt;</span> <span class="t">Ameba</span><span class="t">::</span><span class="t">Rule</span><span class="t">::</span><span class="t">Base</span>
   <span class="k">def</span> <span class="m">test</span>(source)
     <span class="k">if</span> invalid?(source)
@@ -653,8 +657,7 @@ inherits from this struct:</p>
     <span class="c"># ...</span>
   <span class="k">end</span>
 <span class="k">end</span></code></pre>
-
-<p>Enforces rules to implement an abstract <code><a href="../../Ameba/Rule/Base.html#test(source:Source,node:Crystal::ASTNode,*opts)-instance-method">#test</a></code> method which
+<p>Enforces rules to implement an abstract <code><a href="../../Ameba/Rule/Base.html#test%28source%3ASource%2Cnode%3ACrystal%3A%3AASTNode%2C%2Aopts%29-instance-method">#test</a></code> method which
 is designed to test the source passed in. If source has issues
 that are tested by this rule, it should add an issue.</p>
 
@@ -695,6 +698,8 @@ that are tested by this rule, it should add an issue.</p>
       <li class="other-type"><a href="../../Ameba/Rule/Layout/TrailingBlankLines.html">Ameba::Rule::Layout::TrailingBlankLines</a></li>
     
       <li class="other-type"><a href="../../Ameba/Rule/Layout/TrailingWhitespace.html">Ameba::Rule::Layout::TrailingWhitespace</a></li>
+    
+      <li class="other-type"><a href="../../Ameba/Rule/Lint/AmbiguousAssignment.html">Ameba::Rule::Lint::AmbiguousAssignment</a></li>
     
       <li class="other-type"><a href="../../Ameba/Rule/Lint/BadDirective.html">Ameba::Rule::Lint::BadDirective</a></li>
     
@@ -799,7 +804,7 @@ that are tested by this rule, it should add an issue.</p>
   </h2>
   
     
-      <a href="https://github.com/crystal-ameba/ameba/blob/9a91e42b/src/ameba/rule/base.cr#L29" target="_blank">
+      <a href="https://github.com/crystal-ameba/ameba/blob/48b15b9b/src/ameba/rule/base.cr#L29" target="_blank">
         ameba/rule/base.cr
       </a>
     
@@ -844,21 +849,21 @@ that are tested by this rule, it should add an issue.</p>
   <ul class="list-summary">
     
       <li class="entry-summary">
-        <a href="#==(other)-instance-method" class="signature"><strong>#==</strong>(other)</a>
+        <a href="#%3D%3D%28other%29-instance-method" class="signature"><strong>#==</strong>(other)</a>
         
           <div class="summary"><p>Returns <code>false</code> (other can only be a <code>Value</code> here).</p></div>
         
       </li>
     
       <li class="entry-summary">
-        <a href="#catch(source:Source)-instance-method" class="signature"><strong>#catch</strong>(source : Source)</a>
+        <a href="#catch%28source%3ASource%29-instance-method" class="signature"><strong>#catch</strong>(source : Source)</a>
         
-          <div class="summary"><p>A convenient addition to <code><a href="../../Ameba/Rule/Base.html#test(source:Source,node:Crystal::ASTNode,*opts)-instance-method">#test</a></code> method that does the same but returns a passed in <code>source</code> as an addition.</p></div>
+          <div class="summary"><p>A convenient addition to <code><a href="../../Ameba/Rule/Base.html#test%28source%3ASource%2Cnode%3ACrystal%3A%3AASTNode%2C%2Aopts%29-instance-method">#test</a></code> method that does the same but returns a passed in <code>source</code> as an addition.</p></div>
         
       </li>
     
       <li class="entry-summary">
-        <a href="#excluded?(source)-instance-method" class="signature"><strong>#excluded?</strong>(source)</a>
+        <a href="#excluded%3F%28source%29-instance-method" class="signature"><strong>#excluded?</strong>(source)</a>
         
           <div class="summary"><p>Checks whether the source is excluded from this rule.</p></div>
         
@@ -886,19 +891,19 @@ that are tested by this rule, it should add an issue.</p>
       </li>
     
       <li class="entry-summary">
-        <a href="#special?-instance-method" class="signature"><strong>#special?</strong></a>
+        <a href="#special%3F-instance-method" class="signature"><strong>#special?</strong></a>
         
           <div class="summary"><p>Returns true if this rule is special and behaves differently than usual rules.</p></div>
         
       </li>
     
       <li class="entry-summary">
-        <a href="#test(source:Source,node:Crystal::ASTNode,*opts)-instance-method" class="signature"><strong>#test</strong>(source : Source, node : Crystal::ASTNode, *opts)</a>
+        <a href="#test%28source%3ASource%2Cnode%3ACrystal%3A%3AASTNode%2C%2Aopts%29-instance-method" class="signature"><strong>#test</strong>(source : Source, node : Crystal::ASTNode, *opts)</a>
         
       </li>
     
       <li class="entry-summary">
-        <a href="#test(source:Source)-instance-method" class="signature"><strong>#test</strong>(source : Source)</a>
+        <a href="#test%28source%3ASource%29-instance-method" class="signature"><strong>#test</strong>(source : Source)</a>
         
           <div class="summary"><p>This method is designed to test the source passed in.</p></div>
         
@@ -919,7 +924,7 @@ that are tested by this rule, it should add an issue.</p>
   <ul class="list-summary">
     
       <li class="entry-summary">
-        <a href="#issue_for(*args)-macro" class="signature"><strong>issue_for</strong>(*args)</a>
+        <a href="#issue_for%28%2Aargs%29-macro" class="signature"><strong>issue_for</strong>(*args)</a>
         
       </li>
     
@@ -984,7 +989,6 @@ that are tested by this rule, it should add an issue.</p>
         <div class="doc">
           
           <p>Returns documentation for this rule if any.</p>
-
 <pre><code class="language-crystal"><span class="k">module</span> <span class="t">Ameba</span>
   <span class="c"># This is a test rule.</span>
   <span class="c"># Does nothing.</span>
@@ -1000,7 +1004,7 @@ that are tested by this rule, it should add an issue.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/9a91e42b/src/ameba/rule/base.cr#L161" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/48b15b9b/src/ameba/rule/base.cr#L161" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1022,7 +1026,7 @@ that are tested by this rule, it should add an issue.</p>
         
         def <strong>==</strong>(other)
 
-        <a class="method-permalink" href="#==(other)-instance-method">#</a>
+        <a class="method-permalink" href="#%3D%3D%28other%29-instance-method">#</a>
       </div>
       
         <div class="doc">
@@ -1037,7 +1041,7 @@ that are tested by this rule, it should add an issue.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/9a91e42b/src/ameba/rule/base.cr#L107" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/48b15b9b/src/ameba/rule/base.cr#L107" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1047,14 +1051,13 @@ that are tested by this rule, it should add an issue.</p>
         
         def <strong>catch</strong>(source : <a href="../../Ameba/Source.html">Source</a>)
 
-        <a class="method-permalink" href="#catch(source:Source)-instance-method">#</a>
+        <a class="method-permalink" href="#catch%28source%3ASource%29-instance-method">#</a>
       </div>
       
         <div class="doc">
           
-          <p>A convenient addition to <code><a href="../../Ameba/Rule/Base.html#test(source:Source,node:Crystal::ASTNode,*opts)-instance-method">#test</a></code> method that does the same
+          <p>A convenient addition to <code><a href="../../Ameba/Rule/Base.html#test%28source%3ASource%2Cnode%3ACrystal%3A%3AASTNode%2C%2Aopts%29-instance-method">#test</a></code> method that does the same
 but returns a passed in <code>source</code> as an addition.</p>
-
 <pre><code class="language-crystal">source <span class="o">=</span> <span class="t">MyRule</span>.<span class="k">new</span>.catch(source)
 source.valid?</code></pre>
         </div>
@@ -1062,7 +1065,7 @@ source.valid?</code></pre>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/9a91e42b/src/ameba/rule/base.cr#L52" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/48b15b9b/src/ameba/rule/base.cr#L52" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1072,7 +1075,7 @@ source.valid?</code></pre>
         
         def <strong>excluded?</strong>(source)
 
-        <a class="method-permalink" href="#excluded?(source)-instance-method">#</a>
+        <a class="method-permalink" href="#excluded%3F%28source%29-instance-method">#</a>
       </div>
       
         <div class="doc">
@@ -1080,14 +1083,13 @@ source.valid?</code></pre>
           <p>Checks whether the source is excluded from this rule.
 It searches for a path in <code>excluded</code> property which matches
 the one of the given source.</p>
-
 <pre><code class="language-crystal">my_rule.excluded?(source) <span class="c"># =&gt; true or false</span></code></pre>
         </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/9a91e42b/src/ameba/rule/base.cr#L90" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/48b15b9b/src/ameba/rule/base.cr#L90" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1103,7 +1105,6 @@ the one of the given source.</p>
         <div class="doc">
           
           <p>Returns a group this rule belong to.</p>
-
 <pre><code class="language-crystal"><span class="k">class</span> <span class="t">MyGroup</span><span class="t">::</span><span class="t">MyRule</span> <span class="o">&lt;</span> <span class="t">Ameba</span><span class="t">::</span><span class="t">Rule</span><span class="t">::</span><span class="t">Base</span>
   <span class="c"># ...</span>
 <span class="k">end</span>
@@ -1114,7 +1115,7 @@ the one of the given source.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/9a91e42b/src/ameba/rule/base.cr#L79" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/48b15b9b/src/ameba/rule/base.cr#L79" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1134,12 +1135,9 @@ the one of the given source.</p>
             </div>
           
           <p>Generates an <code>UInt64</code> hash value for this object.</p>
-
 <p>This method must have the property that <code>a == b</code> implies <code>a.hash == b.hash</code>.</p>
-
-<p>The hash value is used along with <code><a href="../../Ameba/Rule/Base.html#==(other)-instance-method">#==</a></code> by the <code>Hash</code> class to determine if two objects
+<p>The hash value is used along with <code><a href="../../Ameba/Rule/Base.html#%3D%3D%28other%29-instance-method">#==</a></code> by the <code>Hash</code> class to determine if two objects
 reference the same hash key.</p>
-
 <p>Subclasses must not override this method. Instead, they must define <code>hash(hasher)</code>,
 though usually the macro <code>def_hash</code> can be used to generate this method.</p>
         </div>
@@ -1147,7 +1145,7 @@ though usually the macro <code>def_hash</code> can be used to generate this meth
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/9a91e42b/src/ameba/rule/base.cr#L111" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/48b15b9b/src/ameba/rule/base.cr#L111" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1163,7 +1161,6 @@ though usually the macro <code>def_hash</code> can be used to generate this meth
         <div class="doc">
           
           <p>Returns a name of this rule, which is basically a class name.</p>
-
 <pre><code class="language-crystal"><span class="k">class</span> <span class="t">MyRule</span> <span class="o">&lt;</span> <span class="t">Ameba</span><span class="t">::</span><span class="t">Rule</span><span class="t">::</span><span class="t">Base</span>
   <span class="k">def</span> <span class="m">test</span>(source)
   <span class="k">end</span>
@@ -1175,7 +1172,7 @@ though usually the macro <code>def_hash</code> can be used to generate this meth
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/9a91e42b/src/ameba/rule/base.cr#L66" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/48b15b9b/src/ameba/rule/base.cr#L66" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1185,21 +1182,20 @@ though usually the macro <code>def_hash</code> can be used to generate this meth
         
         def <strong>special?</strong>
 
-        <a class="method-permalink" href="#special?-instance-method">#</a>
+        <a class="method-permalink" href="#special%3F-instance-method">#</a>
       </div>
       
         <div class="doc">
           
           <p>Returns true if this rule is special and behaves differently than
 usual rules.</p>
-
 <pre><code class="language-crystal">my_rule.special? <span class="c"># =&gt; true or false</span></code></pre>
         </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/9a91e42b/src/ameba/rule/base.cr#L103" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/48b15b9b/src/ameba/rule/base.cr#L103" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1209,13 +1205,13 @@ usual rules.</p>
         
         def <strong>test</strong>(source : <a href="../../Ameba/Source.html">Source</a>, node : Crystal::ASTNode, *opts)
 
-        <a class="method-permalink" href="#test(source:Source,node:Crystal::ASTNode,*opts)-instance-method">#</a>
+        <a class="method-permalink" href="#test%28source%3ASource%2Cnode%3ACrystal%3A%3AASTNode%2C%2Aopts%29-instance-method">#</a>
       </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/9a91e42b/src/ameba/rule/base.cr#L41" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/48b15b9b/src/ameba/rule/base.cr#L41" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1225,14 +1221,13 @@ usual rules.</p>
         
         def <strong>test</strong>(source : <a href="../../Ameba/Source.html">Source</a>)
 
-        <a class="method-permalink" href="#test(source:Source)-instance-method">#</a>
+        <a class="method-permalink" href="#test%28source%3ASource%29-instance-method">#</a>
       </div>
       
         <div class="doc">
           
           <p>This method is designed to test the source passed in. If source has issues
 that are tested by this rule, it should add an issue.</p>
-
 <p>Be default it uses a node visitor to traverse all the nodes in the source.
 Must be overriten for other type of rules.</p>
         </div>
@@ -1240,7 +1235,7 @@ Must be overriten for other type of rules.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/9a91e42b/src/ameba/rule/base.cr#L37" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/48b15b9b/src/ameba/rule/base.cr#L37" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1262,13 +1257,13 @@ Must be overriten for other type of rules.</p>
         
         macro <strong>issue_for</strong>(*args)
 
-        <a class="method-permalink" href="#issue_for(*args)-macro">#</a>
+        <a class="method-permalink" href="#issue_for%28%2Aargs%29-macro">#</a>
       </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/9a91e42b/src/ameba/rule/base.cr#L115" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/48b15b9b/src/ameba/rule/base.cr#L115" target="_blank">View source</a>]
         
       </div>
     </div>

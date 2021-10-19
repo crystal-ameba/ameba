@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="generator" content="Crystal Docs 0.36.1">
+<meta name="generator" content="Crystal Docs 1.1.1">
 <meta name="crystal_docs.project_version" content="master">
 <meta name="crystal_docs.project_name" content="ameba">
 
@@ -285,6 +285,11 @@
       <a href="../../Ameba/Rule/Lint.html">Lint</a>
       
         <ul>
+  
+  <li class=" " data-id="ameba/Ameba/Rule/Lint/AmbiguousAssignment" data-name="ameba::rule::lint::ambiguousassignment">
+      <a href="../../Ameba/Rule/Lint/AmbiguousAssignment.html">AmbiguousAssignment</a>
+      
+    </li>
   
   <li class=" " data-id="ameba/Ameba/Rule/Lint/BadDirective" data-name="ameba::rule::lint::baddirective">
       <a href="../../Ameba/Rule/Lint/BadDirective.html">BadDirective</a>
@@ -666,7 +671,7 @@ or excludes failed sources from these rules.</p>
   </h2>
   
     
-      <a href="https://github.com/crystal-ameba/ameba/blob/9a91e42b/src/ameba/formatter/todo_formatter.cr#L5" target="_blank">
+      <a href="https://github.com/crystal-ameba/ameba/blob/48b15b9b/src/ameba/formatter/todo_formatter.cr#L5" target="_blank">
         ameba/formatter/todo_formatter.cr
       </a>
     
@@ -688,7 +693,7 @@ or excludes failed sources from these rules.</p>
   <ul class="list-summary">
     
       <li class="entry-summary">
-        <a href="#new(output=STDOUT)-class-method" class="signature"><strong>.new</strong>(output = <span class="t">STDOUT</span>)</a>
+        <a href="#new%28output%3DSTDOUT%29-class-method" class="signature"><strong>.new</strong>(output = <span class="t">STDOUT</span>)</a>
         
       </li>
     
@@ -709,7 +714,7 @@ or excludes failed sources from these rules.</p>
   <ul class="list-summary">
     
       <li class="entry-summary">
-        <a href="#finished(sources)-instance-method" class="signature"><strong>#finished</strong>(sources)</a>
+        <a href="#finished%28sources%29-instance-method" class="signature"><strong>#finished</strong>(sources)</a>
         
           <div class="summary"><p>Reports a message when inspection is finished.</p></div>
         
@@ -728,17 +733,17 @@ or excludes failed sources from these rules.</p>
   <h3>Instance methods inherited from class <code><a href="../../Ameba/Formatter/DotFormatter.html">Ameba::Formatter::DotFormatter</a></code></h3>
   
   
-    <a href="../../Ameba/Formatter/DotFormatter.html#finished(sources)-instance-method" class="tooltip">
+    <a href="../../Ameba/Formatter/DotFormatter.html#finished%28sources%29-instance-method" class="tooltip">
       <span>finished(sources)</span>
     finished</a>, 
     
   
-    <a href="../../Ameba/Formatter/DotFormatter.html#source_finished(source:Source)-instance-method" class="tooltip">
+    <a href="../../Ameba/Formatter/DotFormatter.html#source_finished%28source%3ASource%29-instance-method" class="tooltip">
       <span>source_finished(source : Source)</span>
     source_finished</a>, 
     
   
-    <a href="../../Ameba/Formatter/DotFormatter.html#started(sources)-instance-method" class="tooltip">
+    <a href="../../Ameba/Formatter/DotFormatter.html#started%28sources%29-instance-method" class="tooltip">
       <span>started(sources)</span>
     started</a>
     
@@ -757,22 +762,22 @@ or excludes failed sources from these rules.</p>
   <h3>Instance methods inherited from module <code><a href="../../Ameba/Formatter/Util.html">Ameba::Formatter::Util</a></code></h3>
   
   
-    <a href="../../Ameba/Formatter/Util.html#affected_code(source,location,end_location=nil,context_lines=0,max_length=120,ellipsis=&quot;...&quot;,prompt=&quot;&gt;&quot;)-instance-method" class="tooltip">
+    <a href="../../Ameba/Formatter/Util.html#affected_code%28source%2Clocation%2Cend_location%3Dnil%2Ccontext_lines%3D0%2Cmax_length%3D120%2Cellipsis%3D%22...%22%2Cprompt%3D%22%3E%22%29-instance-method" class="tooltip">
       <span>affected_code(source, location, end_location = <span class="n">nil</span>, context_lines = <span class="n">0</span>, max_length = <span class="n">120</span>, ellipsis = <span class="s">&quot; ...&quot;</span>, prompt = <span class="s">&quot;&gt; &quot;</span>)</span>
     affected_code</a>, 
     
   
-    <a href="../../Ameba/Formatter/Util.html#context(lines,lineno,context_lines=3,remove_empty=true)-instance-method" class="tooltip">
+    <a href="../../Ameba/Formatter/Util.html#context%28lines%2Clineno%2Ccontext_lines%3D3%2Cremove_empty%3Dtrue%29-instance-method" class="tooltip">
       <span>context(lines, lineno, context_lines = <span class="n">3</span>, remove_empty = <span class="n">true</span>)</span>
     context</a>, 
     
   
-    <a href="../../Ameba/Formatter/Util.html#deansify(message:String?):String?-instance-method" class="tooltip">
+    <a href="../../Ameba/Formatter/Util.html#deansify%28message%3AString%3F%29%3AString%3F-instance-method" class="tooltip">
       <span>deansify(message : String?) : String?</span>
     deansify</a>, 
     
   
-    <a href="../../Ameba/Formatter/Util.html#trim(str,max_length=120,ellipsis=&quot;...&quot;)-instance-method" class="tooltip">
+    <a href="../../Ameba/Formatter/Util.html#trim%28str%2Cmax_length%3D120%2Cellipsis%3D%22...%22%29-instance-method" class="tooltip">
       <span>trim(str, max_length = <span class="n">120</span>, ellipsis = <span class="s">&quot; ...&quot;</span>)</span>
     trim</a>
     
@@ -791,32 +796,32 @@ or excludes failed sources from these rules.</p>
   <h3>Instance methods inherited from class <code><a href="../../Ameba/Formatter/BaseFormatter.html">Ameba::Formatter::BaseFormatter</a></code></h3>
   
   
-    <a href="../../Ameba/Formatter/BaseFormatter.html#config:Hash(Symbol,Bool%7CString)-instance-method" class="tooltip">
+    <a href="../../Ameba/Formatter/BaseFormatter.html#config%3AHash%28Symbol%2CBool%7CString%29-instance-method" class="tooltip">
       <span>config : Hash(Symbol, Bool | String)</span>
     config</a>, 
     
   
-    <a href="../../Ameba/Formatter/BaseFormatter.html#finished(sources)-instance-method" class="tooltip">
+    <a href="../../Ameba/Formatter/BaseFormatter.html#finished%28sources%29-instance-method" class="tooltip">
       <span>finished(sources)</span>
     finished</a>, 
     
   
-    <a href="../../Ameba/Formatter/BaseFormatter.html#output:IO::FileDescriptor%7CIO::Memory-instance-method" class="tooltip">
+    <a href="../../Ameba/Formatter/BaseFormatter.html#output%3AIO%3A%3AFileDescriptor%7CIO%3A%3AMemory-instance-method" class="tooltip">
       <span>output : IO::FileDescriptor | IO::Memory</span>
     output</a>, 
     
   
-    <a href="../../Ameba/Formatter/BaseFormatter.html#source_finished(source:Source)-instance-method" class="tooltip">
+    <a href="../../Ameba/Formatter/BaseFormatter.html#source_finished%28source%3ASource%29-instance-method" class="tooltip">
       <span>source_finished(source : Source)</span>
     source_finished</a>, 
     
   
-    <a href="../../Ameba/Formatter/BaseFormatter.html#source_started(source:Source)-instance-method" class="tooltip">
+    <a href="../../Ameba/Formatter/BaseFormatter.html#source_started%28source%3ASource%29-instance-method" class="tooltip">
       <span>source_started(source : Source)</span>
     source_started</a>, 
     
   
-    <a href="../../Ameba/Formatter/BaseFormatter.html#started(sources)-instance-method" class="tooltip">
+    <a href="../../Ameba/Formatter/BaseFormatter.html#started%28sources%29-instance-method" class="tooltip">
       <span>started(sources)</span>
     started</a>
     
@@ -828,7 +833,7 @@ or excludes failed sources from these rules.</p>
   <h3>Constructor methods inherited from class <code><a href="../../Ameba/Formatter/BaseFormatter.html">Ameba::Formatter::BaseFormatter</a></code></h3>
   
   
-    <a href="../../Ameba/Formatter/BaseFormatter.html#new(output=STDOUT)-class-method" class="tooltip">
+    <a href="../../Ameba/Formatter/BaseFormatter.html#new%28output%3DSTDOUT%29-class-method" class="tooltip">
       <span>new(output = <span class="t">STDOUT</span>)</span>
     new</a>
     
@@ -876,13 +881,13 @@ or excludes failed sources from these rules.</p>
         
         def self.<strong>new</strong>(output = <span class="t">STDOUT</span>)
 
-        <a class="method-permalink" href="#new(output=STDOUT)-class-method">#</a>
+        <a class="method-permalink" href="#new%28output%3DSTDOUT%29-class-method">#</a>
       </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/9a91e42b/src/ameba/formatter/todo_formatter.cr#L6" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/48b15b9b/src/ameba/formatter/todo_formatter.cr#L6" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -906,7 +911,7 @@ or excludes failed sources from these rules.</p>
         
         def <strong>finished</strong>(sources)
 
-        <a class="method-permalink" href="#finished(sources)-instance-method">#</a>
+        <a class="method-permalink" href="#finished%28sources%29-instance-method">#</a>
       </div>
       
         <div class="doc">
@@ -921,7 +926,7 @@ or excludes failed sources from these rules.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/9a91e42b/src/ameba/formatter/todo_formatter.cr#L9" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/48b15b9b/src/ameba/formatter/todo_formatter.cr#L9" target="_blank">View source</a>]
         
       </div>
     </div>
