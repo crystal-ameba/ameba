@@ -55,8 +55,7 @@ class Ameba::SpecSupport::AnnotatedSource
   private def match_annotations?(other)
     return false unless annotations.size == other.annotations.size
 
-    annotations.zip(other.annotations) do |(actual_line, actual_prefix, actual_message),
-                                           (expected_line, expected_prefix, expected_message)|
+    annotations.zip(other.annotations) do |(actual_line, actual_prefix, actual_message), (expected_line, expected_prefix, expected_message)|
       return false unless actual_line == expected_line
       return false unless expected_prefix.empty? || actual_prefix == expected_prefix
       next if actual_message == expected_message
