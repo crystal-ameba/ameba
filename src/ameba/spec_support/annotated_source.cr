@@ -1,7 +1,8 @@
 # Parsed representation of code annotated with the `^^^ Message` style
 class Ameba::SpecSupport::AnnotatedSource
-  ANNOTATION_PATTERN = /\A\s*# (\^+|\^{}) error: /
-  ABBREV             = "[...]"
+  ANNOTATION_PATTERN_1 = /\A\s*# (\^+|\^{}) error: /
+  ANNOTATION_PATTERN_2 = " # error: "
+  ABBREV               = "[...]"
 
   getter lines : Array(String)
 
@@ -14,8 +15,12 @@ class Ameba::SpecSupport::AnnotatedSource
     lines = [] of String
     annotations = [] of {Int32, String}
     annotated_code.each_line do |code_line|
-      if ANNOTATION_PATTERN.matches?(code_line)
+      if ANNOTATION_PATTERN_1.matches?(code_line)
         annotations << {lines.size, code_line}
+      elsif (annotation_index = code_line.index(ANNOTATION_PATTERN_2))
+        lines << code_line[...annotation_index]
+        annotation_index += ANNOTATION_PATTERN_2.size
+        annotations << {lines.size, code_line[annotation_index...]}
       else
         lines << code_line
       end
@@ -40,9 +45,14 @@ class Ameba::SpecSupport::AnnotatedSource
     annotations.zip(other.annotations) do |(actual_line, actual_annotation), (expected_line, expected_annotation)|
       return false unless actual_line == expected_line
       next if actual_annotation == expected_annotation
-      return false unless expected_annotation.includes?(ABBREV)
 
-      regex = Regex.new(annotation_to_regex(expected_annotation))
+      if ANNOTATION_PATTERN_1.matches?(expected_annotation)
+        return false unless expected_annotation.includes?(ABBREV)
+
+        regex = /\A#{annotation_to_regex(expected_annotation)}\Z/
+      else
+        regex = /#{ANNOTATION_PATTERN_1}#{annotation_to_regex(expected_annotation)}\Z/
+      end
       return false unless actual_annotation.matches?(regex)
     end
 
@@ -51,7 +61,6 @@ class Ameba::SpecSupport::AnnotatedSource
 
   private def annotation_to_regex(expected_annotation)
     String.build do |io|
-      io << '^'
       offset = 0
       while (index = expected_annotation.index(ABBREV, offset))
         io << Regex.escape(expected_annotation[offset...index])
@@ -60,7 +69,6 @@ class Ameba::SpecSupport::AnnotatedSource
         offset += ABBREV.size
       end
       io << Regex.escape(expected_annotation[offset..])
-      io << '$'
     end
   end
 
@@ -86,7 +94,11 @@ class Ameba::SpecSupport::AnnotatedSource
   def to_s(io)
     reconstructed = lines.dup
     annotations.reverse_each do |line_number, anno|
-      reconstructed.insert(line_number, anno)
+      if ANNOTATION_PATTERN_1.matches?(anno)
+        reconstructed.insert(line_number, anno)
+      else
+        reconstructed[line_number - 1] += "#{ANNOTATION_PATTERN_2}#{anno}"
+      end
     end
     io << reconstructed.join('\n')
   end
