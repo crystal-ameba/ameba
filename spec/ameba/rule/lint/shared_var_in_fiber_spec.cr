@@ -101,30 +101,20 @@ module Ameba::Rule::Lint
     end
 
     it "reports multiple shared variables in spawn" do
-      s = Source.new %(
+      expect_issue subject, %(
         foo, bar, baz = 0, 0, 0
         while foo < 10
           baz += 1
           spawn do
             puts foo
+               # ^^^ error: Shared variable `foo` is used in fiber
             puts foo + bar + baz
+               # ^^^ error: Shared variable `foo` is used in fiber
+                           # ^^^ error: Shared variable `baz` is used in fiber
           end
           foo += 1
         end
       )
-      subject.catch(s).should_not be_valid
-      s.issues.size.should eq 3
-      s.issues[0].location.to_s.should eq ":5:10"
-      s.issues[0].end_location.to_s.should eq ":5:12"
-      s.issues[0].message.should eq "Shared variable `foo` is used in fiber"
-
-      s.issues[1].location.to_s.should eq ":6:10"
-      s.issues[1].end_location.to_s.should eq ":6:12"
-      s.issues[1].message.should eq "Shared variable `foo` is used in fiber"
-
-      s.issues[2].location.to_s.should eq ":6:22"
-      s.issues[2].end_location.to_s.should eq ":6:24"
-      s.issues[2].message.should eq "Shared variable `baz` is used in fiber"
     end
 
     it "doesn't report if variable is passed to the proc" do
