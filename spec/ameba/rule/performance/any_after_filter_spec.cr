@@ -66,7 +66,7 @@ module Ameba::Rule::Performance
     it "reports rule, pos and message" do
       expect_issue subject, %(
         [1, 2, 3].reject { |e| e > 2 }.any?
-                  ^^^^^^^^^^^^^^^^^^^^^^^^^^ Use `any? {...}` instead of `reject {...}.any?`
+                # ^^^^^^^^^^^^^^^^^^^^^^^^^^ error: Use `any? {...}` instead of `reject {...}.any?`
       )
     end
   end

@@ -1,6 +1,6 @@
 # Parsed representation of code annotated with the `^^^ Message` style
 class Ameba::SpecSupport::AnnotatedSource
-  ANNOTATION_PATTERN = /\A\s*(\^+|\^{}) /
+  ANNOTATION_PATTERN = /\A\s*# (\^+|\^{}) error: /
   ABBREV             = "[...]"
 
   getter lines : Array(String)
@@ -101,14 +101,20 @@ class Ameba::SpecSupport::AnnotatedSource
     issue_annotations = [] of {Int32, String}
     issues.each do |issue|
       line, column, end_line, end_column = validate_location(issue)
-      indent = " " * (column - 1)
+      indent_count = column - 3
+      indent = if indent_count < 0
+                 ""
+               else
+                 " " * indent_count
+               end
       caret_count = column_length(line, column, end_line, end_column)
+      caret_count += indent_count if indent_count < 0
       carets = if caret_count.zero?
                  "^{}"
                else
                  "^" * caret_count
                end
-      issue_annotations << {line, "#{indent}#{carets} #{issue.message}"}
+      issue_annotations << {line, "#{indent}# #{carets} error: #{issue.message}"}
     end
     AnnotatedSource.new(lines, issue_annotations)
   end
