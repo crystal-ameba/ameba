@@ -68,6 +68,20 @@ module Ameba::SpecSupport
           {1, "# ^ error: ", "Message 2"},
         ]
       end
+
+      it "accepts RuboCop-style annotations" do
+        annotated_source = AnnotatedSource.parse <<-EOS
+          line 1
+              ^^ Message
+          line 2
+          EOS
+
+        annotated_source.lines.should eq ["line 1", "line 2"]
+
+        annotated_source.annotations.should eq [
+          {1, "    ^^ ", "Message"},
+        ]
+      end
     end
 
     describe "#==" do
