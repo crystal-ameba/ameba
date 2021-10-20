@@ -23,10 +23,9 @@ module Ameba::Rule::Performance
     end
 
     it "does not report if source is a spec" do
-      source = Source.new %(
+      expect_no_issues subject, %(
         [1, 2, 3].select { |e| e > 2 }.any?
       ), "source_spec.cr"
-      subject.catch(source).should be_valid
     end
 
     it "reports if there is reject followed by any? without a block" do
@@ -65,16 +64,10 @@ module Ameba::Rule::Performance
     end
 
     it "reports rule, pos and message" do
-      s = Source.new %(
+      expect_issue subject, %(
         [1, 2, 3].reject { |e| e > 2 }.any?
-      ), "source.cr"
-      subject.catch(s).should_not be_valid
-      issue = s.issues.first
-
-      issue.rule.should_not be_nil
-      issue.location.to_s.should eq "source.cr:1:11"
-      issue.end_location.to_s.should eq "source.cr:1:36"
-      issue.message.should eq "Use `any? {...}` instead of `reject {...}.any?`"
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^ Use `any? {...}` instead of `reject {...}.any?`
+      )
     end
   end
 end
