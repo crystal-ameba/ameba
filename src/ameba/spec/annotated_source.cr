@@ -1,5 +1,5 @@
 # Parsed representation of code annotated with the `# ^^^ error: Message` style
-class Ameba::SpecSupport::AnnotatedSource
+class Ameba::Spec::AnnotatedSource
   ANNOTATION_PATTERN_1 = /\A\s*(# )?(\^+|\^{})( error:)? /
   ANNOTATION_PATTERN_2 = " # error: "
   ABBREV               = "[...]"

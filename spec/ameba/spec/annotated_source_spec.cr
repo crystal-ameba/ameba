@@ -19,14 +19,14 @@ private def expect_invalid_location(code,
                                     file = __FILE__,
                                     line = __LINE__)
   expect_raises Exception, exception_message, file, line do
-    Ameba::SpecSupport::AnnotatedSource.new(
+    Ameba::Spec::AnnotatedSource.new(
       lines: code.split('\n'),
       issues: [dummy_issue("Message", position, end_position, "path")]
     )
   end
 end
 
-module Ameba::SpecSupport
+module Ameba::Spec
   describe AnnotatedSource do
     annotated_text = <<-EOS
       line 1

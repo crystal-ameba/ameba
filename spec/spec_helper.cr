@@ -1,6 +1,6 @@
 require "spec"
 require "../src/ameba"
-require "../src/ameba/spec_support"
+require "../src/ameba/spec/support"
 
 module Ameba
   # Dummy Rule which does nothing.

@@ -40,8 +40,8 @@ require "./util"
 # simpler assertion since it just inspects the code and checks
 # that there were no issues. The `expect_issue` method has
 # to do more work by parsing out lines that contain carets.
-module Ameba::SpecSupport::ExpectIssue
-  include Ameba::SpecSupport::Util
+module Ameba::Spec::ExpectIssue
+  include Spec::Util
 
   def expect_issue(rules : Rule::Base | Enumerable(Rule::Base),
                    annotated_code : String,
@@ -81,7 +81,7 @@ module Ameba::SpecSupport::ExpectIssue
                        file = __FILE__,
                        line = __LINE__)
     code = normalize_code(code) if normalize
-    lines = code.split('\n')
+    lines = code.lines
     actual_annotations = actual_annotations(rules, code, path, lines)
     if actual_annotations.to_s != code
       fail <<-MSG, file, line

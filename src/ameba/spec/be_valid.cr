@@ -1,7 +1,7 @@
-module Ameba::SpecSupport
+module Ameba::Spec
   module BeValid
     def be_valid
-      Ameba::SpecSupport::BeValidExpectation.new
+      BeValidExpectation.new
     end
   end
 

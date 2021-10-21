@@ -1,4 +1,4 @@
-module Ameba::SpecSupport::Util
+module Ameba::Spec::Util
   def normalize_code(code, separator = "\n")
     lines = code.split(separator)
 

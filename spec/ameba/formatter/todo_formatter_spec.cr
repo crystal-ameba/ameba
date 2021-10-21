@@ -11,7 +11,7 @@ module Ameba
   end
 
   describe Formatter::TODOFormatter do
-    Spec.after_each do
+    ::Spec.after_each do
       FileUtils.rm(Ameba::Config::PATH) if File.exists?(Ameba::Config::PATH)
     end
 
