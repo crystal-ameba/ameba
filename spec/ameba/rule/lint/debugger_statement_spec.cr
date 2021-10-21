@@ -5,7 +5,7 @@ module Ameba::Rule::Lint
 
   describe DebuggerStatement do
     it "passes if there is no debugger statement" do
-      s = Source.new %(
+      expect_no_issues subject, %(
         "this is not a debugger statement"
         s = "debugger"
 
@@ -19,16 +19,15 @@ module Ameba::Rule::Lint
         end
         A.new.debugger
       )
-      subject.catch(s).should be_valid
     end
 
     it "fails if there is a debugger statement" do
-      s = Source.new %(
+      expect_issue subject, %(
         a = 2
         debugger
+        # ^{} error: Possible forgotten debugger statement detected
         a = a + 1
       )
-      subject.catch(s).should_not be_valid
     end
 
     it "reports rule, pos and message" do
