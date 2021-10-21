@@ -122,8 +122,7 @@ class Ameba::SpecSupport::AnnotatedSource
                  " " * indent_count
                end
       caret_count = column_length(line, column, end_line, end_column)
-      caret_count += indent_count if indent_count < 0
-      carets = if caret_count.zero?
+      carets = if indent_count < 0 || caret_count <= 0
                  "^{}"
                else
                  "^" * caret_count
