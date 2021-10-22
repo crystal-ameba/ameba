@@ -5,21 +5,20 @@ module Ameba::Rule::Lint
 
   describe DuplicatedRequire do
     it "passes if there are no duplicated requires" do
-      source = Source.new %(
+      expect_no_issues subject, %(
         require "math"
         require "big"
         require "big/big_decimal"
       )
-      subject.catch(source).should be_valid
     end
 
     it "reports if there are a duplicated requires" do
-      source = Source.new %(
+      expect_issue subject, %(
         require "big"
         require "math"
         require "big"
+        # ^{} error: Duplicated require of `big`
       )
-      subject.catch(source).should_not be_valid
     end
 
     it "reports rule, pos and message" do

@@ -1,5 +1,6 @@
 require "spec"
 require "../src/ameba"
+require "../src/ameba/spec/support"
 
 module Ameba
   # Dummy Rule which does nothing.
@@ -9,29 +10,6 @@ module Ameba
     end
 
     def test(source)
-    end
-  end
-
-  class Source
-    def initialize(code : String, @path = "", normalize = true)
-      @code = normalize ? normalize_source(code) : code
-    end
-
-    private def normalize_source(code, separator = "\n")
-      lines = code.split(separator)
-
-      # remove unneeded first blank lines if any
-      lines.shift if lines[0].blank? && lines.size > 1
-
-      # find the minimum indentation
-      min_indent = lines.min_of do |line|
-        line.blank? ? code.size : line.size - line.lstrip.size
-      end
-
-      # remove the width of minimum indentation in each line
-      lines
-        .map! { |line| line.blank? ? line : line[min_indent..-1] }
-        .join(separator)
     end
   end
 
@@ -140,25 +118,6 @@ module Ameba
     end
   end
 
-  struct BeValidExpectation
-    def match(source)
-      source.valid?
-    end
-
-    def failure_message(source)
-      String.build do |str|
-        str << "Source expected to be valid, but there are issues: \n\n"
-        source.issues.reject(&.disabled?).each do |e|
-          str << "  * #{e.rule.name}: #{e.message}\n"
-        end
-      end
-    end
-
-    def negative_failure_message(source)
-      "Source expected to be invalid, but it is valid."
-    end
-  end
-
   class TestNodeVisitor < Crystal::Visitor
     NODES = [
       Crystal::NilLiteral,
@@ -195,10 +154,6 @@ module Ameba
       end
     {% end %}
   end
-end
-
-def be_valid
-  Ameba::BeValidExpectation.new
 end
 
 def as_node(source)
