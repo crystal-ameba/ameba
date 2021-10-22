@@ -3,7 +3,7 @@ require "./util"
 
 # This mixin makes it easier to specify strict issue expectations
 # in a declarative and visual fashion. Just type out the code that
-# should generate a issue, annotate code by writing '^'s
+# should generate an issue, annotate code by writing '^'s
 # underneath each character that should be highlighted, and follow
 # the carets with a string (separated by a space) that is the
 # message of the issue. You can include multiple issues in
@@ -12,25 +12,29 @@ require "./util"
 # Usage:
 #
 #     expect_issue subject, %(
-#       a do
-#         b
-#       end.c
-#       # ^{} error: Avoid chaining a method call on a do...end block.
+#       def foo
+#         a do
+#           b
+#         end.c
+#       # ^^^^^ error: Avoid chaining a method call on a do...end block.
+#       end
 #     )
 #
 # Equivalent assertion without `expect_issue`:
 #
 #     source = Source.new %(
-#       a do
-#         b
-#       end.c
+#       def foo
+#         a do
+#           b
+#         end.c
+#       end
 #     ), "source.cr"
 #     subject.catch(source).should_not be_valid
 #     source.issues.size.should be(1)
 #
 #     issue = source.issues.first
-#     issue.location.to_s.should eq "source.cr:3:1"
-#     issue.end_location.to_s.should eq "source.cr:3:5"
+#     issue.location.to_s.should eq "source.cr:4:3"
+#     issue.end_location.to_s.should eq "source.cr:4:7"
 #     issue.message.should eq(
 #       "Avoid chaining a method call on a do...end block."
 #     )
