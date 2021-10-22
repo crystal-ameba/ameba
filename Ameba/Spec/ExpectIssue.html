@@ -13,7 +13,7 @@
 <script type="text/javascript" src="../../js/doc.js"></script>
 
   <meta name="repository-name" content="ameba">
-  <title>Ameba::AST::CountingVisitor - ameba master</title>
+  <title>Ameba::Spec::ExpectIssue - ameba master</title>
   <script type="text/javascript">
     CrystalDocs.base_path = "../../";
   </script>
@@ -56,7 +56,7 @@
       
         <ul>
   
-  <li class="parent open current" data-id="ameba/Ameba/AST" data-name="ameba::ast">
+  <li class="parent " data-id="ameba/Ameba/AST" data-name="ameba::ast">
       <a href="../../Ameba/AST.html">AST</a>
       
         <ul>
@@ -86,7 +86,7 @@
       
     </li>
   
-  <li class=" current" data-id="ameba/Ameba/AST/CountingVisitor" data-name="ameba::ast::countingvisitor">
+  <li class=" " data-id="ameba/Ameba/AST/CountingVisitor" data-name="ameba::ast::countingvisitor">
       <a href="../../Ameba/AST/CountingVisitor.html">CountingVisitor</a>
       
     </li>
@@ -606,7 +606,7 @@
       
     </li>
   
-  <li class="parent " data-id="ameba/Ameba/Spec" data-name="ameba::spec">
+  <li class="parent open current" data-id="ameba/Ameba/Spec" data-name="ameba::spec">
       <a href="../../Ameba/Spec.html">Spec</a>
       
         <ul>
@@ -626,7 +626,7 @@
       
     </li>
   
-  <li class=" " data-id="ameba/Ameba/Spec/ExpectIssue" data-name="ameba::spec::expectissue">
+  <li class=" current" data-id="ameba/Ameba/Spec/ExpectIssue" data-name="ameba::spec::expectissue">
       <a href="../../Ameba/Spec/ExpectIssue.html">ExpectIssue</a>
       
     </li>
@@ -660,12 +660,10 @@
 <div class="main-content">
 <h1 class="type-name">
 
-  <span class="kind">class</span> Ameba::AST::CountingVisitor
+  <span class="kind">module</span> Ameba::Spec::ExpectIssue
 
 </h1>
 
-
-  <ul class="superclass-hierarchy"><li class="superclass"><a href="../../Ameba/AST/CountingVisitor.html">Ameba::AST::CountingVisitor</a></li><li class="superclass">Crystal::Visitor</li><li class="superclass">Reference</li><li class="superclass">Object</li></ul>
 
 
 
@@ -679,11 +677,62 @@
     Overview
   </h2>
 
-  <p>AST Visitor that counts occurrences of certain keywords</p>
+  <p>This mixin makes it easier to specify strict issue expectations
+in a declarative and visual fashion. Just type out the code that
+should generate an issue, annotate code by writing '^'s
+underneath each character that should be highlighted, and follow
+the carets with a string (separated by a space) that is the
+message of the issue. You can include multiple issues in
+one code snippet.</p>
+<p>Usage:</p>
+<pre><code class="language-crystal">expect_issue subject, <span class="s">%(
+  def foo
+    a do
+      b
+    end.c
+  # ^^^^^ error: Avoid chaining a method call on a do...end block.
+  end
+)</span></code></pre>
+<p>Equivalent assertion without <code><a href="../../Ameba/Spec/ExpectIssue.html#expect_issue%28rules%3ARule%3A%3ABase%7CEnumerable%28Rule%3A%3ABase%29%2Cannotated_code%3AString%2Cpath%3D%22%22%2Cnormalize%3Dtrue%2C%2A%2Cfile%3D__FILE__%2Cline%3D__LINE__%29-instance-method">#expect_issue</a></code>:</p>
+<pre><code class="language-crystal">source <span class="o">=</span> <span class="t">Source</span>.<span class="k">new</span> <span class="s">%(
+  def foo
+    a do
+      b
+    end.c
+  end
+)</span>, <span class="s">&quot;source.cr&quot;</span>
+subject.catch(source).should_not be_valid
+source.issues.size.should be(<span class="n">1</span>)
+
+issue <span class="o">=</span> source.issues.first
+issue.location.to_s.should eq <span class="s">&quot;source.cr:4:3&quot;</span>
+issue.end_location.to_s.should eq <span class="s">&quot;source.cr:4:7&quot;</span>
+issue.message.should eq(
+  <span class="s">&quot;Avoid chaining a method call on a do...end block.&quot;</span>
+)</code></pre>
+<p>If you do not want to specify an issue then use the
+companion method <code><a href="../../Ameba/Spec/ExpectIssue.html#expect_no_issues%28rules%3ARule%3A%3ABase%7CEnumerable%28Rule%3A%3ABase%29%2Ccode%3AString%2Cpath%3D%22%22%2Cnormalize%3Dtrue%2C%2A%2Cfile%3D__FILE__%2Cline%3D__LINE__%29-instance-method">#expect_no_issues</a></code>. This method is a much
+simpler assertion since it just inspects the code and checks
+that there were no issues. The <code><a href="../../Ameba/Spec/ExpectIssue.html#expect_issue%28rules%3ARule%3A%3ABase%7CEnumerable%28Rule%3A%3ABase%29%2Cannotated_code%3AString%2Cpath%3D%22%22%2Cnormalize%3Dtrue%2C%2A%2Cfile%3D__FILE__%2Cline%3D__LINE__%29-instance-method">#expect_issue</a></code> method has
+to do more work by parsing out lines that contain carets.</p>
 
 
 
 
+
+  <h2>
+    <a id="included-modules" class="anchor" href="#included-modules">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>
+    Included Modules
+  </h2>
+  <ul class="other-types-list">
+    
+      <li class="other-type"><a href="../../Ameba/Spec/Util.html">Ameba::Spec::Util</a></li>
+    
+  </ul>
 
 
 
@@ -704,8 +753,8 @@
   </h2>
   
     
-      <a href="https://github.com/crystal-ameba/ameba/blob/3d432fde/src/ameba/ast/visitors/counting_visitor.cr#L3" target="_blank">
-        ameba/ast/visitors/counting_visitor.cr
+      <a href="https://github.com/crystal-ameba/ameba/blob/3d432fde/src/ameba/spec/expect_issue.cr#L47" target="_blank">
+        ameba/spec/expect_issue.cr
       </a>
     
     <br/>
@@ -713,45 +762,7 @@
 
 
 
-  
-    <h2>
-      <a id="constant-summary" class="anchor" href="#constant-summary">
-  <svg class="octicon-link" aria-hidden="true">
-    <use href="#octicon-link"/>
-  </svg>
-</a>
-      Constant Summary
-    </h2>
-  
-  <dl>
-    
-      <dt class="entry-const" id="DEFAULT_COMPLEXITY">
-        <strong>DEFAULT_COMPLEXITY</strong> = <code><span class="n">1</span></code>
-      </dt>
-      
-    
-  </dl>
 
-
-
-  <h2>
-    <a id="constructors" class="anchor" href="#constructors">
-  <svg class="octicon-link" aria-hidden="true">
-    <use href="#octicon-link"/>
-  </svg>
-</a>
-    Constructors
-  </h2>
-  <ul class="list-summary">
-    
-      <li class="entry-summary">
-        <a href="#new%28scope%3ACrystal%3A%3AASTNode%29-class-method" class="signature"><strong>.new</strong>(scope : Crystal::ASTNode)</a>
-        
-          <div class="summary"><p>Creates a new counting visitor</p></div>
-        
-      </li>
-    
-  </ul>
 
 
 
@@ -768,19 +779,12 @@
   <ul class="list-summary">
     
       <li class="entry-summary">
-        <a href="#count-instance-method" class="signature"><strong>#count</strong></a>
-        
-          <div class="summary"><p>Returns the number of keywords that were found in the node</p></div>
+        <a href="#expect_issue%28rules%3ARule%3A%3ABase%7CEnumerable%28Rule%3A%3ABase%29%2Cannotated_code%3AString%2Cpath%3D%22%22%2Cnormalize%3Dtrue%2C%2A%2Cfile%3D__FILE__%2Cline%3D__LINE__%29-instance-method" class="signature"><strong>#expect_issue</strong>(rules : Rule::Base | Enumerable(Rule::Base), annotated_code : String, path = <span class="s">&quot;&quot;</span>, normalize = <span class="n">true</span>, *, file = __FILE__, line = __LINE__)</a>
         
       </li>
     
       <li class="entry-summary">
-        <a href="#macro_condition%3ABool-instance-method" class="signature"><strong>#macro_condition</strong> : Bool</a>
-        
-      </li>
-    
-      <li class="entry-summary">
-        <a href="#visit%28node%3ACrystal%3A%3AMacroIf%7CCrystal%3A%3AMacroFor%29-instance-method" class="signature"><strong>#visit</strong>(node : Crystal::MacroIf | Crystal::MacroFor)</a>
+        <a href="#expect_no_issues%28rules%3ARule%3A%3ABase%7CEnumerable%28Rule%3A%3ABase%29%2Ccode%3AString%2Cpath%3D%22%22%2Cnormalize%3Dtrue%2C%2A%2Cfile%3D__FILE__%2Cline%3D__LINE__%29-instance-method" class="signature"><strong>#expect_no_issues</strong>(rules : Rule::Base | Enumerable(Rule::Base), code : String, path = <span class="s">&quot;&quot;</span>, normalize = <span class="n">true</span>, *, file = __FILE__, line = __LINE__)</a>
         
       </li>
     
@@ -794,25 +798,14 @@
   
     
 
-
-    
-
-
-    
-
-
+  <h3>Instance methods inherited from module <code><a href="../../Ameba/Spec/Util.html">Ameba::Spec::Util</a></code></h3>
   
-    
-
-
-    
-
-
-    
-
-
   
+    <a href="../../Ameba/Spec/Util.html#normalize_code%28code%2Cseparator%3D%27%5Cn%27%29-instance-method" class="tooltip">
+      <span>normalize_code(code, separator = <span class="s">&#39;\n&#39;</span>)</span>
+    normalize_code</a>
     
+  
 
 
     
@@ -824,37 +817,6 @@
   
 </div>
 
-
-  <h2>
-    <a id="constructor-detail" class="anchor" href="#constructor-detail">
-  <svg class="octicon-link" aria-hidden="true">
-    <use href="#octicon-link"/>
-  </svg>
-</a>
-    Constructor Detail
-  </h2>
-  
-    <div class="entry-detail" id="new(scope:Crystal::ASTNode)-class-method">
-      <div class="signature">
-        
-        def self.<strong>new</strong>(scope : Crystal::ASTNode)
-
-        <a class="method-permalink" href="#new%28scope%3ACrystal%3A%3AASTNode%29-class-method">#</a>
-      </div>
-      
-        <div class="doc">
-          
-          <p>Creates a new counting visitor</p>
-        </div>
-      
-      <br/>
-      <div>
-        
-          [<a href="https://github.com/crystal-ameba/ameba/blob/3d432fde/src/ameba/ast/visitors/counting_visitor.cr#L8" target="_blank">View source</a>]
-        
-      </div>
-    </div>
-  
 
 
 
@@ -869,55 +831,34 @@
     Instance Method Detail
   </h2>
   
-    <div class="entry-detail" id="count-instance-method">
+    <div class="entry-detail" id="expect_issue(rules:Rule::Base|Enumerable(Rule::Base),annotated_code:String,path=&quot;&quot;,normalize=true,*,file=__FILE__,line=__LINE__)-instance-method">
       <div class="signature">
         
-        def <strong>count</strong>
+        def <strong>expect_issue</strong>(rules : <a href="../../Ameba/Rule/Base.html">Rule::Base</a> | Enumerable(<a href="../../Ameba/Rule/Base.html">Rule::Base</a>), annotated_code : String, path = <span class="s">&quot;&quot;</span>, normalize = <span class="n">true</span>, *, file = __FILE__, line = __LINE__)
 
-        <a class="method-permalink" href="#count-instance-method">#</a>
+        <a class="method-permalink" href="#expect_issue%28rules%3ARule%3A%3ABase%7CEnumerable%28Rule%3A%3ABase%29%2Cannotated_code%3AString%2Cpath%3D%22%22%2Cnormalize%3Dtrue%2C%2A%2Cfile%3D__FILE__%2Cline%3D__LINE__%29-instance-method">#</a>
       </div>
-      
-        <div class="doc">
-          
-          <p>Returns the number of keywords that were found in the node</p>
-        </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/3d432fde/src/ameba/ast/visitors/counting_visitor.cr#L18" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/3d432fde/src/ameba/spec/expect_issue.cr#L50" target="_blank">View source</a>]
         
       </div>
     </div>
   
-    <div class="entry-detail" id="macro_condition:Bool-instance-method">
+    <div class="entry-detail" id="expect_no_issues(rules:Rule::Base|Enumerable(Rule::Base),code:String,path=&quot;&quot;,normalize=true,*,file=__FILE__,line=__LINE__)-instance-method">
       <div class="signature">
         
-        def <strong>macro_condition</strong> : Bool
+        def <strong>expect_no_issues</strong>(rules : <a href="../../Ameba/Rule/Base.html">Rule::Base</a> | Enumerable(<a href="../../Ameba/Rule/Base.html">Rule::Base</a>), code : String, path = <span class="s">&quot;&quot;</span>, normalize = <span class="n">true</span>, *, file = __FILE__, line = __LINE__)
 
-        <a class="method-permalink" href="#macro_condition%3ABool-instance-method">#</a>
+        <a class="method-permalink" href="#expect_no_issues%28rules%3ARule%3A%3ABase%7CEnumerable%28Rule%3A%3ABase%29%2Ccode%3AString%2Cpath%3D%22%22%2Cnormalize%3Dtrue%2C%2A%2Cfile%3D__FILE__%2Cline%3D__LINE__%29-instance-method">#</a>
       </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/3d432fde/src/ameba/ast/visitors/counting_visitor.cr#L5" target="_blank">View source</a>]
-        
-      </div>
-    </div>
-  
-    <div class="entry-detail" id="visit(node:Crystal::MacroIf|Crystal::MacroFor)-instance-method">
-      <div class="signature">
-        
-        def <strong>visit</strong>(node : Crystal::MacroIf | Crystal::MacroFor)
-
-        <a class="method-permalink" href="#visit%28node%3ACrystal%3A%3AMacroIf%7CCrystal%3A%3AMacroFor%29-instance-method">#</a>
-      </div>
-      
-      <br/>
-      <div>
-        
-          [<a href="https://github.com/crystal-ameba/ameba/blob/3d432fde/src/ameba/ast/visitors/counting_visitor.cr#L44" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/3d432fde/src/ameba/spec/expect_issue.cr#L80" target="_blank">View source</a>]
         
       </div>
     </div>

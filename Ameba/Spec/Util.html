@@ -13,7 +13,7 @@
 <script type="text/javascript" src="../../js/doc.js"></script>
 
   <meta name="repository-name" content="ameba">
-  <title>Ameba::AST::CountingVisitor - ameba master</title>
+  <title>Ameba::Spec::Util - ameba master</title>
   <script type="text/javascript">
     CrystalDocs.base_path = "../../";
   </script>
@@ -56,7 +56,7 @@
       
         <ul>
   
-  <li class="parent open current" data-id="ameba/Ameba/AST" data-name="ameba::ast">
+  <li class="parent " data-id="ameba/Ameba/AST" data-name="ameba::ast">
       <a href="../../Ameba/AST.html">AST</a>
       
         <ul>
@@ -86,7 +86,7 @@
       
     </li>
   
-  <li class=" current" data-id="ameba/Ameba/AST/CountingVisitor" data-name="ameba::ast::countingvisitor">
+  <li class=" " data-id="ameba/Ameba/AST/CountingVisitor" data-name="ameba::ast::countingvisitor">
       <a href="../../Ameba/AST/CountingVisitor.html">CountingVisitor</a>
       
     </li>
@@ -606,7 +606,7 @@
       
     </li>
   
-  <li class="parent " data-id="ameba/Ameba/Spec" data-name="ameba::spec">
+  <li class="parent open current" data-id="ameba/Ameba/Spec" data-name="ameba::spec">
       <a href="../../Ameba/Spec.html">Spec</a>
       
         <ul>
@@ -631,7 +631,7 @@
       
     </li>
   
-  <li class=" " data-id="ameba/Ameba/Spec/Util" data-name="ameba::spec::util">
+  <li class=" current" data-id="ameba/Ameba/Spec/Util" data-name="ameba::spec::util">
       <a href="../../Ameba/Spec/Util.html">Util</a>
       
     </li>
@@ -660,36 +660,39 @@
 <div class="main-content">
 <h1 class="type-name">
 
-  <span class="kind">class</span> Ameba::AST::CountingVisitor
+  <span class="kind">module</span> Ameba::Spec::Util
 
 </h1>
 
 
-  <ul class="superclass-hierarchy"><li class="superclass"><a href="../../Ameba/AST/CountingVisitor.html">Ameba::AST::CountingVisitor</a></li><li class="superclass">Crystal::Visitor</li><li class="superclass">Reference</li><li class="superclass">Object</li></ul>
+
+
+
+
+
+
+
+
+
 
 
 
 
   <h2>
-    <a id="overview" class="anchor" href="#overview">
+    <a id="direct-including-types" class="anchor" href="#direct-including-types">
   <svg class="octicon-link" aria-hidden="true">
     <use href="#octicon-link"/>
   </svg>
 </a>
-    Overview
+    Direct including types
   </h2>
-
-  <p>AST Visitor that counts occurrences of certain keywords</p>
-
-
-
-
-
-
-
-
-
-
+  <ul class="other-types-list">
+    
+      <li class="other-type"><a href="../../Ameba/Source.html">Ameba::Source</a></li>
+    
+      <li class="other-type"><a href="../../Ameba/Spec/ExpectIssue.html">Ameba::Spec::ExpectIssue</a></li>
+    
+  </ul>
 
 
 
@@ -704,8 +707,8 @@
   </h2>
   
     
-      <a href="https://github.com/crystal-ameba/ameba/blob/3d432fde/src/ameba/ast/visitors/counting_visitor.cr#L3" target="_blank">
-        ameba/ast/visitors/counting_visitor.cr
+      <a href="https://github.com/crystal-ameba/ameba/blob/3d432fde/src/ameba/spec/util.cr#L1" target="_blank">
+        ameba/spec/util.cr
       </a>
     
     <br/>
@@ -713,45 +716,7 @@
 
 
 
-  
-    <h2>
-      <a id="constant-summary" class="anchor" href="#constant-summary">
-  <svg class="octicon-link" aria-hidden="true">
-    <use href="#octicon-link"/>
-  </svg>
-</a>
-      Constant Summary
-    </h2>
-  
-  <dl>
-    
-      <dt class="entry-const" id="DEFAULT_COMPLEXITY">
-        <strong>DEFAULT_COMPLEXITY</strong> = <code><span class="n">1</span></code>
-      </dt>
-      
-    
-  </dl>
 
-
-
-  <h2>
-    <a id="constructors" class="anchor" href="#constructors">
-  <svg class="octicon-link" aria-hidden="true">
-    <use href="#octicon-link"/>
-  </svg>
-</a>
-    Constructors
-  </h2>
-  <ul class="list-summary">
-    
-      <li class="entry-summary">
-        <a href="#new%28scope%3ACrystal%3A%3AASTNode%29-class-method" class="signature"><strong>.new</strong>(scope : Crystal::ASTNode)</a>
-        
-          <div class="summary"><p>Creates a new counting visitor</p></div>
-        
-      </li>
-    
-  </ul>
 
 
 
@@ -768,19 +733,7 @@
   <ul class="list-summary">
     
       <li class="entry-summary">
-        <a href="#count-instance-method" class="signature"><strong>#count</strong></a>
-        
-          <div class="summary"><p>Returns the number of keywords that were found in the node</p></div>
-        
-      </li>
-    
-      <li class="entry-summary">
-        <a href="#macro_condition%3ABool-instance-method" class="signature"><strong>#macro_condition</strong> : Bool</a>
-        
-      </li>
-    
-      <li class="entry-summary">
-        <a href="#visit%28node%3ACrystal%3A%3AMacroIf%7CCrystal%3A%3AMacroFor%29-instance-method" class="signature"><strong>#visit</strong>(node : Crystal::MacroIf | Crystal::MacroFor)</a>
+        <a href="#normalize_code%28code%2Cseparator%3D%27%5Cn%27%29-instance-method" class="signature"><strong>#normalize_code</strong>(code, separator = <span class="s">&#39;\n&#39;</span>)</a>
         
       </li>
     
@@ -792,69 +745,8 @@
 
 <div class="methods-inherited">
   
-    
-
-
-    
-
-
-    
-
-
-  
-    
-
-
-    
-
-
-    
-
-
-  
-    
-
-
-    
-
-
-    
-
-
-  
 </div>
 
-
-  <h2>
-    <a id="constructor-detail" class="anchor" href="#constructor-detail">
-  <svg class="octicon-link" aria-hidden="true">
-    <use href="#octicon-link"/>
-  </svg>
-</a>
-    Constructor Detail
-  </h2>
-  
-    <div class="entry-detail" id="new(scope:Crystal::ASTNode)-class-method">
-      <div class="signature">
-        
-        def self.<strong>new</strong>(scope : Crystal::ASTNode)
-
-        <a class="method-permalink" href="#new%28scope%3ACrystal%3A%3AASTNode%29-class-method">#</a>
-      </div>
-      
-        <div class="doc">
-          
-          <p>Creates a new counting visitor</p>
-        </div>
-      
-      <br/>
-      <div>
-        
-          [<a href="https://github.com/crystal-ameba/ameba/blob/3d432fde/src/ameba/ast/visitors/counting_visitor.cr#L8" target="_blank">View source</a>]
-        
-      </div>
-    </div>
-  
 
 
 
@@ -869,55 +761,18 @@
     Instance Method Detail
   </h2>
   
-    <div class="entry-detail" id="count-instance-method">
+    <div class="entry-detail" id="normalize_code(code,separator=&#39;\n&#39;)-instance-method">
       <div class="signature">
         
-        def <strong>count</strong>
+        def <strong>normalize_code</strong>(code, separator = <span class="s">&#39;\n&#39;</span>)
 
-        <a class="method-permalink" href="#count-instance-method">#</a>
-      </div>
-      
-        <div class="doc">
-          
-          <p>Returns the number of keywords that were found in the node</p>
-        </div>
-      
-      <br/>
-      <div>
-        
-          [<a href="https://github.com/crystal-ameba/ameba/blob/3d432fde/src/ameba/ast/visitors/counting_visitor.cr#L18" target="_blank">View source</a>]
-        
-      </div>
-    </div>
-  
-    <div class="entry-detail" id="macro_condition:Bool-instance-method">
-      <div class="signature">
-        
-        def <strong>macro_condition</strong> : Bool
-
-        <a class="method-permalink" href="#macro_condition%3ABool-instance-method">#</a>
+        <a class="method-permalink" href="#normalize_code%28code%2Cseparator%3D%27%5Cn%27%29-instance-method">#</a>
       </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/3d432fde/src/ameba/ast/visitors/counting_visitor.cr#L5" target="_blank">View source</a>]
-        
-      </div>
-    </div>
-  
-    <div class="entry-detail" id="visit(node:Crystal::MacroIf|Crystal::MacroFor)-instance-method">
-      <div class="signature">
-        
-        def <strong>visit</strong>(node : Crystal::MacroIf | Crystal::MacroFor)
-
-        <a class="method-permalink" href="#visit%28node%3ACrystal%3A%3AMacroIf%7CCrystal%3A%3AMacroFor%29-instance-method">#</a>
-      </div>
-      
-      <br/>
-      <div>
-        
-          [<a href="https://github.com/crystal-ameba/ameba/blob/3d432fde/src/ameba/ast/visitors/counting_visitor.cr#L44" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/3d432fde/src/ameba/spec/util.cr#L2" target="_blank">View source</a>]
         
       </div>
     </div>

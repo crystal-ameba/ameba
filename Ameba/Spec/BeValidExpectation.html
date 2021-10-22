@@ -13,7 +13,7 @@
 <script type="text/javascript" src="../../js/doc.js"></script>
 
   <meta name="repository-name" content="ameba">
-  <title>Ameba::AST::CountingVisitor - ameba master</title>
+  <title>Ameba::Spec::BeValidExpectation - ameba master</title>
   <script type="text/javascript">
     CrystalDocs.base_path = "../../";
   </script>
@@ -56,7 +56,7 @@
       
         <ul>
   
-  <li class="parent open current" data-id="ameba/Ameba/AST" data-name="ameba::ast">
+  <li class="parent " data-id="ameba/Ameba/AST" data-name="ameba::ast">
       <a href="../../Ameba/AST.html">AST</a>
       
         <ul>
@@ -86,7 +86,7 @@
       
     </li>
   
-  <li class=" current" data-id="ameba/Ameba/AST/CountingVisitor" data-name="ameba::ast::countingvisitor">
+  <li class=" " data-id="ameba/Ameba/AST/CountingVisitor" data-name="ameba::ast::countingvisitor">
       <a href="../../Ameba/AST/CountingVisitor.html">CountingVisitor</a>
       
     </li>
@@ -606,7 +606,7 @@
       
     </li>
   
-  <li class="parent " data-id="ameba/Ameba/Spec" data-name="ameba::spec">
+  <li class="parent open current" data-id="ameba/Ameba/Spec" data-name="ameba::spec">
       <a href="../../Ameba/Spec.html">Spec</a>
       
         <ul>
@@ -621,7 +621,7 @@
       
     </li>
   
-  <li class=" " data-id="ameba/Ameba/Spec/BeValidExpectation" data-name="ameba::spec::bevalidexpectation">
+  <li class=" current" data-id="ameba/Ameba/Spec/BeValidExpectation" data-name="ameba::spec::bevalidexpectation">
       <a href="../../Ameba/Spec/BeValidExpectation.html">BeValidExpectation</a>
       
     </li>
@@ -660,26 +660,15 @@
 <div class="main-content">
 <h1 class="type-name">
 
-  <span class="kind">class</span> Ameba::AST::CountingVisitor
+  <span class="kind">struct</span> Ameba::Spec::BeValidExpectation
 
 </h1>
 
 
-  <ul class="superclass-hierarchy"><li class="superclass"><a href="../../Ameba/AST/CountingVisitor.html">Ameba::AST::CountingVisitor</a></li><li class="superclass">Crystal::Visitor</li><li class="superclass">Reference</li><li class="superclass">Object</li></ul>
+  <ul class="superclass-hierarchy"><li class="superclass"><a href="../../Ameba/Spec/BeValidExpectation.html">Ameba::Spec::BeValidExpectation</a></li><li class="superclass">Struct</li><li class="superclass">Value</li><li class="superclass">Object</li></ul>
 
 
 
-
-  <h2>
-    <a id="overview" class="anchor" href="#overview">
-  <svg class="octicon-link" aria-hidden="true">
-    <use href="#octicon-link"/>
-  </svg>
-</a>
-    Overview
-  </h2>
-
-  <p>AST Visitor that counts occurrences of certain keywords</p>
 
 
 
@@ -704,33 +693,14 @@
   </h2>
   
     
-      <a href="https://github.com/crystal-ameba/ameba/blob/3d432fde/src/ameba/ast/visitors/counting_visitor.cr#L3" target="_blank">
-        ameba/ast/visitors/counting_visitor.cr
+      <a href="https://github.com/crystal-ameba/ameba/blob/3d432fde/src/ameba/spec/be_valid.cr#L8" target="_blank">
+        ameba/spec/be_valid.cr
       </a>
     
     <br/>
   
 
 
-
-  
-    <h2>
-      <a id="constant-summary" class="anchor" href="#constant-summary">
-  <svg class="octicon-link" aria-hidden="true">
-    <use href="#octicon-link"/>
-  </svg>
-</a>
-      Constant Summary
-    </h2>
-  
-  <dl>
-    
-      <dt class="entry-const" id="DEFAULT_COMPLEXITY">
-        <strong>DEFAULT_COMPLEXITY</strong> = <code><span class="n">1</span></code>
-      </dt>
-      
-    
-  </dl>
 
 
 
@@ -745,9 +715,7 @@
   <ul class="list-summary">
     
       <li class="entry-summary">
-        <a href="#new%28scope%3ACrystal%3A%3AASTNode%29-class-method" class="signature"><strong>.new</strong>(scope : Crystal::ASTNode)</a>
-        
-          <div class="summary"><p>Creates a new counting visitor</p></div>
+        <a href="#new-class-method" class="signature"><strong>.new</strong></a>
         
       </li>
     
@@ -768,19 +736,17 @@
   <ul class="list-summary">
     
       <li class="entry-summary">
-        <a href="#count-instance-method" class="signature"><strong>#count</strong></a>
-        
-          <div class="summary"><p>Returns the number of keywords that were found in the node</p></div>
+        <a href="#failure_message%28source%29-instance-method" class="signature"><strong>#failure_message</strong>(source)</a>
         
       </li>
     
       <li class="entry-summary">
-        <a href="#macro_condition%3ABool-instance-method" class="signature"><strong>#macro_condition</strong> : Bool</a>
+        <a href="#match%28source%29-instance-method" class="signature"><strong>#match</strong>(source)</a>
         
       </li>
     
       <li class="entry-summary">
-        <a href="#visit%28node%3ACrystal%3A%3AMacroIf%7CCrystal%3A%3AMacroFor%29-instance-method" class="signature"><strong>#visit</strong>(node : Crystal::MacroIf | Crystal::MacroFor)</a>
+        <a href="#negative_failure_message%28source%29-instance-method" class="signature"><strong>#negative_failure_message</strong>(source)</a>
         
       </li>
     
@@ -834,23 +800,18 @@
     Constructor Detail
   </h2>
   
-    <div class="entry-detail" id="new(scope:Crystal::ASTNode)-class-method">
+    <div class="entry-detail" id="new-class-method">
       <div class="signature">
         
-        def self.<strong>new</strong>(scope : Crystal::ASTNode)
+        def self.<strong>new</strong>
 
-        <a class="method-permalink" href="#new%28scope%3ACrystal%3A%3AASTNode%29-class-method">#</a>
+        <a class="method-permalink" href="#new-class-method">#</a>
       </div>
-      
-        <div class="doc">
-          
-          <p>Creates a new counting visitor</p>
-        </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/3d432fde/src/ameba/ast/visitors/counting_visitor.cr#L8" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/3d432fde/src/ameba/spec/be_valid.cr#L8" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -869,55 +830,50 @@
     Instance Method Detail
   </h2>
   
-    <div class="entry-detail" id="count-instance-method">
+    <div class="entry-detail" id="failure_message(source)-instance-method">
       <div class="signature">
         
-        def <strong>count</strong>
+        def <strong>failure_message</strong>(source)
 
-        <a class="method-permalink" href="#count-instance-method">#</a>
+        <a class="method-permalink" href="#failure_message%28source%29-instance-method">#</a>
       </div>
-      
-        <div class="doc">
-          
-          <p>Returns the number of keywords that were found in the node</p>
-        </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/3d432fde/src/ameba/ast/visitors/counting_visitor.cr#L18" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/3d432fde/src/ameba/spec/be_valid.cr#L13" target="_blank">View source</a>]
         
       </div>
     </div>
   
-    <div class="entry-detail" id="macro_condition:Bool-instance-method">
+    <div class="entry-detail" id="match(source)-instance-method">
       <div class="signature">
         
-        def <strong>macro_condition</strong> : Bool
+        def <strong>match</strong>(source)
 
-        <a class="method-permalink" href="#macro_condition%3ABool-instance-method">#</a>
+        <a class="method-permalink" href="#match%28source%29-instance-method">#</a>
       </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/3d432fde/src/ameba/ast/visitors/counting_visitor.cr#L5" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/3d432fde/src/ameba/spec/be_valid.cr#L9" target="_blank">View source</a>]
         
       </div>
     </div>
   
-    <div class="entry-detail" id="visit(node:Crystal::MacroIf|Crystal::MacroFor)-instance-method">
+    <div class="entry-detail" id="negative_failure_message(source)-instance-method">
       <div class="signature">
         
-        def <strong>visit</strong>(node : Crystal::MacroIf | Crystal::MacroFor)
+        def <strong>negative_failure_message</strong>(source)
 
-        <a class="method-permalink" href="#visit%28node%3ACrystal%3A%3AMacroIf%7CCrystal%3A%3AMacroFor%29-instance-method">#</a>
+        <a class="method-permalink" href="#negative_failure_message%28source%29-instance-method">#</a>
       </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/3d432fde/src/ameba/ast/visitors/counting_visitor.cr#L44" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/3d432fde/src/ameba/spec/be_valid.cr#L22" target="_blank">View source</a>]
         
       </div>
     </div>

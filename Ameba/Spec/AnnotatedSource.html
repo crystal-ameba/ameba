@@ -13,7 +13,7 @@
 <script type="text/javascript" src="../../js/doc.js"></script>
 
   <meta name="repository-name" content="ameba">
-  <title>Ameba::AST::CountingVisitor - ameba master</title>
+  <title>Ameba::Spec::AnnotatedSource - ameba master</title>
   <script type="text/javascript">
     CrystalDocs.base_path = "../../";
   </script>
@@ -56,7 +56,7 @@
       
         <ul>
   
-  <li class="parent open current" data-id="ameba/Ameba/AST" data-name="ameba::ast">
+  <li class="parent " data-id="ameba/Ameba/AST" data-name="ameba::ast">
       <a href="../../Ameba/AST.html">AST</a>
       
         <ul>
@@ -86,7 +86,7 @@
       
     </li>
   
-  <li class=" current" data-id="ameba/Ameba/AST/CountingVisitor" data-name="ameba::ast::countingvisitor">
+  <li class=" " data-id="ameba/Ameba/AST/CountingVisitor" data-name="ameba::ast::countingvisitor">
       <a href="../../Ameba/AST/CountingVisitor.html">CountingVisitor</a>
       
     </li>
@@ -606,12 +606,12 @@
       
     </li>
   
-  <li class="parent " data-id="ameba/Ameba/Spec" data-name="ameba::spec">
+  <li class="parent open current" data-id="ameba/Ameba/Spec" data-name="ameba::spec">
       <a href="../../Ameba/Spec.html">Spec</a>
       
         <ul>
   
-  <li class=" " data-id="ameba/Ameba/Spec/AnnotatedSource" data-name="ameba::spec::annotatedsource">
+  <li class=" current" data-id="ameba/Ameba/Spec/AnnotatedSource" data-name="ameba::spec::annotatedsource">
       <a href="../../Ameba/Spec/AnnotatedSource.html">AnnotatedSource</a>
       
     </li>
@@ -660,12 +660,12 @@
 <div class="main-content">
 <h1 class="type-name">
 
-  <span class="kind">class</span> Ameba::AST::CountingVisitor
+  <span class="kind">class</span> Ameba::Spec::AnnotatedSource
 
 </h1>
 
 
-  <ul class="superclass-hierarchy"><li class="superclass"><a href="../../Ameba/AST/CountingVisitor.html">Ameba::AST::CountingVisitor</a></li><li class="superclass">Crystal::Visitor</li><li class="superclass">Reference</li><li class="superclass">Object</li></ul>
+  <ul class="superclass-hierarchy"><li class="superclass"><a href="../../Ameba/Spec/AnnotatedSource.html">Ameba::Spec::AnnotatedSource</a></li><li class="superclass">Reference</li><li class="superclass">Object</li></ul>
 
 
 
@@ -679,7 +679,7 @@
     Overview
   </h2>
 
-  <p>AST Visitor that counts occurrences of certain keywords</p>
+  <p>Parsed representation of code annotated with the <code># ^^^ error: Message</code> style</p>
 
 
 
@@ -704,8 +704,8 @@
   </h2>
   
     
-      <a href="https://github.com/crystal-ameba/ameba/blob/3d432fde/src/ameba/ast/visitors/counting_visitor.cr#L3" target="_blank">
-        ameba/ast/visitors/counting_visitor.cr
+      <a href="https://github.com/crystal-ameba/ameba/blob/3d432fde/src/ameba/spec/annotated_source.cr#L2" target="_blank">
+        ameba/spec/annotated_source.cr
       </a>
     
     <br/>
@@ -725,8 +725,18 @@
   
   <dl>
     
-      <dt class="entry-const" id="DEFAULT_COMPLEXITY">
-        <strong>DEFAULT_COMPLEXITY</strong> = <code><span class="n">1</span></code>
+      <dt class="entry-const" id="ABBREV">
+        <strong>ABBREV</strong> = <code><span class="s">&quot;[...]&quot;</span></code>
+      </dt>
+      
+    
+      <dt class="entry-const" id="ANNOTATION_PATTERN_1">
+        <strong>ANNOTATION_PATTERN_1</strong> = <code><span class="s">/\A\s*(# )?(\^+|\^{})( error:)? /</span></code>
+      </dt>
+      
+    
+      <dt class="entry-const" id="ANNOTATION_PATTERN_2">
+        <strong>ANNOTATION_PATTERN_2</strong> = <code><span class="s">&quot; # error: &quot;</span></code>
       </dt>
       
     
@@ -745,15 +755,41 @@
   <ul class="list-summary">
     
       <li class="entry-summary">
-        <a href="#new%28scope%3ACrystal%3A%3AASTNode%29-class-method" class="signature"><strong>.new</strong>(scope : Crystal::ASTNode)</a>
+        <a href="#new%28lines%2Cannotations%3AEnumerable%28Tuple%28Int32%2CString%2CString%29%29%29-class-method" class="signature"><strong>.new</strong>(lines, annotations : Enumerable(Tuple(Int32, String, String)))</a>
         
-          <div class="summary"><p>Creates a new counting visitor</p></div>
+          <div class="summary"><p><span class="flag purple">NOTE</span>  Annotations are sorted so that reconstructing the annotation       text via <code><a href="../../Ameba/Spec/AnnotatedSource.html#to_s%28io%29-instance-method">#to_s</a></code> is deterministic.</p></div>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#new%28lines%2Cissues%3AEnumerable%28Issue%29%29-class-method" class="signature"><strong>.new</strong>(lines, issues : Enumerable(Issue))</a>
+        
+          <div class="summary"><p>Annotates the source code with the Ameba issues provided.</p></div>
         
       </li>
     
   </ul>
 
 
+
+  <h2>
+    <a id="class-method-summary" class="anchor" href="#class-method-summary">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>
+    Class Method Summary
+  </h2>
+  <ul class="list-summary">
+    
+      <li class="entry-summary">
+        <a href="#parse%28annotated_code%29-class-method" class="signature"><strong>.parse</strong>(annotated_code)</a>
+        
+          <div class="summary"><p>Separates annotation lines from code lines.</p></div>
+        
+      </li>
+    
+  </ul>
 
 
 
@@ -768,19 +804,28 @@
   <ul class="list-summary">
     
       <li class="entry-summary">
-        <a href="#count-instance-method" class="signature"><strong>#count</strong></a>
+        <a href="#%3D%3D%28other%29-instance-method" class="signature"><strong>#==</strong>(other)</a>
         
-          <div class="summary"><p>Returns the number of keywords that were found in the node</p></div>
-        
-      </li>
-    
-      <li class="entry-summary">
-        <a href="#macro_condition%3ABool-instance-method" class="signature"><strong>#macro_condition</strong> : Bool</a>
+          <div class="summary"><p>Returns <code>false</code> (other can only be a <code>Value</code> here).</p></div>
         
       </li>
     
       <li class="entry-summary">
-        <a href="#visit%28node%3ACrystal%3A%3AMacroIf%7CCrystal%3A%3AMacroFor%29-instance-method" class="signature"><strong>#visit</strong>(node : Crystal::MacroIf | Crystal::MacroFor)</a>
+        <a href="#annotations%3AArray%28Tuple%28Int32%2CString%2CString%29%29-instance-method" class="signature"><strong>#annotations</strong> : Array(Tuple(Int32, String, String))</a>
+        
+          <div class="summary"><p>Each entry is the line number, annotation prefix, and message.</p></div>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#lines%3AArray%28String%29-instance-method" class="signature"><strong>#lines</strong> : Array(String)</a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#to_s%28io%29-instance-method" class="signature"><strong>#to_s</strong>(io)</a>
+        
+          <div class="summary"><p>Constructs an annotated source string (like what we parse).</p></div>
         
       </li>
     
@@ -791,16 +836,6 @@
 
 
 <div class="methods-inherited">
-  
-    
-
-
-    
-
-
-    
-
-
   
     
 
@@ -834,29 +869,85 @@
     Constructor Detail
   </h2>
   
-    <div class="entry-detail" id="new(scope:Crystal::ASTNode)-class-method">
+    <div class="entry-detail" id="new(lines,annotations:Enumerable(Tuple(Int32,String,String)))-class-method">
       <div class="signature">
         
-        def self.<strong>new</strong>(scope : Crystal::ASTNode)
+        def self.<strong>new</strong>(lines, annotations : Enumerable(Tuple(Int32, String, String)))
 
-        <a class="method-permalink" href="#new%28scope%3ACrystal%3A%3AASTNode%29-class-method">#</a>
+        <a class="method-permalink" href="#new%28lines%2Cannotations%3AEnumerable%28Tuple%28Int32%2CString%2CString%29%29%29-class-method">#</a>
       </div>
       
         <div class="doc">
           
-          <p>Creates a new counting visitor</p>
+          <p><span class="flag purple">NOTE</span>  Annotations are sorted so that reconstructing the annotation
+text via <code><a href="../../Ameba/Spec/AnnotatedSource.html#to_s%28io%29-instance-method">#to_s</a></code> is deterministic.</p>
         </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/3d432fde/src/ameba/ast/visitors/counting_visitor.cr#L8" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/3d432fde/src/ameba/spec/annotated_source.cr#L39" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="new(lines,issues:Enumerable(Issue))-class-method">
+      <div class="signature">
+        
+        def self.<strong>new</strong>(lines, issues : Enumerable(<a href="../../Ameba/Issue.html">Issue</a>))
+
+        <a class="method-permalink" href="#new%28lines%2Cissues%3AEnumerable%28Issue%29%29-class-method">#</a>
+      </div>
+      
+        <div class="doc">
+          
+          <p>Annotates the source code with the Ameba issues provided.</p>
+<p><span class="flag purple">NOTE</span>  Annotations are sorted so that reconstructing the annotation
+text via <code><a href="../../Ameba/Spec/AnnotatedSource.html#to_s%28io%29-instance-method">#to_s</a></code> is deterministic.</p>
+        </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/crystal-ameba/ameba/blob/3d432fde/src/ameba/spec/annotated_source.cr#L47" target="_blank">View source</a>]
         
       </div>
     </div>
   
 
 
+
+  <h2>
+    <a id="class-method-detail" class="anchor" href="#class-method-detail">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>
+    Class Method Detail
+  </h2>
+  
+    <div class="entry-detail" id="parse(annotated_code)-class-method">
+      <div class="signature">
+        
+        def self.<strong>parse</strong>(annotated_code)
+
+        <a class="method-permalink" href="#parse%28annotated_code%29-class-method">#</a>
+      </div>
+      
+        <div class="doc">
+          
+          <p>Separates annotation lines from code lines. Tracks the real
+code line number that each annotation corresponds to.</p>
+        </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/crystal-ameba/ameba/blob/3d432fde/src/ameba/spec/annotated_source.cr#L15" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
 
 
 
@@ -869,55 +960,102 @@
     Instance Method Detail
   </h2>
   
-    <div class="entry-detail" id="count-instance-method">
+    <div class="entry-detail" id="==(other)-instance-method">
       <div class="signature">
         
-        def <strong>count</strong>
+        def <strong>==</strong>(other)
 
-        <a class="method-permalink" href="#count-instance-method">#</a>
+        <a class="method-permalink" href="#%3D%3D%28other%29-instance-method">#</a>
       </div>
       
         <div class="doc">
           
-          <p>Returns the number of keywords that were found in the node</p>
+            <div class="doc-inherited">
+              Description copied from class Reference
+            </div>
+          
+          <p>Returns <code>false</code> (other can only be a <code>Value</code> here).</p>
         </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/3d432fde/src/ameba/ast/visitors/counting_visitor.cr#L18" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/3d432fde/src/ameba/spec/annotated_source.cr#L51" target="_blank">View source</a>]
         
       </div>
     </div>
   
-    <div class="entry-detail" id="macro_condition:Bool-instance-method">
+    <div class="entry-detail" id="annotations:Array(Tuple(Int32,String,String))-instance-method">
       <div class="signature">
         
-        def <strong>macro_condition</strong> : Bool
+        def <strong>annotations</strong> : Array(Tuple(Int32, String, String))
 
-        <a class="method-permalink" href="#macro_condition%3ABool-instance-method">#</a>
+        <a class="method-permalink" href="#annotations%3AArray%28Tuple%28Int32%2CString%2CString%29%29-instance-method">#</a>
+      </div>
+      
+        <div class="doc">
+          
+          <p>Each entry is the line number, annotation prefix, and message.
+The prefix is empty if the annotation is at the end of a code line.</p>
+        </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/crystal-ameba/ameba/blob/3d432fde/src/ameba/spec/annotated_source.cr#L11" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="lines:Array(String)-instance-method">
+      <div class="signature">
+        
+        def <strong>lines</strong> : Array(String)
+
+        <a class="method-permalink" href="#lines%3AArray%28String%29-instance-method">#</a>
       </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/3d432fde/src/ameba/ast/visitors/counting_visitor.cr#L5" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/3d432fde/src/ameba/spec/annotated_source.cr#L7" target="_blank">View source</a>]
         
       </div>
     </div>
   
-    <div class="entry-detail" id="visit(node:Crystal::MacroIf|Crystal::MacroFor)-instance-method">
+    <div class="entry-detail" id="to_s(io)-instance-method">
       <div class="signature">
         
-        def <strong>visit</strong>(node : Crystal::MacroIf | Crystal::MacroFor)
+        def <strong>to_s</strong>(io)
 
-        <a class="method-permalink" href="#visit%28node%3ACrystal%3A%3AMacroIf%7CCrystal%3A%3AMacroFor%29-instance-method">#</a>
+        <a class="method-permalink" href="#to_s%28io%29-instance-method">#</a>
       </div>
+      
+        <div class="doc">
+          
+          <p>Constructs an annotated source string (like what we parse).</p>
+<p>Reconstructs a deterministic annotated source string. This is
+useful for eliminating semantically irrelevant annotation
+ordering differences.</p>
+<pre><code class="language-crystal">source1 <span class="o">=</span> <span class="t">AnnotatedSource</span>.parse(<span class="s">&lt;&lt;-CRYSTAL</span>)
+<span class="s">line1
+^ Annotation 1
+ ^^ Annotation 2
+CRYSTAL</span>
+
+source2 <span class="o">=</span> <span class="t">AnnotatedSource</span>.parse(<span class="s">&lt;&lt;-CRYSTAL</span>)
+<span class="s">line1
+ ^^ Annotation 2
+^ Annotation 1
+CRYSTAL</span>
+
+source1.to_s <span class="o">==</span> source2.to_s <span class="c"># =&gt; true</span></code></pre>
+        </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/3d432fde/src/ameba/ast/visitors/counting_visitor.cr#L44" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/3d432fde/src/ameba/spec/annotated_source.cr#L102" target="_blank">View source</a>]
         
       </div>
     </div>
