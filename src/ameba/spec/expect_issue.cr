@@ -60,7 +60,7 @@ module Ameba::Spec::ExpectIssue
     end
 
     actual_annotations = actual_annotations(rules, code, path, lines)
-    if actual_annotations != expected_annotations
+    unless actual_annotations == expected_annotations
       fail <<-MSG, file, line
         Expected:
 
@@ -83,7 +83,7 @@ module Ameba::Spec::ExpectIssue
     code = normalize_code(code) if normalize
     lines = code.lines
     actual_annotations = actual_annotations(rules, code, path, lines)
-    if actual_annotations.to_s != code
+    unless actual_annotations.to_s == code
       fail <<-MSG, file, line
         Expected no issues, but got:
 

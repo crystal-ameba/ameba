@@ -1,5 +1,5 @@
 module Ameba::Spec::Util
-  def normalize_code(code, separator = "\n")
+  def normalize_code(code, separator = '\n')
     lines = code.split(separator)
 
     # remove unneeded first blank lines if any
@@ -11,8 +11,8 @@ module Ameba::Spec::Util
     end
 
     # remove the width of minimum indentation in each line
-    lines
-      .map! { |line| line.blank? ? line : line[min_indent..-1] }
-      .join(separator)
+    lines.join(separator) do |line|
+      line.blank? ? line : line[min_indent..]
+    end
   end
 end

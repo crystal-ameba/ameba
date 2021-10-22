@@ -4,10 +4,14 @@ private def dummy_issue(message,
                         position : {Int32, Int32}?,
                         end_position : {Int32, Int32}?,
                         path = "")
+  location, end_location = nil, nil
+  location = Crystal::Location.new(path, *position) if position
+  end_location = Crystal::Location.new(path, *end_position) if end_position
+
   Ameba::Issue.new(
     rule: Ameba::DummyRule.new,
-    location: position ? Crystal::Location.new(path, *position) : nil,
-    end_location: end_position ? Crystal::Location.new(path, *end_position) : nil,
+    location: location,
+    end_location: end_location,
     message: message
   )
 end
@@ -20,7 +24,7 @@ private def expect_invalid_location(code,
                                     line = __LINE__)
   expect_raises Exception, exception_message, file, line do
     Ameba::Spec::AnnotatedSource.new(
-      lines: code.split('\n'),
+      lines: code.lines,
       issues: [dummy_issue("Message", position, end_position, "path")]
     )
   end
