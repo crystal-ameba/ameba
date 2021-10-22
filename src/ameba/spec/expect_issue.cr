@@ -15,7 +15,7 @@ require "./util"
 #       a do
 #         b
 #       end.c
-#       ^^^^^ Avoid chaining a method call on a do...end block.
+#       # ^{} error: Avoid chaining a method call on a do...end block.
 #     )
 #
 # Equivalent assertion without `expect_issue`:
