@@ -5,9 +5,12 @@ module Ameba
 
   private def it_transforms(number, expected)
     it "transforms large number #{number}" do
-      s = Source.new number
-      Rule::Style::LargeNumbers.new.catch(s).should_not be_valid
-      s.issues.first.message.should contain expected
+      rule = Rule::Style::LargeNumbers.new
+
+      expect_issue rule, <<-CRYSTAL, number: number
+        number = %{number}
+               # ^{number} error: Large numbers should be written with underscores: #{expected}
+        CRYSTAL
     end
   end
 
@@ -118,7 +121,7 @@ module Ameba
       issue = s.issues.first
       issue.rule.should_not be_nil
       issue.location.to_s.should eq "source.cr:1:1"
-      issue.end_location.should be_nil
+      issue.end_location.to_s.should eq "source.cr:1:7"
       issue.message.should match /1_200_000/
     end
 
