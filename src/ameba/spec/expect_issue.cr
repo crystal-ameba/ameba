@@ -47,6 +47,8 @@ require "./util"
 module Ameba::Spec::ExpectIssue
   include Spec::Util
 
+  class_property source : Source?
+
   def expect_issue(rules : Rule::Base | Enumerable(Rule::Base),
                    annotated_code : String,
                    path = "",
@@ -79,6 +81,39 @@ module Ameba::Spec::ExpectIssue
     end
   end
 
+  def expect_correction(correction, *, file = __FILE__, line = __LINE__)
+    source = ExpectIssue.source
+    raise "`expect_correction` must follow `expect_issue`" unless source
+
+    corrected_code = Source::Corrector.correct(source) # TODO: recursive
+    raise "Use `expect_no_corrections` if the code will not change" unless corrected_code
+    return if correction == corrected_code
+
+    fail <<-MSG, file, line
+      Expected correction:
+
+      #{correction}
+
+      Got:
+
+      #{corrected_code}
+      MSG
+  end
+
+  def expect_no_corrections(*, file = __FILE__, line = __LINE__)
+    source = ExpectIssue.source
+    raise "`expect_no_corrections` must follow `expect_offense`" unless source
+
+    corrected_code = Source::Corrector.correct(source)
+    return unless corrected_code
+
+    fail <<-MSG, file, line
+      Expected no corrections, but got:
+
+      #{corrected_code}
+      MSG
+  end
+
   def expect_no_issues(rules : Rule::Base | Enumerable(Rule::Base),
                        code : String,
                        path = "",
@@ -87,7 +122,7 @@ module Ameba::Spec::ExpectIssue
                        file = __FILE__,
                        line = __LINE__)
     code = normalize_code(code) if normalize
-    lines = code.lines
+    lines = code.split('\n') # must preserve trailing newline
     actual_annotations = actual_annotations(rules, code, path, lines)
     unless actual_annotations.to_s == code
       fail <<-MSG, file, line
@@ -100,6 +135,7 @@ module Ameba::Spec::ExpectIssue
 
   private def actual_annotations(rules, code, path, lines)
     source = Source.new(code, path, normalize: false) # already normalized
+    ExpectIssue.source = source
     if rules.is_a?(Enumerable)
       rules.each(&.catch(source))
     else
