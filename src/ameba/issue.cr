@@ -24,12 +24,20 @@ module Ameba
     delegate :enabled?, :disabled?,
       to: status
 
-    def initialize(@rule, @location, @end_location, @message, status : Status? = nil)
+    def initialize(@rule, @location, @end_location, @message, status : Status? = nil, @block : (Source::Corrector ->)? = nil)
       @status = status || Status::Enabled
     end
 
     def syntax?
       rule.is_a?(Rule::Lint::Syntax)
+    end
+
+    def correctable?
+      !@block.nil?
+    end
+
+    def correct(corrector)
+      @block.try &.call(corrector)
     end
   end
 end
