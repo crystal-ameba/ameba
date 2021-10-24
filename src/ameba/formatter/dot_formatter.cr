@@ -36,7 +36,15 @@ module Ameba::Formatter
           next if issue.disabled?
           next if (location = issue.location).nil?
 
-          output.puts location.colorize(:cyan)
+          output.print location.colorize(:cyan)
+          if issue.correctable?
+            if config[:autocorrect]?
+              output.print " [Corrected]".colorize(:green)
+            else
+              output.print " [Correctable]".colorize(:yellow)
+            end
+          end
+          output.puts
           output.puts \
             "[#{issue.rule.severity.symbol}] " \
             "#{issue.rule.name}: " \

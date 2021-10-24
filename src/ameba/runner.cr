@@ -29,6 +29,8 @@ module Ameba
     # Checks for unneeded disable directives. Always inspects a source last
     @unneeded_disable_directive_rule : Rule::Base?
 
+    private getter? autocorrect : Bool
+
     # Instantiates a runner using a `config`.
     #
     # ```
@@ -43,6 +45,7 @@ module Ameba
       @formatter = config.formatter
       @severity = config.severity
       @rules = config.rules.select(&.enabled).reject!(&.special?)
+      @autocorrect = config.autocorrect?
 
       @unneeded_disable_directive_rule =
         config.rules
@@ -50,6 +53,7 @@ module Ameba
     end
 
     protected def initialize(@rules, @sources, @formatter, @severity)
+      @autocorrect = false
     end
 
     # Performs the inspection. Iterates through all sources and test it using
@@ -89,12 +93,16 @@ module Ameba
     private def run_source(source)
       @formatter.source_started source
 
+      # TODO: run autocorrection recursively. A new `Issue#source` property must
+      #       be added so that `affected_code` will return the code from the old
+      #       source instead of the autocorrected one.
       if @syntax_rule.catch(source).valid?
         @rules.each do |rule|
           next if rule.excluded?(source)
           rule.test(source)
         end
         check_unneeded_directives(source)
+        autocorrect(source) if autocorrect?
       end
 
       @formatter.source_finished source
@@ -134,6 +142,13 @@ module Ameba
       if (rule = @unneeded_disable_directive_rule) && rule.enabled
         rule.test(source)
       end
+    end
+
+    private def autocorrect(source)
+      corrected_code = Source::Corrector.correct(source)
+      return unless corrected_code
+
+      File.write(source.path, corrected_code)
     end
   end
 end

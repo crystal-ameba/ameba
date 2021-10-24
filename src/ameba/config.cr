@@ -54,6 +54,8 @@ class Ameba::Config
   # ```
   property excluded : Array(String)
 
+  property? autocorrect = false
+
   @rule_groups : Hash(String, Array(Rule::Base))
 
   # Creates a new instance of `Ameba::Config` based on YAML parameters.

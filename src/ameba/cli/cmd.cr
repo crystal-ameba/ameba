@@ -8,6 +8,7 @@ module Ameba::Cli
   def run(args = ARGV)
     opts = parse_args args
     config = Config.load opts.config, opts.colors?
+    config.autocorrect = opts.autocorrect?
 
     if globs = opts.globs
       config.globs = globs
@@ -47,6 +48,7 @@ module Ameba::Cli
     property? all = false
     property? colors = true
     property? without_affected_code = false
+    property? autocorrect = false
   end
 
   def parse_args(args, opts = Opts.new)
@@ -87,6 +89,10 @@ module Ameba::Cli
 
       parser.on("--all", "Enables all available rules") do
         opts.all = true
+      end
+
+      parser.on("-a", "--autocorrect", "Autocorrect issues") do
+        opts.autocorrect = true
       end
 
       parser.on("--gen-config",
@@ -133,6 +139,7 @@ module Ameba::Cli
     if name = opts.formatter
       config.formatter = name
     end
+    config.formatter.config[:autocorrect] = opts.autocorrect?
     config.formatter.config[:without_affected_code] =
       opts.without_affected_code?
   end
