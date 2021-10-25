@@ -4,6 +4,8 @@ PREFIX ?= /usr/local
 SHARD_BIN ?= ../../bin
 SRC_FILES = $(shell find src/ -type f)
 
+.PHONY: build clean install bin run_file test
+
 build: bin/ameba
 bin/ameba: $(SRC_FILES)
 	$(SHARDS_BIN) build $(CRFLAGS)
