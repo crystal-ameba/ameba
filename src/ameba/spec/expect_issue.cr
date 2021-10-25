@@ -53,8 +53,10 @@ module Ameba::Spec::ExpectIssue
                    normalize = true,
                    *,
                    file = __FILE__,
-                   line = __LINE__)
+                   line = __LINE__,
+                   **replacements)
     annotated_code = normalize_code(annotated_code) if normalize
+    annotated_code = format_issue(annotated_code, **replacements)
     expected_annotations = AnnotatedSource.parse(annotated_code)
     lines = expected_annotations.lines
     code = lines.join('\n')
@@ -104,5 +106,15 @@ module Ameba::Spec::ExpectIssue
       rules.catch(source)
     end
     AnnotatedSource.new(lines, source.issues)
+  end
+
+  private def format_issue(code, **replacements)
+    replacements.each do |keyword, value|
+      value = value.to_s
+      code = code.gsub("%{#{keyword}}", value)
+      code = code.gsub("^{#{keyword}}", "^" * value.size)
+      code = code.gsub("_{#{keyword}}", " " * value.size)
+    end
+    code
   end
 end

@@ -42,7 +42,13 @@ module Ameba::Rule::Style
         parsed = parse_number token.raw
 
         if allowed?(*parsed) && (expected = underscored *parsed) != token.raw
-          issue_for token, MSG % expected
+          location = token.location
+          end_location = Crystal::Location.new(
+            location.filename,
+            location.line_number,
+            location.column_number + token.raw.size - 1
+          )
+          issue_for location, end_location, MSG % expected
         end
       end
     end
