@@ -693,7 +693,7 @@ one code snippet.</p>
   # ^^^^^ error: Avoid chaining a method call on a do...end block.
   end
 )</span></code></pre>
-<p>Equivalent assertion without <code><a href="../../Ameba/Spec/ExpectIssue.html#expect_issue%28rules%3ARule%3A%3ABase%7CEnumerable%28Rule%3A%3ABase%29%2Cannotated_code%3AString%2Cpath%3D%22%22%2Cnormalize%3Dtrue%2C%2A%2Cfile%3D__FILE__%2Cline%3D__LINE__%29-instance-method">#expect_issue</a></code>:</p>
+<p>Equivalent assertion without <code><a href="../../Ameba/Spec/ExpectIssue.html#expect_issue%28rules%3ARule%3A%3ABase%7CEnumerable%28Rule%3A%3ABase%29%2Cannotated_code%3AString%2Cpath%3D%22%22%2Cnormalize%3Dtrue%2C%2A%2Cfile%3D__FILE__%2Cline%3D__LINE__%2C%2A%2Areplacements%29-instance-method">#expect_issue</a></code>:</p>
 <pre><code class="language-crystal">source <span class="o">=</span> <span class="t">Source</span>.<span class="k">new</span> <span class="s">%(
   def foo
     a do
@@ -713,7 +713,7 @@ issue.message.should eq(
 <p>If you do not want to specify an issue then use the
 companion method <code><a href="../../Ameba/Spec/ExpectIssue.html#expect_no_issues%28rules%3ARule%3A%3ABase%7CEnumerable%28Rule%3A%3ABase%29%2Ccode%3AString%2Cpath%3D%22%22%2Cnormalize%3Dtrue%2C%2A%2Cfile%3D__FILE__%2Cline%3D__LINE__%29-instance-method">#expect_no_issues</a></code>. This method is a much
 simpler assertion since it just inspects the code and checks
-that there were no issues. The <code><a href="../../Ameba/Spec/ExpectIssue.html#expect_issue%28rules%3ARule%3A%3ABase%7CEnumerable%28Rule%3A%3ABase%29%2Cannotated_code%3AString%2Cpath%3D%22%22%2Cnormalize%3Dtrue%2C%2A%2Cfile%3D__FILE__%2Cline%3D__LINE__%29-instance-method">#expect_issue</a></code> method has
+that there were no issues. The <code><a href="../../Ameba/Spec/ExpectIssue.html#expect_issue%28rules%3ARule%3A%3ABase%7CEnumerable%28Rule%3A%3ABase%29%2Cannotated_code%3AString%2Cpath%3D%22%22%2Cnormalize%3Dtrue%2C%2A%2Cfile%3D__FILE__%2Cline%3D__LINE__%2C%2A%2Areplacements%29-instance-method">#expect_issue</a></code> method has
 to do more work by parsing out lines that contain carets.</p>
 
 
@@ -753,7 +753,7 @@ to do more work by parsing out lines that contain carets.</p>
   </h2>
   
     
-      <a href="https://github.com/crystal-ameba/ameba/blob/3d432fde/src/ameba/spec/expect_issue.cr#L47" target="_blank">
+      <a href="https://github.com/crystal-ameba/ameba/blob/dafae6ca/src/ameba/spec/expect_issue.cr#L47" target="_blank">
         ameba/spec/expect_issue.cr
       </a>
     
@@ -779,7 +779,7 @@ to do more work by parsing out lines that contain carets.</p>
   <ul class="list-summary">
     
       <li class="entry-summary">
-        <a href="#expect_issue%28rules%3ARule%3A%3ABase%7CEnumerable%28Rule%3A%3ABase%29%2Cannotated_code%3AString%2Cpath%3D%22%22%2Cnormalize%3Dtrue%2C%2A%2Cfile%3D__FILE__%2Cline%3D__LINE__%29-instance-method" class="signature"><strong>#expect_issue</strong>(rules : Rule::Base | Enumerable(Rule::Base), annotated_code : String, path = <span class="s">&quot;&quot;</span>, normalize = <span class="n">true</span>, *, file = __FILE__, line = __LINE__)</a>
+        <a href="#expect_issue%28rules%3ARule%3A%3ABase%7CEnumerable%28Rule%3A%3ABase%29%2Cannotated_code%3AString%2Cpath%3D%22%22%2Cnormalize%3Dtrue%2C%2A%2Cfile%3D__FILE__%2Cline%3D__LINE__%2C%2A%2Areplacements%29-instance-method" class="signature"><strong>#expect_issue</strong>(rules : Rule::Base | Enumerable(Rule::Base), annotated_code : String, path = <span class="s">&quot;&quot;</span>, normalize = <span class="n">true</span>, *, file = __FILE__, line = __LINE__, **replacements)</a>
         
       </li>
     
@@ -831,18 +831,18 @@ to do more work by parsing out lines that contain carets.</p>
     Instance Method Detail
   </h2>
   
-    <div class="entry-detail" id="expect_issue(rules:Rule::Base|Enumerable(Rule::Base),annotated_code:String,path=&quot;&quot;,normalize=true,*,file=__FILE__,line=__LINE__)-instance-method">
+    <div class="entry-detail" id="expect_issue(rules:Rule::Base|Enumerable(Rule::Base),annotated_code:String,path=&quot;&quot;,normalize=true,*,file=__FILE__,line=__LINE__,**replacements)-instance-method">
       <div class="signature">
         
-        def <strong>expect_issue</strong>(rules : <a href="../../Ameba/Rule/Base.html">Rule::Base</a> | Enumerable(<a href="../../Ameba/Rule/Base.html">Rule::Base</a>), annotated_code : String, path = <span class="s">&quot;&quot;</span>, normalize = <span class="n">true</span>, *, file = __FILE__, line = __LINE__)
+        def <strong>expect_issue</strong>(rules : <a href="../../Ameba/Rule/Base.html">Rule::Base</a> | Enumerable(<a href="../../Ameba/Rule/Base.html">Rule::Base</a>), annotated_code : String, path = <span class="s">&quot;&quot;</span>, normalize = <span class="n">true</span>, *, file = __FILE__, line = __LINE__, **replacements)
 
-        <a class="method-permalink" href="#expect_issue%28rules%3ARule%3A%3ABase%7CEnumerable%28Rule%3A%3ABase%29%2Cannotated_code%3AString%2Cpath%3D%22%22%2Cnormalize%3Dtrue%2C%2A%2Cfile%3D__FILE__%2Cline%3D__LINE__%29-instance-method">#</a>
+        <a class="method-permalink" href="#expect_issue%28rules%3ARule%3A%3ABase%7CEnumerable%28Rule%3A%3ABase%29%2Cannotated_code%3AString%2Cpath%3D%22%22%2Cnormalize%3Dtrue%2C%2A%2Cfile%3D__FILE__%2Cline%3D__LINE__%2C%2A%2Areplacements%29-instance-method">#</a>
       </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/3d432fde/src/ameba/spec/expect_issue.cr#L50" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/dafae6ca/src/ameba/spec/expect_issue.cr#L50" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -858,7 +858,7 @@ to do more work by parsing out lines that contain carets.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/3d432fde/src/ameba/spec/expect_issue.cr#L80" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/dafae6ca/src/ameba/spec/expect_issue.cr#L82" target="_blank">View source</a>]
         
       </div>
     </div>
