@@ -50,7 +50,7 @@ module Ameba::Formatter
             "#{issue.rule.name}: " \
             "#{issue.message}".colorize(:red)
 
-          if show_affected_code && (code = affected_code(source, location, issue.end_location))
+          if show_affected_code && (code = affected_code(issue))
             output << code.colorize(:default)
           end
 

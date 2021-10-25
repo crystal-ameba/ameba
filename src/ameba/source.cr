@@ -11,6 +11,9 @@ module Ameba
     # Crystal code (content of a source file).
     getter code : String
 
+    @lines : Array(String)?
+    @ast : Crystal::ASTNode?
+
     # Creates a new source by `code` and `path`.
     #
     # For example:
@@ -20,6 +23,18 @@ module Ameba
     # Ameba::Source.new File.read(path), path
     # ```
     def initialize(@code, @path = "")
+    end
+
+    def correct
+      corrector = Corrector.new(code)
+      issues.each(&.correct(corrector))
+      corrected_code = corrector.process
+      return false if code == corrected_code
+
+      @code = corrected_code
+      @lines = nil
+      @ast = nil
+      true
     end
 
     # Returns lines of code splitted by new line character.
@@ -33,7 +48,9 @@ module Ameba
     # source.lines # => ["a = 1", "b = 2"]
     # ```
     #
-    getter lines : Array(String) { code.split('\n') }
+    def lines : Array(String)
+      @lines ||= code.split('\n')
+    end
 
     # Returns AST nodes constructed by `Crystal::Parser`.
     #
@@ -42,11 +59,12 @@ module Ameba
     # source.ast
     # ```
     #
-    getter ast : Crystal::ASTNode do
-      Crystal::Parser.new(code)
-        .tap(&.wants_doc = true)
-        .tap(&.filename = path)
-        .parse
+    def ast : Crystal::ASTNode
+      @ast ||=
+        Crystal::Parser.new(code)
+          .tap(&.wants_doc = true)
+          .tap(&.filename = path)
+          .parse
     end
 
     getter fullpath : String do

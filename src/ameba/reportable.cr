@@ -9,7 +9,7 @@ module Ameba
       status ||=
         Issue::Status::Disabled if location_disabled?(location, rule)
 
-      Issue.new(rule, location, end_location, message, status, block).tap do |issue|
+      Issue.new(code, rule, location, end_location, message, status, block).tap do |issue|
         issues << issue
       end
     end

@@ -1,6 +1,7 @@
 require "../../spec_helper"
 
-private def dummy_issue(message,
+private def dummy_issue(code,
+                        message,
                         position : {Int32, Int32}?,
                         end_position : {Int32, Int32}?,
                         path = "")
@@ -9,6 +10,7 @@ private def dummy_issue(message,
   end_location = Crystal::Location.new(path, *end_position) if end_position
 
   Ameba::Issue.new(
+    code: code,
     rule: Ameba::DummyRule.new,
     location: location,
     end_location: end_location,
@@ -25,7 +27,7 @@ private def expect_invalid_location(code,
   expect_raises Exception, exception_message, file, line do
     Ameba::Spec::AnnotatedSource.new(
       lines: code.lines,
-      issues: [dummy_issue("Message", position, end_position, "path")]
+      issues: [dummy_issue(code, "Message", position, end_position, "path")]
     )
   end
 end

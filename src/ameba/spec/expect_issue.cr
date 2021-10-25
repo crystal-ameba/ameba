@@ -85,9 +85,8 @@ module Ameba::Spec::ExpectIssue
     source = ExpectIssue.source
     raise "`expect_correction` must follow `expect_issue`" unless source
 
-    corrected_code = Source::Corrector.correct(source) # TODO: recursive
-    raise "Use `expect_no_corrections` if the code will not change" unless corrected_code
-    return if correction == corrected_code
+    raise "Use `expect_no_corrections` if the code will not change" unless source.correct
+    return if correction == source.code
 
     fail <<-MSG, file, line
       Expected correction:
@@ -96,7 +95,7 @@ module Ameba::Spec::ExpectIssue
 
       Got:
 
-      #{corrected_code}
+      #{source.code}
       MSG
   end
 
@@ -104,13 +103,12 @@ module Ameba::Spec::ExpectIssue
     source = ExpectIssue.source
     raise "`expect_no_corrections` must follow `expect_offense`" unless source
 
-    corrected_code = Source::Corrector.correct(source)
-    return unless corrected_code
+    return unless source.correct
 
     fail <<-MSG, file, line
       Expected no corrections, but got:
 
-      #{corrected_code}
+      #{source.code}
       MSG
   end
 

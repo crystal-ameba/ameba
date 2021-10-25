@@ -3,7 +3,8 @@ require "../spec_helper"
 module Ameba
   describe Issue do
     it "accepts rule and message" do
-      issue = Issue.new rule: DummyRule.new,
+      issue = Issue.new code: "",
+        rule: DummyRule.new,
         location: nil,
         end_location: nil,
         message: "Blah",
@@ -15,7 +16,8 @@ module Ameba
 
     it "accepts location" do
       location = Crystal::Location.new("path", 3, 2)
-      issue = Issue.new rule: DummyRule.new,
+      issue = Issue.new code: "",
+        rule: DummyRule.new,
         location: location,
         end_location: nil,
         message: "Blah",
@@ -27,7 +29,8 @@ module Ameba
 
     it "accepts end_location" do
       location = Crystal::Location.new("path", 3, 2)
-      issue = Issue.new rule: DummyRule.new,
+      issue = Issue.new code: "",
+        rule: DummyRule.new,
         location: nil,
         end_location: location,
         message: "Blah",
@@ -38,7 +41,8 @@ module Ameba
     end
 
     it "accepts status" do
-      issue = Issue.new rule: DummyRule.new,
+      issue = Issue.new code: "",
+        rule: DummyRule.new,
         location: nil,
         end_location: nil,
         message: "",
@@ -50,7 +54,8 @@ module Ameba
     end
 
     it "sets status to :enabled by default" do
-      issue = Issue.new rule: DummyRule.new,
+      issue = Issue.new code: "",
+        rule: DummyRule.new,
         location: nil,
         end_location: nil,
         message: ""

@@ -69,24 +69,24 @@ module Ameba::Formatter
 
     describe "#affected_code" do
       it "returns nil if there is no such a line number" do
-        source = Source.new %(
+        code = <<-EOF
           a = 1
-        )
+          EOF
         location = Crystal::Location.new("filename", 2, 1)
-        subject.affected_code(source, location).should be_nil
+        subject.affected_code(code, location).should be_nil
       end
 
       it "returns correct line if it is found" do
-        source = Source.new %(
+        code = <<-EOF
           a = 1
-        )
+          EOF
         location = Crystal::Location.new("filename", 1, 1)
-        subject.deansify(subject.affected_code(source, location))
+        subject.deansify(subject.affected_code(code, location))
           .should eq "> a = 1\n  ^\n"
       end
 
       it "returns correct line if it is found" do
-        source = Source.new <<-EOF
+        code = <<-EOF
           # pre:1
             # pre:2
               # pre:3
@@ -101,7 +101,7 @@ module Ameba::Formatter
           EOF
 
         location = Crystal::Location.new("filename", 6, 1)
-        subject.deansify(subject.affected_code(source, location, context_lines: 3))
+        subject.deansify(subject.affected_code(code, location, context_lines: 3))
           .should eq <<-STR
             >     # pre:3
             >       # pre:4

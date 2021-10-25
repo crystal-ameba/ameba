@@ -93,17 +93,23 @@ module Ameba
     private def run_source(source)
       @formatter.source_started source
 
-      # TODO: run autocorrection recursively. A new `Issue#source` property must
-      #       be added so that `affected_code` will return the code from the old
-      #       source instead of the autocorrected one.
-      if @syntax_rule.catch(source).valid?
+      corrected_issues = [] of Issue
+      loop do
+        @syntax_rule.test(source)
+        break unless source.valid?
+
         @rules.each do |rule|
           next if rule.excluded?(source)
           rule.test(source)
         end
         check_unneeded_directives(source)
-        autocorrect(source) if autocorrect?
+        break unless autocorrect? && source.correct
+
+        corrected_issues += source.issues.select(&.correctable?)
+        source.issues.clear
       end
+      corrected_issues.reverse_each { |issue| source.issues.unshift(issue) }
+      File.write(source.path, source.code) if corrected_issues.any?
 
       @formatter.source_finished source
     end
@@ -142,13 +148,6 @@ module Ameba
       if (rule = @unneeded_disable_directive_rule) && rule.enabled
         rule.test(source)
       end
-    end
-
-    private def autocorrect(source)
-      corrected_code = Source::Corrector.correct(source)
-      return unless corrected_code
-
-      File.write(source.path, corrected_code)
     end
   end
 end

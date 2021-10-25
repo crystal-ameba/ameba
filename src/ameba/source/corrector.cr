@@ -2,16 +2,6 @@ require "./rewriter"
 
 class Ameba::Source
   class Corrector
-    def self.correct(source : Source)
-      code = source.code
-      corrector = new(code)
-      source.issues.each(&.correct(corrector))
-      corrected_code = corrector.process
-      return if code == corrected_code
-
-      corrected_code
-    end
-
     @line_sizes : Array(Int32)
 
     def initialize(code : String)
