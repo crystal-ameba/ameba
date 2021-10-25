@@ -2,9 +2,10 @@ CRYSTAL_BIN ?= crystal
 SHARDS_BIN ?= shards
 PREFIX ?= /usr/local
 SHARD_BIN ?= ../../bin
+SRC_FILES = $(shell find src/ -type f -name *.cr)
 
 build: bin/ameba
-bin/ameba:
+bin/ameba: $(SRC_FILES)
 	$(SHARDS_BIN) build $(CRFLAGS)
 clean:
 	rm -f ./bin/ameba ./bin/ameba.dwarf
