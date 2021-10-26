@@ -40,6 +40,34 @@ class Ameba::Source
       @line_sizes[0...line - 1].sum + (column - 1)
     end
 
+    def replace(node : Crystal::ASTNode, content)
+      replace(location(node), end_location(node), content)
+    end
+
+    def wrap(node : Crystal::ASTNode, insert_before, insert_after)
+      wrap(location(node), end_location(node), insert_before, insert_after)
+    end
+
+    def remove(node : Crystal::ASTNode)
+      remove(location(node), end_location(node))
+    end
+
+    def insert_before(node : Crystal::ASTNode, content)
+      insert_before(location(node), content)
+    end
+
+    def insert_after(node : Crystal::ASTNode, content)
+      insert_after(end_location(node), content)
+    end
+
+    private def location(node : Crystal::ASTNode)
+      node.location || raise "Missing location"
+    end
+
+    private def end_location(node : Crystal::ASTNode)
+      node.end_location || raise "Missing end location"
+    end
+
     def process
       @rewriter.process
     end
