@@ -109,7 +109,7 @@ module Ameba
         source.issues.clear
       end
       corrected_issues.reverse_each { |issue| source.issues.unshift(issue) }
-      File.write(source.path, source.code) if corrected_issues.any?
+      File.write(source.path, source.code) unless corrected_issues.empty?
 
       @formatter.source_finished source
     end

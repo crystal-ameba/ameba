@@ -9,7 +9,7 @@ module Ameba
 
       expect_issue rule, <<-CRYSTAL, number: number
         number = %{number}
-               # ^{number} error: Large numbers should be written with underscores.
+               # ^{number} error: Large numbers should be written with underscores: #{expected}
         CRYSTAL
 
       expect_correction <<-CRYSTAL
@@ -126,7 +126,7 @@ module Ameba
       issue.rule.should_not be_nil
       issue.location.to_s.should eq "source.cr:1:1"
       issue.end_location.to_s.should eq "source.cr:1:7"
-      issue.message.should eq "Large numbers should be written with underscores."
+      issue.message.should match /1_200_000/
     end
 
     context "properties" do

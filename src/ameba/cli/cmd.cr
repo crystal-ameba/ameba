@@ -91,7 +91,7 @@ module Ameba::Cli
         opts.all = true
       end
 
-      parser.on("-a", "--autocorrect", "Autocorrect issues") do
+      parser.on("--fix", "Autocorrect issues") do
         opts.autocorrect = true
       end
 
