@@ -5,7 +5,7 @@ module Ameba::Rule::Style
 
   describe PredicateName do
     it "passes if predicate name is correct" do
-      s = Source.new %q(
+      expect_no_issues subject, <<-CRYSTAL
         def valid?(x)
         end
 
@@ -16,16 +16,15 @@ module Ameba::Rule::Style
 
         def allow_this_picture?
         end
-      )
-      subject.catch(s).should be_valid
+        CRYSTAL
     end
 
     it "fails if predicate name is wrong" do
-      s = Source.new %q(
+      expect_issue subject, <<-CRYSTAL
         def is_valid?(x)
+        # ^^^^^^^^^^^^^^ error: Favour method name 'valid?' over 'is_valid?'
         end
-      )
-      subject.catch(s).should_not be_valid
+        CRYSTAL
     end
 
     it "reports rule, pos and message" do
@@ -47,14 +46,13 @@ module Ameba::Rule::Style
     end
 
     it "ignores if alternative name isn't valid syntax" do
-      s = Source.new %q(
+      expect_no_issues subject, <<-CRYSTAL
         class Image
           def is_404?(x)
             true
           end
         end
-      )
-      subject.catch(s).should be_valid
+        CRYSTAL
     end
   end
 end

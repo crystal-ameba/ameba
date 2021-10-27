@@ -20,7 +20,7 @@ module Ameba
 
   describe Rule::Style::LargeNumbers do
     it "passes if large number does not require underscore" do
-      s = Source.new %q(
+      expect_no_issues subject, <<-CRYSTAL
         1 2 3 4 5 6 7 8 9 10 11 12 13 14 15
         16 17 18 19 20 30 40 50 60 70 80 90
         100
@@ -41,7 +41,7 @@ module Ameba
         900_000
         1_000_000
 
-       -9_223_372_036_854_775_808
+        -9_223_372_036_854_775_808
         9_223_372_036_854_775_807
 
         141_592_654
@@ -80,8 +80,7 @@ module Ameba
         1200.0
         1200.01
         1200.012
-      )
-      subject.catch(s).should be_valid
+        CRYSTAL
     end
 
     it_transforms "10000", "10_000"
@@ -131,10 +130,9 @@ module Ameba
 
     context "properties" do
       it "allows to configure integer min digits" do
-        s = Source.new %q(1200000)
         rule = Rule::Style::LargeNumbers.new
         rule.int_min_digits = 10
-        rule.catch(s).should be_valid
+        expect_no_issues rule, %q(1200000)
       end
     end
   end

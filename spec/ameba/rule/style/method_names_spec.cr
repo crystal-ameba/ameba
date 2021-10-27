@@ -3,17 +3,19 @@ require "../../../spec_helper"
 module Ameba
   subject = Rule::Style::MethodNames.new
 
-  private def it_reports_method_name(code, expected)
+  private def it_reports_method_name(name, expected)
     it "reports method name #{expected}" do
-      s = Source.new code
-      Rule::Style::MethodNames.new.catch(s).should_not be_valid
-      s.issues.first.message.should contain expected
+      rule = Rule::Style::MethodNames.new
+      expect_issue rule, <<-CRYSTAL, name: name
+        def %{name}; end
+          # ^{name} error: Method name should be underscore-cased: #{expected}, not %{name}
+        CRYSTAL
     end
   end
 
   describe Rule::Style::MethodNames do
     it "passes if method names are underscore-cased" do
-      s = Source.new %(
+      expect_no_issues subject, <<-CRYSTAL
         class Person
           def first_name
           end
@@ -30,13 +32,12 @@ module Ameba
           def name
           end
         end
-      )
-      subject.catch(s).should be_valid
+        CRYSTAL
     end
 
-    it_reports_method_name %(def firstName; end), "first_name"
-    it_reports_method_name %(def date_of_Birth; end), "date_of_birth"
-    it_reports_method_name %(def homepageURL; end), "homepage_url"
+    it_reports_method_name "firstName", "first_name"
+    it_reports_method_name "date_of_Birth", "date_of_birth"
+    it_reports_method_name "homepageURL", "homepage_url"
 
     it "reports rule, pos and message" do
       s = Source.new %(
