@@ -9,29 +9,27 @@ class Ameba::Source
       @line_sizes = code.lines(chomp: false).map(&.size)
     end
 
-    alias SourceLocation = Crystal::Location | {Int32, Int32}
-
-    def replace(location : SourceLocation, end_location : SourceLocation, content)
+    def replace(location, end_location, content)
       @rewriter.replace(loc_to_pos(location), loc_to_pos(end_location) + 1, content)
     end
 
-    def wrap(location : SourceLocation, end_location : SourceLocation, insert_before, insert_after)
+    def wrap(location, end_location, insert_before, insert_after)
       @rewriter.wrap(loc_to_pos(location), loc_to_pos(end_location) + 1, insert_before, insert_after)
     end
 
-    def remove(location : SourceLocation, end_location : SourceLocation)
+    def remove(location, end_location)
       @rewriter.remove(loc_to_pos(location), loc_to_pos(end_location) + 1)
     end
 
-    def insert_before(location : SourceLocation, content)
+    def insert_before(location, content)
       @rewriter.insert_before(loc_to_pos(location), content)
     end
 
-    def insert_after(location : SourceLocation, content)
+    def insert_after(location, content)
       @rewriter.insert_after(loc_to_pos(location) + 1, content)
     end
 
-    private def loc_to_pos(location : SourceLocation)
+    private def loc_to_pos(location : Crystal::Location | {Int32, Int32})
       if location.is_a?(Crystal::Location)
         line, column = location.line_number, location.column_number
       else
