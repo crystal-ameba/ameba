@@ -46,6 +46,25 @@ class Ameba::Source
       @rewriter.insert_after(loc_to_pos(location) + 1, content)
     end
 
+    # Removes *size* characters prior to the source range.
+    def remove_preceding(location, end_location, size)
+      @rewriter.remove(loc_to_pos(location) - size, loc_to_pos(location))
+    end
+
+    # Removes *size* characters from the beginning of the given range.
+    # If *size* is greater than the size of the range, the removed region can
+    # overrun the end of the range.
+    def remove_leading(location, end_location, size)
+      remove(loc_to_pos(location), loc_to_pos(location) + size)
+    end
+
+    # Removes *size* characters from the end of the given range.
+    # If *size* is greater than the size of the range, the removed region can
+    # overrun the beginning of the range.
+    def remove_trailing(location, end_location, size)
+      remove(loc_to_pos(end_location) + 1 - size, loc_to_pos(end_location) + 1)
+    end
+
     private def loc_to_pos(location : Crystal::Location | {Int32, Int32})
       if location.is_a?(Crystal::Location)
         line, column = location.line_number, location.column_number
@@ -78,6 +97,25 @@ class Ameba::Source
     # Shortcut for `wrap(node, nil, content)`
     def insert_after(node : Crystal::ASTNode, content)
       insert_after(end_location(node), content)
+    end
+
+    # Removes *size* characters prior to the given node.
+    def remove_preceding(node : Crystal::ASTNode, size)
+      remove_preceding(location(node), end_location(node), size)
+    end
+
+    # Removes *size* characters from the beginning of the given node.
+    # If *size* is greater than the size of the node, the removed region can
+    # overrun the end of the node.
+    def remove_leading(node : Crystal::ASTNode, size)
+      remove_leading(location(node), end_location(node), size)
+    end
+
+    # Removes *size* characters from the end of the given node.
+    # If *size* is greater than the size of the node, the removed region can
+    # overrun the beginning of the node.
+    def remove_trailing(node : Crystal::ASTNode, size)
+      remove_trailing(location(node), end_location(node), size)
     end
 
     private def location(node : Crystal::ASTNode)
