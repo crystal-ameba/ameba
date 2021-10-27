@@ -70,7 +70,7 @@ class Ameba::Source
       @action_root.empty?
     end
 
-    # Replaces the code of the given range with `content`.
+    # Replaces the code of the given range with *content*.
     def replace(begin_pos, end_pos, content)
       combine(begin_pos, end_pos, replacement: content.to_s)
     end

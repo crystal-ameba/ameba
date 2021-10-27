@@ -1,4 +1,5 @@
 class Ameba::Source::Rewriter
+  # :nodoc:
   # Actions are arranged in a tree and get combined so that:
   # - children are strictly contained by their parent
   # - siblings all disjoint from one another and ordered

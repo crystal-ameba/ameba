@@ -25,6 +25,8 @@ module Ameba
     def initialize(@code, @path = "")
     end
 
+    # Corrects any correctable issues and updates `code`.
+    # Returns `false` if no issues were corrected.
     def correct
       corrector = Corrector.new(code)
       issues.each(&.correct(corrector))

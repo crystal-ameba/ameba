@@ -50,6 +50,7 @@ module Ameba
     # Checks for unneeded disable directives. Always inspects a source last
     @unneeded_disable_directive_rule : Rule::Base?
 
+    # Returns true if correctable issues should be autocorrected.
     private getter? autocorrect : Bool
 
     # Instantiates a runner using a `config`.
