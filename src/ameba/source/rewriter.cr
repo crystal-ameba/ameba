@@ -59,9 +59,9 @@ class Ameba::Source
   # The updates are organized in a tree, according to the ranges they act on
   # (where children are strictly contained by their parent).
   class Rewriter
-    getter code
+    getter code : String
 
-    def initialize(@code : String)
+    def initialize(@code)
       @action_root = Rewriter::Action.new(0, code.size)
     end
 

@@ -73,21 +73,23 @@ class Ameba::Source::Rewriter
       family = analyse_hierarchy(action)
       sibling_left, sibling_right = family[:sibling_left], family[:sibling_right]
 
-      if (fusible = family[:fusible])
+      if fusible = family[:fusible]
         child = family[:child]
         child ||= [] of Action
         fuse_deletions(action, fusible, sibling_left + child + sibling_right)
       else
-        extra_sibling = if (parent = family[:parent])
-                          # action should be a descendant of one of the children
-                          parent.do_combine(action)
-                        elsif (child = family[:child])
-                          # or it should become the parent of some of the children,
-                          action.with(children: child).combine_children(action.children)
-                        else
-                          # or else it should become an additional child
-                          action
-                        end
+        extra_sibling =
+          case
+          when parent = family[:parent]
+            # action should be a descendant of one of the children
+            parent.do_combine(action)
+          when child = family[:child]
+            # or it should become the parent of some of the children,
+            action.with(children: child).combine_children(action.children)
+          else
+            # or else it should become an additional child
+            action
+          end
         self.with(children: sibling_left + [extra_sibling] + sibling_right)
       end
     end
@@ -102,8 +104,8 @@ class Ameba::Source::Rewriter
     protected def fuse_deletions(action, fusible, other_siblings)
       without_fusible = self.with(children: other_siblings)
       fusible = [action] + fusible
-      fused_begin_pos = fusible.map(&.begin_pos).min
-      fused_end_pos = fusible.map(&.end_pos).max
+      fused_begin_pos = fusible.min_of(&.begin_pos)
+      fused_end_pos = fusible.max_of(&.end_pos)
       fused_deletion = action.with(begin_pos: fused_begin_pos, end_pos: fused_end_pos)
       without_fusible.do_combine(fused_deletion)
     end

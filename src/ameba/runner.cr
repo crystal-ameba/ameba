@@ -19,8 +19,7 @@ module Ameba
       def initialize(path, issues_by_iteration, loop_start = -1)
         root_cause =
           issues_by_iteration[loop_start..-1]
-            .map(&.map(&.rule.name).uniq!.join(", "))
-            .join(" -> ")
+            .join(" -> ", &.map(&.rule.name).uniq!.join(", "))
 
         message = String.build do |io|
           io << "Infinite loop"
@@ -210,7 +209,7 @@ module Ameba
     private def check_for_infinite_loop(source, corrected_issues, processed_sources)
       checksum = Digest::SHA1.hexdigest(source.code)
 
-      if (loop_start = processed_sources.index(checksum))
+      if loop_start = processed_sources.index(checksum)
         raise InfiniteCorrectionLoopError.new(
           source.path,
           corrected_issues,

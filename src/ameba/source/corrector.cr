@@ -8,7 +8,7 @@ class Ameba::Source
 
     def initialize(code : String)
       @rewriter = Rewriter.new(code)
-      @line_sizes = code.lines(chomp: false).map(&.size)
+      @line_sizes = code.each_line(chomp: false).map(&.size).to_a
     end
 
     # Replaces the code of the given range with *content*.
