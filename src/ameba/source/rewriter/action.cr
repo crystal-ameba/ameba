@@ -23,7 +23,11 @@ class Ameba::Source::Rewriter
     def combine(action)
       return self if action.empty? # Ignore empty action
 
-      do_combine(action)
+      if action.begin_pos == @begin_pos && action.end_pos == @end_pos
+        merge(action)
+      else
+        place_in_hierarchy(action)
+      end
     end
 
     def empty?
@@ -60,15 +64,6 @@ class Ameba::Source::Rewriter
       self.class.new(begin_pos, end_pos, insert_before, replacement, insert_after, children)
     end
 
-    # Assumes *action* is contained within `@begin_pos...@end_pos` and has no children
-    protected def do_combine(action)
-      if action.begin_pos == @begin_pos && action.end_pos == @end_pos
-        merge(action)
-      else
-        place_in_hierarchy(action)
-      end
-    end
-
     protected def place_in_hierarchy(action)
       family = analyse_hierarchy(action)
       sibling_left, sibling_right = family[:sibling_left], family[:sibling_right]
@@ -82,7 +77,7 @@ class Ameba::Source::Rewriter
           case
           when parent = family[:parent]
             # action should be a descendant of one of the children
-            parent.do_combine(action)
+            parent.combine(action)
           when child = family[:child]
             # or it should become the parent of some of the children,
             action.with(children: child).combine_children(action.children)
@@ -107,7 +102,7 @@ class Ameba::Source::Rewriter
       fused_begin_pos = fusible.min_of(&.begin_pos)
       fused_end_pos = fusible.max_of(&.end_pos)
       fused_deletion = action.with(begin_pos: fused_begin_pos, end_pos: fused_end_pos)
-      without_fusible.do_combine(fused_deletion)
+      without_fusible.combine(fused_deletion)
     end
 
     # Similar to `@children.bsearch_index || size` except allows for a starting point
