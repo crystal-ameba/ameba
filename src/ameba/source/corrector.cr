@@ -4,11 +4,13 @@ class Ameba::Source
   # This class takes source code and rewrites it based
   # on the different correction actions supplied.
   class Corrector
-    @line_sizes : Array(Int32)
+    @line_sizes = [] of Int32
 
     def initialize(code : String)
+      code.each_line(chomp: false) do |line|
+        @line_sizes << line.size
+      end
       @rewriter = Rewriter.new(code)
-      @line_sizes = code.each_line(chomp: false).map(&.size).to_a
     end
 
     # Replaces the code of the given range with *content*.
