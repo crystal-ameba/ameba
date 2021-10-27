@@ -77,6 +77,7 @@ module Ameba::Formatter
 
       source.issues.each do |e|
         next if e.disabled?
+        next if e.correctable? && config[:autocorrect]?
         json_source.issues << AsJSON::Issue.new(e.rule.name, e.rule.severity.to_s, e.location, e.end_location, e.message)
         @result.summary.issues_count += 1
       end
