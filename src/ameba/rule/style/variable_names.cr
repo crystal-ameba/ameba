@@ -35,6 +35,18 @@ module Ameba::Rule::Style
       issue_for node, MSG % {expected, node.name}
     end
 
+    # TODO: Handle special case where instance variable is method parameter.
+    #       For example, this:
+    #
+    #         def initialize(@foo)
+    #         end
+    #
+    #       is represented in the AST as:
+    #
+    #         def initialize(foo)
+    #           @foo = foo
+    #         end
+
     def test(source, node : Crystal::Var)
       check_node source, node
     end
