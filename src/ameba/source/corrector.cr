@@ -21,6 +21,14 @@ class Ameba::Source
       @rewriter.remove(loc_to_pos(location), loc_to_pos(end_location) + 1)
     end
 
+    def insert_before(location, end_location, content)
+      @rewriter.insert_before(loc_to_pos(location), loc_to_pos(end_location) + 1, content)
+    end
+
+    def insert_after(location, end_location, content)
+      @rewriter.insert_after(loc_to_pos(location), loc_to_pos(end_location) + 1, content)
+    end
+
     def insert_before(location, content)
       @rewriter.insert_before(loc_to_pos(location), content)
     end
