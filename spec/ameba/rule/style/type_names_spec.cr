@@ -3,17 +3,19 @@ require "../../../spec_helper"
 module Ameba
   subject = Rule::Style::TypeNames.new
 
-  private def it_reports_name(code, expected)
+  private def it_reports_name(type, name, expected)
     it "reports type name #{expected}" do
-      s = Source.new code
-      Rule::Style::TypeNames.new.catch(s).should_not be_valid
-      s.issues.first.message.should contain expected
+      rule = Rule::Style::TypeNames.new
+      expect_issue rule, <<-CRYSTAL, type: type, name: name
+        %{type} %{name}; end
+        # ^{type}^{name}^^^^ error: Type name should be camelcased: #{expected}, but it was %{name}
+        CRYSTAL
     end
   end
 
   describe Rule::Style::TypeNames do
     it "passes if type names are camelcased" do
-      s = Source.new %(
+      expect_no_issues subject, <<-CRYSTAL
         class ParseError < Exception
         end
 
@@ -32,16 +34,21 @@ module Ameba
 
         enum Time::DayOfWeek
         end
-      )
-      subject.catch(s).should be_valid
+        CRYSTAL
     end
 
-    it_reports_name "class My_class; end", "MyClass"
-    it_reports_name "module HTT_p; end", "HTTP"
-    it_reports_name "alias Numeric_value = Int32", "NumericValue"
-    it_reports_name "lib Lib_YAML; end", "LibYAML"
-    it_reports_name "struct Tag_directive; end", "TagDirective"
-    it_reports_name "enum Time_enum::Day_of_week; end", "TimeEnum::DayOfWeek"
+    it_reports_name "class", "My_class", "MyClass"
+    it_reports_name "module", "HTT_p", "HTTP"
+    it_reports_name "lib", "Lib_YAML", "LibYAML"
+    it_reports_name "struct", "Tag_directive", "TagDirective"
+    it_reports_name "enum", "Time_enum::Day_of_week", "TimeEnum::DayOfWeek"
+
+    it "reports alias name" do
+      expect_issue subject, <<-CRYSTAL
+        alias Numeric_value = Int32
+        # ^{} error: Type name should be camelcased: NumericValue, but it was Numeric_value
+        CRYSTAL
+    end
 
     it "reports rule, pos and message" do
       s = Source.new %(
