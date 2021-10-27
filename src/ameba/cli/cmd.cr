@@ -27,7 +27,7 @@ module Ameba::Cli
     runner = Ameba.run(config)
 
     if location = opts.location_to_explain
-      runner.explain(location)
+      runner.explain(location, autocorrect: opts.autocorrect?)
     else
       exit 1 unless runner.success?
     end

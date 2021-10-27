@@ -11,6 +11,7 @@ module Ameba::Formatter
 
     getter output : IO::FileDescriptor | IO::Memory
     getter location : Crystal::Location
+    getter? autocorrect : Bool
 
     # Creates a new instance of ExplainFormatter.
     # Accepts *output* which indicates the io where the explanation will be wrtitten to.
@@ -20,7 +21,7 @@ module Ameba::Formatter
     # ExplainFormatter.new output,
     #   {file: path, line: line_number, column: column_number}
     # ```
-    def initialize(@output, location)
+    def initialize(@output, location, @autocorrect = false)
       @location = Crystal::Location.new(location[:file], location[:line], location[:column])
     end
 
@@ -40,11 +41,21 @@ module Ameba::Formatter
 
       return unless (location = issue.location)
 
-      output_title "ISSUE INFO"
-      output_paragraph [
+      issue_info = [
         issue.message.colorize(:red).to_s,
         location.to_s.colorize(:cyan).to_s,
       ]
+
+      if issue.correctable?
+        if autocorrect?
+          issue_info << "Corrected".colorize(:green).to_s
+        else
+          issue_info << "Correctable".colorize(:yellow).to_s
+        end
+      end
+
+      output_title "ISSUE INFO"
+      output_paragraph issue_info
 
       if affected_code = affected_code(issue, context_lines: 3)
         output_title "AFFECTED CODE"
