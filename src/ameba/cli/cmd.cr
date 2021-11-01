@@ -85,7 +85,7 @@ module Ameba::Cli
         opts.except = rules.split(',')
       end
 
-      parser.on("--all", "Enables all available rules") do
+      parser.on("--all", "Enable all available rules") do
         opts.all = true
       end
 
