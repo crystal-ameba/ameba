@@ -13,7 +13,7 @@
 <script type="text/javascript" src="../../js/doc.js"></script>
 
   <meta name="repository-name" content="ameba">
-  <title>Ameba::InlineComments::Action - ameba master</title>
+  <title>Ameba::Source::Corrector - ameba master</title>
   <script type="text/javascript">
     CrystalDocs.base_path = "../../";
   </script>
@@ -211,12 +211,12 @@
       
     </li>
   
-  <li class="parent open current" data-id="ameba/Ameba/InlineComments" data-name="ameba::inlinecomments">
+  <li class="parent " data-id="ameba/Ameba/InlineComments" data-name="ameba::inlinecomments">
       <a href="../../Ameba/InlineComments.html">InlineComments</a>
       
         <ul>
   
-  <li class=" current" data-id="ameba/Ameba/InlineComments/Action" data-name="ameba::inlinecomments::action">
+  <li class=" " data-id="ameba/Ameba/InlineComments/Action" data-name="ameba::inlinecomments::action">
       <a href="../../Ameba/InlineComments/Action.html">Action</a>
       
     </li>
@@ -611,12 +611,12 @@
       
     </li>
   
-  <li class="parent " data-id="ameba/Ameba/Source" data-name="ameba::source">
+  <li class="parent open current" data-id="ameba/Ameba/Source" data-name="ameba::source">
       <a href="../../Ameba/Source.html">Source</a>
       
         <ul>
   
-  <li class=" " data-id="ameba/Ameba/Source/Corrector" data-name="ameba::source::corrector">
+  <li class=" current" data-id="ameba/Ameba/Source/Corrector" data-name="ameba::source::corrector">
       <a href="../../Ameba/Source/Corrector.html">Corrector</a>
       
     </li>
@@ -685,10 +685,12 @@
 <div class="main-content">
 <h1 class="type-name">
 
-  <span class="kind">enum</span> Ameba::InlineComments::Action
+  <span class="kind">class</span> Ameba::Source::Corrector
 
 </h1>
 
+
+  <ul class="superclass-hierarchy"><li class="superclass"><a href="../../Ameba/Source/Corrector.html">Ameba::Source::Corrector</a></li><li class="superclass">Reference</li><li class="superclass">Object</li></ul>
 
 
 
@@ -702,7 +704,8 @@
     Overview
   </h2>
 
-  <p>Available actions in the inline comments</p>
+  <p>This class takes source code and rewrites it based
+on the different correction actions supplied.</p>
 
 
 
@@ -727,8 +730,8 @@
   </h2>
   
     
-      <a href="https://github.com/crystal-ameba/ameba/blob/7cb0c157/src/ameba/inline_comments.cr#L7" target="_blank">
-        ameba/inline_comments.cr
+      <a href="https://github.com/crystal-ameba/ameba/blob/7cb0c157/src/ameba/source/corrector.cr#L6" target="_blank">
+        ameba/source/corrector.cr
       </a>
     
     <br/>
@@ -736,31 +739,24 @@
 
 
 
-  
-    <h2>
-      <a id="enum-members" class="anchor" href="#enum-members">
+
+
+  <h2>
+    <a id="constructors" class="anchor" href="#constructors">
   <svg class="octicon-link" aria-hidden="true">
     <use href="#octicon-link"/>
   </svg>
 </a>
-      Enum Members
-    </h2>
-  
-  <dl>
+    Constructors
+  </h2>
+  <ul class="list-summary">
     
-      <dt class="entry-const" id="Disable">
-        <strong>Disable</strong> = <code><span class="n">0</span></code>
-      </dt>
-      
+      <li class="entry-summary">
+        <a href="#new%28code%3AString%29-class-method" class="signature"><strong>.new</strong>(code : String)</a>
+        
+      </li>
     
-      <dt class="entry-const" id="Enable">
-        <strong>Enable</strong> = <code><span class="n">1</span></code>
-      </dt>
-      
-    
-  </dl>
-
-
+  </ul>
 
 
 
@@ -777,12 +773,135 @@
   <ul class="list-summary">
     
       <li class="entry-summary">
-        <a href="#disable%3F-instance-method" class="signature"><strong>#disable?</strong></a>
+        <a href="#insert_after%28location%2Cend_location%2Ccontent%29-instance-method" class="signature"><strong>#insert_after</strong>(location, end_location, content)</a>
+        
+          <div class="summary"><p>Shortcut for <code><a href="../../Ameba/Source/Corrector.html#wrap%28location%2Cend_location%2Cinsert_before%2Cinsert_after%29-instance-method">#wrap(location, end_location, nil, content)</a></code></p></div>
         
       </li>
     
       <li class="entry-summary">
-        <a href="#enable%3F-instance-method" class="signature"><strong>#enable?</strong></a>
+        <a href="#insert_after%28node%3ACrystal%3A%3AASTNode%2Ccontent%29-instance-method" class="signature"><strong>#insert_after</strong>(node : Crystal::ASTNode, content)</a>
+        
+          <div class="summary"><p>Shortcut for <code><a href="../../Ameba/Source/Corrector.html#wrap%28node%3ACrystal%3A%3AASTNode%2Cinsert_before%2Cinsert_after%29-instance-method">#wrap(node, nil, content)</a></code></p></div>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#insert_after%28location%2Ccontent%29-instance-method" class="signature"><strong>#insert_after</strong>(location, content)</a>
+        
+          <div class="summary"><p>Shortcut for <code><a href="../../Ameba/Source/Corrector.html#insert_after%28location%2Cend_location%2Ccontent%29-instance-method">#insert_after(location, location, content)</a></code></p></div>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#insert_before%28location%2Cend_location%2Ccontent%29-instance-method" class="signature"><strong>#insert_before</strong>(location, end_location, content)</a>
+        
+          <div class="summary"><p>Shortcut for <code><a href="../../Ameba/Source/Corrector.html#wrap%28location%2Cend_location%2Cinsert_before%2Cinsert_after%29-instance-method">#wrap(location, end_location, content, nil)</a></code></p></div>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#insert_before%28node%3ACrystal%3A%3AASTNode%2Ccontent%29-instance-method" class="signature"><strong>#insert_before</strong>(node : Crystal::ASTNode, content)</a>
+        
+          <div class="summary"><p>Shortcut for <code><a href="../../Ameba/Source/Corrector.html#wrap%28node%3ACrystal%3A%3AASTNode%2Cinsert_before%2Cinsert_after%29-instance-method">#wrap(node, content, nil)</a></code></p></div>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#insert_before%28location%2Ccontent%29-instance-method" class="signature"><strong>#insert_before</strong>(location, content)</a>
+        
+          <div class="summary"><p>Shortcut for <code><a href="../../Ameba/Source/Corrector.html#insert_before%28location%2Cend_location%2Ccontent%29-instance-method">#insert_before(location, location, content)</a></code></p></div>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#process-instance-method" class="signature"><strong>#process</strong></a>
+        
+          <div class="summary"><p>Applies all scheduled changes and returns modified source as a new string.</p></div>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#remove%28location%2Cend_location%29-instance-method" class="signature"><strong>#remove</strong>(location, end_location)</a>
+        
+          <div class="summary"><p>Shortcut for <code><a href="../../Ameba/Source/Corrector.html#replace%28location%2Cend_location%2Ccontent%29-instance-method">#replace(location, end_location, "")</a></code></p></div>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#remove%28node%3ACrystal%3A%3AASTNode%29-instance-method" class="signature"><strong>#remove</strong>(node : Crystal::ASTNode)</a>
+        
+          <div class="summary"><p>Shortcut for <code><a href="../../Ameba/Source/Corrector.html#replace%28node%3ACrystal%3A%3AASTNode%2Ccontent%29-instance-method">#replace(node, "")</a></code></p></div>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#remove_leading%28location%2Cend_location%2Csize%29-instance-method" class="signature"><strong>#remove_leading</strong>(location, end_location, size)</a>
+        
+          <div class="summary"><p>Removes <em>size</em> characters from the beginning of the given range.</p></div>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#remove_leading%28node%3ACrystal%3A%3AASTNode%2Csize%29-instance-method" class="signature"><strong>#remove_leading</strong>(node : Crystal::ASTNode, size)</a>
+        
+          <div class="summary"><p>Removes <em>size</em> characters from the beginning of the given node.</p></div>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#remove_preceding%28location%2Cend_location%2Csize%29-instance-method" class="signature"><strong>#remove_preceding</strong>(location, end_location, size)</a>
+        
+          <div class="summary"><p>Removes <em>size</em> characters prior to the source range.</p></div>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#remove_preceding%28node%3ACrystal%3A%3AASTNode%2Csize%29-instance-method" class="signature"><strong>#remove_preceding</strong>(node : Crystal::ASTNode, size)</a>
+        
+          <div class="summary"><p>Removes <em>size</em> characters prior to the given node.</p></div>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#remove_trailing%28location%2Cend_location%2Csize%29-instance-method" class="signature"><strong>#remove_trailing</strong>(location, end_location, size)</a>
+        
+          <div class="summary"><p>Removes <em>size</em> characters from the end of the given range.</p></div>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#remove_trailing%28node%3ACrystal%3A%3AASTNode%2Csize%29-instance-method" class="signature"><strong>#remove_trailing</strong>(node : Crystal::ASTNode, size)</a>
+        
+          <div class="summary"><p>Removes <em>size</em> characters from the end of the given node.</p></div>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#replace%28location%2Cend_location%2Ccontent%29-instance-method" class="signature"><strong>#replace</strong>(location, end_location, content)</a>
+        
+          <div class="summary"><p>Replaces the code of the given range with <em>content</em>.</p></div>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#replace%28node%3ACrystal%3A%3AASTNode%2Ccontent%29-instance-method" class="signature"><strong>#replace</strong>(node : Crystal::ASTNode, content)</a>
+        
+          <div class="summary"><p>Replaces the code of the given node with <em>content</em>.</p></div>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#wrap%28location%2Cend_location%2Cinsert_before%2Cinsert_after%29-instance-method" class="signature"><strong>#wrap</strong>(location, end_location, insert_before, insert_after)</a>
+        
+          <div class="summary"><p>Inserts the given strings before and after the given range.</p></div>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#wrap%28node%3ACrystal%3A%3AASTNode%2Cinsert_before%2Cinsert_after%29-instance-method" class="signature"><strong>#wrap</strong>(node : Crystal::ASTNode, insert_before, insert_after)</a>
+        
+          <div class="summary"><p>Inserts the given strings before and after the given node.</p></div>
         
       </li>
     
@@ -814,28 +933,34 @@
 
 
   
-    
-
-
-    
-
-
-    
-
-
-  
-    
-
-
-    
-
-
-    
-
-
-  
 </div>
 
+
+  <h2>
+    <a id="constructor-detail" class="anchor" href="#constructor-detail">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>
+    Constructor Detail
+  </h2>
+  
+    <div class="entry-detail" id="new(code:String)-class-method">
+      <div class="signature">
+        
+        def self.<strong>new</strong>(code : String)
+
+        <a class="method-permalink" href="#new%28code%3AString%29-class-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/crystal-ameba/ameba/blob/7cb0c157/src/ameba/source/corrector.cr#L9" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
 
 
 
@@ -850,34 +975,409 @@
     Instance Method Detail
   </h2>
   
-    <div class="entry-detail" id="disable?-instance-method">
+    <div class="entry-detail" id="insert_after(location,end_location,content)-instance-method">
       <div class="signature">
         
-        def <strong>disable?</strong>
+        def <strong>insert_after</strong>(location, end_location, content)
 
-        <a class="method-permalink" href="#disable%3F-instance-method">#</a>
+        <a class="method-permalink" href="#insert_after%28location%2Cend_location%2Ccontent%29-instance-method">#</a>
       </div>
+      
+        <div class="doc">
+          
+          <p>Shortcut for <code><a href="../../Ameba/Source/Corrector.html#wrap%28location%2Cend_location%2Cinsert_before%2Cinsert_after%29-instance-method">#wrap(location, end_location, nil, content)</a></code></p>
+        </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/7cb0c157/src/ameba/inline_comments.cr#L8" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/7cb0c157/src/ameba/source/corrector.cr#L37" target="_blank">View source</a>]
         
       </div>
     </div>
   
-    <div class="entry-detail" id="enable?-instance-method">
+    <div class="entry-detail" id="insert_after(node:Crystal::ASTNode,content)-instance-method">
       <div class="signature">
         
-        def <strong>enable?</strong>
+        def <strong>insert_after</strong>(node : Crystal::ASTNode, content)
 
-        <a class="method-permalink" href="#enable%3F-instance-method">#</a>
+        <a class="method-permalink" href="#insert_after%28node%3ACrystal%3A%3AASTNode%2Ccontent%29-instance-method">#</a>
       </div>
+      
+        <div class="doc">
+          
+          <p>Shortcut for <code><a href="../../Ameba/Source/Corrector.html#wrap%28node%3ACrystal%3A%3AASTNode%2Cinsert_before%2Cinsert_after%29-instance-method">#wrap(node, nil, content)</a></code></p>
+        </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/7cb0c157/src/ameba/inline_comments.cr#L9" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/7cb0c157/src/ameba/source/corrector.cr#L100" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="insert_after(location,content)-instance-method">
+      <div class="signature">
+        
+        def <strong>insert_after</strong>(location, content)
+
+        <a class="method-permalink" href="#insert_after%28location%2Ccontent%29-instance-method">#</a>
+      </div>
+      
+        <div class="doc">
+          
+          <p>Shortcut for <code><a href="../../Ameba/Source/Corrector.html#insert_after%28location%2Cend_location%2Ccontent%29-instance-method">#insert_after(location, location, content)</a></code></p>
+        </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/crystal-ameba/ameba/blob/7cb0c157/src/ameba/source/corrector.cr#L47" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="insert_before(location,end_location,content)-instance-method">
+      <div class="signature">
+        
+        def <strong>insert_before</strong>(location, end_location, content)
+
+        <a class="method-permalink" href="#insert_before%28location%2Cend_location%2Ccontent%29-instance-method">#</a>
+      </div>
+      
+        <div class="doc">
+          
+          <p>Shortcut for <code><a href="../../Ameba/Source/Corrector.html#wrap%28location%2Cend_location%2Cinsert_before%2Cinsert_after%29-instance-method">#wrap(location, end_location, content, nil)</a></code></p>
+        </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/crystal-ameba/ameba/blob/7cb0c157/src/ameba/source/corrector.cr#L32" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="insert_before(node:Crystal::ASTNode,content)-instance-method">
+      <div class="signature">
+        
+        def <strong>insert_before</strong>(node : Crystal::ASTNode, content)
+
+        <a class="method-permalink" href="#insert_before%28node%3ACrystal%3A%3AASTNode%2Ccontent%29-instance-method">#</a>
+      </div>
+      
+        <div class="doc">
+          
+          <p>Shortcut for <code><a href="../../Ameba/Source/Corrector.html#wrap%28node%3ACrystal%3A%3AASTNode%2Cinsert_before%2Cinsert_after%29-instance-method">#wrap(node, content, nil)</a></code></p>
+        </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/crystal-ameba/ameba/blob/7cb0c157/src/ameba/source/corrector.cr#L95" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="insert_before(location,content)-instance-method">
+      <div class="signature">
+        
+        def <strong>insert_before</strong>(location, content)
+
+        <a class="method-permalink" href="#insert_before%28location%2Ccontent%29-instance-method">#</a>
+      </div>
+      
+        <div class="doc">
+          
+          <p>Shortcut for <code><a href="../../Ameba/Source/Corrector.html#insert_before%28location%2Cend_location%2Ccontent%29-instance-method">#insert_before(location, location, content)</a></code></p>
+        </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/crystal-ameba/ameba/blob/7cb0c157/src/ameba/source/corrector.cr#L42" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="process-instance-method">
+      <div class="signature">
+        
+        def <strong>process</strong>
+
+        <a class="method-permalink" href="#process-instance-method">#</a>
+      </div>
+      
+        <div class="doc">
+          
+          <p>Applies all scheduled changes and returns modified source as a new string.</p>
+        </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/crystal-ameba/ameba/blob/7cb0c157/src/ameba/source/corrector.cr#L132" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="remove(location,end_location)-instance-method">
+      <div class="signature">
+        
+        def <strong>remove</strong>(location, end_location)
+
+        <a class="method-permalink" href="#remove%28location%2Cend_location%29-instance-method">#</a>
+      </div>
+      
+        <div class="doc">
+          
+          <p>Shortcut for <code><a href="../../Ameba/Source/Corrector.html#replace%28location%2Cend_location%2Ccontent%29-instance-method">#replace(location, end_location, "")</a></code></p>
+        </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/crystal-ameba/ameba/blob/7cb0c157/src/ameba/source/corrector.cr#L27" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="remove(node:Crystal::ASTNode)-instance-method">
+      <div class="signature">
+        
+        def <strong>remove</strong>(node : Crystal::ASTNode)
+
+        <a class="method-permalink" href="#remove%28node%3ACrystal%3A%3AASTNode%29-instance-method">#</a>
+      </div>
+      
+        <div class="doc">
+          
+          <p>Shortcut for <code><a href="../../Ameba/Source/Corrector.html#replace%28node%3ACrystal%3A%3AASTNode%2Ccontent%29-instance-method">#replace(node, "")</a></code></p>
+        </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/crystal-ameba/ameba/blob/7cb0c157/src/ameba/source/corrector.cr#L90" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="remove_leading(location,end_location,size)-instance-method">
+      <div class="signature">
+        
+        def <strong>remove_leading</strong>(location, end_location, size)
+
+        <a class="method-permalink" href="#remove_leading%28location%2Cend_location%2Csize%29-instance-method">#</a>
+      </div>
+      
+        <div class="doc">
+          
+          <p>Removes <em>size</em> characters from the beginning of the given range.
+If <em>size</em> is greater than the size of the range, the removed region can
+overrun the end of the range.</p>
+        </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/crystal-ameba/ameba/blob/7cb0c157/src/ameba/source/corrector.cr#L59" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="remove_leading(node:Crystal::ASTNode,size)-instance-method">
+      <div class="signature">
+        
+        def <strong>remove_leading</strong>(node : Crystal::ASTNode, size)
+
+        <a class="method-permalink" href="#remove_leading%28node%3ACrystal%3A%3AASTNode%2Csize%29-instance-method">#</a>
+      </div>
+      
+        <div class="doc">
+          
+          <p>Removes <em>size</em> characters from the beginning of the given node.
+If <em>size</em> is greater than the size of the node, the removed region can
+overrun the end of the node.</p>
+        </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/crystal-ameba/ameba/blob/7cb0c157/src/ameba/source/corrector.cr#L112" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="remove_preceding(location,end_location,size)-instance-method">
+      <div class="signature">
+        
+        def <strong>remove_preceding</strong>(location, end_location, size)
+
+        <a class="method-permalink" href="#remove_preceding%28location%2Cend_location%2Csize%29-instance-method">#</a>
+      </div>
+      
+        <div class="doc">
+          
+          <p>Removes <em>size</em> characters prior to the source range.</p>
+        </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/crystal-ameba/ameba/blob/7cb0c157/src/ameba/source/corrector.cr#L52" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="remove_preceding(node:Crystal::ASTNode,size)-instance-method">
+      <div class="signature">
+        
+        def <strong>remove_preceding</strong>(node : Crystal::ASTNode, size)
+
+        <a class="method-permalink" href="#remove_preceding%28node%3ACrystal%3A%3AASTNode%2Csize%29-instance-method">#</a>
+      </div>
+      
+        <div class="doc">
+          
+          <p>Removes <em>size</em> characters prior to the given node.</p>
+        </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/crystal-ameba/ameba/blob/7cb0c157/src/ameba/source/corrector.cr#L105" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="remove_trailing(location,end_location,size)-instance-method">
+      <div class="signature">
+        
+        def <strong>remove_trailing</strong>(location, end_location, size)
+
+        <a class="method-permalink" href="#remove_trailing%28location%2Cend_location%2Csize%29-instance-method">#</a>
+      </div>
+      
+        <div class="doc">
+          
+          <p>Removes <em>size</em> characters from the end of the given range.
+If <em>size</em> is greater than the size of the range, the removed region can
+overrun the beginning of the range.</p>
+        </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/crystal-ameba/ameba/blob/7cb0c157/src/ameba/source/corrector.cr#L66" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="remove_trailing(node:Crystal::ASTNode,size)-instance-method">
+      <div class="signature">
+        
+        def <strong>remove_trailing</strong>(node : Crystal::ASTNode, size)
+
+        <a class="method-permalink" href="#remove_trailing%28node%3ACrystal%3A%3AASTNode%2Csize%29-instance-method">#</a>
+      </div>
+      
+        <div class="doc">
+          
+          <p>Removes <em>size</em> characters from the end of the given node.
+If <em>size</em> is greater than the size of the node, the removed region can
+overrun the beginning of the node.</p>
+        </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/crystal-ameba/ameba/blob/7cb0c157/src/ameba/source/corrector.cr#L119" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="replace(location,end_location,content)-instance-method">
+      <div class="signature">
+        
+        def <strong>replace</strong>(location, end_location, content)
+
+        <a class="method-permalink" href="#replace%28location%2Cend_location%2Ccontent%29-instance-method">#</a>
+      </div>
+      
+        <div class="doc">
+          
+          <p>Replaces the code of the given range with <em>content</em>.</p>
+        </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/crystal-ameba/ameba/blob/7cb0c157/src/ameba/source/corrector.cr#L17" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="replace(node:Crystal::ASTNode,content)-instance-method">
+      <div class="signature">
+        
+        def <strong>replace</strong>(node : Crystal::ASTNode, content)
+
+        <a class="method-permalink" href="#replace%28node%3ACrystal%3A%3AASTNode%2Ccontent%29-instance-method">#</a>
+      </div>
+      
+        <div class="doc">
+          
+          <p>Replaces the code of the given node with <em>content</em>.</p>
+        </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/crystal-ameba/ameba/blob/7cb0c157/src/ameba/source/corrector.cr#L80" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="wrap(location,end_location,insert_before,insert_after)-instance-method">
+      <div class="signature">
+        
+        def <strong>wrap</strong>(location, end_location, insert_before, insert_after)
+
+        <a class="method-permalink" href="#wrap%28location%2Cend_location%2Cinsert_before%2Cinsert_after%29-instance-method">#</a>
+      </div>
+      
+        <div class="doc">
+          
+          <p>Inserts the given strings before and after the given range.</p>
+        </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/crystal-ameba/ameba/blob/7cb0c157/src/ameba/source/corrector.cr#L22" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="wrap(node:Crystal::ASTNode,insert_before,insert_after)-instance-method">
+      <div class="signature">
+        
+        def <strong>wrap</strong>(node : Crystal::ASTNode, insert_before, insert_after)
+
+        <a class="method-permalink" href="#wrap%28node%3ACrystal%3A%3AASTNode%2Cinsert_before%2Cinsert_after%29-instance-method">#</a>
+      </div>
+      
+        <div class="doc">
+          
+          <p>Inserts the given strings before and after the given node.</p>
+        </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/crystal-ameba/ameba/blob/7cb0c157/src/ameba/source/corrector.cr#L85" target="_blank">View source</a>]
         
       </div>
     </div>

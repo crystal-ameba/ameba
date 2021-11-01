@@ -13,7 +13,7 @@
 <script type="text/javascript" src="../../js/doc.js"></script>
 
   <meta name="repository-name" content="ameba">
-  <title>Ameba::InlineComments::Action - ameba master</title>
+  <title>Ameba::Runner::InfiniteCorrectionLoopError - ameba master</title>
   <script type="text/javascript">
     CrystalDocs.base_path = "../../";
   </script>
@@ -211,12 +211,12 @@
       
     </li>
   
-  <li class="parent open current" data-id="ameba/Ameba/InlineComments" data-name="ameba::inlinecomments">
+  <li class="parent " data-id="ameba/Ameba/InlineComments" data-name="ameba::inlinecomments">
       <a href="../../Ameba/InlineComments.html">InlineComments</a>
       
         <ul>
   
-  <li class=" current" data-id="ameba/Ameba/InlineComments/Action" data-name="ameba::inlinecomments::action">
+  <li class=" " data-id="ameba/Ameba/InlineComments/Action" data-name="ameba::inlinecomments::action">
       <a href="../../Ameba/InlineComments/Action.html">Action</a>
       
     </li>
@@ -586,12 +586,12 @@
       
     </li>
   
-  <li class="parent " data-id="ameba/Ameba/Runner" data-name="ameba::runner">
+  <li class="parent open current" data-id="ameba/Ameba/Runner" data-name="ameba::runner">
       <a href="../../Ameba/Runner.html">Runner</a>
       
         <ul>
   
-  <li class=" " data-id="ameba/Ameba/Runner/InfiniteCorrectionLoopError" data-name="ameba::runner::infinitecorrectionlooperror">
+  <li class=" current" data-id="ameba/Ameba/Runner/InfiniteCorrectionLoopError" data-name="ameba::runner::infinitecorrectionlooperror">
       <a href="../../Ameba/Runner/InfiniteCorrectionLoopError.html">InfiniteCorrectionLoopError</a>
       
     </li>
@@ -685,10 +685,12 @@
 <div class="main-content">
 <h1 class="type-name">
 
-  <span class="kind">enum</span> Ameba::InlineComments::Action
+  <span class="kind">class</span> Ameba::Runner::InfiniteCorrectionLoopError
 
 </h1>
 
+
+  <ul class="superclass-hierarchy"><li class="superclass"><a href="../../Ameba/Runner/InfiniteCorrectionLoopError.html">Ameba::Runner::InfiniteCorrectionLoopError</a></li><li class="superclass">RuntimeError</li><li class="superclass">Exception</li><li class="superclass">Reference</li><li class="superclass">Object</li></ul>
 
 
 
@@ -702,7 +704,8 @@
     Overview
   </h2>
 
-  <p>Available actions in the inline comments</p>
+  <p>An error indicating that the inspection loop got stuck correcting
+issues back and forth.</p>
 
 
 
@@ -727,8 +730,8 @@
   </h2>
   
     
-      <a href="https://github.com/crystal-ameba/ameba/blob/7cb0c157/src/ameba/inline_comments.cr#L7" target="_blank">
-        ameba/inline_comments.cr
+      <a href="https://github.com/crystal-ameba/ameba/blob/7cb0c157/src/ameba/runner.cr#L18" target="_blank">
+        ameba/runner.cr
       </a>
     
     <br/>
@@ -736,57 +739,28 @@
 
 
 
-  
-    <h2>
-      <a id="enum-members" class="anchor" href="#enum-members">
-  <svg class="octicon-link" aria-hidden="true">
-    <use href="#octicon-link"/>
-  </svg>
-</a>
-      Enum Members
-    </h2>
-  
-  <dl>
-    
-      <dt class="entry-const" id="Disable">
-        <strong>Disable</strong> = <code><span class="n">0</span></code>
-      </dt>
-      
-    
-      <dt class="entry-const" id="Enable">
-        <strong>Enable</strong> = <code><span class="n">1</span></code>
-      </dt>
-      
-    
-  </dl>
-
-
-
-
-
 
 
   <h2>
-    <a id="instance-method-summary" class="anchor" href="#instance-method-summary">
+    <a id="constructors" class="anchor" href="#constructors">
   <svg class="octicon-link" aria-hidden="true">
     <use href="#octicon-link"/>
   </svg>
 </a>
-    Instance Method Summary
+    Constructors
   </h2>
   <ul class="list-summary">
     
       <li class="entry-summary">
-        <a href="#disable%3F-instance-method" class="signature"><strong>#disable?</strong></a>
-        
-      </li>
-    
-      <li class="entry-summary">
-        <a href="#enable%3F-instance-method" class="signature"><strong>#enable?</strong></a>
+        <a href="#new%28path%2Cissues_by_iteration%2Cloop_start%3D-1%29-class-method" class="signature"><strong>.new</strong>(path, issues_by_iteration, loop_start = <span class="n">-1</span>)</a>
         
       </li>
     
   </ul>
+
+
+
+
 
 
 
@@ -834,54 +808,48 @@
 
 
   
+    
+
+
+    
+
+
+    
+
+
+  
 </div>
 
 
-
-
-
-
   <h2>
-    <a id="instance-method-detail" class="anchor" href="#instance-method-detail">
+    <a id="constructor-detail" class="anchor" href="#constructor-detail">
   <svg class="octicon-link" aria-hidden="true">
     <use href="#octicon-link"/>
   </svg>
 </a>
-    Instance Method Detail
+    Constructor Detail
   </h2>
   
-    <div class="entry-detail" id="disable?-instance-method">
+    <div class="entry-detail" id="new(path,issues_by_iteration,loop_start=-1)-class-method">
       <div class="signature">
         
-        def <strong>disable?</strong>
+        def self.<strong>new</strong>(path, issues_by_iteration, loop_start = <span class="n">-1</span>)
 
-        <a class="method-permalink" href="#disable%3F-instance-method">#</a>
+        <a class="method-permalink" href="#new%28path%2Cissues_by_iteration%2Cloop_start%3D-1%29-class-method">#</a>
       </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/7cb0c157/src/ameba/inline_comments.cr#L8" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/7cb0c157/src/ameba/runner.cr#L19" target="_blank">View source</a>]
         
       </div>
     </div>
   
-    <div class="entry-detail" id="enable?-instance-method">
-      <div class="signature">
-        
-        def <strong>enable?</strong>
 
-        <a class="method-permalink" href="#enable%3F-instance-method">#</a>
-      </div>
-      
-      <br/>
-      <div>
-        
-          [<a href="https://github.com/crystal-ameba/ameba/blob/7cb0c157/src/ameba/inline_comments.cr#L9" target="_blank">View source</a>]
-        
-      </div>
-    </div>
-  
+
+
+
 
 
 

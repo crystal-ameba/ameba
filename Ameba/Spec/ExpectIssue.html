@@ -586,8 +586,18 @@
       
     </li>
   
-  <li class=" " data-id="ameba/Ameba/Runner" data-name="ameba::runner">
+  <li class="parent " data-id="ameba/Ameba/Runner" data-name="ameba::runner">
       <a href="../../Ameba/Runner.html">Runner</a>
+      
+        <ul>
+  
+  <li class=" " data-id="ameba/Ameba/Runner/InfiniteCorrectionLoopError" data-name="ameba::runner::infinitecorrectionlooperror">
+      <a href="../../Ameba/Runner/InfiniteCorrectionLoopError.html">InfiniteCorrectionLoopError</a>
+      
+    </li>
+  
+</ul>
+
       
     </li>
   
@@ -601,8 +611,23 @@
       
     </li>
   
-  <li class=" " data-id="ameba/Ameba/Source" data-name="ameba::source">
+  <li class="parent " data-id="ameba/Ameba/Source" data-name="ameba::source">
       <a href="../../Ameba/Source.html">Source</a>
+      
+        <ul>
+  
+  <li class=" " data-id="ameba/Ameba/Source/Corrector" data-name="ameba::source::corrector">
+      <a href="../../Ameba/Source/Corrector.html">Corrector</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/Source/Rewriter" data-name="ameba::source::rewriter">
+      <a href="../../Ameba/Source/Rewriter.html">Rewriter</a>
+      
+    </li>
+  
+</ul>
+
       
     </li>
   
@@ -753,7 +778,7 @@ to do more work by parsing out lines that contain carets.</p>
   </h2>
   
     
-      <a href="https://github.com/crystal-ameba/ameba/blob/3e1df339/src/ameba/spec/expect_issue.cr#L47" target="_blank">
+      <a href="https://github.com/crystal-ameba/ameba/blob/7cb0c157/src/ameba/spec/expect_issue.cr#L47" target="_blank">
         ameba/spec/expect_issue.cr
       </a>
     
@@ -779,7 +804,17 @@ to do more work by parsing out lines that contain carets.</p>
   <ul class="list-summary">
     
       <li class="entry-summary">
+        <a href="#expect_correction%28source%2Ccorrection%2C%2A%2Cfile%3D__FILE__%2Cline%3D__LINE__%29-instance-method" class="signature"><strong>#expect_correction</strong>(source, correction, *, file = __FILE__, line = __LINE__)</a>
+        
+      </li>
+    
+      <li class="entry-summary">
         <a href="#expect_issue%28rules%3ARule%3A%3ABase%7CEnumerable%28Rule%3A%3ABase%29%2Cannotated_code%3AString%2Cpath%3D%22%22%2Cnormalize%3Dtrue%2C%2A%2Cfile%3D__FILE__%2Cline%3D__LINE__%2C%2A%2Areplacements%29-instance-method" class="signature"><strong>#expect_issue</strong>(rules : Rule::Base | Enumerable(Rule::Base), annotated_code : String, path = <span class="s">&quot;&quot;</span>, normalize = <span class="n">true</span>, *, file = __FILE__, line = __LINE__, **replacements)</a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#expect_no_corrections%28source%2C%2A%2Cfile%3D__FILE__%2Cline%3D__LINE__%29-instance-method" class="signature"><strong>#expect_no_corrections</strong>(source, *, file = __FILE__, line = __LINE__)</a>
         
       </li>
     
@@ -831,6 +866,22 @@ to do more work by parsing out lines that contain carets.</p>
     Instance Method Detail
   </h2>
   
+    <div class="entry-detail" id="expect_correction(source,correction,*,file=__FILE__,line=__LINE__)-instance-method">
+      <div class="signature">
+        
+        def <strong>expect_correction</strong>(source, correction, *, file = __FILE__, line = __LINE__)
+
+        <a class="method-permalink" href="#expect_correction%28source%2Ccorrection%2C%2A%2Cfile%3D__FILE__%2Cline%3D__LINE__%29-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/crystal-ameba/ameba/blob/7cb0c157/src/ameba/spec/expect_issue.cr#L84" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
     <div class="entry-detail" id="expect_issue(rules:Rule::Base|Enumerable(Rule::Base),annotated_code:String,path=&quot;&quot;,normalize=true,*,file=__FILE__,line=__LINE__,**replacements)-instance-method">
       <div class="signature">
         
@@ -842,7 +893,23 @@ to do more work by parsing out lines that contain carets.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/3e1df339/src/ameba/spec/expect_issue.cr#L50" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/7cb0c157/src/ameba/spec/expect_issue.cr#L50" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="expect_no_corrections(source,*,file=__FILE__,line=__LINE__)-instance-method">
+      <div class="signature">
+        
+        def <strong>expect_no_corrections</strong>(source, *, file = __FILE__, line = __LINE__)
+
+        <a class="method-permalink" href="#expect_no_corrections%28source%2C%2A%2Cfile%3D__FILE__%2Cline%3D__LINE__%29-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/crystal-ameba/ameba/blob/7cb0c157/src/ameba/spec/expect_issue.cr#L99" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -858,7 +925,7 @@ to do more work by parsing out lines that contain carets.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/3e1df339/src/ameba/spec/expect_issue.cr#L82" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/7cb0c157/src/ameba/spec/expect_issue.cr#L109" target="_blank">View source</a>]
         
       </div>
     </div>

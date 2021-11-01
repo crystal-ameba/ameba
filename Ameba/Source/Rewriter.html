@@ -13,7 +13,7 @@
 <script type="text/javascript" src="../../js/doc.js"></script>
 
   <meta name="repository-name" content="ameba">
-  <title>Ameba::InlineComments::Action - ameba master</title>
+  <title>Ameba::Source::Rewriter - ameba master</title>
   <script type="text/javascript">
     CrystalDocs.base_path = "../../";
   </script>
@@ -211,12 +211,12 @@
       
     </li>
   
-  <li class="parent open current" data-id="ameba/Ameba/InlineComments" data-name="ameba::inlinecomments">
+  <li class="parent " data-id="ameba/Ameba/InlineComments" data-name="ameba::inlinecomments">
       <a href="../../Ameba/InlineComments.html">InlineComments</a>
       
         <ul>
   
-  <li class=" current" data-id="ameba/Ameba/InlineComments/Action" data-name="ameba::inlinecomments::action">
+  <li class=" " data-id="ameba/Ameba/InlineComments/Action" data-name="ameba::inlinecomments::action">
       <a href="../../Ameba/InlineComments/Action.html">Action</a>
       
     </li>
@@ -611,7 +611,7 @@
       
     </li>
   
-  <li class="parent " data-id="ameba/Ameba/Source" data-name="ameba::source">
+  <li class="parent open current" data-id="ameba/Ameba/Source" data-name="ameba::source">
       <a href="../../Ameba/Source.html">Source</a>
       
         <ul>
@@ -621,7 +621,7 @@
       
     </li>
   
-  <li class=" " data-id="ameba/Ameba/Source/Rewriter" data-name="ameba::source::rewriter">
+  <li class=" current" data-id="ameba/Ameba/Source/Rewriter" data-name="ameba::source::rewriter">
       <a href="../../Ameba/Source/Rewriter.html">Rewriter</a>
       
     </li>
@@ -685,10 +685,12 @@
 <div class="main-content">
 <h1 class="type-name">
 
-  <span class="kind">enum</span> Ameba::InlineComments::Action
+  <span class="kind">class</span> Ameba::Source::Rewriter
 
 </h1>
 
+
+  <ul class="superclass-hierarchy"><li class="superclass"><a href="../../Ameba/Source/Rewriter.html">Ameba::Source::Rewriter</a></li><li class="superclass">Reference</li><li class="superclass">Object</li></ul>
 
 
 
@@ -702,7 +704,78 @@
     Overview
   </h2>
 
-  <p>Available actions in the inline comments</p>
+  <p>This class performs the heavy lifting in the source rewriting process.
+It schedules code updates to be performed in the correct order.</p>
+<p>For simple cases, the resulting source will be obvious.</p>
+<p>Examples for more complex cases follow. Assume these examples are acting on
+the source <code>puts(:hello, :world)</code>. The methods <code><a href="../../Ameba/Source/Rewriter.html#wrap%28begin_pos%2Cend_pos%2Cinsert_before%2Cinsert_after%29-instance-method">#wrap</a></code>, <code><a href="../../Ameba/Source/Rewriter.html#remove%28begin_pos%2Cend_pos%29-instance-method">#remove</a></code>, etc.
+receive a range as the first two arguments; for clarity, examples below use
+English sentences and a string of raw code instead.</p>
+<h2><a id="overlapping-deletions" class="anchor" href="#overlapping-deletions">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>Overlapping deletions:</h2>
+<ul>
+<li>remove <code>:hello,</code></li>
+<li>remove <code>, :world</code></li>
+</ul>
+<p>The overlapping ranges are merged and <code>:hello, :world</code> will be removed.</p>
+<h2><a id="multiple-actions-at-the-same-end-points" class="anchor" href="#multiple-actions-at-the-same-end-points">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>Multiple actions at the same end points:</h2>
+<p>Results will always be independent of the order they were given.
+Exception: rewriting actions done on exactly the same range (covered next).</p>
+<p>Example:</p>
+<ul>
+<li>replace <code>,</code> by <code>=></code></li>
+<li>wrap <code>:hello, :world</code> with <code>{</code> and <code>}</code></li>
+<li>replace <code>:world</code> with <code>:everybody</code></li>
+<li>wrap <code>:world</code> with <code>[</code>, <code>]</code></li>
+</ul>
+<p>The resulting string will be <code>puts({:hello => [:everybody]})</code>
+and this result is independent of the order the instructions were given in.</p>
+<h2><a id="multiple-wraps-on-same-range" class="anchor" href="#multiple-wraps-on-same-range">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>Multiple wraps on same range:</h2>
+<ul>
+<li>wrap <code>:hello</code> with <code>(</code> and <code>)</code></li>
+<li>wrap <code>:hello</code> with <code>[</code> and <code>]</code></li>
+</ul>
+<p>The wraps are combined in order given and results would be <code>puts([(:hello)], :world)</code>.</p>
+<h2><a id="multiple-replacements-on-same-range" class="anchor" href="#multiple-replacements-on-same-range">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>Multiple replacements on same range:</h2>
+<ul>
+<li>replace <code>:hello</code> by <code>:hi</code>, then</li>
+<li>replace <code>:hello</code> by <code>:hey</code></li>
+</ul>
+<p>The replacements are made in the order given, so the latter replacement
+supersedes the former and <code>:hello</code> will be replaced by <code>:hey</code>.</p>
+<h2><a id="swallowed-insertions" class="anchor" href="#swallowed-insertions">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>Swallowed insertions:</h2>
+<ul>
+<li>wrap <code>world</code> by <code>__</code>, <code>__</code></li>
+<li>replace <code>:hello, :world</code> with <code>:hi</code></li>
+</ul>
+<p>A containing replacement will swallow the contained rewriting actions
+and <code>:hello, :world</code> will be replaced by <code>:hi</code>.</p>
+<h2><a id="implementation" class="anchor" href="#implementation">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>Implementation</h2>
+<p>The updates are organized in a tree, according to the ranges they act on
+(where children are strictly contained by their parent).</p>
 
 
 
@@ -727,8 +800,15 @@
   </h2>
   
     
-      <a href="https://github.com/crystal-ameba/ameba/blob/7cb0c157/src/ameba/inline_comments.cr#L7" target="_blank">
-        ameba/inline_comments.cr
+      <a href="https://github.com/crystal-ameba/ameba/blob/7cb0c157/src/ameba/source/rewriter.cr#L61" target="_blank">
+        ameba/source/rewriter.cr
+      </a>
+    
+    <br/>
+  
+    
+      <a href="https://github.com/crystal-ameba/ameba/blob/7cb0c157/src/ameba/source/rewriter/action.cr#L1" target="_blank">
+        ameba/source/rewriter/action.cr
       </a>
     
     <br/>
@@ -736,31 +816,24 @@
 
 
 
-  
-    <h2>
-      <a id="enum-members" class="anchor" href="#enum-members">
+
+
+  <h2>
+    <a id="constructors" class="anchor" href="#constructors">
   <svg class="octicon-link" aria-hidden="true">
     <use href="#octicon-link"/>
   </svg>
 </a>
-      Enum Members
-    </h2>
-  
-  <dl>
+    Constructors
+  </h2>
+  <ul class="list-summary">
     
-      <dt class="entry-const" id="Disable">
-        <strong>Disable</strong> = <code><span class="n">0</span></code>
-      </dt>
-      
+      <li class="entry-summary">
+        <a href="#new%28code%29-class-method" class="signature"><strong>.new</strong>(code)</a>
+        
+      </li>
     
-      <dt class="entry-const" id="Enable">
-        <strong>Enable</strong> = <code><span class="n">1</span></code>
-      </dt>
-      
-    
-  </dl>
-
-
+  </ul>
 
 
 
@@ -777,12 +850,70 @@
   <ul class="list-summary">
     
       <li class="entry-summary">
-        <a href="#disable%3F-instance-method" class="signature"><strong>#disable?</strong></a>
+        <a href="#code%3AString-instance-method" class="signature"><strong>#code</strong> : String</a>
         
       </li>
     
       <li class="entry-summary">
-        <a href="#enable%3F-instance-method" class="signature"><strong>#enable?</strong></a>
+        <a href="#empty%3F-instance-method" class="signature"><strong>#empty?</strong></a>
+        
+          <div class="summary"><p>Returns true if no (non trivial) update has been recorded</p></div>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#insert_after%28begin_pos%2Cend_pos%2Ccontent%29-instance-method" class="signature"><strong>#insert_after</strong>(begin_pos, end_pos, content)</a>
+        
+          <div class="summary"><p>Shortcut for <code><a href="../../Ameba/Source/Rewriter.html#wrap%28begin_pos%2Cend_pos%2Cinsert_before%2Cinsert_after%29-instance-method">#wrap(begin_pos, end_pos, nil, content)</a></code></p></div>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#insert_after%28pos%2Ccontent%29-instance-method" class="signature"><strong>#insert_after</strong>(pos, content)</a>
+        
+          <div class="summary"><p>Shortcut for <code><a href="../../Ameba/Source/Rewriter.html#insert_after%28begin_pos%2Cend_pos%2Ccontent%29-instance-method">#insert_after(pos, pos, content)</a></code></p></div>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#insert_before%28begin_pos%2Cend_pos%2Ccontent%29-instance-method" class="signature"><strong>#insert_before</strong>(begin_pos, end_pos, content)</a>
+        
+          <div class="summary"><p>Shortcut for <code><a href="../../Ameba/Source/Rewriter.html#wrap%28begin_pos%2Cend_pos%2Cinsert_before%2Cinsert_after%29-instance-method">#wrap(begin_pos, end_pos, content, nil)</a></code></p></div>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#insert_before%28pos%2Ccontent%29-instance-method" class="signature"><strong>#insert_before</strong>(pos, content)</a>
+        
+          <div class="summary"><p>Shortcut for <code><a href="../../Ameba/Source/Rewriter.html#insert_before%28begin_pos%2Cend_pos%2Ccontent%29-instance-method">#insert_before(pos, pos, content)</a></code></p></div>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#process-instance-method" class="signature"><strong>#process</strong></a>
+        
+          <div class="summary"><p>Applies all scheduled changes and returns modified source as a new string.</p></div>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#remove%28begin_pos%2Cend_pos%29-instance-method" class="signature"><strong>#remove</strong>(begin_pos, end_pos)</a>
+        
+          <div class="summary"><p>Shortcut for <code><a href="../../Ameba/Source/Rewriter.html#replace%28begin_pos%2Cend_pos%2Ccontent%29-instance-method">#replace(begin_pos, end_pos, "")</a></code></p></div>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#replace%28begin_pos%2Cend_pos%2Ccontent%29-instance-method" class="signature"><strong>#replace</strong>(begin_pos, end_pos, content)</a>
+        
+          <div class="summary"><p>Replaces the code of the given range with <em>content</em>.</p></div>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#wrap%28begin_pos%2Cend_pos%2Cinsert_before%2Cinsert_after%29-instance-method" class="signature"><strong>#wrap</strong>(begin_pos, end_pos, insert_before, insert_after)</a>
+        
+          <div class="summary"><p>Inserts the given strings before and after the given range.</p></div>
         
       </li>
     
@@ -814,28 +945,34 @@
 
 
   
-    
-
-
-    
-
-
-    
-
-
-  
-    
-
-
-    
-
-
-    
-
-
-  
 </div>
 
+
+  <h2>
+    <a id="constructor-detail" class="anchor" href="#constructor-detail">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>
+    Constructor Detail
+  </h2>
+  
+    <div class="entry-detail" id="new(code)-class-method">
+      <div class="signature">
+        
+        def self.<strong>new</strong>(code)
+
+        <a class="method-permalink" href="#new%28code%29-class-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/crystal-ameba/ameba/blob/7cb0c157/src/ameba/source/rewriter.cr#L64" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
 
 
 
@@ -850,34 +987,207 @@
     Instance Method Detail
   </h2>
   
-    <div class="entry-detail" id="disable?-instance-method">
+    <div class="entry-detail" id="code:String-instance-method">
       <div class="signature">
         
-        def <strong>disable?</strong>
+        def <strong>code</strong> : String
 
-        <a class="method-permalink" href="#disable%3F-instance-method">#</a>
+        <a class="method-permalink" href="#code%3AString-instance-method">#</a>
       </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/7cb0c157/src/ameba/inline_comments.cr#L8" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/7cb0c157/src/ameba/source/rewriter.cr#L62" target="_blank">View source</a>]
         
       </div>
     </div>
   
-    <div class="entry-detail" id="enable?-instance-method">
+    <div class="entry-detail" id="empty?-instance-method">
       <div class="signature">
         
-        def <strong>enable?</strong>
+        def <strong>empty?</strong>
 
-        <a class="method-permalink" href="#enable%3F-instance-method">#</a>
+        <a class="method-permalink" href="#empty%3F-instance-method">#</a>
       </div>
+      
+        <div class="doc">
+          
+          <p>Returns true if no (non trivial) update has been recorded</p>
+        </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/7cb0c157/src/ameba/inline_comments.cr#L9" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/7cb0c157/src/ameba/source/rewriter.cr#L69" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="insert_after(begin_pos,end_pos,content)-instance-method">
+      <div class="signature">
+        
+        def <strong>insert_after</strong>(begin_pos, end_pos, content)
+
+        <a class="method-permalink" href="#insert_after%28begin_pos%2Cend_pos%2Ccontent%29-instance-method">#</a>
+      </div>
+      
+        <div class="doc">
+          
+          <p>Shortcut for <code><a href="../../Ameba/Source/Rewriter.html#wrap%28begin_pos%2Cend_pos%2Cinsert_before%2Cinsert_after%29-instance-method">#wrap(begin_pos, end_pos, nil, content)</a></code></p>
+        </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/crystal-ameba/ameba/blob/7cb0c157/src/ameba/source/rewriter.cr#L94" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="insert_after(pos,content)-instance-method">
+      <div class="signature">
+        
+        def <strong>insert_after</strong>(pos, content)
+
+        <a class="method-permalink" href="#insert_after%28pos%2Ccontent%29-instance-method">#</a>
+      </div>
+      
+        <div class="doc">
+          
+          <p>Shortcut for <code><a href="../../Ameba/Source/Rewriter.html#insert_after%28begin_pos%2Cend_pos%2Ccontent%29-instance-method">#insert_after(pos, pos, content)</a></code></p>
+        </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/crystal-ameba/ameba/blob/7cb0c157/src/ameba/source/rewriter.cr#L104" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="insert_before(begin_pos,end_pos,content)-instance-method">
+      <div class="signature">
+        
+        def <strong>insert_before</strong>(begin_pos, end_pos, content)
+
+        <a class="method-permalink" href="#insert_before%28begin_pos%2Cend_pos%2Ccontent%29-instance-method">#</a>
+      </div>
+      
+        <div class="doc">
+          
+          <p>Shortcut for <code><a href="../../Ameba/Source/Rewriter.html#wrap%28begin_pos%2Cend_pos%2Cinsert_before%2Cinsert_after%29-instance-method">#wrap(begin_pos, end_pos, content, nil)</a></code></p>
+        </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/crystal-ameba/ameba/blob/7cb0c157/src/ameba/source/rewriter.cr#L89" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="insert_before(pos,content)-instance-method">
+      <div class="signature">
+        
+        def <strong>insert_before</strong>(pos, content)
+
+        <a class="method-permalink" href="#insert_before%28pos%2Ccontent%29-instance-method">#</a>
+      </div>
+      
+        <div class="doc">
+          
+          <p>Shortcut for <code><a href="../../Ameba/Source/Rewriter.html#insert_before%28begin_pos%2Cend_pos%2Ccontent%29-instance-method">#insert_before(pos, pos, content)</a></code></p>
+        </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/crystal-ameba/ameba/blob/7cb0c157/src/ameba/source/rewriter.cr#L99" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="process-instance-method">
+      <div class="signature">
+        
+        def <strong>process</strong>
+
+        <a class="method-permalink" href="#process-instance-method">#</a>
+      </div>
+      
+        <div class="doc">
+          
+          <p>Applies all scheduled changes and returns modified source as a new string.</p>
+        </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/crystal-ameba/ameba/blob/7cb0c157/src/ameba/source/rewriter.cr#L109" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="remove(begin_pos,end_pos)-instance-method">
+      <div class="signature">
+        
+        def <strong>remove</strong>(begin_pos, end_pos)
+
+        <a class="method-permalink" href="#remove%28begin_pos%2Cend_pos%29-instance-method">#</a>
+      </div>
+      
+        <div class="doc">
+          
+          <p>Shortcut for <code><a href="../../Ameba/Source/Rewriter.html#replace%28begin_pos%2Cend_pos%2Ccontent%29-instance-method">#replace(begin_pos, end_pos, "")</a></code></p>
+        </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/crystal-ameba/ameba/blob/7cb0c157/src/ameba/source/rewriter.cr#L84" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="replace(begin_pos,end_pos,content)-instance-method">
+      <div class="signature">
+        
+        def <strong>replace</strong>(begin_pos, end_pos, content)
+
+        <a class="method-permalink" href="#replace%28begin_pos%2Cend_pos%2Ccontent%29-instance-method">#</a>
+      </div>
+      
+        <div class="doc">
+          
+          <p>Replaces the code of the given range with <em>content</em>.</p>
+        </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/crystal-ameba/ameba/blob/7cb0c157/src/ameba/source/rewriter.cr#L74" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="wrap(begin_pos,end_pos,insert_before,insert_after)-instance-method">
+      <div class="signature">
+        
+        def <strong>wrap</strong>(begin_pos, end_pos, insert_before, insert_after)
+
+        <a class="method-permalink" href="#wrap%28begin_pos%2Cend_pos%2Cinsert_before%2Cinsert_after%29-instance-method">#</a>
+      </div>
+      
+        <div class="doc">
+          
+          <p>Inserts the given strings before and after the given range.</p>
+        </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/crystal-ameba/ameba/blob/7cb0c157/src/ameba/source/rewriter.cr#L79" target="_blank">View source</a>]
         
       </div>
     </div>
