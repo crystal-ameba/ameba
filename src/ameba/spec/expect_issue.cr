@@ -47,8 +47,6 @@ require "./util"
 module Ameba::Spec::ExpectIssue
   include Spec::Util
 
-  class_property source : Source?
-
   def expect_issue(rules : Rule::Base | Enumerable(Rule::Base),
                    annotated_code : String,
                    path = "",
@@ -67,7 +65,7 @@ module Ameba::Spec::ExpectIssue
       raise "Use `report_no_issues` to assert that no issues are found"
     end
 
-    actual_annotations = actual_annotations(rules, code, path, lines)
+    source, actual_annotations = actual_annotations(rules, code, path, lines)
     unless actual_annotations == expected_annotations
       fail <<-MSG, file, line
         Expected:
@@ -79,12 +77,11 @@ module Ameba::Spec::ExpectIssue
         #{actual_annotations}
         MSG
     end
+
+    source
   end
 
-  def expect_correction(correction, *, file = __FILE__, line = __LINE__)
-    source = ExpectIssue.source
-    raise "`expect_correction` must follow `expect_issue`" unless source
-
+  def expect_correction(source, correction, *, file = __FILE__, line = __LINE__)
     raise "Use `expect_no_corrections` if the code will not change" unless source.correct
     return if correction == source.code
 
@@ -99,10 +96,7 @@ module Ameba::Spec::ExpectIssue
       MSG
   end
 
-  def expect_no_corrections(*, file = __FILE__, line = __LINE__)
-    source = ExpectIssue.source
-    raise "`expect_no_corrections` must follow `expect_offense`" unless source
-
+  def expect_no_corrections(source, *, file = __FILE__, line = __LINE__)
     return unless source.correct
 
     fail <<-MSG, file, line
@@ -121,7 +115,7 @@ module Ameba::Spec::ExpectIssue
                        line = __LINE__)
     code = normalize_code(code) if normalize
     lines = code.split('\n') # must preserve trailing newline
-    actual_annotations = actual_annotations(rules, code, path, lines)
+    _, actual_annotations = actual_annotations(rules, code, path, lines)
     unless actual_annotations.to_s == code
       fail <<-MSG, file, line
         Expected no issues, but got:
@@ -133,13 +127,12 @@ module Ameba::Spec::ExpectIssue
 
   private def actual_annotations(rules, code, path, lines)
     source = Source.new(code, path, normalize: false) # already normalized
-    ExpectIssue.source = source
     if rules.is_a?(Enumerable)
       rules.each(&.catch(source))
     else
       rules.catch(source)
     end
-    AnnotatedSource.new(lines, source.issues)
+    {source, AnnotatedSource.new(lines, source.issues)}
   end
 
   private def format_issue(code, **replacements)
