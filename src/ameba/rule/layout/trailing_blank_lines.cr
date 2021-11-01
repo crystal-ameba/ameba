@@ -25,7 +25,13 @@ module Ameba::Rule::Layout
 
       last_line_empty = last_source_line.empty?
       if source_lines_size >= 1 && (source_lines.last(2).join.blank? || !last_line_empty)
-        issue_for({source_lines_size - 1, 1}, last_line_empty ? MSG : MSG_FINAL_NEWLINE)
+        if last_line_empty
+          issue_for({source_lines_size, 1}, MSG)
+        else
+          issue_for({source_lines_size, 1}, MSG_FINAL_NEWLINE) do |corrector|
+            corrector.insert_before({source_lines_size + 1, 1}, '\n')
+          end
+        end
       end
     end
   end

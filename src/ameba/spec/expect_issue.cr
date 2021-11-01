@@ -65,7 +65,7 @@ module Ameba::Spec::ExpectIssue
       raise "Use `report_no_issues` to assert that no issues are found"
     end
 
-    actual_annotations = actual_annotations(rules, code, path, lines)
+    source, actual_annotations = actual_annotations(rules, code, path, lines)
     unless actual_annotations == expected_annotations
       fail <<-MSG, file, line
         Expected:
@@ -77,6 +77,33 @@ module Ameba::Spec::ExpectIssue
         #{actual_annotations}
         MSG
     end
+
+    source
+  end
+
+  def expect_correction(source, correction, *, file = __FILE__, line = __LINE__)
+    raise "Use `expect_no_corrections` if the code will not change" unless source.correct
+    return if correction == source.code
+
+    fail <<-MSG, file, line
+      Expected correction:
+
+      #{correction}
+
+      Got:
+
+      #{source.code}
+      MSG
+  end
+
+  def expect_no_corrections(source, *, file = __FILE__, line = __LINE__)
+    return unless source.correct
+
+    fail <<-MSG, file, line
+      Expected no corrections, but got:
+
+      #{source.code}
+      MSG
   end
 
   def expect_no_issues(rules : Rule::Base | Enumerable(Rule::Base),
@@ -87,8 +114,8 @@ module Ameba::Spec::ExpectIssue
                        file = __FILE__,
                        line = __LINE__)
     code = normalize_code(code) if normalize
-    lines = code.lines
-    actual_annotations = actual_annotations(rules, code, path, lines)
+    lines = code.split('\n') # must preserve trailing newline
+    _, actual_annotations = actual_annotations(rules, code, path, lines)
     unless actual_annotations.to_s == code
       fail <<-MSG, file, line
         Expected no issues, but got:
@@ -105,7 +132,7 @@ module Ameba::Spec::ExpectIssue
     else
       rules.catch(source)
     end
-    AnnotatedSource.new(lines, source.issues)
+    {source, AnnotatedSource.new(lines, source.issues)}
   end
 
   private def format_issue(code, **replacements)

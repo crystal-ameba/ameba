@@ -8,6 +8,13 @@ module Ameba
 
     config.update_rule ErrorRule.rule_name, enabled: false
     config.update_rule PerfRule.rule_name, enabled: false
+    config.update_rule AtoAA.rule_name, enabled: false
+    config.update_rule AtoB.rule_name, enabled: false
+    config.update_rule BtoA.rule_name, enabled: false
+    config.update_rule BtoC.rule_name, enabled: false
+    config.update_rule CtoA.rule_name, enabled: false
+    config.update_rule ClassToModule.rule_name, enabled: false
+    config.update_rule ModuleToClass.rule_name, enabled: false
 
     Runner.new(config)
   end
@@ -52,6 +59,15 @@ module Ameba
         end
 
         Runner.new(all_rules, [source], formatter, default_severity).run.success?.should be_true
+      end
+
+      it "aborts because of an infinite loop" do
+        rules = [AtoAA.new] of Rule::Base
+        source = Source.new "class A; end", "source.cr"
+        message = "Infinite loop in source.cr caused by Ameba/AtoAA"
+        expect_raises(Runner::InfiniteCorrectionLoopError, message) do
+          Runner.new(rules, [source], formatter, default_severity, autocorrect: true).run
+        end
       end
 
       context "exception in rule" do
@@ -178,6 +194,57 @@ module Ameba
         Runner
           .new(rules, [source], formatter, default_severity)
           .run.success?.should be_true
+      end
+    end
+
+    describe "#run with rules autocorrecting each other" do
+      context "with two conflicting rules" do
+        context "if there is an offense in an inspected file" do
+          it "aborts because of an infinite loop" do
+            rules = [AtoB.new, BtoA.new]
+            source = Source.new "class A; end", "source.cr"
+            message = "Infinite loop in source.cr caused by Ameba/AtoB -> Ameba/BtoA"
+            expect_raises(Runner::InfiniteCorrectionLoopError, message) do
+              Runner.new(rules, [source], formatter, default_severity, autocorrect: true).run
+            end
+          end
+        end
+
+        context "if there are multiple offenses in an inspected file" do
+          it "aborts because of an infinite loop" do
+            rules = [AtoB.new, BtoA.new]
+            source = Source.new %(
+              class A; end
+              class A_A; end
+            ), "source.cr"
+            message = "Infinite loop in source.cr caused by Ameba/AtoB -> Ameba/BtoA"
+            expect_raises(Runner::InfiniteCorrectionLoopError, message) do
+              Runner.new(rules, [source], formatter, default_severity, autocorrect: true).run
+            end
+          end
+        end
+      end
+
+      context "with two pairs of conflicting rules" do
+        it "aborts because of an infinite loop" do
+          rules = [ClassToModule.new, ModuleToClass.new, AtoB.new, BtoA.new]
+          source = Source.new "class A_A; end", "source.cr"
+          message = "Infinite loop in source.cr caused by Ameba/ClassToModule, Ameba/AtoB -> Ameba/ModuleToClass, Ameba/BtoA"
+          expect_raises(Runner::InfiniteCorrectionLoopError, message) do
+            Runner.new(rules, [source], formatter, default_severity, autocorrect: true).run
+          end
+        end
+      end
+
+      context "with three rule cycle" do
+        it "aborts because of an infinite loop" do
+          rules = [AtoB.new, BtoC.new, CtoA.new]
+          source = Source.new "class A; end", "source.cr"
+          message = "Infinite loop in source.cr caused by Ameba/AtoB -> Ameba/BtoC -> Ameba/CtoA"
+          expect_raises(Runner::InfiniteCorrectionLoopError, message) do
+            Runner.new(rules, [source], formatter, default_severity, autocorrect: true).run
+          end
+        end
       end
     end
   end

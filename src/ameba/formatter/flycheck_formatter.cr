@@ -5,6 +5,7 @@ module Ameba::Formatter
     def source_finished(source : Source)
       source.issues.each do |e|
         next if e.disabled?
+        next if e.correctable? && config[:autocorrect]?
         if loc = e.location
           @mutex.synchronize do
             output.printf "%s:%d:%d: %s: [%s] %s\n",

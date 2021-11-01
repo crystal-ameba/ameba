@@ -6,6 +6,9 @@ module Ameba
       Disabled
     end
 
+    # The source code that triggered this issue.
+    getter code : String
+
     # A rule that triggers this issue.
     getter rule : Rule::Base
 
@@ -24,12 +27,20 @@ module Ameba
     delegate :enabled?, :disabled?,
       to: status
 
-    def initialize(@rule, @location, @end_location, @message, status : Status? = nil)
+    def initialize(@code, @rule, @location, @end_location, @message, status : Status? = nil, @block : (Source::Corrector ->)? = nil)
       @status = status || Status::Enabled
     end
 
     def syntax?
       rule.is_a?(Rule::Lint::Syntax)
+    end
+
+    def correctable?
+      !@block.nil?
+    end
+
+    def correct(corrector)
+      @block.try &.call(corrector)
     end
   end
 end

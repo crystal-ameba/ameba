@@ -22,6 +22,20 @@ module Ameba
     def initialize(@code, @path = "")
     end
 
+    # Corrects any correctable issues and updates `code`.
+    # Returns `false` if no issues were corrected.
+    def correct
+      corrector = Corrector.new(code)
+      issues.each(&.correct(corrector))
+      corrected_code = corrector.process
+      return false if code == corrected_code
+
+      @code = corrected_code
+      @lines = nil
+      @ast = nil
+      true
+    end
+
     # Returns lines of code splitted by new line character.
     # Since `code` is immutable and can't be changed, this
     # method caches lines in an instance variable, so calling

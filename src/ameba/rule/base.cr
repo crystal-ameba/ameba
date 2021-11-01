@@ -112,8 +112,8 @@ module Ameba::Rule
       name.hash
     end
 
-    macro issue_for(*args)
-      source.add_issue self, {{*args}}
+    macro issue_for(*args, **kwargs, &block)
+      source.add_issue(self, {{*args}}, {{**kwargs}}) {{block}}
     end
 
     protected def self.rule_name

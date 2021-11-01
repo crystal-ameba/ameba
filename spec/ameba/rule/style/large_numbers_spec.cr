@@ -7,9 +7,13 @@ module Ameba
     it "transforms large number #{number}" do
       rule = Rule::Style::LargeNumbers.new
 
-      expect_issue rule, <<-CRYSTAL, number: number
+      source = expect_issue rule, <<-CRYSTAL, number: number
         number = %{number}
                # ^{number} error: Large numbers should be written with underscores: #{expected}
+        CRYSTAL
+
+      expect_correction source, <<-CRYSTAL
+        number = #{expected}
         CRYSTAL
     end
   end

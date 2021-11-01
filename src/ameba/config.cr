@@ -54,6 +54,9 @@ class Ameba::Config
   # ```
   property excluded : Array(String)
 
+  # Returns true if correctable issues should be autocorrected.
+  property? autocorrect = false
+
   @rule_groups : Hash(String, Array(Rule::Base))
 
   # Creates a new instance of `Ameba::Config` based on YAML parameters.

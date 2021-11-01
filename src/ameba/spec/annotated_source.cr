@@ -15,7 +15,8 @@ class Ameba::Spec::AnnotatedSource
   def self.parse(annotated_code)
     lines = [] of String
     annotations = [] of {Int32, String, String}
-    annotated_code.each_line do |code_line|
+    code_lines = annotated_code.split('\n') # must preserve trailing newline
+    code_lines.each do |code_line|
       if (annotation_match = ANNOTATION_PATTERN_1.match(code_line))
         message_index = annotation_match.end
         prefix = code_line[0...message_index]

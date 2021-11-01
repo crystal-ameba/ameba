@@ -95,6 +95,133 @@ module Ameba
     end
   end
 
+  class AtoAA < Rule::Base
+    include AST::Util
+
+    properties do
+      description "This rule is only used to test infinite loop detection"
+    end
+
+    def test(source, node : Crystal::ClassDef | Crystal::ModuleDef)
+      return unless (name = node_source(node.name, source.lines))
+      return unless name.includes?("A")
+
+      issue_for(node.name, message: "A to AA") do |corrector|
+        corrector.replace(node.name, name.sub("A", "AA"))
+      end
+    end
+  end
+
+  class AtoB < Rule::Base
+    include AST::Util
+
+    properties do
+      description "This rule is only used to test infinite loop detection"
+    end
+
+    def test(source, node : Crystal::ClassDef | Crystal::ModuleDef)
+      return unless (name = node_source(node.name, source.lines))
+      return unless name.includes?("A")
+
+      issue_for(node.name, message: "A to B") do |corrector|
+        corrector.replace(node.name, name.tr("A", "B"))
+      end
+    end
+  end
+
+  class BtoA < Rule::Base
+    include AST::Util
+
+    properties do
+      description "This rule is only used to test infinite loop detection"
+    end
+
+    def test(source, node : Crystal::ClassDef | Crystal::ModuleDef)
+      return unless (name = node_source(node.name, source.lines))
+      return unless name.includes?("B")
+
+      issue_for(node.name, message: "B to A") do |corrector|
+        corrector.replace(node.name, name.tr("B", "A"))
+      end
+    end
+  end
+
+  class BtoC < Rule::Base
+    include AST::Util
+
+    properties do
+      description "This rule is only used to test infinite loop detection"
+    end
+
+    def test(source, node : Crystal::ClassDef | Crystal::ModuleDef)
+      return unless (name = node_source(node.name, source.lines))
+      return unless name.includes?("B")
+
+      issue_for(node.name, message: "B to C") do |corrector|
+        corrector.replace(node.name, name.tr("B", "C"))
+      end
+    end
+  end
+
+  class CtoA < Rule::Base
+    include AST::Util
+
+    properties do
+      description "This rule is only used to test infinite loop detection"
+    end
+
+    def test(source, node : Crystal::ClassDef | Crystal::ModuleDef)
+      return unless (name = node_source(node.name, source.lines))
+      return unless name.includes?("C")
+
+      issue_for(node.name, message: "C to A") do |corrector|
+        corrector.replace(node.name, name.tr("C", "A"))
+      end
+    end
+  end
+
+  class ClassToModule < Ameba::Rule::Base
+    include Ameba::AST::Util
+
+    properties do
+      description "This rule is only used to test infinite loop detection"
+    end
+
+    def test(source, node : Crystal::ClassDef)
+      return unless (location = node.location)
+
+      end_location = Crystal::Location.new(
+        location.filename,
+        location.line_number,
+        location.column_number + "class".size - 1
+      )
+      issue_for(location, end_location, message: "class to module") do |corrector|
+        corrector.replace(location, end_location, "module")
+      end
+    end
+  end
+
+  class ModuleToClass < Ameba::Rule::Base
+    include Ameba::AST::Util
+
+    properties do
+      description "This rule is only used to test infinite loop detection"
+    end
+
+    def test(source, node : Crystal::ModuleDef)
+      return unless (location = node.location)
+
+      end_location = Crystal::Location.new(
+        location.filename,
+        location.line_number,
+        location.column_number + "module".size - 1
+      )
+      issue_for(location, end_location, message: "module to class") do |corrector|
+        corrector.replace(location, end_location, "class")
+      end
+    end
+  end
+
   class DummyFormatter < Formatter::BaseFormatter
     property started_sources : Array(Source)?
     property finished_sources : Array(Source)?

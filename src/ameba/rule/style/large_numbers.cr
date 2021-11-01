@@ -28,7 +28,7 @@ module Ameba::Rule::Style
   # ```
   class LargeNumbers < Base
     properties do
-      enabled false
+      enabled true
       description "Disallows usage of large numbers without underscore"
       int_min_digits 5
     end
@@ -48,7 +48,9 @@ module Ameba::Rule::Style
             location.line_number,
             location.column_number + token.raw.size - 1
           )
-          issue_for location, end_location, MSG % expected
+          issue_for location, end_location, MSG % expected do |corrector|
+            corrector.replace(location, end_location, expected)
+          end
         end
       end
     end

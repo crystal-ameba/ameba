@@ -40,8 +40,14 @@ module Ameba::Formatter
       {pre_context, post_context}
     end
 
-    def affected_code(source, location, end_location = nil, context_lines = 0, max_length = 120, ellipsis = " ...", prompt = "> ")
-      lines = source.lines
+    def affected_code(issue : Issue, context_lines = 0, max_length = 120, ellipsis = " ...", prompt = "> ")
+      return unless (location = issue.location)
+
+      affected_code(issue.code, location, issue.end_location, context_lines, max_length, ellipsis, prompt)
+    end
+
+    def affected_code(code, location, end_location = nil, context_lines = 0, max_length = 120, ellipsis = " ...", prompt = "> ")
+      lines = code.split('\n') # must preserve trailing newline
       lineno, column =
         location.line_number, location.column_number
 
