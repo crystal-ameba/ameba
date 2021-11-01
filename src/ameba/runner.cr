@@ -160,8 +160,8 @@ module Ameba
     # runner.run
     # runner.explain({file: file, line: l, column: c})
     # ```
-    def explain(location, output = STDOUT, autocorrect = false)
-      Formatter::ExplainFormatter.new(output, location, autocorrect).finished @sources
+    def explain(location, output = STDOUT)
+      Formatter::ExplainFormatter.new(output, location).finished @sources
     end
 
     # Indicates whether the last inspection successful or not.
