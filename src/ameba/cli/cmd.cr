@@ -7,8 +7,15 @@ module Ameba::Cli
 
   def run(args = ARGV)
     opts = parse_args args
+    location_to_explain = opts.location_to_explain
+    autocorrect = opts.autocorrect?
+
+    if location_to_explain && autocorrect
+      raise "Invalid usage: Cannot explain an issue and autocorrect at the same time."
+    end
+
     config = Config.load opts.config, opts.colors?
-    config.autocorrect = opts.autocorrect?
+    config.autocorrect = autocorrect
 
     if globs = opts.globs
       config.globs = globs
@@ -26,8 +33,8 @@ module Ameba::Cli
 
     runner = Ameba.run(config)
 
-    if location = opts.location_to_explain
-      runner.explain(location)
+    if location_to_explain
+      runner.explain(location_to_explain)
     else
       exit 1 unless runner.success?
     end
