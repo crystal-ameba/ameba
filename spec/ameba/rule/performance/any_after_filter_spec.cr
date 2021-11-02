@@ -15,10 +15,12 @@ module Ameba::Rule::Performance
     end
 
     it "reports if there is select followed by any? without a block" do
-      expect_issue subject, <<-CRYSTAL
+      source = expect_issue subject, <<-CRYSTAL
         [1, 2, 3].select { |e| e > 2 }.any?
                 # ^^^^^^^^^^^^^^^^^^^^^^^^^^ error: Use `any? {...}` instead of `select {...}.any?`
         CRYSTAL
+
+      expect_no_corrections source
     end
 
     it "does not report if source is a spec" do
@@ -28,10 +30,12 @@ module Ameba::Rule::Performance
     end
 
     it "reports if there is reject followed by any? without a block" do
-      expect_issue subject, <<-CRYSTAL
+      source = expect_issue subject, <<-CRYSTAL
         [1, 2, 3].reject { |e| e > 2 }.any?
                 # ^^^^^^^^^^^^^^^^^^^^^^^^^^ error: Use `any? {...}` instead of `reject {...}.any?`
         CRYSTAL
+
+      expect_no_corrections source
     end
 
     it "does not report if any? calls contains a block" do
@@ -53,18 +57,22 @@ module Ameba::Rule::Performance
 
     context "macro" do
       it "reports in macro scope" do
-        expect_issue subject, <<-CRYSTAL
+        source = expect_issue subject, <<-CRYSTAL
           {{ [1, 2, 3].reject { |e| e > 2  }.any? }}
                      # ^^^^^^^^^^^^^^^^^^^^^^^^^^^ error: Use `any? {...}` instead of `reject {...}.any?`
           CRYSTAL
+
+        expect_no_corrections source
       end
     end
 
     it "reports rule, pos and message" do
-      expect_issue subject, <<-CRYSTAL
+      source = expect_issue subject, <<-CRYSTAL
         [1, 2, 3].reject { |e| e > 2 }.any?
                 # ^^^^^^^^^^^^^^^^^^^^^^^^^^ error: Use `any? {...}` instead of `reject {...}.any?`
         CRYSTAL
+
+      expect_no_corrections source
     end
   end
 end

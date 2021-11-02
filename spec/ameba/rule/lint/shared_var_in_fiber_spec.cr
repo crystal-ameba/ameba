@@ -40,7 +40,7 @@ module Ameba::Rule::Lint
     end
 
     it "reports if there is a shared var in spawn" do
-      expect_issue subject, <<-CRYSTAL
+      source = expect_issue subject, <<-CRYSTAL
         i = 0
         while i < 10
           spawn do
@@ -52,10 +52,12 @@ module Ameba::Rule::Lint
 
         Fiber.yield
         CRYSTAL
+
+      expect_no_corrections source
     end
 
     it "reports reassigned reference to shared var in spawn" do
-      expect_issue subject, <<-CRYSTAL
+      source = expect_issue subject, <<-CRYSTAL
         channel = Channel(String).new
         n = 0
 
@@ -68,6 +70,8 @@ module Ameba::Rule::Lint
           end
         end
         CRYSTAL
+
+      expect_no_corrections source
     end
 
     it "doesn't report reassigned reference to shared var in block" do
@@ -96,7 +100,7 @@ module Ameba::Rule::Lint
     end
 
     it "reports multiple shared variables in spawn" do
-      expect_issue subject, <<-CRYSTAL
+      source = expect_issue subject, <<-CRYSTAL
         foo, bar, baz = 0, 0, 0
         while foo < 10
           baz += 1
@@ -110,6 +114,8 @@ module Ameba::Rule::Lint
           foo += 1
         end
         CRYSTAL
+
+      expect_no_corrections source
     end
 
     it "doesn't report if variable is passed to the proc" do
