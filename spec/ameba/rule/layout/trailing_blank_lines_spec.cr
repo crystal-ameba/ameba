@@ -24,7 +24,7 @@ module Ameba::Rule::Layout
 
     it "fails if last line is not blank" do
       source = expect_issue subject, "\n\n\n puts 22 # error: Trailing newline missing", normalize: false
-      expect_correction source, "\n\n\n puts 22\n"
+      expect_correction source, "\n\n\n puts 22\n", normalize: false
     end
 
     context "when unnecessary blank line has been detected" do

@@ -50,8 +50,8 @@ module Ameba::Spec::ExpectIssue
   def expect_issue(rules : Rule::Base | Enumerable(Rule::Base),
                    annotated_code : String,
                    path = "",
-                   normalize = true,
                    *,
+                   normalize = true,
                    file = __FILE__,
                    line = __LINE__,
                    **replacements)
@@ -81,7 +81,8 @@ module Ameba::Spec::ExpectIssue
     source
   end
 
-  def expect_correction(source, correction, *, file = __FILE__, line = __LINE__)
+  def expect_correction(source, correction, *, normalize = true, file = __FILE__, line = __LINE__)
+    correction = normalize_code(correction) if normalize
     raise "Use `expect_no_corrections` if the code will not change" unless source.correct
     return if correction == source.code
 
