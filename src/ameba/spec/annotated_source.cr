@@ -114,16 +114,22 @@ class Ameba::Spec::AnnotatedSource
   end
 
   private def issues_to_annotations(issues)
+    lines_without_prefix = [] of Int32
     issues.map do |issue|
       line, column, end_line, end_column = validate_location(issue)
       indent_count = column - 3
-      indent = if indent_count < 0
-                 ""
-               else
-                 " " * indent_count
-               end
+
+      if indent_count < 0
+        if lines_without_prefix.includes?(line)
+          raise "Missing indentation: #{-indent_count} spaces"
+        end
+        lines_without_prefix << line
+        next {line, "", issue.message}
+      end
+
+      indent = " " * indent_count
       caret_count = column_length(line, column, end_line, end_column)
-      carets = if indent_count < 0 || caret_count <= 0
+      carets = if caret_count.zero?
                  "^{}"
                else
                  "^" * caret_count

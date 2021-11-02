@@ -5,7 +5,7 @@ module Ameba::Rule::Lint
 
   describe DebuggerStatement do
     it "passes if there is no debugger statement" do
-      expect_no_issues subject, %(
+      expect_no_issues subject, <<-CRYSTAL
         "this is not a debugger statement"
         s = "debugger"
 
@@ -18,16 +18,16 @@ module Ameba::Rule::Lint
           end
         end
         A.new.debugger
-      )
+        CRYSTAL
     end
 
     it "fails if there is a debugger statement" do
-      expect_issue subject, %(
-        a = 2
-        debugger
-        # ^{} error: Possible forgotten debugger statement detected
-        a = a + 1
-      )
+      expect_issue subject, <<-CRYSTAL
+          a = 2
+          debugger
+        # ^^^^^^^^ error: Possible forgotten debugger statement detected
+          a = a + 1
+        CRYSTAL
     end
 
     it "reports rule, pos and message" do
