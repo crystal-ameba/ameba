@@ -50,12 +50,10 @@ module Ameba::Spec::ExpectIssue
   def expect_issue(rules : Rule::Base | Enumerable(Rule::Base),
                    annotated_code : String,
                    path = "",
-                   normalize = true,
                    *,
                    file = __FILE__,
                    line = __LINE__,
                    **replacements)
-    annotated_code = normalize_code(annotated_code) if normalize
     annotated_code = format_issue(annotated_code, **replacements)
     expected_annotations = AnnotatedSource.parse(annotated_code)
     lines = expected_annotations.lines
@@ -109,11 +107,9 @@ module Ameba::Spec::ExpectIssue
   def expect_no_issues(rules : Rule::Base | Enumerable(Rule::Base),
                        code : String,
                        path = "",
-                       normalize = true,
                        *,
                        file = __FILE__,
                        line = __LINE__)
-    code = normalize_code(code) if normalize
     lines = code.split('\n') # must preserve trailing newline
     _, actual_annotations = actual_annotations(rules, code, path, lines)
     unless actual_annotations.to_s == code
@@ -126,7 +122,7 @@ module Ameba::Spec::ExpectIssue
   end
 
   private def actual_annotations(rules, code, path, lines)
-    source = Source.new(code, path, normalize: false) # already normalized
+    source = Source.new(code, path, normalize: false)
     if rules.is_a?(Enumerable)
       rules.each(&.catch(source))
     else

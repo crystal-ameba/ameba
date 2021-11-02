@@ -5,18 +5,18 @@ module Ameba::Rule::Lint
     subject = SharedVarInFiber.new
 
     it "doesn't report if there is only local shared var in fiber" do
-      expect_no_issues subject, %(
+      expect_no_issues subject, <<-CRYSTAL
         spawn do
           i = 1
           puts i
         end
 
         Fiber.yield
-      )
+        CRYSTAL
     end
 
     it "doesn't report if there is only block shared var in fiber" do
-      expect_no_issues subject, %(
+      expect_no_issues subject, <<-CRYSTAL
         10.times do |i|
           spawn do
             puts i
@@ -24,11 +24,11 @@ module Ameba::Rule::Lint
         end
 
         Fiber.yield
-      )
+        CRYSTAL
     end
 
     it "doesn't report if there a spawn macro is used" do
-      expect_no_issues subject, %(
+      expect_no_issues subject, <<-CRYSTAL
         i = 0
         while i < 10
           spawn puts(i)
@@ -36,11 +36,11 @@ module Ameba::Rule::Lint
         end
 
         Fiber.yield
-      )
+        CRYSTAL
     end
 
     it "reports if there is a shared var in spawn" do
-      expect_issue subject, %(
+      expect_issue subject, <<-CRYSTAL
         i = 0
         while i < 10
           spawn do
@@ -51,11 +51,11 @@ module Ameba::Rule::Lint
         end
 
         Fiber.yield
-      )
+        CRYSTAL
     end
 
     it "reports reassigned reference to shared var in spawn" do
-      expect_issue subject, %(
+      expect_issue subject, <<-CRYSTAL
         channel = Channel(String).new
         n = 0
 
@@ -67,11 +67,11 @@ module Ameba::Rule::Lint
             channel.send m
           end
         end
-      )
+        CRYSTAL
     end
 
     it "doesn't report reassigned reference to shared var in block" do
-      expect_no_issues subject, %(
+      expect_no_issues subject, <<-CRYSTAL
         channel = Channel(String).new
         n = 0
 
@@ -82,21 +82,21 @@ module Ameba::Rule::Lint
             channel.send m
           end
         end
-      )
+        CRYSTAL
     end
 
     it "does not report block is called in a spawn" do
-      expect_no_issues subject, %(
+      expect_no_issues subject, <<-CRYSTAL
         def method(block)
           spawn do
             block.call(10)
           end
         end
-      )
+        CRYSTAL
     end
 
     it "reports multiple shared variables in spawn" do
-      expect_issue subject, %(
+      expect_issue subject, <<-CRYSTAL
         foo, bar, baz = 0, 0, 0
         while foo < 10
           baz += 1
@@ -109,11 +109,11 @@ module Ameba::Rule::Lint
           end
           foo += 1
         end
-      )
+        CRYSTAL
     end
 
     it "doesn't report if variable is passed to the proc" do
-      expect_no_issues subject, %(
+      expect_no_issues subject, <<-CRYSTAL
         i = 0
         while i < 10
           proc = ->(x : Int32) do
@@ -124,19 +124,19 @@ module Ameba::Rule::Lint
           proc.call(i)
           i += 1
         end
-      )
+        CRYSTAL
     end
 
     it "doesn't report if a channel is declared in outer scope" do
-      expect_no_issues subject, %(
+      expect_no_issues subject, <<-CRYSTAL
         channel = Channel(Nil).new
         spawn { channel.send(nil) }
         channel.receive
-      )
+        CRYSTAL
     end
 
     it "doesn't report if there is a loop in spawn" do
-      expect_no_issues subject, %(
+      expect_no_issues subject, <<-CRYSTAL
         channel = Channel(String).new
 
         spawn do
@@ -146,47 +146,47 @@ module Ameba::Rule::Lint
             channel.send(line)
           end
         end
-      )
+        CRYSTAL
     end
 
     it "doesn't report if a var is mutated in spawn and referenced outside" do
-      expect_no_issues subject, %(
+      expect_no_issues subject, <<-CRYSTAL
         def method
           foo = 1
           spawn { foo = 2 }
           foo
         end
-      )
+        CRYSTAL
     end
 
     it "doesn't report if variable is changed without iterations" do
-      expect_no_issues subject, %(
+      expect_no_issues subject, <<-CRYSTAL
         def foo
           i = 0
           i += 1
           spawn { i }
         end
-      )
+        CRYSTAL
     end
 
     it "doesn't report if variable is in a loop inside spawn" do
-      expect_no_issues subject, %(
+      expect_no_issues subject, <<-CRYSTAL
         i = 0
         spawn do
           while i < 10
             i += 1
           end
         end
-      )
+        CRYSTAL
     end
 
     it "doesn't report if variable declared inside loop" do
-      expect_no_issues subject, %(
+      expect_no_issues subject, <<-CRYSTAL
         while true
           i = 0
           spawn { i += 1 }
         end
-      )
+        CRYSTAL
     end
 
     it "reports rule, location and message" do
