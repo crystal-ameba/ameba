@@ -23,10 +23,10 @@ module Ameba::Rule::Lint
 
     it "fails if there is a debugger statement" do
       source = expect_issue subject, <<-CRYSTAL
-          a = 2
-          debugger
-        # ^^^^^^^^ error: Possible forgotten debugger statement detected
-          a = a + 1
+        a = 2
+        debugger
+        # ^^^^^^ error: Possible forgotten debugger statement detected
+        a = a + 1
         CRYSTAL
 
       expect_no_corrections source

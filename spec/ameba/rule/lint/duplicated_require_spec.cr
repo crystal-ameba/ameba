@@ -14,10 +14,10 @@ module Ameba::Rule::Lint
 
     it "reports if there are a duplicated requires" do
       source = expect_issue subject, <<-CRYSTAL
-          require "big"
-          require "math"
-          require "big"
-        # ^ error: Duplicated require of `big`
+        require "big"
+        require "math"
+        require "big"
+        # ^{} error: Duplicated require of `big`
         CRYSTAL
 
       expect_no_corrections source

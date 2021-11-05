@@ -8,12 +8,12 @@ module Ameba
       rule = Rule::Style::LargeNumbers.new
 
       source = expect_issue rule, <<-CRYSTAL, number: number
-          %{number}
-        # ^{number} error: Large numbers should be written with underscores: #{expected}
+        number = %{number}
+               # ^{number} error: Large numbers should be written with underscores: #{expected}
         CRYSTAL
 
       expect_correction source, <<-CRYSTAL
-          #{expected}
+        number = #{expected}
         CRYSTAL
     end
   end
