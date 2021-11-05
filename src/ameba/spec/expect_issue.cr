@@ -14,10 +14,10 @@ require "./util"
 # Usage:
 #
 #     expect_issue subject, <<-CRYSTAL
-#         a do
-#           b
-#         end.c
-#       # ^^^^^ error: Avoid chaining a method call on a do...end block.
+#       a do
+#         b
+#       end.c
+#       # ^^^ error: Avoid chaining a method call on a do...end block.
 #       CRYSTAL
 #
 # Equivalent assertion without `expect_issue`:
@@ -41,12 +41,12 @@ require "./util"
 # `expect_issue`.
 #
 #     source = expect_issue subject, <<-CRYSTAL
-#         x % 2 == 0
-#       # ^^^^^^^^^^ error: Replace with `Int#even?`.
+#       x % 2 == 0
+#       # ^^^^^^^^ error: Replace with `Int#even?`.
 #       CRYSTAL
 #
 #     expect_correction source, <<-CRYSTAL
-#         x.even?
+#       x.even?
 #       CRYSTAL
 #
 # If you do not want to specify an issue then use the
@@ -59,10 +59,10 @@ require "./util"
 # use `expect_no_corrections` after `expect_issue`.
 #
 #     source = expect_issue subject, <<-CRYSTAL
-#         a do
-#           b
-#         end.c
-#       # ^^^^^ error: Avoid chaining a method call on a do...end block.
+#       a do
+#         b
+#       end.c
+#       # ^^^ error: Avoid chaining a method call on a do...end block.
 #       CRYSTAL
 #
 #     expect_no_corrections source
@@ -73,8 +73,8 @@ require "./util"
 #
 #     %w[raise fail].each do |keyword|
 #       expect_issue subject, <<-CRYSTAL, keyword: keyword
-#           %{keyword} Exception.new(msg)
-#         # ^{keyword}^^^^^^^^^^^^^^^^^^^ error: Redundant `Exception.new` [...]
+#         %{keyword} Exception.new(msg)
+#         # ^{keyword}^^^^^^^^^^^^^^^^^ error: Redundant `Exception.new` [...]
 #         CRYSTAL
 #
 #     %w[has_one has_many].each do |type|
