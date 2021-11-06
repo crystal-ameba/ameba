@@ -5,7 +5,7 @@ module Ameba::Rule::Layout
 
   describe TrailingBlankLines do
     it "passes if there is a blank line at the end of a source" do
-      expect_no_issues subject, "a = 1\n", normalize: false
+      expect_no_issues subject, "a = 1\n"
     end
 
     it "passes if source is empty" do
@@ -18,12 +18,12 @@ module Ameba::Rule::Layout
     end
 
     it "fails if there more then one blank line at the end of a source" do
-      source = expect_issue subject, "a = 1\n \n # error: Excessive trailing newline detected", normalize: false
+      source = expect_issue subject, "a = 1\n \n # error: Excessive trailing newline detected"
       expect_no_corrections source
     end
 
     it "fails if last line is not blank" do
-      source = expect_issue subject, "\n\n\n puts 22 # error: Trailing newline missing", normalize: false
+      source = expect_issue subject, "\n\n\n puts 22 # error: Trailing newline missing"
       expect_correction source, "\n\n\n puts 22\n"
     end
 

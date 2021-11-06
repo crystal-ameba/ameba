@@ -44,7 +44,9 @@ module Ameba::Rule::Style
       filter_names : Array(String) = %w(select reject any? all? none? one?)
     end
 
-    MSG = "Use `%s(%s)` instead of `%s {...}`"
+    MSG = "Use `%s` instead of `%s`"
+    NEW = "%s(%s)"
+    OLD = "%s {...}"
 
     def test(source)
       AST::NodeVisitor.new self, source, skip: [
@@ -57,6 +59,7 @@ module Ameba::Rule::Style
 
     def test(source, node : Crystal::Call)
       return unless node.name.in?(filter_names)
+      return unless (filter_location = node.name_location)
       return unless (block = node.block)
       return unless (body = block.body).is_a?(Crystal::IsA)
       return unless (path = body.const).is_a?(Crystal::Path)
@@ -77,8 +80,16 @@ module Ameba::Rule::Style
         end
       end
 
-      issue_for node.name_location, end_location,
-        MSG % {node.name, name, node.name}
+      old = OLD % node.name
+      new = NEW % {node.name, name}
+      msg = MSG % {new, old}
+      if end_location
+        issue_for(filter_location, end_location, msg) do |corrector|
+          corrector.replace(filter_location, end_location, new)
+        end
+      else
+        issue_for(filter_location, nil, msg)
+      end
     end
   end
 end
