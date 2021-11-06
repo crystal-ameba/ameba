@@ -94,6 +94,8 @@ module Ameba::Rule::Style
   #   AllowEmptyReturn: true
   # ```
   class RedundantReturn < Base
+    include AST::Util
+
     properties do
       description "Reports redundant return expressions"
 
@@ -111,7 +113,13 @@ module Ameba::Rule::Style
       return if allow_multi_return && node.exp.is_a?(Crystal::TupleLiteral)
       return if allow_empty_return && (node.exp.nil? || node.exp.not_nil!.nop?)
 
-      source.try &.add_issue self, node, MSG
+      if (exp_code = control_exp_code(source, node))
+        issue_for node, MSG do |corrector|
+          corrector.replace(node, exp_code)
+        end
+      else
+        issue_for node, MSG
+      end
     end
   end
 end
