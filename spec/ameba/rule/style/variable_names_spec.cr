@@ -43,6 +43,17 @@ module Ameba
         CRYSTAL
     end
 
+    it "reports method with multiple instance variables" do
+      expect_issue subject, <<-CRYSTAL
+        class Location
+          def at(@startLocation = nil, @endLocation = nil)
+               # ^ error: Var name should be underscore-cased: @start_location, not @startLocation
+                                     # ^ error: Var name should be underscore-cased: @end_location, not @endLocation
+          end
+        end
+        CRYSTAL
+    end
+
     it "reports class variable name" do
       expect_issue subject, <<-CRYSTAL
         class Greeting
