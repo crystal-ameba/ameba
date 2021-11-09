@@ -38,7 +38,6 @@ module Ameba
         class Greeting
           def initialize(@badNamed = nil)
                        # ^ error: Var name should be underscore-cased: @bad_named, not @badNamed
-                       # ^ error: Var name should be underscore-cased: bad_named, not badNamed
           end
         end
         CRYSTAL
