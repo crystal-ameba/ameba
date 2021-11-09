@@ -39,31 +39,31 @@ module Ameba::AST
 
     describe "#node_source" do
       it "returns original source of the node" do
-        s = %(
+        s = <<-CRYSTAL
           a = 1
-        )
+          CRYSTAL
         node = Crystal::Parser.new(s).parse
         source = subject.node_source node, s.split("\n")
         source.should eq "a = 1"
       end
 
       it "returns original source of multiline node" do
-        s = %(
+        s = <<-CRYSTAL
           if ()
             :ok
           end
-        )
+          CRYSTAL
         node = Crystal::Parser.new(s).parse
         source = subject.node_source node, s.split("\n")
         source.should eq <<-CRYSTAL
           if ()
-                      :ok
-                    end
+            :ok
+          end
           CRYSTAL
       end
 
       it "does not report source of node which has incorrect location" do
-        s = %q(
+        s = <<-'CRYSTAL'
           module MyModule
             macro conditional_error_for_inline_callbacks
               \{%
@@ -74,7 +74,7 @@ module Ameba::AST
             macro before_save(x = nil)
             end
           end
-        )
+          CRYSTAL
         node = as_nodes(s).nil_literal_nodes.first
         source = subject.node_source node, s.split("\n")
 
@@ -140,29 +140,29 @@ module Ameba::AST
       end
 
       it "returns true if this is if-else consumed by flow expressions" do
-        node = as_node %(
+        node = as_node <<-CRYSTAL
           if foo
             return :foo
           else
             return :bar
           end
-        )
+          CRYSTAL
         subject.flow_expression?(node, false).should eq true
       end
 
       it "returns true if this is unless-else consumed by flow expressions" do
-        node = as_node %(
+        node = as_node <<-CRYSTAL
           unless foo
             return :foo
           else
             return :bar
           end
-        )
+          CRYSTAL
         subject.flow_expression?(node).should eq true
       end
 
       it "returns true if this is case consumed by flow expressions" do
-        node = as_node %(
+        node = as_node <<-CRYSTAL
           case
           when 1
             return 1
@@ -171,71 +171,71 @@ module Ameba::AST
           else
             return 3
           end
-        )
+          CRYSTAL
         subject.flow_expression?(node).should eq true
       end
 
       it "returns true if this is exception handler consumed by flow expressions" do
-        node = as_node %(
+        node = as_node <<-CRYSTAL
           begin
             raise "exp"
           rescue e
             return e
           end
-        )
+          CRYSTAL
         subject.flow_expression?(node).should eq true
       end
 
       it "returns true if this while consumed by flow expressions" do
-        node = as_node %(
+        node = as_node <<-CRYSTAL
           while true
             return
           end
-        )
+          CRYSTAL
         subject.flow_expression?(node).should eq true
       end
 
       it "returns false if this while with break" do
-        node = as_node %(
+        node = as_node <<-CRYSTAL
           while true
             break
           end
-        )
+          CRYSTAL
         subject.flow_expression?(node).should eq false
       end
 
       it "returns true if this until consumed by flow expressions" do
-        node = as_node %(
+        node = as_node <<-CRYSTAL
           until false
             return
           end
-        )
+          CRYSTAL
         subject.flow_expression?(node).should eq true
       end
 
       it "returns false if this until with break" do
-        node = as_node %(
+        node = as_node <<-CRYSTAL
           until false
             break
           end
-        )
+          CRYSTAL
         subject.flow_expression?(node).should eq false
       end
 
       it "returns true if this expressions consumed by flow expressions" do
-        node = as_node %(
+        node = as_node <<-CRYSTAL
           exp1
           exp2
           return
-        )
+          CRYSTAL
         subject.flow_expression?(node).should eq true
       end
 
       it "returns false otherwise" do
-        node = as_node %(
+        node = as_node <<-CRYSTAL
           exp1
           exp2
-        )
+          CRYSTAL
         subject.flow_expression?(node).should eq false
       end
     end
@@ -320,6 +320,29 @@ module Ameba::AST
       it "returns false if size of the arguments doesn't match" do
         node = as_node "loop 1"
         subject.loop?(node).should eq false
+      end
+    end
+
+    describe "#control_exp_code" do
+      it "returns the exp code of a control expression" do
+        s = "return 1"
+        node = as_node(s).as Crystal::ControlExpression
+        exp_code = subject.control_exp_code node, [s]
+        exp_code.should eq "1"
+      end
+
+      it "wraps implicit tuple literal with curly brackets" do
+        s = "return 1, 2"
+        node = as_node(s).as Crystal::ControlExpression
+        exp_code = subject.control_exp_code node, [s]
+        exp_code.should eq "{1, 2}"
+      end
+
+      it "accepts explicit tuple literal" do
+        s = "return {1, 2}"
+        node = as_node(s).as Crystal::ControlExpression
+        exp_code = subject.control_exp_code node, [s]
+        exp_code.should eq "{1, 2}"
       end
     end
   end

@@ -5,23 +5,22 @@ module Ameba::Rule::Style
 
   describe UnlessElse do
     it "passes if unless hasn't else" do
-      s = Source.new %(
+      expect_no_issues subject, <<-CRYSTAL
         unless something
           :ok
         end
-      )
-      subject.catch(s).should be_valid
+        CRYSTAL
     end
 
     it "fails if unless has else" do
-      s = Source.new %(
+      expect_issue subject, <<-CRYSTAL
         unless something
+        # ^^^^^^^^^^^^^^ error: Favour if over unless with else
           :one
         else
           :two
         end
-      )
-      subject.catch(s).should_not be_valid
+        CRYSTAL
     end
 
     it "reports rule, pos and message" do

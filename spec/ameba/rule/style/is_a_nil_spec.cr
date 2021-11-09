@@ -5,27 +5,26 @@ module Ameba::Rule::Style
     subject = IsANil.new
 
     it "doesn't report if there are no is_a?(Nil) calls" do
-      s = Source.new %(
+      expect_no_issues subject, <<-CRYSTAL
         a = 1
         a.nil?
         a.is_a?(NilLiteral)
         a.is_a?(Custom::Nil)
-      )
-      subject.catch(s).should be_valid
+        CRYSTAL
     end
 
     it "reports if there is a call to is_a?(Nil) without receiver" do
-      s = Source.new %(
-        is_a?(Nil)
-      )
-      subject.catch(s).should_not be_valid
+      expect_issue subject, <<-CRYSTAL
+        a = is_a?(Nil)
+                # ^^^ error: Use `nil?` instead of `is_a?(Nil)`
+        CRYSTAL
     end
 
     it "reports if there is a call to is_a?(Nil) with receiver" do
-      s = Source.new %(
+      expect_issue subject, <<-CRYSTAL
         a.is_a?(Nil)
-      )
-      subject.catch(s).should_not be_valid
+              # ^^^ error: Use `nil?` instead of `is_a?(Nil)`
+        CRYSTAL
     end
 
     it "reports rule, location and message" do

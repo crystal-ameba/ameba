@@ -5,7 +5,7 @@ module Ameba::Rule::Style
     subject = RedundantBegin.new
 
     it "passes if there is no redundant begin blocks" do
-      s = Source.new %(
+      expect_no_issues subject, <<-CRYSTAL
         def method
           do_something
         rescue
@@ -27,12 +27,11 @@ module Ameba::Rule::Style
         def method; end
         def method; a = 1; rescue; end
         def method; begin; rescue; end; end
-      )
-      subject.catch(s).should be_valid
+        CRYSTAL
     end
 
     it "passes if there is a correct begin block in a handler" do
-      s = Source.new %q(
+      expect_no_issues subject, <<-CRYSTAL
         def handler_and_expression
           begin
             open_file
@@ -80,13 +79,13 @@ module Ameba::Rule::Style
           end
           expr
         end
-      )
-      subject.catch(s).should be_valid
+        CRYSTAL
     end
 
     it "fails if there is a redundant begin block" do
-      s = Source.new %q(
+      expect_issue subject, <<-CRYSTAL
         def method(a : String) : String
+        # ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ error: Redundant `begin` block detected
           begin
             open_file
             do_some_stuff
@@ -94,39 +93,39 @@ module Ameba::Rule::Style
             close_file
           end
         end
-      )
-      subject.catch(s).should_not be_valid
+        CRYSTAL
     end
 
     it "fails if there is a redundant begin block in a method without args" do
-      s = Source.new %q(
+      expect_issue subject, <<-CRYSTAL
         def method
+        # ^^^^^^^^ error: Redundant `begin` block detected
           begin
             open_file
           ensure
             close_file
           end
         end
-      )
-      subject.catch(s).should_not be_valid
+        CRYSTAL
     end
 
     it "fails if there is a redundant block in a method with return type" do
-      s = Source.new %q(
+      expect_issue subject, <<-CRYSTAL
         def method : String
+        # ^^^^^^^^^^^^^^^^^ error: Redundant `begin` block detected
           begin
             open_file
           ensure
             close_file
           end
         end
-      )
-      subject.catch(s).should_not be_valid
+        CRYSTAL
     end
 
     it "fails if there is a redundant block in a method with multiple args" do
-      s = Source.new %q(
+      expect_issue subject, <<-CRYSTAL
         def method(a : String,
+        # ^^^^^^^^^^^^^^^^^^^^ error: Redundant `begin` block detected
                   b : String)
           begin
             open_file
@@ -134,13 +133,13 @@ module Ameba::Rule::Style
             close_file
           end
         end
-      )
-      subject.catch(s).should_not be_valid
+        CRYSTAL
     end
 
     it "fails if there is a redundant block in a method with multiple args" do
-      s = Source.new %q(
+      expect_issue subject, <<-CRYSTAL
         def method(a : String,
+        # ^^^^^^^^^^^^^^^^^^^^ error: Redundant `begin` block detected
                   b : String
         )
           begin
@@ -149,12 +148,11 @@ module Ameba::Rule::Style
             close_file
           end
         end
-      )
-      subject.catch(s).should_not be_valid
+        CRYSTAL
     end
 
     it "doesn't report if there is an inner redundant block" do
-      s = Source.new %q(
+      expect_no_issues subject, <<-CRYSTAL
         def method
           begin
             open_file
@@ -163,37 +161,36 @@ module Ameba::Rule::Style
           end
         rescue
         end
-      )
-      subject.catch(s).should be_valid
+        CRYSTAL
     end
 
     it "fails if there is a redundant block with yield" do
-      s = Source.new %q(
+      expect_issue subject, <<-CRYSTAL
         def method
+        # ^^^^^^^^ error: Redundant `begin` block detected
           begin
             yield
           ensure
             close_file
           end
         end
-      )
-      subject.catch(s).should_not be_valid
+        CRYSTAL
     end
 
     it "fails if there is top level redundant block in a method" do
-      s = Source.new %q(
+      expect_issue subject, <<-CRYSTAL
         def method
+        # ^^^^^^^^ error: Redundant `begin` block detected
           begin
             a = 1
             b = 2
           end
         end
-      )
-      subject.catch(s).should_not be_valid
+        CRYSTAL
     end
 
     it "doesn't report if begin-end block in a proc literal" do
-      s = Source.new %q(
+      expect_no_issues subject, <<-CRYSTAL
         foo = ->{
           begin
             raise "Foo!"
@@ -201,8 +198,7 @@ module Ameba::Rule::Style
             pp ex
           end
         }
-      )
-      subject.catch(s).should be_valid
+        CRYSTAL
     end
 
     it "reports rule, pos and message" do

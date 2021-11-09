@@ -5,7 +5,7 @@ module Ameba::Rule::Style
 
   describe NegatedConditionsInUnless do
     it "passes with a unless without negated condition" do
-      s = Source.new %(
+      expect_no_issues subject, <<-CRYSTAL
         unless a
           :ok
         end
@@ -15,44 +15,43 @@ module Ameba::Rule::Style
         unless s.empty?
           :ok
         end
-      )
-      subject.catch(s).should be_valid
+        CRYSTAL
     end
 
     it "fails if there is a negated condition in unless" do
-      s = Source.new %(
+      expect_issue subject, <<-CRYSTAL
         unless !a
+        # ^^^^^^^ error: Avoid negated conditions in unless blocks
           :nok
         end
-      )
-      subject.catch(s).should_not be_valid
+        CRYSTAL
     end
 
     it "fails if one of AND conditions is negated" do
-      s = Source.new %(
+      expect_issue subject, <<-CRYSTAL
         unless a && !b
+        # ^^^^^^^^^^^^ error: Avoid negated conditions in unless blocks
           :nok
         end
-      )
-      subject.catch(s).should_not be_valid
+        CRYSTAL
     end
 
     it "fails if one of OR conditions is negated" do
-      s = Source.new %(
+      expect_issue subject, <<-CRYSTAL
         unless a || !b
+        # ^^^^^^^^^^^^ error: Avoid negated conditions in unless blocks
           :nok
         end
-      )
-      subject.catch(s).should_not be_valid
+        CRYSTAL
     end
 
     it "fails if one of inner conditions is negated" do
-      s = Source.new %(
+      expect_issue subject, <<-CRYSTAL
         unless a && (b || !c)
+        # ^^^^^^^^^^^^^^^^^^^ error: Avoid negated conditions in unless blocks
           :nok
         end
-      )
-      subject.catch(s).should_not be_valid
+        CRYSTAL
     end
 
     it "reports rule, pos and message" do

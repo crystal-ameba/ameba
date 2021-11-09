@@ -33,7 +33,13 @@ module Ameba::Rule::Style
     MSG = "While statement using true literal as condition"
 
     def test(source, node : Crystal::While)
-      issue_for node, MSG if node.cond.true_literal?
+      return unless node.cond.true_literal?
+      return unless (location = node.location)
+      return unless (end_location = node.cond.end_location)
+
+      issue_for node, MSG do |corrector|
+        corrector.replace(location, end_location, "loop do")
+      end
     end
   end
 end

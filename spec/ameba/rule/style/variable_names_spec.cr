@@ -3,17 +3,19 @@ require "../../../spec_helper"
 module Ameba
   subject = Rule::Style::VariableNames.new
 
-  private def it_reports_var_name(code, expected)
-    it "reports method name #{expected}" do
-      s = Source.new code
-      Rule::Style::VariableNames.new.catch(s).should_not be_valid
-      s.issues.first.message.should contain expected
+  private def it_reports_var_name(name, value, expected)
+    it "reports variable name #{expected}" do
+      rule = Rule::Style::VariableNames.new
+      expect_issue rule, <<-CRYSTAL, name: name
+          %{name} = #{value}
+        # ^{name} error: Var name should be underscore-cased: #{expected}, not %{name}
+        CRYSTAL
     end
   end
 
   describe Rule::Style::VariableNames do
     it "passes if var names are underscore-cased" do
-      s = Source.new %(
+      expect_no_issues subject, <<-CRYSTAL
         class Greeting
           @@default_greeting = "Hello world"
 
@@ -25,25 +27,41 @@ module Ameba
             puts greeting
           end
         end
-      )
-      subject.catch(s).should be_valid
+        CRYSTAL
     end
 
-    it_reports_var_name %(myBadNamedVar = 1), "my_bad_named_var"
-    it_reports_var_name %(wrong_Name = 'y'), "wrong_name"
+    it_reports_var_name "myBadNamedVar", "1", "my_bad_named_var"
+    it_reports_var_name "wrong_Name", "'y'", "wrong_name"
 
-    it_reports_var_name %(
-      class Greeting
-        def initialize(@badNamed = nil)
+    it "reports instance variable name" do
+      expect_issue subject, <<-CRYSTAL
+        class Greeting
+          def initialize(@badNamed = nil)
+                       # ^ error: Var name should be underscore-cased: @bad_named, not @badNamed
+          end
         end
-      end
-    ), "bad_named"
+        CRYSTAL
+    end
 
-    it_reports_var_name %(
-      class Greeting
-        @@defaultGreeting = "Hello world"
-      end
-    ), "default_greeting"
+    it "reports method with multiple instance variables" do
+      expect_issue subject, <<-CRYSTAL
+        class Location
+          def at(@startLocation = nil, @endLocation = nil)
+               # ^ error: Var name should be underscore-cased: @start_location, not @startLocation
+                                     # ^ error: Var name should be underscore-cased: @end_location, not @endLocation
+          end
+        end
+        CRYSTAL
+    end
+
+    it "reports class variable name" do
+      expect_issue subject, <<-CRYSTAL
+        class Greeting
+          @@defaultGreeting = "Hello world"
+        # ^^^^^^^^^^^^^^^^^ error: Var name should be underscore-cased: @@default_greeting, not @@defaultGreeting
+        end
+        CRYSTAL
+    end
 
     it "reports rule, pos and message" do
       s = Source.new %(
