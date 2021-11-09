@@ -153,7 +153,7 @@ module Ameba::Rule::Style
         rule.max_length = nil
         expect_issue rule, <<-CRYSTAL
           (1..3).tap { |i| i.to_s.split.reverse.join.strip.blank? }
-               # ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ error: Use short [...] `tap(&.to_s.split.reverse.join.strip.blank?)`
+               # ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ error: [...] `tap(&.to_s.split.reverse.join.strip.blank?)`
           CRYSTAL
       end
     end
@@ -172,29 +172,29 @@ module Ameba::Rule::Style
       rule.exclude_operators = false
       expect_issue rule, <<-CRYSTAL
         (1..3).map { |i| i.to_s[start: 0.to_i64, count: 3]? }
-             # ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ error: Use short [...] `map(&.to_s.[start: 0.to_i64, count: 3]?)`
+             # ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ error: [...] `map(&.to_s.[start: 0.to_i64, count: 3]?)`
         (1..3).map { |i| i.to_s[0.to_i64, count: 3]? }
-             # ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ error: Use short [...] `map(&.to_s.[0.to_i64, count: 3]?)`
+             # ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ error: [...] `map(&.to_s.[0.to_i64, count: 3]?)`
         (1..3).map { |i| i.to_s[0.to_i64, 3]? }
-             # ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ error: Use short [...] `map(&.to_s.[0.to_i64, 3]?)`
+             # ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ error: [...] `map(&.to_s.[0.to_i64, 3]?)`
         (1..3).map { |i| i.to_s[start: 0.to_i64, count: 3] = "foo" }
-             # ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ error: Use short [...] `map(&.to_s.[start: 0.to_i64, count: 3]=("foo"))`
+             # ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ error: [...] `map(&.to_s.[start: 0.to_i64, count: 3]=("foo"))`
         (1..3).map { |i| i.to_s[0.to_i64, count: 3] = "foo" }
-             # ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ error: Use short [...] `map(&.to_s.[0.to_i64, count: 3]=("foo"))`
+             # ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ error: [...] `map(&.to_s.[0.to_i64, count: 3]=("foo"))`
         (1..3).map { |i| i.to_s[0.to_i64, 3] = "foo" }
-             # ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ error: Use short [...] `map(&.to_s.[0.to_i64, 3]=("foo"))`
+             # ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ error: [...] `map(&.to_s.[0.to_i64, 3]=("foo"))`
         (1..3).map { |i| i.to_s.camelcase(lower: true) }
-             # ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ error: Use short [...] `map(&.to_s.camelcase(lower: true))`
+             # ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ error: [...] `map(&.to_s.camelcase(lower: true))`
         (1..3).map { |i| i.to_s.camelcase }
-             # ^^^^^^^^^^^^^^^^^^^^^^^^^^^^ error: Use short [...] `map(&.to_s.camelcase)`
+             # ^^^^^^^^^^^^^^^^^^^^^^^^^^^^ error: [...] `map(&.to_s.camelcase)`
         (1..3).map { |i| i.to_s.gsub('_', '-') }
-             # ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ error: Use short [...] `map(&.to_s.gsub('_', '-'))`
+             # ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ error: [...] `map(&.to_s.gsub('_', '-'))`
         (1..3).map { |i| i.in?(*{1, 2, 3}, **{foo: :bar}) }
-             # ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ error: Use short [...] `map(&.in?(*{1, 2, 3}, **{foo: :bar}))`
+             # ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ error: [...] `map(&.in?(*{1, 2, 3}, **{foo: :bar}))`
         (1..3).map { |i| i.in?(1, *foo, 3, **bar) }
-             # ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ error: Use short [...] `map(&.in?(1, *foo, 3, **bar))`
+             # ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ error: [...] `map(&.in?(1, *foo, 3, **bar))`
         (1..3).join(separator: '.') { |i| i.to_s }
-             # ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ error: Use short [...] `join(separator: '.', &.to_s)`
+             # ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ error: [...] `join(separator: '.', &.to_s)`
         CRYSTAL
     end
 
