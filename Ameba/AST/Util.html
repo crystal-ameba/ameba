@@ -746,6 +746,10 @@
     
       <li class="other-type"><a href="../../Ameba/Rule/Style/RedundantBegin.html">Ameba::Rule::Style::RedundantBegin</a></li>
     
+      <li class="other-type"><a href="../../Ameba/Rule/Style/RedundantNext.html">Ameba::Rule::Style::RedundantNext</a></li>
+    
+      <li class="other-type"><a href="../../Ameba/Rule/Style/RedundantReturn.html">Ameba::Rule::Style::RedundantReturn</a></li>
+    
   </ul>
 
 
@@ -761,7 +765,7 @@
   </h2>
   
     
-      <a href="https://github.com/crystal-ameba/ameba/blob/7b437fbd/src/ameba/ast/util.cr#L2" target="_blank">
+      <a href="https://github.com/crystal-ameba/ameba/blob/d843afd9/src/ameba/ast/util.cr#L2" target="_blank">
         ameba/ast/util.cr
       </a>
     
@@ -790,6 +794,13 @@
         <a href="#abort%3F%28node%29-instance-method" class="signature"><strong>#abort?</strong>(node)</a>
         
           <div class="summary"><p>Returns true if node represents <code>abort</code> method call.</p></div>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#control_exp_code%28node%3ACrystal%3A%3AControlExpression%2Ccode_lines%29-instance-method" class="signature"><strong>#control_exp_code</strong>(node : Crystal::ControlExpression, code_lines)</a>
+        
+          <div class="summary"><p>Returns the exp code of a control expression.</p></div>
         
       </li>
     
@@ -889,7 +900,29 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/7b437fbd/src/ameba/ast/util.cr#L145" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/d843afd9/src/ameba/ast/util.cr#L145" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="control_exp_code(node:Crystal::ControlExpression,code_lines)-instance-method">
+      <div class="signature">
+        
+        def <strong>control_exp_code</strong>(node : Crystal::ControlExpression, code_lines)
+
+        <a class="method-permalink" href="#control_exp_code%28node%3ACrystal%3A%3AControlExpression%2Ccode_lines%29-instance-method">#</a>
+      </div>
+      
+        <div class="doc">
+          
+          <p>Returns the exp code of a control expression.
+Wraps implicit tuple literal with curly brackets (e.g. multi-return).</p>
+        </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/crystal-ameba/ameba/blob/d843afd9/src/ameba/ast/util.cr#L164" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -910,7 +943,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/7b437fbd/src/ameba/ast/util.cr#L139" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/d843afd9/src/ameba/ast/util.cr#L139" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -933,7 +966,7 @@ or special call node that interrupts execution (i.e. raise, exit, abort).</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/7b437fbd/src/ameba/ast/util.cr#L67" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/d843afd9/src/ameba/ast/util.cr#L67" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -969,7 +1002,7 @@ a flow command <code>return</code>:</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/7b437fbd/src/ameba/ast/util.cr#L105" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/d843afd9/src/ameba/ast/util.cr#L105" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -990,7 +1023,7 @@ a flow command <code>return</code>:</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/7b437fbd/src/ameba/ast/util.cr#L4" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/d843afd9/src/ameba/ast/util.cr#L4" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1011,7 +1044,7 @@ a flow command <code>return</code>:</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/7b437fbd/src/ameba/ast/util.cr#L151" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/d843afd9/src/ameba/ast/util.cr#L151" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1034,7 +1067,7 @@ to determine and cut a piece of source of the node.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/7b437fbd/src/ameba/ast/util.cr#L33" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/d843afd9/src/ameba/ast/util.cr#L33" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1055,7 +1088,7 @@ to determine and cut a piece of source of the node.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/7b437fbd/src/ameba/ast/util.cr#L133" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/d843afd9/src/ameba/ast/util.cr#L133" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1076,7 +1109,7 @@ to determine and cut a piece of source of the node.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/7b437fbd/src/ameba/ast/util.cr#L42" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/d843afd9/src/ameba/ast/util.cr#L42" target="_blank">View source</a>]
         
       </div>
     </div>
