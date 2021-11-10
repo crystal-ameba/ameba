@@ -20,6 +20,8 @@ module Ameba::Rule::Lint
   #   Enabled: true
   # ```
   class ComparisonToBoolean < Base
+    include AST::Util
+
     properties do
       enabled false
       description "Disallows comparison to booleans"
@@ -29,11 +31,31 @@ module Ameba::Rule::Lint
     OP_NAMES = %w(== != ===)
 
     def test(source, node : Crystal::Call)
-      comparison = node.name.in?(OP_NAMES)
-      to_boolean = node.args.first?.try(&.is_a?(Crystal::BoolLiteral)) ||
-                   node.obj.is_a?(Crystal::BoolLiteral)
+      return unless node.name.in?(OP_NAMES)
+      return unless node.args.size == 1
 
-      issue_for node, MSG if comparison && to_boolean
+      arg, obj = node.args.first, node.obj
+      case
+      when arg.is_a?(Crystal::BoolLiteral)
+        bool, exp = arg, obj
+      when obj.is_a?(Crystal::BoolLiteral)
+        bool, exp = obj, arg
+      end
+
+      return unless bool && exp
+      return unless (exp_code = node_source(exp, source.lines))
+
+      not =
+        case node.name
+        when "==", "===" then !bool.value # foo == false
+        when "!="        then bool.value  # foo != true
+        end
+
+      exp_code = "!#{exp_code}" if not
+
+      issue_for node, MSG do |corrector|
+        corrector.replace(node, exp_code)
+      end
     end
   end
 end
