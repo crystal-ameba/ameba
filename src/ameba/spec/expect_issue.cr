@@ -161,13 +161,12 @@ module Ameba::Spec::ExpectIssue
                        line = __LINE__)
     lines = code.split('\n') # must preserve trailing newline
     _, actual_annotations = actual_annotations(rules, code, path, lines)
-    unless actual_annotations.to_s == code
-      fail <<-MSG, file, line
+    return if actual_annotations.to_s == code
+    fail <<-MSG, file, line
         Expected no issues, but got:
 
         #{actual_annotations}
         MSG
-    end
   end
 
   private def actual_annotations(rules, code, path, lines)

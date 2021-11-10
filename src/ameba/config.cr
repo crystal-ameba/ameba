@@ -68,9 +68,8 @@ class Ameba::Config
     @excluded = load_array_section(config, "Excluded")
     @globs = load_array_section(config, "Globs", DEFAULT_GLOBS)
 
-    if formatter_name = load_formatter_name(config)
-      self.formatter = formatter_name
-    end
+    return unless formatter_name = load_formatter_name(config)
+    self.formatter = formatter_name
   end
 
   # Loads YAML configuration file by `path`.
@@ -124,11 +123,10 @@ class Ameba::Config
   # config.formatter = :progress
   # ```
   def formatter=(name : String | Symbol)
-    if f = AVAILABLE_FORMATTERS[name]?
-      @formatter = f.new
-    else
+    unless f = AVAILABLE_FORMATTERS[name]?
       raise "Unknown formatter `#{name}`. Use one of #{Config.formatter_names}."
     end
+    @formatter = f.new
   end
 
   # Updates rule properties.

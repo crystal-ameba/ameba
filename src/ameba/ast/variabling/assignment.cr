@@ -29,12 +29,11 @@ module Ameba::AST
     # Assignment.new(node, variable, scope)
     # ```
     def initialize(@node, @variable, @scope)
-      if scope = @variable.scope
-        @branch = Branch.of(@node, scope)
-        @referenced = true if @variable.special? ||
-                              @variable.scope.type_definition? ||
-                              referenced_in_loop?
-      end
+      return unless scope = @variable.scope
+      @branch = Branch.of(@node, scope)
+      @referenced = true if @variable.special? ||
+                            @variable.scope.type_definition? ||
+                            referenced_in_loop?
     end
 
     def referenced_in_loop?

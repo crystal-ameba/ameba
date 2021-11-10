@@ -55,9 +55,8 @@ module Ameba::Rule::Lint
     end
 
     def test(source, node, flow_expression : AST::FlowExpression)
-      if unreachable_node = flow_expression.unreachable_nodes.first?
-        issue_for unreachable_node, MSG
-      end
+      return unless unreachable_node = flow_expression.unreachable_nodes.first?
+      issue_for unreachable_node, MSG
     end
   end
 end

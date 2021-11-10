@@ -37,12 +37,11 @@ module Ameba::Rule::Style
     MSG = "Favour method name '%s?' over '%s'"
 
     def test(source, node : Crystal::Def)
-      if node.name =~ /^(is|has)_(\w+)\?/
-        alternative = $2
-        return unless alternative =~ /^[a-z][a-zA-Z_0-9]*$/
+      return unless node.name =~ /^(is|has)_(\w+)\?/
+      alternative = $2
+      return unless alternative =~ /^[a-z][a-zA-Z_0-9]*$/
 
-        issue_for node, MSG % {alternative, node.name}
-      end
+      issue_for node, MSG % {alternative, node.name}
     end
   end
 end
