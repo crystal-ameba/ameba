@@ -28,6 +28,8 @@ module Ameba::Rule::Performance
   #   Enabled: true
   # ```
   class AnyInsteadOfEmpty < Base
+    include AST::Util
+
     properties do
       description "Identifies usage of arg-less `any?` calls."
     end
@@ -39,8 +41,14 @@ module Ameba::Rule::Performance
       return unless node.name == ANY_NAME
       return unless node.block.nil? && node.args.empty?
       return unless node.obj
+      return unless (location = node.location)
+      return unless (name_location = node.name_location)
+      return unless (end_location = name_end_location(node))
 
-      issue_for node.name_location, node.name_end_location, MSG
+      issue_for location, end_location, MSG do |corrector|
+        corrector.insert_before(location, '!')
+        corrector.replace(name_location, end_location, "empty?")
+      end
     end
   end
 end
