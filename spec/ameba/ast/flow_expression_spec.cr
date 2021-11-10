@@ -39,6 +39,22 @@ module Ameba::AST
           flow_expression.unreachable_nodes.should eq nodes.assign_nodes
         end
 
+        it "returns nil if there is no unreachable node after loop" do
+          nodes = as_nodes %(
+            def run
+              idx = items.size - 1
+              while 0 <= idx
+                return
+              end
+
+              puts "foo"
+            end
+          )
+          node = nodes.expressions_nodes.first
+          flow_expression = FlowExpression.new node, false
+          flow_expression.unreachable_nodes.empty?.should eq true
+        end
+
         it "returns nil if there is no unreachable node" do
           nodes = as_nodes %(
             def foobar

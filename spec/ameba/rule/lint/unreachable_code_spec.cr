@@ -420,7 +420,7 @@ module Ameba::Rule::Lint
     end
 
     context "while/until" do
-      it "reports if there is unreachable code after while" do
+      it "does not report if there is no unreachable code after while" do
         s = Source.new %(
           def method
             while something
@@ -434,13 +434,10 @@ module Ameba::Rule::Lint
           end
         )
 
-        subject.catch(s).should_not be_valid
-
-        issue = s.issues.first
-        issue.location.to_s.should eq ":9:3"
+        subject.catch(s).should be_valid
       end
 
-      it "reports if there is unreachable code after until" do
+      it "does not report if there is no unreachable code after until" do
         s = Source.new %(
           def method
             until something
@@ -454,10 +451,7 @@ module Ameba::Rule::Lint
           end
         )
 
-        subject.catch(s).should_not be_valid
-
-        issue = s.issues.first
-        issue.location.to_s.should eq ":9:3"
+        subject.catch(s).should be_valid
       end
 
       it "doesn't report if there is reachable code after while with break" do
