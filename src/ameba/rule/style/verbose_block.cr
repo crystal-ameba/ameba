@@ -28,6 +28,8 @@ module Ameba::Rule::Style
   #   MaxLength: 50 # use ~ to disable
   # ```
   class VerboseBlock < Base
+    include AST::Util
+
     properties do
       description "Identifies usage of collapsible single expression blocks."
 
@@ -108,20 +110,27 @@ module Ameba::Rule::Style
       i
     end
 
-    protected def args_to_s(io : IO, node : Crystal::Call, skip_last_arg = false)
+    protected def args_to_s(io : IO, node : Crystal::Call, short_block = nil, skip_last_arg = false)
       node.args.dup.tap do |args|
         args.pop? if skip_last_arg
         args.join io, ", "
-        node.named_args.try do |named_args|
+
+        named_args = node.named_args
+        if named_args
           io << ", " unless args.empty? || named_args.empty?
           named_args.join io, ", " do |arg, inner_io|
             inner_io << arg.name << ": " << arg.value
           end
         end
+
+        if short_block
+          io << ", " unless args.empty? && (named_args.nil? || named_args.empty?)
+          io << short_block
+        end
       end
     end
 
-    protected def node_to_s(node : Crystal::Call)
+    protected def node_to_s(source, node : Crystal::Call)
       String.build do |str|
         case name = node.name
         when "[]"
@@ -137,29 +146,41 @@ module Ameba::Rule::Style
           args_to_s(str, node, skip_last_arg: true)
           str << "]=(" << node.args.last? << ')'
         else
+          short_block = short_block_code(source, node)
           str << name
-          if !node.args.empty? || (node.named_args && !node.named_args.try(&.empty?))
+          if !node.args.empty? || (node.named_args && !node.named_args.try(&.empty?)) || short_block
             str << '('
-            args_to_s(str, node)
+            args_to_s(str, node, short_block)
             str << ')'
           end
-          str << " {...}" if node.block
+          str << " {...}" if node.block && short_block.nil?
         end
       end
     end
 
-    protected def call_code(call, body)
+    protected def short_block_code(source, node : Crystal::Call)
+      return unless block = node.block
+      return unless block_location = block.location
+      return unless block_end_location = block.body.end_location
+
+      block_code = source_between(block_location, block_end_location, source.lines)
+      return unless block_code.try(&.starts_with?("&."))
+
+      block_code
+    end
+
+    protected def call_code(source, call, body)
       args = String.build { |io| args_to_s(io, call) }.presence
       args += ", " if args
 
       call_chain = %w[].tap do |arr|
         obj = body.obj
         while obj.is_a?(Crystal::Call)
-          arr << node_to_s(obj)
+          arr << node_to_s(source, obj)
           obj = obj.obj
         end
         arr.reverse!
-        arr << node_to_s(body)
+        arr << node_to_s(source, body)
       end
 
       name =
@@ -170,6 +191,8 @@ module Ameba::Rule::Style
 
     # ameba:disable Metrics/CyclomaticComplexity
     protected def issue_for_valid(source, call : Crystal::Call, block : Crystal::Block, body : Crystal::Call)
+      return unless (location = call.name_location)
+      return unless (end_location = block.end_location)
       return if exclude_calls_with_block && body.block
       return if exclude_multiple_line_blocks && !same_location_lines?(call, body)
       return if exclude_prefix_operators && prefix_operator?(body)
@@ -177,13 +200,18 @@ module Ameba::Rule::Style
       return if exclude_setters && setter?(body.name)
 
       call_code =
-        call_code(call, body)
+        call_code(source, call, body)
 
       return unless valid_line_length?(call, call_code)
       return unless valid_length?(call_code)
 
-      issue_for call.name_location, block.end_location,
-        MSG % call_code
+      if call_code.includes?("{...}")
+        issue_for location, end_location, MSG % call_code
+      else
+        issue_for location, end_location, MSG % call_code do |corrector|
+          corrector.replace(location, end_location, call_code)
+        end
+      end
     end
 
     def test(source, node : Crystal::Call)
