@@ -72,11 +72,7 @@ module Ameba::Rule::Style
       end_location = node.end_location
       if !end_location || end_location.try(&.column_number.zero?)
         if end_location = path.end_location
-          end_location = Crystal::Location.new(
-            end_location.filename,
-            end_location.line_number,
-            end_location.column_number + 1
-          )
+          end_location = end_location.adjust(column_number: 1)
         end
       end
 

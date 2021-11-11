@@ -43,11 +43,7 @@ module Ameba::Rule::Style
 
         if allowed?(*parsed) && (expected = underscored *parsed) != token.raw
           location = token.location
-          end_location = Crystal::Location.new(
-            location.filename,
-            location.line_number,
-            location.column_number + token.raw.size - 1
-          )
+          end_location = location.adjust(column_number: token.raw.size - 1)
           issue_for location, end_location, MSG % expected do |corrector|
             corrector.replace(location, end_location, expected)
           end

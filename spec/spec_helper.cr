@@ -190,11 +190,8 @@ module Ameba
     def test(source, node : Crystal::ClassDef)
       return unless (location = node.location)
 
-      end_location = Crystal::Location.new(
-        location.filename,
-        location.line_number,
-        location.column_number + "class".size - 1
-      )
+      end_location = location.adjust(column_number: {{"class".size - 1}})
+
       issue_for(location, end_location, message: "class to module") do |corrector|
         corrector.replace(location, end_location, "module")
       end
@@ -211,11 +208,8 @@ module Ameba
     def test(source, node : Crystal::ModuleDef)
       return unless (location = node.location)
 
-      end_location = Crystal::Location.new(
-        location.filename,
-        location.line_number,
-        location.column_number + "module".size - 1
-      )
+      end_location = location.adjust(column_number: {{"module".size - 1}})
+
       issue_for(location, end_location, message: "module to class") do |corrector|
         corrector.replace(location, end_location, "class")
       end

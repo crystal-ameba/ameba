@@ -208,10 +208,6 @@ module Ameba::AST::Util
     return unless (loc = name_location(node))
     return if (size = name_size(node)).zero?
 
-    Crystal::Location.new(
-      loc.filename,
-      loc.line_number,
-      loc.column_number + size - 1
-    )
+    loc.adjust(column_number: size - 1)
   end
 end
