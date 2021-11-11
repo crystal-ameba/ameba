@@ -37,6 +37,8 @@ module Ameba::Rule::Performance
   #     - reverse
   # ```
   class ChainedCallWithNoBang < Base
+    include AST::Util
+
     properties do
       description "Identifies usage of chained calls not utilizing the bang method variants."
 
@@ -66,12 +68,15 @@ module Ameba::Rule::Performance
     end
 
     def test(source, node : Crystal::Call)
+      return unless (location = node.name_location)
+      return unless (end_location = name_end_location(node))
       return unless (obj = node.obj).is_a?(Crystal::Call)
       return unless node.name.in?(call_names)
       return unless obj.name.in?(call_names) || obj.name.in?(ALLOCATING_METHOD_NAMES)
 
-      issue_for node.name_location, node.name_end_location,
-        MSG % {node.name, obj.name}
+      issue_for location, end_location, MSG % {node.name, obj.name} do |corrector|
+        corrector.insert_after(end_location, '!')
+      end
     end
   end
 end

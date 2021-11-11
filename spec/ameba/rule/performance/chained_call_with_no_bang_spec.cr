@@ -5,46 +5,51 @@ module Ameba::Rule::Performance
 
   describe ChainedCallWithNoBang do
     it "passes if there is no potential performance improvements" do
-      source = Source.new %(
+      expect_no_issues subject, <<-CRYSTAL
         (1..3).select { |e| e > 1 }.sort!
         (1..3).select { |e| e > 1 }.sort_by!(&.itself)
         (1..3).select { |e| e > 1 }.uniq!
         (1..3).select { |e| e > 1 }.shuffle!
         (1..3).select { |e| e > 1 }.reverse!
         (1..3).select { |e| e > 1 }.rotate!
-      )
-      subject.catch(source).should be_valid
+        CRYSTAL
     end
 
     it "reports if there is select followed by reverse" do
-      source = Source.new %(
+      source = expect_issue subject, <<-CRYSTAL
         [1, 2, 3].select { |e| e > 1 }.reverse
-      )
-      subject.catch(source).should_not be_valid
+                                     # ^^^^^^^ error: Use bang method variant `reverse!` after chained `select` call
+        CRYSTAL
+
+      expect_correction source, <<-CRYSTAL
+        [1, 2, 3].select { |e| e > 1 }.reverse!
+        CRYSTAL
     end
 
     it "does not report if source is a spec" do
-      source = Source.new %(
+      expect_no_issues subject, <<-CRYSTAL, "source_spec.cr"
         [1, 2, 3].select { |e| e > 1 }.reverse
-      ), "source_spec.cr"
-      subject.catch(source).should be_valid
+        CRYSTAL
     end
 
     it "reports if there is select followed by reverse followed by other call" do
-      source = Source.new %(
+      source = expect_issue subject, <<-CRYSTAL
         [1, 2, 3].select { |e| e > 2 }.reverse.size
-      )
-      subject.catch(source).should_not be_valid
+                                     # ^^^^^^^ error: Use bang method variant `reverse!` after chained `select` call
+        CRYSTAL
+
+      expect_correction source, <<-CRYSTAL
+        [1, 2, 3].select { |e| e > 2 }.reverse!.size
+        CRYSTAL
     end
 
     context "properties" do
       it "allows to configure `call_names`" do
-        source = Source.new %(
-          [1, 2, 3].select { |e| e > 2 }.reverse
-        )
         rule = ChainedCallWithNoBang.new
         rule.call_names = %w(uniq)
-        rule.catch(source).should be_valid
+        expect_no_issues rule, <<-CRYSTAL
+          [1, 2, 3].select { |e| e > 2 }.reverse
+          CRYSTAL
       end
     end
 
@@ -59,17 +64,16 @@ module Ameba::Rule::Performance
       issue = source.issues.first
       issue.rule.should_not be_nil
       issue.location.to_s.should eq "source.cr:1:32"
-      issue.end_location.to_s.should eq "source.cr:1:39"
+      issue.end_location.to_s.should eq "source.cr:1:38"
 
       issue.message.should eq "Use bang method variant `reverse!` after chained `select` call"
     end
 
     context "macro" do
       it "doesn't report in macro scope" do
-        source = Source.new %(
+        expect_no_issues subject, <<-CRYSTAL
           {{ [1, 2, 3].select { |e| e > 2  }.reverse }}
-        )
-        subject.catch(source).should be_valid
+          CRYSTAL
       end
     end
   end
