@@ -65,29 +65,32 @@ module Ameba::Rule::Style
     MSG = "Redundant `begin` block detected"
 
     def test(source, node : Crystal::Def)
-      issue_for node, MSG if redundant_begin?(source, node)
-    end
+      return unless (def_loc = node.location)
 
-    private def redundant_begin?(source, node)
       case body = node.body
       when Crystal::ExceptionHandler
-        redundant_begin_in_handler?(source, body, node)
+        return if begin_exprs_in_handler?(body) || inner_handler?(body)
       when Crystal::Expressions
-        redundant_begin_in_expressions?(body)
+        return unless redundant_begin_in_expressions?(body)
+      else
+        return
+      end
+
+      return unless (begin_range = def_redundant_begin_range(source, node))
+
+      begin_loc, end_loc = begin_range
+      begin_loc, end_loc = def_loc.seek(begin_loc), def_loc.seek(end_loc)
+      begin_end_loc = begin_loc.adjust(column_number: {{"begin".size - 1}})
+      end_end_loc = end_loc.adjust(column_number: {{"end".size - 1}})
+
+      issue_for begin_loc, begin_end_loc, MSG do |corrector|
+        corrector.remove(begin_loc, begin_end_loc)
+        corrector.remove(end_loc, end_end_loc)
       end
     end
 
     private def redundant_begin_in_expressions?(node)
       node.keyword == :begin
-    end
-
-    private def redundant_begin_in_handler?(source, handler, node)
-      return false if begin_exprs_in_handler?(handler) || inner_handler?(handler)
-
-      code = node_source(node, source.lines)
-      def_redundant_begin? code if code
-    rescue
-      false
     end
 
     private def inner_handler?(handler)
@@ -96,12 +99,21 @@ module Ameba::Rule::Style
 
     private def begin_exprs_in_handler?(handler)
       if (body = handler.body).is_a?(Crystal::Expressions)
-        body.expressions.first.is_a?(Crystal::ExceptionHandler)
+        body.expressions.first?.is_a?(Crystal::ExceptionHandler)
       end
     end
 
-    private def def_redundant_begin?(code)
+    private def def_redundant_begin_range(source, node)
+      return unless (code = node_source(node, source.lines))
+
       lexer = Crystal::Lexer.new code
+      return unless (begin_loc = def_redundant_begin_loc(lexer))
+      return unless (end_loc = def_redundant_end_loc(lexer))
+
+      {begin_loc, end_loc}
+    end
+
+    private def def_redundant_begin_loc(lexer)
       in_body = in_argument_list = false
 
       loop do
@@ -111,7 +123,9 @@ module Ameba::Rule::Style
         when :EOF, :"->"
           break
         when :IDENT
-          return token.value == :begin if in_body
+          next unless in_body
+          return unless token.value == :begin
+          return token.location
         when :"("
           in_argument_list = true
         when :")"
@@ -121,9 +135,21 @@ module Ameba::Rule::Style
         when :SPACE
           # ignore
         else
-          return false if in_body
+          return if in_body
         end
       end
+    end
+
+    private def def_redundant_end_loc(lexer)
+      end_loc = def_end_loc = nil
+
+      while (token = lexer.next_token).type != :EOF
+        next unless token.value == :end
+
+        end_loc, def_end_loc = def_end_loc, token.location
+      end
+
+      end_loc
     end
   end
 end
