@@ -68,8 +68,8 @@ module Ameba::Rule::Performance
     end
 
     def test(source, node : Crystal::Call)
-      return unless (location = node.name_location)
-      return unless (end_location = name_end_location(node))
+      return unless location = node.name_location
+      return unless end_location = name_end_location(node)
       return unless (obj = node.obj).is_a?(Crystal::Call)
       return unless node.name.in?(call_names)
       return unless obj.name.in?(call_names) || obj.name.in?(ALLOCATING_METHOD_NAMES)

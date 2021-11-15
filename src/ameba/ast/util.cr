@@ -205,7 +205,7 @@ module Ameba::AST::Util
   # NOTE: Use this instead of `Crystal::Call#name_end_location` to avoid an
   #       off-by-one error.
   def name_end_location(node)
-    return unless (loc = name_location(node))
+    return unless loc = name_location(node)
     return if (size = name_size(node)).zero?
 
     loc.adjust(column_number: size - 1)

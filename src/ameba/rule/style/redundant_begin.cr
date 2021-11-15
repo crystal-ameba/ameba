@@ -65,7 +65,7 @@ module Ameba::Rule::Style
     MSG = "Redundant `begin` block detected"
 
     def test(source, node : Crystal::Def)
-      return unless (def_loc = node.location)
+      return unless def_loc = node.location
 
       case body = node.body
       when Crystal::ExceptionHandler
@@ -76,7 +76,7 @@ module Ameba::Rule::Style
         return
       end
 
-      return unless (begin_range = def_redundant_begin_range(source, node))
+      return unless begin_range = def_redundant_begin_range(source, node)
 
       begin_loc, end_loc = begin_range
       begin_loc, end_loc = def_loc.seek(begin_loc), def_loc.seek(end_loc)
@@ -104,11 +104,11 @@ module Ameba::Rule::Style
     end
 
     private def def_redundant_begin_range(source, node)
-      return unless (code = node_source(node, source.lines))
+      return unless code = node_source(node, source.lines)
 
       lexer = Crystal::Lexer.new code
-      return unless (begin_loc = def_redundant_begin_loc(lexer))
-      return unless (end_loc = def_redundant_end_loc(lexer))
+      return unless begin_loc = def_redundant_begin_loc(lexer)
+      return unless end_loc = def_redundant_end_loc(lexer)
 
       {begin_loc, end_loc}
     end

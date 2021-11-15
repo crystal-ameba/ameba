@@ -14,7 +14,7 @@ module Ameba::Ext::Location
 
   # Seeks to a given *offset* relative to `self`.
   def seek(offset : self) : self
-    if offset.filename.as?(String).try(&.presence) && @filename != offset.filename
+    if offset.filename.as?(String).presence && @filename != offset.filename
       raise ArgumentError.new <<-MSG
         Mismatching filenames:
           #{@filename}

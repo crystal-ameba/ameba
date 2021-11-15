@@ -43,7 +43,7 @@ module Ameba::Rule::Lint
       end
 
       return unless bool && exp
-      return unless (exp_code = node_source(exp, source.lines))
+      return unless exp_code = node_source(exp, source.lines)
 
       not =
         case node.name
