@@ -13,7 +13,7 @@
 <script type="text/javascript" src="../../js/doc.js"></script>
 
   <meta name="repository-name" content="ameba">
-  <title>Ameba::AST::FlowExpressionVisitor - ameba master</title>
+  <title>Ameba::Ext::Location - ameba master</title>
   <script type="text/javascript">
     CrystalDocs.base_path = "../../";
   </script>
@@ -61,7 +61,7 @@
       
         <ul>
   
-  <li class="parent open current" data-id="ameba/Ameba/AST" data-name="ameba::ast">
+  <li class="parent " data-id="ameba/Ameba/AST" data-name="ameba::ast">
       <a href="../../Ameba/AST.html">AST</a>
       
         <ul>
@@ -101,7 +101,7 @@
       
     </li>
   
-  <li class=" current" data-id="ameba/Ameba/AST/FlowExpressionVisitor" data-name="ameba::ast::flowexpressionvisitor">
+  <li class=" " data-id="ameba/Ameba/AST/FlowExpressionVisitor" data-name="ameba::ast::flowexpressionvisitor">
       <a href="../../Ameba/AST/FlowExpressionVisitor.html">FlowExpressionVisitor</a>
       
     </li>
@@ -161,12 +161,12 @@
       
     </li>
   
-  <li class="parent " data-id="ameba/Ameba/Ext" data-name="ameba::ext">
+  <li class="parent open current" data-id="ameba/Ameba/Ext" data-name="ameba::ext">
       <a href="../../Ameba/Ext.html">Ext</a>
       
         <ul>
   
-  <li class=" " data-id="ameba/Ameba/Ext/Location" data-name="ameba::ext::location">
+  <li class=" current" data-id="ameba/Ameba/Ext/Location" data-name="ameba::ext::location">
       <a href="../../Ameba/Ext/Location.html">Location</a>
       
     </li>
@@ -705,12 +705,10 @@
 <div class="main-content">
 <h1 class="type-name">
 
-  <span class="kind">class</span> Ameba::AST::FlowExpressionVisitor
+  <span class="kind">module</span> Ameba::Ext::Location
 
 </h1>
 
-
-  <ul class="superclass-hierarchy"><li class="superclass"><a href="../../Ameba/AST/FlowExpressionVisitor.html">Ameba::AST::FlowExpressionVisitor</a></li><li class="superclass"><a href="../../Ameba/AST/BaseVisitor.html">Ameba::AST::BaseVisitor</a></li><li class="superclass">Crystal::Visitor</li><li class="superclass">Reference</li><li class="superclass">Object</li></ul>
 
 
 
@@ -724,31 +722,31 @@
     Overview
   </h2>
 
-  <p>AST Visitor that traverses all the flow expressions.</p>
+  <p>Extensions to Crystal::Location</p>
+
+
+
+
+
+
 
 
 
 
 
   <h2>
-    <a id="included-modules" class="anchor" href="#included-modules">
+    <a id="direct-including-types" class="anchor" href="#direct-including-types">
   <svg class="octicon-link" aria-hidden="true">
     <use href="#octicon-link"/>
   </svg>
 </a>
-    Included Modules
+    Direct including types
   </h2>
   <ul class="other-types-list">
     
-      <li class="other-type"><a href="../../Ameba/AST/Util.html">Ameba::AST::Util</a></li>
+      <li class="other-type"><a href="../../Crystal/Location.html">Crystal::Location</a></li>
     
   </ul>
-
-
-
-
-
-
 
 
 
@@ -763,8 +761,8 @@
   </h2>
   
     
-      <a href="https://github.com/crystal-ameba/ameba/blob/63a6c73d/src/ameba/ast/visitors/flow_expression_visitor.cr#L6" target="_blank">
-        ameba/ast/visitors/flow_expression_visitor.cr
+      <a href="https://github.com/crystal-ameba/ameba/blob/63a6c73d/src/ameba/ext/location.cr#L2" target="_blank">
+        ameba/ext/location.cr
       </a>
     
     <br/>
@@ -774,20 +772,38 @@
 
 
 
+
+
+
+
   <h2>
-    <a id="constructors" class="anchor" href="#constructors">
+    <a id="instance-method-summary" class="anchor" href="#instance-method-summary">
   <svg class="octicon-link" aria-hidden="true">
     <use href="#octicon-link"/>
   </svg>
 </a>
-    Constructors
+    Instance Method Summary
   </h2>
   <ul class="list-summary">
     
       <li class="entry-summary">
-        <a href="#new%28rule%2Csource%29-class-method" class="signature"><strong>.new</strong>(rule, source)</a>
+        <a href="#adjust%28line_number%3D0%2Ccolumn_number%3D0%29%3Aself-instance-method" class="signature"><strong>#adjust</strong>(line_number = <span class="n">0</span>, column_number = <span class="n">0</span>) : <span class="k">self</span></a>
         
-          <div class="summary"><p>Creates a new flow expression visitor.</p></div>
+          <div class="summary"><p>Returns the same location as this location but with the line and/or column number(s) adjusted by the given amount(s).</p></div>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#seek%28offset%3Aself%29%3Aself-instance-method" class="signature"><strong>#seek</strong>(offset : <span class="k">self</span>) : <span class="k">self</span></a>
+        
+          <div class="summary"><p>Seeks to a given <em>offset</em> relative to <code>self</code>.</p></div>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#with%28line_number%3D%40line_number%2Ccolumn_number%3D%40column_number%29%3Aself-instance-method" class="signature"><strong>#with</strong>(line_number = @line_number, column_number = @column_number) : <span class="k">self</span></a>
+        
+          <div class="summary"><p>Returns the same location as this location but with the line and/or column number(s) changed to the given value(s).</p></div>
         
       </li>
     
@@ -797,186 +813,89 @@
 
 
 
-
-
-
-
 <div class="methods-inherited">
-  
-    
-
-  <h3>Instance methods inherited from module <code><a href="../../Ameba/AST/Util.html">Ameba::AST::Util</a></code></h3>
-  
-  
-    <a href="../../Ameba/AST/Util.html#abort%3F%28node%29-instance-method" class="tooltip">
-      <span>abort?(node)</span>
-    abort?</a>, 
-    
-  
-    <a href="../../Ameba/AST/Util.html#control_exp_code%28node%3ACrystal%3A%3AControlExpression%2Ccode_lines%29-instance-method" class="tooltip">
-      <span>control_exp_code(node : Crystal::ControlExpression, code_lines)</span>
-    control_exp_code</a>, 
-    
-  
-    <a href="../../Ameba/AST/Util.html#exit%3F%28node%29-instance-method" class="tooltip">
-      <span>exit?(node)</span>
-    exit?</a>, 
-    
-  
-    <a href="../../Ameba/AST/Util.html#flow_command%3F%28node%2Cin_loop%29-instance-method" class="tooltip">
-      <span>flow_command?(node, in_loop)</span>
-    flow_command?</a>, 
-    
-  
-    <a href="../../Ameba/AST/Util.html#flow_expression%3F%28node%2Cin_loop%3Dfalse%29-instance-method" class="tooltip">
-      <span>flow_expression?(node, in_loop = <span class="n">false</span>)</span>
-    flow_expression?</a>, 
-    
-  
-    <a href="../../Ameba/AST/Util.html#literal%3F%28node%29-instance-method" class="tooltip">
-      <span>literal?(node)</span>
-    literal?</a>, 
-    
-  
-    <a href="../../Ameba/AST/Util.html#loop%3F%28node%29-instance-method" class="tooltip">
-      <span>loop?(node)</span>
-    loop?</a>, 
-    
-  
-    <a href="../../Ameba/AST/Util.html#name_end_location%28node%29-instance-method" class="tooltip">
-      <span>name_end_location(node)</span>
-    name_end_location</a>, 
-    
-  
-    <a href="../../Ameba/AST/Util.html#name_location%28node%29-instance-method" class="tooltip">
-      <span>name_location(node)</span>
-    name_location</a>, 
-    
-  
-    <a href="../../Ameba/AST/Util.html#name_size%28node%29-instance-method" class="tooltip">
-      <span>name_size(node)</span>
-    name_size</a>, 
-    
-  
-    <a href="../../Ameba/AST/Util.html#node_source%28node%2Ccode_lines%29-instance-method" class="tooltip">
-      <span>node_source(node, code_lines)</span>
-    node_source</a>, 
-    
-  
-    <a href="../../Ameba/AST/Util.html#raise%3F%28node%29-instance-method" class="tooltip">
-      <span>raise?(node)</span>
-    raise?</a>, 
-    
-  
-    <a href="../../Ameba/AST/Util.html#source_between%28loc%2Cend_loc%2Ccode_lines%29%3AString%3F-instance-method" class="tooltip">
-      <span>source_between(loc, end_loc, code_lines) : String?</span>
-    source_between</a>
-    
-  
-
-
-    
-
-
-    
-
-
-  
-    
-
-  <h3>Instance methods inherited from class <code><a href="../../Ameba/AST/BaseVisitor.html">Ameba::AST::BaseVisitor</a></code></h3>
-  
-  
-    <a href="../../Ameba/AST/BaseVisitor.html#visit%28node%3ACrystal%3A%3AASTNode%29-instance-method" class="tooltip">
-      <span>visit(node : Crystal::ASTNode)</span>
-    visit</a>
-    
-  
-
-
-    
-
-  <h3>Constructor methods inherited from class <code><a href="../../Ameba/AST/BaseVisitor.html">Ameba::AST::BaseVisitor</a></code></h3>
-  
-  
-    <a href="../../Ameba/AST/BaseVisitor.html#new%28rule%2Csource%29-class-method" class="tooltip">
-      <span>new(rule, source)</span>
-    new</a>
-    
-  
-
-
-    
-
-
-  
-    
-
-
-    
-
-
-    
-
-
-  
-    
-
-
-    
-
-
-    
-
-
-  
-    
-
-
-    
-
-
-    
-
-
   
 </div>
 
 
+
+
+
+
   <h2>
-    <a id="constructor-detail" class="anchor" href="#constructor-detail">
+    <a id="instance-method-detail" class="anchor" href="#instance-method-detail">
   <svg class="octicon-link" aria-hidden="true">
     <use href="#octicon-link"/>
   </svg>
 </a>
-    Constructor Detail
+    Instance Method Detail
   </h2>
   
-    <div class="entry-detail" id="new(rule,source)-class-method">
+    <div class="entry-detail" id="adjust(line_number=0,column_number=0):self-instance-method">
       <div class="signature">
         
-        def self.<strong>new</strong>(rule, source)
+        def <strong>adjust</strong>(line_number = <span class="n">0</span>, column_number = <span class="n">0</span>) : <span class="k">self</span>
 
-        <a class="method-permalink" href="#new%28rule%2Csource%29-class-method">#</a>
+        <a class="method-permalink" href="#adjust%28line_number%3D0%2Ccolumn_number%3D0%29%3Aself-instance-method">#</a>
       </div>
       
         <div class="doc">
           
-          <p>Creates a new flow expression visitor.</p>
+          <p>Returns the same location as this location but with the line and/or column number(s) adjusted
+by the given amount(s).</p>
         </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/63a6c73d/src/ameba/ast/visitors/flow_expression_visitor.cr#L12" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/63a6c73d/src/ameba/ext/location.cr#L11" target="_blank">View source</a>]
         
       </div>
     </div>
   
+    <div class="entry-detail" id="seek(offset:self):self-instance-method">
+      <div class="signature">
+        
+        def <strong>seek</strong>(offset : <span class="k">self</span>) : <span class="k">self</span>
 
+        <a class="method-permalink" href="#seek%28offset%3Aself%29%3Aself-instance-method">#</a>
+      </div>
+      
+        <div class="doc">
+          
+          <p>Seeks to a given <em>offset</em> relative to <code>self</code>.</p>
+        </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/crystal-ameba/ameba/blob/63a6c73d/src/ameba/ext/location.cr#L16" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="with(line_number=@line_number,column_number=@column_number):self-instance-method">
+      <div class="signature">
+        
+        def <strong>with</strong>(line_number = @line_number, column_number = @column_number) : <span class="k">self</span>
 
-
-
+        <a class="method-permalink" href="#with%28line_number%3D%40line_number%2Ccolumn_number%3D%40column_number%29%3Aself-instance-method">#</a>
+      </div>
+      
+        <div class="doc">
+          
+          <p>Returns the same location as this location but with the line and/or column number(s) changed
+to the given value(s).</p>
+        </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/crystal-ameba/ameba/blob/63a6c73d/src/ameba/ext/location.cr#L5" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
 
 
 
