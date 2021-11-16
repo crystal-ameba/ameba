@@ -103,7 +103,7 @@ module Ameba
     end
 
     def test(source, node : Crystal::ClassDef | Crystal::ModuleDef)
-      return unless (name = node_source(node.name, source.lines))
+      return unless name = node_source(node.name, source.lines)
       return unless name.includes?("A")
 
       issue_for(node.name, message: "A to AA") do |corrector|
@@ -120,7 +120,7 @@ module Ameba
     end
 
     def test(source, node : Crystal::ClassDef | Crystal::ModuleDef)
-      return unless (name = node_source(node.name, source.lines))
+      return unless name = node_source(node.name, source.lines)
       return unless name.includes?("A")
 
       issue_for(node.name, message: "A to B") do |corrector|
@@ -137,7 +137,7 @@ module Ameba
     end
 
     def test(source, node : Crystal::ClassDef | Crystal::ModuleDef)
-      return unless (name = node_source(node.name, source.lines))
+      return unless name = node_source(node.name, source.lines)
       return unless name.includes?("B")
 
       issue_for(node.name, message: "B to A") do |corrector|
@@ -154,7 +154,7 @@ module Ameba
     end
 
     def test(source, node : Crystal::ClassDef | Crystal::ModuleDef)
-      return unless (name = node_source(node.name, source.lines))
+      return unless name = node_source(node.name, source.lines)
       return unless name.includes?("B")
 
       issue_for(node.name, message: "B to C") do |corrector|
@@ -171,7 +171,7 @@ module Ameba
     end
 
     def test(source, node : Crystal::ClassDef | Crystal::ModuleDef)
-      return unless (name = node_source(node.name, source.lines))
+      return unless name = node_source(node.name, source.lines)
       return unless name.includes?("C")
 
       issue_for(node.name, message: "C to A") do |corrector|
@@ -188,13 +188,10 @@ module Ameba
     end
 
     def test(source, node : Crystal::ClassDef)
-      return unless (location = node.location)
+      return unless location = node.location
 
-      end_location = Crystal::Location.new(
-        location.filename,
-        location.line_number,
-        location.column_number + "class".size - 1
-      )
+      end_location = location.adjust(column_number: {{"class".size - 1}})
+
       issue_for(location, end_location, message: "class to module") do |corrector|
         corrector.replace(location, end_location, "module")
       end
@@ -209,13 +206,10 @@ module Ameba
     end
 
     def test(source, node : Crystal::ModuleDef)
-      return unless (location = node.location)
+      return unless location = node.location
 
-      end_location = Crystal::Location.new(
-        location.filename,
-        location.line_number,
-        location.column_number + "module".size - 1
-      )
+      end_location = location.adjust(column_number: {{"module".size - 1}})
+
       issue_for(location, end_location, message: "module to class") do |corrector|
         corrector.replace(location, end_location, "class")
       end

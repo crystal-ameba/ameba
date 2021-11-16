@@ -5,7 +5,7 @@ module Ameba::Rule::Lint
 
   describe ComparisonToBoolean do
     it "passes if there is no comparison to boolean" do
-      source = Source.new %(
+      expect_no_issues subject, <<-CRYSTAL
         a = true
 
         if a
@@ -32,34 +32,67 @@ module Ameba::Rule::Lint
         when false
           :not_ok
         end
-      )
-      subject.catch(source).should be_valid
+        CRYSTAL
     end
 
     context "boolean on the right" do
       it "fails if there is == comparison to boolean" do
-        source = Source.new %(
+        source = expect_issue subject, <<-CRYSTAL
           if s.empty? == true
+           # ^^^^^^^^^^^^^^^^ error: Comparison to a boolean is pointless
             :ok
           end
-        )
-        subject.catch(source).should_not be_valid
+
+          if s.empty? == false
+           # ^^^^^^^^^^^^^^^^^ error: Comparison to a boolean is pointless
+            :ok
+          end
+          CRYSTAL
+
+        expect_correction source, <<-CRYSTAL
+          if s.empty?
+            :ok
+          end
+
+          if !s.empty?
+            :ok
+          end
+          CRYSTAL
       end
 
       it "fails if there is != comparison to boolean" do
-        source = Source.new %(
+        source = expect_issue subject, <<-CRYSTAL
           if a != false
+           # ^^^^^^^^^^ error: Comparison to a boolean is pointless
             :ok
           end
-        )
-        subject.catch(source).should_not be_valid
+
+          if a != true
+           # ^^^^^^^^^ error: Comparison to a boolean is pointless
+            :ok
+          end
+          CRYSTAL
+
+        expect_correction source, <<-CRYSTAL
+          if a
+            :ok
+          end
+
+          if !a
+            :ok
+          end
+          CRYSTAL
       end
 
       it "fails if there is case comparison to boolean" do
-        source = Source.new %(
+        source = expect_issue subject, <<-CRYSTAL
           a === true
-        )
-        subject.catch(source).should_not be_valid
+          # ^^^^^^^^ error: Comparison to a boolean is pointless
+          CRYSTAL
+
+        expect_correction source, <<-CRYSTAL
+          a
+          CRYSTAL
       end
 
       it "reports rule, pos and message" do
@@ -75,28 +108,62 @@ module Ameba::Rule::Lint
 
     context "boolean on the left" do
       it "fails if there is == comparison to boolean" do
-        source = Source.new %(
+        source = expect_issue subject, <<-CRYSTAL
           if true == s.empty?
+           # ^^^^^^^^^^^^^^^^ error: Comparison to a boolean is pointless
             :ok
           end
-        )
-        subject.catch(source).should_not be_valid
+
+          if false == s.empty?
+           # ^^^^^^^^^^^^^^^^^ error: Comparison to a boolean is pointless
+            :ok
+          end
+          CRYSTAL
+
+        expect_correction source, <<-CRYSTAL
+          if s.empty?
+            :ok
+          end
+
+          if !s.empty?
+            :ok
+          end
+          CRYSTAL
       end
 
       it "fails if there is != comparison to boolean" do
-        source = Source.new %(
+        source = expect_issue subject, <<-CRYSTAL
           if false != a
+           # ^^^^^^^^^^ error: Comparison to a boolean is pointless
             :ok
           end
-        )
-        subject.catch(source).should_not be_valid
+
+          if true != a
+           # ^^^^^^^^^ error: Comparison to a boolean is pointless
+            :ok
+          end
+          CRYSTAL
+
+        expect_correction source, <<-CRYSTAL
+          if a
+            :ok
+          end
+
+          if !a
+            :ok
+          end
+          CRYSTAL
       end
 
       it "fails if there is case comparison to boolean" do
-        source = Source.new %(
+        source = expect_issue subject, <<-CRYSTAL
           true === a
-        )
-        subject.catch(source).should_not be_valid
+          # ^^^^^^^^ error: Comparison to a boolean is pointless
+          CRYSTAL
+
+        expect_correction source, <<-CRYSTAL
+          a
+          CRYSTAL
       end
 
       it "reports rule, pos and message" do

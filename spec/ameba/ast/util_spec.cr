@@ -345,5 +345,89 @@ module Ameba::AST
         exp_code.should eq "{1, 2}"
       end
     end
+
+    describe "#name_end_location" do
+      it "works on method call" do
+        node = as_node("name(foo)").as Crystal::Call
+        subject.name_end_location(node).to_s.should eq ":1:4"
+      end
+
+      it "works on method definition" do
+        node = as_node("def name; end").as Crystal::Def
+        subject.name_end_location(node).to_s.should eq ":1:8"
+      end
+
+      it "works on macro definition" do
+        node = as_node("macro name; end").as Crystal::Macro
+        subject.name_end_location(node).to_s.should eq ":1:10"
+      end
+
+      it "works on class definition" do
+        node = as_node("class Name; end").as Crystal::ClassDef
+        subject.name_end_location(node).to_s.should eq ":1:10"
+      end
+
+      it "works on module definition" do
+        node = as_node("module Name; end").as Crystal::ModuleDef
+        subject.name_end_location(node).to_s.should eq ":1:11"
+      end
+
+      it "works on annotation definition" do
+        node = as_node("annotation Name; end").as Crystal::AnnotationDef
+        subject.name_end_location(node).to_s.should eq ":1:15"
+      end
+
+      it "works on enum definition" do
+        node = as_node("enum Name; end").as Crystal::EnumDef
+        subject.name_end_location(node).to_s.should eq ":1:9"
+      end
+
+      it "works on alias definition" do
+        node = as_node("alias Name = Foo").as Crystal::Alias
+        subject.name_end_location(node).to_s.should eq ":1:10"
+      end
+
+      it "works on generic" do
+        node = as_node("Name(Foo)").as Crystal::Generic
+        subject.name_end_location(node).to_s.should eq ":1:4"
+      end
+
+      it "works on include" do
+        node = as_node("include Name").as Crystal::Include
+        subject.name_end_location(node).to_s.should eq ":1:12"
+      end
+
+      it "works on extend" do
+        node = as_node("extend Name").as Crystal::Extend
+        subject.name_end_location(node).to_s.should eq ":1:11"
+      end
+
+      it "works on variable type declaration" do
+        node = as_node("name : Foo").as Crystal::TypeDeclaration
+        subject.name_end_location(node).to_s.should eq ":1:4"
+      end
+
+      it "works on uninitialized variable" do
+        node = as_node("name = uninitialized Foo").as Crystal::UninitializedVar
+        subject.name_end_location(node).to_s.should eq ":1:4"
+      end
+
+      it "works on lib definition" do
+        node = as_node("lib Name; end").as Crystal::LibDef
+        subject.name_end_location(node).to_s.should eq ":1:8"
+      end
+
+      it "works on lib type definition" do
+        node = as_node("lib Foo; type Name = Bar; end").as(Crystal::LibDef).body
+        node.class.should eq Crystal::TypeDef
+        subject.name_end_location(node).to_s.should eq ":1:18"
+      end
+
+      it "works on metaclass" do
+        node = as_node("foo : Name.class").as(Crystal::TypeDeclaration).declared_type
+        node.class.should eq Crystal::Metaclass
+        subject.name_end_location(node).to_s.should eq ":1:10"
+      end
+    end
   end
 end

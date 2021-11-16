@@ -34,7 +34,7 @@ module Ameba::Rule::Metrics
       issue = source.issues.first
       issue.rule.should eq subject
       issue.location.to_s.should eq "source.cr:1:5"
-      issue.end_location.to_s.should eq "source.cr:1:10"
+      issue.end_location.to_s.should eq "source.cr:1:9"
       issue.message.should eq "Cyclomatic complexity too high [8/5]"
     end
 

@@ -16,7 +16,14 @@ module Ameba::Rule::Layout
 
     def test(source)
       source.lines.each_with_index do |line, index|
-        issue_for({index + 1, line.size}, MSG) if line =~ /\s$/
+        next unless ws_index = line =~ /\s+$/
+
+        location = {index + 1, ws_index + 1}
+        end_location = {index + 1, line.size}
+
+        issue_for location, end_location, MSG do |corrector|
+          corrector.remove(location, end_location)
+        end
       end
     end
   end

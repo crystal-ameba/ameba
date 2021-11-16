@@ -83,10 +83,10 @@ module Ameba::Rule::Style
     end
 
     it "fails if there is a redundant begin block" do
-      expect_issue subject, <<-CRYSTAL
+      source = expect_issue subject, <<-CRYSTAL
         def method(a : String) : String
-        # ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ error: Redundant `begin` block detected
           begin
+        # ^^^^^ error: Redundant `begin` block detected
             open_file
             do_some_stuff
           ensure
@@ -94,59 +94,113 @@ module Ameba::Rule::Style
           end
         end
         CRYSTAL
+
+      expect_correction source, <<-CRYSTAL
+        def method(a : String) : String
+         #{trailing_whitespace}
+            open_file
+            do_some_stuff
+          ensure
+            close_file
+         #{trailing_whitespace}
+        end
+        CRYSTAL
     end
 
     it "fails if there is a redundant begin block in a method without args" do
-      expect_issue subject, <<-CRYSTAL
+      source = expect_issue subject, <<-CRYSTAL
         def method
-        # ^^^^^^^^ error: Redundant `begin` block detected
           begin
+        # ^^^^^ error: Redundant `begin` block detected
             open_file
           ensure
             close_file
           end
+        end
+        CRYSTAL
+
+      expect_correction source, <<-CRYSTAL
+        def method
+         #{trailing_whitespace}
+            open_file
+          ensure
+            close_file
+         #{trailing_whitespace}
         end
         CRYSTAL
     end
 
     it "fails if there is a redundant block in a method with return type" do
-      expect_issue subject, <<-CRYSTAL
+      source = expect_issue subject, <<-CRYSTAL
         def method : String
-        # ^^^^^^^^^^^^^^^^^ error: Redundant `begin` block detected
           begin
+        # ^^^^^ error: Redundant `begin` block detected
             open_file
           ensure
             close_file
           end
         end
         CRYSTAL
+
+      expect_correction source, <<-CRYSTAL
+        def method : String
+         #{trailing_whitespace}
+            open_file
+          ensure
+            close_file
+         #{trailing_whitespace}
+        end
+        CRYSTAL
     end
 
     it "fails if there is a redundant block in a method with multiple args" do
-      expect_issue subject, <<-CRYSTAL
+      source = expect_issue subject, <<-CRYSTAL
         def method(a : String,
-        # ^^^^^^^^^^^^^^^^^^^^ error: Redundant `begin` block detected
                   b : String)
           begin
+        # ^^^^^ error: Redundant `begin` block detected
             open_file
           ensure
             close_file
           end
         end
         CRYSTAL
+
+      expect_correction source, <<-CRYSTAL
+        def method(a : String,
+                  b : String)
+         #{trailing_whitespace}
+            open_file
+          ensure
+            close_file
+         #{trailing_whitespace}
+        end
+        CRYSTAL
     end
 
     it "fails if there is a redundant block in a method with multiple args" do
-      expect_issue subject, <<-CRYSTAL
+      source = expect_issue subject, <<-CRYSTAL
         def method(a : String,
-        # ^^^^^^^^^^^^^^^^^^^^ error: Redundant `begin` block detected
                   b : String
         )
           begin
+        # ^^^^^ error: Redundant `begin` block detected
             open_file
           ensure
             close_file
           end
+        end
+        CRYSTAL
+
+      expect_correction source, <<-CRYSTAL
+        def method(a : String,
+                  b : String
+        )
+         #{trailing_whitespace}
+            open_file
+          ensure
+            close_file
+         #{trailing_whitespace}
         end
         CRYSTAL
     end
@@ -165,26 +219,45 @@ module Ameba::Rule::Style
     end
 
     it "fails if there is a redundant block with yield" do
-      expect_issue subject, <<-CRYSTAL
+      source = expect_issue subject, <<-CRYSTAL
         def method
-        # ^^^^^^^^ error: Redundant `begin` block detected
           begin
+        # ^^^^^ error: Redundant `begin` block detected
             yield
           ensure
             close_file
           end
         end
         CRYSTAL
+
+      expect_correction source, <<-CRYSTAL
+        def method
+         #{trailing_whitespace}
+            yield
+          ensure
+            close_file
+         #{trailing_whitespace}
+        end
+        CRYSTAL
     end
 
     it "fails if there is top level redundant block in a method" do
-      expect_issue subject, <<-CRYSTAL
+      source = expect_issue subject, <<-CRYSTAL
         def method
-        # ^^^^^^^^ error: Redundant `begin` block detected
           begin
+        # ^^^^^ error: Redundant `begin` block detected
             a = 1
             b = 2
           end
+        end
+        CRYSTAL
+
+      expect_correction source, <<-CRYSTAL
+        def method
+         #{trailing_whitespace}
+            a = 1
+            b = 2
+         #{trailing_whitespace}
         end
         CRYSTAL
     end
@@ -215,8 +288,8 @@ module Ameba::Rule::Style
 
       issue = s.issues.first
       issue.rule.should_not be_nil
-      issue.location.to_s.should eq "source.cr:1:1"
-      issue.end_location.to_s.should eq "source.cr:7:3"
+      issue.location.to_s.should eq "source.cr:2:3"
+      issue.end_location.to_s.should eq "source.cr:2:7"
       issue.message.should eq "Redundant `begin` block detected"
     end
   end

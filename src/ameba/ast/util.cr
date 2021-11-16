@@ -170,4 +170,44 @@ module Ameba::AST::Util
 
     "{#{source_between(exp_start, exp_end, code_lines)}}"
   end
+
+  # Returns `nil` if *node* does not contain a name.
+  def name_location(node)
+    if loc = node.name_location
+      return loc
+    end
+
+    return node.var.location if node.is_a?(Crystal::TypeDeclaration) ||
+                                node.is_a?(Crystal::UninitializedVar)
+    return unless node.responds_to?(:name) && (name = node.name)
+    return unless name.is_a?(Crystal::ASTNode)
+
+    name.location
+  end
+
+  # Returns zero if *node* does not contain a name.
+  def name_size(node)
+    unless (size = node.name_size).zero?
+      return size
+    end
+
+    return 0 unless node.responds_to?(:name) && (name = node.name)
+
+    case name
+    when Crystal::ASTNode then name.name_size
+    when Symbol           then name.to_s.size # Crystal::MagicConstant
+    else                       name.size
+    end
+  end
+
+  # Returns `nil` if *node* does not contain a name.
+  #
+  # NOTE: Use this instead of `Crystal::Call#name_end_location` to avoid an
+  #       off-by-one error.
+  def name_end_location(node)
+    return unless loc = name_location(node)
+    return if (size = name_size(node)).zero?
+
+    loc.adjust(column_number: size - 1)
+  end
 end
