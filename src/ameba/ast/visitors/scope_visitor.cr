@@ -131,9 +131,8 @@ module Ameba::AST
 
     # :nodoc:
     def visit(node : Crystal::TypeDeclaration)
-      if !@current_scope.type_definition? && (var = node.var).is_a?(Crystal::Var)
-        @current_scope.add_variable var
-      end
+      return if @current_scope.type_definition? || !(var = node.var).is_a?(Crystal::Var)
+      @current_scope.add_variable var
     end
 
     # :nodoc:
