@@ -23,7 +23,7 @@ module Ameba
         end
         CRYSTAL
 
-      expect_correction source, <<-CRYSTAL
+      expect_correction source, <<-CRYSTAL, line: line
         def func
           return unless something
             #{body}
@@ -57,7 +57,7 @@ module Ameba
         end
         CRYSTAL
 
-      expect_correction source, <<-CRYSTAL
+      expect_correction source, <<-CRYSTAL, line: line
         def func
           test
           return unless something
@@ -90,7 +90,7 @@ module Ameba
         end
         CRYSTAL
 
-      expect_no_corrections source
+      expect_no_corrections source, line: line
     end
 
     it "reports an issue with #{kw} in the else branch" do
@@ -105,7 +105,7 @@ module Ameba
         end
         CRYSTAL
 
-      expect_no_corrections source
+      expect_no_corrections source, line: line
     end
 
     it "doesn't report an issue if condition has multiple lines" do
@@ -174,7 +174,7 @@ module Ameba
         end
         CRYSTAL
 
-      expect_no_corrections source
+      expect_no_corrections source, line: line
     end
   end
 
