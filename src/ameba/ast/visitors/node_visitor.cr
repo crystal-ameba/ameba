@@ -60,7 +60,7 @@ module Ameba::AST
     end
 
     private def skip?(node)
-      @skip.try &.includes?(node.class)
+      !!@skip.try(&.includes?(node.class))
     end
   end
 end
