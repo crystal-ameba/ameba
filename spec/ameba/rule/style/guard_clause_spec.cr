@@ -342,58 +342,58 @@ module Ameba
         end
         CRYSTAL
     end
-  end
 
-  it_reports_control_expression "return"
-  it_reports_control_expression "next"
-  it_reports_control_expression "break"
-  it_reports_control_expression %(raise "error")
+    it_reports_control_expression "return"
+    it_reports_control_expression "next"
+    it_reports_control_expression "break"
+    it_reports_control_expression %(raise "error")
 
-  context "method in module" do
-    it "reports an issue for instance method" do
-      source = expect_issue subject, <<-CRYSTAL
-        module CopTest
-          def test
-            if something
-          # ^^ error: Use a guard clause (`return unless something`) instead of wrapping the code inside a conditional expression.
-              work
+    context "method in module" do
+      it "reports an issue for instance method" do
+        source = expect_issue subject, <<-CRYSTAL
+          module CopTest
+            def test
+              if something
+            # ^^ error: Use a guard clause (`return unless something`) instead of wrapping the code inside a conditional expression.
+                work
+              end
             end
           end
-        end
-        CRYSTAL
+          CRYSTAL
 
-      expect_correction source, <<-CRYSTAL
-        module CopTest
-          def test
-            return unless something
-              work
-           #{trailing_whitespace}
-          end
-        end
-        CRYSTAL
-    end
-
-    it "reports an issue for singleton methods" do
-      source = expect_issue subject, <<-CRYSTAL
-        module CopTest
-          def self.test
-            if something && something_else
-          # ^^ error: Use a guard clause (`return unless something && something_else`) instead of [...]
-              work
+        expect_correction source, <<-CRYSTAL
+          module CopTest
+            def test
+              return unless something
+                work
+             #{trailing_whitespace}
             end
           end
-        end
-        CRYSTAL
+          CRYSTAL
+      end
 
-      expect_correction source, <<-CRYSTAL
-        module CopTest
-          def self.test
-            return unless something && something_else
-              work
-           #{trailing_whitespace}
+      it "reports an issue for singleton methods" do
+        source = expect_issue subject, <<-CRYSTAL
+          module CopTest
+            def self.test
+              if something && something_else
+            # ^^ error: Use a guard clause (`return unless something && something_else`) instead of [...]
+                work
+              end
+            end
           end
-        end
-        CRYSTAL
+          CRYSTAL
+
+        expect_correction source, <<-CRYSTAL
+          module CopTest
+            def self.test
+              return unless something && something_else
+                work
+             #{trailing_whitespace}
+            end
+          end
+          CRYSTAL
+      end
     end
   end
 end
