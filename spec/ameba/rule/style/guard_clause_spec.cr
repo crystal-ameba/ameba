@@ -190,7 +190,7 @@ module Ameba
           else
             # nothing
           end
-        end      
+        end
         CRYSTAL
     end
 
