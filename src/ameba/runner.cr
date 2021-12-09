@@ -221,9 +221,8 @@ module Ameba
     end
 
     private def check_unneeded_directives(source)
-      if (rule = @unneeded_disable_directive_rule) && rule.enabled
-        rule.test(source)
-      end
+      return unless (rule = @unneeded_disable_directive_rule) && rule.enabled
+      rule.test(source)
     end
   end
 end

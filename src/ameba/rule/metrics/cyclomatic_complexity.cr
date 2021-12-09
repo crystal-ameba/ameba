@@ -21,10 +21,9 @@ module Ameba::Rule::Metrics
     def test(source, node : Crystal::Def)
       complexity = AST::CountingVisitor.new(node).count
 
-      if complexity > max_complexity && (location = node.name_location)
-        issue_for location, name_end_location(node),
-          MSG % {complexity, max_complexity}
-      end
+      return unless complexity > max_complexity && (location = node.name_location)
+      issue_for location, name_end_location(node),
+        MSG % {complexity, max_complexity}
     end
   end
 end

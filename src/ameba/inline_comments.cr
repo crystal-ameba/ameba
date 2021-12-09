@@ -65,20 +65,18 @@ module Ameba
     # parse_inline_directive(line) # => nil
     # ```
     def parse_inline_directive(line)
-      if directive = COMMENT_DIRECTIVE_REGEX.match(line)
-        return if commented_out?(line.gsub(directive[0], ""))
-        {
-          action: directive["action"],
-          rules:  directive["rules"].split(/[\s,]/, remove_empty: true),
-        }
-      end
+      return unless directive = COMMENT_DIRECTIVE_REGEX.match(line)
+      return if commented_out?(line.gsub(directive[0], ""))
+      {
+        action: directive["action"],
+        rules:  directive["rules"].split(/[\s,]/, remove_empty: true),
+      }
     end
 
     # Returns true if the line at the given `line_number` is a comment.
     def comment?(line_number : Int32)
-      if line = lines[line_number]?
-        comment?(line)
-      end
+      return unless line = lines[line_number]?
+      comment?(line)
     end
 
     private def comment?(line : String)

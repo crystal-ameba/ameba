@@ -23,9 +23,8 @@ module Ameba::AST
       @scope_queue << @current_scope
 
       # go up if this is not a top level scope
-      if outer_scope = @current_scope.outer_scope
-        @current_scope = outer_scope
-      end
+      return unless outer_scope = @current_scope.outer_scope
+      @current_scope = outer_scope
     end
 
     private def on_assign_end(target, node)
@@ -132,9 +131,8 @@ module Ameba::AST
 
     # :nodoc:
     def visit(node : Crystal::TypeDeclaration)
-      if !@current_scope.type_definition? && (var = node.var).is_a?(Crystal::Var)
-        @current_scope.add_variable var
-      end
+      return if @current_scope.type_definition? || !(var = node.var).is_a?(Crystal::Var)
+      @current_scope.add_variable var
     end
 
     # :nodoc:

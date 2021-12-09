@@ -124,9 +124,8 @@ class Ameba::Source
     end
 
     private def check_range_validity(begin_pos, end_pos)
-      if begin_pos < 0 || end_pos > code.size
-        raise IndexError.new("The range #{begin_pos}...#{end_pos} is outside the bounds of the source")
-      end
+      return unless begin_pos < 0 || end_pos > code.size
+      raise IndexError.new("The range #{begin_pos}...#{end_pos} is outside the bounds of the source")
     end
   end
 end

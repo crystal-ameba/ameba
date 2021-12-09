@@ -29,14 +29,13 @@ module Ameba::Rule::Style
     MSG = "Constant name should be screaming-cased: %s, not %s"
 
     def test(source, node : Crystal::Assign)
-      if (target = node.target).is_a?(Crystal::Path)
-        name = target.names.first
-        expected = name.upcase
+      return unless (target = node.target).is_a?(Crystal::Path)
+      name = target.names.first
+      expected = name.upcase
 
-        return if name.in?(expected, name.camelcase)
+      return if name.in?(expected, name.camelcase)
 
-        issue_for target, MSG % {expected, name}
-      end
+      issue_for target, MSG % {expected, name}
     end
   end
 end

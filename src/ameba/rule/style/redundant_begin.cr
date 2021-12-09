@@ -98,9 +98,8 @@ module Ameba::Rule::Style
     end
 
     private def begin_exprs_in_handler?(handler)
-      if (body = handler.body).is_a?(Crystal::Expressions)
-        body.expressions.first?.is_a?(Crystal::ExceptionHandler)
-      end
+      return unless (body = handler.body).is_a?(Crystal::Expressions)
+      body.expressions.first?.is_a?(Crystal::ExceptionHandler)
     end
 
     private def def_redundant_begin_range(source, node)

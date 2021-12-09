@@ -71,9 +71,8 @@ module Ameba::Formatter
     end
 
     private def finished_in_message(started, finished)
-      if started && finished
-        "Finished in #{to_human(finished - started)}".colorize(:default)
-      end
+      return unless started && finished
+      "Finished in #{to_human(finished - started)}".colorize(:default)
     end
 
     private def to_human(span : Time::Span)
