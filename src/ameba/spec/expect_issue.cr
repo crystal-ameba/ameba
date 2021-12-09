@@ -163,10 +163,10 @@ module Ameba::Spec::ExpectIssue
     _, actual_annotations = actual_annotations(rules, code, path, lines)
     return if actual_annotations.to_s == code
     fail <<-MSG, file, line
-        Expected no issues, but got:
+      Expected no issues, but got:
 
-        #{actual_annotations}
-        MSG
+      #{actual_annotations}
+      MSG
   end
 
   private def actual_annotations(rules, code, path, lines)

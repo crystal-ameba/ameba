@@ -145,8 +145,7 @@ module Ameba::Rule::Style
       return true unless cond_loc = node.cond.location
       return true unless cond_end_loc = node.cond.end_location
       return true unless cond_loc.line_number == cond_end_loc.line_number
-      return true unless (then_loc = node.then.location).nil? ||
-                         cond_loc < then_loc
+      return true unless (then_loc = node.then.location).nil? || cond_loc < then_loc
 
       if ending
         !node.else.is_a?(Crystal::Nop)
