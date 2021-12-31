@@ -13,7 +13,7 @@
 <script type="text/javascript" src="../../../js/doc.js"></script>
 
   <meta name="repository-name" content="ameba">
-  <title>Ameba::Rule::Lint::SharedVarInFiber - ameba master</title>
+  <title>Ameba::Rule::Lint::DebugCalls - ameba master</title>
   <script type="text/javascript">
     CrystalDocs.base_path = "../../../";
   </script>
@@ -321,7 +321,7 @@
       
     </li>
   
-  <li class=" " data-id="ameba/Ameba/Rule/Lint/DebugCalls" data-name="ameba::rule::lint::debugcalls">
+  <li class=" current" data-id="ameba/Ameba/Rule/Lint/DebugCalls" data-name="ameba::rule::lint::debugcalls">
       <a href="../../../Ameba/Rule/Lint/DebugCalls.html">DebugCalls</a>
       
     </li>
@@ -406,7 +406,7 @@
       
     </li>
   
-  <li class=" current" data-id="ameba/Ameba/Rule/Lint/SharedVarInFiber" data-name="ameba::rule::lint::sharedvarinfiber">
+  <li class=" " data-id="ameba/Ameba/Rule/Lint/SharedVarInFiber" data-name="ameba::rule::lint::sharedvarinfiber">
       <a href="../../../Ameba/Rule/Lint/SharedVarInFiber.html">SharedVarInFiber</a>
       
     </li>
@@ -715,12 +715,12 @@
 <div class="main-content">
 <h1 class="type-name">
 
-  <span class="kind">class</span> Ameba::Rule::Lint::SharedVarInFiber
+  <span class="kind">class</span> Ameba::Rule::Lint::DebugCalls
 
 </h1>
 
 
-  <ul class="superclass-hierarchy"><li class="superclass"><a href="../../../Ameba/Rule/Lint/SharedVarInFiber.html">Ameba::Rule::Lint::SharedVarInFiber</a></li><li class="superclass"><a href="../../../Ameba/Rule/Base.html">Ameba::Rule::Base</a></li><li class="superclass">Reference</li><li class="superclass">Object</li></ul>
+  <ul class="superclass-hierarchy"><li class="superclass"><a href="../../../Ameba/Rule/Lint/DebugCalls.html">Ameba::Rule::Lint::DebugCalls</a></li><li class="superclass"><a href="../../../Ameba/Rule/Base.html">Ameba::Rule::Base</a></li><li class="superclass">Reference</li><li class="superclass">Object</li></ul>
 
 
 
@@ -734,40 +734,17 @@
     Overview
   </h2>
 
-  <p>A rule that disallows using shared variables in fibers,
-which are mutated during iterations.</p>
-<p>In most cases it leads to unexpected behaviour and is undesired.</p>
-<p>For example, having this example:</p>
-<pre><code class="language-crystal">n <span class="o">=</span> <span class="n">0</span>
-channel <span class="o">=</span> <span class="t">Channel</span>(<span class="t">Int32</span>).<span class="k">new</span>
-
-<span class="k">while</span> n <span class="o">&lt;</span> <span class="n">3</span>
-  n <span class="o">=</span> n <span class="o">+</span> <span class="n">1</span>
-  spawn { channel.send n }
-<span class="k">end</span>
-
-<span class="n">3</span>.times { puts channel.receive } <span class="c"># =&gt; # 3, 3, 3</span></code></pre>
-<p>The problem is there is only one shared between fibers variable <code>n</code>
-and when <code>channel.receive</code> is executed its value is <code>3</code>.</p>
-<p>To solve this, the code above needs to be rewritten to the following:</p>
-<pre><code class="language-crystal">n <span class="o">=</span> <span class="n">0</span>
-channel <span class="o">=</span> <span class="t">Channel</span>(<span class="t">Int32</span>).<span class="k">new</span>
-
-<span class="k">while</span> n <span class="o">&lt;</span> <span class="n">3</span>
-  n <span class="o">=</span> n <span class="o">+</span> <span class="n">1</span>
-  m <span class="o">=</span> n
-  spawn <span class="k">do</span> { channel.send m }
-<span class="k">end</span>
-
-<span class="n">3</span>.times { puts channel.receive } <span class="c"># =&gt; # 1, 2, 3</span></code></pre>
-<p>This rule is able to find the shared variables between fibers, which are mutated
-during iterations. So it reports the issue on the first sample and passes on
-the second one.</p>
-<p>There are also other technics to solve the problem above which are
-<a href="https://crystal-lang.org/reference/guides/concurrency.html">officially documented</a></p>
+  <p>A rule that disallows calls to debug-related methods.</p>
+<p>This is because we don't want debug calls accidentally being
+committed into our codebase.</p>
 <p>YAML configuration example:</p>
-<pre><code class="language-crystal">Lint/SharedVarInFiber:
-  Enabled: true</code></pre>
+<pre><code class="language-crystal">Lint/DebugCalls:
+  Enabled: true
+  MethodNames:
+    - p
+    - p!
+    - pp
+    - pp!</code></pre>
 
 
 
@@ -808,8 +785,8 @@ the second one.</p>
   </h2>
   
     
-      <a href="https://github.com/crystal-ameba/ameba/blob/276b429e/src/ameba/rule/lint/shared_var_in_fiber.cr#L52" target="_blank">
-        ameba/rule/lint/shared_var_in_fiber.cr
+      <a href="https://github.com/crystal-ameba/ameba/blob/276b429e/src/ameba/rule/lint/debug_calls.cr#L18" target="_blank">
+        ameba/rule/lint/debug_calls.cr
       </a>
     
     <br/>
@@ -830,7 +807,7 @@ the second one.</p>
   <dl>
     
       <dt class="entry-const" id="MSG">
-        <strong>MSG</strong> = <code><span class="s">&quot;Shared variable `%s` is used in fiber&quot;</span></code>
+        <strong>MSG</strong> = <code><span class="s">&quot;Possibly forgotten debug-related `%s` call detected&quot;</span></code>
       </dt>
       
     
@@ -856,7 +833,7 @@ the second one.</p>
       <li class="entry-summary">
         <a href="#new%28config%3Dnil%29-class-method" class="signature"><strong>.new</strong>(config = <span class="n">nil</span>)</a>
         
-          <div class="summary"><p>A rule that disallows using shared variables in fibers, which are mutated during iterations.</p></div>
+          <div class="summary"><p>A rule that disallows calls to debug-related methods.</p></div>
         
       </li>
     
@@ -907,6 +884,16 @@ the second one.</p>
       </li>
     
       <li class="entry-summary">
+        <a href="#method_names%3AArray%28String%29-instance-method" class="signature"><strong>#method_names</strong> : Array(String)</a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#method_names%3D%28method_names%3AArray%28String%29%29-instance-method" class="signature"><strong>#method_names=</strong>(method_names : Array(String))</a>
+        
+      </li>
+    
+      <li class="entry-summary">
         <a href="#severity%3AAmeba%3A%3ASeverity-instance-method" class="signature"><strong>#severity</strong> : Ameba::Severity</a>
         
       </li>
@@ -917,12 +904,7 @@ the second one.</p>
       </li>
     
       <li class="entry-summary">
-        <a href="#test%28source%2Cnode%2Cscope%3AAST%3A%3AScope%29-instance-method" class="signature"><strong>#test</strong>(source, node, scope : AST::Scope)</a>
-        
-      </li>
-    
-      <li class="entry-summary">
-        <a href="#test%28source%29-instance-method" class="signature"><strong>#test</strong>(source)</a>
+        <a href="#test%28source%2Cnode%3ACrystal%3A%3ACall%29-instance-method" class="signature"><strong>#test</strong>(source, node : Crystal::Call)</a>
         
       </li>
     
@@ -1083,46 +1065,23 @@ the second one.</p>
       
         <div class="doc">
           
-          <p>A rule that disallows using shared variables in fibers,
-which are mutated during iterations.</p>
-<p>In most cases it leads to unexpected behaviour and is undesired.</p>
-<p>For example, having this example:</p>
-<pre><code class="language-crystal">n <span class="o">=</span> <span class="n">0</span>
-channel <span class="o">=</span> <span class="t">Channel</span>(<span class="t">Int32</span>).<span class="k">new</span>
-
-<span class="k">while</span> n <span class="o">&lt;</span> <span class="n">3</span>
-  n <span class="o">=</span> n <span class="o">+</span> <span class="n">1</span>
-  spawn { channel.send n }
-<span class="k">end</span>
-
-<span class="n">3</span>.times { puts channel.receive } <span class="c"># =&gt; # 3, 3, 3</span></code></pre>
-<p>The problem is there is only one shared between fibers variable <code>n</code>
-and when <code>channel.receive</code> is executed its value is <code>3</code>.</p>
-<p>To solve this, the code above needs to be rewritten to the following:</p>
-<pre><code class="language-crystal">n <span class="o">=</span> <span class="n">0</span>
-channel <span class="o">=</span> <span class="t">Channel</span>(<span class="t">Int32</span>).<span class="k">new</span>
-
-<span class="k">while</span> n <span class="o">&lt;</span> <span class="n">3</span>
-  n <span class="o">=</span> n <span class="o">+</span> <span class="n">1</span>
-  m <span class="o">=</span> n
-  spawn <span class="k">do</span> { channel.send m }
-<span class="k">end</span>
-
-<span class="n">3</span>.times { puts channel.receive } <span class="c"># =&gt; # 1, 2, 3</span></code></pre>
-<p>This rule is able to find the shared variables between fibers, which are mutated
-during iterations. So it reports the issue on the first sample and passes on
-the second one.</p>
-<p>There are also other technics to solve the problem above which are
-<a href="https://crystal-lang.org/reference/guides/concurrency.html">officially documented</a></p>
+          <p>A rule that disallows calls to debug-related methods.</p>
+<p>This is because we don't want debug calls accidentally being
+committed into our codebase.</p>
 <p>YAML configuration example:</p>
-<pre><code class="language-crystal">Lint/SharedVarInFiber:
-  Enabled: true</code></pre>
+<pre><code class="language-crystal">Lint/DebugCalls:
+  Enabled: true
+  MethodNames:
+    - p
+    - p!
+    - pp
+    - pp!</code></pre>
         </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/276b429e/src/ameba/rule/lint/shared_var_in_fiber.cr#L52" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/276b429e/src/ameba/rule/lint/debug_calls.cr#L18" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1225,6 +1184,34 @@ the second one.</p>
       </div>
     </div>
   
+    <div class="entry-detail" id="method_names:Array(String)-instance-method">
+      <div class="signature">
+        
+        def <strong>method_names</strong> : Array(String)
+
+        <a class="method-permalink" href="#method_names%3AArray%28String%29-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="method_names=(method_names:Array(String))-instance-method">
+      <div class="signature">
+        
+        def <strong>method_names=</strong>(method_names : Array(String))
+
+        <a class="method-permalink" href="#method_names%3D%28method_names%3AArray%28String%29%29-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+      </div>
+    </div>
+  
     <div class="entry-detail" id="severity:Ameba::Severity-instance-method">
       <div class="signature">
         
@@ -1253,34 +1240,18 @@ the second one.</p>
       </div>
     </div>
   
-    <div class="entry-detail" id="test(source,node,scope:AST::Scope)-instance-method">
+    <div class="entry-detail" id="test(source,node:Crystal::Call)-instance-method">
       <div class="signature">
         
-        def <strong>test</strong>(source, node, scope : <a href="../../../Ameba/AST/Scope.html">AST::Scope</a>)
+        def <strong>test</strong>(source, node : Crystal::Call)
 
-        <a class="method-permalink" href="#test%28source%2Cnode%2Cscope%3AAST%3A%3AScope%29-instance-method">#</a>
+        <a class="method-permalink" href="#test%28source%2Cnode%3ACrystal%3A%3ACall%29-instance-method">#</a>
       </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/276b429e/src/ameba/rule/lint/shared_var_in_fiber.cr#L63" target="_blank">View source</a>]
-        
-      </div>
-    </div>
-  
-    <div class="entry-detail" id="test(source)-instance-method">
-      <div class="signature">
-        
-        def <strong>test</strong>(source)
-
-        <a class="method-permalink" href="#test%28source%29-instance-method">#</a>
-      </div>
-      
-      <br/>
-      <div>
-        
-          [<a href="https://github.com/crystal-ameba/ameba/blob/276b429e/src/ameba/rule/lint/shared_var_in_fiber.cr#L59" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/276b429e/src/ameba/rule/lint/debug_calls.cr#L26" target="_blank">View source</a>]
         
       </div>
     </div>
