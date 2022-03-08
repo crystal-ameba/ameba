@@ -6,17 +6,17 @@ module Ameba::Rule::Style
   # For example, these are considered invalid:
   #
   # ```
-  # 10000
+  # 100000
   # 141592654
-  # 5.12345
+  # 5.123456
   # ```
   #
   # And has to be rewritten as the following:
   #
   # ```
-  # 10_000
+  # 100_000
   # 141_592_654
-  # 5.123_45
+  # 5.123_456
   # ```
   #
   # YAML configuration example:
@@ -24,13 +24,13 @@ module Ameba::Rule::Style
   # ```
   # Style/LargeNumbers:
   #   Enabled: true
-  #   IntMinDigits: 5 # i.e. integers higher than 9999
+  #   IntMinDigits: 6 # i.e. integers higher than 99999
   # ```
   class LargeNumbers < Base
     properties do
       enabled true
       description "Disallows usage of large numbers without underscore"
-      int_min_digits 5
+      int_min_digits 6
     end
 
     MSG = "Large numbers should be written with underscores: %s"
