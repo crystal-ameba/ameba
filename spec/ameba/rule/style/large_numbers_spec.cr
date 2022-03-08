@@ -6,6 +6,7 @@ module Ameba
   private def it_transforms(number, expected)
     it "transforms large number #{number}" do
       rule = Rule::Style::LargeNumbers.new
+      rule.int_min_digits = 5
 
       source = expect_issue rule, <<-CRYSTAL, number: number
         number = %{number}
