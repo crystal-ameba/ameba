@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="generator" content="Crystal Docs 1.1.1">
+<meta name="generator" content="Crystal Docs 1.2.2">
 <meta name="crystal_docs.project_version" content="master">
 <meta name="crystal_docs.project_name" content="ameba">
 
@@ -736,7 +736,7 @@
 
   <p>This rule is used to identify usage of arg-less <code>Enumerable#any?</code> calls.</p>
 <p>Using <code>Enumerable#any?</code> instead of <code>Enumerable#empty?</code> might lead to an
-unexpected results (like <code>[nil, false].any? # => false</code>). In some cases
+unexpected results (like <code>[nil, false].any? # =&gt; false</code>). In some cases
 it also might be less efficient, since it iterates until the block will
 return a <em>truthy</em> value, instead of just checking if there's at least
 one value present.</p>
@@ -789,7 +789,7 @@ one value present.</p>
   </h2>
   
     
-      <a href="https://github.com/crystal-ameba/ameba/blob/276b429e/src/ameba/rule/performance/any_instead_of_empty.cr#L30" target="_blank">
+      <a href="https://github.com/crystal-ameba/ameba/blob/ae29754d/src/ameba/rule/performance/any_instead_of_empty.cr#L30" target="_blank">
         ameba/rule/performance/any_instead_of_empty.cr
       </a>
     
@@ -1181,7 +1181,7 @@ one value present.</p>
           
           <p>This rule is used to identify usage of arg-less <code>Enumerable#any?</code> calls.</p>
 <p>Using <code>Enumerable#any?</code> instead of <code>Enumerable#empty?</code> might lead to an
-unexpected results (like <code>[nil, false].any? # => false</code>). In some cases
+unexpected results (like <code>[nil, false].any? # =&gt; false</code>). In some cases
 it also might be less efficient, since it iterates until the block will
 return a <em>truthy</em> value, instead of just checking if there's at least
 one value present.</p>
@@ -1212,7 +1212,7 @@ one value present.</p>
           
           <p>This rule is used to identify usage of arg-less <code>Enumerable#any?</code> calls.</p>
 <p>Using <code>Enumerable#any?</code> instead of <code>Enumerable#empty?</code> might lead to an
-unexpected results (like <code>[nil, false].any? # => false</code>). In some cases
+unexpected results (like <code>[nil, false].any? # =&gt; false</code>). In some cases
 it also might be less efficient, since it iterates until the block will
 return a <em>truthy</em> value, instead of just checking if there's at least
 one value present.</p>
@@ -1228,7 +1228,7 @@ one value present.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/276b429e/src/ameba/rule/performance/any_instead_of_empty.cr#L30" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/ae29754d/src/ameba/rule/performance/any_instead_of_empty.cr#L30" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1370,7 +1370,7 @@ one value present.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/276b429e/src/ameba/rule/performance/any_instead_of_empty.cr#L40" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/ae29754d/src/ameba/rule/performance/any_instead_of_empty.cr#L40" target="_blank">View source</a>]
         
       </div>
     </div>

@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="generator" content="Crystal Docs 1.1.1">
+<meta name="generator" content="Crystal Docs 1.2.2">
 <meta name="crystal_docs.project_version" content="master">
 <meta name="crystal_docs.project_name" content="ameba">
 
@@ -760,12 +760,12 @@ English sentences and a string of raw code instead.</p>
 Exception: rewriting actions done on exactly the same range (covered next).</p>
 <p>Example:</p>
 <ul>
-<li>replace <code>,</code> by <code>=></code></li>
+<li>replace <code>,</code> by <code>=&gt;</code></li>
 <li>wrap <code>:hello, :world</code> with <code>{</code> and <code>}</code></li>
 <li>replace <code>:world</code> with <code>:everybody</code></li>
 <li>wrap <code>:world</code> with <code>[</code>, <code>]</code></li>
 </ul>
-<p>The resulting string will be <code>puts({:hello => [:everybody]})</code>
+<p>The resulting string will be <code>puts({:hello =&gt; [:everybody]})</code>
 and this result is independent of the order the instructions were given in.</p>
 <h2><a id="multiple-wraps-on-same-range" class="anchor" href="#multiple-wraps-on-same-range">
   <svg class="octicon-link" aria-hidden="true">
@@ -830,14 +830,14 @@ and <code>:hello, :world</code> will be replaced by <code>:hi</code>.</p>
   </h2>
   
     
-      <a href="https://github.com/crystal-ameba/ameba/blob/276b429e/src/ameba/source/rewriter.cr#L61" target="_blank">
+      <a href="https://github.com/crystal-ameba/ameba/blob/ae29754d/src/ameba/source/rewriter.cr#L61" target="_blank">
         ameba/source/rewriter.cr
       </a>
     
     <br/>
   
     
-      <a href="https://github.com/crystal-ameba/ameba/blob/276b429e/src/ameba/source/rewriter/action.cr#L1" target="_blank">
+      <a href="https://github.com/crystal-ameba/ameba/blob/ae29754d/src/ameba/source/rewriter/action.cr#L1" target="_blank">
         ameba/source/rewriter/action.cr
       </a>
     
@@ -929,7 +929,7 @@ and <code>:hello, :world</code> will be replaced by <code>:hi</code>.</p>
       <li class="entry-summary">
         <a href="#remove%28begin_pos%2Cend_pos%29-instance-method" class="signature"><strong>#remove</strong>(begin_pos, end_pos)</a>
         
-          <div class="summary"><p>Shortcut for <code><a href="../../Ameba/Source/Rewriter.html#replace%28begin_pos%2Cend_pos%2Ccontent%29-instance-method">#replace(begin_pos, end_pos, "")</a></code></p></div>
+          <div class="summary"><p>Shortcut for <code><a href="../../Ameba/Source/Rewriter.html#replace%28begin_pos%2Cend_pos%2Ccontent%29-instance-method">#replace(begin_pos, end_pos, &quot;&quot;)</a></code></p></div>
         
       </li>
     
@@ -998,7 +998,7 @@ and <code>:hello, :world</code> will be replaced by <code>:hi</code>.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/276b429e/src/ameba/source/rewriter.cr#L64" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/ae29754d/src/ameba/source/rewriter.cr#L64" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1028,7 +1028,7 @@ and <code>:hello, :world</code> will be replaced by <code>:hi</code>.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/276b429e/src/ameba/source/rewriter.cr#L62" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/ae29754d/src/ameba/source/rewriter.cr#L62" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1049,7 +1049,7 @@ and <code>:hello, :world</code> will be replaced by <code>:hi</code>.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/276b429e/src/ameba/source/rewriter.cr#L69" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/ae29754d/src/ameba/source/rewriter.cr#L69" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1070,7 +1070,7 @@ and <code>:hello, :world</code> will be replaced by <code>:hi</code>.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/276b429e/src/ameba/source/rewriter.cr#L94" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/ae29754d/src/ameba/source/rewriter.cr#L94" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1091,7 +1091,7 @@ and <code>:hello, :world</code> will be replaced by <code>:hi</code>.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/276b429e/src/ameba/source/rewriter.cr#L104" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/ae29754d/src/ameba/source/rewriter.cr#L104" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1112,7 +1112,7 @@ and <code>:hello, :world</code> will be replaced by <code>:hi</code>.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/276b429e/src/ameba/source/rewriter.cr#L89" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/ae29754d/src/ameba/source/rewriter.cr#L89" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1133,7 +1133,7 @@ and <code>:hello, :world</code> will be replaced by <code>:hi</code>.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/276b429e/src/ameba/source/rewriter.cr#L99" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/ae29754d/src/ameba/source/rewriter.cr#L99" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1154,7 +1154,7 @@ and <code>:hello, :world</code> will be replaced by <code>:hi</code>.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/276b429e/src/ameba/source/rewriter.cr#L109" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/ae29754d/src/ameba/source/rewriter.cr#L109" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1169,13 +1169,13 @@ and <code>:hello, :world</code> will be replaced by <code>:hi</code>.</p>
       
         <div class="doc">
           
-          <p>Shortcut for <code><a href="../../Ameba/Source/Rewriter.html#replace%28begin_pos%2Cend_pos%2Ccontent%29-instance-method">#replace(begin_pos, end_pos, "")</a></code></p>
+          <p>Shortcut for <code><a href="../../Ameba/Source/Rewriter.html#replace%28begin_pos%2Cend_pos%2Ccontent%29-instance-method">#replace(begin_pos, end_pos, &quot;&quot;)</a></code></p>
         </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/276b429e/src/ameba/source/rewriter.cr#L84" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/ae29754d/src/ameba/source/rewriter.cr#L84" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1196,7 +1196,7 @@ and <code>:hello, :world</code> will be replaced by <code>:hi</code>.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/276b429e/src/ameba/source/rewriter.cr#L74" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/ae29754d/src/ameba/source/rewriter.cr#L74" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1217,7 +1217,7 @@ and <code>:hello, :world</code> will be replaced by <code>:hi</code>.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/276b429e/src/ameba/source/rewriter.cr#L79" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/ae29754d/src/ameba/source/rewriter.cr#L79" target="_blank">View source</a>]
         
       </div>
     </div>
