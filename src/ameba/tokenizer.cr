@@ -60,9 +60,9 @@ module Ameba
           run_delimiter_state lexer, token, &block
         when .string_array_start?, .symbol_array_start?
           run_array_state lexer, token, &block
-        when .op_rcurly?
-          break
         when .eof?
+          break
+        when .op_rcurly?
           break if break_on_rcurly
         end
       end
