@@ -3,7 +3,7 @@ require "../spec_helper"
 module Ameba
   private def it_tokenizes(str, expected)
     it "tokenizes #{str}" do
-      ([] of Symbol).tap do |token_types|
+      ([] of Crystal::Token::Kind).tap do |token_types|
         Tokenizer.new(Source.new str, normalize: false)
           .run { |token| token_types << token.type }
           .should be_true

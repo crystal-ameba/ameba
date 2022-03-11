@@ -33,7 +33,7 @@ module Ameba::Rule::Lint
 
     def test(source)
       Tokenizer.new(source).run do |token|
-        next unless token.type == :COMMENT
+        next unless token.type.comment?
         next unless directive = source.parse_inline_directive(token.value.to_s)
         next unless names = unneeded_disables(source, directive, token.location)
         next if names.empty?

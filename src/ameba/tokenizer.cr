@@ -56,13 +56,13 @@ module Ameba
         block.call token
 
         case token.type
-        when :DELIMITER_START
+        when .delimiter_start?
           run_delimiter_state lexer, token, &block
-        when :STRING_ARRAY_START, :SYMBOL_ARRAY_START
+        when .string_array_start?, .symbol_array_start?
           run_array_state lexer, token, &block
-        when :EOF
+        when .op_rcurly?
           break
-        when :"}"
+        when .eof?
           break if break_on_rcurly
         end
       end
@@ -74,11 +74,11 @@ module Ameba
         block.call token
 
         case token.type
-        when :DELIMITER_END
+        when .delimiter_end?
           break
-        when :INTERPOLATION_START
+        when .interpolation_start?
           run_normal_state lexer, break_on_rcurly: true, &block
-        when :EOF
+        when .eof?
           break
         end
       end
@@ -90,9 +90,9 @@ module Ameba
         block.call token
 
         case token.type
-        when :STRING_ARRAY_END
+        when .string_array_end?
           break
-        when :EOF
+        when .eof?
           break
         end
       end

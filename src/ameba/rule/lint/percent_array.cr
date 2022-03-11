@@ -38,13 +38,13 @@ module Ameba::Rule::Lint
 
       Tokenizer.new(source).run do |token|
         case token.type
-        when :STRING_ARRAY_START, :SYMBOL_ARRAY_START
+        when .string_array_start?, .symbol_array_start?
           start_token = token.dup
-        when :STRING
+        when .string?
           if start_token && issue.nil?
             issue = array_entry_invalid?(token.value, start_token.not_nil!.raw)
           end
-        when :STRING_ARRAY_END, :SYMBOL_ARRAY_END
+        when .string_array_end?
           if issue
             issue_for start_token.not_nil!, issue.not_nil!
           end
