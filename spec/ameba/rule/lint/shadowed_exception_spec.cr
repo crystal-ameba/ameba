@@ -166,7 +166,7 @@ module Ameba::Rule::Lint
       issue = s.issues.first
 
       issue.rule.should_not be_nil
-      issue.location.to_s.should eq "source.cr:2:3"
+      issue.location.to_s.should eq "source.cr:1:1"
       issue.end_location.to_s.should eq "source.cr:4:3"
       issue.message.should eq(
         "Exception handler has shadowed exceptions: IndexError"

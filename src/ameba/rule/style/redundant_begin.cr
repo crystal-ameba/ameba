@@ -90,7 +90,7 @@ module Ameba::Rule::Style
     end
 
     private def redundant_begin_in_expressions?(node)
-      node.keyword == :begin
+      node.keyword == Crystal::Expressions::Keyword::Begin
     end
 
     private def inner_handler?(handler)
