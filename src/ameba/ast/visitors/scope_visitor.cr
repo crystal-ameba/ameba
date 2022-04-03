@@ -8,14 +8,17 @@ module Ameba::AST
 
     @scope_queue = [] of Scope
     @current_scope : Scope
+    @skip : Array(Crystal::ASTNode.class)?
 
-    def initialize(@rule, @source)
+    def initialize(@rule, @source, skip = nil)
+      @skip = skip.try &.map(&.as(Crystal::ASTNode.class))
       @current_scope = Scope.new(@source.ast) # top level scope
       @source.ast.accept self
       @scope_queue.each { |scope| @rule.test @source, scope.node, scope }
     end
 
     private def on_scope_enter(node)
+      return if skip?(node)
       @current_scope = Scope.new(node, @current_scope)
     end
 
@@ -181,6 +184,10 @@ module Ameba::AST
 
     private def record_macro?(node)
       node.name == RECORD_NODE_NAME && node.args.first?.is_a?(Crystal::Path)
+    end
+
+    private def skip?(node)
+      !!@skip.try(&.includes?(node.class))
     end
   end
 end
