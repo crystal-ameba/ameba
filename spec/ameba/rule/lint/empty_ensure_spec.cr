@@ -1,12 +1,11 @@
 require "../../../spec_helper"
-require "semantic_version"
 
 module Ameba::Rule::Lint
   describe EmptyEnsure do
     subject = EmptyEnsure.new
 
     it "passes if there is no empty ensure blocks" do
-      s = Source.new %(
+      expect_no_issues subject, <<-CRYSTAL
         def some_method
           do_some_stuff
         ensure
@@ -24,53 +23,30 @@ module Ameba::Rule::Lint
         ensure
           nil
         end
-      )
-      subject.catch(s).should be_valid
+      CRYSTAL
     end
 
     it "fails if there is an empty ensure in method" do
-      s = Source.new %(
+      expect_issue subject, <<-CRYSTAL
         def method
           do_some_stuff
         ensure
+      # ^^^^^^ error: Empty `ensure` block detected
         end
-      )
-      subject.catch(s).should_not be_valid
+      CRYSTAL
     end
 
     it "fails if there is an empty ensure in a block" do
-      s = Source.new %(
-        begin
-          do_some_stuff
-        ensure
-          # nothing here
-        end
-      )
-      subject.catch(s).should_not be_valid
-    end
-
-    it "reports rule, pos and message" do
-      s = Source.new %(
+      expect_issue subject, <<-CRYSTAL
         begin
           do_some_stuff
         rescue
           do_some_other_stuff
         ensure
+      # ^^^^^^ error: Empty `ensure` block detected
+          # nothing here
         end
-      ), "source.cr"
-      subject.catch(s).should_not be_valid
-      issue = s.issues.first
-
-      issue.rule.should_not be_nil
-      # TODO: refactor this in next release
-      # Crystal 1.4 changes the start location of Crystal::ExceptionHandler
-      if SemanticVersion.parse(Crystal::VERSION) <= SemanticVersion.parse("1.3.2")
-        issue.location.to_s.should eq "source.cr:2:3"
-      else
-        issue.location.to_s.should eq "source.cr:1:1"
-      end
-      issue.end_location.to_s.should eq "source.cr:6:3"
-      issue.message.should eq "Empty `ensure` block detected"
+      CRYSTAL
     end
   end
 end

@@ -49,7 +49,7 @@ module Ameba::Rule::Lint
       node_ensure = node.ensure
       return if node_ensure.nil? || !node_ensure.nop?
 
-      issue_for node, MSG
+      issue_for node.ensure_location, node.end_location, MSG
     end
   end
 end

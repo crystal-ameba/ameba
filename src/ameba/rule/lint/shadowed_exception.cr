@@ -38,38 +38,44 @@ module Ameba::Rule::Lint
       description "Disallows rescued exception that get shadowed"
     end
 
-    MSG = "Exception handler has shadowed exceptions: %s"
+    MSG = "Shadowed exception found: %s"
 
     def test(source, node : Crystal::ExceptionHandler)
-      return unless excs = node.rescues.try &.map(&.types)
-      return if (excs = shadowed excs).empty?
+      rescues = node.rescues
 
-      issue_for node, MSG % excs.join(", ")
+      return if rescues.nil?
+
+      shadowed(rescues).each { |tp| issue_for tp, MSG % tp.names.join("::") }
     end
 
-    private def shadowed(exceptions, exception_found = false)
-      previous_exceptions = [] of String
+    private def shadowed(rescues, catch_all = false)
+      traversed_types = Set(String).new
 
-      exceptions.reduce([] of String) do |shadowed, excs|
-        excs = excs.try(&.map(&.to_s)) || %w[Exception]
-
-        if exception_found
-          shadowed.concat excs
-          previous_exceptions.concat excs
+      filter_rescues(rescues).each_with_object([] of Crystal::Path) do |types, shadowed|
+        case
+        when catch_all
+          shadowed.concat(types)
+          next
+        when types.any?(&.single?("Exception"))
+          nodes = types.reject(&.single?("Exception"))
+          shadowed.concat(nodes) unless nodes.empty?
+          catch_all = true
+          next
         else
-          exception_found ||= excs.any? &.== "Exception"
-          excs.each do |exc|
-            if exception_found && exc != "Exception"
-              shadowed << exc
-            else
-              shadowed << exc if previous_exceptions.any? &.== exc
-            end
-            previous_exceptions << exc
-          end
+          nodes = types.select { |tp| traverse(tp.to_s, traversed_types) }
+          shadowed.concat(nodes) unless nodes.empty?
         end
-
-        shadowed
       end
+    end
+
+    private def filter_rescues(rescues)
+      rescues.compact_map(&.types.try &.select(Crystal::Path))
+    end
+
+    private def traverse(path, traversed_types)
+      dup = traversed_types.includes?(path)
+      dup || (traversed_types << path)
+      dup
     end
   end
 end
