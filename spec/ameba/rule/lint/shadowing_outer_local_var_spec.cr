@@ -235,6 +235,23 @@ module Ameba::Rule::Lint
           end
           CRYSTAL
       end
+
+      # https://github.com/crystal-ameba/ameba/issues/224#issuecomment-822245167
+      it "does not report scoped vars to MacroFor (2)" do
+        expect_no_issues subject, <<-CRYSTAL
+          struct Test
+            def test
+              {% begin %}
+                {% for ivar in @type.instance_vars %}
+                  {% var_type = ivar %}
+                {% end %}
+
+                {% ["a", "b"].map { |ivar| puts ivar } %}
+              {% end %}
+            end
+          end
+          CRYSTAL
+      end
     end
   end
 end
