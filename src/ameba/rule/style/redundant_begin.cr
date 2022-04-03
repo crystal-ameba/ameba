@@ -90,7 +90,7 @@ module Ameba::Rule::Style
     end
 
     private def redundant_begin_in_expressions?(node)
-      node.keyword.try &.begin?
+      !!(node.keyword.try &.begin?)
     end
 
     private def inner_handler?(handler)
