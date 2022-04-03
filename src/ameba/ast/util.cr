@@ -194,7 +194,10 @@ module Ameba::AST::Util
     return 0 unless node.responds_to?(:name) && (name = node.name)
 
     case name
-    when Crystal::ASTNode     then name.name_size
+    when Crystal::ASTNode then name.name_size
+      # TODO: remove in a next release
+      # (preserves backward compatibility of crystal <= 1.3.2 )
+    when Symbol               then name.to_s.size # Crystal::MagicConstant
     when Crystal::Token::Kind then name.to_s.size # Crystal::MagicConstant
     else                           name.size
     end
