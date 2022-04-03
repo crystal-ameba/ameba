@@ -1,4 +1,5 @@
 require "../../../spec_helper"
+require "semantic_version"
 
 module Ameba::Rule::Lint
   describe EmptyEnsure do
@@ -63,7 +64,11 @@ module Ameba::Rule::Lint
       issue.rule.should_not be_nil
       # TODO: refactor this in next release
       # Crystal 1.4 changes the start location of Crystal::ExceptionHandler
-      # issue.location.to_s.should eq "source.cr:2:3"
+      if SemanticVersion.parse(Crystal::VERSION) <= SemanticVersion.parse("1.3.2")
+        issue.location.to_s.should eq "source.cr:2:3"
+      else
+        issue.location.to_s.should eq "source.cr:1:1"
+      end
       issue.end_location.to_s.should eq "source.cr:6:3"
       issue.message.should eq "Empty `ensure` block detected"
     end
