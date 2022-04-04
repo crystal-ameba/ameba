@@ -5,62 +5,42 @@ module Ameba::Rule::Lint
     subject = BadDirective.new
 
     it "does not report if rule is correct" do
-      s = Source.new %(
+      expect_no_issues subject, <<-CRYSTAL
         # ameba:disable Lint/BadDirective
-      )
-      subject.catch(s).should be_valid
+        CRYSTAL
     end
 
     it "reports if there is incorrect action" do
-      s = Source.new %(
+      expect_issue subject, <<-CRYSTAL
         # ameba:foo Lint/BadDirective
-      ), "source.cr"
-      subject.catch(s).should_not be_valid
-      s.issues.size.should eq 1
-
-      issue = s.issues.first
-      issue.message.should eq(
-        "Bad action in comment directive: 'foo'. Possible values: disable, enable"
-      )
-      issue.location.to_s.should eq "source.cr:1:1"
-      issue.end_location.to_s.should eq ""
+        # ^{} error: Bad action in comment directive: 'foo'. Possible values: disable, enable
+        CRYSTAL
     end
 
     it "reports if there are incorrect rule names" do
-      s = Source.new %(
+      expect_issue subject, <<-CRYSTAL
         # ameba:enable BadRule1, BadRule2
-      ), "source.cr"
-      subject.catch(s).should_not be_valid
-      s.issues.size.should eq 1
-
-      issue = s.issues.first
-      issue.message.should eq(
-        "Such rules do not exist: BadRule1, BadRule2"
-      )
-      issue.location.to_s.should eq "source.cr:1:1"
-      issue.end_location.to_s.should eq ""
+        # ^{} error: Such rules do not exist: BadRule1, BadRule2
+        CRYSTAL
     end
 
     it "does not report if there no action and rules at all" do
-      s = Source.new %(
+      expect_no_issues subject, <<-CRYSTAL
         # ameba:
-      )
-      subject.catch(s).should be_valid
+        CRYSTAL
     end
 
     it "does not report if there are no rules" do
-      s = Source.new %(
+      expect_no_issues subject, <<-CRYSTAL
         # ameba:enable
         # ameba:disable
-      )
-      subject.catch(s).should be_valid
+        CRYSTAL
     end
 
     it "does not report if there are group names in the directive" do
-      s = Source.new %(
+      expect_no_issues subject, <<-CRYSTAL
         # ameba:disable Style Performance
-      )
-      subject.catch(s).should be_valid
+        CRYSTAL
     end
   end
 end

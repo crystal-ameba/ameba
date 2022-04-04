@@ -3,19 +3,39 @@ require "./base_visitor"
 module Ameba::AST
   # AST Visitor that traverses the source and constructs scopes.
   class ScopeVisitor < BaseVisitor
+    # Non-exhaustive list of nodes to be visited by Ameba's rules.
+    NODES = [
+      ClassDef,
+      ModuleDef,
+      EnumDef,
+      LibDef,
+      FunDef,
+      TypeDef,
+      TypeOf,
+      CStructOrUnionDef,
+      ProcLiteral,
+      Block,
+      Macro,
+      MacroFor,
+    ]
+
     SUPER_NODE_NAME  = "super"
     RECORD_NODE_NAME = "record"
 
     @scope_queue = [] of Scope
     @current_scope : Scope
+    @current_assign : Crystal::ASTNode?
+    @skip : Array(Crystal::ASTNode.class)?
 
-    def initialize(@rule, @source)
+    def initialize(@rule, @source, skip = nil)
+      @skip = skip.try &.map(&.as(Crystal::ASTNode.class))
       @current_scope = Scope.new(@source.ast) # top level scope
       @source.ast.accept self
       @scope_queue.each { |scope| @rule.test @source, scope.node, scope }
     end
 
     private def on_scope_enter(node)
+      return if skip?(node)
       @current_scope = Scope.new(node, @current_scope)
     end
 
@@ -36,72 +56,17 @@ module Ameba::AST
       on_scope_end(node) if @current_scope.eql?(node)
     end
 
-    # :nodoc:
-    def visit(node : Crystal::ClassDef)
-      on_scope_enter(node)
-    end
-
-    # :nodoc:
-    def visit(node : Crystal::ModuleDef)
-      on_scope_enter(node)
-    end
-
-    # :nodoc:
-    def visit(node : Crystal::EnumDef)
-      on_scope_enter(node)
-    end
-
-    # :nodoc:
-    def visit(node : Crystal::LibDef)
-      on_scope_enter(node)
-    end
-
-    # :nodoc:
-    def visit(node : Crystal::FunDef)
-      on_scope_enter(node)
-    end
-
-    # :nodoc:
-    def visit(node : Crystal::TypeDef)
-      on_scope_enter(node)
-    end
-
-    # :nodoc:
-    def visit(node : Crystal::TypeOf)
-      on_scope_enter(node)
-    end
-
-    # :nodoc:
-    def visit(node : Crystal::CStructOrUnionDef)
-      on_scope_enter(node)
-    end
+    {% for name in NODES %}
+      # :nodoc:
+      def visit(node : Crystal::{{name}})
+        on_scope_enter(node)
+      end
+    {% end %}
 
     # :nodoc:
     def visit(node : Crystal::Def)
       node.name == "->" || on_scope_enter(node)
     end
-
-    # :nodoc:
-    def visit(node : Crystal::ProcLiteral)
-      on_scope_enter(node)
-    end
-
-    # :nodoc:
-    def visit(node : Crystal::Block)
-      on_scope_enter(node)
-    end
-
-    # :nodoc:
-    def visit(node : Crystal::Macro)
-      on_scope_enter(node)
-    end
-
-    # :nodoc:
-    def visit(node : Crystal::MacroFor)
-      on_scope_enter(node)
-    end
-
-    @current_assign : Crystal::ASTNode?
 
     # :nodoc:
     def visit(node : Crystal::Assign | Crystal::OpAssign | Crystal::MultiAssign | Crystal::UninitializedVar)
@@ -181,6 +146,10 @@ module Ameba::AST
 
     private def record_macro?(node)
       node.name == RECORD_NODE_NAME && node.args.first?.is_a?(Crystal::Path)
+    end
+
+    private def skip?(node)
+      !!@skip.try(&.includes?(node.class))
     end
   end
 end

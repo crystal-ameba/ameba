@@ -71,7 +71,7 @@ module Ameba::AST
       ivariables << InstanceVariable.new(node)
     end
 
-    # Returns variable by its name or nil if it does not exist.
+    # Returns variable by its name or `nil` if it does not exist.
     #
     # ```
     # scope = Scope.new(class_node, nil)
@@ -91,13 +91,13 @@ module Ameba::AST
       find_variable(name).try &.assign(node, self)
     end
 
-    # Returns true if current scope represents a block (or proc),
-    # false if not.
+    # Returns `true` if current scope represents a block (or proc),
+    # `false` otherwise.
     def block?
       node.is_a?(Crystal::Block) || node.is_a?(Crystal::ProcLiteral)
     end
 
-    # Returns true if current scope represents a spawn block, e. g.
+    # Returns `true` if current scope represents a spawn block, e. g.
     #
     # ```
     # spawn do
@@ -110,18 +110,19 @@ module Ameba::AST
       call.try(&.name) == "spawn"
     end
 
-    # Returns true if current scope sits inside a macro.
+    # Returns `true` if current scope sits inside a macro.
     def in_macro?
-      node.is_a?(Crystal::Macro) || !!outer_scope.try(&.in_macro?)
+      (node.is_a?(Crystal::Macro) || node.is_a?(Crystal::MacroFor)) ||
+        !!outer_scope.try(&.in_macro?)
     end
 
-    # Returns true instance variable assinged in this scope.
+    # Returns `true` if instance variable is assinged in this scope.
     def assigns_ivar?(name)
       arguments.find(&.name.== name) &&
         ivariables.find(&.name.== "@#{name}")
     end
 
-    # Returns true if and only if current scope represents some
+    # Returns `true` if and only if current scope represents some
     # type definition, for example a class.
     def type_definition?
       node.is_a?(Crystal::ClassDef) ||
@@ -133,7 +134,7 @@ module Ameba::AST
     end
 
     # Returns true if current scope (or any of inner scopes) references variable,
-    # false if not.
+    # `false` otherwise.
     def references?(variable : Variable, check_inner_scopes = true)
       variable.references.any? do |reference|
         return true if reference.scope == self
@@ -141,17 +142,17 @@ module Ameba::AST
       end || variable.used_in_macro?
     end
 
-    # Returns true if current scope is a def, false if not.
+    # Returns `true` if current scope is a def, `false` otherwise.
     def def?
       node.is_a?(Crystal::Def)
     end
 
-    # Returns true if this scope is a top level scope, false if not.
+    # Returns `true` if this scope is a top level scope, `false` otherwise.
     def top_level?
       outer_scope.nil?
     end
 
-    # Returns true if var is an argument in current scope, false if not.
+    # Returns true if var is an argument in current scope, `false` otherwise.
     def arg?(var)
       case current_node = node
       when Crystal::Def
@@ -169,7 +170,7 @@ module Ameba::AST
       args.any? { |arg| arg.name == var.name && arg.location == var.location }
     end
 
-    # Returns true if the `node` represents exactly
+    # Returns `true` if the *node* represents exactly
     # the same Crystal node as `@node`.
     def eql?(node)
       node == @node &&
