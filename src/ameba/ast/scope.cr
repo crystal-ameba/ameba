@@ -112,7 +112,8 @@ module Ameba::AST
 
     # Returns `true` if current scope sits inside a macro.
     def in_macro?
-      node.is_a?(Crystal::Macro) || !!outer_scope.try(&.in_macro?)
+      (node.is_a?(Crystal::Macro) || node.is_a?(Crystal::MacroFor)) ||
+        !!outer_scope.try(&.in_macro?)
     end
 
     # Returns `true` if instance variable is assinged in this scope.
