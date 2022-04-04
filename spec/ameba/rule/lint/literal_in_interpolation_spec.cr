@@ -5,15 +5,14 @@ module Ameba::Rule::Lint
 
   describe LiteralInInterpolation do
     it "passes with good interpolation examples" do
-      s = Source.new %q(
+      expect_no_issues subject, <<-CRYSTAL
         name = "Ary"
         "Hello, #{name}"
 
         "#{name}"
 
         "Name size: #{name.size}"
-      )
-      subject.catch(s).should be_valid
+        CRYSTAL
     end
 
     it "fails if there is useless interpolation" do

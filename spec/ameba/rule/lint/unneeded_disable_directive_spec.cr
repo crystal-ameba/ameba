@@ -5,17 +5,15 @@ module Ameba::Rule::Lint
     subject = UnneededDisableDirective.new
 
     it "passes if there are no comments" do
-      s = Source.new %(
+      expect_no_issues subject, <<-CRYSTAL
         a = 1
-      )
-      subject.catch(s).should be_valid
+        CRYSTAL
     end
 
     it "passes if there is disable directive" do
-      s = Source.new %(
+      expect_no_issues subject, <<-CRYSTAL
         a = 1 # my super var
-      )
-      subject.catch(s).should be_valid
+        CRYSTAL
     end
 
     it "doesn't report if there is disable directive and it is needed" do
@@ -48,33 +46,27 @@ module Ameba::Rule::Lint
     end
 
     it "fails if there is unneeded directive" do
-      s = Source.new %Q(
+      expect_issue subject, <<-CRYSTAL
         # ameba:disable #{NamedRule.name}
+        # ^{} error: Unnecessary disabling of #{NamedRule.name}
         a = 1
-      )
-      subject.catch(s).should_not be_valid
-      s.issues.first.message.should eq(
-        "Unnecessary disabling of #{NamedRule.name}"
-      )
+        CRYSTAL
     end
 
     it "fails if there is inline unneeded directive" do
-      s = Source.new %Q(a = 1 # ameba:disable #{NamedRule.name})
-      subject.catch(s).should_not be_valid
-      s.issues.first.message.should eq(
-        "Unnecessary disabling of #{NamedRule.name}"
-      )
+      expect_issue subject, <<-CRYSTAL
+        a = 1 # ameba:disable #{NamedRule.name}
+            # ^ error: Unnecessary disabling of #{NamedRule.name}
+        CRYSTAL
     end
 
     it "detects mixed inline directives" do
-      s = Source.new %Q(
+      expect_issue subject, <<-CRYSTAL
         # ameba:disable Rule1, Rule2
+        # ^{} error: Unnecessary disabling of Rule1, Rule2
         a = 1 # ameba:disable Rule3
-      ), "source.cr"
-      subject.catch(s).should_not be_valid
-      s.issues.size.should eq 2
-      s.issues.first.message.should contain "Rule1, Rule2"
-      s.issues.last.message.should contain "Rule3"
+            # ^ error: Unnecessary disabling of Rule3
+        CRYSTAL
     end
 
     it "fails if there is disabled UnneededDisableDirective" do

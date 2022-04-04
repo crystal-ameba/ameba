@@ -6,163 +6,115 @@ module Ameba::Rule::Lint
 
     context "when using `-`" do
       it "registers an offense with `x`" do
-        source = Source.new("x =- y", "source.cr")
-        subject.catch(source).should_not be_valid
-        source.issues.size.should eq 1
-
-        issue = source.issues.first
-        issue.message.should eq "Suspicious assignment detected. Did you mean `-=`?"
-        issue.location.to_s.should eq "source.cr:1:3"
-        issue.end_location.to_s.should eq "source.cr:1:4"
+        expect_issue subject, <<-CRYSTAL
+          x =- y
+          # ^^ error: Suspicious assignment detected. Did you mean `-=`?
+          CRYSTAL
       end
 
       it "registers an offense with `@x`" do
-        source = Source.new("@x =- y", "source.cr")
-        subject.catch(source).should_not be_valid
-        source.issues.size.should eq 1
-
-        issue = source.issues.first
-        issue.message.should eq "Suspicious assignment detected. Did you mean `-=`?"
-        issue.location.to_s.should eq "source.cr:1:4"
-        issue.end_location.to_s.should eq "source.cr:1:5"
+        expect_issue subject, <<-CRYSTAL
+          @x =- y
+           # ^^ error: Suspicious assignment detected. Did you mean `-=`?
+          CRYSTAL
       end
 
       it "registers an offense with `@@x`" do
-        source = Source.new("@@x =- y", "source.cr")
-        subject.catch(source).should_not be_valid
-        source.issues.size.should eq 1
-
-        issue = source.issues.first
-        issue.message.should eq "Suspicious assignment detected. Did you mean `-=`?"
-        issue.location.to_s.should eq "source.cr:1:5"
-        issue.end_location.to_s.should eq "source.cr:1:6"
+        expect_issue subject, <<-CRYSTAL
+          @@x =- y
+            # ^^ error: Suspicious assignment detected. Did you mean `-=`?
+          CRYSTAL
       end
 
       it "registers an offense with `X`" do
-        source = Source.new("X =- y", "source.cr")
-        subject.catch(source).should_not be_valid
-        source.issues.size.should eq 1
-
-        issue = source.issues.first
-        issue.message.should eq "Suspicious assignment detected. Did you mean `-=`?"
-        issue.location.to_s.should eq "source.cr:1:3"
-        issue.end_location.to_s.should eq "source.cr:1:4"
+        expect_issue subject, <<-CRYSTAL
+          X =- y
+          # ^^ error: Suspicious assignment detected. Did you mean `-=`?
+          CRYSTAL
       end
 
       it "does not register an offense when no mistype assignments" do
-        subject.catch(Source.new(<<-CRYSTAL)).should be_valid
+        expect_no_issues subject, <<-CRYSTAL
           x = 1
           x -= y
           x = -y
-        CRYSTAL
+          CRYSTAL
       end
     end
 
     context "when using `+`" do
       it "registers an offense with `x`" do
-        source = Source.new("x =+ y", "source.cr")
-        subject.catch(source).should_not be_valid
-        source.issues.size.should eq 1
-
-        issue = source.issues.first
-        issue.message.should eq "Suspicious assignment detected. Did you mean `+=`?"
-        issue.location.to_s.should eq "source.cr:1:3"
-        issue.end_location.to_s.should eq "source.cr:1:4"
+        expect_issue subject, <<-CRYSTAL
+          x =+ y
+          # ^^ error: Suspicious assignment detected. Did you mean `+=`?
+          CRYSTAL
       end
 
       it "registers an offense with `@x`" do
-        source = Source.new("@x =+ y", "source.cr")
-        subject.catch(source).should_not be_valid
-        source.issues.size.should eq 1
-
-        issue = source.issues.first
-        issue.message.should eq "Suspicious assignment detected. Did you mean `+=`?"
-        issue.location.to_s.should eq "source.cr:1:4"
-        issue.end_location.to_s.should eq "source.cr:1:5"
+        expect_issue subject, <<-CRYSTAL
+          @x =+ y
+           # ^^ error: Suspicious assignment detected. Did you mean `+=`?
+          CRYSTAL
       end
 
       it "registers an offense with `@@x`" do
-        source = Source.new("@@x =+ y", "source.cr")
-        subject.catch(source).should_not be_valid
-        source.issues.size.should eq 1
-
-        issue = source.issues.first
-        issue.message.should eq "Suspicious assignment detected. Did you mean `+=`?"
-        issue.location.to_s.should eq "source.cr:1:5"
-        issue.end_location.to_s.should eq "source.cr:1:6"
+        expect_issue subject, <<-CRYSTAL
+          @@x =+ y
+            # ^^ error: Suspicious assignment detected. Did you mean `+=`?
+          CRYSTAL
       end
 
       it "registers an offense with `X`" do
-        source = Source.new("X =+ y", "source.cr")
-        subject.catch(source).should_not be_valid
-        source.issues.size.should eq 1
-
-        issue = source.issues.first
-        issue.message.should eq "Suspicious assignment detected. Did you mean `+=`?"
-        issue.location.to_s.should eq "source.cr:1:3"
-        issue.end_location.to_s.should eq "source.cr:1:4"
+        expect_issue subject, <<-CRYSTAL
+          X =+ y
+          # ^^ error: Suspicious assignment detected. Did you mean `+=`?
+          CRYSTAL
       end
 
       it "does not register an offense when no mistype assignments" do
-        subject.catch(Source.new(<<-CRYSTAL)).should be_valid
+        expect_no_issues subject, <<-CRYSTAL
           x = 1
           x += y
           x = +y
-        CRYSTAL
+          CRYSTAL
       end
     end
 
     context "when using `!`" do
       it "registers an offense with `x`" do
-        source = Source.new("x =! y", "source.cr")
-        subject.catch(source).should_not be_valid
-        source.issues.size.should eq 1
-
-        issue = source.issues.first
-        issue.message.should eq "Suspicious assignment detected. Did you mean `!=`?"
-        issue.location.to_s.should eq "source.cr:1:3"
-        issue.end_location.to_s.should eq "source.cr:1:4"
+        expect_issue subject, <<-CRYSTAL
+          x =! y
+          # ^^ error: Suspicious assignment detected. Did you mean `!=`?
+          CRYSTAL
       end
 
       it "registers an offense with `@x`" do
-        source = Source.new("@x =! y", "source.cr")
-        subject.catch(source).should_not be_valid
-        source.issues.size.should eq 1
-
-        issue = source.issues.first
-        issue.message.should eq "Suspicious assignment detected. Did you mean `!=`?"
-        issue.location.to_s.should eq "source.cr:1:4"
-        issue.end_location.to_s.should eq "source.cr:1:5"
+        expect_issue subject, <<-CRYSTAL
+          @x =! y
+           # ^^ error: Suspicious assignment detected. Did you mean `!=`?
+          CRYSTAL
       end
 
       it "registers an offense with `@@x`" do
-        source = Source.new("@@x =! y", "source.cr")
-        subject.catch(source).should_not be_valid
-        source.issues.size.should eq 1
-
-        issue = source.issues.first
-        issue.message.should eq "Suspicious assignment detected. Did you mean `!=`?"
-        issue.location.to_s.should eq "source.cr:1:5"
-        issue.end_location.to_s.should eq "source.cr:1:6"
+        expect_issue subject, <<-CRYSTAL
+          @@x =! y
+            # ^^ error: Suspicious assignment detected. Did you mean `!=`?
+          CRYSTAL
       end
 
       it "registers an offense with `X`" do
-        source = Source.new("X =! y", "source.cr")
-        subject.catch(source).should_not be_valid
-        source.issues.size.should eq 1
-
-        issue = source.issues.first
-        issue.message.should eq "Suspicious assignment detected. Did you mean `!=`?"
-        issue.location.to_s.should eq "source.cr:1:3"
-        issue.end_location.to_s.should eq "source.cr:1:4"
+        expect_issue subject, <<-CRYSTAL
+          X =! y
+          # ^^ error: Suspicious assignment detected. Did you mean `!=`?
+          CRYSTAL
       end
 
       it "does not register an offense when no mistype assignments" do
-        subject.catch(Source.new(<<-CRYSTAL)).should be_valid
+        expect_no_issues subject, <<-CRYSTAL
           x = false
           x != y
           x = !y
-        CRYSTAL
+          CRYSTAL
       end
     end
   end

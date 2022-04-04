@@ -49,6 +49,7 @@ module Ameba::Rule::Performance
       it "allows to configure object_call_names" do
         rule = Rule::Performance::AnyAfterFilter.new
         rule.filter_names = %w(select)
+
         expect_no_issues rule, <<-CRYSTAL
           [1, 2, 3].reject { |e| e > 2 }.any?
           CRYSTAL
