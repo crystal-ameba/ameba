@@ -39,7 +39,10 @@ module Ameba::Rule::Lint
     MSG = "Shadowing outer local variable `%s`"
 
     def test(source)
-      AST::ScopeVisitor.new self, source
+      AST::ScopeVisitor.new self, source, skip: [
+        Crystal::Macro,
+        Crystal::MacroFor,
+      ]
     end
 
     def test(source, node : Crystal::ProcLiteral, scope : AST::Scope)
@@ -51,9 +54,7 @@ module Ameba::Rule::Lint
     end
 
     private def find_shadowing(source, scope)
-      outer_scope = scope.outer_scope
-
-      return if outer_scope.nil? || outer_scope.in_macro?
+      return unless outer_scope = scope.outer_scope
 
       scope.arguments.reject(&.ignored?).each do |arg|
         variable = outer_scope.find_variable(arg.name)
