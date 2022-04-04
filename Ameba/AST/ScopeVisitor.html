@@ -759,7 +759,7 @@
   </h2>
   
     
-      <a href="https://github.com/crystal-ameba/ameba/blob/528ec460/src/ameba/ast/visitors/scope_visitor.cr#L5" target="_blank">
+      <a href="https://github.com/crystal-ameba/ameba/blob/a69fba88/src/ameba/ast/visitors/scope_visitor.cr#L5" target="_blank">
         ameba/ast/visitors/scope_visitor.cr
       </a>
     
@@ -779,6 +779,15 @@
     </h2>
   
   <dl>
+    
+      <dt class="entry-const" id="NODES">
+        <strong>NODES</strong> = <code>[<span class="t">ClassDef</span>, <span class="t">ModuleDef</span>, <span class="t">EnumDef</span>, <span class="t">LibDef</span>, <span class="t">FunDef</span>, <span class="t">TypeDef</span>, <span class="t">TypeOf</span>, <span class="t">CStructOrUnionDef</span>, <span class="t">ProcLiteral</span>, <span class="t">Block</span>, <span class="t">Macro</span>, <span class="t">MacroFor</span>]</code>
+      </dt>
+      
+      <dd class="entry-const-doc">
+        <p>Non-exhaustive list of nodes to be visited by Ameba's rules.</p>
+      </dd>
+      
     
       <dt class="entry-const" id="RECORD_NODE_NAME">
         <strong>RECORD_NODE_NAME</strong> = <code><span class="s">&quot;record&quot;</span></code>
@@ -805,7 +814,7 @@
   <ul class="list-summary">
     
       <li class="entry-summary">
-        <a href="#new%28rule%2Csource%29-class-method" class="signature"><strong>.new</strong>(rule, source)</a>
+        <a href="#new%28rule%2Csource%2Cskip%3Dnil%29-class-method" class="signature"><strong>.new</strong>(rule, source, skip = <span class="n">nil</span>)</a>
         
       </li>
     
@@ -891,18 +900,18 @@
     Constructor Detail
   </h2>
   
-    <div class="entry-detail" id="new(rule,source)-class-method">
+    <div class="entry-detail" id="new(rule,source,skip=nil)-class-method">
       <div class="signature">
         
-        def self.<strong>new</strong>(rule, source)
+        def self.<strong>new</strong>(rule, source, skip = <span class="n">nil</span>)
 
-        <a class="method-permalink" href="#new%28rule%2Csource%29-class-method">#</a>
+        <a class="method-permalink" href="#new%28rule%2Csource%2Cskip%3Dnil%29-class-method">#</a>
       </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/528ec460/src/ameba/ast/visitors/scope_visitor.cr#L12" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/a69fba88/src/ameba/ast/visitors/scope_visitor.cr#L30" target="_blank">View source</a>]
         
       </div>
     </div>
