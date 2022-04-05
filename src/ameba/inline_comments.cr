@@ -95,7 +95,7 @@ module Ameba
       commented = false
 
       lexer = Crystal::Lexer.new(line).tap(&.comments_enabled = true)
-      Tokenizer.new(lexer).run { |t| commented = true if t.type == :COMMENT }
+      Tokenizer.new(lexer).run { |t| commented = true if t.type.comment? }
       commented
     end
   end

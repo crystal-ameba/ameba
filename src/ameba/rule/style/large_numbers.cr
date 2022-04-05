@@ -37,7 +37,7 @@ module Ameba::Rule::Style
 
     def test(source)
       Tokenizer.new(source).run do |token|
-        next unless token.type == :NUMBER && decimal?(token.raw)
+        next unless token.type.number? && decimal?(token.raw)
 
         parsed = parse_number token.raw
 

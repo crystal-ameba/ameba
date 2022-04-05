@@ -90,7 +90,7 @@ module Ameba::Rule::Style
     end
 
     private def redundant_begin_in_expressions?(node)
-      node.keyword == :begin
+      !!node.keyword.try(&.begin?)
     end
 
     private def inner_handler?(handler)
@@ -119,19 +119,19 @@ module Ameba::Rule::Style
         token = lexer.next_token
 
         case token.type
-        when :EOF, :"->"
+        when .eof?, .op_minus_gt?
           break
-        when :IDENT
+        when .ident?
           next unless in_body
           return unless token.value == :begin
           return token.location
-        when :"("
+        when .op_lparen?
           in_argument_list = true
-        when :")"
+        when .op_rparen?
           in_argument_list = false
-        when :NEWLINE
+        when .newline?
           in_body = true unless in_argument_list
-        when :SPACE
+        when .space?
           # ignore
         else
           return if in_body
@@ -142,7 +142,7 @@ module Ameba::Rule::Style
     private def def_redundant_end_loc(lexer)
       end_loc = def_end_loc = nil
 
-      while (token = lexer.next_token).type != :EOF
+      while !(token = lexer.next_token).type.eof?
         next unless token.value == :end
 
         end_loc, def_end_loc = def_end_loc, token.location
