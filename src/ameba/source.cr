@@ -63,6 +63,10 @@ module Ameba
         .parse
     end
 
+    getter directives : Directives do
+      parse_directives(lines)
+    end
+
     getter fullpath : String do
       File.expand_path(path)
     end

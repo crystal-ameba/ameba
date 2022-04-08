@@ -34,7 +34,7 @@ module Ameba::Rule::Lint
     def test(source)
       Tokenizer.new(source).run do |token|
         next unless token.type.comment?
-        next unless directive = source.parse_inline_directive(token.value.to_s)
+        next unless directive = source.parse_directive(token.value.to_s)
         next unless names = unneeded_disables(source, directive, token.location)
         next if names.empty?
 
@@ -43,9 +43,9 @@ module Ameba::Rule::Lint
     end
 
     private def unneeded_disables(source, directive, location)
-      return unless directive[:action] == "disable"
+      return unless directive.action.disable?
 
-      directive[:rules].reject do |rule_name|
+      directive.names.reject do |rule_name|
         next if rule_name == self.name
         source.issues.any? do |issue|
           issue.rule.name == rule_name &&

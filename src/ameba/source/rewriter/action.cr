@@ -121,7 +121,7 @@ class Ameba::Source::Rewriter
     # In case a child has equal range to *action*, it is returned as `:parent`
     #
     # Reminder: an empty range 1...1 is considered disjoint from 1...10
-    protected def analyse_hierarchy(action) # ameba:disable Metrics/CyclomaticComplexity
+    protected def analyse_hierarchy(action) # ameba:disable_line Metrics/CyclomaticComplexity
       # left_index is the index of the first child that isn't completely to the left of action
       left_index = bsearch_child_index { |child| child.end_pos > action.begin_pos }
       # right_index is the index of the first child that is completely on the right of action

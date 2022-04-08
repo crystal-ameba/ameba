@@ -185,7 +185,7 @@ module Ameba
         rules = [NamedRule.new] of Rule::Base
         source = Source.new %(
           def foo
-            bar = 1 # ameba:disable #{NamedRule.name}
+            bar = 1 # ameba:disable_line #{NamedRule.name}
           end
         )
         source.add_issue NamedRule.new, location: {2, 1},

@@ -189,7 +189,7 @@ module Ameba::Rule::Style
       CALL_PATTERN % {call.name, args, name}
     end
 
-    # ameba:disable Metrics/CyclomaticComplexity
+    # ameba:disable_next_line Metrics/CyclomaticComplexity
     protected def issue_for_valid(source, call : Crystal::Call, block : Crystal::Block, body : Crystal::Call)
       return unless location = call.name_location
       return unless end_location = block.end_location

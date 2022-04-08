@@ -22,17 +22,17 @@ module Ameba::Rule::Lint
       description "Reports bad comment directives"
     end
 
-    AVAILABLE_ACTIONS = InlineComments::Action.names.map(&.downcase)
+    AVAILABLE_ACTIONS = InlineComments::Action.names.map(&.underscore)
     ALL_RULE_NAMES    = Rule.rules.map(&.rule_name)
     ALL_GROUP_NAMES   = Rule.rules.map(&.group_name).uniq!
 
     def test(source)
       Tokenizer.new(source).run do |token|
         next unless token.type.comment?
-        next unless directive = source.parse_inline_directive(token.value.to_s)
+        next unless match = source.match_inline_comment(token.value.to_s)
 
-        check_action source, token, directive[:action]
-        check_rules source, token, directive[:rules]
+        check_action source, token, match[:action]
+        check_rules source, token, match[:names]
       end
     end
 

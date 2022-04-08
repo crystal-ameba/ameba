@@ -1,13 +1,32 @@
 module Ameba
   # A module that utilizes inline comments parsing and processing logic.
   module InlineComments
-    COMMENT_DIRECTIVE_REGEX = /# ameba:(?<action>\w+) (?<rules>\w+(?:\/\w+)?(?:,? \w+(?:\/\w+)?)*)/
+    COMMENT_DIRECTIVE_REGEX = /# ameba:(?<action>\w+) (?<names>\w+(?:\/\w+)?(?:,? \w+(?:\/\w+)?)*)/
 
     # Available actions in the inline comments
     enum Action
-      Disable
       Enable
+      Disable
+      DisableLine
+      DisableNextLine
     end
+
+    # Directive the inline comment is parsed to.
+    struct Directive
+      getter action : Action
+      getter names : Array(String)
+
+      def initialize(@action, @names)
+      end
+
+      def includes?(rule)
+        rule.name.in?(names) || rule.group.in?(names)
+      end
+    end
+
+    # Map of directives.
+    # Key is a line number, value is a Directive itself.
+    alias Directives = Hash(Int32, Directive)
 
     # Returns true if current location is disabled for a particular rule,
     # false otherwise.
@@ -37,15 +56,21 @@ module Ameba
     # end
     # ```
     def location_disabled?(location, rule)
+      return false if directives.empty?
       return false if rule.name.in?(Rule::SPECIAL)
-      return false unless line_number = location.try &.line_number.try &.- 1
-      return false unless line = lines[line_number]?
+      return false unless line_number = location.try &.line_number
 
-      line_disabled?(line, rule) ||
-        (line_number > 0 &&
-          (prev_line = lines[line_number - 1]) &&
-          comment?(prev_line) &&
-          line_disabled?(prev_line, rule))
+      line_disabled?(line_number, rule) ||
+        next_line_disabled?(line_number, rule)
+    end
+
+    def parse_directives(lines)
+      Directives.new.tap do |directives|
+        lines.each_with_index do |line, line_number|
+          next unless d = parse_directive(line)
+          directives[line_number + 1] = d
+        end
+      end
     end
 
     # Parses inline comment directive. Returns a tuple that consists of
@@ -53,7 +78,7 @@ module Ameba
     #
     # ```
     # line = "# ameba:disable Rule1, Rule2"
-    # directive = parse_inline_directive(line)
+    # directive = parse_directive(line)
     # directive[:action] # => "disable"
     # directive[:rules]  # => ["Rule1", "Rule2"]
     # ```
@@ -62,14 +87,21 @@ module Ameba
     #
     # ```
     # line = "# # ameba:disable Rule1, Rule2"
-    # parse_inline_directive(line) # => nil
+    # parse_directive(line) # => nil
     # ```
-    def parse_inline_directive(line)
-      return unless directive = COMMENT_DIRECTIVE_REGEX.match(line)
-      return if commented_out?(line.gsub(directive[0], ""))
+    def parse_directive(line)
+      return unless match = match_inline_comment(line)
+      return unless action = Action.parse?(match[:action])
+      Directive.new(action: action, names: match[:names])
+    end
+
+    def match_inline_comment(line)
+      return unless match = COMMENT_DIRECTIVE_REGEX.match(line)
+      return if commented_out?(line.gsub(match[0], ""))
+
       {
-        action: directive["action"],
-        rules:  directive["rules"].split(/[\s,]/, remove_empty: true),
+        action: match[1],
+        names:  match[2].split(/[\s,]/, remove_empty: true),
       }
     end
 
@@ -83,12 +115,14 @@ module Ameba
       line.lstrip.starts_with? '#'
     end
 
-    private def line_disabled?(line, rule)
-      return false unless directive = parse_inline_directive(line)
-      return false unless Action.parse?(directive[:action]).try(&.disable?)
+    private def line_disabled?(line_number, rule)
+      return false unless directive = directives[line_number]?
+      directive.action.disable_line? && directive.includes?(rule)
+    end
 
-      directive[:rules].includes?(rule.name) ||
-        directive[:rules].includes?(rule.group)
+    private def next_line_disabled?(line_number, rule)
+      return false unless directive = directives[line_number - 1]?
+      directive.action.disable_next_line? && directive.includes?(rule)
     end
 
     private def commented_out?(line)
