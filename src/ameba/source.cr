@@ -63,7 +63,7 @@ module Ameba
         .parse
     end
 
-    getter directives : Directives do
+    getter directives : Array(Directive) do
       parse_directives(lines)
     end
 
