@@ -45,7 +45,7 @@ module Ameba::Rule::Performance
       return unless name_location = node.name_location
       return unless end_location = name_end_location(node)
 
-      issue_for location, end_location, MSG do |corrector|
+      issue_for name_location, end_location, MSG do |corrector|
         corrector.insert_before(location, '!')
         corrector.replace(name_location, end_location, "empty?")
       end

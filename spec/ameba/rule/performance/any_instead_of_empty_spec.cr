@@ -16,7 +16,7 @@ module Ameba::Rule::Performance
     it "reports if there is any? call without a block nor argument" do
       source = expect_issue subject, <<-CRYSTAL
         [1, 2, 3].any?
-        # ^^^^^^^^^^^^ error: Use `!{...}.empty?` instead of `{...}.any?`
+                # ^^^^ error: Use `!{...}.empty?` instead of `{...}.any?`
         CRYSTAL
 
       expect_correction source, <<-CRYSTAL
@@ -34,7 +34,7 @@ module Ameba::Rule::Performance
       it "reports in macro scope" do
         source = expect_issue subject, <<-CRYSTAL
           {{ [1, 2, 3].any? }}
-           # ^^^^^^^^^^^^^^ error: Use `!{...}.empty?` instead of `{...}.any?`
+                     # ^^^^ error: Use `!{...}.empty?` instead of `{...}.any?`
           CRYSTAL
 
         expect_correction source, <<-CRYSTAL
@@ -51,7 +51,7 @@ module Ameba::Rule::Performance
       issue = source.issues.first
 
       issue.rule.should_not be_nil
-      issue.location.to_s.should eq "source.cr:1:1"
+      issue.location.to_s.should eq "source.cr:1:11"
       issue.end_location.to_s.should eq "source.cr:1:14"
       issue.message.should eq "Use `!{...}.empty?` instead of `{...}.any?`"
     end
