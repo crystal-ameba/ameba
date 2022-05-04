@@ -2,6 +2,7 @@ CRYSTAL_BIN ?= crystal
 SHARDS_BIN ?= shards
 PREFIX ?= /usr/local
 SHARD_BIN ?= ../../bin
+CRFLAGS ?= -Dpreview_mt
 
 build: bin/ameba
 bin/ameba:
