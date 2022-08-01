@@ -5,7 +5,12 @@ module Ameba
     getter issues = [] of Issue
 
     # Adds a new issue to the list of issues.
-    def add_issue(rule, location, end_location, message, status : Issue::Status? = nil, block : (Source::Corrector ->)? = nil) : Issue
+    def add_issue(rule,
+                  location : Crystal::Location?,
+                  end_location : Crystal::Location?,
+                  message : String,
+                  status : Issue::Status? = nil,
+                  block : (Source::Corrector ->)? = nil) : Issue
       status ||=
         Issue::Status::Disabled if location_disabled?(location, rule)
 
@@ -15,7 +20,12 @@ module Ameba
     end
 
     # :ditto:
-    def add_issue(rule, location, end_location, message, status : Issue::Status? = nil, &block : Source::Corrector ->) : Issue
+    def add_issue(rule,
+                  location : Crystal::Location,
+                  end_location : Crystal::Location,
+                  message : String,
+                  status : Issue::Status? = nil,
+                  &block : Source::Corrector ->) : Issue
       add_issue rule, location, end_location, message, status, block
     end
 
