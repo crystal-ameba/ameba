@@ -7,8 +7,8 @@ module Ameba
     # Adds a new issue to the list of issues.
     def add_issue(rule,
                   location : Crystal::Location?,
-                  end_location,
-                  message,
+                  end_location : Crystal::Location?,
+                  message : String,
                   status : Issue::Status? = nil,
                   block : (Source::Corrector ->)? = nil) : Issue
       status ||=
