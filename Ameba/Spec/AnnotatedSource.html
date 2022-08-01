@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="generator" content="Crystal Docs 1.3.2">
+<meta name="generator" content="Crystal Docs 1.4.1">
 <meta name="crystal_docs.project_version" content="master">
 <meta name="crystal_docs.project_name" content="ameba">
 
@@ -759,7 +759,7 @@
   </h2>
   
     
-      <a href="https://github.com/crystal-ameba/ameba/blob/8a122291/src/ameba/spec/annotated_source.cr#L2" target="_blank">
+      <a href="https://github.com/crystal-ameba/ameba/blob/1bef5fc5/src/ameba/spec/annotated_source.cr#L2" target="_blank">
         ameba/spec/annotated_source.cr
       </a>
     
@@ -810,14 +810,14 @@
   <ul class="list-summary">
     
       <li class="entry-summary">
-        <a href="#new%28lines%2Cannotations%3AEnumerable%28Tuple%28Int32%2CString%2CString%29%29%29-class-method" class="signature"><strong>.new</strong>(lines, annotations : Enumerable(Tuple(Int32, String, String)))</a>
+        <a href="#new%28lines%3AArray%28String%29%2Cannotations%3AEnumerable%28Tuple%28Int32%2CString%2CString%29%29%29-class-method" class="signature"><strong>.new</strong>(lines : Array(String), annotations : Enumerable(Tuple(Int32, String, String)))</a>
         
           <div class="summary"><p><span class="flag purple">NOTE</span>  Annotations are sorted so that reconstructing the annotation       text via <code><a href="../../Ameba/Spec/AnnotatedSource.html#to_s%28io%29-instance-method">#to_s</a></code> is deterministic.</p></div>
         
       </li>
     
       <li class="entry-summary">
-        <a href="#new%28lines%2Cissues%3AEnumerable%28Issue%29%29-class-method" class="signature"><strong>.new</strong>(lines, issues : Enumerable(Issue))</a>
+        <a href="#new%28lines%3AArray%28String%29%2Cissues%3AEnumerable%28Issue%29%29-class-method" class="signature"><strong>.new</strong>(lines : Array(String), issues : Enumerable(Issue))</a>
         
           <div class="summary"><p>Annotates the source code with the Ameba issues provided.</p></div>
         
@@ -924,12 +924,12 @@
     Constructor Detail
   </h2>
   
-    <div class="entry-detail" id="new(lines,annotations:Enumerable(Tuple(Int32,String,String)))-class-method">
+    <div class="entry-detail" id="new(lines:Array(String),annotations:Enumerable(Tuple(Int32,String,String)))-class-method">
       <div class="signature">
         
-        def self.<strong>new</strong>(lines, annotations : Enumerable(Tuple(Int32, String, String)))
+        def self.<strong>new</strong>(lines : Array(String), annotations : Enumerable(Tuple(Int32, String, String)))
 
-        <a class="method-permalink" href="#new%28lines%2Cannotations%3AEnumerable%28Tuple%28Int32%2CString%2CString%29%29%29-class-method">#</a>
+        <a class="method-permalink" href="#new%28lines%3AArray%28String%29%2Cannotations%3AEnumerable%28Tuple%28Int32%2CString%2CString%29%29%29-class-method">#</a>
       </div>
       
         <div class="doc">
@@ -941,17 +941,17 @@ text via <code><a href="../../Ameba/Spec/AnnotatedSource.html#to_s%28io%29-insta
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/8a122291/src/ameba/spec/annotated_source.cr#L40" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/1bef5fc5/src/ameba/spec/annotated_source.cr#L40" target="_blank">View source</a>]
         
       </div>
     </div>
   
-    <div class="entry-detail" id="new(lines,issues:Enumerable(Issue))-class-method">
+    <div class="entry-detail" id="new(lines:Array(String),issues:Enumerable(Issue))-class-method">
       <div class="signature">
         
-        def self.<strong>new</strong>(lines, issues : Enumerable(<a href="../../Ameba/Issue.html">Issue</a>))
+        def self.<strong>new</strong>(lines : Array(String), issues : Enumerable(<a href="../../Ameba/Issue.html">Issue</a>))
 
-        <a class="method-permalink" href="#new%28lines%2Cissues%3AEnumerable%28Issue%29%29-class-method">#</a>
+        <a class="method-permalink" href="#new%28lines%3AArray%28String%29%2Cissues%3AEnumerable%28Issue%29%29-class-method">#</a>
       </div>
       
         <div class="doc">
@@ -964,7 +964,7 @@ text via <code><a href="../../Ameba/Spec/AnnotatedSource.html#to_s%28io%29-insta
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/8a122291/src/ameba/spec/annotated_source.cr#L48" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/1bef5fc5/src/ameba/spec/annotated_source.cr#L48" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -998,7 +998,7 @@ code line number that each annotation corresponds to.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/8a122291/src/ameba/spec/annotated_source.cr#L15" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/1bef5fc5/src/ameba/spec/annotated_source.cr#L15" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1035,7 +1035,7 @@ code line number that each annotation corresponds to.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/8a122291/src/ameba/spec/annotated_source.cr#L52" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/1bef5fc5/src/ameba/spec/annotated_source.cr#L52" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1057,7 +1057,7 @@ The prefix is empty if the annotation is at the end of a code line.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/8a122291/src/ameba/spec/annotated_source.cr#L11" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/1bef5fc5/src/ameba/spec/annotated_source.cr#L11" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1073,7 +1073,7 @@ The prefix is empty if the annotation is at the end of a code line.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/8a122291/src/ameba/spec/annotated_source.cr#L7" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/1bef5fc5/src/ameba/spec/annotated_source.cr#L7" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1110,7 +1110,7 @@ source1.to_s <span class="o">==</span> source2.to_s <span class="c"># =&gt; true
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/8a122291/src/ameba/spec/annotated_source.cr#L103" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/1bef5fc5/src/ameba/spec/annotated_source.cr#L103" target="_blank">View source</a>]
         
       </div>
     </div>
