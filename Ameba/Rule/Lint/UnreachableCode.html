@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="generator" content="Crystal Docs 1.4.1">
+<meta name="generator" content="Crystal Docs 1.5.0">
 <meta name="crystal_docs.project_version" content="master">
 <meta name="crystal_docs.project_name" content="ameba">
 
@@ -743,7 +743,7 @@
 <pre><code class="language-crystal">a <span class="o">=</span> <span class="n">1</span>
 loop <span class="k">do</span>
   <span class="k">break</span>
-  a += <span class="n">1</span>
+  a <span class="o">+=</span> <span class="n">1</span>
 <span class="k">end</span></code></pre>
 <p>And has to be written as the following:</p>
 <pre><code class="language-crystal"><span class="k">def</span> <span class="m">method</span>(a)
@@ -753,11 +753,11 @@ loop <span class="k">do</span>
 <pre><code class="language-crystal">a <span class="o">=</span> <span class="n">1</span>
 loop <span class="k">do</span>
   <span class="k">break</span> a <span class="o">&gt;</span> <span class="n">3</span>
-  a += <span class="n">1</span>
+  a <span class="o">+=</span> <span class="n">1</span>
 <span class="k">end</span></code></pre>
 <p>YAML configuration example:</p>
-<pre><code class="language-crystal">Lint/UnreachableCode:
-  Enabled: true</code></pre>
+<pre><code class="language-crystal"><span class="t">Lint</span><span class="o">/</span><span class="t">UnreachableCode</span>:
+  <span class="t">Enabled</span>: <span class="n">true</span></code></pre>
 
 
 
@@ -800,7 +800,7 @@ loop <span class="k">do</span>
   </h2>
   
     
-      <a href="https://github.com/crystal-ameba/ameba/blob/97acedae/src/ameba/rule/lint/unreachable_code.cr#L44" target="_blank">
+      <a href="https://github.com/crystal-ameba/ameba/blob/80532da3/src/ameba/rule/lint/unreachable_code.cr#L44" target="_blank">
         ameba/rule/lint/unreachable_code.cr
       </a>
     
@@ -1163,7 +1163,7 @@ loop <span class="k">do</span>
 <pre><code class="language-crystal">a <span class="o">=</span> <span class="n">1</span>
 loop <span class="k">do</span>
   <span class="k">break</span>
-  a += <span class="n">1</span>
+  a <span class="o">+=</span> <span class="n">1</span>
 <span class="k">end</span></code></pre>
 <p>And has to be written as the following:</p>
 <pre><code class="language-crystal"><span class="k">def</span> <span class="m">method</span>(a)
@@ -1173,17 +1173,17 @@ loop <span class="k">do</span>
 <pre><code class="language-crystal">a <span class="o">=</span> <span class="n">1</span>
 loop <span class="k">do</span>
   <span class="k">break</span> a <span class="o">&gt;</span> <span class="n">3</span>
-  a += <span class="n">1</span>
+  a <span class="o">+=</span> <span class="n">1</span>
 <span class="k">end</span></code></pre>
 <p>YAML configuration example:</p>
-<pre><code class="language-crystal">Lint/UnreachableCode:
-  Enabled: true</code></pre>
+<pre><code class="language-crystal"><span class="t">Lint</span><span class="o">/</span><span class="t">UnreachableCode</span>:
+  <span class="t">Enabled</span>: <span class="n">true</span></code></pre>
         </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/97acedae/src/ameba/rule/lint/unreachable_code.cr#L44" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/80532da3/src/ameba/rule/lint/unreachable_code.cr#L44" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1325,7 +1325,7 @@ loop <span class="k">do</span>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/97acedae/src/ameba/rule/lint/unreachable_code.cr#L57" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/80532da3/src/ameba/rule/lint/unreachable_code.cr#L57" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1341,7 +1341,7 @@ loop <span class="k">do</span>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/97acedae/src/ameba/rule/lint/unreachable_code.cr#L53" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/80532da3/src/ameba/rule/lint/unreachable_code.cr#L53" target="_blank">View source</a>]
         
       </div>
     </div>

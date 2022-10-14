@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="generator" content="Crystal Docs 1.4.1">
+<meta name="generator" content="Crystal Docs 1.5.0">
 <meta name="crystal_docs.project_version" content="master">
 <meta name="crystal_docs.project_name" content="ameba">
 
@@ -741,18 +741,18 @@ where it is guaranteed to always return the same result.</p>
 <span class="k">when</span> utc?
   io <span class="o">&lt;&lt;</span> <span class="s">&quot; UTC&quot;</span>
 <span class="k">when</span> local?
-  <span class="t">Format</span>.<span class="k">new</span>(<span class="s">&quot; %:z&quot;</span>).format(<span class="k">self</span>, io) <span class="k">if</span> local?
+  <span class="t">Format</span>.new(<span class="s">&quot; %:z&quot;</span>).format(<span class="k">self</span>, io) <span class="k">if</span> local?
 <span class="k">end</span></code></pre>
 <p>And has to be written as the following:</p>
 <pre><code class="language-crystal"><span class="k">case</span>
 <span class="k">when</span> utc?
   io <span class="o">&lt;&lt;</span> <span class="s">&quot; UTC&quot;</span>
 <span class="k">when</span> local?
-  <span class="t">Format</span>.<span class="k">new</span>(<span class="s">&quot; %:z&quot;</span>).format(<span class="k">self</span>, io)
+  <span class="t">Format</span>.new(<span class="s">&quot; %:z&quot;</span>).format(<span class="k">self</span>, io)
 <span class="k">end</span></code></pre>
 <p>YAML configuration example:</p>
-<pre><code class="language-crystal">Lint/UselessConditionInWhen:
-  Enabled: true</code></pre>
+<pre><code class="language-crystal"><span class="t">Lint</span><span class="o">/</span><span class="t">UselessConditionInWhen</span>:
+  <span class="t">Enabled</span>: <span class="n">true</span></code></pre>
 
 
 
@@ -793,7 +793,7 @@ where it is guaranteed to always return the same result.</p>
   </h2>
   
     
-      <a href="https://github.com/crystal-ameba/ameba/blob/97acedae/src/ameba/rule/lint/useless_condition_in_when.cr#L33" target="_blank">
+      <a href="https://github.com/crystal-ameba/ameba/blob/80532da3/src/ameba/rule/lint/useless_condition_in_when.cr#L33" target="_blank">
         ameba/rule/lint/useless_condition_in_when.cr
       </a>
     
@@ -1070,24 +1070,24 @@ where it is guaranteed to always return the same result.</p>
 <span class="k">when</span> utc?
   io <span class="o">&lt;&lt;</span> <span class="s">&quot; UTC&quot;</span>
 <span class="k">when</span> local?
-  <span class="t">Format</span>.<span class="k">new</span>(<span class="s">&quot; %:z&quot;</span>).format(<span class="k">self</span>, io) <span class="k">if</span> local?
+  <span class="t">Format</span>.new(<span class="s">&quot; %:z&quot;</span>).format(<span class="k">self</span>, io) <span class="k">if</span> local?
 <span class="k">end</span></code></pre>
 <p>And has to be written as the following:</p>
 <pre><code class="language-crystal"><span class="k">case</span>
 <span class="k">when</span> utc?
   io <span class="o">&lt;&lt;</span> <span class="s">&quot; UTC&quot;</span>
 <span class="k">when</span> local?
-  <span class="t">Format</span>.<span class="k">new</span>(<span class="s">&quot; %:z&quot;</span>).format(<span class="k">self</span>, io)
+  <span class="t">Format</span>.new(<span class="s">&quot; %:z&quot;</span>).format(<span class="k">self</span>, io)
 <span class="k">end</span></code></pre>
 <p>YAML configuration example:</p>
-<pre><code class="language-crystal">Lint/UselessConditionInWhen:
-  Enabled: true</code></pre>
+<pre><code class="language-crystal"><span class="t">Lint</span><span class="o">/</span><span class="t">UselessConditionInWhen</span>:
+  <span class="t">Enabled</span>: <span class="n">true</span></code></pre>
         </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/97acedae/src/ameba/rule/lint/useless_condition_in_when.cr#L33" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/80532da3/src/ameba/rule/lint/useless_condition_in_when.cr#L33" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1229,7 +1229,7 @@ where it is guaranteed to always return the same result.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/97acedae/src/ameba/rule/lint/useless_condition_in_when.cr#L50" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/80532da3/src/ameba/rule/lint/useless_condition_in_when.cr#L50" target="_blank">View source</a>]
         
       </div>
     </div>

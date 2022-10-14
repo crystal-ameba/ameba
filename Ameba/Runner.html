@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="generator" content="Crystal Docs 1.4.1">
+<meta name="generator" content="Crystal Docs 1.5.0">
 <meta name="crystal_docs.project_version" content="master">
 <meta name="crystal_docs.project_name" content="ameba">
 
@@ -739,7 +739,7 @@ Holds a list of rules to do inspection based on,
 list of sources to run inspection on and a formatter
 to prepare a report.</p>
 <pre><code class="language-crystal">config <span class="o">=</span> <span class="t">Ameba</span><span class="t">::</span><span class="t">Config</span>.load
-runner <span class="o">=</span> <span class="t">Ameba</span><span class="t">::</span><span class="t">Runner</span>.<span class="k">new</span> config
+runner <span class="o">=</span> <span class="t">Ameba</span><span class="t">::</span><span class="t">Runner</span>.new config
 runner.run.success? <span class="c"># =&gt; true or false</span></code></pre>
 
 
@@ -765,7 +765,7 @@ runner.run.success? <span class="c"># =&gt; true or false</span></code></pre>
   </h2>
   
     
-      <a href="https://github.com/crystal-ameba/ameba/blob/97acedae/src/ameba/runner.cr#L15" target="_blank">
+      <a href="https://github.com/crystal-ameba/ameba/blob/80532da3/src/ameba/runner.cr#L15" target="_blank">
         ameba/runner.cr
       </a>
     
@@ -892,13 +892,13 @@ runner.run.success? <span class="c"># =&gt; true or false</span></code></pre>
 config.files <span class="o">=</span> files
 config.formatter <span class="o">=</span> formatter
 
-<span class="t">Ameba</span><span class="t">::</span><span class="t">Runner</span>.<span class="k">new</span> config</code></pre>
+<span class="t">Ameba</span><span class="t">::</span><span class="t">Runner</span>.new config</code></pre>
         </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/97acedae/src/ameba/runner.cr#L64" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/80532da3/src/ameba/runner.cr#L64" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -930,7 +930,7 @@ config.formatter <span class="o">=</span> formatter
           <p>Explains an issue at a specified <em>location</em>.</p>
 <p>Runner should perform inspection before doing the explain.
 This is necessary to be able to find the issue at a specified location.</p>
-<pre><code class="language-crystal">runner <span class="o">=</span> <span class="t">Ameba</span><span class="t">::</span><span class="t">Runner</span>.<span class="k">new</span> config
+<pre><code class="language-crystal">runner <span class="o">=</span> <span class="t">Ameba</span><span class="t">::</span><span class="t">Runner</span>.new config
 runner.run
 runner.explain({file: file, line: l, column: c})</code></pre>
         </div>
@@ -938,7 +938,7 @@ runner.explain({file: file, line: l, column: c})</code></pre>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/97acedae/src/ameba/runner.cr#L163" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/80532da3/src/ameba/runner.cr#L163" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -958,14 +958,14 @@ list of rules. If a specific rule fails on a specific source, it adds
 an issue to that source.</p>
 <p>This action also notifies formatter when inspection is started/finished,
 and when a specific source started/finished to be inspected.</p>
-<pre><code class="language-crystal">runner <span class="o">=</span> <span class="t">Ameba</span><span class="t">::</span><span class="t">Runner</span>.<span class="k">new</span> config
+<pre><code class="language-crystal">runner <span class="o">=</span> <span class="t">Ameba</span><span class="t">::</span><span class="t">Runner</span>.new config
 runner.run <span class="c"># =&gt; returns runner again</span></code></pre>
         </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/97acedae/src/ameba/runner.cr#L90" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/80532da3/src/ameba/runner.cr#L90" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -986,7 +986,7 @@ runner.run <span class="c"># =&gt; returns runner again</span></code></pre>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/97acedae/src/ameba/runner.cr#L38" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/80532da3/src/ameba/runner.cr#L38" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1003,7 +1003,7 @@ runner.run <span class="c"># =&gt; returns runner again</span></code></pre>
           
           <p>Indicates whether the last inspection successful or not.
 It returns true if no issues matching severity in sources found, false otherwise.</p>
-<pre><code class="language-crystal">runner <span class="o">=</span> <span class="t">Ameba</span><span class="t">::</span><span class="t">Runner</span>.<span class="k">new</span> config
+<pre><code class="language-crystal">runner <span class="o">=</span> <span class="t">Ameba</span><span class="t">::</span><span class="t">Runner</span>.new config
 runner.run
 runner.success? <span class="c"># =&gt; true or false</span></code></pre>
         </div>
@@ -1011,7 +1011,7 @@ runner.success? <span class="c"># =&gt; true or false</span></code></pre>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/97acedae/src/ameba/runner.cr#L175" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/80532da3/src/ameba/runner.cr#L175" target="_blank">View source</a>]
         
       </div>
     </div>
