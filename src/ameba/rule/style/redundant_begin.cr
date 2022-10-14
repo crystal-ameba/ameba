@@ -123,7 +123,7 @@ module Ameba::Rule::Style
           break
         when .ident?
           next unless in_body
-          return unless token.value == :begin
+          return unless token.value == Crystal::Keyword::BEGIN
           return token.location
         when .op_lparen?
           in_argument_list = true
@@ -143,7 +143,7 @@ module Ameba::Rule::Style
       end_loc = def_end_loc = nil
 
       while !(token = lexer.next_token).type.eof?
-        next unless token.value == :end
+        next unless token.value == Crystal::Keyword::END
 
         end_loc, def_end_loc = def_end_loc, token.location
       end
