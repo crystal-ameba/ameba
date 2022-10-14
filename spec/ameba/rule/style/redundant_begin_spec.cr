@@ -241,6 +241,27 @@ module Ameba::Rule::Style
         CRYSTAL
     end
 
+    it "fails if there is a redundant block with string with inner quotes" do
+      source = expect_issue subject, <<-CRYSTAL
+        def method
+          begin
+        # ^^^^^ error: Redundant `begin` block detected
+            "'"
+          rescue
+          end
+        end
+        CRYSTAL
+
+      expect_correction source, <<-CRYSTAL
+        def method
+         #{trailing_whitespace}
+            "'"
+          rescue
+         #{trailing_whitespace}
+        end
+        CRYSTAL
+    end
+
     it "fails if there is top level redundant block in a method" do
       source = expect_issue subject, <<-CRYSTAL
         def method

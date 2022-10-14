@@ -142,7 +142,7 @@ module Ameba::Rule::Style
     private def def_redundant_end_loc(lexer)
       end_loc = def_end_loc = nil
 
-      while !(token = lexer.next_token).type.eof?
+      Tokenizer.new(lexer).run do |token|
         next unless token.value == Crystal::Keyword::END
 
         end_loc, def_end_loc = def_end_loc, token.location
