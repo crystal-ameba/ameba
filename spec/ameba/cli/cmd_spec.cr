@@ -91,9 +91,8 @@ module Ameba::Cli
       describe "-e/--explain" do
         it "configures file/line/column" do
           c = Cli.parse_args %w(--explain src/file.cr:3:5)
-          c.location_to_explain.should_not be_nil
 
-          location_to_explain = c.location_to_explain.not_nil!
+          location_to_explain = c.location_to_explain.should_not be_nil
           location_to_explain[:file].should eq "src/file.cr"
           location_to_explain[:line].should eq 3
           location_to_explain[:column].should eq 5
@@ -154,9 +153,8 @@ module Ameba::Cli
 
       it "accepts one unknown arg as explain location if it has correct format" do
         c = Cli.parse_args %w(source.cr:3:22)
-        c.location_to_explain.should_not be_nil
 
-        location_to_explain = c.location_to_explain.not_nil!
+        location_to_explain = c.location_to_explain.should_not be_nil
         location_to_explain[:file].should eq "source.cr"
         location_to_explain[:line].should eq 3
         location_to_explain[:column].should eq 22
