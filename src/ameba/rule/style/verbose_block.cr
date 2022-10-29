@@ -20,7 +20,7 @@ module Ameba::Rule::Style
   # Style/VerboseBlock:
   #   Enabled: true
   #   ExcludeMultipleLineBlocks: true
-  #   ExcludeCallsWithBlocks: true
+  #   ExcludeCallsWithBlock: true
   #   ExcludePrefixOperators: true
   #   ExcludeOperators: true
   #   ExcludeSetters: false
