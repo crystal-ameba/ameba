@@ -1,5 +1,3 @@
-require "digest"
-
 module Ameba
   # Represents a runner for inspecting sources files.
   # Holds a list of rules to do inspection based on,
@@ -186,7 +184,7 @@ module Ameba
       # Keep track of the state of the source. If a rule modifies the source
       # and another rule undoes it producing identical source we have an
       # infinite loop.
-      processed_sources = [] of String
+      processed_sources = [] of UInt64
 
       # It is possible for a rule to keep adding indefinitely to a file,
       # making it bigger and bigger. If the inspection loop runs for an
@@ -207,7 +205,7 @@ module Ameba
     # Check whether a run created source identical to a previous run, which
     # means that we definitely have an infinite loop.
     private def check_for_infinite_loop(source, corrected_issues, processed_sources)
-      checksum = Digest::SHA1.hexdigest(source.code)
+      checksum = source.code.hash
 
       if loop_start = processed_sources.index(checksum)
         raise InfiniteCorrectionLoopError.new(
