@@ -1,7 +1,7 @@
 require "compiler/crystal/syntax/*"
 
 private class DocFinder < Crystal::Visitor
-  getter type_name : String?
+  getter type_name : String
   getter doc : String?
 
   def initialize(nodes, @type_name)
@@ -11,11 +11,8 @@ private class DocFinder < Crystal::Visitor
   def visit(node : Crystal::ASTNode)
     return false if @doc
 
-    if node.responds_to?(:name) &&
-       (name = node.name) &&
-       name.is_a?(Crystal::Path) &&
-       name.names.last? == @type_name
-      @doc = node.doc
+    if node.responds_to?(:name) && (name = node.name).is_a?(Crystal::Path)
+      @doc = node.doc if name.names.last? == @type_name
     end
 
     true
