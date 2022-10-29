@@ -781,7 +781,7 @@
   </h2>
   
     
-      <a href="https://github.com/crystal-ameba/ameba/blob/a9ae491a/src/ameba/rule/lint/duplicated_require.cr#L16" target="_blank">
+      <a href="https://github.com/crystal-ameba/ameba/blob/4700ae76/src/ameba/rule/lint/duplicated_require.cr#L16" target="_blank">
         ameba/rule/lint/duplicated_require.cr
       </a>
     
@@ -836,6 +836,25 @@
   </ul>
 
 
+
+  <h2>
+    <a id="class-method-summary" class="anchor" href="#class-method-summary">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>
+    Class Method Summary
+  </h2>
+  <ul class="list-summary">
+    
+      <li class="entry-summary">
+        <a href="#parsed_doc%3AString%3F-class-method" class="signature"><strong>.parsed_doc</strong> : String?</a>
+        
+          <div class="summary"><p>Returns documentation for this rule, if there is any.</p></div>
+        
+      </li>
+    
+  </ul>
 
 
 
@@ -974,15 +993,6 @@
 
     
 
-  <h3>Class methods inherited from class <code><a href="../../../Ameba/Rule/Base.html">Ameba::Rule::Base</a></code></h3>
-  
-  
-    <a href="../../../Ameba/Rule/Base.html#parsed_doc-class-method" class="tooltip">
-      <span>parsed_doc</span>
-    parsed_doc</a>
-    
-  
-
 
   
     
@@ -1063,13 +1073,52 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/a9ae491a/src/ameba/rule/lint/duplicated_require.cr#L16" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/4700ae76/src/ameba/rule/lint/duplicated_require.cr#L16" target="_blank">View source</a>]
         
       </div>
     </div>
   
 
 
+
+  <h2>
+    <a id="class-method-detail" class="anchor" href="#class-method-detail">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>
+    Class Method Detail
+  </h2>
+  
+    <div class="entry-detail" id="parsed_doc:String?-class-method">
+      <div class="signature">
+        
+        def self.<strong>parsed_doc</strong> : String?
+
+        <a class="method-permalink" href="#parsed_doc%3AString%3F-class-method">#</a>
+      </div>
+      
+        <div class="doc">
+          
+          <p>Returns documentation for this rule, if there is any.</p>
+<pre><code class="language-crystal"><span class="k">module</span> <span class="t">Ameba</span>
+  <span class="c"># This is a test rule.</span>
+  <span class="c"># Does nothing.</span>
+  <span class="k">class</span> <span class="t">MyRule</span> <span class="o">&lt;</span> <span class="t">Ameba</span><span class="t">::</span><span class="t">Rule</span><span class="t">::</span><span class="t">Base</span>
+    <span class="k">def</span> <span class="m">test</span>(source)
+    <span class="k">end</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+
+<span class="t">MyRule</span>.parsed_doc <span class="c"># =&gt; &quot;This is a test rule.\nDoes nothing.&quot;</span></code></pre>
+        </div>
+      
+      <br/>
+      <div>
+        
+      </div>
+    </div>
+  
 
 
 
@@ -1205,7 +1254,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/a9ae491a/src/ameba/rule/lint/duplicated_require.cr#L23" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/4700ae76/src/ameba/rule/lint/duplicated_require.cr#L23" target="_blank">View source</a>]
         
       </div>
     </div>
