@@ -165,7 +165,7 @@ module Ameba
       it "updates enabled property" do
         name = DummyRule.rule_name
         config.update_rule name, enabled: false
-        rule = config.rules.find(&.name.== name).not_nil!
+        rule = config.rules.find!(&.name.== name)
         rule.enabled.should be_false
       end
 
@@ -173,7 +173,7 @@ module Ameba
         name = DummyRule.rule_name
         excluded = %w(spec/source.cr)
         config.update_rule name, excluded: excluded
-        rule = config.rules.find(&.name.== name).not_nil!
+        rule = config.rules.find!(&.name.== name)
         rule.excluded.should eq excluded
       end
     end
@@ -184,7 +184,7 @@ module Ameba
       it "updates multiple rules by enabled property" do
         name = DummyRule.rule_name
         config.update_rules [name], enabled: false
-        rule = config.rules.find(&.name.== name).not_nil!
+        rule = config.rules.find!(&.name.== name)
         rule.enabled.should be_false
       end
 
@@ -192,14 +192,14 @@ module Ameba
         name = DummyRule.rule_name
         excluded = %w(spec/source.cr)
         config.update_rules [name], excluded: excluded
-        rule = config.rules.find(&.name.== name).not_nil!
+        rule = config.rules.find!(&.name.== name)
         rule.excluded.should eq excluded
       end
 
       it "updates a group of rules by enabled property" do
         group = DummyRule.group_name
         config.update_rules [group], enabled: false
-        rule = config.rules.find(&.name.== DummyRule.rule_name).not_nil!
+        rule = config.rules.find!(&.name.== DummyRule.rule_name)
         rule.enabled.should be_false
       end
 
@@ -207,7 +207,7 @@ module Ameba
         name = DummyRule.group_name
         excluded = %w(spec/source.cr)
         config.update_rules [name], excluded: excluded
-        rule = config.rules.find(&.name.== DummyRule.rule_name).not_nil!
+        rule = config.rules.find!(&.name.== DummyRule.rule_name)
         rule.excluded.should eq excluded
       end
     end

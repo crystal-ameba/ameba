@@ -53,8 +53,8 @@ module Ameba::AST
         scope = Scope.new nodes.def_nodes.first
         variable = Variable.new(nodes.var_nodes.first, scope)
         assignment = Assignment.new(nodes.assign_nodes.first, variable, scope)
-        assignment.branch.should_not be_nil
-        assignment.branch.not_nil!.node.class.should eq Crystal::Expressions
+        branch = assignment.branch.should_not be_nil
+        branch.node.class.should eq Crystal::Expressions
       end
 
       it "returns inner branch" do
@@ -70,8 +70,8 @@ module Ameba::AST
         scope = Scope.new nodes.def_nodes.first
         variable = Variable.new(nodes.var_nodes.first, scope)
         assignment = Assignment.new(nodes.assign_nodes.first, variable, scope)
-        assignment.branch.should_not be_nil
-        assignment.branch.not_nil!.node.class.should eq Crystal::Assign
+        branch = assignment.branch.should_not be_nil
+        branch.node.class.should eq Crystal::Assign
       end
 
       it "returns nil if assignment does not have a branch" do
