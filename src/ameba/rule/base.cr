@@ -138,8 +138,8 @@ module Ameba::Rule
       end
     end
 
-    private macro read_rule_doc(filepath = __FILE__)
-      {{ run("../../read_rule_doc",
+    private macro read_type_doc(filepath = __FILE__)
+      {{ run("../../contrib/read_type_doc",
            @type.name.split("::").last,
            filepath
          ).chomp.stringify }}.presence
@@ -160,7 +160,7 @@ module Ameba::Rule
       #
       # MyRule.parsed_doc # => "This is a test rule.\nDoes nothing."
       # ```
-      class_getter parsed_doc : String? = read_rule_doc
+      class_getter parsed_doc : String? = read_type_doc
     end
   end
 
