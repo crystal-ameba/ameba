@@ -23,7 +23,7 @@ module Ameba::Rule::Performance
   # ```
   class CompactAfterMap < Base
     properties do
-      description "Identifies usage of `compact` calls that follow `map`."
+      description "Identifies usage of `compact` calls that follow `map`"
     end
 
     COMPACT_NAME = "compact"

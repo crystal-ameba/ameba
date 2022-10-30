@@ -56,7 +56,7 @@ module Ameba::Rule::Style
 
     properties do
       enabled false
-      description "Check for conditionals that can be replaced with guard clauses."
+      description "Check for conditionals that can be replaced with guard clauses"
     end
 
     MSG = "Use a guard clause (`%s`) instead of wrapping the " \

@@ -31,7 +31,7 @@ module Ameba::Rule::Style
     include AST::Util
 
     properties do
-      description "Identifies usage of collapsible single expression blocks."
+      description "Identifies usage of collapsible single expression blocks"
 
       exclude_multiple_line_blocks true
       exclude_calls_with_block true
