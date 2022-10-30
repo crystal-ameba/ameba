@@ -57,14 +57,14 @@ class Ameba::Source
     # If *size* is greater than the size of the range, the removed region can
     # overrun the end of the range.
     def remove_leading(location, end_location, size)
-      remove(loc_to_pos(location), loc_to_pos(location) + size)
+      @rewriter.remove(loc_to_pos(location), loc_to_pos(location) + size)
     end
 
     # Removes *size* characters from the end of the given range.
     # If *size* is greater than the size of the range, the removed region can
     # overrun the beginning of the range.
     def remove_trailing(location, end_location, size)
-      remove(loc_to_pos(end_location) + 1 - size, loc_to_pos(end_location) + 1)
+      @rewriter.remove(loc_to_pos(end_location) + 1 - size, loc_to_pos(end_location) + 1)
     end
 
     private def loc_to_pos(location : Crystal::Location | {Int32, Int32})
