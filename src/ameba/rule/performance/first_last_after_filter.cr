@@ -27,7 +27,7 @@ module Ameba::Rule::Performance
   # ```
   class FirstLastAfterFilter < Base
     properties do
-      description "Identifies usage of `first/last/first?/last?` calls that follow filters."
+      description "Identifies usage of `first/last/first?/last?` calls that follow filters"
       filter_names : Array(String) = %w(select)
     end
 

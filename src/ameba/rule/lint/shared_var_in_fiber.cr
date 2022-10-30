@@ -51,7 +51,7 @@ module Ameba::Rule::Lint
   # ```
   class SharedVarInFiber < Base
     properties do
-      description "Disallows shared variables in fibers."
+      description "Disallows shared variables in fibers"
     end
 
     MSG = "Shared variable `%s` is used in fiber"

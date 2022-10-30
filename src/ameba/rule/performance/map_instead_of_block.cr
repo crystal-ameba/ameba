@@ -24,7 +24,7 @@ module Ameba::Rule::Performance
   # ```
   class MapInsteadOfBlock < Base
     properties do
-      description "Identifies usage of `sum/product` calls that follow `map`."
+      description "Identifies usage of `sum/product` calls that follow `map`"
     end
 
     CALL_NAMES = %w(sum product)

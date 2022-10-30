@@ -23,7 +23,7 @@ module Ameba::Rule::Performance
   # ```
   class FlattenAfterMap < Base
     properties do
-      description "Identifies usage of `flatten` calls that follow `map`."
+      description "Identifies usage of `flatten` calls that follow `map`"
     end
 
     FLATTEN_NAME = "flatten"

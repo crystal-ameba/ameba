@@ -40,7 +40,7 @@ module Ameba::Rule::Performance
     include AST::Util
 
     properties do
-      description "Identifies usage of chained calls not utilizing the bang method variants."
+      description "Identifies usage of chained calls not utilizing the bang method variants"
 
       # All of those have bang method variants returning `self`
       # and are not modifying the receiver type (like `compact` does),

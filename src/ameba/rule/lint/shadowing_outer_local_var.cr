@@ -32,8 +32,8 @@ module Ameba::Rule::Lint
   # ```
   class ShadowingOuterLocalVar < Base
     properties do
-      description "Disallows the usage of the same name as outer local variables" \
-                  " for block or proc arguments."
+      description "Disallows the usage of the same name as outer local variables " \
+                  "for block or proc arguments"
     end
 
     MSG = "Shadowing outer local variable `%s`"

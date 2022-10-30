@@ -31,7 +31,7 @@ module Ameba::Rule::Performance
     include AST::Util
 
     properties do
-      description "Identifies usage of arg-less `any?` calls."
+      description "Identifies usage of arg-less `any?` calls"
     end
 
     ANY_NAME = "any?"
