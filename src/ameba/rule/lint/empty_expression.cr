@@ -31,7 +31,6 @@ module Ameba::Rule::Lint
     include AST::Util
 
     properties do
-      enabled false
       description "Disallows empty expressions"
     end
 
