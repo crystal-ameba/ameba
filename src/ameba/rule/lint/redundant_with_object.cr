@@ -37,8 +37,8 @@ module Ameba::Rule::Lint
     def test(source, node : Crystal::Call)
       return if node.name != "each_with_object" ||
                 node.args.size != 1 ||
-                node.block.nil? ||
-                with_index_arg?(node.block.not_nil!)
+                !(block = node.block) ||
+                with_index_arg?(block)
 
       issue_for node.name_location, node.name_end_location, MSG
     end

@@ -41,12 +41,12 @@ module Ameba::Rule::Lint
         when .string_array_start?, .symbol_array_start?
           start_token = token.dup
         when .string?
-          if start_token && issue.nil?
-            issue = array_entry_invalid?(token.value, start_token.not_nil!.raw)
+          if (_start = start_token) && !issue
+            issue = array_entry_invalid?(token.value, _start.raw)
           end
         when .string_array_end?
-          if issue
-            issue_for start_token.not_nil!, issue.not_nil!
+          if (_start = start_token) && (_issue = issue)
+            issue_for _start, _issue
           end
           issue = start_token = nil
         end
