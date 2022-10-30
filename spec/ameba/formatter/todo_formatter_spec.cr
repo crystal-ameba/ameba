@@ -86,8 +86,8 @@ module Ameba
         s1.add_issue DummyRule.new, {2, 2}, "message1"
         s2.add_issue DummyRule.new, {2, 2}, "message2"
 
-        file = formatter.finished([s1, s2])
-        content = File.read(file.not_nil!.path)
+        file = formatter.finished([s1, s2]).should_not be_nil
+        content = File.read(file.path)
         content.should contain <<-CONTENT
         # Problems found: 3
         # Run `ameba --only Ameba/DummyRule` for details

@@ -135,14 +135,16 @@ module Ameba::AST
       scope = Scope.new as_node("foo = 1")
       scope.add_variable Crystal::Var.new "foo"
       scope.assign_variable("foo", Crystal::Var.new "foo")
-      scope.find_variable("foo").not_nil!.assignments.size.should eq 1
+      var = scope.find_variable("foo").should_not be_nil
+      var.assignments.size.should eq 1
     end
 
     it "does not create the assignment if variable is wrong" do
       scope = Scope.new as_node("foo = 1")
       scope.add_variable Crystal::Var.new "foo"
       scope.assign_variable("bar", Crystal::Var.new "bar")
-      scope.find_variable("foo").not_nil!.assignments.size.should eq 0
+      var = scope.find_variable("foo").should_not be_nil
+      var.assignments.size.should eq 0
     end
   end
 
