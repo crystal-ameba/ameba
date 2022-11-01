@@ -13,7 +13,7 @@
 <script type="text/javascript" src="../../../js/doc.js"></script>
 
   <meta name="repository-name" content="ameba">
-  <title>Ameba::Rule::Style::NegatedConditionsInUnless - ameba master</title>
+  <title>Ameba::Rule::Lint::StaticComparison - ameba master</title>
   <script type="text/javascript">
     CrystalDocs.base_path = "../../../";
   </script>
@@ -301,7 +301,7 @@
       
     </li>
   
-  <li class="parent " data-id="ameba/Ameba/Rule/Lint" data-name="ameba::rule::lint">
+  <li class="parent open current" data-id="ameba/Ameba/Rule/Lint" data-name="ameba::rule::lint">
       <a href="../../../Ameba/Rule/Lint.html">Lint</a>
       
         <ul>
@@ -426,7 +426,7 @@
       
     </li>
   
-  <li class=" " data-id="ameba/Ameba/Rule/Lint/StaticComparison" data-name="ameba::rule::lint::staticcomparison">
+  <li class=" current" data-id="ameba/Ameba/Rule/Lint/StaticComparison" data-name="ameba::rule::lint::staticcomparison">
       <a href="../../../Ameba/Rule/Lint/StaticComparison.html">StaticComparison</a>
       
     </li>
@@ -536,7 +536,7 @@
       
     </li>
   
-  <li class="parent open current" data-id="ameba/Ameba/Rule/Style" data-name="ameba::rule::style">
+  <li class="parent " data-id="ameba/Ameba/Rule/Style" data-name="ameba::rule::style">
       <a href="../../../Ameba/Rule/Style.html">Style</a>
       
         <ul>
@@ -571,7 +571,7 @@
       
     </li>
   
-  <li class=" current" data-id="ameba/Ameba/Rule/Style/NegatedConditionsInUnless" data-name="ameba::rule::style::negatedconditionsinunless">
+  <li class=" " data-id="ameba/Ameba/Rule/Style/NegatedConditionsInUnless" data-name="ameba::rule::style::negatedconditionsinunless">
       <a href="../../../Ameba/Rule/Style/NegatedConditionsInUnless.html">NegatedConditionsInUnless</a>
       
     </li>
@@ -730,12 +730,12 @@
 <div class="main-content">
 <h1 class="type-name">
 
-  <span class="kind">class</span> Ameba::Rule::Style::NegatedConditionsInUnless
+  <span class="kind">class</span> Ameba::Rule::Lint::StaticComparison
 
 </h1>
 
 
-  <ul class="superclass-hierarchy"><li class="superclass"><a href="../../../Ameba/Rule/Style/NegatedConditionsInUnless.html">Ameba::Rule::Style::NegatedConditionsInUnless</a></li><li class="superclass"><a href="../../../Ameba/Rule/Base.html">Ameba::Rule::Base</a></li><li class="superclass">Reference</li><li class="superclass">Object</li></ul>
+  <ul class="superclass-hierarchy"><li class="superclass"><a href="../../../Ameba/Rule/Lint/StaticComparison.html">Ameba::Rule::Lint::StaticComparison</a></li><li class="superclass"><a href="../../../Ameba/Rule/Base.html">Ameba::Rule::Base</a></li><li class="superclass">Reference</li><li class="superclass">Object</li></ul>
 
 
 
@@ -749,19 +749,12 @@
     Overview
   </h2>
 
-  <p>A rule that disallows negated conditions in unless.</p>
-<p>For example, this is considered invalid:</p>
-<pre><code class="language-crystal"><span class="k">unless</span> <span class="o">!</span>s.empty?
-  <span class="n">:ok</span>
-<span class="k">end</span></code></pre>
-<p>And should be rewritten to the following:</p>
-<pre><code class="language-crystal"><span class="k">if</span> s.emtpy?
-  <span class="n">:ok</span>
-<span class="k">end</span></code></pre>
-<p>It is pretty difficult to wrap your head around a block of code
-that is executed if a negated condition is NOT met.</p>
+  <p>This rule is used to identify static comparisons -
+the ones that will always have the same result.</p>
+<p>For example, this will be always false:</p>
+<pre><code class="language-crystal"><span class="s">&quot;foo&quot;</span> <span class="o">==</span> <span class="n">42</span></code></pre>
 <p>YAML configuration example:</p>
-<pre><code class="language-crystal"><span class="t">Style</span><span class="o">/</span><span class="t">NegatedConditionsInUnless</span>:
+<pre><code class="language-crystal"><span class="t">Lint</span><span class="o">/</span><span class="t">StaticComparison</span>:
   <span class="t">Enabled</span>: <span class="n">true</span></code></pre>
 
 
@@ -777,6 +770,8 @@ that is executed if a negated condition is NOT met.</p>
     Included Modules
   </h2>
   <ul class="other-types-list">
+    
+      <li class="other-type"><a href="../../../Ameba/AST/Util.html">Ameba::AST::Util</a></li>
     
       <li class="other-type">YAML::Serializable</li>
     
@@ -803,8 +798,8 @@ that is executed if a negated condition is NOT met.</p>
   </h2>
   
     
-      <a href="https://github.com/crystal-ameba/ameba/blob/23ca87ff/src/ameba/rule/style/negated_conditions_in_unless.cr#L29" target="_blank">
-        ameba/rule/style/negated_conditions_in_unless.cr
+      <a href="https://github.com/crystal-ameba/ameba/blob/23ca87ff/src/ameba/rule/lint/static_comparison.cr#L17" target="_blank">
+        ameba/rule/lint/static_comparison.cr
       </a>
     
     <br/>
@@ -825,7 +820,17 @@ that is executed if a negated condition is NOT met.</p>
   <dl>
     
       <dt class="entry-const" id="MSG">
-        <strong>MSG</strong> = <code><span class="s">&quot;Avoid negated conditions in unless blocks&quot;</span></code>
+        <strong>MSG</strong> = <code><span class="s">&quot;Comparison always evaluates to %s&quot;</span></code>
+      </dt>
+      
+    
+      <dt class="entry-const" id="OP_NAMES">
+        <strong>OP_NAMES</strong> = <code>[<span class="s">&quot;===&quot;</span>, <span class="s">&quot;==&quot;</span>, <span class="s">&quot;!=&quot;</span>] <span class="k">of</span> <span class="t">::</span><span class="t">String</span></code>
+      </dt>
+      
+    
+      <dt class="entry-const" id="PRIMITIVES">
+        <strong>PRIMITIVES</strong> = <code>{<span class="t">Crystal</span><span class="t">::</span><span class="t">NilLiteral</span>, <span class="t">Crystal</span><span class="t">::</span><span class="t">BoolLiteral</span>, <span class="t">Crystal</span><span class="t">::</span><span class="t">NumberLiteral</span>, <span class="t">Crystal</span><span class="t">::</span><span class="t">CharLiteral</span>, <span class="t">Crystal</span><span class="t">::</span><span class="t">StringLiteral</span>, <span class="t">Crystal</span><span class="t">::</span><span class="t">SymbolLiteral</span>, <span class="t">Crystal</span><span class="t">::</span><span class="t">RangeLiteral</span>, <span class="t">Crystal</span><span class="t">::</span><span class="t">RegexLiteral</span>, <span class="t">Crystal</span><span class="t">::</span><span class="t">TupleLiteral</span>, <span class="t">Crystal</span><span class="t">::</span><span class="t">NamedTupleLiteral</span>, <span class="t">Crystal</span><span class="t">::</span><span class="t">ArrayLiteral</span>, <span class="t">Crystal</span><span class="t">::</span><span class="t">HashLiteral</span>, <span class="t">Crystal</span><span class="t">::</span><span class="t">ProcLiteral</span>}</code>
       </dt>
       
     
@@ -851,7 +856,7 @@ that is executed if a negated condition is NOT met.</p>
       <li class="entry-summary">
         <a href="#new%28config%3Dnil%29-class-method" class="signature"><strong>.new</strong>(config = <span class="n">nil</span>)</a>
         
-          <div class="summary"><p>A rule that disallows negated conditions in unless.</p></div>
+          <div class="summary"><p>This rule is used to identify static comparisons - the ones that will always have the same result.</p></div>
         
       </li>
     
@@ -931,7 +936,7 @@ that is executed if a negated condition is NOT met.</p>
       </li>
     
       <li class="entry-summary">
-        <a href="#test%28source%2Cnode%3ACrystal%3A%3AUnless%29-instance-method" class="signature"><strong>#test</strong>(source, node : Crystal::Unless)</a>
+        <a href="#test%28source%2Cnode%3ACrystal%3A%3ACall%29-instance-method" class="signature"><strong>#test</strong>(source, node : Crystal::Call)</a>
         
       </li>
     
@@ -942,6 +947,85 @@ that is executed if a negated condition is NOT met.</p>
 
 
 <div class="methods-inherited">
+  
+    
+
+  <h3>Instance methods inherited from module <code><a href="../../../Ameba/AST/Util.html">Ameba::AST::Util</a></code></h3>
+  
+  
+    <a href="../../../Ameba/AST/Util.html#abort%3F%28node%29-instance-method" class="tooltip">
+      <span>abort?(node)</span>
+    abort?</a>, 
+    
+  
+    <a href="../../../Ameba/AST/Util.html#control_exp_code%28node%3ACrystal%3A%3AControlExpression%2Ccode_lines%29-instance-method" class="tooltip">
+      <span>control_exp_code(node : Crystal::ControlExpression, code_lines)</span>
+    control_exp_code</a>, 
+    
+  
+    <a href="../../../Ameba/AST/Util.html#exit%3F%28node%29-instance-method" class="tooltip">
+      <span>exit?(node)</span>
+    exit?</a>, 
+    
+  
+    <a href="../../../Ameba/AST/Util.html#flow_command%3F%28node%2Cin_loop%29-instance-method" class="tooltip">
+      <span>flow_command?(node, in_loop)</span>
+    flow_command?</a>, 
+    
+  
+    <a href="../../../Ameba/AST/Util.html#flow_expression%3F%28node%2Cin_loop%3Dfalse%29-instance-method" class="tooltip">
+      <span>flow_expression?(node, in_loop = <span class="n">false</span>)</span>
+    flow_expression?</a>, 
+    
+  
+    <a href="../../../Ameba/AST/Util.html#literal%3F%28node%29-instance-method" class="tooltip">
+      <span>literal?(node)</span>
+    literal?</a>, 
+    
+  
+    <a href="../../../Ameba/AST/Util.html#loop%3F%28node%29-instance-method" class="tooltip">
+      <span>loop?(node)</span>
+    loop?</a>, 
+    
+  
+    <a href="../../../Ameba/AST/Util.html#name_end_location%28node%29-instance-method" class="tooltip">
+      <span>name_end_location(node)</span>
+    name_end_location</a>, 
+    
+  
+    <a href="../../../Ameba/AST/Util.html#name_location%28node%29-instance-method" class="tooltip">
+      <span>name_location(node)</span>
+    name_location</a>, 
+    
+  
+    <a href="../../../Ameba/AST/Util.html#name_size%28node%29-instance-method" class="tooltip">
+      <span>name_size(node)</span>
+    name_size</a>, 
+    
+  
+    <a href="../../../Ameba/AST/Util.html#node_source%28node%2Ccode_lines%29-instance-method" class="tooltip">
+      <span>node_source(node, code_lines)</span>
+    node_source</a>, 
+    
+  
+    <a href="../../../Ameba/AST/Util.html#raise%3F%28node%29-instance-method" class="tooltip">
+      <span>raise?(node)</span>
+    raise?</a>, 
+    
+  
+    <a href="../../../Ameba/AST/Util.html#source_between%28loc%2Cend_loc%2Ccode_lines%29%3AString%3F-instance-method" class="tooltip">
+      <span>source_between(loc, end_loc, code_lines) : String?</span>
+    source_between</a>
+    
+  
+
+
+    
+
+
+    
+
+
   
     
 
@@ -1083,26 +1167,19 @@ that is executed if a negated condition is NOT met.</p>
       
         <div class="doc">
           
-          <p>A rule that disallows negated conditions in unless.</p>
-<p>For example, this is considered invalid:</p>
-<pre><code class="language-crystal"><span class="k">unless</span> <span class="o">!</span>s.empty?
-  <span class="n">:ok</span>
-<span class="k">end</span></code></pre>
-<p>And should be rewritten to the following:</p>
-<pre><code class="language-crystal"><span class="k">if</span> s.emtpy?
-  <span class="n">:ok</span>
-<span class="k">end</span></code></pre>
-<p>It is pretty difficult to wrap your head around a block of code
-that is executed if a negated condition is NOT met.</p>
+          <p>This rule is used to identify static comparisons -
+the ones that will always have the same result.</p>
+<p>For example, this will be always false:</p>
+<pre><code class="language-crystal"><span class="s">&quot;foo&quot;</span> <span class="o">==</span> <span class="n">42</span></code></pre>
 <p>YAML configuration example:</p>
-<pre><code class="language-crystal"><span class="t">Style</span><span class="o">/</span><span class="t">NegatedConditionsInUnless</span>:
+<pre><code class="language-crystal"><span class="t">Lint</span><span class="o">/</span><span class="t">StaticComparison</span>:
   <span class="t">Enabled</span>: <span class="n">true</span></code></pre>
         </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/23ca87ff/src/ameba/rule/style/negated_conditions_in_unless.cr#L29" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/23ca87ff/src/ameba/rule/lint/static_comparison.cr#L17" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1272,18 +1349,18 @@ that is executed if a negated condition is NOT met.</p>
       </div>
     </div>
   
-    <div class="entry-detail" id="test(source,node:Crystal::Unless)-instance-method">
+    <div class="entry-detail" id="test(source,node:Crystal::Call)-instance-method">
       <div class="signature">
         
-        def <strong>test</strong>(source, node : Crystal::Unless)
+        def <strong>test</strong>(source, node : Crystal::Call)
 
-        <a class="method-permalink" href="#test%28source%2Cnode%3ACrystal%3A%3AUnless%29-instance-method">#</a>
+        <a class="method-permalink" href="#test%28source%2Cnode%3ACrystal%3A%3ACall%29-instance-method">#</a>
       </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/23ca87ff/src/ameba/rule/style/negated_conditions_in_unless.cr#L36" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/23ca87ff/src/ameba/rule/lint/static_comparison.cr#L43" target="_blank">View source</a>]
         
       </div>
     </div>
