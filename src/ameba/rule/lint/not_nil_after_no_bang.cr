@@ -16,10 +16,10 @@ module Ameba::Rule::Lint
   # YAML configuration example:
   #
   # ```
-  # Lint/NotNilWithNoBang:
+  # Lint/NotNilAfterNoBang:
   #   Enabled: true
   # ```
-  class NotNilWithNoBang < Base
+  class NotNilAfterNoBang < Base
     include AST::Util
 
     properties do
