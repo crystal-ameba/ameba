@@ -21,7 +21,7 @@ module Ameba::Rule::Lint
       description "Identifies static comparisons"
     end
 
-    OP_NAMES = %w(== !=)
+    OP_NAMES = %w(=== == !=)
     MSG      = "Comparison always evaluates to %s"
 
     PRIMITIVES = {
@@ -45,12 +45,12 @@ module Ameba::Rule::Lint
       return unless (obj = node.obj) && (arg = node.args.first?)
       return unless obj.class.in?(PRIMITIVES) && arg.class.in?(PRIMITIVES)
 
-      case node.name
-      when "=="
-        what = (obj.to_s == arg.to_s).to_s
-      when "!="
-        what = (obj.to_s != arg.to_s).to_s
-      end
+      what =
+        case node.name
+        when "===" then "the same"
+        when "=="  then (obj.to_s == arg.to_s).to_s
+        when "!="  then (obj.to_s != arg.to_s).to_s
+        end
 
       issue_for node, MSG % what
     end

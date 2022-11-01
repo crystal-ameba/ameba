@@ -6,13 +6,21 @@ module Ameba::Rule::Lint
   describe StaticComparison do
     it "passes for valid cases" do
       expect_no_issues subject, <<-CRYSTAL
-        /foo/ === "foo"
         "foo" == foo
+        "foo" != foo
         foo == "foo"
+        foo != "foo"
         CRYSTAL
     end
 
-    it "reports if there is a static comparison evaluating to true" do
+    it "reports if there is a static comparison evaluating to the same" do
+      expect_issue subject, <<-CRYSTAL
+        "foo" === "foo"
+        # ^^^^^^^^^^^^^ error: Comparison always evaluates to the same
+        CRYSTAL
+    end
+
+    it "reports if there is a static comparison evaluating to true (2)" do
       expect_issue subject, <<-CRYSTAL
         "foo" == "foo"
         # ^^^^^^^^^^^^ error: Comparison always evaluates to true
