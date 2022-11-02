@@ -37,6 +37,7 @@ module Ameba::Rule::Lint
       Crystal::StringLiteral,
       Crystal::SymbolLiteral,
       Crystal::ProcLiteral,
+      Crystal::Path,
     }
 
     DYNAMIC_LITERAL_TYPES = {
