@@ -13,7 +13,7 @@
 <script type="text/javascript" src="../../../js/doc.js"></script>
 
   <meta name="repository-name" content="ameba">
-  <title>Ameba::Rule::Lint::StaticComparison - ameba master</title>
+  <title>Ameba::Rule::Lint::LiteralsComparison - ameba master</title>
   <script type="text/javascript">
     CrystalDocs.base_path = "../../../";
   </script>
@@ -366,6 +366,11 @@
       
     </li>
   
+  <li class=" current" data-id="ameba/Ameba/Rule/Lint/LiteralsComparison" data-name="ameba::rule::lint::literalscomparison">
+      <a href="../../../Ameba/Rule/Lint/LiteralsComparison.html">LiteralsComparison</a>
+      
+    </li>
+  
   <li class=" " data-id="ameba/Ameba/Rule/Lint/NotNil" data-name="ameba::rule::lint::notnil">
       <a href="../../../Ameba/Rule/Lint/NotNil.html">NotNil</a>
       
@@ -423,11 +428,6 @@
   
   <li class=" " data-id="ameba/Ameba/Rule/Lint/SpecFocus" data-name="ameba::rule::lint::specfocus">
       <a href="../../../Ameba/Rule/Lint/SpecFocus.html">SpecFocus</a>
-      
-    </li>
-  
-  <li class=" current" data-id="ameba/Ameba/Rule/Lint/StaticComparison" data-name="ameba::rule::lint::staticcomparison">
-      <a href="../../../Ameba/Rule/Lint/StaticComparison.html">StaticComparison</a>
       
     </li>
   
@@ -730,12 +730,12 @@
 <div class="main-content">
 <h1 class="type-name">
 
-  <span class="kind">class</span> Ameba::Rule::Lint::StaticComparison
+  <span class="kind">class</span> Ameba::Rule::Lint::LiteralsComparison
 
 </h1>
 
 
-  <ul class="superclass-hierarchy"><li class="superclass"><a href="../../../Ameba/Rule/Lint/StaticComparison.html">Ameba::Rule::Lint::StaticComparison</a></li><li class="superclass"><a href="../../../Ameba/Rule/Base.html">Ameba::Rule::Base</a></li><li class="superclass">Reference</li><li class="superclass">Object</li></ul>
+  <ul class="superclass-hierarchy"><li class="superclass"><a href="../../../Ameba/Rule/Lint/LiteralsComparison.html">Ameba::Rule::Lint::LiteralsComparison</a></li><li class="superclass"><a href="../../../Ameba/Rule/Base.html">Ameba::Rule::Base</a></li><li class="superclass">Reference</li><li class="superclass">Object</li></ul>
 
 
 
@@ -749,12 +749,13 @@
     Overview
   </h2>
 
-  <p>This rule is used to identify static comparisons -
-the ones that will always have the same result.</p>
+  <p>This rule is used to identify comparisons between two literals.</p>
+<p>They usually have the same result - except for non-primitive
+types like containers, range or regex.</p>
 <p>For example, this will be always false:</p>
 <pre><code class="language-crystal"><span class="s">&quot;foo&quot;</span> <span class="o">==</span> <span class="n">42</span></code></pre>
 <p>YAML configuration example:</p>
-<pre><code class="language-crystal"><span class="t">Lint</span><span class="o">/</span><span class="t">StaticComparison</span>:
+<pre><code class="language-crystal"><span class="t">Lint</span><span class="o">/</span><span class="t">LiteralsComparison</span>:
   <span class="t">Enabled</span>: <span class="n">true</span></code></pre>
 
 
@@ -798,8 +799,8 @@ the ones that will always have the same result.</p>
   </h2>
   
     
-      <a href="https://github.com/crystal-ameba/ameba/blob/23ca87ff/src/ameba/rule/lint/static_comparison.cr#L17" target="_blank">
-        ameba/rule/lint/static_comparison.cr
+      <a href="https://github.com/crystal-ameba/ameba/blob/816c8b11/src/ameba/rule/lint/literals_comparison.cr#L20" target="_blank">
+        ameba/rule/lint/literals_comparison.cr
       </a>
     
     <br/>
@@ -819,8 +820,23 @@ the ones that will always have the same result.</p>
   
   <dl>
     
+      <dt class="entry-const" id="DYNAMIC_LITERAL_TYPES">
+        <strong>DYNAMIC_LITERAL_TYPES</strong> = <code>{<span class="t">Crystal</span><span class="t">::</span><span class="t">RangeLiteral</span>, <span class="t">Crystal</span><span class="t">::</span><span class="t">RegexLiteral</span>, <span class="t">Crystal</span><span class="t">::</span><span class="t">TupleLiteral</span>, <span class="t">Crystal</span><span class="t">::</span><span class="t">NamedTupleLiteral</span>, <span class="t">Crystal</span><span class="t">::</span><span class="t">ArrayLiteral</span>, <span class="t">Crystal</span><span class="t">::</span><span class="t">HashLiteral</span>}</code>
+      </dt>
+      
+    
+      <dt class="entry-const" id="LITERAL_TYPES">
+        <strong>LITERAL_TYPES</strong> = <code><span class="t">PRIMITIVE_LITERAL_TYPES</span> <span class="o">+</span> <span class="t">DYNAMIC_LITERAL_TYPES</span></code>
+      </dt>
+      
+    
       <dt class="entry-const" id="MSG">
         <strong>MSG</strong> = <code><span class="s">&quot;Comparison always evaluates to %s&quot;</span></code>
+      </dt>
+      
+    
+      <dt class="entry-const" id="MSG_LIKELY">
+        <strong>MSG_LIKELY</strong> = <code><span class="s">&quot;Comparison most likely evaluates to %s&quot;</span></code>
       </dt>
       
     
@@ -829,8 +845,8 @@ the ones that will always have the same result.</p>
       </dt>
       
     
-      <dt class="entry-const" id="PRIMITIVES">
-        <strong>PRIMITIVES</strong> = <code>{<span class="t">Crystal</span><span class="t">::</span><span class="t">NilLiteral</span>, <span class="t">Crystal</span><span class="t">::</span><span class="t">BoolLiteral</span>, <span class="t">Crystal</span><span class="t">::</span><span class="t">NumberLiteral</span>, <span class="t">Crystal</span><span class="t">::</span><span class="t">CharLiteral</span>, <span class="t">Crystal</span><span class="t">::</span><span class="t">StringLiteral</span>, <span class="t">Crystal</span><span class="t">::</span><span class="t">SymbolLiteral</span>, <span class="t">Crystal</span><span class="t">::</span><span class="t">RangeLiteral</span>, <span class="t">Crystal</span><span class="t">::</span><span class="t">RegexLiteral</span>, <span class="t">Crystal</span><span class="t">::</span><span class="t">TupleLiteral</span>, <span class="t">Crystal</span><span class="t">::</span><span class="t">NamedTupleLiteral</span>, <span class="t">Crystal</span><span class="t">::</span><span class="t">ArrayLiteral</span>, <span class="t">Crystal</span><span class="t">::</span><span class="t">HashLiteral</span>, <span class="t">Crystal</span><span class="t">::</span><span class="t">ProcLiteral</span>}</code>
+      <dt class="entry-const" id="PRIMITIVE_LITERAL_TYPES">
+        <strong>PRIMITIVE_LITERAL_TYPES</strong> = <code>{<span class="t">Crystal</span><span class="t">::</span><span class="t">NilLiteral</span>, <span class="t">Crystal</span><span class="t">::</span><span class="t">BoolLiteral</span>, <span class="t">Crystal</span><span class="t">::</span><span class="t">NumberLiteral</span>, <span class="t">Crystal</span><span class="t">::</span><span class="t">CharLiteral</span>, <span class="t">Crystal</span><span class="t">::</span><span class="t">StringLiteral</span>, <span class="t">Crystal</span><span class="t">::</span><span class="t">SymbolLiteral</span>, <span class="t">Crystal</span><span class="t">::</span><span class="t">ProcLiteral</span>, <span class="t">Crystal</span><span class="t">::</span><span class="t">Path</span>}</code>
       </dt>
       
     
@@ -856,7 +872,7 @@ the ones that will always have the same result.</p>
       <li class="entry-summary">
         <a href="#new%28config%3Dnil%29-class-method" class="signature"><strong>.new</strong>(config = <span class="n">nil</span>)</a>
         
-          <div class="summary"><p>This rule is used to identify static comparisons - the ones that will always have the same result.</p></div>
+          <div class="summary"><p>This rule is used to identify comparisons between two literals.</p></div>
         
       </li>
     
@@ -1167,19 +1183,20 @@ the ones that will always have the same result.</p>
       
         <div class="doc">
           
-          <p>This rule is used to identify static comparisons -
-the ones that will always have the same result.</p>
+          <p>This rule is used to identify comparisons between two literals.</p>
+<p>They usually have the same result - except for non-primitive
+types like containers, range or regex.</p>
 <p>For example, this will be always false:</p>
 <pre><code class="language-crystal"><span class="s">&quot;foo&quot;</span> <span class="o">==</span> <span class="n">42</span></code></pre>
 <p>YAML configuration example:</p>
-<pre><code class="language-crystal"><span class="t">Lint</span><span class="o">/</span><span class="t">StaticComparison</span>:
+<pre><code class="language-crystal"><span class="t">Lint</span><span class="o">/</span><span class="t">LiteralsComparison</span>:
   <span class="t">Enabled</span>: <span class="n">true</span></code></pre>
         </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/23ca87ff/src/ameba/rule/lint/static_comparison.cr#L17" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/816c8b11/src/ameba/rule/lint/literals_comparison.cr#L20" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1360,7 +1377,7 @@ the ones that will always have the same result.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/23ca87ff/src/ameba/rule/lint/static_comparison.cr#L43" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/816c8b11/src/ameba/rule/lint/literals_comparison.cr#L55" target="_blank">View source</a>]
         
       </div>
     </div>
