@@ -1,15 +1,22 @@
 require "../../../spec_helper"
 
 module Ameba::Rule::Lint
-  subject = StaticComparison.new
+  subject = LiteralsComparison.new
 
-  describe StaticComparison do
+  describe LiteralsComparison do
     it "passes for valid cases" do
       expect_no_issues subject, <<-CRYSTAL
         "foo" == foo
         "foo" != foo
         foo == "foo"
         foo != "foo"
+        CRYSTAL
+    end
+
+    it "reports if there is a regex comparison possibly evaluating to the same" do
+      expect_issue subject, <<-CRYSTAL
+        /foo/ === "foo"
+        # ^^^^^^^^^^^^^ error: Comparison most likely evaluates to the same
         CRYSTAL
     end
 
