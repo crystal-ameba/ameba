@@ -261,15 +261,6 @@ module Ameba::Rule::Lint
       end
     end
 
-    it "does not report if global var" do
-      s = Source.new %(
-        def method
-          $1 = 3
-        end
-      )
-      subject.catch(s).should be_valid
-    end
-
     it "does not report if assignment is referenced in a proc" do
       s = Source.new %(
         def method
