@@ -52,6 +52,22 @@ module Ameba::Rule::Lint
     LITERAL_TYPES =
       PRIMITIVE_LITERAL_TYPES + DYNAMIC_LITERAL_TYPES
 
+    # Edge-case: `{{ T == Nil }}`
+    #
+    # Current implementation just skips all macro contexts,
+    # regardless of the free variable being present.
+    #
+    # Ideally we should only check whether either of the sides
+    # is a free var
+    def test(source)
+      AST::NodeVisitor.new self, source, skip: [
+        Crystal::Macro,
+        Crystal::MacroExpression,
+        Crystal::MacroIf,
+        Crystal::MacroFor,
+      ]
+    end
+
     def test(source, node : Crystal::Call)
       return unless node.name.in?(OP_NAMES)
       return unless (obj = node.obj) && (arg = node.args.first?)

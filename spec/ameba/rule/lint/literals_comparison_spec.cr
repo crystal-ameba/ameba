@@ -41,11 +41,24 @@ module Ameba::Rule::Lint
         CRYSTAL
     end
 
+    it "reports if there is a static path comparison evaluating to false" do
+      expect_issue subject, <<-CRYSTAL
+        String == Nil
+        # ^^^^^^^^^^^ error: Comparison always evaluates to false
+        CRYSTAL
+    end
+
     context "macro" do
-      it "reports in macro scope" do
+      pending "reports in macro scope" do
         expect_issue subject, <<-CRYSTAL
           {{ "foo" == "foo" }}
            # ^^^^^^^^^^^^^^ error: Comparison always evaluates to true
+          CRYSTAL
+      end
+
+      it "passes for free variables comparisons in macro scope" do
+        expect_no_issues subject, <<-CRYSTAL
+          {{ T == Nil }}
           CRYSTAL
       end
     end
