@@ -1,24 +1,19 @@
 module Ameba::Rule::Style
-  # A rule that disallows tautological predicate names, meaning those that
-  # start with the prefix `has_` or the prefix `is_`. Ignores if the alternative isn't valid Crystal code (e.g. `is_404?`).
+  # A rule that disallows tautological predicate names -
+  # meaning those that start with the prefix `is_`, except for
+  # the ones that are not valid Crystal code (e.g. `is_404?`).
   #
-  # Favour these:
+  # Favour this:
   #
   # ```
   # def valid?(x)
   # end
-  #
-  # def picture?(x)
-  # end
   # ```
   #
-  # Over these:
+  # Over this:
   #
   # ```
   # def is_valid?(x)
-  # end
-  #
-  # def has_picture?(x)
   # end
   # ```
   #
@@ -37,9 +32,8 @@ module Ameba::Rule::Style
     MSG = "Favour method name '%s?' over '%s'"
 
     def test(source, node : Crystal::Def)
-      return unless node.name =~ /^(is|has)_(\w+)\?/
-      alternative = $2
-      return unless alternative =~ /^[a-z][a-zA-Z_0-9]*$/
+      return unless node.name =~ /^is_([a-z]\w*)\?$/
+      alternative = $1
 
       issue_for node, MSG % {alternative, node.name}
     end
