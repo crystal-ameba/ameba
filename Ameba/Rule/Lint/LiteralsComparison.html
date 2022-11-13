@@ -799,7 +799,7 @@ types like containers, range or regex.</p>
   </h2>
   
     
-      <a href="https://github.com/crystal-ameba/ameba/blob/1a26ebcf/src/ameba/rule/lint/literals_comparison.cr#L20" target="_blank">
+      <a href="https://github.com/crystal-ameba/ameba/blob/df4b4979/src/ameba/rule/lint/literals_comparison.cr#L20" target="_blank">
         ameba/rule/lint/literals_comparison.cr
       </a>
     
@@ -953,6 +953,13 @@ types like containers, range or regex.</p>
     
       <li class="entry-summary">
         <a href="#test%28source%2Cnode%3ACrystal%3A%3ACall%29-instance-method" class="signature"><strong>#test</strong>(source, node : Crystal::Call)</a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#test%28source%29-instance-method" class="signature"><strong>#test</strong>(source)</a>
+        
+          <div class="summary"><p>Edge-case: <code>{{ T == Nil }}</code></p></div>
         
       </li>
     
@@ -1196,7 +1203,7 @@ types like containers, range or regex.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/1a26ebcf/src/ameba/rule/lint/literals_comparison.cr#L20" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/df4b4979/src/ameba/rule/lint/literals_comparison.cr#L20" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1377,7 +1384,32 @@ types like containers, range or regex.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/1a26ebcf/src/ameba/rule/lint/literals_comparison.cr#L55" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/df4b4979/src/ameba/rule/lint/literals_comparison.cr#L71" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="test(source)-instance-method">
+      <div class="signature">
+        
+        def <strong>test</strong>(source)
+
+        <a class="method-permalink" href="#test%28source%29-instance-method">#</a>
+      </div>
+      
+        <div class="doc">
+          
+          <p>Edge-case: <code>{{ T == Nil }}</code></p>
+<p>Current implementation just skips all macro contexts,
+regardless of the free variable being present.</p>
+<p>Ideally we should only check whether either of the sides
+is a free var</p>
+        </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/crystal-ameba/ameba/blob/df4b4979/src/ameba/rule/lint/literals_comparison.cr#L62" target="_blank">View source</a>]
         
       </div>
     </div>
