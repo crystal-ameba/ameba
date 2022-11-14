@@ -33,7 +33,7 @@ module Ameba::Rule
     # that are tested by this rule, it should add an issue.
     #
     # Be default it uses a node visitor to traverse all the nodes in the source.
-    # Must be overriten for other type of rules.
+    # NOTE: Must be overridden for other type of rules.
     def test(source : Source)
       AST::NodeVisitor.new self, source
     end
