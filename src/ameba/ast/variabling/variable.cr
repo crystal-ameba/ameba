@@ -85,7 +85,7 @@ module Ameba::AST
       consumed_branches = Set(Branch).new
 
       assignments.reverse_each do |assignment|
-        next if consumed_branches.includes?(assignment.branch)
+        next if assignment.branch.in?(consumed_branches)
         assignment.referenced = true
 
         break unless branch = assignment.branch

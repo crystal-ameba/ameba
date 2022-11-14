@@ -55,7 +55,7 @@ module Ameba::Rule::Style
       private getter var_locations = [] of Crystal::Location
 
       def visit(node : Crystal::Var)
-        !var_locations.includes?(node.location) && super
+        !node.location.in?(var_locations) && super
       end
 
       def visit(node : Crystal::InstanceVar | Crystal::ClassVar)
