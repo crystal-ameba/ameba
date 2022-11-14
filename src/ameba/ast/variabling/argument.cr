@@ -39,10 +39,10 @@ module Ameba::AST
     # Name of the argument.
     def name
       case current_node = node
-      when Crystal::Var then current_node.name
-      when Crystal::Arg then current_node.name
+      when Crystal::Var, Crystal::Arg
+        current_node.name
       else
-        raise ArgumentError.new "invalid node"
+        raise ArgumentError.new "Invalid node"
       end
     end
   end

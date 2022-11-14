@@ -48,7 +48,8 @@ module Ameba::AST
     end
 
     private def on_assign_end(target, node)
-      target.is_a?(Crystal::Var) && @current_scope.assign_variable(target.name, node)
+      target.is_a?(Crystal::Var) &&
+        @current_scope.assign_variable(target.name, node)
     end
 
     # :nodoc:
@@ -58,7 +59,7 @@ module Ameba::AST
 
     {% for name in NODES %}
       # :nodoc:
-      def visit(node : Crystal::{{name}})
+      def visit(node : Crystal::{{ name }})
         on_scope_enter(node)
       end
     {% end %}
@@ -96,13 +97,15 @@ module Ameba::AST
 
     # :nodoc:
     def visit(node : Crystal::TypeDeclaration)
-      return if @current_scope.type_definition? || !(var = node.var).is_a?(Crystal::Var)
-      @current_scope.add_variable var
+      return if @current_scope.type_definition?
+      return if !(var = node.var).is_a?(Crystal::Var)
+
+      @current_scope.add_variable(var)
     end
 
     # :nodoc:
     def visit(node : Crystal::Arg)
-      @current_scope.add_argument node
+      @current_scope.add_argument(node)
     end
 
     # :nodoc:

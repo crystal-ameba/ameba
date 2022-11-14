@@ -2,6 +2,7 @@ module Ameba::AST
   # AST Visitor that counts occurrences of certain keywords
   class CountingVisitor < Crystal::Visitor
     DEFAULT_COMPLEXITY = 1
+
     getter macro_condition = false
 
     # Creates a new counting visitor
@@ -44,6 +45,7 @@ module Ameba::AST
     def visit(node : Crystal::MacroIf | Crystal::MacroFor)
       @macro_condition = true
       @complexity = DEFAULT_COMPLEXITY
+
       false
     end
   end

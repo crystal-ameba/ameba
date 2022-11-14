@@ -218,11 +218,11 @@ module Ameba::Rule::Lint
         s = Source.new %(
           record X do
             macro foo(a, b)
-              {{a}} + {{b}}
+              {{ a }} + {{ b }}
             end
 
             macro bar(a, b, c)
-              {{a}} + {{b}} + {{c}}
+              {{ a }} + {{ b }} + {{ c }}
             end
           end
         )

@@ -211,11 +211,13 @@ module Ameba::Rule::Lint
               end
 
               def bar
-                {{@type.instance_vars.map do |ivar|
+                {{
+                  @type.instance_vars.map do |ivar|
                     ivar.annotations(Name).each do |ann|
                       puts ann.args
                     end
-                  end}}
+                  end
+                }}
               end
             end
           end

@@ -190,7 +190,7 @@ module Ameba
     def test(source, node : Crystal::ClassDef)
       return unless location = node.location
 
-      end_location = location.adjust(column_number: {{"class".size - 1}})
+      end_location = location.adjust(column_number: {{ "class".size - 1 }})
 
       issue_for(location, end_location, message: "class to module") do |corrector|
         corrector.replace(location, end_location, "module")
@@ -208,7 +208,7 @@ module Ameba
     def test(source, node : Crystal::ModuleDef)
       return unless location = node.location
 
-      end_location = location.adjust(column_number: {{"module".size - 1}})
+      end_location = location.adjust(column_number: {{ "module".size - 1 }})
 
       issue_for(location, end_location, message: "module to class") do |corrector|
         corrector.replace(location, end_location, "class")
@@ -265,12 +265,12 @@ module Ameba
     end
 
     {% for node in NODES %}
-      {{getter_name = node.stringify.split("::").last.underscore + "_nodes"}}
+      {{ getter_name = node.stringify.split("::").last.underscore + "_nodes" }}
 
-      getter {{getter_name.id}} = [] of {{node}}
+      getter {{ getter_name.id }} = [] of {{ node }}
 
-      def visit(node : {{node}})
-        {{getter_name.id}} << node
+      def visit(node : {{ node }})
+        {{ getter_name.id }} << node
         true
       end
     {% end %}

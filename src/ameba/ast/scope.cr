@@ -106,6 +106,7 @@ module Ameba::AST
     # ```
     def spawn_block?
       return false unless node.is_a?(Crystal::Block)
+
       call = node.as(Crystal::Block).call
       call.try(&.name) == "spawn"
     end

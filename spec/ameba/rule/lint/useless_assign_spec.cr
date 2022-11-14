@@ -949,7 +949,7 @@ module Ameba::Rule::Lint
           foo = 22
 
           {% for x in %w(foo) %}
-            add({{x.id}})
+            add({{ x.id }})
           {% end %}
         )
         subject.catch(s).should be_valid

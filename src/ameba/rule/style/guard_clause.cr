@@ -114,7 +114,7 @@ module Ameba::Rule::Style
       if node.else.is_a?(Crystal::Nop)
         return unless end_end_loc = node.end_location
 
-        end_loc = end_end_loc.adjust(column_number: {{1 - "end".size}})
+        end_loc = end_end_loc.adjust(column_number: {{ 1 - "end".size }})
 
         issue_for keyword_loc, keyword_end_loc, MSG % example do |corrector|
           replacement = "#{scope_exiting_keyword} #{conditional_keyword}"

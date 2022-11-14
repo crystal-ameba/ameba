@@ -45,11 +45,11 @@ module Ameba::AST
     end
 
     {% for name in NODES %}
-      # A visit callback for `Crystal::{{name}}` node.
+      # A visit callback for `Crystal::{{ name }}` node.
       #
       # Returns `true` if the child nodes should be traversed as well,
       # `false` otherwise.
-      def visit(node : Crystal::{{name}})
+      def visit(node : Crystal::{{ name }})
         return false if skip?(node)
 
         @rule.test @source, node

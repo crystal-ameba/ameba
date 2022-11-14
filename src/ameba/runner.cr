@@ -87,6 +87,7 @@ module Ameba
     # ```
     def run
       @formatter.started @sources
+
       channels = @sources.map { Channel(Exception?).new }
       @sources.each_with_index do |source, idx|
         channel = channels[idx]
@@ -219,7 +220,9 @@ module Ameba
     end
 
     private def check_unneeded_directives(source)
-      return unless (rule = @unneeded_disable_directive_rule) && rule.enabled
+      return unless rule = @unneeded_disable_directive_rule
+      return unless rule.enabled
+
       rule.test(source)
     end
   end

@@ -32,7 +32,6 @@ module Ameba::AST::Util
   # to determine and cut a piece of source of the node.
   def node_source(node, code_lines)
     loc, end_loc = node.location, node.end_location
-
     return unless loc && end_loc
 
     source_between(loc, end_loc, code_lines)
@@ -46,7 +45,7 @@ module Ameba::AST::Util
     first_line, last_line = node_lines[0]?, node_lines[-1]?
 
     return if first_line.nil? || last_line.nil?
-    return if first_line.size < column # compiler reports incorrection location
+    return if first_line.size < column # compiler reports incorrect location
 
     node_lines[0] = first_line.sub(0...column, "")
 
