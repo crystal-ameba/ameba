@@ -59,7 +59,7 @@ module Ameba::Rule::Style
       end
 
       def visit(node : Crystal::InstanceVar | Crystal::ClassVar)
-        if (location = node.location)
+        if location = node.location
           var_locations << location
         end
         super

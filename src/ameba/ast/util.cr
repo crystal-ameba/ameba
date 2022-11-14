@@ -162,11 +162,11 @@ module Ameba::AST::Util
   # Returns the exp code of a control expression.
   # Wraps implicit tuple literal with curly brackets (e.g. multi-return).
   def control_exp_code(node : Crystal::ControlExpression, code_lines)
-    return unless (exp = node.exp)
-    return unless (exp_code = node_source(exp, code_lines))
+    return unless exp = node.exp
+    return unless exp_code = node_source(exp, code_lines)
     return exp_code unless exp.is_a?(Crystal::TupleLiteral) && exp_code[0] != '{'
-    return unless (exp_start = exp.elements.first.location)
-    return unless (exp_end = exp.end_location)
+    return unless exp_start = exp.elements.first.location
+    return unless exp_end = exp.end_location
 
     "{#{source_between(exp_start, exp_end, code_lines)}}"
   end

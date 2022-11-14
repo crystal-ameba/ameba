@@ -114,11 +114,12 @@ module Ameba::AST
     def visit(node : Crystal::Var)
       variable = @current_scope.find_variable node.name
 
-      if @current_scope.arg?(node) # node is an argument
+      case
+      when @current_scope.arg?(node) # node is an argument
         @current_scope.add_argument(node)
-      elsif variable.nil? && @current_assign # node is a variable
+      when variable.nil? && @current_assign # node is a variable
         @current_scope.add_variable(node)
-      elsif variable # node is a reference
+      when variable # node is a reference
         reference = variable.reference node, @current_scope
         if @current_assign.is_a?(Crystal::OpAssign) || !reference.target_of?(@current_assign)
           variable.reference_assignments!

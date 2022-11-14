@@ -38,7 +38,7 @@ module Ameba::Formatter
     private def explain(source, issue)
       rule = issue.rule
 
-      return unless (location = issue.location)
+      return unless location = issue.location
 
       output_title "ISSUE INFO"
       output_paragraph [

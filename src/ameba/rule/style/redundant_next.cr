@@ -116,7 +116,7 @@ module Ameba::Rule::Style
       return if allow_multi_next && node.exp.is_a?(Crystal::TupleLiteral)
       return if allow_empty_next && (node.exp.nil? || node.exp.try(&.nop?))
 
-      if (exp_code = control_exp_code(node, source.lines))
+      if exp_code = control_exp_code(node, source.lines)
         issue_for node, MSG do |corrector|
           corrector.replace(node, exp_code)
         end
