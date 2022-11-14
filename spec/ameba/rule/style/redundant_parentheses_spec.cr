@@ -55,16 +55,22 @@ module Ameba::Rule::Style
           rule.exclude_ternary = false
 
           expect_issue rule, <<-CRYSTAL
-            (foo > bar) ? true : false
-            # ^^^^^^^^^ error: Redundant parentheses
+            (foo.empty?) ? true : false
+            # ^^^^^^^^^^ error: Redundant parentheses
             CRYSTAL
 
           expect_no_issues subject, <<-CRYSTAL
             (foo && bar) ? true : false
-            CRYSTAL
-
-          expect_no_issues subject, <<-CRYSTAL
             (foo || bar) ? true : false
+            (foo = @foo) ? true : false
+            foo == 42 ? true : false
+            (foo = 42) ? true : false
+            (foo > 42) ? true : false
+            (foo >= 42) ? true : false
+            (3 >= foo >= 42) ? true : false
+            (3.in? 0..42) ? true : false
+            (yield 42) ? true : false
+            (foo rescue 42) ? true : false
             CRYSTAL
         end
       end
