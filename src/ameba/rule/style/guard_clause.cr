@@ -75,8 +75,8 @@ module Ameba::Rule::Style
         end
 
       case final_expression
-      when Crystal::If     then check_ending_if(source, final_expression)
-      when Crystal::Unless then check_ending_if(source, final_expression)
+      when Crystal::If, Crystal::Unless
+        check_ending_if(source, final_expression)
       end
     end
 
@@ -92,7 +92,8 @@ module Ameba::Rule::Style
 
       return unless guard_clause && parent && conditional_keyword
 
-      report_issue(source, node, guard_clause_source(source, guard_clause, parent), conditional_keyword)
+      guard_clause_source = guard_clause_source(source, guard_clause, parent)
+      report_issue(source, node, guard_clause_source, conditional_keyword)
     end
 
     private def check_ending_if(source, node)
@@ -116,7 +117,8 @@ module Ameba::Rule::Style
         end_loc = end_end_loc.adjust(column_number: {{1 - "end".size}})
 
         issue_for keyword_loc, keyword_end_loc, MSG % example do |corrector|
-          corrector.replace(keyword_loc, keyword_end_loc, "#{scope_exiting_keyword} #{conditional_keyword}")
+          replacement = "#{scope_exiting_keyword} #{conditional_keyword}"
+          corrector.replace(keyword_loc, keyword_end_loc, replacement)
           corrector.remove(end_loc, end_end_loc)
         end
       else
