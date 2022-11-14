@@ -40,7 +40,9 @@ module Ameba
           ---
           Globs: 100
           CONFIG
-        expect_raises(Exception, "incorrect 'Globs' section in a config file") { Config.new(yml) }
+        expect_raises(Exception, "Incorrect 'Globs' section in a config file") do
+          Config.new(yml)
+        end
       end
 
       it "initializes excluded as string" do
@@ -68,7 +70,9 @@ module Ameba
           ---
           Excluded: true
           CONFIG
-        expect_raises(Exception, "incorrect 'Excluded' section in a config file") { Config.new(yml) }
+        expect_raises(Exception, "Incorrect 'Excluded' section in a config file") do
+          Config.new(yml)
+        end
       end
     end
 

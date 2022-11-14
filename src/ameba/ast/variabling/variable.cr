@@ -1,8 +1,8 @@
 module Ameba::AST
   # Represents the existence of the local variable.
-  # Holds the var node and variable assigments.
+  # Holds the var node and variable assignments.
   class Variable
-    # List of the assigments of this variable.
+    # List of the assignments of this variable.
     getter assignments = [] of Assignment
 
     # List of the references of this variable.
@@ -30,7 +30,7 @@ module Ameba::AST
     def initialize(@node, @scope)
     end
 
-    # Returns true if it is a special variable, i.e `$?`.
+    # Returns `true` if it is a special variable, i.e `$?`.
     def special?
       @node.special_var?
     end
@@ -50,7 +50,7 @@ module Ameba::AST
       update_assign_reference!
     end
 
-    # Returns true if variable has any reference.
+    # Returns `true` if variable has any reference.
     #
     # ```
     # variable = Variable.new(node, scope)
@@ -85,7 +85,7 @@ module Ameba::AST
       consumed_branches = Set(Branch).new
 
       assignments.reverse_each do |assignment|
-        next if consumed_branches.includes?(assignment.branch)
+        next if assignment.branch.in?(consumed_branches)
         assignment.referenced = true
 
         break unless branch = assignment.branch
@@ -93,7 +93,7 @@ module Ameba::AST
       end
     end
 
-    # Returns true if the current var is referenced in
+    # Returns `true` if the current var is referenced in
     # in the block. For example this variable is captured
     # by block:
     #
@@ -110,26 +110,29 @@ module Ameba::AST
     # ```
     def captured_by_block?(scope = @scope)
       scope.inner_scopes.each do |inner_scope|
-        return true if inner_scope.block? && inner_scope.references?(self, check_inner_scopes: false)
+        return true if inner_scope.block? &&
+                       inner_scope.references?(self, check_inner_scopes: false)
         return true if captured_by_block?(inner_scope)
       end
 
       false
     end
 
-    # Returns true if current variable potentially referenced in a macro,
-    # false if not.
+    # Returns `true` if current variable potentially referenced in a macro,
+    # `false` if not.
     def used_in_macro?(scope = @scope)
       scope.inner_scopes.each do |inner_scope|
         return true if MacroReferenceFinder.new(inner_scope.node, node.name).references
       end
       return true if MacroReferenceFinder.new(scope.node, node.name).references
-      return true if (outer_scope = scope.outer_scope) && used_in_macro?(outer_scope)
+      return true if (outer_scope = scope.outer_scope) &&
+                     used_in_macro?(outer_scope)
+
       false
     end
 
-    # Returns true if the variable is a target (on the left) of the assignment,
-    # false otherwise.
+    # Returns `true` if the variable is a target (on the left) of the assignment,
+    # `false` otherwise.
     def target_of?(assign)
       case assign
       when Crystal::Assign           then eql?(assign.target)
@@ -141,12 +144,12 @@ module Ameba::AST
       end
     end
 
-    # Returns true if the name starts with '_', false if not.
+    # Returns `true` if the name starts with '_', `false` if not.
     def ignored?
       name.starts_with? '_'
     end
 
-    # Returns true if the `node` represents exactly
+    # Returns `true` if the `node` represents exactly
     # the same Crystal node as `@node`.
     def eql?(node)
       node.is_a?(Crystal::Var) &&
@@ -154,7 +157,7 @@ module Ameba::AST
         node.location == @node.location
     end
 
-    # Returns true if the variable is declared before the `node`.
+    # Returns `true` if the variable is declared before the `node`.
     def declared_before?(node)
       var_location, node_location = location, node.location
 

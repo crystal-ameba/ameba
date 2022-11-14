@@ -41,7 +41,7 @@ module Ameba::Formatter
     end
 
     def affected_code(issue : Issue, context_lines = 0, max_length = 120, ellipsis = " ...", prompt = "> ")
-      return unless (location = issue.location)
+      return unless location = issue.location
 
       affected_code(issue.code, location, issue.end_location, context_lines, max_length, ellipsis, prompt)
     end

@@ -48,7 +48,8 @@ module Ameba::AST
     end
 
     private def on_assign_end(target, node)
-      target.is_a?(Crystal::Var) && @current_scope.assign_variable(target.name, node)
+      target.is_a?(Crystal::Var) &&
+        @current_scope.assign_variable(target.name, node)
     end
 
     # :nodoc:
@@ -58,7 +59,7 @@ module Ameba::AST
 
     {% for name in NODES %}
       # :nodoc:
-      def visit(node : Crystal::{{name}})
+      def visit(node : Crystal::{{ name }})
         on_scope_enter(node)
       end
     {% end %}
@@ -96,13 +97,15 @@ module Ameba::AST
 
     # :nodoc:
     def visit(node : Crystal::TypeDeclaration)
-      return if @current_scope.type_definition? || !(var = node.var).is_a?(Crystal::Var)
-      @current_scope.add_variable var
+      return if @current_scope.type_definition?
+      return if !(var = node.var).is_a?(Crystal::Var)
+
+      @current_scope.add_variable(var)
     end
 
     # :nodoc:
     def visit(node : Crystal::Arg)
-      @current_scope.add_argument node
+      @current_scope.add_argument(node)
     end
 
     # :nodoc:
@@ -114,11 +117,12 @@ module Ameba::AST
     def visit(node : Crystal::Var)
       variable = @current_scope.find_variable node.name
 
-      if @current_scope.arg?(node) # node is an argument
+      case
+      when @current_scope.arg?(node) # node is an argument
         @current_scope.add_argument(node)
-      elsif variable.nil? && @current_assign # node is a variable
+      when variable.nil? && @current_assign # node is a variable
         @current_scope.add_variable(node)
-      elsif variable # node is a reference
+      when variable # node is a reference
         reference = variable.reference node, @current_scope
         if @current_assign.is_a?(Crystal::OpAssign) || !reference.target_of?(@current_assign)
           variable.reference_assignments!

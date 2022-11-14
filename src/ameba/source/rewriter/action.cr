@@ -32,10 +32,12 @@ class Ameba::Source::Rewriter
 
     def empty?
       replacement = @replacement
+
       @insert_before.empty? &&
         @insert_after.empty? &&
         @children.empty? &&
-        (replacement.nil? || (replacement.empty? && @begin_pos == @end_pos))
+        (replacement.nil? ||
+          (replacement.empty? && @begin_pos == @end_pos))
     end
 
     def ordered_replacements
@@ -50,7 +52,10 @@ class Ameba::Source::Rewriter
 
     def insertion?
       replacement = @replacement
-      !@insert_before.empty? || !@insert_after.empty? || (replacement && !replacement.empty?)
+
+      !@insert_before.empty? ||
+        !@insert_after.empty? ||
+        (replacement && !replacement.empty?)
     end
 
     protected def with(*,

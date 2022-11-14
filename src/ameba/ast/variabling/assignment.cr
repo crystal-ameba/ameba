@@ -97,6 +97,7 @@ module Ameba::AST
       return false unless (assign = node).is_a?(Crystal::Assign)
       return false unless (value = assign.value).is_a?(Crystal::Call)
       return false unless (obj = value.obj).is_a?(Crystal::Var)
+
       obj.name.starts_with? "__arg"
     end
   end

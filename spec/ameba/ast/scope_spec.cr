@@ -191,7 +191,7 @@ module Ameba::AST
     it "returns true if node is nested to Crystal::Macro" do
       nodes = as_nodes %(
         macro included
-          {{@type.each do |type| a = type end}}
+          {{ @type.each do |type| a = type end }}
         end
       )
       outer_scope = Scope.new nodes.macro_nodes.first

@@ -123,10 +123,10 @@ class Ameba::Config
   # config.formatter = :progress
   # ```
   def formatter=(name : String | Symbol)
-    unless f = AVAILABLE_FORMATTERS[name]?
+    unless formatter = AVAILABLE_FORMATTERS[name]?
       raise "Unknown formatter `#{name}`. Use one of #{Config.formatter_names}."
     end
-    @formatter = f.new
+    @formatter = formatter.new
   end
 
   # Updates rule properties.
@@ -180,7 +180,7 @@ class Ameba::Config
     when .as_s? then [value.to_s]
     when .as_a? then value.as_a.map(&.as_s)
     else
-      raise "incorrect '#{section_name}' section in a config files"
+      raise "Incorrect '#{section_name}' section in a config files"
     end
   end
 
@@ -241,8 +241,8 @@ class Ameba::Config
 
         {% properties[name] = {key: key, default: value, type: type, converter: converter} %}
 
-        @[YAML::Field(key: {{key}}, converter: {{converter}}, type: {{type}})]
-        property {{name}} : {{type}} = {{value}}
+        @[YAML::Field(key: {{ key }}, converter: {{ converter }}, type: {{ type }})]
+        property {{ name }} : {{ type }} = {{ value }}
       {% end %}
 
       {% if properties["enabled".id] == nil %}
@@ -253,7 +253,7 @@ class Ameba::Config
       {% if properties["severity".id] == nil %}
         {% default = @type.name.starts_with?("Ameba::Rule::Lint") ? "Ameba::Severity::Warning".id : "Ameba::Severity::Convention".id %}
         @[YAML::Field(key: "Severity", converter: Ameba::SeverityYamlConverter)]
-        property severity = {{default}}
+        property severity = {{ default }}
       {% end %}
 
       {% if properties["excluded".id] == nil %}

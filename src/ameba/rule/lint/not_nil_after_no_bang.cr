@@ -54,7 +54,7 @@ module Ameba::Rule::Lint
 
       issue_for name_location, end_location, msg do |corrector|
         corrector.insert_after(name_location_end, '!')
-        corrector.remove_trailing(node, ".not_nil!".size)
+        corrector.remove_trailing(node, {{ ".not_nil!".size }})
       end
     end
   end

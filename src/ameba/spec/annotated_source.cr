@@ -17,12 +17,13 @@ class Ameba::Spec::AnnotatedSource
     annotations = [] of {Int32, String, String}
     code_lines = annotated_code.split('\n') # must preserve trailing newline
     code_lines.each do |code_line|
-      if (annotation_match = ANNOTATION_PATTERN_1.match(code_line))
+      case
+      when annotation_match = ANNOTATION_PATTERN_1.match(code_line)
         message_index = annotation_match.end
         prefix = code_line[0...message_index]
         message = code_line[message_index...]
         annotations << {lines.size, prefix, message}
-      elsif (annotation_index = code_line.index(ANNOTATION_PATTERN_2))
+      when annotation_index = code_line.index(ANNOTATION_PATTERN_2)
         lines << code_line[...annotation_index]
         message_index = annotation_index + ANNOTATION_PATTERN_2.size
         message = code_line[message_index...]

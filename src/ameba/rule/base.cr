@@ -33,7 +33,7 @@ module Ameba::Rule
     # that are tested by this rule, it should add an issue.
     #
     # Be default it uses a node visitor to traverse all the nodes in the source.
-    # Must be overriten for other type of rules.
+    # NOTE: Must be overridden for other type of rules.
     def test(source : Source)
       AST::NodeVisitor.new self, source
     end
@@ -64,7 +64,7 @@ module Ameba::Rule
     # MyRule.new.name # => "MyRule"
     # ```
     def name
-      {{@type}}.rule_name
+      {{ @type }}.rule_name
     end
 
     # Returns a group this rule belong to.
@@ -77,7 +77,7 @@ module Ameba::Rule
     # MyGroup::MyRule.new.group # => "MyGroup"
     # ```
     def group
-      {{@type}}.group_name
+      {{ @type }}.group_name
     end
 
     # Checks whether the source is excluded from this rule.
@@ -113,7 +113,7 @@ module Ameba::Rule
     end
 
     macro issue_for(*args, **kwargs, &block)
-      source.add_issue(self, {{*args}}, {{**kwargs}}) {{block}}
+      source.add_issue(self, {{ *args }}, {{ **kwargs }}) {{ block }}
     end
 
     protected def self.rule_name
