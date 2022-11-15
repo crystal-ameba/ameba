@@ -13,10 +13,10 @@ module Ameba::Rule::Lint
         CRYSTAL
     end
 
-    it "reports if there is a regex comparison possibly evaluating to the same" do
+    it "reports if there is a dynamic comparison possibly evaluating to the same" do
       expect_issue subject, <<-CRYSTAL
-        /foo/ === "foo"
-        # ^^^^^^^^^^^^^ error: Comparison most likely evaluates to the same
+        [foo] === ["foo"]
+        # ^^^^^^^^^^^^^^^ error: Comparison most likely evaluates to the same
         CRYSTAL
     end
 

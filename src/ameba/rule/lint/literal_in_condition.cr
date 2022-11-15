@@ -30,7 +30,7 @@ module Ameba::Rule::Lint
     MSG = "Literal value found in conditional"
 
     def check_node(source, node)
-      issue_for node, MSG if literal?(node.cond)
+      issue_for node, MSG if static_literal?(node.cond)
     end
 
     def test(source, node : Crystal::If)
