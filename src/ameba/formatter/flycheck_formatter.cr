@@ -6,12 +6,13 @@ module Ameba::Formatter
       source.issues.each do |e|
         next if e.disabled?
         next if e.correctable? && config[:autocorrect]?
-        if loc = e.location
-          @mutex.synchronize do
-            output.printf "%s:%d:%d: %s: [%s] %s\n",
-              source.path, loc.line_number, loc.column_number, e.rule.severity.symbol,
-              e.rule.name, e.message.gsub('\n', " ")
-          end
+
+        next unless loc = e.location
+
+        @mutex.synchronize do
+          output.printf "%s:%d:%d: %s: [%s] %s\n",
+            source.path, loc.line_number, loc.column_number, e.rule.severity.symbol,
+            e.rule.name, e.message.gsub('\n', " ")
         end
       end
     end

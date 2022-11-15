@@ -62,10 +62,7 @@ module Ameba::Rule::Style
     end
 
     protected def operator?(name)
-      name.each_char do |char|
-        return false unless char.in?(OPERATOR_CHARS)
-      end
-      !name.empty?
+      !name.empty? && name[0].in?(OPERATOR_CHARS)
     end
 
     protected def setter?(name)

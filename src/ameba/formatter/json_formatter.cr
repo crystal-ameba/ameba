@@ -62,7 +62,6 @@ module Ameba::Formatter
   #   },
   # }
   # ```
-  #
   class JSONFormatter < BaseFormatter
     def initialize(@output = STDOUT)
       @result = AsJSON::Result.new
@@ -75,10 +74,17 @@ module Ameba::Formatter
     def source_finished(source : Source)
       json_source = AsJSON::Source.new source.path
 
-      source.issues.each do |e|
-        next if e.disabled?
-        next if e.correctable? && config[:autocorrect]?
-        json_source.issues << AsJSON::Issue.new(e.rule.name, e.rule.severity.to_s, e.location, e.end_location, e.message)
+      source.issues.each do |issue|
+        next if issue.disabled?
+        next if issue.correctable? && config[:autocorrect]?
+
+        json_source.issues << AsJSON::Issue.new(
+          issue.rule.name,
+          issue.rule.severity.to_s,
+          issue.location,
+          issue.end_location,
+          issue.message
+        )
         @result.summary.issues_count += 1
       end
 
@@ -96,7 +102,11 @@ module Ameba::Formatter
       metadata = Metadata.new,
       summary = Summary.new do
       def to_json(json)
-        {sources: sources, metadata: metadata, summary: summary}.to_json(json)
+        {
+          sources:  sources,
+          metadata: metadata,
+          summary:  summary,
+        }.to_json(json)
       end
     end
 
@@ -104,7 +114,10 @@ module Ameba::Formatter
       path : String,
       issues = [] of Issue do
       def to_json(json)
-        {path: path, issues: issues}.to_json(json)
+        {
+          path:   path,
+          issues: issues,
+        }.to_json(json)
       end
     end
 
@@ -115,15 +128,19 @@ module Ameba::Formatter
       end_location : Crystal::Location?,
       message : String do
       def to_json(json)
-        json.object do
-          json.field :rule_name, rule_name
-          json.field :severity, severity
-          json.field :message, message
-          json.field :location,
-            {line: location.try &.line_number, column: location.try &.column_number}
-          json.field :end_location,
-            {line: end_location.try &.line_number, column: end_location.try &.column_number}
-        end
+        {
+          rule_name: rule_name,
+          severity:  severity,
+          message:   message,
+          location:  {
+            line:   location.try &.line_number,
+            column: location.try &.column_number,
+          },
+          end_location: {
+            line:   end_location.try &.line_number,
+            column: end_location.try &.column_number,
+          },
+        }.to_json(json)
       end
     end
 
@@ -131,10 +148,10 @@ module Ameba::Formatter
       ameba_version : String = Ameba::VERSION,
       crystal_version : String = Crystal::VERSION do
       def to_json(json)
-        json.object do
-          json.field :ameba_version, ameba_version
-          json.field :crystal_version, crystal_version
-        end
+        {
+          ameba_version:   ameba_version,
+          crystal_version: crystal_version,
+        }.to_json(json)
       end
     end
 
@@ -143,10 +160,10 @@ module Ameba::Formatter
       property issues_count = 0
 
       def to_json(json)
-        json.object do
-          json.field :target_sources_count, target_sources_count
-          json.field :issues_count, issues_count
-        end
+        {
+          target_sources_count: target_sources_count,
+          issues_count:         issues_count,
+        }.to_json(json)
       end
     end
   end

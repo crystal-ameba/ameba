@@ -160,7 +160,7 @@ module Ameba::Rule::Style
     end
 
     private def guard_clause(node)
-      node = node.right if node.is_a?(Crystal::And) || node.is_a?(Crystal::Or)
+      node = node.right if node.is_a?(Crystal::BinaryOp)
 
       return unless location = node.location
       return unless end_location = node.end_location
@@ -175,11 +175,9 @@ module Ameba::Rule::Style
     end
 
     def guard_clause_source(source, guard_clause, parent)
-      if parent.is_a?(Crystal::And) || parent.is_a?(Crystal::Or)
-        node_source(parent, source.lines)
-      else
-        node_source(guard_clause, source.lines)
-      end
+      node = parent.is_a?(Crystal::BinaryOp) ? parent : guard_clause
+
+      node_source(node, source.lines)
     end
   end
 end

@@ -80,8 +80,8 @@ module Ameba::Rule::Style
 
       begin_loc, end_loc = begin_range
       begin_loc, end_loc = def_loc.seek(begin_loc), def_loc.seek(end_loc)
-      begin_end_loc = begin_loc.adjust(column_number: {{"begin".size - 1}})
-      end_end_loc = end_loc.adjust(column_number: {{"end".size - 1}})
+      begin_end_loc = begin_loc.adjust(column_number: {{ "begin".size - 1 }})
+      end_end_loc = end_loc.adjust(column_number: {{ "end".size - 1 }})
 
       issue_for begin_loc, begin_end_loc, MSG do |corrector|
         corrector.remove(begin_loc, begin_end_loc)
