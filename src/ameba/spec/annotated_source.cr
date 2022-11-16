@@ -73,7 +73,7 @@ class Ameba::Spec::AnnotatedSource
   private def message_to_regex(expected_annotation)
     String.build do |io|
       offset = 0
-      while (index = expected_annotation.index(ABBREV, offset))
+      while index = expected_annotation.index(ABBREV, offset)
         io << Regex.escape(expected_annotation[offset...index])
         io << ".*?"
         offset = index + ABBREV.size
