@@ -12,19 +12,22 @@ module Ameba::Formatter
     getter output : IO::FileDescriptor | IO::Memory
     getter location : Crystal::Location
 
-    # Creates a new instance of ExplainFormatter.
-    # Accepts *output* which indicates the io where the explanation will be wrtitten to.
+    # Creates a new instance of `ExplainFormatter`.
+    #
+    # Accepts *output* which indicates the io where the explanation will be written to.
     # Second argument is *location* which indicates the location to explain.
     #
     # ```
     # ExplainFormatter.new output,
-    #   {file: path, line: line_number, column: column_number}
+    #   file: path,
+    #   line: line_number,
+    #   column: column_number
     # ```
     def initialize(@output, location)
       @location = Crystal::Location.new(location[:file], location[:line], location[:column])
     end
 
-    # Reports the explainations at the *@location*.
+    # Reports the explanations at the *@location*.
     def finished(sources)
       source = sources.find(&.path.==(@location.filename))
       return unless source

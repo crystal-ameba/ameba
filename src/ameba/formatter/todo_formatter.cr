@@ -20,9 +20,9 @@ module Ameba::Formatter
         return
       end
 
-      file = generate_todo_config issues
-      @output.puts "Created #{file.path}"
-      file
+      generate_todo_config(issues).tap do |file|
+        @output.puts "Created #{file.path}"
+      end
     end
 
     private def generate_todo_config(issues)
@@ -43,6 +43,7 @@ module Ameba::Formatter
         issues.each do |issue|
           next if issue.disabled? || issue.rule.is_a?(Rule::Lint::Syntax)
           next if issue.correctable? && config[:autocorrect]?
+
           (h[issue.rule] ||= Array(Issue).new) << issue
         end
       end

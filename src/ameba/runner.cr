@@ -9,7 +9,6 @@ module Ameba
   # runner = Ameba::Runner.new config
   # runner.run.success? # => true or false
   # ```
-  #
   class Runner
     # An error indicating that the inspection loop got stuck correcting
     # issues back and forth.

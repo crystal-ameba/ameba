@@ -72,6 +72,7 @@ module Ameba::Formatter
 
     private def finished_in_message(started, finished)
       return unless started && finished
+
       "Finished in #{to_human(finished - started)}".colorize(:default)
     end
 
@@ -92,6 +93,7 @@ module Ameba::Formatter
 
       minutes = span.minutes
       seconds = span.seconds
+
       "#{minutes}:#{seconds < 10 ? "0" : ""}#{seconds} minutes"
     end
 
