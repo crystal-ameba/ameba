@@ -4,7 +4,7 @@ module Ameba::Rule::Lint
   describe UselessAssign do
     subject = UselessAssign.new
 
-    it "does not report used assigments" do
+    it "does not report used assignments" do
       s = Source.new %(
         def method
           a = 2
@@ -54,7 +54,7 @@ module Ameba::Rule::Lint
       subject.catch(s).should_not be_valid
     end
 
-    it "does not report ignored assigments" do
+    it "does not report ignored assignments" do
       s = Source.new %(
         payload, _header = decode
         puts payload
@@ -859,7 +859,7 @@ module Ameba::Rule::Lint
     end
 
     context "typeof" do
-      it "reports useless assigments in typeof" do
+      it "reports useless assignments in typeof" do
         s = Source.new %(
           typeof(begin
             foo = 1
@@ -944,7 +944,7 @@ module Ameba::Rule::Lint
         subject.catch(s).should be_valid
       end
 
-      it "doesn't report if assignement is referenced in for macro in exp" do
+      it "doesn't report if assignment is referenced in for macro in exp" do
         s = Source.new %(
           foo = 22
 
@@ -955,7 +955,7 @@ module Ameba::Rule::Lint
         subject.catch(s).should be_valid
       end
 
-      it "doesn't report if assignement is referenced in for macro in body" do
+      it "doesn't report if assignment is referenced in for macro in body" do
         s = Source.new %(
           foo = 22
 
@@ -966,7 +966,7 @@ module Ameba::Rule::Lint
         subject.catch(s).should be_valid
       end
 
-      it "doesn't report if assignement is referenced in if macro in cond" do
+      it "doesn't report if assignment is referenced in if macro in cond" do
         s = Source.new %(
           foo = 22
           {% if "foo".id %}
@@ -975,7 +975,7 @@ module Ameba::Rule::Lint
         subject.catch(s).should be_valid
       end
 
-      it "doesn't report if assignement is referenced in if macro in then" do
+      it "doesn't report if assignment is referenced in if macro in then" do
         s = Source.new %(
           foo = 22
           {% if true %}
@@ -985,7 +985,7 @@ module Ameba::Rule::Lint
         subject.catch(s).should be_valid
       end
 
-      it "doesn't report if assignement is referenced in if macro in else" do
+      it "doesn't report if assignment is referenced in if macro in else" do
         s = Source.new %(
           foo = 22
           {% if true %}

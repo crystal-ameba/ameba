@@ -117,7 +117,7 @@ module Ameba::AST
         !!outer_scope.try(&.in_macro?)
     end
 
-    # Returns `true` if instance variable is assinged in this scope.
+    # Returns `true` if instance variable is assigned in this scope.
     def assigns_ivar?(name)
       arguments.find(&.name.== name) &&
         ivariables.find(&.name.== "@#{name}")

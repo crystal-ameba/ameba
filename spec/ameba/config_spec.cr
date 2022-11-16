@@ -127,7 +127,7 @@ module Ameba
         config.sources.any?(&.fullpath.==(__FILE__)).should be_true
       end
 
-      it "returns a list of sources mathing globs" do
+      it "returns a list of sources matching globs" do
         config.globs = %w(**/config_spec.cr)
         config.sources.size.should eq(1)
       end

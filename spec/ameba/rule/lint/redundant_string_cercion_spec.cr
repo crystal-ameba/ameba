@@ -4,21 +4,21 @@ module Ameba::Rule::Lint
   describe RedundantStringCoercion do
     subject = RedundantStringCoercion.new
 
-    it "does not report if there is no redundant string coersion" do
+    it "does not report if there is no redundant string coercion" do
       s = Source.new %(
         "Hello, #{name}"
       )
       subject.catch(s).should be_valid
     end
 
-    it "reports if there is a redundant string coersion" do
+    it "reports if there is a redundant string coercion" do
       s = Source.new %q(
         "Hello, #{name.to_s}"
       )
       subject.catch(s).should_not be_valid
     end
 
-    it "does not report if coersion is used in binary op" do
+    it "does not report if coercion is used in binary op" do
       s = Source.new %q(
         "Hello, #{3.to_s + 's'}"
       )

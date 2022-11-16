@@ -146,7 +146,7 @@ module Ameba::Rule::Style
       end
     end
 
-    context "expception handler" do
+    context "exception handler" do
       it "doesn't report if there is no redundant next in exception handler" do
         expect_no_issues subject, <<-CRYSTAL
           block do |v|
