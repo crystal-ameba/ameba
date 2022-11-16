@@ -90,7 +90,7 @@ module Ameba::Rule::Style
   # ```
   # Style/RedundantReturn:
   #   Enabled: true
-  #   AllowMutliReturn: true
+  #   AllowMultiReturn: true
   #   AllowEmptyReturn: true
   # ```
   class RedundantReturn < Base

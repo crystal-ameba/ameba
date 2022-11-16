@@ -40,7 +40,7 @@ module Ameba::Rule::Lint
   # during iterations. So it reports the issue on the first sample and passes on
   # the second one.
   #
-  # There are also other technics to solve the problem above which are
+  # There are also other techniques to solve the problem above which are
   # [officially documented](https://crystal-lang.org/reference/guides/concurrency.html)
   #
   # YAML configuration example:
