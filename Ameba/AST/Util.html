@@ -830,7 +830,7 @@
   </h2>
   
     
-      <a href="https://github.com/crystal-ameba/ameba/blob/cc687d02/src/ameba/ast/util.cr#L2" target="_blank">
+      <a href="https://github.com/crystal-ameba/ameba/blob/b5ac5990/src/ameba/ast/util.cr#L2" target="_blank">
         ameba/ast/util.cr
       </a>
     
@@ -858,7 +858,7 @@
       <li class="entry-summary">
         <a href="#abort%3F%28node%29-instance-method" class="signature"><strong>#abort?</strong>(node)</a>
         
-          <div class="summary"><p>Returns true if node represents <code>abort</code> method call.</p></div>
+          <div class="summary"><p>Returns <code>true</code> if node represents <code>abort</code> method call.</p></div>
         
       </li>
     
@@ -870,37 +870,44 @@
       </li>
     
       <li class="entry-summary">
+        <a href="#dynamic_literal%3F%28node%2Cinclude_paths%3Dfalse%29%3ABool-instance-method" class="signature"><strong>#dynamic_literal?</strong>(node, include_paths = <span class="n">false</span>) : Bool</a>
+        
+          <div class="summary"><p>Returns <code>true</code> if current <code>node</code> is a dynamic literal, <code>false</code> otherwise.</p></div>
+        
+      </li>
+    
+      <li class="entry-summary">
         <a href="#exit%3F%28node%29-instance-method" class="signature"><strong>#exit?</strong>(node)</a>
         
-          <div class="summary"><p>Returns true if node represents <code>exit</code> method call.</p></div>
+          <div class="summary"><p>Returns <code>true</code> if node represents <code>exit</code> method call.</p></div>
         
       </li>
     
       <li class="entry-summary">
         <a href="#flow_command%3F%28node%2Cin_loop%29-instance-method" class="signature"><strong>#flow_command?</strong>(node, in_loop)</a>
         
-          <div class="summary"><p>Returns true if node is a flow command, false - otherwise.</p></div>
+          <div class="summary"><p>Returns <code>true</code> if node is a flow command, <code>false</code> otherwise.</p></div>
         
       </li>
     
       <li class="entry-summary">
         <a href="#flow_expression%3F%28node%2Cin_loop%3Dfalse%29-instance-method" class="signature"><strong>#flow_expression?</strong>(node, in_loop = <span class="n">false</span>)</a>
         
-          <div class="summary"><p>Returns true if node is a flow expression, false if not.</p></div>
+          <div class="summary"><p>Returns <code>true</code> if node is a flow expression, <code>false</code> if not.</p></div>
         
       </li>
     
       <li class="entry-summary">
-        <a href="#literal%3F%28node%29-instance-method" class="signature"><strong>#literal?</strong>(node)</a>
+        <a href="#literal%3F%28node%2Cinclude_paths%3Dfalse%29%3ABool-instance-method" class="signature"><strong>#literal?</strong>(node, include_paths = <span class="n">false</span>) : Bool</a>
         
-          <div class="summary"><p>Returns true if current <code>node</code> is a literal, false otherwise.</p></div>
+          <div class="summary"><p>Returns <code>true</code> if current <code>node</code> is a literal, <code>false</code> otherwise.</p></div>
         
       </li>
     
       <li class="entry-summary">
         <a href="#loop%3F%28node%29-instance-method" class="signature"><strong>#loop?</strong>(node)</a>
         
-          <div class="summary"><p>Returns true if node represents a loop.</p></div>
+          <div class="summary"><p>Returns <code>true</code> if node represents a loop.</p></div>
         
       </li>
     
@@ -935,7 +942,7 @@
       <li class="entry-summary">
         <a href="#raise%3F%28node%29-instance-method" class="signature"><strong>#raise?</strong>(node)</a>
         
-          <div class="summary"><p>Returns true if node represents <code>raise</code> method call.</p></div>
+          <div class="summary"><p>Returns <code>true</code> if node represents <code>raise</code> method call.</p></div>
         
       </li>
     
@@ -943,6 +950,13 @@
         <a href="#source_between%28loc%2Cend_loc%2Ccode_lines%29%3AString%3F-instance-method" class="signature"><strong>#source_between</strong>(loc, end_loc, code_lines) : String?</a>
         
           <div class="summary"><p>Returns the source code from <em>loc</em> to <em>end_loc</em> (inclusive).</p></div>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#static_literal%3F%28node%2Cinclude_paths%3Dfalse%29%3ABool-instance-method" class="signature"><strong>#static_literal?</strong>(node, include_paths = <span class="n">false</span>) : Bool</a>
+        
+          <div class="summary"><p>Returns <code>true</code> if current <code>node</code> is a static literal, <code>false</code> otherwise.</p></div>
         
       </li>
     
@@ -980,13 +994,13 @@
       
         <div class="doc">
           
-          <p>Returns true if node represents <code>abort</code> method call.</p>
+          <p>Returns <code>true</code> if node represents <code>abort</code> method call.</p>
         </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/cc687d02/src/ameba/ast/util.cr#L144" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/b5ac5990/src/ameba/ast/util.cr#L175" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1008,7 +1022,28 @@ Wraps implicit tuple literal with curly brackets (e.g. multi-return).</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/cc687d02/src/ameba/ast/util.cr#L163" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/b5ac5990/src/ameba/ast/util.cr#L194" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="dynamic_literal?(node,include_paths=false):Bool-instance-method">
+      <div class="signature">
+        
+        def <strong>dynamic_literal?</strong>(node, include_paths = <span class="n">false</span>) : Bool
+
+        <a class="method-permalink" href="#dynamic_literal%3F%28node%2Cinclude_paths%3Dfalse%29%3ABool-instance-method">#</a>
+      </div>
+      
+        <div class="doc">
+          
+          <p>Returns <code>true</code> if current <code>node</code> is a dynamic literal, <code>false</code> otherwise.</p>
+        </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/crystal-ameba/ameba/blob/b5ac5990/src/ameba/ast/util.cr#L50" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1023,13 +1058,13 @@ Wraps implicit tuple literal with curly brackets (e.g. multi-return).</p>
       
         <div class="doc">
           
-          <p>Returns true if node represents <code>exit</code> method call.</p>
+          <p>Returns <code>true</code> if node represents <code>exit</code> method call.</p>
         </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/cc687d02/src/ameba/ast/util.cr#L138" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/b5ac5990/src/ameba/ast/util.cr#L169" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1044,7 +1079,7 @@ Wraps implicit tuple literal with curly brackets (e.g. multi-return).</p>
       
         <div class="doc">
           
-          <p>Returns true if node is a flow command, false - otherwise.
+          <p>Returns <code>true</code> if node is a flow command, <code>false</code> otherwise.
 Node represents a flow command if it is a control expression,
 or special call node that interrupts execution (i.e. raise, exit, abort).</p>
         </div>
@@ -1052,7 +1087,7 @@ or special call node that interrupts execution (i.e. raise, exit, abort).</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/cc687d02/src/ameba/ast/util.cr#L66" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/b5ac5990/src/ameba/ast/util.cr#L97" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1067,7 +1102,7 @@ or special call node that interrupts execution (i.e. raise, exit, abort).</p>
       
         <div class="doc">
           
-          <p>Returns true if node is a flow expression, false if not.
+          <p>Returns <code>true</code> if node is a flow expression, <code>false</code> if not.
 Node represents a flow expression if it is full-filled by a flow command.</p>
 <p>For example, this node is a flow expression, because each branch contains
 a flow command <code>return</code>:</p>
@@ -1088,28 +1123,28 @@ a flow command <code>return</code>:</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/cc687d02/src/ameba/ast/util.cr#L104" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/b5ac5990/src/ameba/ast/util.cr#L135" target="_blank">View source</a>]
         
       </div>
     </div>
   
-    <div class="entry-detail" id="literal?(node)-instance-method">
+    <div class="entry-detail" id="literal?(node,include_paths=false):Bool-instance-method">
       <div class="signature">
         
-        def <strong>literal?</strong>(node)
+        def <strong>literal?</strong>(node, include_paths = <span class="n">false</span>) : Bool
 
-        <a class="method-permalink" href="#literal%3F%28node%29-instance-method">#</a>
+        <a class="method-permalink" href="#literal%3F%28node%2Cinclude_paths%3Dfalse%29%3ABool-instance-method">#</a>
       </div>
       
         <div class="doc">
           
-          <p>Returns true if current <code>node</code> is a literal, false otherwise.</p>
+          <p>Returns <code>true</code> if current <code>node</code> is a literal, <code>false</code> otherwise.</p>
         </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/cc687d02/src/ameba/ast/util.cr#L4" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/b5ac5990/src/ameba/ast/util.cr#L56" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1124,13 +1159,13 @@ a flow command <code>return</code>:</p>
       
         <div class="doc">
           
-          <p>Returns true if node represents a loop.</p>
+          <p>Returns <code>true</code> if node represents a loop.</p>
         </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/cc687d02/src/ameba/ast/util.cr#L150" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/b5ac5990/src/ameba/ast/util.cr#L181" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1153,7 +1188,7 @@ off-by-one error.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/cc687d02/src/ameba/ast/util.cr#L206" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/b5ac5990/src/ameba/ast/util.cr#L237" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1174,7 +1209,7 @@ off-by-one error.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/cc687d02/src/ameba/ast/util.cr#L174" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/b5ac5990/src/ameba/ast/util.cr#L205" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1195,7 +1230,7 @@ off-by-one error.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/cc687d02/src/ameba/ast/util.cr#L188" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/b5ac5990/src/ameba/ast/util.cr#L219" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1218,7 +1253,7 @@ to determine and cut a piece of source of the node.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/cc687d02/src/ameba/ast/util.cr#L33" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/b5ac5990/src/ameba/ast/util.cr#L64" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1233,13 +1268,13 @@ to determine and cut a piece of source of the node.</p>
       
         <div class="doc">
           
-          <p>Returns true if node represents <code>raise</code> method call.</p>
+          <p>Returns <code>true</code> if node represents <code>raise</code> method call.</p>
         </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/cc687d02/src/ameba/ast/util.cr#L132" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/b5ac5990/src/ameba/ast/util.cr#L163" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1260,7 +1295,28 @@ to determine and cut a piece of source of the node.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/cc687d02/src/ameba/ast/util.cr#L41" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/b5ac5990/src/ameba/ast/util.cr#L72" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="static_literal?(node,include_paths=false):Bool-instance-method">
+      <div class="signature">
+        
+        def <strong>static_literal?</strong>(node, include_paths = <span class="n">false</span>) : Bool
+
+        <a class="method-permalink" href="#static_literal%3F%28node%2Cinclude_paths%3Dfalse%29%3ABool-instance-method">#</a>
+      </div>
+      
+        <div class="doc">
+          
+          <p>Returns <code>true</code> if current <code>node</code> is a static literal, <code>false</code> otherwise.</p>
+        </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/crystal-ameba/ameba/blob/b5ac5990/src/ameba/ast/util.cr#L44" target="_blank">View source</a>]
         
       </div>
     </div>

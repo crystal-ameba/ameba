@@ -799,7 +799,7 @@ types like containers, range or regex.</p>
   </h2>
   
     
-      <a href="https://github.com/crystal-ameba/ameba/blob/cc687d02/src/ameba/rule/lint/literals_comparison.cr#L20" target="_blank">
+      <a href="https://github.com/crystal-ameba/ameba/blob/b5ac5990/src/ameba/rule/lint/literals_comparison.cr#L20" target="_blank">
         ameba/rule/lint/literals_comparison.cr
       </a>
     
@@ -820,16 +820,6 @@ types like containers, range or regex.</p>
   
   <dl>
     
-      <dt class="entry-const" id="DYNAMIC_LITERAL_TYPES">
-        <strong>DYNAMIC_LITERAL_TYPES</strong> = <code>{<span class="t">Crystal</span><span class="t">::</span><span class="t">RangeLiteral</span>, <span class="t">Crystal</span><span class="t">::</span><span class="t">RegexLiteral</span>, <span class="t">Crystal</span><span class="t">::</span><span class="t">TupleLiteral</span>, <span class="t">Crystal</span><span class="t">::</span><span class="t">NamedTupleLiteral</span>, <span class="t">Crystal</span><span class="t">::</span><span class="t">ArrayLiteral</span>, <span class="t">Crystal</span><span class="t">::</span><span class="t">HashLiteral</span>}</code>
-      </dt>
-      
-    
-      <dt class="entry-const" id="LITERAL_TYPES">
-        <strong>LITERAL_TYPES</strong> = <code><span class="t">PRIMITIVE_LITERAL_TYPES</span> <span class="o">+</span> <span class="t">DYNAMIC_LITERAL_TYPES</span></code>
-      </dt>
-      
-    
       <dt class="entry-const" id="MSG">
         <strong>MSG</strong> = <code><span class="s">&quot;Comparison always evaluates to %s&quot;</span></code>
       </dt>
@@ -842,11 +832,6 @@ types like containers, range or regex.</p>
     
       <dt class="entry-const" id="OP_NAMES">
         <strong>OP_NAMES</strong> = <code>[<span class="s">&quot;===&quot;</span>, <span class="s">&quot;==&quot;</span>, <span class="s">&quot;!=&quot;</span>] <span class="k">of</span> <span class="t">::</span><span class="t">String</span></code>
-      </dt>
-      
-    
-      <dt class="entry-const" id="PRIMITIVE_LITERAL_TYPES">
-        <strong>PRIMITIVE_LITERAL_TYPES</strong> = <code>{<span class="t">Crystal</span><span class="t">::</span><span class="t">NilLiteral</span>, <span class="t">Crystal</span><span class="t">::</span><span class="t">BoolLiteral</span>, <span class="t">Crystal</span><span class="t">::</span><span class="t">NumberLiteral</span>, <span class="t">Crystal</span><span class="t">::</span><span class="t">CharLiteral</span>, <span class="t">Crystal</span><span class="t">::</span><span class="t">StringLiteral</span>, <span class="t">Crystal</span><span class="t">::</span><span class="t">SymbolLiteral</span>, <span class="t">Crystal</span><span class="t">::</span><span class="t">ProcLiteral</span>, <span class="t">Crystal</span><span class="t">::</span><span class="t">Path</span>}</code>
       </dt>
       
     
@@ -986,6 +971,11 @@ types like containers, range or regex.</p>
     control_exp_code</a>, 
     
   
+    <a href="../../../Ameba/AST/Util.html#dynamic_literal%3F%28node%2Cinclude_paths%3Dfalse%29%3ABool-instance-method" class="tooltip">
+      <span>dynamic_literal?(node, include_paths = <span class="n">false</span>) : Bool</span>
+    dynamic_literal?</a>, 
+    
+  
     <a href="../../../Ameba/AST/Util.html#exit%3F%28node%29-instance-method" class="tooltip">
       <span>exit?(node)</span>
     exit?</a>, 
@@ -1001,8 +991,8 @@ types like containers, range or regex.</p>
     flow_expression?</a>, 
     
   
-    <a href="../../../Ameba/AST/Util.html#literal%3F%28node%29-instance-method" class="tooltip">
-      <span>literal?(node)</span>
+    <a href="../../../Ameba/AST/Util.html#literal%3F%28node%2Cinclude_paths%3Dfalse%29%3ABool-instance-method" class="tooltip">
+      <span>literal?(node, include_paths = <span class="n">false</span>) : Bool</span>
     literal?</a>, 
     
   
@@ -1038,7 +1028,12 @@ types like containers, range or regex.</p>
   
     <a href="../../../Ameba/AST/Util.html#source_between%28loc%2Cend_loc%2Ccode_lines%29%3AString%3F-instance-method" class="tooltip">
       <span>source_between(loc, end_loc, code_lines) : String?</span>
-    source_between</a>
+    source_between</a>, 
+    
+  
+    <a href="../../../Ameba/AST/Util.html#static_literal%3F%28node%2Cinclude_paths%3Dfalse%29%3ABool-instance-method" class="tooltip">
+      <span>static_literal?(node, include_paths = <span class="n">false</span>) : Bool</span>
+    static_literal?</a>
     
   
 
@@ -1203,7 +1198,7 @@ types like containers, range or regex.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/cc687d02/src/ameba/rule/lint/literals_comparison.cr#L20" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/b5ac5990/src/ameba/rule/lint/literals_comparison.cr#L20" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1384,7 +1379,7 @@ types like containers, range or regex.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/cc687d02/src/ameba/rule/lint/literals_comparison.cr#L71" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/b5ac5990/src/ameba/rule/lint/literals_comparison.cr#L48" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1409,7 +1404,7 @@ is a free var</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/cc687d02/src/ameba/rule/lint/literals_comparison.cr#L62" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/b5ac5990/src/ameba/rule/lint/literals_comparison.cr#L39" target="_blank">View source</a>]
         
       </div>
     </div>
