@@ -1,7 +1,10 @@
 # Utility module for Ameba's rules.
 module Ameba::AST::Util
-  # Returns true if current `node` is a literal, false otherwise.
-  def literal?(node)
+  # Returns tuple with two bool flags:
+  #
+  # 1. is *node* a literal?
+  # 2. can *node* be proven static?
+  protected def literal_kind?(node, include_paths = false) : {Bool, Bool}
     case node
     when Crystal::NilLiteral,
          Crystal::BoolLiteral,
@@ -12,19 +15,47 @@ module Ameba::AST::Util
          Crystal::RegexLiteral,
          Crystal::ProcLiteral,
          Crystal::MacroLiteral
-      true
+      {true, true}
     when Crystal::RangeLiteral
-      literal?(node.from) && literal?(node.to)
+      {true, static_literal?(node.from, include_paths) &&
+        static_literal?(node.to, include_paths)}
     when Crystal::ArrayLiteral,
          Crystal::TupleLiteral
-      node.elements.all? { |el| literal?(el) }
+      {true, node.elements.all? do |el|
+        static_literal?(el, include_paths)
+      end}
     when Crystal::HashLiteral
-      node.entries.all? { |entry| literal?(entry.key) && literal?(entry.value) }
+      {true, node.entries.all? do |entry|
+        static_literal?(entry.key, include_paths) &&
+          static_literal?(entry.value, include_paths)
+      end}
     when Crystal::NamedTupleLiteral
-      node.entries.all? { |entry| literal?(entry.value) }
+      {true, node.entries.all? do |entry|
+        static_literal?(entry.value, include_paths)
+      end}
+    when Crystal::Path
+      {include_paths, true}
     else
-      false
+      {false, false}
     end
+  end
+
+  # Returns `true` if current `node` is a static literal, `false` otherwise.
+  def static_literal?(node, include_paths = false) : Bool
+    is_literal, is_static = literal_kind?(node, include_paths)
+    is_literal && is_static
+  end
+
+  # Returns `true` if current `node` is a dynamic literal, `false` otherwise.
+  def dynamic_literal?(node, include_paths = false) : Bool
+    is_literal, is_static = literal_kind?(node, include_paths)
+    is_literal && !is_static
+  end
+
+  # Returns `true` if current `node` is a literal, `false` otherwise.
+  def literal?(node, include_paths = false) : Bool
+    is_literal, _ = literal_kind?(node, include_paths)
+    is_literal
   end
 
   # Returns a source code for the current node.
@@ -60,7 +91,7 @@ module Ameba::AST::Util
     node_lines.join('\n')
   end
 
-  # Returns true if node is a flow command, false - otherwise.
+  # Returns `true` if node is a flow command, `false` otherwise.
   # Node represents a flow command if it is a control expression,
   # or special call node that interrupts execution (i.e. raise, exit, abort).
   def flow_command?(node, in_loop)
@@ -76,7 +107,7 @@ module Ameba::AST::Util
     end
   end
 
-  # Returns true if node is a flow expression, false if not.
+  # Returns `true` if node is a flow expression, `false` if not.
   # Node represents a flow expression if it is full-filled by a flow command.
   #
   # For example, this node is a flow expression, because each branch contains
@@ -128,25 +159,25 @@ module Ameba::AST::Util
     nodes.all? { |exp| flow_expression? exp, in_loop }
   end
 
-  # Returns true if node represents `raise` method call.
+  # Returns `true` if node represents `raise` method call.
   def raise?(node)
     node.is_a?(Crystal::Call) &&
       node.name == "raise" && node.args.size == 1 && node.obj.nil?
   end
 
-  # Returns true if node represents `exit` method call.
+  # Returns `true` if node represents `exit` method call.
   def exit?(node)
     node.is_a?(Crystal::Call) &&
       node.name == "exit" && node.args.size <= 1 && node.obj.nil?
   end
 
-  # Returns true if node represents `abort` method call.
+  # Returns `true` if node represents `abort` method call.
   def abort?(node)
     node.is_a?(Crystal::Call) &&
       node.name == "abort" && node.args.size <= 2 && node.obj.nil?
   end
 
-  # Returns true if node represents a loop.
+  # Returns `true` if node represents a loop.
   def loop?(node)
     case node
     when Crystal::While, Crystal::Until

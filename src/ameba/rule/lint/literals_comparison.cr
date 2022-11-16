@@ -29,29 +29,6 @@ module Ameba::Rule::Lint
     MSG        = "Comparison always evaluates to %s"
     MSG_LIKELY = "Comparison most likely evaluates to %s"
 
-    PRIMITIVE_LITERAL_TYPES = {
-      Crystal::NilLiteral,
-      Crystal::BoolLiteral,
-      Crystal::NumberLiteral,
-      Crystal::CharLiteral,
-      Crystal::StringLiteral,
-      Crystal::SymbolLiteral,
-      Crystal::ProcLiteral,
-      Crystal::Path,
-    }
-
-    DYNAMIC_LITERAL_TYPES = {
-      Crystal::RangeLiteral,
-      Crystal::RegexLiteral,
-      Crystal::TupleLiteral,
-      Crystal::NamedTupleLiteral,
-      Crystal::ArrayLiteral,
-      Crystal::HashLiteral,
-    }
-
-    LITERAL_TYPES =
-      PRIMITIVE_LITERAL_TYPES + DYNAMIC_LITERAL_TYPES
-
     # Edge-case: `{{ T == Nil }}`
     #
     # Current implementation just skips all macro contexts,
@@ -72,11 +49,12 @@ module Ameba::Rule::Lint
       return unless node.name.in?(OP_NAMES)
       return unless (obj = node.obj) && (arg = node.args.first?)
 
-      return unless obj.class.in?(LITERAL_TYPES) &&
-                    arg.class.in?(LITERAL_TYPES)
+      obj_is_literal, obj_is_static = literal_kind?(obj, include_paths: true)
+      arg_is_literal, arg_is_static = literal_kind?(arg, include_paths: true)
 
-      is_dynamic = obj.class.in?(DYNAMIC_LITERAL_TYPES) ||
-                   arg.class.in?(DYNAMIC_LITERAL_TYPES)
+      return unless obj_is_literal && arg_is_literal
+
+      is_dynamic = !obj_is_static || !arg_is_static
 
       what =
         case node.name
