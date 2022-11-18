@@ -85,6 +85,12 @@ module Ameba::Rule::Style
             CRYSTAL
 
           expect_no_issues subject, <<-CRYSTAL
+            if !(foo = @foo)
+              foo
+            end
+            CRYSTAL
+
+          expect_no_issues subject, <<-CRYSTAL
             if foo = @foo
               foo
             end
