@@ -75,7 +75,7 @@ module Ameba::Rule::Style
         end
       end
 
-      context "#exclude_assignments=" do
+      context "#parenthesized_assignments=" do
         it "reports assignments by default" do
           expect_issue subject, <<-CRYSTAL
             if (foo = @foo)
@@ -83,11 +83,24 @@ module Ameba::Rule::Style
               foo
             end
             CRYSTAL
+
+          expect_no_issues subject, <<-CRYSTAL
+            if foo = @foo
+              foo
+            end
+            CRYSTAL
         end
 
         it "allows to configure assignments" do
           rule = Rule::Style::RedundantParentheses.new
-          rule.exclude_assignments = true
+          rule.parenthesized_assignments = true
+
+          expect_issue rule, <<-CRYSTAL
+            if foo = @foo
+             # ^^^^^^^^^^ error: Missing parentheses
+              foo
+            end
+            CRYSTAL
 
           expect_no_issues rule, <<-CRYSTAL
             if (foo = @foo)
