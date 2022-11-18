@@ -1,9 +1,9 @@
 require "../../../spec_helper"
 
 module Ameba::Rule::Style
-  subject = RedundantParentheses.new
+  subject = ParenthesesAroundCondition.new
 
-  describe RedundantParentheses do
+  describe ParenthesesAroundCondition do
     {% for keyword in %w(if unless while until) %}
       context "{{ keyword.id }}" do
         it "reports if redundant parentheses are found" do
@@ -51,7 +51,7 @@ module Ameba::Rule::Style
         end
 
         it "allows to configure assignments" do
-          rule = Rule::Style::RedundantParentheses.new
+          rule = Rule::Style::ParenthesesAroundCondition.new
           rule.exclude_ternary = false
 
           expect_issue rule, <<-CRYSTAL
@@ -75,7 +75,7 @@ module Ameba::Rule::Style
         end
       end
 
-      context "#parenthesized_assignments=" do
+      context "#allow_safe_assignment=" do
         it "reports assignments by default" do
           expect_issue subject, <<-CRYSTAL
             if (foo = @foo)
@@ -98,8 +98,8 @@ module Ameba::Rule::Style
         end
 
         it "allows to configure assignments" do
-          rule = Rule::Style::RedundantParentheses.new
-          rule.parenthesized_assignments = true
+          rule = Rule::Style::ParenthesesAroundCondition.new
+          rule.allow_safe_assignment = true
 
           expect_issue rule, <<-CRYSTAL
             if foo = @foo

@@ -1,5 +1,6 @@
 module Ameba::Rule::Style
-  # A rule that disallows redundant parentheses around control expressions.
+  # A rule that checks for the presence of superfluous parentheses
+  # around the condition of `if`, `unless`, `case, `while` and `until`.
   #
   # For example, this is considered invalid:
   #
@@ -20,17 +21,17 @@ module Ameba::Rule::Style
   # YAML configuration example:
   #
   # ```
-  # Style/RedundantParentheses:
+  # Style/ParenthesesAroundCondition:
   #   Enabled: true
   #   ExcludeTernary: false
-  #   ParenthesizedAssignments: false
+  #   AllowSafeAssignment: false
   # ```
-  class RedundantParentheses < Base
+  class ParenthesesAroundCondition < Base
     properties do
       description "Disallows redundant parentheses around control expressions"
 
       exclude_ternary false
-      parenthesized_assignments false
+      allow_safe_assignment false
     end
 
     MSG_REDUNDANT = "Redundant parentheses"
@@ -45,7 +46,7 @@ module Ameba::Rule::Style
       when Crystal::Yield
         !in_ternary || node.has_parentheses? || node.exps.empty?
       when Crystal::Assign, Crystal::OpAssign, Crystal::MultiAssign
-        !in_ternary && !parenthesized_assignments
+        !in_ternary && !allow_safe_assignment
       else
         true
       end
@@ -54,7 +55,7 @@ module Ameba::Rule::Style
     def test(source, node : Crystal::If | Crystal::Unless | Crystal::Case | Crystal::While | Crystal::Until)
       cond = node.cond
 
-      if cond.is_a?(Crystal::Assign) && parenthesized_assignments
+      if cond.is_a?(Crystal::Assign) && allow_safe_assignment
         issue_for cond, MSG_MISSING do |corrector|
           corrector.insert_before(cond, '(')
           corrector.insert_after(cond, ')')
