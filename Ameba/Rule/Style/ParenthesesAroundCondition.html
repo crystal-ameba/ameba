@@ -13,7 +13,7 @@
 <script type="text/javascript" src="../../../js/doc.js"></script>
 
   <meta name="repository-name" content="ameba">
-  <title>Ameba::Rule::Style::RedundantParentheses - ameba master</title>
+  <title>Ameba::Rule::Style::ParenthesesAroundCondition - ameba master</title>
   <script type="text/javascript">
     CrystalDocs.base_path = "../../../";
   </script>
@@ -581,6 +581,11 @@
       
     </li>
   
+  <li class=" current" data-id="ameba/Ameba/Rule/Style/ParenthesesAroundCondition" data-name="ameba::rule::style::parenthesesaroundcondition">
+      <a href="../../../Ameba/Rule/Style/ParenthesesAroundCondition.html">ParenthesesAroundCondition</a>
+      
+    </li>
+  
   <li class=" " data-id="ameba/Ameba/Rule/Style/PredicateName" data-name="ameba::rule::style::predicatename">
       <a href="../../../Ameba/Rule/Style/PredicateName.html">PredicateName</a>
       
@@ -593,11 +598,6 @@
   
   <li class=" " data-id="ameba/Ameba/Rule/Style/RedundantNext" data-name="ameba::rule::style::redundantnext">
       <a href="../../../Ameba/Rule/Style/RedundantNext.html">RedundantNext</a>
-      
-    </li>
-  
-  <li class=" current" data-id="ameba/Ameba/Rule/Style/RedundantParentheses" data-name="ameba::rule::style::redundantparentheses">
-      <a href="../../../Ameba/Rule/Style/RedundantParentheses.html">RedundantParentheses</a>
       
     </li>
   
@@ -740,12 +740,12 @@
 <div class="main-content">
 <h1 class="type-name">
 
-  <span class="kind">class</span> Ameba::Rule::Style::RedundantParentheses
+  <span class="kind">class</span> Ameba::Rule::Style::ParenthesesAroundCondition
 
 </h1>
 
 
-  <ul class="superclass-hierarchy"><li class="superclass"><a href="../../../Ameba/Rule/Style/RedundantParentheses.html">Ameba::Rule::Style::RedundantParentheses</a></li><li class="superclass"><a href="../../../Ameba/Rule/Base.html">Ameba::Rule::Base</a></li><li class="superclass">Reference</li><li class="superclass">Object</li></ul>
+  <ul class="superclass-hierarchy"><li class="superclass"><a href="../../../Ameba/Rule/Style/ParenthesesAroundCondition.html">Ameba::Rule::Style::ParenthesesAroundCondition</a></li><li class="superclass"><a href="../../../Ameba/Rule/Base.html">Ameba::Rule::Base</a></li><li class="superclass">Reference</li><li class="superclass">Object</li></ul>
 
 
 
@@ -759,7 +759,8 @@
     Overview
   </h2>
 
-  <p>A rule that disallows redundant parentheses around control expressions.</p>
+  <p>A rule that checks for the presence of superfluous parentheses
+around the condition of <code>if</code>, <code>unless</code>, <code>case,</code>while<code>and</code>until`.</p>
 <p>For example, this is considered invalid:</p>
 <pre><code class="language-crystal"><span class="k">if</span> (foo <span class="o">==</span> <span class="n">42</span>)
   do_something
@@ -769,10 +770,10 @@
   do_something
 <span class="k">end</span></code></pre>
 <p>YAML configuration example:</p>
-<pre><code class="language-crystal"><span class="t">Style</span><span class="o">/</span><span class="t">RedundantParentheses</span>:
+<pre><code class="language-crystal"><span class="t">Style</span><span class="o">/</span><span class="t">ParenthesesAroundCondition</span>:
   <span class="t">Enabled</span>: <span class="n">true</span>
   <span class="t">ExcludeTernary</span>: <span class="n">false</span>
-  <span class="t">ExcludeAssignments</span>: <span class="n">false</span></code></pre>
+  <span class="t">AllowSafeAssignment</span>: <span class="n">false</span></code></pre>
 
 
 
@@ -813,8 +814,8 @@
   </h2>
   
     
-      <a href="https://github.com/crystal-ameba/ameba/blob/496e8930/src/ameba/rule/style/redundant_parentheses.cr#L28" target="_blank">
-        ameba/rule/style/redundant_parentheses.cr
+      <a href="https://github.com/crystal-ameba/ameba/blob/a3e5f2d2/src/ameba/rule/style/parentheses_around_condition.cr#L29" target="_blank">
+        ameba/rule/style/parentheses_around_condition.cr
       </a>
     
     <br/>
@@ -834,8 +835,13 @@
   
   <dl>
     
-      <dt class="entry-const" id="MSG">
-        <strong>MSG</strong> = <code><span class="s">&quot;Redundant parentheses&quot;</span></code>
+      <dt class="entry-const" id="MSG_MISSING">
+        <strong>MSG_MISSING</strong> = <code><span class="s">&quot;Missing parentheses&quot;</span></code>
+      </dt>
+      
+    
+      <dt class="entry-const" id="MSG_REDUNDANT">
+        <strong>MSG_REDUNDANT</strong> = <code><span class="s">&quot;Redundant parentheses&quot;</span></code>
       </dt>
       
     
@@ -861,7 +867,7 @@
       <li class="entry-summary">
         <a href="#new%28config%3Dnil%29-class-method" class="signature"><strong>.new</strong>(config = <span class="n">nil</span>)</a>
         
-          <div class="summary"><p>A rule that disallows redundant parentheses around control expressions.</p></div>
+          <div class="summary"><p>A rule that checks for the presence of superfluous parentheses around the condition of <code>if</code>, <code>unless</code>, <code>case,</code>while<code>and</code>until`.</p></div>
         
       </li>
     
@@ -901,6 +907,16 @@
   <ul class="list-summary">
     
       <li class="entry-summary">
+        <a href="#allow_safe_assignment%3ABool-instance-method" class="signature"><strong>#allow_safe_assignment</strong> : Bool</a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#allow_safe_assignment%3D%28allow_safe_assignment%3ABool%29-instance-method" class="signature"><strong>#allow_safe_assignment=</strong>(allow_safe_assignment : Bool)</a>
+        
+      </li>
+    
+      <li class="entry-summary">
         <a href="#description%3AString-instance-method" class="signature"><strong>#description</strong> : String</a>
         
       </li>
@@ -917,16 +933,6 @@
     
       <li class="entry-summary">
         <a href="#enabled%3D%28enabled%3ABool%29-instance-method" class="signature"><strong>#enabled=</strong>(enabled : Bool)</a>
-        
-      </li>
-    
-      <li class="entry-summary">
-        <a href="#exclude_assignments%3ABool-instance-method" class="signature"><strong>#exclude_assignments</strong> : Bool</a>
-        
-      </li>
-    
-      <li class="entry-summary">
-        <a href="#exclude_assignments%3D%28exclude_assignments%3ABool%29-instance-method" class="signature"><strong>#exclude_assignments=</strong>(exclude_assignments : Bool)</a>
         
       </li>
     
@@ -1113,7 +1119,8 @@
       
         <div class="doc">
           
-          <p>A rule that disallows redundant parentheses around control expressions.</p>
+          <p>A rule that checks for the presence of superfluous parentheses
+around the condition of <code>if</code>, <code>unless</code>, <code>case,</code>while<code>and</code>until`.</p>
 <p>For example, this is considered invalid:</p>
 <pre><code class="language-crystal"><span class="k">if</span> (foo <span class="o">==</span> <span class="n">42</span>)
   do_something
@@ -1123,16 +1130,16 @@
   do_something
 <span class="k">end</span></code></pre>
 <p>YAML configuration example:</p>
-<pre><code class="language-crystal"><span class="t">Style</span><span class="o">/</span><span class="t">RedundantParentheses</span>:
+<pre><code class="language-crystal"><span class="t">Style</span><span class="o">/</span><span class="t">ParenthesesAroundCondition</span>:
   <span class="t">Enabled</span>: <span class="n">true</span>
   <span class="t">ExcludeTernary</span>: <span class="n">false</span>
-  <span class="t">ExcludeAssignments</span>: <span class="n">false</span></code></pre>
+  <span class="t">AllowSafeAssignment</span>: <span class="n">false</span></code></pre>
         </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/496e8930/src/ameba/rule/style/redundant_parentheses.cr#L28" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/a3e5f2d2/src/ameba/rule/style/parentheses_around_condition.cr#L29" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1190,6 +1197,34 @@
     Instance Method Detail
   </h2>
   
+    <div class="entry-detail" id="allow_safe_assignment:Bool-instance-method">
+      <div class="signature">
+        
+        def <strong>allow_safe_assignment</strong> : Bool
+
+        <a class="method-permalink" href="#allow_safe_assignment%3ABool-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="allow_safe_assignment=(allow_safe_assignment:Bool)-instance-method">
+      <div class="signature">
+        
+        def <strong>allow_safe_assignment=</strong>(allow_safe_assignment : Bool)
+
+        <a class="method-permalink" href="#allow_safe_assignment%3D%28allow_safe_assignment%3ABool%29-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+      </div>
+    </div>
+  
     <div class="entry-detail" id="description:String-instance-method">
       <div class="signature">
         
@@ -1238,34 +1273,6 @@
         def <strong>enabled=</strong>(enabled : Bool)
 
         <a class="method-permalink" href="#enabled%3D%28enabled%3ABool%29-instance-method">#</a>
-      </div>
-      
-      <br/>
-      <div>
-        
-      </div>
-    </div>
-  
-    <div class="entry-detail" id="exclude_assignments:Bool-instance-method">
-      <div class="signature">
-        
-        def <strong>exclude_assignments</strong> : Bool
-
-        <a class="method-permalink" href="#exclude_assignments%3ABool-instance-method">#</a>
-      </div>
-      
-      <br/>
-      <div>
-        
-      </div>
-    </div>
-  
-    <div class="entry-detail" id="exclude_assignments=(exclude_assignments:Bool)-instance-method">
-      <div class="signature">
-        
-        def <strong>exclude_assignments=</strong>(exclude_assignments : Bool)
-
-        <a class="method-permalink" href="#exclude_assignments%3D%28exclude_assignments%3ABool%29-instance-method">#</a>
       </div>
       
       <br/>
@@ -1369,7 +1376,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/496e8930/src/ameba/rule/style/redundant_parentheses.cr#L53" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/a3e5f2d2/src/ameba/rule/style/parentheses_around_condition.cr#L55" target="_blank">View source</a>]
         
       </div>
     </div>
