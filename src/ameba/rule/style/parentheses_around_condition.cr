@@ -1,5 +1,6 @@
 module Ameba::Rule::Style
-  # A rule that disallows redundant parentheses around control expressions.
+  # A rule that checks for the presence of superfluous parentheses
+  # around the condition of `if`, `unless`, `case, `while` and `until`.
   #
   # For example, this is considered invalid:
   #
@@ -20,20 +21,21 @@ module Ameba::Rule::Style
   # YAML configuration example:
   #
   # ```
-  # Style/RedundantParentheses:
+  # Style/ParenthesesAroundCondition:
   #   Enabled: true
   #   ExcludeTernary: false
-  #   ExcludeAssignments: false
+  #   AllowSafeAssignment: false
   # ```
-  class RedundantParentheses < Base
+  class ParenthesesAroundCondition < Base
     properties do
       description "Disallows redundant parentheses around control expressions"
 
       exclude_ternary false
-      exclude_assignments false
+      allow_safe_assignment false
     end
 
-    MSG = "Redundant parentheses"
+    MSG_REDUNDANT = "Redundant parentheses"
+    MSG_MISSING   = "Missing parentheses"
 
     protected def strip_parentheses?(node, in_ternary) : Bool
       case node
@@ -44,24 +46,34 @@ module Ameba::Rule::Style
       when Crystal::Yield
         !in_ternary || node.has_parentheses? || node.exps.empty?
       when Crystal::Assign, Crystal::OpAssign, Crystal::MultiAssign
-        !in_ternary && !exclude_assignments
+        !in_ternary && !allow_safe_assignment
       else
         true
       end
     end
 
     def test(source, node : Crystal::If | Crystal::Unless | Crystal::Case | Crystal::While | Crystal::Until)
+      cond = node.cond
+
+      if cond.is_a?(Crystal::Assign) && allow_safe_assignment
+        issue_for cond, MSG_MISSING do |corrector|
+          corrector.insert_before(cond, '(')
+          corrector.insert_after(cond, ')')
+        end
+        return
+      end
+
       is_ternary = node.is_a?(Crystal::If) && node.ternary?
 
       return if is_ternary && exclude_ternary
 
-      return unless (cond = node.cond).is_a?(Crystal::Expressions)
+      return unless cond.is_a?(Crystal::Expressions)
       return unless cond.keyword.paren?
 
       return unless exp = cond.single_expression?
       return unless strip_parentheses?(exp, is_ternary)
 
-      issue_for cond, MSG do |corrector|
+      issue_for cond, MSG_REDUNDANT do |corrector|
         corrector.remove_trailing(cond, 1)
         corrector.remove_leading(cond, 1)
       end
