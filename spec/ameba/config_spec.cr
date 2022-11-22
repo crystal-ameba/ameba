@@ -132,7 +132,7 @@ module Ameba
         config.sources.size.should eq(1)
       end
 
-      it "returns a lisf of sources excluding 'Excluded'" do
+      it "returns a list of sources excluding 'Excluded'" do
         config.excluded = %w(**/config_spec.cr)
         config.sources.any?(&.fullpath.==(__FILE__)).should be_false
       end
