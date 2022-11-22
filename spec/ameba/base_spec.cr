@@ -25,7 +25,7 @@ module Ameba::Rule
       subject = DummyRule.new
 
       it "is enabled by default" do
-        subject.enabled.should be_true
+        subject.enabled?.should be_true
       end
 
       it "has a description property" do

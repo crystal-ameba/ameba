@@ -62,7 +62,7 @@ module Ameba
       @sources = config.sources
       @formatter = config.formatter
       @severity = config.severity
-      @rules = config.rules.select(&.enabled).reject!(&.special?)
+      @rules = config.rules.select(&.enabled?).reject!(&.special?)
       @autocorrect = config.autocorrect?
 
       @unneeded_disable_directive_rule =
@@ -220,7 +220,7 @@ module Ameba
 
     private def check_unneeded_directives(source)
       return unless rule = @unneeded_disable_directive_rule
-      return unless rule.enabled
+      return unless rule.enabled?
 
       rule.test(source)
     end

@@ -170,7 +170,7 @@ module Ameba
         name = DummyRule.rule_name
         config.update_rule name, enabled: false
         rule = config.rules.find!(&.name.== name)
-        rule.enabled.should be_false
+        rule.enabled?.should be_false
       end
 
       it "updates excluded property" do
@@ -189,7 +189,7 @@ module Ameba
         name = DummyRule.rule_name
         config.update_rules [name], enabled: false
         rule = config.rules.find!(&.name.== name)
-        rule.enabled.should be_false
+        rule.enabled?.should be_false
       end
 
       it "updates multiple rules by excluded property" do
@@ -204,7 +204,7 @@ module Ameba
         group = DummyRule.group_name
         config.update_rules [group], enabled: false
         rule = config.rules.find!(&.name.== DummyRule.rule_name)
-        rule.enabled.should be_false
+        rule.enabled?.should be_false
       end
 
       it "updates a group by excluded property" do

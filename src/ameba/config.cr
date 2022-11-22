@@ -247,7 +247,7 @@ class Ameba::Config
 
       {% if properties["enabled".id] == nil %}
         @[YAML::Field(key: "Enabled")]
-        property enabled = true
+        property? enabled = true
       {% end %}
 
       {% if properties["severity".id] == nil %}
