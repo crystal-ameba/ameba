@@ -102,6 +102,7 @@ module Ameba
               # Run `ameba --only Ameba/DummyRule` for details
               Ameba/DummyRule:
                 Description: Dummy rule that does nothing.
+                Dummy: true
                 Excluded:
                 - source1.cr
                 - source2.cr

@@ -7,6 +7,7 @@ module Ameba
   class DummyRule < Rule::Base
     properties do
       description : String = "Dummy rule that does nothing."
+      dummy true
     end
 
     def test(source)

@@ -32,6 +32,10 @@ module Ameba::Rule
         subject.description.should_not be_nil
       end
 
+      it "has a dummy? property" do
+        subject.dummy?.should be_true
+      end
+
       it "has excluded property" do
         subject.excluded.should be_nil
       end
