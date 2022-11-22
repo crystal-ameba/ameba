@@ -74,14 +74,14 @@ module Ameba
 
   # A rule that always raises an error
   class RaiseRule < Rule::Base
-    property should_raise = false
+    property? should_raise = false
 
     properties do
       description "Internal rule that always raises"
     end
 
     def test(source)
-      should_raise && raise "something went wrong"
+      should_raise? && raise "something went wrong"
     end
   end
 
