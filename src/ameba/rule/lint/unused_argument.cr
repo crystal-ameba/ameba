@@ -41,15 +41,15 @@ module Ameba::Rule::Lint
     end
 
     def test(source, node : Crystal::ProcLiteral, scope : AST::Scope)
-      ignore_procs || find_unused_arguments source, scope
+      ignore_procs? || find_unused_arguments source, scope
     end
 
     def test(source, node : Crystal::Block, scope : AST::Scope)
-      ignore_blocks || find_unused_arguments source, scope
+      ignore_blocks? || find_unused_arguments source, scope
     end
 
     def test(source, node : Crystal::Def, scope : AST::Scope)
-      ignore_defs || find_unused_arguments source, scope
+      ignore_defs? || find_unused_arguments source, scope
     end
 
     private def find_unused_arguments(source, scope)

@@ -113,8 +113,8 @@ module Ameba::Rule::Style
     end
 
     def test(source, node : Crystal::Next, visitor : AST::RedundantControlExpressionVisitor)
-      return if allow_multi_next && node.exp.is_a?(Crystal::TupleLiteral)
-      return if allow_empty_next && (node.exp.nil? || node.exp.try(&.nop?))
+      return if allow_multi_next? && node.exp.is_a?(Crystal::TupleLiteral)
+      return if allow_empty_next? && (node.exp.nil? || node.exp.try(&.nop?))
 
       if exp_code = control_exp_code(node, source.lines)
         issue_for node, MSG do |corrector|
