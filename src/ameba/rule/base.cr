@@ -1,10 +1,10 @@
 module Ameba::Rule
   # List of names of the special rules, which
   # behave differently than usual rules.
-  SPECIAL = [
+  SPECIAL = {
     Lint::Syntax.rule_name,
     Lint::UnneededDisableDirective.rule_name,
-  ]
+  }
 
   # Represents a base of all rules. In other words, all rules
   # inherits from this struct:
