@@ -241,7 +241,7 @@ module Ameba
   end
 
   class TestNodeVisitor < Crystal::Visitor
-    NODES = [
+    NODES = {
       Crystal::NilLiteral,
       Crystal::Var,
       Crystal::Assign,
@@ -255,7 +255,7 @@ module Ameba
       Crystal::MacroLiteral,
       Crystal::Expressions,
       Crystal::ControlExpression,
-    ]
+    }
 
     def initialize(node)
       node.accept self
