@@ -2,6 +2,7 @@ module Ameba::Rule::Lint
   # A rule that disallows redundant `with_index` calls.
   #
   # For example, this is considered invalid:
+  #
   # ```
   # collection.each.with_index do |e|
   #   # ...
