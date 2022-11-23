@@ -3,7 +3,7 @@ module Ameba::AST
   class CountingVisitor < Crystal::Visitor
     DEFAULT_COMPLEXITY = 1
 
-    getter macro_condition = false
+    getter? macro_condition = false
 
     # Creates a new counting visitor
     def initialize(@scope : Crystal::ASTNode)
@@ -27,13 +27,13 @@ module Ameba::AST
     {% for node in %i(if while until rescue or and) %}
       # :nodoc:
       def visit(node : Crystal::{{ node.id.capitalize }})
-        @complexity += 1 unless macro_condition
+        @complexity += 1 unless macro_condition?
       end
     {% end %}
 
     # :nodoc:
     def visit(node : Crystal::Case)
-      return true if macro_condition
+      return true if macro_condition?
 
       # Count the complexity of an exhaustive `Case` as 1
       # Otherwise count the number of `When`s

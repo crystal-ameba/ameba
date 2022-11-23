@@ -45,10 +45,11 @@ module Ameba::Formatter
             end
           end
           output.puts
-          output.puts \
-            "[#{issue.rule.severity.symbol}] " \
-            "#{issue.rule.name}: " \
-            "#{issue.message}".colorize(:red)
+          output.puts ("[%s] %s: %s" % {
+            issue.rule.severity.symbol,
+            issue.rule.name,
+            issue.message,
+          }).colorize(:red)
 
           if show_affected_code && (code = affected_code(issue))
             output << code.colorize(:default)

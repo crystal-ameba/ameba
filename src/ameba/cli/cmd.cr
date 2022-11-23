@@ -184,10 +184,11 @@ module Ameba::Cli
 
   private def print_rules(config)
     config.rules.each do |rule|
-      puts \
-        "#{rule.name.colorize(:white)} " \
-        "[#{rule.severity.symbol.to_s.colorize(:green)}] - " \
-        "#{rule.description.colorize(:dark_gray)}"
+      puts "%s [%s] - %s" % {
+        rule.name.colorize(:white),
+        rule.severity.symbol.to_s.colorize(:green),
+        rule.description.colorize(:dark_gray),
+      }
     end
     exit 0
   end

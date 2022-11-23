@@ -6,7 +6,7 @@ module Ameba::AST
   # are branchables.
   #
   # ```
-  # white a > 100 # Branchable A
+  # while a > 100 # Branchable A
   #   if b > 2    # Branchable B
   #     a += 1
   #   end
@@ -37,7 +37,7 @@ module Ameba::AST
 
     # Returns true if this node or one of the parent branchables is a loop, false otherwise.
     def loop?
-      loop?(node) || parent.try(&.loop?) || false
+      loop?(node) || !!parent.try(&.loop?)
     end
   end
 end

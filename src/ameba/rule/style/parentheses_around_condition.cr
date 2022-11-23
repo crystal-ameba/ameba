@@ -46,7 +46,7 @@ module Ameba::Rule::Style
       when Crystal::Yield
         !in_ternary || node.has_parentheses? || node.exps.empty?
       when Crystal::Assign, Crystal::OpAssign, Crystal::MultiAssign
-        !in_ternary && !allow_safe_assignment
+        !in_ternary && !allow_safe_assignment?
       else
         true
       end
@@ -55,7 +55,7 @@ module Ameba::Rule::Style
     def test(source, node : Crystal::If | Crystal::Unless | Crystal::Case | Crystal::While | Crystal::Until)
       cond = node.cond
 
-      if cond.is_a?(Crystal::Assign) && allow_safe_assignment
+      if cond.is_a?(Crystal::Assign) && allow_safe_assignment?
         issue_for cond, MSG_MISSING do |corrector|
           corrector.insert_before(cond, '(')
           corrector.insert_after(cond, ')')
@@ -65,7 +65,7 @@ module Ameba::Rule::Style
 
       is_ternary = node.is_a?(Crystal::If) && node.ternary?
 
-      return if is_ternary && exclude_ternary
+      return if is_ternary && exclude_ternary?
 
       return unless cond.is_a?(Crystal::Expressions)
       return unless cond.keyword.paren?

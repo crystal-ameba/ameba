@@ -30,6 +30,7 @@ module Ameba::AST
     # ```
     def initialize(@node, @variable, @scope)
       return unless scope = @variable.scope
+
       @branch = Branch.of(@node, scope)
       @referenced = true if @variable.special? ||
                             @variable.scope.type_definition? ||
@@ -37,7 +38,7 @@ module Ameba::AST
     end
 
     def referenced_in_loop?
-      @variable.referenced? && @branch.try &.in_loop?
+      @variable.referenced? && !!@branch.try(&.in_loop?)
     end
 
     # Returns true if this assignment is an op assign, false if not.

@@ -2,7 +2,7 @@ require "./base_visitor"
 
 module Ameba::AST
   # List of nodes to be visited by Ameba's rules.
-  NODES = [
+  NODES = {
     Alias,
     IsA,
     Assign,
@@ -27,7 +27,7 @@ module Ameba::AST
     When,
     While,
     Until,
-  ]
+  }
 
   # An AST Visitor that traverses the source and allows all nodes
   # to be inspected by rules.
@@ -35,7 +35,6 @@ module Ameba::AST
   # ```
   # visitor = Ameba::AST::NodeVisitor.new(rule, source)
   # ```
-  #
   class NodeVisitor < BaseVisitor
     @skip : Array(Crystal::ASTNode.class)?
 

@@ -4,7 +4,7 @@ module Ameba::AST
   # AST Visitor that traverses the source and constructs scopes.
   class ScopeVisitor < BaseVisitor
     # Non-exhaustive list of nodes to be visited by Ameba's rules.
-    NODES = [
+    NODES = {
       ClassDef,
       ModuleDef,
       EnumDef,
@@ -17,7 +17,7 @@ module Ameba::AST
       Block,
       Macro,
       MacroFor,
-    ]
+    }
 
     SUPER_NODE_NAME  = "super"
     RECORD_NODE_NAME = "record"

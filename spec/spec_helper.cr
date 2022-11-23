@@ -7,6 +7,7 @@ module Ameba
   class DummyRule < Rule::Base
     properties do
       description : String = "Dummy rule that does nothing."
+      dummy true
     end
 
     def test(source)
@@ -74,14 +75,14 @@ module Ameba
 
   # A rule that always raises an error
   class RaiseRule < Rule::Base
-    property should_raise = false
+    property? should_raise = false
 
     properties do
       description "Internal rule that always raises"
     end
 
     def test(source)
-      should_raise && raise "something went wrong"
+      should_raise? && raise "something went wrong"
     end
   end
 
@@ -240,7 +241,7 @@ module Ameba
   end
 
   class TestNodeVisitor < Crystal::Visitor
-    NODES = [
+    NODES = {
       Crystal::NilLiteral,
       Crystal::Var,
       Crystal::Assign,
@@ -254,7 +255,7 @@ module Ameba
       Crystal::MacroLiteral,
       Crystal::Expressions,
       Crystal::ControlExpression,
-    ]
+    }
 
     def initialize(node)
       node.accept self

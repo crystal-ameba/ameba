@@ -1,10 +1,10 @@
 module Ameba::Rule
   # List of names of the special rules, which
   # behave differently than usual rules.
-  SPECIAL = [
+  SPECIAL = {
     Lint::Syntax.rule_name,
     Lint::UnneededDisableDirective.rule_name,
-  ]
+  }
 
   # Represents a base of all rules. In other words, all rules
   # inherits from this struct:
@@ -88,7 +88,7 @@ module Ameba::Rule
     # my_rule.excluded?(source) # => true or false
     # ```
     def excluded?(source)
-      excluded.try &.any? do |path|
+      !!excluded.try &.any? do |path|
         source.matches_path?(path) ||
           Dir.glob(path).any? { |glob| source.matches_path?(glob) }
       end

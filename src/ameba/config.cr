@@ -242,12 +242,16 @@ class Ameba::Config
         {% properties[name] = {key: key, default: value, type: type, converter: converter} %}
 
         @[YAML::Field(key: {{ key }}, converter: {{ converter }}, type: {{ type }})]
-        property {{ name }} : {{ type }} = {{ value }}
+        {% if type == Bool %}
+          property? {{ name }} : {{ type }} = {{ value }}
+        {% else %}
+          property {{ name }} : {{ type }} = {{ value }}
+        {% end %}
       {% end %}
 
       {% if properties["enabled".id] == nil %}
         @[YAML::Field(key: "Enabled")]
-        property enabled = true
+        property? enabled = true
       {% end %}
 
       {% if properties["severity".id] == nil %}
