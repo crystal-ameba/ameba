@@ -6,7 +6,7 @@ module Ameba::AST
   # are branchables.
   #
   # ```
-  # white a > 100 # Branchable A
+  # while a > 100 # Branchable A
   #   if b > 2    # Branchable B
   #     a += 1
   #   end
