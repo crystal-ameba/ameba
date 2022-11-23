@@ -10,7 +10,6 @@ module Ameba
   #   puts token
   # end
   # ```
-  #
   class Tokenizer
     # Instantiates Tokenizer using a `source`.
     #

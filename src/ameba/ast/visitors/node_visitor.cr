@@ -35,7 +35,6 @@ module Ameba::AST
   # ```
   # visitor = Ameba::AST::NodeVisitor.new(rule, source)
   # ```
-  #
   class NodeVisitor < BaseVisitor
     @skip : Array(Crystal::ASTNode.class)?
 

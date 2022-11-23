@@ -11,7 +11,6 @@ module Ameba::AST
   #   do_something a # --> Branch D
   # end
   # ```
-  #
   class Branch
     # The actual branch node.
     getter node : Crystal::ASTNode
