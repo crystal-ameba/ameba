@@ -870,7 +870,7 @@ without arguments. Sometimes such returns are used to return the <code>nil</code
   </h2>
   
     
-      <a href="https://github.com/crystal-ameba/ameba/blob/a3e5f2d2/src/ameba/rule/style/redundant_return.cr#L96" target="_blank">
+      <a href="https://github.com/crystal-ameba/ameba/blob/e7a6b6b1/src/ameba/rule/style/redundant_return.cr#L96" target="_blank">
         ameba/rule/style/redundant_return.cr
       </a>
     
@@ -958,22 +958,22 @@ without arguments. Sometimes such returns are used to return the <code>nil</code
   <ul class="list-summary">
     
       <li class="entry-summary">
-        <a href="#allow_empty_return%3ABool-instance-method" class="signature"><strong>#allow_empty_return</strong> : Bool</a>
-        
-      </li>
-    
-      <li class="entry-summary">
         <a href="#allow_empty_return%3D%28allow_empty_return%3ABool%29-instance-method" class="signature"><strong>#allow_empty_return=</strong>(allow_empty_return : Bool)</a>
         
       </li>
     
       <li class="entry-summary">
-        <a href="#allow_multi_return%3ABool-instance-method" class="signature"><strong>#allow_multi_return</strong> : Bool</a>
+        <a href="#allow_empty_return%3F%3ABool-instance-method" class="signature"><strong>#allow_empty_return?</strong> : Bool</a>
         
       </li>
     
       <li class="entry-summary">
         <a href="#allow_multi_return%3D%28allow_multi_return%3ABool%29-instance-method" class="signature"><strong>#allow_multi_return=</strong>(allow_multi_return : Bool)</a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#allow_multi_return%3F%3ABool-instance-method" class="signature"><strong>#allow_multi_return?</strong> : Bool</a>
         
       </li>
     
@@ -988,12 +988,12 @@ without arguments. Sometimes such returns are used to return the <code>nil</code
       </li>
     
       <li class="entry-summary">
-        <a href="#enabled%3ABool-instance-method" class="signature"><strong>#enabled</strong> : Bool</a>
+        <a href="#enabled%3D%28enabled%3ABool%29-instance-method" class="signature"><strong>#enabled=</strong>(enabled : Bool)</a>
         
       </li>
     
       <li class="entry-summary">
-        <a href="#enabled%3D%28enabled%3ABool%29-instance-method" class="signature"><strong>#enabled=</strong>(enabled : Bool)</a>
+        <a href="#enabled%3F%3ABool-instance-method" class="signature"><strong>#enabled?</strong> : Bool</a>
         
       </li>
     
@@ -1338,7 +1338,7 @@ without arguments. Sometimes such returns are used to return the <code>nil</code
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/a3e5f2d2/src/ameba/rule/style/redundant_return.cr#L96" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/e7a6b6b1/src/ameba/rule/style/redundant_return.cr#L96" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1396,20 +1396,6 @@ without arguments. Sometimes such returns are used to return the <code>nil</code
     Instance Method Detail
   </h2>
   
-    <div class="entry-detail" id="allow_empty_return:Bool-instance-method">
-      <div class="signature">
-        
-        def <strong>allow_empty_return</strong> : Bool
-
-        <a class="method-permalink" href="#allow_empty_return%3ABool-instance-method">#</a>
-      </div>
-      
-      <br/>
-      <div>
-        
-      </div>
-    </div>
-  
     <div class="entry-detail" id="allow_empty_return=(allow_empty_return:Bool)-instance-method">
       <div class="signature">
         
@@ -1424,12 +1410,12 @@ without arguments. Sometimes such returns are used to return the <code>nil</code
       </div>
     </div>
   
-    <div class="entry-detail" id="allow_multi_return:Bool-instance-method">
+    <div class="entry-detail" id="allow_empty_return?:Bool-instance-method">
       <div class="signature">
         
-        def <strong>allow_multi_return</strong> : Bool
+        def <strong>allow_empty_return?</strong> : Bool
 
-        <a class="method-permalink" href="#allow_multi_return%3ABool-instance-method">#</a>
+        <a class="method-permalink" href="#allow_empty_return%3F%3ABool-instance-method">#</a>
       </div>
       
       <br/>
@@ -1444,6 +1430,20 @@ without arguments. Sometimes such returns are used to return the <code>nil</code
         def <strong>allow_multi_return=</strong>(allow_multi_return : Bool)
 
         <a class="method-permalink" href="#allow_multi_return%3D%28allow_multi_return%3ABool%29-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="allow_multi_return?:Bool-instance-method">
+      <div class="signature">
+        
+        def <strong>allow_multi_return?</strong> : Bool
+
+        <a class="method-permalink" href="#allow_multi_return%3F%3ABool-instance-method">#</a>
       </div>
       
       <br/>
@@ -1480,12 +1480,12 @@ without arguments. Sometimes such returns are used to return the <code>nil</code
       </div>
     </div>
   
-    <div class="entry-detail" id="enabled:Bool-instance-method">
+    <div class="entry-detail" id="enabled=(enabled:Bool)-instance-method">
       <div class="signature">
         
-        def <strong>enabled</strong> : Bool
+        def <strong>enabled=</strong>(enabled : Bool)
 
-        <a class="method-permalink" href="#enabled%3ABool-instance-method">#</a>
+        <a class="method-permalink" href="#enabled%3D%28enabled%3ABool%29-instance-method">#</a>
       </div>
       
       <br/>
@@ -1494,12 +1494,12 @@ without arguments. Sometimes such returns are used to return the <code>nil</code
       </div>
     </div>
   
-    <div class="entry-detail" id="enabled=(enabled:Bool)-instance-method">
+    <div class="entry-detail" id="enabled?:Bool-instance-method">
       <div class="signature">
         
-        def <strong>enabled=</strong>(enabled : Bool)
+        def <strong>enabled?</strong> : Bool
 
-        <a class="method-permalink" href="#enabled%3D%28enabled%3ABool%29-instance-method">#</a>
+        <a class="method-permalink" href="#enabled%3F%3ABool-instance-method">#</a>
       </div>
       
       <br/>
@@ -1575,7 +1575,7 @@ without arguments. Sometimes such returns are used to return the <code>nil</code
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/a3e5f2d2/src/ameba/rule/style/redundant_return.cr#L112" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/e7a6b6b1/src/ameba/rule/style/redundant_return.cr#L112" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1591,7 +1591,7 @@ without arguments. Sometimes such returns are used to return the <code>nil</code
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/a3e5f2d2/src/ameba/rule/style/redundant_return.cr#L108" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/e7a6b6b1/src/ameba/rule/style/redundant_return.cr#L108" target="_blank">View source</a>]
         
       </div>
     </div>

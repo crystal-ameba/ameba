@@ -814,7 +814,7 @@ around the condition of <code>if</code>, <code>unless</code>, <code>case,</code>
   </h2>
   
     
-      <a href="https://github.com/crystal-ameba/ameba/blob/a3e5f2d2/src/ameba/rule/style/parentheses_around_condition.cr#L29" target="_blank">
+      <a href="https://github.com/crystal-ameba/ameba/blob/e7a6b6b1/src/ameba/rule/style/parentheses_around_condition.cr#L29" target="_blank">
         ameba/rule/style/parentheses_around_condition.cr
       </a>
     
@@ -907,12 +907,12 @@ around the condition of <code>if</code>, <code>unless</code>, <code>case,</code>
   <ul class="list-summary">
     
       <li class="entry-summary">
-        <a href="#allow_safe_assignment%3ABool-instance-method" class="signature"><strong>#allow_safe_assignment</strong> : Bool</a>
+        <a href="#allow_safe_assignment%3D%28allow_safe_assignment%3ABool%29-instance-method" class="signature"><strong>#allow_safe_assignment=</strong>(allow_safe_assignment : Bool)</a>
         
       </li>
     
       <li class="entry-summary">
-        <a href="#allow_safe_assignment%3D%28allow_safe_assignment%3ABool%29-instance-method" class="signature"><strong>#allow_safe_assignment=</strong>(allow_safe_assignment : Bool)</a>
+        <a href="#allow_safe_assignment%3F%3ABool-instance-method" class="signature"><strong>#allow_safe_assignment?</strong> : Bool</a>
         
       </li>
     
@@ -927,22 +927,22 @@ around the condition of <code>if</code>, <code>unless</code>, <code>case,</code>
       </li>
     
       <li class="entry-summary">
-        <a href="#enabled%3ABool-instance-method" class="signature"><strong>#enabled</strong> : Bool</a>
-        
-      </li>
-    
-      <li class="entry-summary">
         <a href="#enabled%3D%28enabled%3ABool%29-instance-method" class="signature"><strong>#enabled=</strong>(enabled : Bool)</a>
         
       </li>
     
       <li class="entry-summary">
-        <a href="#exclude_ternary%3ABool-instance-method" class="signature"><strong>#exclude_ternary</strong> : Bool</a>
+        <a href="#enabled%3F%3ABool-instance-method" class="signature"><strong>#enabled?</strong> : Bool</a>
         
       </li>
     
       <li class="entry-summary">
         <a href="#exclude_ternary%3D%28exclude_ternary%3ABool%29-instance-method" class="signature"><strong>#exclude_ternary=</strong>(exclude_ternary : Bool)</a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#exclude_ternary%3F%3ABool-instance-method" class="signature"><strong>#exclude_ternary?</strong> : Bool</a>
         
       </li>
     
@@ -1139,7 +1139,7 @@ around the condition of <code>if</code>, <code>unless</code>, <code>case,</code>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/a3e5f2d2/src/ameba/rule/style/parentheses_around_condition.cr#L29" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/e7a6b6b1/src/ameba/rule/style/parentheses_around_condition.cr#L29" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1197,12 +1197,12 @@ around the condition of <code>if</code>, <code>unless</code>, <code>case,</code>
     Instance Method Detail
   </h2>
   
-    <div class="entry-detail" id="allow_safe_assignment:Bool-instance-method">
+    <div class="entry-detail" id="allow_safe_assignment=(allow_safe_assignment:Bool)-instance-method">
       <div class="signature">
         
-        def <strong>allow_safe_assignment</strong> : Bool
+        def <strong>allow_safe_assignment=</strong>(allow_safe_assignment : Bool)
 
-        <a class="method-permalink" href="#allow_safe_assignment%3ABool-instance-method">#</a>
+        <a class="method-permalink" href="#allow_safe_assignment%3D%28allow_safe_assignment%3ABool%29-instance-method">#</a>
       </div>
       
       <br/>
@@ -1211,12 +1211,12 @@ around the condition of <code>if</code>, <code>unless</code>, <code>case,</code>
       </div>
     </div>
   
-    <div class="entry-detail" id="allow_safe_assignment=(allow_safe_assignment:Bool)-instance-method">
+    <div class="entry-detail" id="allow_safe_assignment?:Bool-instance-method">
       <div class="signature">
         
-        def <strong>allow_safe_assignment=</strong>(allow_safe_assignment : Bool)
+        def <strong>allow_safe_assignment?</strong> : Bool
 
-        <a class="method-permalink" href="#allow_safe_assignment%3D%28allow_safe_assignment%3ABool%29-instance-method">#</a>
+        <a class="method-permalink" href="#allow_safe_assignment%3F%3ABool-instance-method">#</a>
       </div>
       
       <br/>
@@ -1253,20 +1253,6 @@ around the condition of <code>if</code>, <code>unless</code>, <code>case,</code>
       </div>
     </div>
   
-    <div class="entry-detail" id="enabled:Bool-instance-method">
-      <div class="signature">
-        
-        def <strong>enabled</strong> : Bool
-
-        <a class="method-permalink" href="#enabled%3ABool-instance-method">#</a>
-      </div>
-      
-      <br/>
-      <div>
-        
-      </div>
-    </div>
-  
     <div class="entry-detail" id="enabled=(enabled:Bool)-instance-method">
       <div class="signature">
         
@@ -1281,12 +1267,12 @@ around the condition of <code>if</code>, <code>unless</code>, <code>case,</code>
       </div>
     </div>
   
-    <div class="entry-detail" id="exclude_ternary:Bool-instance-method">
+    <div class="entry-detail" id="enabled?:Bool-instance-method">
       <div class="signature">
         
-        def <strong>exclude_ternary</strong> : Bool
+        def <strong>enabled?</strong> : Bool
 
-        <a class="method-permalink" href="#exclude_ternary%3ABool-instance-method">#</a>
+        <a class="method-permalink" href="#enabled%3F%3ABool-instance-method">#</a>
       </div>
       
       <br/>
@@ -1301,6 +1287,20 @@ around the condition of <code>if</code>, <code>unless</code>, <code>case,</code>
         def <strong>exclude_ternary=</strong>(exclude_ternary : Bool)
 
         <a class="method-permalink" href="#exclude_ternary%3D%28exclude_ternary%3ABool%29-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="exclude_ternary?:Bool-instance-method">
+      <div class="signature">
+        
+        def <strong>exclude_ternary?</strong> : Bool
+
+        <a class="method-permalink" href="#exclude_ternary%3F%3ABool-instance-method">#</a>
       </div>
       
       <br/>
@@ -1376,7 +1376,7 @@ around the condition of <code>if</code>, <code>unless</code>, <code>case,</code>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/a3e5f2d2/src/ameba/rule/style/parentheses_around_condition.cr#L55" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/e7a6b6b1/src/ameba/rule/style/parentheses_around_condition.cr#L55" target="_blank">View source</a>]
         
       </div>
     </div>

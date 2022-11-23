@@ -817,7 +817,7 @@ argument as a receiver, that can be collapsed into a short form.</p>
   </h2>
   
     
-      <a href="https://github.com/crystal-ameba/ameba/blob/a3e5f2d2/src/ameba/rule/style/verbose_block.cr#L30" target="_blank">
+      <a href="https://github.com/crystal-ameba/ameba/blob/e7a6b6b1/src/ameba/rule/style/verbose_block.cr#L30" target="_blank">
         ameba/rule/style/verbose_block.cr
       </a>
     
@@ -920,17 +920,12 @@ argument as a receiver, that can be collapsed into a short form.</p>
       </li>
     
       <li class="entry-summary">
-        <a href="#enabled%3ABool-instance-method" class="signature"><strong>#enabled</strong> : Bool</a>
-        
-      </li>
-    
-      <li class="entry-summary">
         <a href="#enabled%3D%28enabled%3ABool%29-instance-method" class="signature"><strong>#enabled=</strong>(enabled : Bool)</a>
         
       </li>
     
       <li class="entry-summary">
-        <a href="#exclude_calls_with_block%3ABool-instance-method" class="signature"><strong>#exclude_calls_with_block</strong> : Bool</a>
+        <a href="#enabled%3F%3ABool-instance-method" class="signature"><strong>#enabled?</strong> : Bool</a>
         
       </li>
     
@@ -940,7 +935,7 @@ argument as a receiver, that can be collapsed into a short form.</p>
       </li>
     
       <li class="entry-summary">
-        <a href="#exclude_multiple_line_blocks%3ABool-instance-method" class="signature"><strong>#exclude_multiple_line_blocks</strong> : Bool</a>
+        <a href="#exclude_calls_with_block%3F%3ABool-instance-method" class="signature"><strong>#exclude_calls_with_block?</strong> : Bool</a>
         
       </li>
     
@@ -950,7 +945,7 @@ argument as a receiver, that can be collapsed into a short form.</p>
       </li>
     
       <li class="entry-summary">
-        <a href="#exclude_operators%3ABool-instance-method" class="signature"><strong>#exclude_operators</strong> : Bool</a>
+        <a href="#exclude_multiple_line_blocks%3F%3ABool-instance-method" class="signature"><strong>#exclude_multiple_line_blocks?</strong> : Bool</a>
         
       </li>
     
@@ -960,7 +955,7 @@ argument as a receiver, that can be collapsed into a short form.</p>
       </li>
     
       <li class="entry-summary">
-        <a href="#exclude_prefix_operators%3ABool-instance-method" class="signature"><strong>#exclude_prefix_operators</strong> : Bool</a>
+        <a href="#exclude_operators%3F%3ABool-instance-method" class="signature"><strong>#exclude_operators?</strong> : Bool</a>
         
       </li>
     
@@ -970,12 +965,17 @@ argument as a receiver, that can be collapsed into a short form.</p>
       </li>
     
       <li class="entry-summary">
-        <a href="#exclude_setters%3ABool-instance-method" class="signature"><strong>#exclude_setters</strong> : Bool</a>
+        <a href="#exclude_prefix_operators%3F%3ABool-instance-method" class="signature"><strong>#exclude_prefix_operators?</strong> : Bool</a>
         
       </li>
     
       <li class="entry-summary">
         <a href="#exclude_setters%3D%28exclude_setters%3ABool%29-instance-method" class="signature"><strong>#exclude_setters=</strong>(exclude_setters : Bool)</a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#exclude_setters%3F%3ABool-instance-method" class="signature"><strong>#exclude_setters?</strong> : Bool</a>
         
       </li>
     
@@ -1282,7 +1282,7 @@ argument as a receiver, that can be collapsed into a short form.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/a3e5f2d2/src/ameba/rule/style/verbose_block.cr#L30" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/e7a6b6b1/src/ameba/rule/style/verbose_block.cr#L30" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1368,20 +1368,6 @@ argument as a receiver, that can be collapsed into a short form.</p>
       </div>
     </div>
   
-    <div class="entry-detail" id="enabled:Bool-instance-method">
-      <div class="signature">
-        
-        def <strong>enabled</strong> : Bool
-
-        <a class="method-permalink" href="#enabled%3ABool-instance-method">#</a>
-      </div>
-      
-      <br/>
-      <div>
-        
-      </div>
-    </div>
-  
     <div class="entry-detail" id="enabled=(enabled:Bool)-instance-method">
       <div class="signature">
         
@@ -1396,12 +1382,12 @@ argument as a receiver, that can be collapsed into a short form.</p>
       </div>
     </div>
   
-    <div class="entry-detail" id="exclude_calls_with_block:Bool-instance-method">
+    <div class="entry-detail" id="enabled?:Bool-instance-method">
       <div class="signature">
         
-        def <strong>exclude_calls_with_block</strong> : Bool
+        def <strong>enabled?</strong> : Bool
 
-        <a class="method-permalink" href="#exclude_calls_with_block%3ABool-instance-method">#</a>
+        <a class="method-permalink" href="#enabled%3F%3ABool-instance-method">#</a>
       </div>
       
       <br/>
@@ -1424,12 +1410,12 @@ argument as a receiver, that can be collapsed into a short form.</p>
       </div>
     </div>
   
-    <div class="entry-detail" id="exclude_multiple_line_blocks:Bool-instance-method">
+    <div class="entry-detail" id="exclude_calls_with_block?:Bool-instance-method">
       <div class="signature">
         
-        def <strong>exclude_multiple_line_blocks</strong> : Bool
+        def <strong>exclude_calls_with_block?</strong> : Bool
 
-        <a class="method-permalink" href="#exclude_multiple_line_blocks%3ABool-instance-method">#</a>
+        <a class="method-permalink" href="#exclude_calls_with_block%3F%3ABool-instance-method">#</a>
       </div>
       
       <br/>
@@ -1452,12 +1438,12 @@ argument as a receiver, that can be collapsed into a short form.</p>
       </div>
     </div>
   
-    <div class="entry-detail" id="exclude_operators:Bool-instance-method">
+    <div class="entry-detail" id="exclude_multiple_line_blocks?:Bool-instance-method">
       <div class="signature">
         
-        def <strong>exclude_operators</strong> : Bool
+        def <strong>exclude_multiple_line_blocks?</strong> : Bool
 
-        <a class="method-permalink" href="#exclude_operators%3ABool-instance-method">#</a>
+        <a class="method-permalink" href="#exclude_multiple_line_blocks%3F%3ABool-instance-method">#</a>
       </div>
       
       <br/>
@@ -1480,12 +1466,12 @@ argument as a receiver, that can be collapsed into a short form.</p>
       </div>
     </div>
   
-    <div class="entry-detail" id="exclude_prefix_operators:Bool-instance-method">
+    <div class="entry-detail" id="exclude_operators?:Bool-instance-method">
       <div class="signature">
         
-        def <strong>exclude_prefix_operators</strong> : Bool
+        def <strong>exclude_operators?</strong> : Bool
 
-        <a class="method-permalink" href="#exclude_prefix_operators%3ABool-instance-method">#</a>
+        <a class="method-permalink" href="#exclude_operators%3F%3ABool-instance-method">#</a>
       </div>
       
       <br/>
@@ -1508,12 +1494,12 @@ argument as a receiver, that can be collapsed into a short form.</p>
       </div>
     </div>
   
-    <div class="entry-detail" id="exclude_setters:Bool-instance-method">
+    <div class="entry-detail" id="exclude_prefix_operators?:Bool-instance-method">
       <div class="signature">
         
-        def <strong>exclude_setters</strong> : Bool
+        def <strong>exclude_prefix_operators?</strong> : Bool
 
-        <a class="method-permalink" href="#exclude_setters%3ABool-instance-method">#</a>
+        <a class="method-permalink" href="#exclude_prefix_operators%3F%3ABool-instance-method">#</a>
       </div>
       
       <br/>
@@ -1528,6 +1514,20 @@ argument as a receiver, that can be collapsed into a short form.</p>
         def <strong>exclude_setters=</strong>(exclude_setters : Bool)
 
         <a class="method-permalink" href="#exclude_setters%3D%28exclude_setters%3ABool%29-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="exclude_setters?:Bool-instance-method">
+      <div class="signature">
+        
+        def <strong>exclude_setters?</strong> : Bool
+
+        <a class="method-permalink" href="#exclude_setters%3F%3ABool-instance-method">#</a>
       </div>
       
       <br/>
@@ -1659,7 +1659,7 @@ argument as a receiver, that can be collapsed into a short form.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/a3e5f2d2/src/ameba/rule/style/verbose_block.cr#L214" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/e7a6b6b1/src/ameba/rule/style/verbose_block.cr#L215" target="_blank">View source</a>]
         
       </div>
     </div>

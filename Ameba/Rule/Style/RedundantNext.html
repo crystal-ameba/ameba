@@ -873,7 +873,7 @@ without arguments. Sometimes such statements are used to yild the <code>nil</cod
   </h2>
   
     
-      <a href="https://github.com/crystal-ameba/ameba/blob/a3e5f2d2/src/ameba/rule/style/redundant_next.cr#L99" target="_blank">
+      <a href="https://github.com/crystal-ameba/ameba/blob/e7a6b6b1/src/ameba/rule/style/redundant_next.cr#L99" target="_blank">
         ameba/rule/style/redundant_next.cr
       </a>
     
@@ -961,22 +961,22 @@ without arguments. Sometimes such statements are used to yild the <code>nil</cod
   <ul class="list-summary">
     
       <li class="entry-summary">
-        <a href="#allow_empty_next%3ABool-instance-method" class="signature"><strong>#allow_empty_next</strong> : Bool</a>
-        
-      </li>
-    
-      <li class="entry-summary">
         <a href="#allow_empty_next%3D%28allow_empty_next%3ABool%29-instance-method" class="signature"><strong>#allow_empty_next=</strong>(allow_empty_next : Bool)</a>
         
       </li>
     
       <li class="entry-summary">
-        <a href="#allow_multi_next%3ABool-instance-method" class="signature"><strong>#allow_multi_next</strong> : Bool</a>
+        <a href="#allow_empty_next%3F%3ABool-instance-method" class="signature"><strong>#allow_empty_next?</strong> : Bool</a>
         
       </li>
     
       <li class="entry-summary">
         <a href="#allow_multi_next%3D%28allow_multi_next%3ABool%29-instance-method" class="signature"><strong>#allow_multi_next=</strong>(allow_multi_next : Bool)</a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#allow_multi_next%3F%3ABool-instance-method" class="signature"><strong>#allow_multi_next?</strong> : Bool</a>
         
       </li>
     
@@ -991,12 +991,12 @@ without arguments. Sometimes such statements are used to yild the <code>nil</cod
       </li>
     
       <li class="entry-summary">
-        <a href="#enabled%3ABool-instance-method" class="signature"><strong>#enabled</strong> : Bool</a>
+        <a href="#enabled%3D%28enabled%3ABool%29-instance-method" class="signature"><strong>#enabled=</strong>(enabled : Bool)</a>
         
       </li>
     
       <li class="entry-summary">
-        <a href="#enabled%3D%28enabled%3ABool%29-instance-method" class="signature"><strong>#enabled=</strong>(enabled : Bool)</a>
+        <a href="#enabled%3F%3ABool-instance-method" class="signature"><strong>#enabled?</strong> : Bool</a>
         
       </li>
     
@@ -1344,7 +1344,7 @@ without arguments. Sometimes such statements are used to yild the <code>nil</cod
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/a3e5f2d2/src/ameba/rule/style/redundant_next.cr#L99" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/e7a6b6b1/src/ameba/rule/style/redundant_next.cr#L99" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1402,20 +1402,6 @@ without arguments. Sometimes such statements are used to yild the <code>nil</cod
     Instance Method Detail
   </h2>
   
-    <div class="entry-detail" id="allow_empty_next:Bool-instance-method">
-      <div class="signature">
-        
-        def <strong>allow_empty_next</strong> : Bool
-
-        <a class="method-permalink" href="#allow_empty_next%3ABool-instance-method">#</a>
-      </div>
-      
-      <br/>
-      <div>
-        
-      </div>
-    </div>
-  
     <div class="entry-detail" id="allow_empty_next=(allow_empty_next:Bool)-instance-method">
       <div class="signature">
         
@@ -1430,12 +1416,12 @@ without arguments. Sometimes such statements are used to yild the <code>nil</cod
       </div>
     </div>
   
-    <div class="entry-detail" id="allow_multi_next:Bool-instance-method">
+    <div class="entry-detail" id="allow_empty_next?:Bool-instance-method">
       <div class="signature">
         
-        def <strong>allow_multi_next</strong> : Bool
+        def <strong>allow_empty_next?</strong> : Bool
 
-        <a class="method-permalink" href="#allow_multi_next%3ABool-instance-method">#</a>
+        <a class="method-permalink" href="#allow_empty_next%3F%3ABool-instance-method">#</a>
       </div>
       
       <br/>
@@ -1450,6 +1436,20 @@ without arguments. Sometimes such statements are used to yild the <code>nil</cod
         def <strong>allow_multi_next=</strong>(allow_multi_next : Bool)
 
         <a class="method-permalink" href="#allow_multi_next%3D%28allow_multi_next%3ABool%29-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="allow_multi_next?:Bool-instance-method">
+      <div class="signature">
+        
+        def <strong>allow_multi_next?</strong> : Bool
+
+        <a class="method-permalink" href="#allow_multi_next%3F%3ABool-instance-method">#</a>
       </div>
       
       <br/>
@@ -1486,12 +1486,12 @@ without arguments. Sometimes such statements are used to yild the <code>nil</cod
       </div>
     </div>
   
-    <div class="entry-detail" id="enabled:Bool-instance-method">
+    <div class="entry-detail" id="enabled=(enabled:Bool)-instance-method">
       <div class="signature">
         
-        def <strong>enabled</strong> : Bool
+        def <strong>enabled=</strong>(enabled : Bool)
 
-        <a class="method-permalink" href="#enabled%3ABool-instance-method">#</a>
+        <a class="method-permalink" href="#enabled%3D%28enabled%3ABool%29-instance-method">#</a>
       </div>
       
       <br/>
@@ -1500,12 +1500,12 @@ without arguments. Sometimes such statements are used to yild the <code>nil</cod
       </div>
     </div>
   
-    <div class="entry-detail" id="enabled=(enabled:Bool)-instance-method">
+    <div class="entry-detail" id="enabled?:Bool-instance-method">
       <div class="signature">
         
-        def <strong>enabled=</strong>(enabled : Bool)
+        def <strong>enabled?</strong> : Bool
 
-        <a class="method-permalink" href="#enabled%3D%28enabled%3ABool%29-instance-method">#</a>
+        <a class="method-permalink" href="#enabled%3F%3ABool-instance-method">#</a>
       </div>
       
       <br/>
@@ -1581,7 +1581,7 @@ without arguments. Sometimes such statements are used to yild the <code>nil</cod
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/a3e5f2d2/src/ameba/rule/style/redundant_next.cr#L115" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/e7a6b6b1/src/ameba/rule/style/redundant_next.cr#L115" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1597,7 +1597,7 @@ without arguments. Sometimes such statements are used to yild the <code>nil</cod
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/a3e5f2d2/src/ameba/rule/style/redundant_next.cr#L111" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/e7a6b6b1/src/ameba/rule/style/redundant_next.cr#L111" target="_blank">View source</a>]
         
       </div>
     </div>
