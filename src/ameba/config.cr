@@ -267,7 +267,9 @@ class Ameba::Config
 
     macro included
       GROUP_SEVERITY = {
-        Lint: Ameba::Severity::Warning,
+        Lint:        Ameba::Severity::Warning,
+        Metrics:     Ameba::Severity::Warning,
+        Performance: Ameba::Severity::Warning,
       }
 
       class_getter default_severity : Ameba::Severity do
