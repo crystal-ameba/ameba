@@ -161,7 +161,7 @@ module Ameba::AST
     def declared_before?(node)
       var_location, node_location = location, node.location
 
-      return if var_location.nil? || node_location.nil?
+      return unless var_location && node_location
 
       (var_location.line_number < node_location.line_number) ||
         (var_location.line_number == node_location.line_number &&

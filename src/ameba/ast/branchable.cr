@@ -37,7 +37,7 @@ module Ameba::AST
 
     # Returns true if this node or one of the parent branchables is a loop, false otherwise.
     def loop?
-      loop?(node) || parent.try(&.loop?) || false
+      loop?(node) || !!parent.try(&.loop?)
     end
   end
 end
