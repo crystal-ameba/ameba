@@ -255,9 +255,8 @@ class Ameba::Config
       {% end %}
 
       {% if properties["severity".id] == nil %}
-        {% default = @type.name.starts_with?("Ameba::Rule::Lint") ? "Ameba::Severity::Warning".id : "Ameba::Severity::Convention".id %}
         @[YAML::Field(key: "Severity", converter: Ameba::SeverityYamlConverter)]
-        property severity = {{ default }}
+        property severity = {{ @type }}.default_severity
       {% end %}
 
       {% if properties["excluded".id] == nil %}
@@ -267,6 +266,16 @@ class Ameba::Config
     end
 
     macro included
+      GROUP_SEVERITY = {
+        Lint:        Ameba::Severity::Warning,
+        Metrics:     Ameba::Severity::Warning,
+        Performance: Ameba::Severity::Warning,
+      }
+
+      class_getter default_severity : Ameba::Severity do
+        GROUP_SEVERITY[group_name]? || Ameba::Severity::Convention
+      end
+
       macro inherited
         include YAML::Serializable
         include YAML::Serializable::Strict

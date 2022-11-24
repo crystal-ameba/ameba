@@ -9,7 +9,7 @@ module Ameba::Rule::Layout
   # ```
   class TrailingWhitespace < Base
     properties do
-      description "Disallows trailing whitespaces"
+      description "Disallows trailing whitespace"
     end
 
     MSG = "Trailing whitespace detected"

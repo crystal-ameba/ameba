@@ -88,8 +88,7 @@ module Ameba
       @formatter.started @sources
 
       channels = @sources.map { Channel(Exception?).new }
-      @sources.each_with_index do |source, idx|
-        channel = channels[idx]
+      @sources.zip(channels).each do |source, channel|
         spawn do
           run_source(source)
         rescue e
