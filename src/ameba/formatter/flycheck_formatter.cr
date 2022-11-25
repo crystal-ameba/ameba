@@ -3,16 +3,16 @@ module Ameba::Formatter
     @mutex = Mutex.new
 
     def source_finished(source : Source)
-      source.issues.each do |e|
-        next if e.disabled?
-        next if e.correctable? && config[:autocorrect]?
+      source.issues.each do |issue|
+        next if issue.disabled?
+        next if issue.correctable? && config[:autocorrect]?
 
-        next unless loc = e.location
+        next unless loc = issue.location
 
         @mutex.synchronize do
           output.printf "%s:%d:%d: %s: [%s] %s\n",
-            source.path, loc.line_number, loc.column_number, e.rule.severity.symbol,
-            e.rule.name, e.message.gsub('\n', " ")
+            source.path, loc.line_number, loc.column_number, issue.rule.severity.symbol,
+            issue.rule.name, issue.message.gsub('\n', " ")
         end
       end
     end
