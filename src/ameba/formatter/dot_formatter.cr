@@ -49,7 +49,7 @@ module Ameba::Formatter
             issue.rule.severity.symbol,
             issue.rule.name,
             issue.message,
-          }).colorize(:red)
+          }).colorize(issue.rule.severity.color)
 
           if show_affected_code && (code = affected_code(issue))
             output << code.colorize(:default)
