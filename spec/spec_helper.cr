@@ -24,6 +24,7 @@ module Ameba
     end
   end
 
+  # Rule extended description
   class ErrorRule < Rule::Base
     properties do
       description "Always adds an error at 1:1"
