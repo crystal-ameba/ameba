@@ -46,7 +46,6 @@ module Ameba
     # source = Ameba::Source.new "a = 1\nb = 2", path
     # source.lines # => ["a = 1", "b = 2"]
     # ```
-    #
     getter lines : Array(String) { code.split('\n') }
 
     # Returns AST nodes constructed by `Crystal::Parser`.
@@ -55,7 +54,6 @@ module Ameba
     # source = Ameba::Source.new code, path
     # source.ast
     # ```
-    #
     getter ast : Crystal::ASTNode do
       Crystal::Parser.new(code)
         .tap(&.wants_doc = true)

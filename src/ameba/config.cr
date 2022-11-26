@@ -111,7 +111,6 @@ class Ameba::Config
   # config.formatter = custom_formatter
   # config.formatter
   # ```
-  #
   property formatter : Formatter::BaseFormatter do
     Formatter::DotFormatter.new
   end
