@@ -21,7 +21,7 @@ module Ameba::Rule::Lint
   class Syntax < Base
     properties do
       description "Reports invalid Crystal syntax"
-      severity Ameba::Severity::Error
+      severity :error
     end
 
     def test(source)
