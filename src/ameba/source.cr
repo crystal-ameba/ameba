@@ -33,6 +33,7 @@ module Ameba
       @code = corrected_code
       @lines = nil
       @ast = nil
+
       true
     end
 
@@ -70,9 +71,9 @@ module Ameba
       path.ends_with?("_spec.cr")
     end
 
-    # Returns `true` if *filepath* matches the source's path, `false` if it does not.
+    # Returns `true` if *filepath* matches the source's path, `false` otherwise.
     def matches_path?(filepath)
-      path == filepath || path == File.expand_path(filepath)
+      path.in?(filepath, File.expand_path(filepath))
     end
   end
 end
