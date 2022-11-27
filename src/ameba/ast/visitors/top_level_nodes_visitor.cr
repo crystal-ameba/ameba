@@ -12,15 +12,17 @@ module Ameba::AST
     # :nodoc:
     def visit(node : Crystal::Require)
       require_nodes << node
+      true
     end
 
-    # If a top level node is Crystal::Expressions traverse the children.
+    # If a top level node is `Crystal::Expressions`,
+    # then always traverse the children.
     def visit(node : Crystal::Expressions)
       true
     end
 
     # A general visit method for rest of the nodes.
-    # Returns false meaning all child nodes will not be traversed.
+    # Returns `false`, meaning all child nodes will not be traversed.
     def visit(node : Crystal::ASTNode)
       false
     end
