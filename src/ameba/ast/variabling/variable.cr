@@ -175,10 +175,6 @@ module Ameba::AST
         node.accept self
       end
 
-      def references?(node : Crystal::Var)
-        @macro_literals.any?(&.value.includes?(node.name))
-      end
-
       def visit(node : Crystal::ASTNode)
         true
       end
