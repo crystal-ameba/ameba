@@ -39,11 +39,12 @@ module Ameba::Rule::Style
       Tokenizer.new(source).run do |token|
         next unless token.type.number? && decimal?(token.raw)
 
-        parsed = parse_number token.raw
+        parsed = parse_number(token.raw)
 
         if allowed?(*parsed) && (expected = underscored *parsed) != token.raw
           location = token.location
           end_location = location.adjust(column_number: token.raw.size - 1)
+
           issue_for location, end_location, MSG % expected do |corrector|
             corrector.replace(location, end_location, expected)
           end
@@ -58,21 +59,21 @@ module Ameba::Rule::Style
     private def allowed?(_sign, value, fraction, _suffix)
       return true if fraction && fraction.size > 3
 
-      digits = value.chars.select &.to_s.=~ /[0-9]/
+      digits = value.chars.select(&.number?)
       digits.size >= int_min_digits
     end
 
     private def underscored(sign, value, fraction, suffix)
-      value = slice_digits(value.reverse) { |slice| slice }.reverse
-      fraction = "." + slice_digits(fraction) { |slice| slice } if fraction
+      value = slice_digits(value.reverse).reverse
+      fraction = "." + slice_digits(fraction) if fraction
 
       "#{sign}#{value}#{fraction}#{suffix}"
     end
 
     private def slice_digits(value, by = 3)
-      ([] of String).tap do |slices|
+      %w[].tap do |slices|
         value.chars.reject(&.== '_').each_slice(by) do |slice|
-          slices << (yield slice).join
+          slices << slice.join
         end
       end.join('_')
     end
