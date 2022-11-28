@@ -69,15 +69,18 @@ module Ameba::Formatter
         output_paragraph rule.description
       end
 
-      rule_doc = colorize_code_blocks(rule.class.parsed_doc)
+      rule_doc = colorize_code_fences(rule.class.parsed_doc)
       return unless rule_doc
 
       output_title "Detailed description"
       output_paragraph rule_doc
     end
 
-    private def colorize_code_blocks(string)
-      string.try &.gsub(/```(.+?)```/m, &.colorize(:dark_gray))
+    private def colorize_code_fences(string)
+      return unless string
+      string
+        .gsub(/```(.+?)```/m, &.colorize(:dark_gray))
+        .gsub(/`(?!`)(.+?)`/, &.colorize(:dark_gray))
     end
 
     private def output_title(title)
