@@ -175,28 +175,32 @@ module Ameba::AST
         node.accept self
       end
 
+      # @[AlwaysInline]
+      private def includes_reference?(val)
+        val.to_s.includes?(@reference)
+      end
+
       def visit(node : Crystal::ASTNode)
         true
       end
 
       def visit(node : Crystal::MacroLiteral)
-        !(self.references ||= node.value.includes?(@reference))
+        !(@references ||= includes_reference?(node.value))
       end
 
       def visit(node : Crystal::MacroExpression)
-        !(self.references ||= node.exp.to_s.includes?(@reference))
+        !(@references ||= includes_reference?(node.exp))
       end
 
       def visit(node : Crystal::MacroFor)
-        exp, body = node.exp, node.body
-        !(self.references ||= exp.to_s.includes?(@reference) ||
-                              body.to_s.includes?(@reference))
+        !(@references ||= includes_reference?(node.exp) ||
+                          includes_reference?(node.body))
       end
 
       def visit(node : Crystal::MacroIf)
-        !(self.references ||= node.cond.to_s.includes?(@reference) ||
-                              node.then.to_s.includes?(@reference) ||
-                              node.else.to_s.includes?(@reference))
+        !(@references ||= includes_reference?(node.cond) ||
+                          includes_reference?(node.then) ||
+                          includes_reference?(node.else))
       end
     end
 
