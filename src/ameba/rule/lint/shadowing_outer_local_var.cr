@@ -45,11 +45,7 @@ module Ameba::Rule::Lint
       ]
     end
 
-    def test(source, node : Crystal::ProcLiteral, scope : AST::Scope)
-      find_shadowing source, scope
-    end
-
-    def test(source, node : Crystal::Block, scope : AST::Scope)
+    def test(source, node : Crystal::ProcLiteral | Crystal::Block, scope : AST::Scope)
       find_shadowing source, scope
     end
 

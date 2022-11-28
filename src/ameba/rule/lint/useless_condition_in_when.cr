@@ -61,12 +61,7 @@ module Ameba::Rule::Lint
         @parent.accept self
       end
 
-      def visit(node : Crystal::If)
-        @rule.check_node(@source, @parent, node.cond)
-        true
-      end
-
-      def visit(node : Crystal::Unless)
+      def visit(node : Crystal::If | Crystal::Unless)
         @rule.check_node(@source, @parent, node.cond)
         true
       end

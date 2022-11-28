@@ -39,15 +39,7 @@ module Ameba::Rule::Style
       VarVisitor.new self, source
     end
 
-    def test(source, node : Crystal::Var)
-      check_node source, node
-    end
-
-    def test(source, node : Crystal::InstanceVar)
-      check_node source, node
-    end
-
-    def test(source, node : Crystal::ClassVar)
+    def test(source, node : Crystal::Var | Crystal::InstanceVar | Crystal::ClassVar)
       check_node source, node
     end
 

@@ -66,23 +66,7 @@ module Ameba::Rule::Style
       issue_for node, MSG % {expected, name}
     end
 
-    def test(source, node : Crystal::ClassDef)
-      check_node(source, node)
-    end
-
-    def test(source, node : Crystal::Alias)
-      check_node(source, node)
-    end
-
-    def test(source, node : Crystal::LibDef)
-      check_node(source, node)
-    end
-
-    def test(source, node : Crystal::EnumDef)
-      check_node(source, node)
-    end
-
-    def test(source, node : Crystal::ModuleDef)
+    def test(source, node : Crystal::Alias | Crystal::ClassDef | Crystal::ModuleDef | Crystal::LibDef | Crystal::EnumDef)
       check_node(source, node)
     end
   end
