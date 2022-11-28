@@ -1,3 +1,5 @@
+require "colorize"
+
 module Ameba
   enum Severity
     Error
@@ -14,6 +16,19 @@ module Ameba
       in Error      then 'E'
       in Warning    then 'W'
       in Convention then 'C'
+      end
+    end
+
+    # Returns a color uniquely indicating severity.
+    #
+    # ```
+    # Severity::Warning.color # => Colorize::ColorANSI::Red
+    # ```
+    def color : Colorize::Color
+      case self
+      in Error      then Colorize::ColorANSI::Red
+      in Warning    then Colorize::ColorANSI::Red
+      in Convention then Colorize::ColorANSI::Blue
       end
     end
 
