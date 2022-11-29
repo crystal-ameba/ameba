@@ -799,7 +799,7 @@ a specific location.</p>
   </h2>
   
     
-      <a href="https://github.com/crystal-ameba/ameba/blob/20935ae3/src/ameba/formatter/explain_formatter.cr#L6" target="_blank">
+      <a href="https://github.com/crystal-ameba/ameba/blob/be65ba2a/src/ameba/formatter/explain_formatter.cr#L6" target="_blank">
         ameba/formatter/explain_formatter.cr
       </a>
     
@@ -820,13 +820,8 @@ a specific location.</p>
   
   <dl>
     
-      <dt class="entry-const" id="HEADING">
-        <strong>HEADING</strong> = <code><span class="s">&quot;## &quot;</span></code>
-      </dt>
-      
-    
-      <dt class="entry-const" id="PREFIX">
-        <strong>PREFIX</strong> = <code><span class="s">&quot; &quot;</span></code>
+      <dt class="entry-const" id="HEADING_MARKER">
+        <strong>HEADING_MARKER</strong> = <code><span class="s">&quot;## &quot;</span></code>
       </dt>
       
     
@@ -971,16 +966,17 @@ a specific location.</p>
           <p>Creates a new instance of <code><a href="../../Ameba/Formatter/ExplainFormatter.html">ExplainFormatter</a></code>.</p>
 <p>Accepts <em>output</em> which indicates the io where the explanation will be written to.
 Second argument is <em>location</em> which indicates the location to explain.</p>
-<pre><code class="language-crystal"><span class="t">ExplainFormatter</span>.new output,
-  file: path,
-  line: line_number,
-  column: column_number</code></pre>
+<pre><code class="language-crystal"><span class="t">ExplainFormatter</span>.new output, {
+  file:   path,
+  line:   line_number,
+  column: column_number,
+}</code></pre>
         </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/20935ae3/src/ameba/formatter/explain_formatter.cr#L26" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/be65ba2a/src/ameba/formatter/explain_formatter.cr#L26" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1015,7 +1011,7 @@ Second argument is <em>location</em> which indicates the location to explain.</p
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/20935ae3/src/ameba/formatter/explain_formatter.cr#L31" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/be65ba2a/src/ameba/formatter/explain_formatter.cr#L35" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1031,7 +1027,7 @@ Second argument is <em>location</em> which indicates the location to explain.</p
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/20935ae3/src/ameba/formatter/explain_formatter.cr#L13" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/be65ba2a/src/ameba/formatter/explain_formatter.cr#L12" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1047,7 +1043,7 @@ Second argument is <em>location</em> which indicates the location to explain.</p
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/20935ae3/src/ameba/formatter/explain_formatter.cr#L12" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/be65ba2a/src/ameba/formatter/explain_formatter.cr#L11" target="_blank">View source</a>]
         
       </div>
     </div>
