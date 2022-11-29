@@ -52,11 +52,7 @@ module Ameba::Rule::Lint
       check_node(source, node, node.block)
     end
 
-    def test(source, node : Crystal::While)
-      check_node(source, node, node.body) if literal?(node.cond)
-    end
-
-    def test(source, node : Crystal::Until)
+    def test(source, node : Crystal::While | Crystal::Until)
       check_node(source, node, node.body) if literal?(node.cond)
     end
 

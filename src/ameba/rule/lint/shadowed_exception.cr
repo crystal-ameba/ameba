@@ -45,13 +45,16 @@ module Ameba::Rule::Lint
 
       return if rescues.nil?
 
-      shadowed(rescues).each { |tp| issue_for tp, MSG % tp.names.join("::") }
+      shadowed(rescues).each do |path|
+        issue_for path, MSG % path.names.join("::")
+      end
     end
 
     private def shadowed(rescues, catch_all = false)
       traversed_types = Set(String).new
 
-      filter_rescues(rescues).each_with_object([] of Crystal::Path) do |types, shadowed|
+      rescues = filter_rescues(rescues)
+      rescues.each_with_object([] of Crystal::Path) do |types, shadowed|
         case
         when catch_all
           shadowed.concat(types)
@@ -62,7 +65,7 @@ module Ameba::Rule::Lint
           catch_all = true
           next
         else
-          nodes = types.select { |tp| traverse(tp.to_s, traversed_types) }
+          nodes = types.select { |path| traverse(path.to_s, traversed_types) }
           shadowed.concat(nodes) unless nodes.empty?
         end
       end

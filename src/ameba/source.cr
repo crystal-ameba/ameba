@@ -33,6 +33,7 @@ module Ameba
       @code = corrected_code
       @lines = nil
       @ast = nil
+
       true
     end
 
@@ -46,7 +47,6 @@ module Ameba
     # source = Ameba::Source.new "a = 1\nb = 2", path
     # source.lines # => ["a = 1", "b = 2"]
     # ```
-    #
     getter lines : Array(String) { code.split('\n') }
 
     # Returns AST nodes constructed by `Crystal::Parser`.
@@ -55,7 +55,6 @@ module Ameba
     # source = Ameba::Source.new code, path
     # source.ast
     # ```
-    #
     getter ast : Crystal::ASTNode do
       Crystal::Parser.new(code)
         .tap(&.wants_doc = true)
@@ -72,9 +71,9 @@ module Ameba
       path.ends_with?("_spec.cr")
     end
 
-    # Returns `true` if *filepath* matches the source's path, `false` if it does not.
+    # Returns `true` if *filepath* matches the source's path, `false` otherwise.
     def matches_path?(filepath)
-      path == filepath || path == File.expand_path(filepath)
+      path.in?(filepath, File.expand_path(filepath))
     end
   end
 end

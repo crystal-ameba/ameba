@@ -33,15 +33,7 @@ module Ameba::Rule::Lint
       issue_for node, MSG if static_literal?(node.cond)
     end
 
-    def test(source, node : Crystal::If)
-      check_node source, node
-    end
-
-    def test(source, node : Crystal::Unless)
-      check_node source, node
-    end
-
-    def test(source, node : Crystal::Case)
+    def test(source, node : Crystal::If | Crystal::Unless | Crystal::Case)
       check_node source, node
     end
   end

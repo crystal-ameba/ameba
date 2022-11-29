@@ -36,12 +36,12 @@ module Ameba::Rule::Lint
     end
 
     private def string_coercion_nodes(node)
-      node.expressions.select do |e|
-        e.is_a?(Crystal::Call) &&
-          e.name == "to_s" &&
-          e.args.size.zero? &&
-          e.named_args.nil? &&
-          e.obj
+      node.expressions.select do |exp|
+        exp.is_a?(Crystal::Call) &&
+          exp.name == "to_s" &&
+          exp.args.size.zero? &&
+          exp.named_args.nil? &&
+          exp.obj
       end
     end
   end

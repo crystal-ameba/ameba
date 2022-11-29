@@ -26,8 +26,8 @@ module Ameba::Rule::Lint
 
     def test(source, node : Crystal::StringInterpolation)
       node.expressions
-        .select { |e| !e.is_a?(Crystal::StringLiteral) && literal?(e) }
-        .each { |n| issue_for n, MSG }
+        .select { |exp| !exp.is_a?(Crystal::StringLiteral) && literal?(exp) }
+        .each { |exp| issue_for exp, MSG }
     end
   end
 end

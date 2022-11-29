@@ -41,6 +41,7 @@ module Ameba::Rule::Lint
         op_end_location.column_number - 1
       )
       op_text = source_between(op_location, op_end_location, source.lines)
+
       return unless op_text
       return unless MISTAKES.has_key?(op_text)
 

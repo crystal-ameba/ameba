@@ -59,7 +59,7 @@ module Ameba
         source = Source.new "a = 42", "source.cr"
         output = explanation(source)
         output.should contain "DETAILED DESCRIPTION"
-        output.should contain "TO BE DONE..."
+        output.should contain "Rule extended description"
       end
 
       it "writes nothing if location not found" do

@@ -79,6 +79,7 @@ module Ameba::Rule::Style
       old = OLD % node.name
       new = NEW % {node.name, name}
       msg = MSG % {new, old}
+
       if end_location
         issue_for(filter_location, end_location, msg) do |corrector|
           corrector.replace(filter_location, end_location, new)

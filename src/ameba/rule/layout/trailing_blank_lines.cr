@@ -24,7 +24,9 @@ module Ameba::Rule::Layout
       return if source_lines_size == 1 && last_source_line.empty?
 
       last_line_empty = last_source_line.empty?
-      return if source_lines_size.zero? || (source_lines.last(2).join.presence && last_line_empty)
+      return if source_lines_size.zero? ||
+                (source_lines.last(2).join.presence && last_line_empty)
+
       if last_line_empty
         issue_for({source_lines_size, 1}, MSG)
       else

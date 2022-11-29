@@ -4,8 +4,7 @@ module Ameba::Formatter
   # A formatter that shows the detailed explanation of the issue at
   # a specific location.
   class ExplainFormatter
-    HEADING = "## "
-    PREFIX  = " "
+    HEADING_MARKER = "## "
 
     include Util
 
@@ -18,13 +17,18 @@ module Ameba::Formatter
     # Second argument is *location* which indicates the location to explain.
     #
     # ```
-    # ExplainFormatter.new output,
-    #   file: path,
-    #   line: line_number,
-    #   column: column_number
+    # ExplainFormatter.new output, {
+    #   file:   path,
+    #   line:   line_number,
+    #   column: column_number,
+    # }
     # ```
     def initialize(@output, location)
-      @location = Crystal::Location.new(location[:file], location[:line], location[:column])
+      @location = Crystal::Location.new(
+        location[:file],
+        location[:line],
+        location[:column]
+      )
     end
 
     # Reports the explanations at the *@location*.
@@ -39,42 +43,59 @@ module Ameba::Formatter
     end
 
     private def explain(source, issue)
-      rule = issue.rule
-
       return unless location = issue.location
 
-      output_title "ISSUE INFO"
+      output << '\n'
+      output_title "Issue info"
       output_paragraph [
-        issue.message.colorize(:red).to_s,
-        location.to_s.colorize(:cyan).to_s,
+        issue.message.colorize(:red),
+        location.to_s.colorize(:cyan),
       ]
 
       if affected_code = affected_code(issue, context_lines: 3)
-        output_title "AFFECTED CODE"
+        output_title "Affected code"
         output_paragraph affected_code
       end
 
+      rule = issue.rule
+
+      output_title "Rule info"
+      output_paragraph "%s of a %s severity" % {
+        rule.name.colorize(:magenta),
+        rule.severity.to_s.colorize(rule.severity.color),
+      }
+
       if rule.responds_to?(:description)
-        output_title "RULE INFO"
-        output_paragraph [rule.severity.to_s, rule.name, rule.description]
+        output_paragraph rule.description
       end
 
-      output_title "DETAILED DESCRIPTION"
-      output_paragraph(rule.class.parsed_doc || "TO BE DONE...")
+      rule_doc = colorize_code_fences(rule.class.parsed_doc)
+      return unless rule_doc
+
+      output_title "Detailed description"
+      output_paragraph rule_doc
+    end
+
+    private def colorize_code_fences(string)
+      return unless string
+      string
+        .gsub(/```(.+?)```/m, &.colorize(:dark_gray))
+        .gsub(/`(?!`)(.+?)`/, &.colorize(:dark_gray))
     end
 
     private def output_title(title)
-      output << HEADING.colorize(:yellow) << title.colorize(:yellow) << '\n'
-      output << '\n'
+      output << HEADING_MARKER.colorize(:yellow)
+      output << title.upcase.colorize(:yellow)
+      output << "\n\n"
     end
 
     private def output_paragraph(paragraph : String)
       output_paragraph(paragraph.lines)
     end
 
-    private def output_paragraph(paragraph : Array(String))
+    private def output_paragraph(paragraph : Array)
       paragraph.each do |line|
-        output << PREFIX << line << '\n'
+        output << ' ' << line << '\n'
       end
       output << '\n'
     end

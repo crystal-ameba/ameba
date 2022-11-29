@@ -111,7 +111,6 @@ class Ameba::Config
   # config.formatter = custom_formatter
   # config.formatter
   # ```
-  #
   property formatter : Formatter::BaseFormatter do
     Formatter::DotFormatter.new
   end
@@ -249,17 +248,17 @@ class Ameba::Config
         {% end %}
       {% end %}
 
-      {% if properties["enabled".id] == nil %}
+      {% unless properties["enabled".id] %}
         @[YAML::Field(key: "Enabled")]
         property? enabled = true
       {% end %}
 
-      {% if properties["severity".id] == nil %}
+      {% unless properties["severity".id] %}
         @[YAML::Field(key: "Severity", converter: Ameba::SeverityYamlConverter)]
         property severity = {{ @type }}.default_severity
       {% end %}
 
-      {% if properties["excluded".id] == nil %}
+      {% unless properties["excluded".id] %}
         @[YAML::Field(key: "Excluded")]
         property excluded : Array(String)?
       {% end %}
