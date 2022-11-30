@@ -20,19 +20,19 @@ module Ameba::Rule::Style
   #   Enabled: true
   # ```
   class IsANil < Base
+    include AST::Util
+
     properties do
       description "Disallows calls to `is_a?(Nil)` in favor of `nil?`"
     end
 
-    MSG            = "Use `nil?` instead of `is_a?(Nil)`"
-    PATH_NIL_NAMES = %w(Nil)
+    MSG = "Use `nil?` instead of `is_a?(Nil)`"
 
     def test(source, node : Crystal::IsA)
       return if node.nil_check?
 
       const = node.const
-      return unless const.is_a?(Crystal::Path)
-      return unless const.names == PATH_NIL_NAMES
+      return unless path_named?(const, "Nil")
 
       issue_for const, MSG
     end
