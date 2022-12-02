@@ -20,6 +20,8 @@
 - [About](#about)
 - [Usage](#usage)
   * [Watch a tutorial](#watch-a-tutorial)
+  * [Autocorrection](#autocorrection)
+  * [Explain issues](#explain-issues)
   * [Run in parallel](#run-in-parallel)
 - [Installation](#installation)
   * [As a project dependency:](#as-a-project-dependency)
@@ -29,7 +31,6 @@
 - [Configuration](#configuration)
   * [Sources](#sources)
   * [Rules](#rules)
-  * [Explain issues](#explain-issues)
   * [Inline disabling](#inline-disabling)
 - [Editors & integrations](#editors--integrations)
 - [Credits & inspirations](#credits--inspirations)
@@ -51,20 +52,25 @@ Run `ameba` binary within your project directory to catch code issues:
 $ ameba
 Inspecting 107 files
 
-...............F.....................F....................................................................
+...............F.....................FF....................................................................
 
-src/ameba/formatter/flycheck_formatter.cr:4:33
-[W] Lint/UnusedArgument: Unused argument `location`
-> source.issues.each do |e, location|
-                            ^
+src/ameba/formatter/flycheck_formatter.cr:6:37
+[W] Lint/UnusedArgument: Unused argument `location`. If it's necessary, use `_` as an argument name to indicate that it won't be used.
+> source.issues.each do |issue, location|
+                                ^
 
-src/ameba/formatter/base_formatter.cr:12:7
+src/ameba/formatter/base_formatter.cr:16:14
 [W] Lint/UselessAssign: Useless assignment to variable `s`
 > return s += issues.size
          ^
 
-Finished in 542.64 milliseconds
-129 inspected, 2 failures
+src/ameba/formatter/base_formatter.cr:16:7 [Correctable]
+[C] Style/RedundantReturn: Redundant `return` detected
+> return s += issues.size
+  ^---------------------^
+
+Finished in 389.45 milliseconds
+107 inspected, 3 failures
 ```
 
 ### Watch a tutorial
@@ -72,6 +78,27 @@ Finished in 542.64 milliseconds
 <a href="https://luckycasts.com/videos/ameba"><img src="https://i.imgur.com/uOETQlM.png" title="Write Better Crystal Code with the Ameba Shard" width="500" /></a>
 
 [🎬 Watch the LuckyCast showing how to use Ameba](https://luckycasts.com/videos/ameba)
+
+### Autocorrection
+
+Rules that are marked as `[Correctable]` in the output can be automatically corrected using `--fix` flag:
+
+```sh
+$ ameba --fix
+```
+
+### Explain issues
+
+Ameba allows you to dig deeper into an issue, by showing you details about the issue
+and the reasoning by it being reported.
+
+To be convenient, you can just copy-paste the `PATH:line:column` string from the
+report and paste behind the `ameba` command to check it out.
+
+```sh
+$ ameba crystal/command/format.cr:26:83           # show explanation for the issue
+$ ameba --explain crystal/command/format.cr:26:83 # same thing
+```
 
 ### Run in parallel
 
@@ -103,7 +130,7 @@ Add this to your application's `shard.yml`:
 development_dependencies:
   ameba:
     github: crystal-ameba/ameba
-    version: ~> 1.0.0
+    version: ~> 1.3.0
 ```
 
 Build `bin/ameba` binary within your project directory while running `shards install`.
@@ -209,19 +236,6 @@ Style/RedundantBegin:
   Enabled: false
 ```
 
-### Explain issues
-
-Ameba allows you to dig deeper into an issue, by showing you details about the issue
-and the reasoning by it being reported.
-
-To be convenient, you can just copy-paste the `PATH:line:column` string from the
-report and paste behind the `ameba` command to check it out.
-
-```sh
-$ ameba crystal/command/format.cr:26:83           # show explanation for the issue
-$ ameba --explain crystal/command/format.cr:26:83 # same thing
-```
-
 ### Inline disabling
 
 One or more rules or one or more group of rules can be disabled using inline directives:
@@ -254,3 +268,4 @@ time = Time.epoch(1483859302) # ameba:disable Style, Lint
 ## Contributors
 
 - [veelenga](https://github.com/veelenga) Vitalii Elenhaupt - creator, maintainer
+- [Sija](https://github.com/Sija) Sijawusz Pur Rahnama - maintainer
