@@ -744,6 +744,8 @@
 <li><a href="#usage">Usage</a>
 <ul>
 <li><a href="#watch-a-tutorial">Watch a tutorial</a></li>
+<li><a href="#autocorrection">Autocorrection</a></li>
+<li><a href="#explain-issues">Explain issues</a></li>
 <li><a href="#run-in-parallel">Run in parallel</a></li>
 </ul>
 </li>
@@ -759,7 +761,6 @@
 <ul>
 <li><a href="#sources">Sources</a></li>
 <li><a href="#rules">Rules</a></li>
-<li><a href="#explain-issues">Explain issues</a></li>
 <li><a href="#inline-disabling">Inline disabling</a></li>
 </ul>
 </li>
@@ -785,26 +786,49 @@ also catches code smells and wrong code constructions.</p>
 <pre><code class="language-sh">$ ameba
 Inspecting 107 files
 
-...............F.....................F....................................................................
+...............F.....................FF....................................................................
 
-src/ameba/formatter/flycheck_formatter.cr:4:33
-[W] Lint/UnusedArgument: Unused argument `location`
-&gt; source.issues.each do |e, location|
-                            ^
+src/ameba/formatter/flycheck_formatter.cr:6:37
+[W] Lint/UnusedArgument: Unused argument `location`. If it's necessary, use `_` as an argument name to indicate that it won't be used.
+&gt; source.issues.each do |issue, location|
+                                ^
 
-src/ameba/formatter/base_formatter.cr:12:7
+src/ameba/formatter/base_formatter.cr:16:14
 [W] Lint/UselessAssign: Useless assignment to variable `s`
 &gt; return s += issues.size
          ^
 
-Finished in 542.64 milliseconds
-129 inspected, 2 failures</code></pre>
+src/ameba/formatter/base_formatter.cr:16:7 [Correctable]
+[C] Style/RedundantReturn: Redundant `return` detected
+&gt; return s += issues.size
+  ^---------------------^
+
+Finished in 389.45 milliseconds
+107 inspected, 3 failures</code></pre>
 <h3><a id="watch-a-tutorial" class="anchor" href="#watch-a-tutorial">
   <svg class="octicon-link" aria-hidden="true">
     <use href="#octicon-link"/>
   </svg>
 </a>Watch a tutorial</h3>
 <p><a href="https://luckycasts.com/videos/ameba">🎬 Watch the LuckyCast showing how to use Ameba</a></p>
+<h3><a id="autocorrection" class="anchor" href="#autocorrection">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>Autocorrection</h3>
+<p>Rules that are marked as <code>[Correctable]</code> in the output can be automatically corrected using <code>--fix</code> flag:</p>
+<pre><code class="language-sh">$ ameba --fix</code></pre>
+<h3><a id="explain-issues" class="anchor" href="#explain-issues">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>Explain issues</h3>
+<p>Ameba allows you to dig deeper into an issue, by showing you details about the issue
+and the reasoning by it being reported.</p>
+<p>To be convenient, you can just copy-paste the <code>PATH:line:column</code> string from the
+report and paste behind the <code>ameba</code> command to check it out.</p>
+<pre><code class="language-sh">$ ameba crystal/command/format.cr:26:83           # show explanation for the issue
+$ ameba --explain crystal/command/format.cr:26:83 # same thing</code></pre>
 <h3><a id="run-in-parallel" class="anchor" href="#run-in-parallel">
   <svg class="octicon-link" aria-hidden="true">
     <use href="#octicon-link"/>
@@ -834,7 +858,7 @@ $ CRYSTAL_WORKERS=8 ameba #=&gt; 10.14 seconds</code></pre>
 <pre><code class="language-yaml">development_dependencies:
   ameba:
     github: crystal-ameba/ameba
-    version: ~&gt; 1.0.0</code></pre>
+    version: ~&gt; 1.3.0</code></pre>
 <p>Build <code>bin/ameba</code> binary within your project directory while running <code>shards install</code>.</p>
 <p>You may also want to use it on <a href="travis-ci.org">Travis</a>:</p>
 <pre><code class="language-yaml"># .travis.yml
@@ -917,17 +941,6 @@ $ ameba --except Style,Lint  # runs all rules except rules in Style and Lint gro
 <p>Or through the configuration file:</p>
 <pre><code class="language-yaml">Style/RedundantBegin:
   Enabled: false</code></pre>
-<h3><a id="explain-issues" class="anchor" href="#explain-issues">
-  <svg class="octicon-link" aria-hidden="true">
-    <use href="#octicon-link"/>
-  </svg>
-</a>Explain issues</h3>
-<p>Ameba allows you to dig deeper into an issue, by showing you details about the issue
-and the reasoning by it being reported.</p>
-<p>To be convenient, you can just copy-paste the <code>PATH:line:column</code> string from the
-report and paste behind the <code>ameba</code> command to check it out.</p>
-<pre><code class="language-sh">$ ameba crystal/command/format.cr:26:83           # show explanation for the issue
-$ ameba --explain crystal/command/format.cr:26:83 # same thing</code></pre>
 <h3><a id="inline-disabling" class="anchor" href="#inline-disabling">
   <svg class="octicon-link" aria-hidden="true">
     <use href="#octicon-link"/>
@@ -971,6 +984,7 @@ time <span class="o">=</span> <span class="t">Time</span>.epoch(<span class="n">
 </a>Contributors</h2>
 <ul>
 <li><a href="https://github.com/veelenga">veelenga</a> Vitalii Elenhaupt - creator, maintainer</li>
+<li><a href="https://github.com/Sija">Sija</a> Sijawusz Pur Rahnama - maintainer</li>
 </ul>
 </div>
 </body>
