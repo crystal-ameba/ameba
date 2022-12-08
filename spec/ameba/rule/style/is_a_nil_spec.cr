@@ -14,16 +14,24 @@ module Ameba::Rule::Style
     end
 
     it "reports if there is a call to is_a?(Nil) without receiver" do
-      expect_issue subject, <<-CRYSTAL
+      source = expect_issue subject, <<-CRYSTAL
         a = is_a?(Nil)
                 # ^^^ error: Use `nil?` instead of `is_a?(Nil)`
+        CRYSTAL
+
+      expect_correction source, <<-CRYSTAL
+        a = self.nil?
         CRYSTAL
     end
 
     it "reports if there is a call to is_a?(Nil) with receiver" do
-      expect_issue subject, <<-CRYSTAL
+      source = expect_issue subject, <<-CRYSTAL
         a.is_a?(Nil)
               # ^^^ error: Use `nil?` instead of `is_a?(Nil)`
+        CRYSTAL
+
+      expect_correction source, <<-CRYSTAL
+        a.nil?
         CRYSTAL
     end
 
