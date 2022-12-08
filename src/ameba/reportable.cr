@@ -21,8 +21,8 @@ module Ameba
 
     # :ditto:
     def add_issue(rule,
-                  location : Crystal::Location,
-                  end_location : Crystal::Location,
+                  location : Crystal::Location?,
+                  end_location : Crystal::Location?,
                   message : String,
                   status : Issue::Status? = nil,
                   &block : Source::Corrector ->) : Issue
