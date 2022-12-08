@@ -188,9 +188,6 @@ module Ameba::Rule::Style
 
     # ameba:disable Metrics/CyclomaticComplexity
     protected def issue_for_valid(source, call : Crystal::Call, block : Crystal::Block, body : Crystal::Call)
-      return unless location = call.name_location
-      return unless end_location = block.end_location
-
       return if exclude_calls_with_block? && body.block
       return if exclude_multiple_line_blocks? && !same_location_lines?(call, body)
       return if exclude_prefix_operators? && prefix_operator?(body)
@@ -202,6 +199,9 @@ module Ameba::Rule::Style
 
       return unless valid_line_length?(call, call_code)
       return unless valid_length?(call_code)
+
+      return unless location = call.name_location
+      return unless end_location = block.end_location
 
       if call_code.includes?("{...}")
         issue_for location, end_location, MSG % call_code

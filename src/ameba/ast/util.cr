@@ -93,8 +93,8 @@ module Ameba::AST::Util
     end
 
     return if last_line.size < end_column + 1
-    node_lines[-1] = last_line.sub(end_column + 1...last_line.size, "")
 
+    node_lines[-1] = last_line.sub(end_column + 1...last_line.size, "")
     node_lines.join('\n')
   end
 

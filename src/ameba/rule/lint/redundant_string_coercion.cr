@@ -17,7 +17,7 @@ module Ameba::Rule::Lint
   # YAML configuration example:
   #
   # ```
-  # Lint/RedundantStringCoersion
+  # Lint/RedundantStringCoercion
   #   Enabled: true
   # ```
   class RedundantStringCoercion < Base

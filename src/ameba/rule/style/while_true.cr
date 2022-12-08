@@ -34,6 +34,7 @@ module Ameba::Rule::Style
 
     def test(source, node : Crystal::While)
       return unless node.cond.true_literal?
+
       return unless location = node.location
       return unless end_location = node.cond.end_location
 

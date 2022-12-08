@@ -4,7 +4,6 @@ module Ameba::Rule::Lint
   # They usually have the same result - except for non-primitive
   # types like containers, range or regex.
   #
-  #
   # For example, this will be always false:
   #
   # ```

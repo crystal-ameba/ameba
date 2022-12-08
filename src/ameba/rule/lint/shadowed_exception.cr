@@ -42,7 +42,6 @@ module Ameba::Rule::Lint
 
     def test(source, node : Crystal::ExceptionHandler)
       rescues = node.rescues
-
       return if rescues.nil?
 
       shadowed(rescues).each do |path|

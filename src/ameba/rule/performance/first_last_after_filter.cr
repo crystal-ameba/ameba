@@ -51,7 +51,9 @@ module Ameba::Rule::Performance
       return unless obj.name.in?(filter_names)
 
       message = node.name.includes?(CALL_NAMES.first) ? MSG : MSG_REVERSE
-      issue_for obj.name_location, node.name_end_location, message % {obj.name, node.name}
+
+      issue_for obj.name_location, node.name_end_location,
+        message % {obj.name, node.name}
     end
   end
 end

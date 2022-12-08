@@ -160,8 +160,10 @@ module Ameba::Spec::ExpectIssue
                        file = __FILE__,
                        line = __LINE__)
     lines = code.split('\n') # must preserve trailing newline
+
     _, actual_annotations = actual_annotations(rules, code, path, lines)
     return if actual_annotations.to_s == code
+
     fail <<-MSG, file, line
       Expected no issues, but got:
 
@@ -182,9 +184,10 @@ module Ameba::Spec::ExpectIssue
   private def format_issue(code, **replacements)
     replacements.each do |keyword, value|
       value = value.to_s
-      code = code.gsub("%{#{keyword}}", value)
-      code = code.gsub("^{#{keyword}}", "^" * value.size)
-      code = code.gsub("_{#{keyword}}", " " * value.size)
+      code = code
+        .gsub("%{#{keyword}}", value)
+        .gsub("^{#{keyword}}", "^" * value.size)
+        .gsub("_{#{keyword}}", " " * value.size)
     end
     code
   end

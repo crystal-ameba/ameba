@@ -48,6 +48,7 @@ module Ameba::Rule::Style
 
     def test(source, node : Crystal::Def)
       return if (expected = node.name.underscore) == node.name
+
       return unless location = name_location(node)
       return unless end_location = name_end_location(node)
 
