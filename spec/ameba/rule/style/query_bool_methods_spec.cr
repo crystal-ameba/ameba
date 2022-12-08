@@ -25,6 +25,18 @@ module Ameba::Rule::Style
         CRYSTAL
     end
 
+    it "reports only valid properties" do
+      expect_issue subject, <<-CRYSTAL
+        class Foo
+          class_property? foo = true
+          class_property bar = true
+                       # ^^^ error: Consider using 'class_property?' for 'bar'
+          class_property baz = true
+                       # ^^^ error: Consider using 'class_property?' for 'baz'
+        end
+        CRYSTAL
+    end
+
     {% for call in %w[getter class_getter property class_property] %}
       it "reports `{{ call.id }}` assign with Bool" do
         expect_issue subject, <<-CRYSTAL, call: {{ call }}
