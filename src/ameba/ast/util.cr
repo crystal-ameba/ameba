@@ -4,7 +4,7 @@ module Ameba::AST::Util
   #
   # 1. is *node* a literal?
   # 2. can *node* be proven static?
-  protected def literal_kind?(node, include_paths = false) : {Bool, Bool}
+  protected def literal_kind?(node) : {Bool, Bool}
     case node
     when Crystal::NilLiteral,
          Crystal::BoolLiteral,
@@ -17,44 +17,42 @@ module Ameba::AST::Util
          Crystal::MacroLiteral
       {true, true}
     when Crystal::RangeLiteral
-      {true, static_literal?(node.from, include_paths) &&
-        static_literal?(node.to, include_paths)}
+      {true, static_literal?(node.from) &&
+        static_literal?(node.to)}
     when Crystal::ArrayLiteral,
          Crystal::TupleLiteral
       {true, node.elements.all? do |el|
-        static_literal?(el, include_paths)
+        static_literal?(el)
       end}
     when Crystal::HashLiteral
       {true, node.entries.all? do |entry|
-        static_literal?(entry.key, include_paths) &&
-          static_literal?(entry.value, include_paths)
+        static_literal?(entry.key) &&
+          static_literal?(entry.value)
       end}
     when Crystal::NamedTupleLiteral
       {true, node.entries.all? do |entry|
-        static_literal?(entry.value, include_paths)
+        static_literal?(entry.value)
       end}
-    when Crystal::Path
-      {include_paths, true}
     else
       {false, false}
     end
   end
 
   # Returns `true` if current `node` is a static literal, `false` otherwise.
-  def static_literal?(node, include_paths = false) : Bool
-    is_literal, is_static = literal_kind?(node, include_paths)
+  def static_literal?(node) : Bool
+    is_literal, is_static = literal_kind?(node)
     is_literal && is_static
   end
 
   # Returns `true` if current `node` is a dynamic literal, `false` otherwise.
-  def dynamic_literal?(node, include_paths = false) : Bool
-    is_literal, is_static = literal_kind?(node, include_paths)
+  def dynamic_literal?(node) : Bool
+    is_literal, is_static = literal_kind?(node)
     is_literal && !is_static
   end
 
   # Returns `true` if current `node` is a literal, `false` otherwise.
-  def literal?(node, include_paths = false) : Bool
-    is_literal, _ = literal_kind?(node, include_paths)
+  def literal?(node) : Bool
+    is_literal, _ = literal_kind?(node)
     is_literal
   end
 
