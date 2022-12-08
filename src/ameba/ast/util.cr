@@ -58,6 +58,13 @@ module Ameba::AST::Util
     is_literal
   end
 
+  # Returns `true` if current `node` is a `Crystal::Path`
+  # matching given *name*, `false` otherwise.
+  def path_named?(node, name) : Bool
+    node.is_a?(Crystal::Path) &&
+      name == node.names.join("::")
+  end
+
   # Returns a source code for the current node.
   # This method uses `node.location` and `node.end_location`
   # to determine and cut a piece of source of the node.

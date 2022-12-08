@@ -122,11 +122,10 @@ module Ameba::AST
     # `false` if not.
     def used_in_macro?(scope = @scope)
       scope.inner_scopes.each do |inner_scope|
-        return true if MacroReferenceFinder.new(inner_scope.node, node.name).references
+        return true if MacroReferenceFinder.new(inner_scope.node, node.name).references?
       end
-      return true if MacroReferenceFinder.new(scope.node, node.name).references
-      return true if (outer_scope = scope.outer_scope) &&
-                     used_in_macro?(outer_scope)
+      return true if MacroReferenceFinder.new(scope.node, node.name).references?
+      return true if (outer_scope = scope.outer_scope) && used_in_macro?(outer_scope)
 
       false
     end
@@ -169,7 +168,7 @@ module Ameba::AST
     end
 
     private class MacroReferenceFinder < Crystal::Visitor
-      property references = false
+      property? references = false
 
       def initialize(node, @reference : String = reference)
         node.accept self
