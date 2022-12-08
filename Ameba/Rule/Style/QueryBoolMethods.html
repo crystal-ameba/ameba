@@ -13,7 +13,7 @@
 <script type="text/javascript" src="../../../js/doc.js"></script>
 
   <meta name="repository-name" content="ameba">
-  <title>Ameba::Rule::Lint::RedundantWithIndex - ameba master</title>
+  <title>Ameba::Rule::Style::QueryBoolMethods - ameba master</title>
   <script type="text/javascript">
     CrystalDocs.base_path = "../../../";
   </script>
@@ -301,7 +301,7 @@
       
     </li>
   
-  <li class="parent open current" data-id="ameba/Ameba/Rule/Lint" data-name="ameba::rule::lint">
+  <li class="parent " data-id="ameba/Ameba/Rule/Lint" data-name="ameba::rule::lint">
       <a href="../../../Ameba/Rule/Lint.html">Lint</a>
       
         <ul>
@@ -401,7 +401,7 @@
       
     </li>
   
-  <li class=" current" data-id="ameba/Ameba/Rule/Lint/RedundantWithIndex" data-name="ameba::rule::lint::redundantwithindex">
+  <li class=" " data-id="ameba/Ameba/Rule/Lint/RedundantWithIndex" data-name="ameba::rule::lint::redundantwithindex">
       <a href="../../../Ameba/Rule/Lint/RedundantWithIndex.html">RedundantWithIndex</a>
       
     </li>
@@ -541,7 +541,7 @@
       
     </li>
   
-  <li class="parent " data-id="ameba/Ameba/Rule/Style" data-name="ameba::rule::style">
+  <li class="parent open current" data-id="ameba/Ameba/Rule/Style" data-name="ameba::rule::style">
       <a href="../../../Ameba/Rule/Style.html">Style</a>
       
         <ul>
@@ -591,7 +591,7 @@
       
     </li>
   
-  <li class=" " data-id="ameba/Ameba/Rule/Style/QueryBoolMethods" data-name="ameba::rule::style::queryboolmethods">
+  <li class=" current" data-id="ameba/Ameba/Rule/Style/QueryBoolMethods" data-name="ameba::rule::style::queryboolmethods">
       <a href="../../../Ameba/Rule/Style/QueryBoolMethods.html">QueryBoolMethods</a>
       
     </li>
@@ -745,12 +745,12 @@
 <div class="main-content">
 <h1 class="type-name">
 
-  <span class="kind">class</span> Ameba::Rule::Lint::RedundantWithIndex
+  <span class="kind">class</span> Ameba::Rule::Style::QueryBoolMethods
 
 </h1>
 
 
-  <ul class="superclass-hierarchy"><li class="superclass"><a href="../../../Ameba/Rule/Lint/RedundantWithIndex.html">Ameba::Rule::Lint::RedundantWithIndex</a></li><li class="superclass"><a href="../../../Ameba/Rule/Base.html">Ameba::Rule::Base</a></li><li class="superclass">Reference</li><li class="superclass">Object</li></ul>
+  <ul class="superclass-hierarchy"><li class="superclass"><a href="../../../Ameba/Rule/Style/QueryBoolMethods.html">Ameba::Rule::Style::QueryBoolMethods</a></li><li class="superclass"><a href="../../../Ameba/Rule/Base.html">Ameba::Rule::Base</a></li><li class="superclass">Reference</li><li class="superclass">Object</li></ul>
 
 
 
@@ -764,21 +764,20 @@
     Overview
   </h2>
 
-  <p>A rule that disallows redundant <code>with_index</code> calls.</p>
-<p>For example, this is considered invalid:</p>
-<pre><code class="language-crystal">collection.each.with_index <span class="k">do</span> <span class="o">|</span>e<span class="o">|</span>
-  <span class="c"># ...</span>
-<span class="k">end</span>
-
-collection.each_with_index <span class="k">do</span> <span class="o">|</span>e, _<span class="o">|</span>
-  <span class="c"># ...</span>
+  <p>A rule that disallows boolean properties without the <code>?</code> suffix - defined
+using <code>Object#(class_)property</code> or <code>Object#(class_)getter</code> macros.</p>
+<p>Favour this:</p>
+<pre><code class="language-crystal"><span class="k">class</span> <span class="t">Person</span>
+  property? deceased <span class="o">=</span> <span class="n">false</span>
+  getter? witty <span class="o">=</span> <span class="n">true</span>
 <span class="k">end</span></code></pre>
-<p>and it should be written as follows:</p>
-<pre><code class="language-crystal">collection.each <span class="k">do</span> <span class="o">|</span>e<span class="o">|</span>
-  <span class="c"># ...</span>
+<p>Over this:</p>
+<pre><code class="language-crystal"><span class="k">class</span> <span class="t">Person</span>
+  property deceased <span class="o">=</span> <span class="n">false</span>
+  getter witty <span class="o">=</span> <span class="n">true</span>
 <span class="k">end</span></code></pre>
 <p>YAML configuration example:</p>
-<pre><code class="language-crystal"><span class="t">Lint</span><span class="o">/</span><span class="t">RedundantWithIndex</span>:
+<pre><code class="language-crystal"><span class="t">Style</span><span class="o">/</span><span class="t">QueryBoolMethods</span>:
   <span class="t">Enabled</span>: <span class="n">true</span></code></pre>
 
 
@@ -794,6 +793,8 @@ collection.each_with_index <span class="k">do</span> <span class="o">|</span>e, 
     Included Modules
   </h2>
   <ul class="other-types-list">
+    
+      <li class="other-type"><a href="../../../Ameba/AST/Util.html">Ameba::AST::Util</a></li>
     
       <li class="other-type">YAML::Serializable</li>
     
@@ -820,14 +821,38 @@ collection.each_with_index <span class="k">do</span> <span class="o">|</span>e, 
   </h2>
   
     
-      <a href="https://github.com/crystal-ameba/ameba/blob/150ba6c7/src/ameba/rule/lint/redundant_with_index.cr#L30" target="_blank">
-        ameba/rule/lint/redundant_with_index.cr
+      <a href="https://github.com/crystal-ameba/ameba/blob/150ba6c7/src/ameba/rule/style/query_bool_methods.cr#L29" target="_blank">
+        ameba/rule/style/query_bool_methods.cr
       </a>
     
     <br/>
   
 
 
+
+  
+    <h2>
+      <a id="constant-summary" class="anchor" href="#constant-summary">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>
+      Constant Summary
+    </h2>
+  
+  <dl>
+    
+      <dt class="entry-const" id="CALL_NAMES">
+        <strong>CALL_NAMES</strong> = <code>[<span class="s">&quot;getter&quot;</span>, <span class="s">&quot;class_getter&quot;</span>, <span class="s">&quot;property&quot;</span>, <span class="s">&quot;class_property&quot;</span>] <span class="k">of</span> <span class="t">::</span><span class="t">String</span></code>
+      </dt>
+      
+    
+      <dt class="entry-const" id="MSG">
+        <strong>MSG</strong> = <code><span class="s">&quot;Consider using &#39;%s?&#39; for &#39;%s&#39;&quot;</span></code>
+      </dt>
+      
+    
+  </dl>
 
 
 
@@ -849,7 +874,7 @@ collection.each_with_index <span class="k">do</span> <span class="o">|</span>e, 
       <li class="entry-summary">
         <a href="#new%28config%3Dnil%29-class-method" class="signature"><strong>.new</strong>(config = <span class="n">nil</span>)</a>
         
-          <div class="summary"><p>A rule that disallows redundant <code>with_index</code> calls.</p></div>
+          <div class="summary"><p>A rule that disallows boolean properties without the <code>?</code> suffix - defined using <code>Object#(class_)property</code> or <code>Object#(class_)getter</code> macros.</p></div>
         
       </li>
     
@@ -929,7 +954,7 @@ collection.each_with_index <span class="k">do</span> <span class="o">|</span>e, 
       </li>
     
       <li class="entry-summary">
-        <a href="#test%28source%2Cnode%3ACrystal%3A%3ACall%29-instance-method" class="signature"><strong>#test</strong>(source, node : Crystal::Call)</a>
+        <a href="#test%28source%2Cnode%3ACrystal%3A%3AClassDef%7CCrystal%3A%3AModuleDef%29-instance-method" class="signature"><strong>#test</strong>(source, node : Crystal::ClassDef | Crystal::ModuleDef)</a>
         
       </li>
     
@@ -940,6 +965,100 @@ collection.each_with_index <span class="k">do</span> <span class="o">|</span>e, 
 
 
 <div class="methods-inherited">
+  
+    
+
+  <h3>Instance methods inherited from module <code><a href="../../../Ameba/AST/Util.html">Ameba::AST::Util</a></code></h3>
+  
+  
+    <a href="../../../Ameba/AST/Util.html#abort%3F%28node%29-instance-method" class="tooltip">
+      <span>abort?(node)</span>
+    abort?</a>, 
+    
+  
+    <a href="../../../Ameba/AST/Util.html#control_exp_code%28node%3ACrystal%3A%3AControlExpression%2Ccode_lines%29-instance-method" class="tooltip">
+      <span>control_exp_code(node : Crystal::ControlExpression, code_lines)</span>
+    control_exp_code</a>, 
+    
+  
+    <a href="../../../Ameba/AST/Util.html#dynamic_literal%3F%28node%2Cinclude_paths%3Dfalse%29%3ABool-instance-method" class="tooltip">
+      <span>dynamic_literal?(node, include_paths = <span class="n">false</span>) : Bool</span>
+    dynamic_literal?</a>, 
+    
+  
+    <a href="../../../Ameba/AST/Util.html#exit%3F%28node%29-instance-method" class="tooltip">
+      <span>exit?(node)</span>
+    exit?</a>, 
+    
+  
+    <a href="../../../Ameba/AST/Util.html#flow_command%3F%28node%2Cin_loop%29-instance-method" class="tooltip">
+      <span>flow_command?(node, in_loop)</span>
+    flow_command?</a>, 
+    
+  
+    <a href="../../../Ameba/AST/Util.html#flow_expression%3F%28node%2Cin_loop%3Dfalse%29-instance-method" class="tooltip">
+      <span>flow_expression?(node, in_loop = <span class="n">false</span>)</span>
+    flow_expression?</a>, 
+    
+  
+    <a href="../../../Ameba/AST/Util.html#literal%3F%28node%2Cinclude_paths%3Dfalse%29%3ABool-instance-method" class="tooltip">
+      <span>literal?(node, include_paths = <span class="n">false</span>) : Bool</span>
+    literal?</a>, 
+    
+  
+    <a href="../../../Ameba/AST/Util.html#loop%3F%28node%29-instance-method" class="tooltip">
+      <span>loop?(node)</span>
+    loop?</a>, 
+    
+  
+    <a href="../../../Ameba/AST/Util.html#name_end_location%28node%29-instance-method" class="tooltip">
+      <span>name_end_location(node)</span>
+    name_end_location</a>, 
+    
+  
+    <a href="../../../Ameba/AST/Util.html#name_location%28node%29-instance-method" class="tooltip">
+      <span>name_location(node)</span>
+    name_location</a>, 
+    
+  
+    <a href="../../../Ameba/AST/Util.html#name_size%28node%29-instance-method" class="tooltip">
+      <span>name_size(node)</span>
+    name_size</a>, 
+    
+  
+    <a href="../../../Ameba/AST/Util.html#node_source%28node%2Ccode_lines%29-instance-method" class="tooltip">
+      <span>node_source(node, code_lines)</span>
+    node_source</a>, 
+    
+  
+    <a href="../../../Ameba/AST/Util.html#path_named%3F%28node%2Cname%29%3ABool-instance-method" class="tooltip">
+      <span>path_named?(node, name) : Bool</span>
+    path_named?</a>, 
+    
+  
+    <a href="../../../Ameba/AST/Util.html#raise%3F%28node%29-instance-method" class="tooltip">
+      <span>raise?(node)</span>
+    raise?</a>, 
+    
+  
+    <a href="../../../Ameba/AST/Util.html#source_between%28loc%2Cend_loc%2Ccode_lines%29%3AString%3F-instance-method" class="tooltip">
+      <span>source_between(loc, end_loc, code_lines) : String?</span>
+    source_between</a>, 
+    
+  
+    <a href="../../../Ameba/AST/Util.html#static_literal%3F%28node%2Cinclude_paths%3Dfalse%29%3ABool-instance-method" class="tooltip">
+      <span>static_literal?(node, include_paths = <span class="n">false</span>) : Bool</span>
+    static_literal?</a>
+    
+  
+
+
+    
+
+
+    
+
+
   
     
 
@@ -1090,28 +1209,27 @@ collection.each_with_index <span class="k">do</span> <span class="o">|</span>e, 
       
         <div class="doc">
           
-          <p>A rule that disallows redundant <code>with_index</code> calls.</p>
-<p>For example, this is considered invalid:</p>
-<pre><code class="language-crystal">collection.each.with_index <span class="k">do</span> <span class="o">|</span>e<span class="o">|</span>
-  <span class="c"># ...</span>
-<span class="k">end</span>
-
-collection.each_with_index <span class="k">do</span> <span class="o">|</span>e, _<span class="o">|</span>
-  <span class="c"># ...</span>
+          <p>A rule that disallows boolean properties without the <code>?</code> suffix - defined
+using <code>Object#(class_)property</code> or <code>Object#(class_)getter</code> macros.</p>
+<p>Favour this:</p>
+<pre><code class="language-crystal"><span class="k">class</span> <span class="t">Person</span>
+  property? deceased <span class="o">=</span> <span class="n">false</span>
+  getter? witty <span class="o">=</span> <span class="n">true</span>
 <span class="k">end</span></code></pre>
-<p>and it should be written as follows:</p>
-<pre><code class="language-crystal">collection.each <span class="k">do</span> <span class="o">|</span>e<span class="o">|</span>
-  <span class="c"># ...</span>
+<p>Over this:</p>
+<pre><code class="language-crystal"><span class="k">class</span> <span class="t">Person</span>
+  property deceased <span class="o">=</span> <span class="n">false</span>
+  getter witty <span class="o">=</span> <span class="n">true</span>
 <span class="k">end</span></code></pre>
 <p>YAML configuration example:</p>
-<pre><code class="language-crystal"><span class="t">Lint</span><span class="o">/</span><span class="t">RedundantWithIndex</span>:
+<pre><code class="language-crystal"><span class="t">Style</span><span class="o">/</span><span class="t">QueryBoolMethods</span>:
   <span class="t">Enabled</span>: <span class="n">true</span></code></pre>
         </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/150ba6c7/src/ameba/rule/lint/redundant_with_index.cr#L30" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/150ba6c7/src/ameba/rule/style/query_bool_methods.cr#L29" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1281,18 +1399,18 @@ collection.each_with_index <span class="k">do</span> <span class="o">|</span>e, 
       </div>
     </div>
   
-    <div class="entry-detail" id="test(source,node:Crystal::Call)-instance-method">
+    <div class="entry-detail" id="test(source,node:Crystal::ClassDef|Crystal::ModuleDef)-instance-method">
       <div class="signature">
         
-        def <strong>test</strong>(source, node : Crystal::Call)
+        def <strong>test</strong>(source, node : Crystal::ClassDef | Crystal::ModuleDef)
 
-        <a class="method-permalink" href="#test%28source%2Cnode%3ACrystal%3A%3ACall%29-instance-method">#</a>
+        <a class="method-permalink" href="#test%28source%2Cnode%3ACrystal%3A%3AClassDef%7CCrystal%3A%3AModuleDef%29-instance-method">#</a>
       </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/150ba6c7/src/ameba/rule/lint/redundant_with_index.cr#L35" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/150ba6c7/src/ameba/rule/style/query_bool_methods.cr#L40" target="_blank">View source</a>]
         
       </div>
     </div>
