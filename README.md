@@ -19,21 +19,21 @@
 
 - [About](#about)
 - [Usage](#usage)
-  * [Watch a tutorial](#watch-a-tutorial)
-  * [Autocorrection](#autocorrection)
-  * [Explain issues](#explain-issues)
-  * [Run in parallel](#run-in-parallel)
+  - [Watch a tutorial](#watch-a-tutorial)
+  - [Autocorrection](#autocorrection)
+  - [Explain issues](#explain-issues)
+  - [Run in parallel](#run-in-parallel)
 - [Installation](#installation)
-  * [As a project dependency:](#as-a-project-dependency)
-  * [OS X](#os-x)
-  * [Docker](#docker)
-  * [From sources](#from-sources)
+  - [As a project dependency:](#as-a-project-dependency)
+  - [OS X](#os-x)
+  - [Docker](#docker)
+  - [From sources](#from-sources)
 - [Configuration](#configuration)
-  * [Sources](#sources)
-  * [Rules](#rules)
-  * [Inline disabling](#inline-disabling)
-- [Editors & integrations](#editors--integrations)
-- [Credits & inspirations](#credits--inspirations)
+  - [Sources](#sources)
+  - [Rules](#rules)
+  - [Inline disabling](#inline-disabling)
+- [Editors \& integrations](#editors--integrations)
+- [Credits \& inspirations](#credits--inspirations)
 - [Contributors](#contributors)
 
 ## About
@@ -201,8 +201,8 @@ In this example we define default globs and exclude `src/compiler` folder:
 
 ``` yaml
 Globs:
-  - **/*.cr
-  - !lib
+  - "**/*.cr"
+  - "!lib"
 
 Excluded:
   - src/compiler
@@ -245,18 +245,17 @@ One or more rules or one or more group of rules can be disabled using inline dir
 time = Time.epoch(1483859302)
 
 time = Time.epoch(1483859302) # ameba:disable Style/LargeNumbers, Lint/UselessAssign
-
 time = Time.epoch(1483859302) # ameba:disable Style, Lint
 ```
 
 ## Editors & integrations
 
- * Vim: [vim-crystal](https://github.com/rhysd/vim-crystal), [Ale](https://github.com/w0rp/ale)
- * Emacs: [ameba.el](https://github.com/crystal-ameba/ameba.el)
- * Sublime Text: [Sublime Linter Ameba](https://github.com/epergo/SublimeLinter-contrib-ameba)
- * VSCode: [vscode-crystal-ameba](https://github.com/crystal-ameba/vscode-crystal-ameba)
- * Codacy: [codacy-ameba](https://github.com/codacy/codacy-ameba)
- * GitHub Actions: [github-action](https://github.com/crystal-ameba/github-action)
+- Vim: [vim-crystal](https://github.com/rhysd/vim-crystal), [Ale](https://github.com/w0rp/ale)
+- Emacs: [ameba.el](https://github.com/crystal-ameba/ameba.el)
+- Sublime Text: [Sublime Linter Ameba](https://github.com/epergo/SublimeLinter-contrib-ameba)
+- VSCode: [vscode-crystal-ameba](https://github.com/crystal-ameba/vscode-crystal-ameba)
+- Codacy: [codacy-ameba](https://github.com/codacy/codacy-ameba)
+- GitHub Actions: [github-action](https://github.com/crystal-ameba/github-action)
 
 ## Credits & inspirations
 
