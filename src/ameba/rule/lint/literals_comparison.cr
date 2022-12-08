@@ -29,28 +29,12 @@ module Ameba::Rule::Lint
     MSG        = "Comparison always evaluates to %s"
     MSG_LIKELY = "Comparison most likely evaluates to %s"
 
-    # Edge-case: `{{ T == Nil }}`
-    #
-    # Current implementation just skips all macro contexts,
-    # regardless of the free variable being present.
-    #
-    # Ideally we should only check whether either of the sides
-    # is a free var
-    def test(source)
-      AST::NodeVisitor.new self, source, skip: [
-        Crystal::Macro,
-        Crystal::MacroExpression,
-        Crystal::MacroIf,
-        Crystal::MacroFor,
-      ]
-    end
-
     def test(source, node : Crystal::Call)
       return unless node.name.in?(OP_NAMES)
       return unless (obj = node.obj) && (arg = node.args.first?)
 
-      obj_is_literal, obj_is_static = literal_kind?(obj, include_paths: true)
-      arg_is_literal, arg_is_static = literal_kind?(arg, include_paths: true)
+      obj_is_literal, obj_is_static = literal_kind?(obj)
+      arg_is_literal, arg_is_static = literal_kind?(arg)
 
       return unless obj_is_literal && arg_is_literal
 
