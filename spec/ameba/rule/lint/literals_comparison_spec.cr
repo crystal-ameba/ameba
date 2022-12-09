@@ -48,6 +48,15 @@ module Ameba::Rule::Lint
            # ^^^^^^^^^^^^^^ error: Comparison always evaluates to true
           CRYSTAL
       end
+
+      it "passes for valid cases" do
+        expect_no_issues subject, <<-CRYSTAL
+          {{ "foo" == foo }}
+          {{ "foo" != foo }}
+          {% foo == "foo" %}
+          {% foo != "foo" %}
+          CRYSTAL
+      end
     end
 
     it "reports rule, pos and message" do
