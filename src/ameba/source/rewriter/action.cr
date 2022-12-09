@@ -70,7 +70,7 @@ class Ameba::Source::Rewriter
     end
 
     protected def place_in_hierarchy(action)
-      family = analyse_hierarchy(action)
+      family = analyze_hierarchy(action)
       sibling_left, sibling_right = family[:sibling_left], family[:sibling_right]
 
       if fusible = family[:fusible]
@@ -126,7 +126,7 @@ class Ameba::Source::Rewriter
     # In case a child has equal range to *action*, it is returned as `:parent`
     #
     # Reminder: an empty range 1...1 is considered disjoint from 1...10
-    protected def analyse_hierarchy(action) # ameba:disable Metrics/CyclomaticComplexity
+    protected def analyze_hierarchy(action) # ameba:disable Metrics/CyclomaticComplexity
       # left_index is the index of the first child that isn't completely to the left of action
       left_index = bsearch_child_index { |child| child.end_pos > action.begin_pos }
       # right_index is the index of the first child that is completely on the right of action
@@ -147,6 +147,7 @@ class Ameba::Source::Rewriter
       else
         overlap_left = @children[left_index].begin_pos <=> action.begin_pos
         overlap_right = @children[right_index - 1].end_pos <=> action.end_pos
+
         raise "Unable to compare begin pos" if overlap_left.nil?
         raise "Unable to compare end pos" if overlap_right.nil?
 
