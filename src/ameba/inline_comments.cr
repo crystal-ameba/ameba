@@ -10,8 +10,8 @@ module Ameba
       Enable
     end
 
-    # Returns true if current location is disabled for a particular rule,
-    # false otherwise.
+    # Returns `true` if current location is disabled for a particular rule,
+    # `false` otherwise.
     #
     # Location is disabled in two cases:
     #   1. The line of the location ends with a comment directive.
@@ -74,7 +74,7 @@ module Ameba
       }
     end
 
-    # Returns true if the line at the given `line_number` is a comment.
+    # Returns `true` if the line at the given `line_number` is a comment.
     def comment?(line_number : Int32)
       return unless line = lines[line_number]?
       comment?(line)

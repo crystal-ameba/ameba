@@ -153,7 +153,7 @@ module Ameba::AST
       outer_scope.nil?
     end
 
-    # Returns true if var is an argument in current scope, `false` otherwise.
+    # Returns `true` if var is an argument in current scope, `false` otherwise.
     def arg?(var)
       case current_node = node
       when Crystal::Def

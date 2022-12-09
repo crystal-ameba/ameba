@@ -41,7 +41,7 @@ module Ameba::AST
       @variable.referenced? && !!@branch.try(&.in_loop?)
     end
 
-    # Returns true if this assignment is an op assign, false if not.
+    # Returns `true` if this assignment is an op assign, `false` if not.
     # For example, this is an op assign:
     #
     # ```
@@ -51,7 +51,7 @@ module Ameba::AST
       node.is_a?(Crystal::OpAssign)
     end
 
-    # Returns true if this assignment is in a branch, false if not.
+    # Returns `true` if this assignment is in a branch, `false` if not.
     # For example, this assignment is in a branch:
     #
     # ```

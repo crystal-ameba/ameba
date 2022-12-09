@@ -65,7 +65,7 @@ class Ameba::Source
       @action_root = Rewriter::Action.new(0, code.size)
     end
 
-    # Returns true if no (non trivial) update has been recorded
+    # Returns `true` if no (non trivial) update has been recorded
     def empty?
       @action_root.empty?
     end

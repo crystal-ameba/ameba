@@ -94,7 +94,7 @@ module Ameba::Rule
       end
     end
 
-    # Returns true if this rule is special and behaves differently than
+    # Returns `true` if this rule is special and behaves differently than
     # usual rules.
     #
     # ```
