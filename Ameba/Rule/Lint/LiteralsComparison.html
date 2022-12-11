@@ -814,7 +814,7 @@ types like containers, range or regex.</p>
   </h2>
   
     
-      <a href="https://github.com/crystal-ameba/ameba/blob/150ba6c7/src/ameba/rule/lint/literals_comparison.cr#L20" target="_blank">
+      <a href="https://github.com/crystal-ameba/ameba/blob/4533e52a/src/ameba/rule/lint/literals_comparison.cr#L19" target="_blank">
         ameba/rule/lint/literals_comparison.cr
       </a>
     
@@ -956,13 +956,6 @@ types like containers, range or regex.</p>
         
       </li>
     
-      <li class="entry-summary">
-        <a href="#test%28source%29-instance-method" class="signature"><strong>#test</strong>(source)</a>
-        
-          <div class="summary"><p>Edge-case: <code>{{ T == Nil }}</code></p></div>
-        
-      </li>
-    
   </ul>
 
 
@@ -986,8 +979,8 @@ types like containers, range or regex.</p>
     control_exp_code</a>, 
     
   
-    <a href="../../../Ameba/AST/Util.html#dynamic_literal%3F%28node%2Cinclude_paths%3Dfalse%29%3ABool-instance-method" class="tooltip">
-      <span>dynamic_literal?(node, include_paths = <span class="n">false</span>) : Bool</span>
+    <a href="../../../Ameba/AST/Util.html#dynamic_literal%3F%28node%29%3ABool-instance-method" class="tooltip">
+      <span>dynamic_literal?(node) : Bool</span>
     dynamic_literal?</a>, 
     
   
@@ -1006,8 +999,8 @@ types like containers, range or regex.</p>
     flow_expression?</a>, 
     
   
-    <a href="../../../Ameba/AST/Util.html#literal%3F%28node%2Cinclude_paths%3Dfalse%29%3ABool-instance-method" class="tooltip">
-      <span>literal?(node, include_paths = <span class="n">false</span>) : Bool</span>
+    <a href="../../../Ameba/AST/Util.html#literal%3F%28node%29%3ABool-instance-method" class="tooltip">
+      <span>literal?(node) : Bool</span>
     literal?</a>, 
     
   
@@ -1051,8 +1044,8 @@ types like containers, range or regex.</p>
     source_between</a>, 
     
   
-    <a href="../../../Ameba/AST/Util.html#static_literal%3F%28node%2Cinclude_paths%3Dfalse%29%3ABool-instance-method" class="tooltip">
-      <span>static_literal?(node, include_paths = <span class="n">false</span>) : Bool</span>
+    <a href="../../../Ameba/AST/Util.html#static_literal%3F%28node%29%3ABool-instance-method" class="tooltip">
+      <span>static_literal?(node) : Bool</span>
     static_literal?</a>
     
   
@@ -1227,7 +1220,7 @@ types like containers, range or regex.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/150ba6c7/src/ameba/rule/lint/literals_comparison.cr#L20" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/4533e52a/src/ameba/rule/lint/literals_comparison.cr#L19" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1408,32 +1401,7 @@ types like containers, range or regex.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/150ba6c7/src/ameba/rule/lint/literals_comparison.cr#L48" target="_blank">View source</a>]
-        
-      </div>
-    </div>
-  
-    <div class="entry-detail" id="test(source)-instance-method">
-      <div class="signature">
-        
-        def <strong>test</strong>(source)
-
-        <a class="method-permalink" href="#test%28source%29-instance-method">#</a>
-      </div>
-      
-        <div class="doc">
-          
-          <p>Edge-case: <code>{{ T == Nil }}</code></p>
-<p>Current implementation just skips all macro contexts,
-regardless of the free variable being present.</p>
-<p>Ideally we should only check whether either of the sides
-is a free var</p>
-        </div>
-      
-      <br/>
-      <div>
-        
-          [<a href="https://github.com/crystal-ameba/ameba/blob/150ba6c7/src/ameba/rule/lint/literals_comparison.cr#L39" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/4533e52a/src/ameba/rule/lint/literals_comparison.cr#L31" target="_blank">View source</a>]
         
       </div>
     </div>

@@ -810,7 +810,7 @@ are branchables.</p>
   </h2>
   
     
-      <a href="https://github.com/crystal-ameba/ameba/blob/150ba6c7/src/ameba/ast/branchable.cr#L15" target="_blank">
+      <a href="https://github.com/crystal-ameba/ameba/blob/4533e52a/src/ameba/ast/branchable.cr#L15" target="_blank">
         ameba/ast/branchable.cr
       </a>
     
@@ -882,7 +882,7 @@ are branchables.</p>
       <li class="entry-summary">
         <a href="#loop%3F-instance-method" class="signature"><strong>#loop?</strong></a>
         
-          <div class="summary"><p>Returns true if this node or one of the parent branchables is a loop, false otherwise.</p></div>
+          <div class="summary"><p>Returns <code>true</code> if this node or one of the parent branchables is a loop, <code>false</code> otherwise.</p></div>
         
       </li>
     
@@ -933,8 +933,8 @@ are branchables.</p>
     control_exp_code</a>, 
     
   
-    <a href="../../Ameba/AST/Util.html#dynamic_literal%3F%28node%2Cinclude_paths%3Dfalse%29%3ABool-instance-method" class="tooltip">
-      <span>dynamic_literal?(node, include_paths = <span class="n">false</span>) : Bool</span>
+    <a href="../../Ameba/AST/Util.html#dynamic_literal%3F%28node%29%3ABool-instance-method" class="tooltip">
+      <span>dynamic_literal?(node) : Bool</span>
     dynamic_literal?</a>, 
     
   
@@ -953,8 +953,8 @@ are branchables.</p>
     flow_expression?</a>, 
     
   
-    <a href="../../Ameba/AST/Util.html#literal%3F%28node%2Cinclude_paths%3Dfalse%29%3ABool-instance-method" class="tooltip">
-      <span>literal?(node, include_paths = <span class="n">false</span>) : Bool</span>
+    <a href="../../Ameba/AST/Util.html#literal%3F%28node%29%3ABool-instance-method" class="tooltip">
+      <span>literal?(node) : Bool</span>
     literal?</a>, 
     
   
@@ -998,8 +998,8 @@ are branchables.</p>
     source_between</a>, 
     
   
-    <a href="../../Ameba/AST/Util.html#static_literal%3F%28node%2Cinclude_paths%3Dfalse%29%3ABool-instance-method" class="tooltip">
-      <span>static_literal?(node, include_paths = <span class="n">false</span>) : Bool</span>
+    <a href="../../Ameba/AST/Util.html#static_literal%3F%28node%29%3ABool-instance-method" class="tooltip">
+      <span>static_literal?(node) : Bool</span>
     static_literal?</a>
     
   
@@ -1061,7 +1061,7 @@ are branchables.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/150ba6c7/src/ameba/ast/branchable.cr#L35" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/4533e52a/src/ameba/ast/branchable.cr#L35" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1091,7 +1091,7 @@ are branchables.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/150ba6c7/src/ameba/ast/branchable.cr#L18" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/4533e52a/src/ameba/ast/branchable.cr#L18" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1107,7 +1107,7 @@ are branchables.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/150ba6c7/src/ameba/ast/branchable.cr#L28" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/4533e52a/src/ameba/ast/branchable.cr#L28" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1123,7 +1123,7 @@ are branchables.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/150ba6c7/src/ameba/ast/branchable.cr#L28" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/4533e52a/src/ameba/ast/branchable.cr#L28" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1139,7 +1139,7 @@ are branchables.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/150ba6c7/src/ameba/ast/branchable.cr#L27" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/4533e52a/src/ameba/ast/branchable.cr#L27" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1155,7 +1155,7 @@ are branchables.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/150ba6c7/src/ameba/ast/branchable.cr#L27" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/4533e52a/src/ameba/ast/branchable.cr#L27" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1170,13 +1170,14 @@ are branchables.</p>
       
         <div class="doc">
           
-          <p>Returns true if this node or one of the parent branchables is a loop, false otherwise.</p>
+          <p>Returns <code>true</code> if this node or one of the parent branchables is a loop,
+<code>false</code> otherwise.</p>
         </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/150ba6c7/src/ameba/ast/branchable.cr#L39" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/4533e52a/src/ameba/ast/branchable.cr#L40" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1197,7 +1198,7 @@ are branchables.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/150ba6c7/src/ameba/ast/branchable.cr#L21" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/4533e52a/src/ameba/ast/branchable.cr#L21" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1218,7 +1219,7 @@ are branchables.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/150ba6c7/src/ameba/ast/branchable.cr#L24" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/4533e52a/src/ameba/ast/branchable.cr#L24" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1234,7 +1235,7 @@ are branchables.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/150ba6c7/src/ameba/ast/branchable.cr#L26" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/4533e52a/src/ameba/ast/branchable.cr#L26" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1250,7 +1251,7 @@ are branchables.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/150ba6c7/src/ameba/ast/branchable.cr#L26" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/4533e52a/src/ameba/ast/branchable.cr#L26" target="_blank">View source</a>]
         
       </div>
     </div>

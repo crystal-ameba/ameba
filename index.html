@@ -922,8 +922,8 @@ source list defined by <code>Globs</code>. Defaults to an empty array.</li>
 </ul>
 <p>In this example we define default globs and exclude <code>src/compiler</code> folder:</p>
 <pre><code class="language-yaml">Globs:
-  - **/*.cr
-  - !lib
+  - &quot;**/*.cr&quot;
+  - &quot;!lib&quot;
 
 Excluded:
   - src/compiler</code></pre>
@@ -956,7 +956,6 @@ $ ameba --except Style,Lint  # runs all rules except rules in Style and Lint gro
 time <span class="o">=</span> <span class="t">Time</span>.epoch(<span class="n">1483859302</span>)
 
 time <span class="o">=</span> <span class="t">Time</span>.epoch(<span class="n">1483859302</span>) <span class="c"># ameba:disable Style/LargeNumbers, Lint/UselessAssign</span>
-
 time <span class="o">=</span> <span class="t">Time</span>.epoch(<span class="n">1483859302</span>) <span class="c"># ameba:disable Style, Lint</span></code></pre>
 <h2><a id="editors-integrations" class="anchor" href="#editors-integrations">
   <svg class="octicon-link" aria-hidden="true">
