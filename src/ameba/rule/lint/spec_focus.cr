@@ -63,8 +63,9 @@ module Ameba::Rule::Lint
       return unless node.block
 
       arg = node.named_args.try &.find(&.name.== "focus")
+      return unless arg
 
-      issue_for arg, MSG if arg
+      issue_for arg, MSG
     end
   end
 end

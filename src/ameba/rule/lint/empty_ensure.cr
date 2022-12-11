@@ -17,7 +17,6 @@ module Ameba::Rule::Lint
   #
   # And it should be written as this:
   #
-  #
   # ```
   # def some_method
   #   do_some_stuff

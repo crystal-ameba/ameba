@@ -46,7 +46,7 @@ module Ameba
     # Checks for unneeded disable directives. Always inspects a source last
     @unneeded_disable_directive_rule : Rule::Base?
 
-    # Returns true if correctable issues should be autocorrected.
+    # Returns `true` if correctable issues should be autocorrected.
     private getter? autocorrect : Bool
 
     # Instantiates a runner using a `config`.
@@ -162,7 +162,7 @@ module Ameba
     end
 
     # Indicates whether the last inspection successful or not.
-    # It returns true if no issues matching severity in sources found, false otherwise.
+    # It returns `true` if no issues matching severity in sources found, `false` otherwise.
     #
     # ```
     # runner = Ameba::Runner.new config

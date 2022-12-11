@@ -59,20 +59,20 @@ module Ameba::Rule::Style
     private def allowed?(_sign, value, fraction, _suffix)
       return true if fraction && fraction.size > 3
 
-      digits = value.chars.select(&.number?)
+      digits = value.chars.select!(&.number?)
       digits.size >= int_min_digits
     end
 
     private def underscored(sign, value, fraction, suffix)
       value = slice_digits(value.reverse).reverse
-      fraction = "." + slice_digits(fraction) if fraction
+      fraction = ".#{slice_digits(fraction)}" if fraction
 
       "#{sign}#{value}#{fraction}#{suffix}"
     end
 
     private def slice_digits(value, by = 3)
       %w[].tap do |slices|
-        value.chars.reject(&.== '_').each_slice(by) do |slice|
+        value.chars.reject!(&.== '_').each_slice(by) do |slice|
           slices << slice.join
         end
       end.join('_')

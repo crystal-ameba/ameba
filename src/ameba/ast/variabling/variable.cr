@@ -174,7 +174,7 @@ module Ameba::AST
         node.accept self
       end
 
-      # @[AlwaysInline]
+      @[AlwaysInline]
       private def includes_reference?(val)
         val.to_s.includes?(@reference)
       end

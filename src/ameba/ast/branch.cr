@@ -32,7 +32,7 @@ module Ameba::AST
     def initialize(@node, @parent)
     end
 
-    # Returns true if current branch is in a loop, false - otherwise.
+    # Returns `true` if current branch is in a loop, `false` - otherwise.
     # For example, this branch is in a loop:
     #
     # ```

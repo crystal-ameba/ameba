@@ -2,7 +2,7 @@ require "../../../spec_helper"
 
 module Ameba::Rule::Metrics
   subject = CyclomaticComplexity.new
-  complex_method = <<-CODE
+  complex_method = <<-CRYSTAL
     def hello(a, b, c)
       if a && b && c
         begin
@@ -15,7 +15,7 @@ module Ameba::Rule::Metrics
         end
       end
     end
-    CODE
+    CRYSTAL
 
   describe CyclomaticComplexity do
     it "passes for empty methods" do

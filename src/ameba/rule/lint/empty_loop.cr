@@ -47,9 +47,7 @@ module Ameba::Rule::Lint
     MSG = "Empty loop detected"
 
     def test(source, node : Crystal::Call)
-      return unless loop?(node)
-
-      check_node(source, node, node.block)
+      check_node(source, node, node.block) if loop?(node)
     end
 
     def test(source, node : Crystal::While | Crystal::Until)
@@ -58,7 +56,9 @@ module Ameba::Rule::Lint
 
     private def check_node(source, node, loop_body)
       body = loop_body.is_a?(Crystal::Block) ? loop_body.body : loop_body
-      issue_for node, MSG if body.nil? || body.nop?
+      return unless body.nil? || body.nop?
+
+      issue_for node, MSG
     end
   end
 end

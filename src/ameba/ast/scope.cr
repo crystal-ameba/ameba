@@ -134,7 +134,7 @@ module Ameba::AST
         node.is_a?(Crystal::CStructOrUnionDef)
     end
 
-    # Returns true if current scope (or any of inner scopes) references variable,
+    # Returns `true` if current scope (or any of inner scopes) references variable,
     # `false` otherwise.
     def references?(variable : Variable, check_inner_scopes = true)
       variable.references.any? do |reference|
@@ -153,7 +153,7 @@ module Ameba::AST
       outer_scope.nil?
     end
 
-    # Returns true if var is an argument in current scope, `false` otherwise.
+    # Returns `true` if var is an argument in current scope, `false` otherwise.
     def arg?(var)
       case current_node = node
       when Crystal::Def

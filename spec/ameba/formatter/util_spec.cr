@@ -39,7 +39,7 @@ module Ameba::Formatter
 
     describe "#context" do
       it "returns correct pre/post context lines" do
-        source = Source.new <<-EOF
+        source = Source.new <<-CRYSTAL
           # pre:1
             # pre:2
               # pre:3
@@ -51,7 +51,7 @@ module Ameba::Formatter
               # post:3
             # post:4
           # post:5
-          EOF
+          CRYSTAL
 
         subject.context(source.lines, lineno: 6, context_lines: 3)
           .should eq({<<-PRE.lines, <<-POST.lines
@@ -69,24 +69,24 @@ module Ameba::Formatter
 
     describe "#affected_code" do
       it "returns nil if there is no such a line number" do
-        code = <<-EOF
+        code = <<-CRYSTAL
           a = 1
-          EOF
+          CRYSTAL
         location = Crystal::Location.new("filename", 2, 1)
         subject.affected_code(code, location).should be_nil
       end
 
       it "returns correct line if it is found" do
-        code = <<-EOF
+        code = <<-CRYSTAL
           a = 1
-          EOF
+          CRYSTAL
         location = Crystal::Location.new("filename", 1, 1)
         subject.deansify(subject.affected_code(code, location))
           .should eq "> a = 1\n  ^\n"
       end
 
       it "returns correct line if it is found" do
-        code = <<-EOF
+        code = <<-CRYSTAL
           # pre:1
             # pre:2
               # pre:3
@@ -98,7 +98,7 @@ module Ameba::Formatter
               # post:3
             # post:4
           # post:5
-          EOF
+          CRYSTAL
 
         location = Crystal::Location.new("filename", 6, 1)
         subject.deansify(subject.affected_code(code, location, context_lines: 3))

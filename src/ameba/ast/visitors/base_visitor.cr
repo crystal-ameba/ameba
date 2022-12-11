@@ -20,7 +20,7 @@ module Ameba::AST
     end
 
     # A main visit method that accepts `Crystal::ASTNode`.
-    # Returns true meaning all child nodes will be traversed.
+    # Returns `true`, meaning all child nodes will be traversed.
     def visit(node : Crystal::ASTNode)
       true
     end

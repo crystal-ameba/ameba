@@ -7,6 +7,7 @@ module Ameba::Rule::Lint
   # replaced with either the body of the construct, or deleted entirely.
   #
   # This is considered invalid:
+  #
   # ```
   # if "something"
   #   :ok
@@ -29,12 +30,8 @@ module Ameba::Rule::Lint
 
     MSG = "Literal value found in conditional"
 
-    def check_node(source, node)
-      issue_for node, MSG if static_literal?(node.cond)
-    end
-
     def test(source, node : Crystal::If | Crystal::Unless | Crystal::Case)
-      check_node source, node
+      issue_for node, MSG if static_literal?(node.cond)
     end
   end
 end

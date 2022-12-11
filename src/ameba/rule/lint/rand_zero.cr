@@ -32,10 +32,8 @@ module Ameba::Rule::Lint
     def test(source, node : Crystal::Call)
       return unless node.name == "rand" &&
                     node.args.size == 1 &&
-                    (arg = node.args.first) &&
-                    arg.is_a?(Crystal::NumberLiteral) &&
-                    (value = arg.value) &&
-                    value.in?("0", "1")
+                    (arg = node.args.first).is_a?(Crystal::NumberLiteral) &&
+                    arg.value.in?("0", "1")
 
       issue_for node, MSG % node
     end

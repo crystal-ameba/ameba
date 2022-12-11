@@ -7,6 +7,7 @@ module Ameba::Rule::Lint
   #   a + b
   # end
   # ```
+  #
   # and should be written as:
   #
   # ```

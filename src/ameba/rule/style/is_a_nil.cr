@@ -34,7 +34,9 @@ module Ameba::Rule::Style
       const = node.const
       return unless path_named?(const, "Nil")
 
-      issue_for const, MSG
+      issue_for const, MSG do |corrector|
+        corrector.replace(node, "#{node.obj}.nil?")
+      end
     end
   end
 end
