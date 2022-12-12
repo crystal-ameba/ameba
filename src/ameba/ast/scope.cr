@@ -4,6 +4,9 @@ module Ameba::AST
   # Represents a context of the local variable visibility.
   # This is where the local variables belong to.
   class Scope
+    # Whether the scope yields.
+    setter yields = false
+
     # Link to local variables
     getter variables = [] of Variable
 
@@ -141,6 +144,14 @@ module Ameba::AST
         return true if reference.scope == self
         check_inner_scopes && inner_scopes.any?(&.references?(variable))
       end || variable.used_in_macro?
+    end
+
+    # Returns `true` if current scope (or any of inner scopes) yields,
+    # `false` otherwise.
+    def yields?(check_inner_scopes = true)
+      return true if @yields
+      return inner_scopes.any?(&.yields?) if check_inner_scopes
+      false
     end
 
     # Returns `true` if current scope is a def, `false` otherwise.

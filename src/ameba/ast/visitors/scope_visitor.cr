@@ -65,6 +65,11 @@ module Ameba::AST
     {% end %}
 
     # :nodoc:
+    def visit(node : Crystal::Yield)
+      @current_scope.yields = true
+    end
+
+    # :nodoc:
     def visit(node : Crystal::Def)
       node.name == "->" || on_scope_enter(node)
     end
