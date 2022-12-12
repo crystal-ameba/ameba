@@ -31,7 +31,12 @@ module Ameba::AST
     def initialize(@node, @variable)
     end
 
-    # Returns `true` if the name starts with '_', `false` if not.
+    # Returns `true` if the `name` is empty, `false` otherwise.
+    def anonymous?
+      name.blank?
+    end
+
+    # Returns `true` if the `name` starts with '_', `false` otherwise.
     def ignored?
       name.starts_with? '_'
     end
