@@ -58,16 +58,12 @@ module Ameba::Rule::Style
 
     MSG = "Type name should be camelcased: %s, but it was %s"
 
-    private def check_node(source, node)
+    def test(source, node : Crystal::Alias | Crystal::ClassDef | Crystal::ModuleDef | Crystal::LibDef | Crystal::EnumDef)
       name = node.name.to_s
       expected = name.camelcase
       return if name == expected
 
       issue_for node, MSG % {expected, name}
-    end
-
-    def test(source, node : Crystal::Alias | Crystal::ClassDef | Crystal::ModuleDef | Crystal::LibDef | Crystal::EnumDef)
-      check_node(source, node)
     end
   end
 end
