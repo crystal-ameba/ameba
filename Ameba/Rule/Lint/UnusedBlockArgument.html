@@ -13,7 +13,7 @@
 <script type="text/javascript" src="../../../js/doc.js"></script>
 
   <meta name="repository-name" content="ameba">
-  <title>Ameba::Rule::Lint::DebugCalls - ameba master</title>
+  <title>Ameba::Rule::Lint::UnusedBlockArgument - ameba master</title>
   <script type="text/javascript">
     CrystalDocs.base_path = "../../../";
   </script>
@@ -321,7 +321,7 @@
       
     </li>
   
-  <li class=" current" data-id="ameba/Ameba/Rule/Lint/DebugCalls" data-name="ameba::rule::lint::debugcalls">
+  <li class=" " data-id="ameba/Ameba/Rule/Lint/DebugCalls" data-name="ameba::rule::lint::debugcalls">
       <a href="../../../Ameba/Rule/Lint/DebugCalls.html">DebugCalls</a>
       
     </li>
@@ -456,7 +456,7 @@
       
     </li>
   
-  <li class=" " data-id="ameba/Ameba/Rule/Lint/UnusedBlockArgument" data-name="ameba::rule::lint::unusedblockargument">
+  <li class=" current" data-id="ameba/Ameba/Rule/Lint/UnusedBlockArgument" data-name="ameba::rule::lint::unusedblockargument">
       <a href="../../../Ameba/Rule/Lint/UnusedBlockArgument.html">UnusedBlockArgument</a>
       
     </li>
@@ -750,12 +750,12 @@
 <div class="main-content">
 <h1 class="type-name">
 
-  <span class="kind">class</span> Ameba::Rule::Lint::DebugCalls
+  <span class="kind">class</span> Ameba::Rule::Lint::UnusedBlockArgument
 
 </h1>
 
 
-  <ul class="superclass-hierarchy"><li class="superclass"><a href="../../../Ameba/Rule/Lint/DebugCalls.html">Ameba::Rule::Lint::DebugCalls</a></li><li class="superclass"><a href="../../../Ameba/Rule/Base.html">Ameba::Rule::Base</a></li><li class="superclass">Reference</li><li class="superclass">Object</li></ul>
+  <ul class="superclass-hierarchy"><li class="superclass"><a href="../../../Ameba/Rule/Lint/UnusedBlockArgument.html">Ameba::Rule::Lint::UnusedBlockArgument</a></li><li class="superclass"><a href="../../../Ameba/Rule/Base.html">Ameba::Rule::Base</a></li><li class="superclass">Reference</li><li class="superclass">Object</li></ul>
 
 
 
@@ -769,17 +769,26 @@
     Overview
   </h2>
 
-  <p>A rule that disallows calls to debug-related methods.</p>
-<p>This is because we don't want debug calls accidentally being
-committed into our codebase.</p>
+  <p>A rule that reports unused block arguments.
+For example, this is considered invalid:</p>
+<pre><code class="language-crystal"><span class="k">def</span> <span class="m">foo</span>(a, b, <span class="o">&amp;</span>block)
+  a <span class="o">+</span> b
+<span class="k">end</span>
+
+<span class="k">def</span> <span class="m">bar</span>(<span class="o">&amp;</span>block)
+  <span class="k">yield</span> <span class="n">42</span>
+<span class="k">end</span></code></pre>
+<p>and should be written as:</p>
+<pre><code class="language-crystal"><span class="k">def</span> <span class="m">foo</span>(a, b, <span class="o">&amp;</span>_block)
+  a <span class="o">+</span> b
+<span class="k">end</span>
+
+<span class="k">def</span> <span class="m">bar</span>(<span class="o">&amp;</span>)
+  <span class="k">yield</span> <span class="n">42</span>
+<span class="k">end</span></code></pre>
 <p>YAML configuration example:</p>
-<pre><code class="language-crystal"><span class="t">Lint</span><span class="o">/</span><span class="t">DebugCalls</span>:
-  <span class="t">Enabled</span>: <span class="n">true</span>
-  <span class="t">MethodNames</span>:
-    <span class="o">-</span> p
-    <span class="o">-</span> p!
-    <span class="o">-</span> pp
-    <span class="o">-</span> pp!</code></pre>
+<pre><code class="language-crystal"><span class="t">Lint</span><span class="o">/</span><span class="t">UnusedBlockArgument</span>:
+  <span class="t">Enabled</span>: <span class="n">true</span></code></pre>
 
 
 
@@ -820,8 +829,8 @@ committed into our codebase.</p>
   </h2>
   
     
-      <a href="https://github.com/crystal-ameba/ameba/blob/e6ebca7a/src/ameba/rule/lint/debug_calls.cr#L18" target="_blank">
-        ameba/rule/lint/debug_calls.cr
+      <a href="https://github.com/crystal-ameba/ameba/blob/e6ebca7a/src/ameba/rule/lint/unused_block_argument.cr#L33" target="_blank">
+        ameba/rule/lint/unused_block_argument.cr
       </a>
     
     <br/>
@@ -841,8 +850,13 @@ committed into our codebase.</p>
   
   <dl>
     
-      <dt class="entry-const" id="MSG">
-        <strong>MSG</strong> = <code><span class="s">&quot;Possibly forgotten debug-related `%s` call detected&quot;</span></code>
+      <dt class="entry-const" id="MSG_UNUSED">
+        <strong>MSG_UNUSED</strong> = <code><span class="s">&quot;Unused block argument `%1$s`. If it&#39;s necessary, use `_%1$s` as an argument name to indicate that it won&#39;t be used.&quot;</span></code>
+      </dt>
+      
+    
+      <dt class="entry-const" id="MSG_YIELDED">
+        <strong>MSG_YIELDED</strong> = <code><span class="s">&quot;Use `&amp;` as an argument name to indicate that it won&#39;t be referenced.&quot;</span></code>
       </dt>
       
     
@@ -868,7 +882,7 @@ committed into our codebase.</p>
       <li class="entry-summary">
         <a href="#new%28config%3Dnil%29-class-method" class="signature"><strong>.new</strong>(config = <span class="n">nil</span>)</a>
         
-          <div class="summary"><p>A rule that disallows calls to debug-related methods.</p></div>
+          <div class="summary"><p>A rule that reports unused block arguments.</p></div>
         
       </li>
     
@@ -938,16 +952,6 @@ committed into our codebase.</p>
       </li>
     
       <li class="entry-summary">
-        <a href="#method_names%3AArray%28String%29-instance-method" class="signature"><strong>#method_names</strong> : Array(String)</a>
-        
-      </li>
-    
-      <li class="entry-summary">
-        <a href="#method_names%3D%28method_names%3AArray%28String%29%29-instance-method" class="signature"><strong>#method_names=</strong>(method_names : Array(String))</a>
-        
-      </li>
-    
-      <li class="entry-summary">
         <a href="#severity%3AAmeba%3A%3ASeverity-instance-method" class="signature"><strong>#severity</strong> : Ameba::Severity</a>
         
       </li>
@@ -958,7 +962,12 @@ committed into our codebase.</p>
       </li>
     
       <li class="entry-summary">
-        <a href="#test%28source%2Cnode%3ACrystal%3A%3ACall%29-instance-method" class="signature"><strong>#test</strong>(source, node : Crystal::Call)</a>
+        <a href="#test%28source%2Cnode%3ACrystal%3A%3ADef%2Cscope%3AAST%3A%3AScope%29-instance-method" class="signature"><strong>#test</strong>(source, node : Crystal::Def, scope : AST::Scope)</a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#test%28source%29-instance-method" class="signature"><strong>#test</strong>(source)</a>
         
       </li>
     
@@ -1119,23 +1128,32 @@ committed into our codebase.</p>
       
         <div class="doc">
           
-          <p>A rule that disallows calls to debug-related methods.</p>
-<p>This is because we don't want debug calls accidentally being
-committed into our codebase.</p>
+          <p>A rule that reports unused block arguments.
+For example, this is considered invalid:</p>
+<pre><code class="language-crystal"><span class="k">def</span> <span class="m">foo</span>(a, b, <span class="o">&amp;</span>block)
+  a <span class="o">+</span> b
+<span class="k">end</span>
+
+<span class="k">def</span> <span class="m">bar</span>(<span class="o">&amp;</span>block)
+  <span class="k">yield</span> <span class="n">42</span>
+<span class="k">end</span></code></pre>
+<p>and should be written as:</p>
+<pre><code class="language-crystal"><span class="k">def</span> <span class="m">foo</span>(a, b, <span class="o">&amp;</span>_block)
+  a <span class="o">+</span> b
+<span class="k">end</span>
+
+<span class="k">def</span> <span class="m">bar</span>(<span class="o">&amp;</span>)
+  <span class="k">yield</span> <span class="n">42</span>
+<span class="k">end</span></code></pre>
 <p>YAML configuration example:</p>
-<pre><code class="language-crystal"><span class="t">Lint</span><span class="o">/</span><span class="t">DebugCalls</span>:
-  <span class="t">Enabled</span>: <span class="n">true</span>
-  <span class="t">MethodNames</span>:
-    <span class="o">-</span> p
-    <span class="o">-</span> p!
-    <span class="o">-</span> pp
-    <span class="o">-</span> pp!</code></pre>
+<pre><code class="language-crystal"><span class="t">Lint</span><span class="o">/</span><span class="t">UnusedBlockArgument</span>:
+  <span class="t">Enabled</span>: <span class="n">true</span></code></pre>
         </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/e6ebca7a/src/ameba/rule/lint/debug_calls.cr#L18" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/e6ebca7a/src/ameba/rule/lint/unused_block_argument.cr#L33" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1277,34 +1295,6 @@ committed into our codebase.</p>
       </div>
     </div>
   
-    <div class="entry-detail" id="method_names:Array(String)-instance-method">
-      <div class="signature">
-        
-        def <strong>method_names</strong> : Array(String)
-
-        <a class="method-permalink" href="#method_names%3AArray%28String%29-instance-method">#</a>
-      </div>
-      
-      <br/>
-      <div>
-        
-      </div>
-    </div>
-  
-    <div class="entry-detail" id="method_names=(method_names:Array(String))-instance-method">
-      <div class="signature">
-        
-        def <strong>method_names=</strong>(method_names : Array(String))
-
-        <a class="method-permalink" href="#method_names%3D%28method_names%3AArray%28String%29%29-instance-method">#</a>
-      </div>
-      
-      <br/>
-      <div>
-        
-      </div>
-    </div>
-  
     <div class="entry-detail" id="severity:Ameba::Severity-instance-method">
       <div class="signature">
         
@@ -1333,18 +1323,34 @@ committed into our codebase.</p>
       </div>
     </div>
   
-    <div class="entry-detail" id="test(source,node:Crystal::Call)-instance-method">
+    <div class="entry-detail" id="test(source,node:Crystal::Def,scope:AST::Scope)-instance-method">
       <div class="signature">
         
-        def <strong>test</strong>(source, node : Crystal::Call)
+        def <strong>test</strong>(source, node : Crystal::Def, scope : <a href="../../../Ameba/AST/Scope.html">AST::Scope</a>)
 
-        <a class="method-permalink" href="#test%28source%2Cnode%3ACrystal%3A%3ACall%29-instance-method">#</a>
+        <a class="method-permalink" href="#test%28source%2Cnode%3ACrystal%3A%3ADef%2Cscope%3AAST%3A%3AScope%29-instance-method">#</a>
       </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/e6ebca7a/src/ameba/rule/lint/debug_calls.cr#L26" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/e6ebca7a/src/ameba/rule/lint/unused_block_argument.cr#L47" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="test(source)-instance-method">
+      <div class="signature">
+        
+        def <strong>test</strong>(source)
+
+        <a class="method-permalink" href="#test%28source%29-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/crystal-ameba/ameba/blob/e6ebca7a/src/ameba/rule/lint/unused_block_argument.cr#L43" target="_blank">View source</a>]
         
       </div>
     </div>
