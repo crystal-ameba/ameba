@@ -115,21 +115,21 @@ module Ameba::Rule::Lint
       subject.catch(s).should be_valid
     end
 
-    it "reports if block arg is not used" do
+    it "doesn't report if block arg is not used" do
       s = Source.new %(
         def method(&block)
         end
       )
-      subject.catch(s).should_not be_valid
+      subject.catch(s).should be_valid
     end
 
-    it "reports if unused and there is yield" do
+    it "doesn't report if unused and there is yield" do
       s = Source.new %(
         def method(&block)
           yield 1
         end
       )
-      subject.catch(s).should_not be_valid
+      subject.catch(s).should be_valid
     end
 
     it "doesn't report if it's an anonymous block" do

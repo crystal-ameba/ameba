@@ -19,8 +19,8 @@ module Ameba::AST
       MacroFor,
     }
 
-    SUPER_NODE_NAME  = "super"
-    RECORD_NODE_NAME = "record"
+    SPECIAL_NODE_NAMES = %w[super previous_def]
+    RECORD_NODE_NAME   = "record"
 
     @scope_queue = [] of Scope
     @current_scope : Scope
@@ -63,6 +63,11 @@ module Ameba::AST
         on_scope_enter(node)
       end
     {% end %}
+
+    # :nodoc:
+    def visit(node : Crystal::Yield)
+      @current_scope.yields = true
+    end
 
     # :nodoc:
     def visit(node : Crystal::Def)
@@ -134,7 +139,7 @@ module Ameba::AST
     def visit(node : Crystal::Call)
       case
       when @current_scope.def?
-        if node.name == SUPER_NODE_NAME && node.args.empty?
+        if node.name.in?(SPECIAL_NODE_NAMES) && node.args.empty?
           @current_scope.arguments.each do |arg|
             variable = arg.variable
             variable.reference(variable.node, @current_scope).explicit = false

@@ -50,6 +50,10 @@ module Ameba::Rule::Lint
     end
 
     def test(source, node : Crystal::Def, scope : AST::Scope)
+      # `Lint/UnusedBlockArgument` rule covers this case explicitly
+      if block_arg = node.block_arg
+        scope.arguments.reject!(&.node.== block_arg)
+      end
       ignore_defs? || find_unused_arguments source, scope
     end
 

@@ -29,18 +29,16 @@ module Ameba::Rule::Style
 
     MSG = "Var name should be underscore-cased: %s, not %s"
 
-    private def check_node(source, node)
-      return if (expected = node.name.underscore) == node.name
-
-      issue_for node, MSG % {expected, node.name}
-    end
-
     def test(source : Source)
       VarVisitor.new self, source
     end
 
     def test(source, node : Crystal::Var | Crystal::InstanceVar | Crystal::ClassVar)
-      check_node source, node
+      name = node.name.to_s
+      expected = name.underscore
+      return if name == expected
+
+      issue_for node, MSG % {expected, name}
     end
 
     private class VarVisitor < AST::NodeVisitor
