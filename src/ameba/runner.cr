@@ -179,7 +179,7 @@ module Ameba
 
     private MAX_ITERATIONS = 200
 
-    private def loop_unless_infinite(source, corrected_issues)
+    private def loop_unless_infinite(source, corrected_issues, &)
       # Keep track of the state of the source. If a rule modifies the source
       # and another rule undoes it producing identical source we have an
       # infinite loop.

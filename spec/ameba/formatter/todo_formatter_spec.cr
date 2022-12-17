@@ -2,7 +2,7 @@ require "../../spec_helper"
 require "file_utils"
 
 module Ameba
-  private def with_formatter
+  private def with_formatter(&)
     io = IO::Memory.new
     formatter = Formatter::TODOFormatter.new(io)
 
