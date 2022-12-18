@@ -7,7 +7,9 @@ module Ameba::Rule::Lint
     it "passes for valid cases" do
       expect_no_issues subject, <<-CRYSTAL
         (1..3).index(1).not_nil!(:foo)
+        (1..3).rindex(1).not_nil!(:foo)
         (1..3).index { |i| i > 2 }.not_nil!(:foo)
+        (1..3).rindex { |i| i > 2 }.not_nil!(:foo)
         (1..3).find { |i| i > 2 }.not_nil!(:foo)
         CRYSTAL
     end
@@ -23,6 +25,17 @@ module Ameba::Rule::Lint
         CRYSTAL
     end
 
+    it "reports if there is an `rindex` call followed by `not_nil!`" do
+      source = expect_issue subject, <<-CRYSTAL
+        (1..3).rindex(1).not_nil!
+             # ^^^^^^^^^^^^^^^^^^ error: Use `rindex! {...}` instead of `rindex {...}.not_nil!`
+        CRYSTAL
+
+      expect_correction source, <<-CRYSTAL
+        (1..3).rindex!(1)
+        CRYSTAL
+    end
+
     it "reports if there is an `index` call with block followed by `not_nil!`" do
       source = expect_issue subject, <<-CRYSTAL
         (1..3).index { |i| i > 2 }.not_nil!
@@ -31,6 +44,17 @@ module Ameba::Rule::Lint
 
       expect_correction source, <<-CRYSTAL
         (1..3).index! { |i| i > 2 }
+        CRYSTAL
+    end
+
+    it "reports if there is an `rindex` call with block followed by `not_nil!`" do
+      source = expect_issue subject, <<-CRYSTAL
+        (1..3).rindex { |i| i > 2 }.not_nil!
+             # ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ error: Use `rindex! {...}` instead of `rindex {...}.not_nil!`
+        CRYSTAL
+
+      expect_correction source, <<-CRYSTAL
+        (1..3).rindex! { |i| i > 2 }
         CRYSTAL
     end
 
