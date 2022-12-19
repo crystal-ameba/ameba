@@ -50,7 +50,30 @@ module Ameba::Rule::Style
     MSG = "Favour if over unless with else"
 
     def test(source, node : Crystal::Unless)
-      issue_for node, MSG unless node.else.nop?
+      return if node.else.nop?
+      return unless location = node.location
+      return unless cond_end_location = node.cond.end_location
+      return unless else_location = node.else_location
+      return unless end_location = node.end_location
+
+      issue_for node, MSG do |corrector|
+        keyword_begin_pos = source.pos(location)
+        keyword_end_pos = keyword_begin_pos + {{ "unless".size }}
+        keyword_range = keyword_begin_pos...keyword_end_pos
+
+        cond_end_pos = source.pos(cond_end_location, end: true)
+        else_begin_pos = source.pos(else_location)
+        body_range = cond_end_pos...else_begin_pos
+
+        else_end_pos = else_begin_pos + {{ "else".size }}
+        end_end_pos = source.pos(end_location, end: true)
+        end_begin_pos = end_end_pos - {{ "end".size }}
+        else_range = else_end_pos...end_begin_pos
+
+        corrector.replace(keyword_range, "if")
+        corrector.replace(body_range, source.code[else_range])
+        corrector.replace(else_range, source.code[body_range])
+      end
     end
   end
 end

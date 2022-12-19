@@ -46,5 +46,22 @@ module Ameba
         s.matches_path?("new_source.cr").should be_false
       end
     end
+
+    describe "#pos" do
+      it "works" do
+        s = Source.new <<-EOS
+          foo
+          bar
+          fizz
+          buzz
+          EOS
+        loc = Crystal::Location.new("", 2, 1)
+        end_loc = Crystal::Location.new("", 3, 4)
+        s.code[s.pos(loc)...s.pos(end_loc, end: true)].should eq <<-EOS
+          bar
+          fizz
+          EOS
+      end
+    end
   end
 end

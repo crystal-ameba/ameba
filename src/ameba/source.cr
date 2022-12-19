@@ -75,5 +75,13 @@ module Ameba
     def matches_path?(filepath)
       path.in?(filepath, File.expand_path(filepath))
     end
+
+    # Converts an AST location to a string position.
+    def pos(location : Crystal::Location, end end_pos = false) : Int32
+      line, column = location.line_number, location.column_number
+      pos = lines[0...line - 1].sum(&.size) + line + column - 2
+      pos += 1 if end_pos
+      pos
+    end
   end
 end
