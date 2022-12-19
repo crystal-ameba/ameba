@@ -17,7 +17,7 @@ module Ameba
     it "passes if type names are screaming-cased" do
       expect_no_issues subject, <<-CRYSTAL
         LUCKY_NUMBERS     = [3, 7, 11]
-        DOCUMENTATION_URL = "http://crystal-lang.org/docs"
+        DOCUMENTATION_URL = "https://crystal-lang.org/docs"
 
         Int32
 

@@ -27,6 +27,7 @@ module Ameba
     def correct
       corrector = Corrector.new(code)
       issues.each(&.correct(corrector))
+
       corrected_code = corrector.process
       return false if code == corrected_code
 

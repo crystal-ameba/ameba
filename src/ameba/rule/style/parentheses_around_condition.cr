@@ -57,8 +57,7 @@ module Ameba::Rule::Style
 
       if cond.is_a?(Crystal::Assign) && allow_safe_assignment?
         issue_for cond, MSG_MISSING do |corrector|
-          corrector.insert_before(cond, '(')
-          corrector.insert_after(cond, ')')
+          corrector.wrap(cond, '(', ')')
         end
         return
       end
