@@ -33,9 +33,9 @@ module Ameba::Rule::Lint
     MSG = "Suspicious assignment detected. Did you mean `%s`?"
 
     MISTAKES = {
-      "=-" => "-=",
-      "=+" => "+=",
-      "=!" => "!=",
+      "=-": "-=",
+      "=+": "+=",
+      "=!": "!=",
     }
 
     def test(source, node : Crystal::Assign)
