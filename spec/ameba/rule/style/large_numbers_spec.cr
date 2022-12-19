@@ -130,7 +130,7 @@ module Ameba
     end
 
     context "properties" do
-      it "allows to configure integer min digits" do
+      it "#int_min_digits" do
         rule = Rule::Style::LargeNumbers.new
         rule.int_min_digits = 10
         expect_no_issues rule, %q(1200000)

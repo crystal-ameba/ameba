@@ -284,7 +284,7 @@ module Ameba::Rule::Style
     end
 
     context "properties" do
-      context "#allow_multi_return=" do
+      context "#allow_multi_return" do
         it "allows multi returns by default" do
           expect_no_issues subject, <<-CRYSTAL
             def method(a, b)

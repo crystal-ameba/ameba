@@ -201,7 +201,7 @@ module Ameba::Rule::Style
     end
 
     context "properties" do
-      context "#allow_multi_next=" do
+      context "#allow_multi_next" do
         it "allows multi next statements by default" do
           expect_no_issues subject, <<-CRYSTAL
             block do |a, b|

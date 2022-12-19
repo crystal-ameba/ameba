@@ -44,7 +44,7 @@ module Ameba::Rule::Performance
     end
 
     context "properties" do
-      it "allows to configure object caller names" do
+      it "#filter_names" do
         rule = SizeAfterFilter.new
         rule.filter_names = %w(select)
 

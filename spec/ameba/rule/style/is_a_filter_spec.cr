@@ -42,7 +42,7 @@ module Ameba::Rule::Style
     end
 
     context "properties" do
-      it "allows to configure filter_names" do
+      it "#filter_names" do
         rule = IsAFilter.new
         rule.filter_names = %w(select)
 

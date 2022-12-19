@@ -44,7 +44,7 @@ module Ameba::Rule::Performance
     end
 
     context "properties" do
-      it "allows to configure `call_names`" do
+      it "#call_names" do
         rule = ChainedCallWithNoBang.new
         rule.call_names = %w(uniq)
 
