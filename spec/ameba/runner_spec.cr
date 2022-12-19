@@ -175,10 +175,11 @@ module Ameba
 
       it "depends on the level of severity" do
         rules = Rule.rules.map &.new.as(Rule::Base)
-        s = Source.new %q(WrongConstant = 5)
-        Runner.new(rules, [s], formatter, Severity::Error).run.success?.should be_true
-        Runner.new(rules, [s], formatter, Severity::Warning).run.success?.should be_true
-        Runner.new(rules, [s], formatter, Severity::Convention).run.success?.should be_false
+        source = Source.new "WrongConstant = 5\n"
+
+        Runner.new(rules, [source], formatter, :error).run.success?.should be_true
+        Runner.new(rules, [source], formatter, :warning).run.success?.should be_true
+        Runner.new(rules, [source], formatter, :convention).run.success?.should be_false
       end
 
       it "returns false if issue is disabled" do
