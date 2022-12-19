@@ -63,7 +63,7 @@ module Ameba::Rule::Performance
 
     context "properties" do
       it "allows to configure object_call_names" do
-        rule = Rule::Performance::FirstLastAfterFilter.new
+        rule = FirstLastAfterFilter.new
         rule.filter_names = %w(reject)
 
         expect_no_issues rule, <<-CRYSTAL

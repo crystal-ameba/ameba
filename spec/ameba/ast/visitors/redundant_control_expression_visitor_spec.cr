@@ -5,11 +5,11 @@ module Ameba::AST
   rule = RedundantControlExpressionRule.new
 
   describe RedundantControlExpressionVisitor do
-    node = as_node %(
+    node = as_node <<-CRYSTAL
       a = 1
       b = 2
       return a + b
-    )
+      CRYSTAL
     subject = RedundantControlExpressionVisitor.new(rule, source, node)
 
     it "assigns valid attributes" do

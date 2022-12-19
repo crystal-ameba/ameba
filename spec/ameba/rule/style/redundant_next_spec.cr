@@ -211,7 +211,7 @@ module Ameba::Rule::Style
         end
 
         it "allows to configure multi next statements" do
-          rule = Rule::Style::RedundantNext.new
+          rule = RedundantNext.new
           rule.allow_multi_next = false
           source = expect_issue rule, <<-CRYSTAL
             block do |a, b|
@@ -238,7 +238,7 @@ module Ameba::Rule::Style
         end
 
         it "allows to configure empty next statements" do
-          rule = Rule::Style::RedundantNext.new
+          rule = RedundantNext.new
           rule.allow_empty_next = false
           source = expect_issue rule, <<-CRYSTAL
             block do

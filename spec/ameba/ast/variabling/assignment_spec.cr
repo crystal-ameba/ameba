@@ -41,15 +41,14 @@ module Ameba::AST
 
     describe "#branch" do
       it "returns the branch of the assignment" do
-        nodes = as_nodes %(
+        nodes = as_nodes <<-CRYSTAL
           def method(a)
             if a
               a = 3  # --> Crystal::Expressions
               puts a
             end
           end
-        )
-
+          CRYSTAL
         scope = Scope.new nodes.def_nodes.first
         variable = Variable.new(nodes.var_nodes.first, scope)
         assignment = Assignment.new(nodes.assign_nodes.first, variable, scope)
@@ -58,7 +57,7 @@ module Ameba::AST
       end
 
       it "returns inner branch" do
-        nodes = as_nodes %(
+        nodes = as_nodes <<-CRYSTAL
           def method(a, b)
             if a
               if b
@@ -66,7 +65,7 @@ module Ameba::AST
               end
             end
           end
-        )
+          CRYSTAL
         scope = Scope.new nodes.def_nodes.first
         variable = Variable.new(nodes.var_nodes.first, scope)
         assignment = Assignment.new(nodes.assign_nodes.first, variable, scope)
@@ -75,12 +74,11 @@ module Ameba::AST
       end
 
       it "returns nil if assignment does not have a branch" do
-        nodes = as_nodes %(
+        nodes = as_nodes <<-CRYSTAL
           def method(a)
             a = 2
           end
-        )
-
+          CRYSTAL
         scope = Scope.new nodes.def_nodes.first
         variable = Variable.new(nodes.var_nodes.first, scope)
         assignment = Assignment.new(nodes.assign_nodes.first, variable, scope)
@@ -90,12 +88,11 @@ module Ameba::AST
 
     describe "#transformed?" do
       it "returns false if the assignment is not transformed by the compiler" do
-        nodes = as_nodes %(
+        nodes = as_nodes <<-CRYSTAL
           def method(a)
             a = 2
           end
-        )
-
+          CRYSTAL
         scope = Scope.new nodes.def_nodes.first
         variable = Variable.new(nodes.var_nodes.first, scope)
         assignment = Assignment.new(nodes.assign_nodes.first, variable, scope)
@@ -103,11 +100,10 @@ module Ameba::AST
       end
 
       it "returns true if the assignment is transformed by the compiler" do
-        nodes = as_nodes %(
+        nodes = as_nodes <<-CRYSTAL
           array.each do |(a, b)|
           end
-        )
-
+          CRYSTAL
         scope = Scope.new nodes.block_nodes.first
         variable = Variable.new(nodes.var_nodes.first, scope)
         assignment = Assignment.new(nodes.assign_nodes.first, variable, scope)

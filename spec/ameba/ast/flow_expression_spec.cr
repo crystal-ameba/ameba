@@ -18,7 +18,7 @@ module Ameba::AST
         end
 
         it "delegates locations to @node" do
-          node = as_node %(break if true)
+          node = as_node("break if true")
           flow_expression = FlowExpression.new node, false
           flow_expression.location.should eq node.location
           flow_expression.end_location.should eq node.end_location
@@ -27,20 +27,20 @@ module Ameba::AST
 
       describe "#unreachable_nodes" do
         it "returns unreachable nodes" do
-          nodes = as_nodes %(
+          nodes = as_nodes <<-CRYSTAL
             def foobar
               return
               a = 1
               a = 2
             end
-          )
+            CRYSTAL
           node = nodes.expressions_nodes.first
           flow_expression = FlowExpression.new node, false
           flow_expression.unreachable_nodes.should eq nodes.assign_nodes
         end
 
         it "returns nil if there is no unreachable node after loop" do
-          nodes = as_nodes %(
+          nodes = as_nodes <<-CRYSTAL
             def run
               idx = items.size - 1
               while 0 <= idx
@@ -49,19 +49,19 @@ module Ameba::AST
 
               puts "foo"
             end
-          )
+            CRYSTAL
           node = nodes.expressions_nodes.first
           flow_expression = FlowExpression.new node, false
           flow_expression.unreachable_nodes.empty?.should eq true
         end
 
         it "returns nil if there is no unreachable node" do
-          nodes = as_nodes %(
+          nodes = as_nodes <<-CRYSTAL
             def foobar
               a = 1
               return a
             end
-          )
+            CRYSTAL
           node = nodes.expressions_nodes.first
           flow_expression = FlowExpression.new node, false
           flow_expression.unreachable_nodes.empty?.should eq true

@@ -45,7 +45,7 @@ module Ameba::Rule::Performance
 
     context "properties" do
       it "allows to configure object caller names" do
-        rule = Rule::Performance::SizeAfterFilter.new
+        rule = SizeAfterFilter.new
         rule.filter_names = %w(select)
 
         expect_no_issues rule, <<-CRYSTAL

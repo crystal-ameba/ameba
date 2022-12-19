@@ -13,7 +13,7 @@ module Ameba
 
   describe Rule::Lint::EmptyExpression do
     it "passes if there is no empty expression" do
-      s = Source.new %(
+      s = Source.new <<-CRYSTAL
         def method()
         end
 
@@ -30,7 +30,7 @@ module Ameba
 
         begin "" end
         [nil] << nil
-      )
+        CRYSTAL
       subject.catch(s).should be_valid
     end
 

@@ -45,6 +45,7 @@ module Ameba::Rule::Style
       it "allows to configure filter_names" do
         rule = IsAFilter.new
         rule.filter_names = %w(select)
+
         expect_no_issues rule, <<-CRYSTAL
           [1, 2, nil].reject(&.nil?)
           CRYSTAL

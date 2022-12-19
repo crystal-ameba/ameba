@@ -1,15 +1,21 @@
 module Ameba::Rule::Lint
   # This rule checks for mistyped shorthand assignments.
   #
-  #     # bad
-  #     x =- y
-  #     x =+ y
-  #     x =! y
+  # This is considered invalid:
   #
-  #     # good
-  #     x -= y # or x = -y
-  #     x += y # or x = +y
-  #     x != y # or x = !y
+  # ```
+  # x = -y
+  # x = +y
+  # x = !y
+  # ```
+  #
+  # And this is valid:
+  #
+  # ```
+  # x -= y # or x = -y
+  # x += y # or x = +y
+  # x != y # or x = !y
+  # ```
   #
   # YAML configuration example:
   #
@@ -43,9 +49,9 @@ module Ameba::Rule::Lint
       op_text = source_between(op_location, op_end_location, source.lines)
 
       return unless op_text
-      return unless MISTAKES.has_key?(op_text)
+      return unless suggestion = MISTAKES[op_text]?
 
-      issue_for op_location, op_end_location, MSG % MISTAKES[op_text]
+      issue_for op_location, op_end_location, MSG % suggestion
     end
   end
 end

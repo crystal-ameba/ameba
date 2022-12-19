@@ -64,10 +64,12 @@ module Ameba::Rule::Style
     context "properties" do
       it "#exclude_calls_with_block" do
         rule = VerboseBlock.new
+
         rule.exclude_calls_with_block = true
         expect_no_issues rule, <<-CRYSTAL
           (1..3).in_groups_of(1) { |i| i.map(&.to_s) }
           CRYSTAL
+
         rule.exclude_calls_with_block = false
         source = expect_issue rule, <<-CRYSTAL
           (1..3).in_groups_of(1) { |i| i.map(&.to_s) }
@@ -81,12 +83,14 @@ module Ameba::Rule::Style
 
       it "#exclude_multiple_line_blocks" do
         rule = VerboseBlock.new
+
         rule.exclude_multiple_line_blocks = true
         expect_no_issues rule, <<-CRYSTAL
           (1..3).any? do |i|
             i.odd?
           end
           CRYSTAL
+
         rule.exclude_multiple_line_blocks = false
         source = expect_issue rule, <<-CRYSTAL
           (1..3).any? do |i|
@@ -102,12 +106,14 @@ module Ameba::Rule::Style
 
       it "#exclude_prefix_operators" do
         rule = VerboseBlock.new
+
         rule.exclude_prefix_operators = true
         expect_no_issues rule, <<-CRYSTAL
           (1..3).sum { |i| +i }
           (1..3).sum { |i| -i }
           (1..3).sum { |i| ~i }
           CRYSTAL
+
         rule.exclude_prefix_operators = false
         rule.exclude_operators = false
         source = expect_issue rule, <<-CRYSTAL
@@ -128,10 +134,12 @@ module Ameba::Rule::Style
 
       it "#exclude_operators" do
         rule = VerboseBlock.new
+
         rule.exclude_operators = true
         expect_no_issues rule, <<-CRYSTAL
           (1..3).sum { |i| i * 2 }
           CRYSTAL
+
         rule.exclude_operators = false
         source = expect_issue rule, <<-CRYSTAL
           (1..3).sum { |i| i * 2 }
@@ -145,10 +153,12 @@ module Ameba::Rule::Style
 
       it "#exclude_setters" do
         rule = VerboseBlock.new
+
         rule.exclude_setters = true
         expect_no_issues rule, <<-CRYSTAL
           Char::Reader.new("abc").tap { |reader| reader.pos = 0 }
           CRYSTAL
+
         rule.exclude_setters = false
         source = expect_issue rule, <<-CRYSTAL
           Char::Reader.new("abc").tap { |reader| reader.pos = 0 }
@@ -163,12 +173,14 @@ module Ameba::Rule::Style
       it "#max_line_length" do
         rule = VerboseBlock.new
         rule.exclude_multiple_line_blocks = false
+
         rule.max_line_length = 60
         expect_no_issues rule, <<-CRYSTAL
           (1..3).tap &.tap &.tap &.tap &.tap &.tap &.tap do |i|
             i.to_s.reverse.strip.blank?
           end
           CRYSTAL
+
         rule.max_line_length = nil
         source = expect_issue rule, <<-CRYSTAL
           (1..3).tap &.tap &.tap &.tap &.tap &.tap &.tap do |i|
@@ -184,10 +196,12 @@ module Ameba::Rule::Style
 
       it "#max_length" do
         rule = VerboseBlock.new
+
         rule.max_length = 30
         expect_no_issues rule, <<-CRYSTAL
           (1..3).tap { |i| i.to_s.split.reverse.join.strip.blank? }
           CRYSTAL
+
         rule.max_length = nil
         source = expect_issue rule, <<-CRYSTAL
           (1..3).tap { |i| i.to_s.split.reverse.join.strip.blank? }
@@ -216,6 +230,7 @@ module Ameba::Rule::Style
     it "reports call args and named_args" do
       rule = VerboseBlock.new
       rule.exclude_operators = false
+
       source = expect_issue rule, <<-CRYSTAL
         (1..3).map { |i| i.to_s[start: 0.to_i64, count: 3]? }
              # ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ error: [...] `map(&.to_s.[start: 0.to_i64, count: 3]?)`
@@ -260,9 +275,9 @@ module Ameba::Rule::Style
     end
 
     it "reports rule, pos and message" do
-      source = Source.new path: "source.cr", code: %(
+      source = Source.new path: "source.cr", code: <<-CRYSTAL
         (1..3).any? { |i| i.odd? }
-      )
+        CRYSTAL
       subject.catch(source).should_not be_valid
       source.issues.size.should eq 1
 

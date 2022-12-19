@@ -51,7 +51,7 @@ module Ameba::Rule::Style
         end
 
         it "allows to configure assignments" do
-          rule = Rule::Style::ParenthesesAroundCondition.new
+          rule = ParenthesesAroundCondition.new
           rule.exclude_ternary = false
 
           expect_issue rule, <<-CRYSTAL
@@ -98,7 +98,7 @@ module Ameba::Rule::Style
         end
 
         it "allows to configure assignments" do
-          rule = Rule::Style::ParenthesesAroundCondition.new
+          rule = ParenthesesAroundCondition.new
           rule.allow_safe_assignment = true
 
           expect_issue rule, <<-CRYSTAL

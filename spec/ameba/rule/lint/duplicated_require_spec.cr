@@ -24,12 +24,12 @@ module Ameba::Rule::Lint
     end
 
     it "reports rule, pos and message" do
-      source = Source.new %(
+      source = Source.new <<-CRYSTAL, "source.cr"
         require "./thing"
         require "./thing"
         require "./another_thing"
         require "./another_thing"
-      ), "source.cr"
+        CRYSTAL
 
       subject.catch(source).should_not be_valid
 

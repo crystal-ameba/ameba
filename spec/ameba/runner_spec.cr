@@ -65,6 +65,7 @@ module Ameba
         rules = [AtoAA.new] of Rule::Base
         source = Source.new "class A; end", "source.cr"
         message = "Infinite loop in source.cr caused by Ameba/AtoAA"
+
         expect_raises(Runner::InfiniteCorrectionLoopError, message) do
           Runner.new(rules, [source], formatter, default_severity, autocorrect: true).run
         end
@@ -95,11 +96,11 @@ module Ameba
 
         it "does not run other rules" do
           rules = [Rule::Lint::Syntax.new, Rule::Style::ConstantNames.new] of Rule::Base
-          source = Source.new %q(
-              MyBadConstant = 1
+          source = Source.new <<-CRYSTAL
+            MyBadConstant = 1
 
-              when my_bad_syntax
-          )
+            when my_bad_syntax
+            CRYSTAL
 
           Runner.new(rules, [source], formatter, default_severity).run
           source.should_not be_valid
@@ -110,9 +111,9 @@ module Ameba
       context "unneeded disables" do
         it "reports an issue if such disable exists" do
           rules = [Rule::Lint::UnneededDisableDirective.new] of Rule::Base
-          source = Source.new %(
+          source = Source.new <<-CRYSTAL
             a = 1 # ameba:disable LineLength
-          )
+            CRYSTAL
 
           Runner.new(rules, [source], formatter, default_severity).run
           source.should_not be_valid
@@ -134,9 +135,7 @@ module Ameba
       it "writes the explanation if sources are not valid and location found" do
         io.clear
         rules = [ErrorRule.new] of Rule::Base
-        source = Source.new %(
-            a = 1
-          ), "source.cr"
+        source = Source.new "a = 1", "source.cr"
 
         runner = Runner.new(rules, [source], formatter, default_severity).run
         runner.explain({file: "source.cr", line: 1, column: 1}, io)
@@ -146,9 +145,7 @@ module Ameba
       it "writes nothing if sources are not valid and location is not found" do
         io.clear
         rules = [ErrorRule.new] of Rule::Base
-        source = Source.new %(
-            a = 1
-          ), "source.cr"
+        source = Source.new "a = 1", "source.cr"
 
         runner = Runner.new(rules, [source], formatter, default_severity).run
         runner.explain({file: "source.cr", line: 1, column: 2}, io)
@@ -167,10 +164,9 @@ module Ameba
 
       it "returns false if there are invalid sources" do
         rules = Rule.rules.map &.new.as(Rule::Base)
-        s = Source.new %q(
-          WrongConstant = 5
-        )
-        Runner.new(rules, [s], formatter, default_severity).run.success?.should be_false
+        source = Source.new "WrongConstant = 5"
+
+        Runner.new(rules, [source], formatter, default_severity).run.success?.should be_false
       end
 
       it "depends on the level of severity" do
@@ -183,11 +179,11 @@ module Ameba
 
       it "returns false if issue is disabled" do
         rules = [NamedRule.new] of Rule::Base
-        source = Source.new %(
+        source = Source.new <<-CRYSTAL
           def foo
             bar = 1 # ameba:disable #{NamedRule.name}
           end
-        )
+          CRYSTAL
         source.add_issue NamedRule.new, location: {2, 1},
           message: "Useless assignment"
 
@@ -204,6 +200,7 @@ module Ameba
             rules = [AtoB.new, BtoA.new]
             source = Source.new "class A; end", "source.cr"
             message = "Infinite loop in source.cr caused by Ameba/AtoB -> Ameba/BtoA"
+
             expect_raises(Runner::InfiniteCorrectionLoopError, message) do
               Runner.new(rules, [source], formatter, default_severity, autocorrect: true).run
             end
@@ -213,11 +210,12 @@ module Ameba
         context "if there are multiple offenses in an inspected file" do
           it "aborts because of an infinite loop" do
             rules = [AtoB.new, BtoA.new]
-            source = Source.new %(
+            source = Source.new <<-CRYSTAL, "source.cr"
               class A; end
               class A_A; end
-            ), "source.cr"
+              CRYSTAL
             message = "Infinite loop in source.cr caused by Ameba/AtoB -> Ameba/BtoA"
+
             expect_raises(Runner::InfiniteCorrectionLoopError, message) do
               Runner.new(rules, [source], formatter, default_severity, autocorrect: true).run
             end
@@ -230,6 +228,7 @@ module Ameba
           rules = [ClassToModule.new, ModuleToClass.new, AtoB.new, BtoA.new]
           source = Source.new "class A_A; end", "source.cr"
           message = "Infinite loop in source.cr caused by Ameba/ClassToModule, Ameba/AtoB -> Ameba/ModuleToClass, Ameba/BtoA"
+
           expect_raises(Runner::InfiniteCorrectionLoopError, message) do
             Runner.new(rules, [source], formatter, default_severity, autocorrect: true).run
           end
@@ -241,6 +240,7 @@ module Ameba
           rules = [AtoB.new, BtoC.new, CtoA.new]
           source = Source.new "class A; end", "source.cr"
           message = "Infinite loop in source.cr caused by Ameba/AtoB -> Ameba/BtoC -> Ameba/CtoA"
+
           expect_raises(Runner::InfiniteCorrectionLoopError, message) do
             Runner.new(rules, [source], formatter, default_severity, autocorrect: true).run
           end

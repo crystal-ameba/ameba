@@ -294,7 +294,7 @@ module Ameba::Rule::Style
         end
 
         it "allows to configure multi returns" do
-          rule = Rule::Style::RedundantReturn.new
+          rule = RedundantReturn.new
           rule.allow_multi_return = false
           source = expect_issue rule, <<-CRYSTAL
             def method(a, b)
@@ -321,7 +321,7 @@ module Ameba::Rule::Style
         end
 
         it "allows to configure empty returns" do
-          rule = Rule::Style::RedundantReturn.new
+          rule = RedundantReturn.new
           rule.allow_empty_return = false
           source = expect_issue rule, <<-CRYSTAL
             def method
