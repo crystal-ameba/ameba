@@ -13,7 +13,7 @@
 <script type="text/javascript" src="../../../js/doc.js"></script>
 
   <meta name="repository-name" content="ameba">
-  <title>Ameba::Rule::Lint::NotNilAfterNoBang - ameba master</title>
+  <title>Ameba::Rule::Lint::MissingBlockArgument - ameba master</title>
   <script type="text/javascript">
     CrystalDocs.base_path = "../../../";
   </script>
@@ -376,7 +376,7 @@
       
     </li>
   
-  <li class=" " data-id="ameba/Ameba/Rule/Lint/MissingBlockArgument" data-name="ameba::rule::lint::missingblockargument">
+  <li class=" current" data-id="ameba/Ameba/Rule/Lint/MissingBlockArgument" data-name="ameba::rule::lint::missingblockargument">
       <a href="../../../Ameba/Rule/Lint/MissingBlockArgument.html">MissingBlockArgument</a>
       
     </li>
@@ -386,7 +386,7 @@
       
     </li>
   
-  <li class=" current" data-id="ameba/Ameba/Rule/Lint/NotNilAfterNoBang" data-name="ameba::rule::lint::notnilafternobang">
+  <li class=" " data-id="ameba/Ameba/Rule/Lint/NotNilAfterNoBang" data-name="ameba::rule::lint::notnilafternobang">
       <a href="../../../Ameba/Rule/Lint/NotNilAfterNoBang.html">NotNilAfterNoBang</a>
       
     </li>
@@ -755,12 +755,12 @@
 <div class="main-content">
 <h1 class="type-name">
 
-  <span class="kind">class</span> Ameba::Rule::Lint::NotNilAfterNoBang
+  <span class="kind">class</span> Ameba::Rule::Lint::MissingBlockArgument
 
 </h1>
 
 
-  <ul class="superclass-hierarchy"><li class="superclass"><a href="../../../Ameba/Rule/Lint/NotNilAfterNoBang.html">Ameba::Rule::Lint::NotNilAfterNoBang</a></li><li class="superclass"><a href="../../../Ameba/Rule/Base.html">Ameba::Rule::Base</a></li><li class="superclass">Reference</li><li class="superclass">Object</li></ul>
+  <ul class="superclass-hierarchy"><li class="superclass"><a href="../../../Ameba/Rule/Lint/MissingBlockArgument.html">Ameba::Rule::Lint::MissingBlockArgument</a></li><li class="superclass"><a href="../../../Ameba/Rule/Base.html">Ameba::Rule::Base</a></li><li class="superclass">Reference</li><li class="superclass">Object</li></ul>
 
 
 
@@ -774,13 +774,17 @@
     Overview
   </h2>
 
-  <p>This rule is used to identify usage of <code>index/find</code> calls followed by <code>not_nil!</code>.</p>
-<p>For example, this is considered a code smell:</p>
-<pre><code class="language-crystal"><span class="s">%w[Alice Bob]</span>.find(<span class="o">&amp;</span>.match(<span class="o">/</span><span class="o">^</span><span class="t">A</span>.<span class="o">/</span>)).not_nil!</code></pre>
-<p>And can be written as this:</p>
-<pre><code class="language-crystal"><span class="s">%w[Alice Bob]</span>.find!(<span class="o">&amp;</span>.match(<span class="o">/</span><span class="o">^</span><span class="t">A</span>.<span class="o">/</span>))</code></pre>
+  <p>A rule that disallows yielding method definitions without block argument.</p>
+<p>For example, this is considered invalid:</p>
+<pre><code class="language-crystal"><span class="k">def</span> <span class="m">foo</span>
+  <span class="k">yield</span> <span class="n">42</span>
+<span class="k">end</span></code></pre>
+<p>And has to be written as the following:</p>
+<pre><code class="language-crystal"><span class="k">def</span> <span class="m">foo</span>(<span class="o">&amp;</span>)
+  <span class="k">yield</span> <span class="n">42</span>
+<span class="k">end</span></code></pre>
 <p>YAML configuration example:</p>
-<pre><code class="language-crystal"><span class="t">Lint</span><span class="o">/</span><span class="t">NotNilAfterNoBang</span>:
+<pre><code class="language-crystal"><span class="t">Lint</span><span class="o">/</span><span class="t">MissingBlockArgument</span>:
   <span class="t">Enabled</span>: <span class="n">true</span></code></pre>
 
 
@@ -824,8 +828,8 @@
   </h2>
   
     
-      <a href="https://github.com/crystal-ameba/ameba/blob/b78e2aeb/src/ameba/rule/lint/not_nil_after_no_bang.cr#L22" target="_blank">
-        ameba/rule/lint/not_nil_after_no_bang.cr
+      <a href="https://github.com/crystal-ameba/ameba/blob/b78e2aeb/src/ameba/rule/lint/missing_block_argument.cr#L26" target="_blank">
+        ameba/rule/lint/missing_block_argument.cr
       </a>
     
     <br/>
@@ -845,23 +849,8 @@
   
   <dl>
     
-      <dt class="entry-const" id="BLOCK_CALL_NAMES">
-        <strong>BLOCK_CALL_NAMES</strong> = <code>[<span class="s">&quot;index&quot;</span>, <span class="s">&quot;find&quot;</span>] <span class="k">of</span> <span class="t">::</span><span class="t">String</span></code>
-      </dt>
-      
-    
-      <dt class="entry-const" id="CALL_NAMES">
-        <strong>CALL_NAMES</strong> = <code>[<span class="s">&quot;index&quot;</span>] <span class="k">of</span> <span class="t">::</span><span class="t">String</span></code>
-      </dt>
-      
-    
       <dt class="entry-const" id="MSG">
-        <strong>MSG</strong> = <code><span class="s">&quot;Use `%s! {...}` instead of `%s {...}.not_nil!`&quot;</span></code>
-      </dt>
-      
-    
-      <dt class="entry-const" id="NOT_NIL_NAME">
-        <strong>NOT_NIL_NAME</strong> = <code><span class="s">&quot;not_nil!&quot;</span></code>
+        <strong>MSG</strong> = <code><span class="s">&quot;Missing anonymous block argument. Use `&amp;` as an argument name to indicate yielding method.&quot;</span></code>
       </dt>
       
     
@@ -887,7 +876,7 @@
       <li class="entry-summary">
         <a href="#new%28config%3Dnil%29-class-method" class="signature"><strong>.new</strong>(config = <span class="n">nil</span>)</a>
         
-          <div class="summary"><p>This rule is used to identify usage of <code>index/find</code> calls followed by <code>not_nil!</code>.</p></div>
+          <div class="summary"><p>A rule that disallows yielding method definitions without block argument.</p></div>
         
       </li>
     
@@ -967,7 +956,7 @@
       </li>
     
       <li class="entry-summary">
-        <a href="#test%28source%2Cnode%3ACrystal%3A%3ACall%29-instance-method" class="signature"><strong>#test</strong>(source, node : Crystal::Call)</a>
+        <a href="#test%28source%2Cnode%3ACrystal%3A%3ADef%2Cscope%3AAST%3A%3AScope%29-instance-method" class="signature"><strong>#test</strong>(source, node : Crystal::Def, scope : AST::Scope)</a>
         
       </li>
     
@@ -1227,20 +1216,24 @@
       
         <div class="doc">
           
-          <p>This rule is used to identify usage of <code>index/find</code> calls followed by <code>not_nil!</code>.</p>
-<p>For example, this is considered a code smell:</p>
-<pre><code class="language-crystal"><span class="s">%w[Alice Bob]</span>.find(<span class="o">&amp;</span>.match(<span class="o">/</span><span class="o">^</span><span class="t">A</span>.<span class="o">/</span>)).not_nil!</code></pre>
-<p>And can be written as this:</p>
-<pre><code class="language-crystal"><span class="s">%w[Alice Bob]</span>.find!(<span class="o">&amp;</span>.match(<span class="o">/</span><span class="o">^</span><span class="t">A</span>.<span class="o">/</span>))</code></pre>
+          <p>A rule that disallows yielding method definitions without block argument.</p>
+<p>For example, this is considered invalid:</p>
+<pre><code class="language-crystal"><span class="k">def</span> <span class="m">foo</span>
+  <span class="k">yield</span> <span class="n">42</span>
+<span class="k">end</span></code></pre>
+<p>And has to be written as the following:</p>
+<pre><code class="language-crystal"><span class="k">def</span> <span class="m">foo</span>(<span class="o">&amp;</span>)
+  <span class="k">yield</span> <span class="n">42</span>
+<span class="k">end</span></code></pre>
 <p>YAML configuration example:</p>
-<pre><code class="language-crystal"><span class="t">Lint</span><span class="o">/</span><span class="t">NotNilAfterNoBang</span>:
+<pre><code class="language-crystal"><span class="t">Lint</span><span class="o">/</span><span class="t">MissingBlockArgument</span>:
   <span class="t">Enabled</span>: <span class="n">true</span></code></pre>
         </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/b78e2aeb/src/ameba/rule/lint/not_nil_after_no_bang.cr#L22" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/b78e2aeb/src/ameba/rule/lint/missing_block_argument.cr#L26" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1410,18 +1403,18 @@
       </div>
     </div>
   
-    <div class="entry-detail" id="test(source,node:Crystal::Call)-instance-method">
+    <div class="entry-detail" id="test(source,node:Crystal::Def,scope:AST::Scope)-instance-method">
       <div class="signature">
         
-        def <strong>test</strong>(source, node : Crystal::Call)
+        def <strong>test</strong>(source, node : Crystal::Def, scope : <a href="../../../Ameba/AST/Scope.html">AST::Scope</a>)
 
-        <a class="method-permalink" href="#test%28source%2Cnode%3ACrystal%3A%3ACall%29-instance-method">#</a>
+        <a class="method-permalink" href="#test%28source%2Cnode%3ACrystal%3A%3ADef%2Cscope%3AAST%3A%3AScope%29-instance-method">#</a>
       </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/b78e2aeb/src/ameba/rule/lint/not_nil_after_no_bang.cr#L44" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/b78e2aeb/src/ameba/rule/lint/missing_block_argument.cr#L40" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1437,7 +1430,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/b78e2aeb/src/ameba/rule/lint/not_nil_after_no_bang.cr#L35" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/b78e2aeb/src/ameba/rule/lint/missing_block_argument.cr#L36" target="_blank">View source</a>]
         
       </div>
     </div>
