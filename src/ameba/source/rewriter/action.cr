@@ -111,7 +111,7 @@ class Ameba::Source::Rewriter
     end
 
     # Similar to `@children.bsearch_index || size` except allows for a starting point
-    protected def bsearch_child_index(from = 0)
+    protected def bsearch_child_index(from = 0, &)
       size = @children.size
       (from...size).bsearch { |i| yield @children[i] } || size
     end
