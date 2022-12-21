@@ -4,7 +4,7 @@ module Ameba
   subject = Rule::Lint::EmptyExpression.new
 
   private def it_detects_empty_expression(code)
-    it "detects empty expression" do
+    it %(detects empty expression "#{code}") do
       s = Source.new code
       rule = Rule::Lint::EmptyExpression.new
       rule.catch(s).should_not be_valid
