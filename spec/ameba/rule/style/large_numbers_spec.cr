@@ -97,10 +97,12 @@ module Ameba
     it_transforms "10000_i16", "10_000_i16"
     it_transforms "10000_i32", "10_000_i32"
     it_transforms "10000_i64", "10_000_i64"
+    it_transforms "10000_i128", "10_000_i128"
 
     it_transforms "10000_u16", "10_000_u16"
     it_transforms "10000_u32", "10_000_u32"
     it_transforms "10000_u64", "10_000_u64"
+    it_transforms "10000_u128", "10_000_u128"
 
     it_transforms "123456_f32", "123_456_f32"
     it_transforms "123456_f64", "123_456_f64"
