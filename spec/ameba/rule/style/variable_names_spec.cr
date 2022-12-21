@@ -3,10 +3,10 @@ require "../../../spec_helper"
 module Ameba
   subject = Rule::Style::VariableNames.new
 
-  private def it_reports_var_name(name, value, expected)
-    it "reports variable name #{expected}" do
+  private def it_reports_var_name(name, value, expected, *, file = __FILE__, line = __LINE__)
+    it "reports variable name #{expected}", file, line do
       rule = Rule::Style::VariableNames.new
-      expect_issue rule, <<-CRYSTAL, name: name
+      expect_issue rule, <<-CRYSTAL, name: name, file: file, line: line
           %{name} = #{value}
         # ^{name} error: Var name should be underscore-cased: #{expected}, not %{name}
         CRYSTAL

@@ -3,10 +3,10 @@ require "../../../spec_helper"
 module Ameba
   subject = Rule::Style::ConstantNames.new
 
-  private def it_reports_constant(name, value, expected)
-    it "reports constant name #{expected}" do
+  private def it_reports_constant(name, value, expected, *, file = __FILE__, line = __LINE__)
+    it "reports constant name #{expected}", file, line do
       rule = Rule::Style::ConstantNames.new
-      expect_issue rule, <<-CRYSTAL, name: name
+      expect_issue rule, <<-CRYSTAL, name: name, file: file, line: line
           %{name} = #{value}
         # ^{name} error: Constant name should be screaming-cased: #{expected}, not #{name}
         CRYSTAL

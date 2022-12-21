@@ -3,12 +3,12 @@ require "../../../spec_helper"
 module Ameba
   subject = Rule::Style::LargeNumbers.new
 
-  private def it_transforms(number, expected)
-    it "transforms large number #{number}" do
+  private def it_transforms(number, expected, *, file = __FILE__, line = __LINE__)
+    it "transforms large number #{number}", file, line do
       rule = Rule::Style::LargeNumbers.new
       rule.int_min_digits = 5
 
-      source = expect_issue rule, <<-CRYSTAL, number: number
+      source = expect_issue rule, <<-CRYSTAL, number: number, file: file, line: line
         number = %{number}
                # ^{number} error: Large numbers should be written with underscores: #{expected}
         CRYSTAL

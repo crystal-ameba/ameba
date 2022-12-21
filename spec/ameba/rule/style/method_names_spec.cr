@@ -3,10 +3,10 @@ require "../../../spec_helper"
 module Ameba
   subject = Rule::Style::MethodNames.new
 
-  private def it_reports_method_name(name, expected)
-    it "reports method name #{expected}" do
+  private def it_reports_method_name(name, expected, *, file = __FILE__, line = __LINE__)
+    it "reports method name #{expected}", file, line do
       rule = Rule::Style::MethodNames.new
-      expect_issue rule, <<-CRYSTAL, name: name
+      expect_issue rule, <<-CRYSTAL, name: name, file: file, line: line
         def %{name}; end
           # ^{name} error: Method name should be underscore-cased: #{expected}, not %{name}
         CRYSTAL

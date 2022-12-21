@@ -3,10 +3,10 @@ require "../../../spec_helper"
 module Ameba
   subject = Rule::Style::TypeNames.new
 
-  private def it_reports_name(type, name, expected)
-    it "reports type name #{expected}" do
+  private def it_reports_name(type, name, expected, *, file = __FILE__, line = __LINE__)
+    it "reports type name #{expected}", file, line do
       rule = Rule::Style::TypeNames.new
-      expect_issue rule, <<-CRYSTAL, type: type, name: name
+      expect_issue rule, <<-CRYSTAL, type: type, name: name, file: file, line: line
         %{type} %{name}; end
         # ^{type}^{name}^^^^ error: Type name should be camelcased: #{expected}, but it was %{name}
         CRYSTAL
