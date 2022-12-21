@@ -17,17 +17,15 @@ jobs:
 
     steps:
       - name: Install Crystal
-        uses: oprypin/install-crystal@v1
+        uses: crystal-lang/install-crystal@v1
         with:
           crystal: ${{ matrix.crystal }}
 
       - name: Download source
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Install dependencies
         run: shards install
-        env:
-          SHARDS_OPTS: --ignore-crystal-version
 
       - name: Run specs
         run: make test
