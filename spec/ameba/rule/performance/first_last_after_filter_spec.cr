@@ -17,7 +17,7 @@ module Ameba::Rule::Performance
     it "reports if there is select followed by last" do
       expect_issue subject, <<-CRYSTAL
         [1, 2, 3].select { |e| e > 2 }.last
-                # ^^^^^^^^^^^^^^^^^^^^^^^^^^ error: Use `reverse_each.find {...}` instead of `select {...}.last`
+                # ^^^^^^^^^^^^^^^^^^^^^^^^^ error: Use `reverse_each.find {...}` instead of `select {...}.last`
         CRYSTAL
     end
 
@@ -30,14 +30,14 @@ module Ameba::Rule::Performance
     it "reports if there is select followed by last?" do
       expect_issue subject, <<-CRYSTAL
         [1, 2, 3].select { |e| e > 2 }.last?
-                # ^^^^^^^^^^^^^^^^^^^^^^^^^^^ error: Use `reverse_each.find {...}` instead of `select {...}.last?`
+                # ^^^^^^^^^^^^^^^^^^^^^^^^^^ error: Use `reverse_each.find {...}` instead of `select {...}.last?`
         CRYSTAL
     end
 
     it "reports if there is select followed by first" do
       expect_issue subject, <<-CRYSTAL
         [1, 2, 3].select { |e| e > 2 }.first
-                # ^^^^^^^^^^^^^^^^^^^^^^^^^^^ error: Use `find {...}` instead of `select {...}.first`
+                # ^^^^^^^^^^^^^^^^^^^^^^^^^^ error: Use `find {...}` instead of `select {...}.first`
         CRYSTAL
     end
 
@@ -50,7 +50,7 @@ module Ameba::Rule::Performance
     it "reports if there is select followed by first?" do
       expect_issue subject, <<-CRYSTAL
         [1, 2, 3].select { |e| e > 2 }.first?
-                # ^^^^^^^^^^^^^^^^^^^^^^^^^^^^ error: Use `find {...}` instead of `select {...}.first?`
+                # ^^^^^^^^^^^^^^^^^^^^^^^^^^^ error: Use `find {...}` instead of `select {...}.first?`
         CRYSTAL
     end
 
