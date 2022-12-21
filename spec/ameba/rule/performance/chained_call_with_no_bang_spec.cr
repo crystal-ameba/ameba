@@ -54,22 +54,6 @@ module Ameba::Rule::Performance
       end
     end
 
-    it "reports rule, pos and message" do
-      source = Source.new path: "source.cr", code: <<-CODE
-        [1, 2, 3].select { |e| e > 1 }.reverse
-        CODE
-
-      subject.catch(source).should_not be_valid
-      source.issues.size.should eq 1
-
-      issue = source.issues.first
-      issue.rule.should_not be_nil
-      issue.location.to_s.should eq "source.cr:1:32"
-      issue.end_location.to_s.should eq "source.cr:1:38"
-
-      issue.message.should eq "Use bang method variant `reverse!` after chained `select` call"
-    end
-
     context "macro" do
       it "doesn't report in macro scope" do
         expect_no_issues subject, <<-CRYSTAL

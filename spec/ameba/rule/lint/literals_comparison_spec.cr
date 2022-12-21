@@ -58,18 +58,5 @@ module Ameba::Rule::Lint
           CRYSTAL
       end
     end
-
-    it "reports rule, pos and message" do
-      s = Source.new %(
-        "foo" == "foo"
-      ), "source.cr"
-      subject.catch(s).should_not be_valid
-      issue = s.issues.first
-
-      issue.rule.should_not be_nil
-      issue.location.to_s.should eq "source.cr:1:1"
-      issue.end_location.to_s.should eq "source.cr:1:14"
-      issue.message.should eq "Comparison always evaluates to true"
-    end
   end
 end

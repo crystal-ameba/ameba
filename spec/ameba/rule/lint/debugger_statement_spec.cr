@@ -31,16 +31,5 @@ module Ameba::Rule::Lint
 
       expect_no_corrections source
     end
-
-    it "reports rule, pos and message" do
-      s = Source.new "debugger", "source.cr"
-      subject.catch(s).should_not be_valid
-
-      issue = s.issues.first
-      issue.rule.should_not be_nil
-      issue.location.to_s.should eq "source.cr:1:1"
-      issue.end_location.to_s.should eq "source.cr:1:8"
-      issue.message.should eq "Possible forgotten debugger statement detected"
-    end
   end
 end

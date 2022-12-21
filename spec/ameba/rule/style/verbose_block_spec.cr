@@ -273,20 +273,5 @@ module Ameba::Rule::Style
         (1..3).join(separator: '.', &.to_s)
         CRYSTAL
     end
-
-    it "reports rule, pos and message" do
-      source = Source.new path: "source.cr", code: <<-CRYSTAL
-        (1..3).any? { |i| i.odd? }
-        CRYSTAL
-      subject.catch(source).should_not be_valid
-      source.issues.size.should eq 1
-
-      issue = source.issues.first
-      issue.rule.should_not be_nil
-      issue.location.to_s.should eq "source.cr:1:8"
-      issue.end_location.to_s.should eq "source.cr:1:26"
-
-      issue.message.should eq "Use short block notation instead: `any?(&.odd?)`"
-    end
   end
 end

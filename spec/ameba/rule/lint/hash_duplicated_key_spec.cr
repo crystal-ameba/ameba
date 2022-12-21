@@ -32,17 +32,5 @@ module Ameba::Rule::Lint
           # ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ error: Duplicated keys in hash literal: "key1", "key2"
         CRYSTAL
     end
-
-    it "reports rule, location and message" do
-      s = Source.new %q(
-        h = {"a" => 1, "a" => 2}
-      ), "source.cr"
-      subject.catch(s).should_not be_valid
-      issue = s.issues.first
-      issue.rule.should_not be_nil
-      issue.location.to_s.should eq "source.cr:1:5"
-      issue.end_location.to_s.should eq "source.cr:1:24"
-      issue.message.should eq %(Duplicated keys in hash literal: "a")
-    end
   end
 end

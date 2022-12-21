@@ -49,20 +49,5 @@ module Ameba
         # ^{} error: Type name should be camelcased: NumericValue, but it was Numeric_value
         CRYSTAL
     end
-
-    it "reports rule, pos and message" do
-      s = Source.new %(
-        class My_class
-        end
-      ), "source.cr"
-      subject.catch(s).should_not be_valid
-      issue = s.issues.first
-      issue.rule.should_not be_nil
-      issue.location.to_s.should eq "source.cr:1:1"
-      issue.end_location.to_s.should eq "source.cr:2:3"
-      issue.message.should eq(
-        "Type name should be camelcased: MyClass, but it was My_class"
-      )
-    end
   end
 end

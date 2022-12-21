@@ -94,16 +94,6 @@ module Ameba::Rule::Lint
           a
           CRYSTAL
       end
-
-      it "reports rule, pos and message" do
-        source = Source.new "a != true", "source.cr"
-        subject.catch(source)
-
-        issue = source.issues.first
-        issue.rule.should_not be_nil
-        issue.location.to_s.should eq "source.cr:1:1"
-        issue.message.should eq "Comparison to a boolean is pointless"
-      end
     end
 
     context "boolean on the left" do
@@ -164,17 +154,6 @@ module Ameba::Rule::Lint
         expect_correction source, <<-CRYSTAL
           a
           CRYSTAL
-      end
-
-      it "reports rule, pos and message" do
-        source = Source.new "true != a", "source.cr"
-        subject.catch(source).should_not be_valid
-
-        issue = source.issues.first
-        issue.rule.should_not be_nil
-        issue.location.to_s.should eq "source.cr:1:1"
-        issue.end_location.to_s.should eq "source.cr:1:9"
-        issue.message.should eq "Comparison to a boolean is pointless"
       end
     end
   end

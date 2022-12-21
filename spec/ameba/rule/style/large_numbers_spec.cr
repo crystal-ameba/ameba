@@ -117,18 +117,6 @@ module Ameba
     it_transforms "3.001234", "3.001_234"
     it_transforms "3.0012345", "3.001_234_5"
 
-    it "reports rule, pos and message" do
-      s = Source.new %q(
-        1200000
-      ), "source.cr"
-      subject.catch(s).should_not be_valid
-      issue = s.issues.first
-      issue.rule.should_not be_nil
-      issue.location.to_s.should eq "source.cr:1:1"
-      issue.end_location.to_s.should eq "source.cr:1:7"
-      issue.message.should match /1_200_000/
-    end
-
     context "properties" do
       it "#int_min_digits" do
         rule = Rule::Style::LargeNumbers.new

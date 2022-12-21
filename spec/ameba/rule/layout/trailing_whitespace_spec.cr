@@ -15,16 +15,5 @@ module Ameba::Rule::Layout
 
       expect_correction source, "whitespace at the end"
     end
-
-    it "reports rule, pos and message" do
-      source = Source.new "a = 1\n b = 2 ", "source.cr"
-      subject.catch(source).should_not be_valid
-
-      issue = source.issues.first
-      issue.rule.should_not be_nil
-      issue.location.to_s.should eq "source.cr:2:7"
-      issue.end_location.to_s.should eq "source.cr:2:7"
-      issue.message.should eq "Trailing whitespace detected"
-    end
   end
 end
