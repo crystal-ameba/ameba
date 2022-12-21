@@ -3,7 +3,7 @@ require "../../../spec_helper"
 module Ameba
   subject = Rule::Lint::EmptyExpression.new
 
-  def it_detects_empty_expression(code)
+  private def it_detects_empty_expression(code)
     it "detects empty expression" do
       s = Source.new code
       rule = Rule::Lint::EmptyExpression.new

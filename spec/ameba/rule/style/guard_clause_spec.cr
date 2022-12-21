@@ -3,7 +3,7 @@ require "../../../spec_helper"
 module Ameba
   subject = Rule::Style::GuardClause.new
 
-  def it_reports_body(body, *, line = __LINE__)
+  private def it_reports_body(body, *, line = __LINE__)
     rule = Rule::Style::GuardClause.new
 
     it "reports an issue if method body is if / unless without else" do
@@ -75,7 +75,7 @@ module Ameba
     end
   end
 
-  def it_reports_control_expression(kw, *, line = __LINE__)
+  private def it_reports_control_expression(kw, *, line = __LINE__)
     rule = Rule::Style::GuardClause.new
 
     it "reports an issue with #{kw} in the if branch" do
