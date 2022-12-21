@@ -5,7 +5,7 @@ module Ameba::Rule::Layout
 
   describe TrailingWhitespace do
     it "passes if all lines do not have trailing whitespace" do
-      expect_no_issues subject, "no-whispace"
+      expect_no_issues subject, "no-whitespace"
     end
 
     it "fails if there is a line with trailing whitespace" do
