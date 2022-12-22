@@ -46,8 +46,8 @@ module Ameba::Rule::Performance
     end
 
     context "properties" do
-      it "allows to configure object_call_names" do
-        rule = Rule::Performance::AnyAfterFilter.new
+      it "#filter_names" do
+        rule = AnyAfterFilter.new
         rule.filter_names = %w(select)
 
         expect_no_issues rule, <<-CRYSTAL
@@ -65,15 +65,6 @@ module Ameba::Rule::Performance
 
         expect_no_corrections source
       end
-    end
-
-    it "reports rule, pos and message" do
-      source = expect_issue subject, <<-CRYSTAL
-        [1, 2, 3].reject { |e| e > 2 }.any?
-                # ^^^^^^^^^^^^^^^^^^^^^^^^^^ error: Use `any? {...}` instead of `reject {...}.any?`
-        CRYSTAL
-
-      expect_no_corrections source
     end
   end
 end

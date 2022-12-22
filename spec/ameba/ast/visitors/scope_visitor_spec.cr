@@ -4,37 +4,37 @@ module Ameba::AST
   describe ScopeVisitor do
     it "creates a scope for the def" do
       rule = ScopeRule.new
-      ScopeVisitor.new rule, Source.new %(
+      ScopeVisitor.new rule, Source.new <<-CRYSTAL
         def method
         end
-      )
+        CRYSTAL
       rule.scopes.size.should eq 1
     end
 
     it "creates a scope for the proc" do
       rule = ScopeRule.new
-      ScopeVisitor.new rule, Source.new %(
+      ScopeVisitor.new rule, Source.new <<-CRYSTAL
         -> {}
-      )
+        CRYSTAL
       rule.scopes.size.should eq 1
     end
 
     it "creates a scope for the block" do
       rule = ScopeRule.new
-      ScopeVisitor.new rule, Source.new %(
+      ScopeVisitor.new rule, Source.new <<-CRYSTAL
         3.times {}
-      )
+        CRYSTAL
       rule.scopes.size.should eq 2
     end
 
     context "inner scopes" do
       it "creates scope for block inside def" do
         rule = ScopeRule.new
-        ScopeVisitor.new rule, Source.new %(
+        ScopeVisitor.new rule, Source.new <<-CRYSTAL
           def method
             3.times {}
           end
-        )
+          CRYSTAL
         rule.scopes.size.should eq 2
         rule.scopes.last.outer_scope.should_not be_nil
         rule.scopes.first.outer_scope.should eq rule.scopes.last
@@ -42,11 +42,11 @@ module Ameba::AST
 
       it "creates scope for block inside block" do
         rule = ScopeRule.new
-        ScopeVisitor.new rule, Source.new %(
+        ScopeVisitor.new rule, Source.new <<-CRYSTAL
           3.times do
             2.times {}
           end
-        )
+          CRYSTAL
         rule.scopes.size.should eq 3
         inner_block = rule.scopes.first
         outer_block = rule.scopes.last

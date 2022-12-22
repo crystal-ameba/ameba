@@ -44,7 +44,7 @@ module Ameba::Rule::Performance
     end
 
     context "properties" do
-      it "allows to configure `call_names`" do
+      it "#call_names" do
         rule = ChainedCallWithNoBang.new
         rule.call_names = %w(uniq)
 
@@ -52,22 +52,6 @@ module Ameba::Rule::Performance
           [1, 2, 3].select { |e| e > 2 }.reverse
           CRYSTAL
       end
-    end
-
-    it "reports rule, pos and message" do
-      source = Source.new path: "source.cr", code: <<-CODE
-        [1, 2, 3].select { |e| e > 1 }.reverse
-        CODE
-
-      subject.catch(source).should_not be_valid
-      source.issues.size.should eq 1
-
-      issue = source.issues.first
-      issue.rule.should_not be_nil
-      issue.location.to_s.should eq "source.cr:1:32"
-      issue.end_location.to_s.should eq "source.cr:1:38"
-
-      issue.message.should eq "Use bang method variant `reverse!` after chained `select` call"
     end
 
     context "macro" do

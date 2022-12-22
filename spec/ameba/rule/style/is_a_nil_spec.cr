@@ -34,19 +34,5 @@ module Ameba::Rule::Style
         a.nil?
         CRYSTAL
     end
-
-    it "reports rule, location and message" do
-      s = Source.new %(
-        nil.is_a? Nil
-      ), "source.cr"
-      subject.catch(s).should_not be_valid
-      s.issues.size.should eq 1
-
-      issue = s.issues.first
-      issue.rule.should_not be_nil
-      issue.location.to_s.should eq "source.cr:1:11"
-      issue.end_location.to_s.should eq "source.cr:1:13"
-      issue.message.should eq IsANil::MSG
-    end
   end
 end

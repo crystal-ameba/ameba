@@ -62,29 +62,14 @@ module Ameba::Rule::Performance
     end
 
     context "properties" do
-      it "allows to configure object_call_names" do
-        rule = Rule::Performance::FirstLastAfterFilter.new
+      it "#filter_names" do
+        rule = FirstLastAfterFilter.new
         rule.filter_names = %w(reject)
 
         expect_no_issues rule, <<-CRYSTAL
           [1, 2, 3].select { |e| e > 2 }.first
           CRYSTAL
       end
-    end
-
-    it "reports rule, pos and message" do
-      s = Source.new %(
-        [1, 2, 3].select { |e| e > 2 }.first
-      ), "source.cr"
-      subject.catch(s).should_not be_valid
-      s.issues.size.should eq 1
-
-      issue = s.issues.first
-      issue.rule.should_not be_nil
-      issue.location.to_s.should eq "source.cr:1:11"
-      issue.end_location.to_s.should eq "source.cr:1:37"
-
-      issue.message.should eq "Use `find {...}` instead of `select {...}.first`"
     end
 
     context "macro" do

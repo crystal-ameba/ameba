@@ -42,18 +42,5 @@ module Ameba::Rule::Performance
           CRYSTAL
       end
     end
-
-    it "reports rule, pos and message" do
-      source = Source.new path: "source.cr", code: %(
-        [1, 2, 3].any?
-      )
-      subject.catch(source).should_not be_valid
-      issue = source.issues.first
-
-      issue.rule.should_not be_nil
-      issue.location.to_s.should eq "source.cr:1:11"
-      issue.end_location.to_s.should eq "source.cr:1:14"
-      issue.message.should eq "Use `!{...}.empty?` instead of `{...}.any?`"
-    end
   end
 end

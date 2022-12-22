@@ -3,10 +3,10 @@ require "../../../spec_helper"
 module Ameba
   subject = Rule::Style::TypeNames.new
 
-  private def it_reports_name(type, name, expected)
-    it "reports type name #{expected}" do
+  private def it_reports_name(type, name, expected, *, file = __FILE__, line = __LINE__)
+    it "reports type name #{expected}", file, line do
       rule = Rule::Style::TypeNames.new
-      expect_issue rule, <<-CRYSTAL, type: type, name: name
+      expect_issue rule, <<-CRYSTAL, type: type, name: name, file: file, line: line
         %{type} %{name}; end
         # ^{type}^{name}^^^^ error: Type name should be camelcased: #{expected}, but it was %{name}
         CRYSTAL
@@ -48,21 +48,6 @@ module Ameba
         alias Numeric_value = Int32
         # ^{} error: Type name should be camelcased: NumericValue, but it was Numeric_value
         CRYSTAL
-    end
-
-    it "reports rule, pos and message" do
-      s = Source.new %(
-        class My_class
-        end
-      ), "source.cr"
-      subject.catch(s).should_not be_valid
-      issue = s.issues.first
-      issue.rule.should_not be_nil
-      issue.location.to_s.should eq "source.cr:1:1"
-      issue.end_location.to_s.should eq "source.cr:2:3"
-      issue.message.should eq(
-        "Type name should be camelcased: MyClass, but it was My_class"
-      )
     end
   end
 end

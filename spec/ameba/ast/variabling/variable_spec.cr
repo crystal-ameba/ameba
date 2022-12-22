@@ -79,12 +79,12 @@ module Ameba::AST
 
     describe "#captured_by_block?" do
       it "returns truthy if the variable is captured by block" do
-        nodes = as_nodes %(
+        nodes = as_nodes <<-CRYSTAL
           def method
             a = 2
             3.times { |i| a = a + i }
           end
-        )
+          CRYSTAL
         scope = Scope.new nodes.def_nodes.first
         var_node = nodes.var_nodes.first
         scope.add_variable var_node
@@ -95,12 +95,12 @@ module Ameba::AST
         variable.captured_by_block?.should be_truthy
       end
 
-      it "returns falsey if the variable is not captured by the block" do
-        scope = Scope.new as_node %(
+      it "returns falsy if the variable is not captured by the block" do
+        scope = Scope.new as_node <<-CRYSTAL
           def method
             a = 1
           end
-        )
+          CRYSTAL
         scope.add_variable Crystal::Var.new "a"
         variable = scope.variables.first
         variable.captured_by_block?.should be_falsey

@@ -194,24 +194,5 @@ module Ameba::Rule::Lint
         end
         CRYSTAL
     end
-
-    it "reports rule, location and message" do
-      s = Source.new %(
-        i = 0
-        while true
-          i += 1
-          spawn { i }
-        end
-      ), "source.cr"
-
-      subject.catch(s).should_not be_valid
-      s.issues.size.should eq 1
-
-      issue = s.issues.first
-      issue.rule.should_not be_nil
-      issue.location.to_s.should eq "source.cr:4:11"
-      issue.end_location.to_s.should eq "source.cr:4:11"
-      issue.message.should eq "Shared variable `i` is used in fiber"
-    end
   end
 end

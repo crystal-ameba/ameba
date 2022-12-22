@@ -3,10 +3,10 @@ require "../../../spec_helper"
 module Ameba
   subject = Rule::Style::VariableNames.new
 
-  private def it_reports_var_name(name, value, expected)
-    it "reports variable name #{expected}" do
+  private def it_reports_var_name(name, value, expected, *, file = __FILE__, line = __LINE__)
+    it "reports variable name #{expected}", file, line do
       rule = Rule::Style::VariableNames.new
-      expect_issue rule, <<-CRYSTAL, name: name
+      expect_issue rule, <<-CRYSTAL, name: name, file: file, line: line
           %{name} = #{value}
         # ^{name} error: Var name should be underscore-cased: #{expected}, not %{name}
         CRYSTAL
@@ -61,20 +61,6 @@ module Ameba
         # ^^^^^^^^^^^^^^^^^ error: Var name should be underscore-cased: @@default_greeting, not @@defaultGreeting
         end
         CRYSTAL
-    end
-
-    it "reports rule, pos and message" do
-      s = Source.new %(
-        badName = "Yeah"
-      ), "source.cr"
-      subject.catch(s).should_not be_valid
-      issue = s.issues.first
-      issue.rule.should_not be_nil
-      issue.location.to_s.should eq "source.cr:1:1"
-      issue.end_location.to_s.should eq "source.cr:1:7"
-      issue.message.should eq(
-        "Var name should be underscore-cased: bad_name, not badName"
-      )
     end
   end
 end

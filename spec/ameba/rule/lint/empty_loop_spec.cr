@@ -64,21 +64,5 @@ module Ameba::Rule::Lint
         end
         CRYSTAL
     end
-
-    it "reports rule, message and location" do
-      s = Source.new %(
-        a = 1
-        loop do
-          # comment goes here
-        end
-      ), "source.cr"
-      subject.catch(s).should_not be_valid
-      s.issues.size.should eq 1
-      issue = s.issues.first
-      issue.rule.should_not be_nil
-      issue.location.to_s.should eq "source.cr:2:1"
-      issue.end_location.to_s.should eq "source.cr:4:3"
-      issue.message.should eq EmptyLoop::MSG
-    end
   end
 end

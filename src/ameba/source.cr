@@ -24,9 +24,10 @@ module Ameba
 
     # Corrects any correctable issues and updates `code`.
     # Returns `false` if no issues were corrected.
-    def correct
+    def correct?
       corrector = Corrector.new(code)
       issues.each(&.correct(corrector))
+
       corrected_code = corrector.process
       return false if code == corrected_code
 
