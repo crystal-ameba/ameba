@@ -51,10 +51,16 @@ module Ameba::Rule::Style
 
     def test(source, node : Crystal::Unless)
       return if node.else.nop?
-      return unless location = node.location
-      return unless cond_end_location = node.cond.end_location
-      return unless else_location = node.else_location
-      return unless end_location = node.end_location
+
+      location = node.location
+      cond_end_location = node.cond.end_location
+      else_location = node.else_location
+      end_location = node.end_location
+
+      unless location && cond_end_location && else_location && end_location
+        issue_for node, MSG
+        return
+      end
 
       issue_for node, MSG do |corrector|
         keyword_begin_pos = source.pos(location)
