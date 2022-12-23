@@ -62,7 +62,7 @@ module Ameba::Rule::Style
         return
       end
 
-      issue_for node, MSG do |corrector|
+      issue_for location, cond_end_location, MSG do |corrector|
         keyword_begin_pos = source.pos(location)
         keyword_end_pos = keyword_begin_pos + {{ "unless".size }}
         keyword_range = keyword_begin_pos...keyword_end_pos
