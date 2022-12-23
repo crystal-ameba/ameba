@@ -47,14 +47,17 @@ module Ameba::Rule::Lint
       return unless obj.name.in?(obj.block ? BLOCK_CALL_NAMES : CALL_NAMES)
 
       return unless name_location = obj.name_location
-      return unless name_location_end = name_end_location(obj)
-      return unless end_location = name_end_location(node)
+      return unless name_end_location = name_end_location(node)
 
       msg = MSG % {obj.name, obj.name}
 
-      issue_for name_location, end_location, msg do |corrector|
+      issue_for name_location, name_end_location, msg do |corrector|
+        next unless location = node.location
+        next unless end_location = node.end_location
+        next unless name_location_end = name_end_location(obj)
+
         corrector.insert_after(name_location_end, '!')
-        corrector.remove_trailing(node, {{ ".not_nil!".size }})
+        corrector.remove_trailing(location, end_location, {{ ".not_nil!".size }})
       end
     end
   end

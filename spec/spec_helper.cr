@@ -109,7 +109,10 @@ module Ameba
       return unless name.includes?("A")
 
       issue_for(node.name, message: "A to AA") do |corrector|
-        corrector.replace(node.name, name.sub("A", "AA"))
+        next unless location = node.name.location
+        next unless end_location = node.name.end_location
+
+        corrector.replace(location, end_location, name.sub("A", "AA"))
       end
     end
   end
@@ -126,7 +129,10 @@ module Ameba
       return unless name.includes?("A")
 
       issue_for(node.name, message: "A to B") do |corrector|
-        corrector.replace(node.name, name.tr("A", "B"))
+        next unless location = node.name.location
+        next unless end_location = node.name.end_location
+
+        corrector.replace(location, end_location, name.tr("A", "B"))
       end
     end
   end
@@ -143,7 +149,10 @@ module Ameba
       return unless name.includes?("B")
 
       issue_for(node.name, message: "B to A") do |corrector|
-        corrector.replace(node.name, name.tr("B", "A"))
+        next unless location = node.name.location
+        next unless end_location = node.name.end_location
+
+        corrector.replace(location, end_location, name.tr("B", "A"))
       end
     end
   end
@@ -160,7 +169,10 @@ module Ameba
       return unless name.includes?("B")
 
       issue_for(node.name, message: "B to C") do |corrector|
-        corrector.replace(node.name, name.tr("B", "C"))
+        next unless location = node.name.location
+        next unless end_location = node.name.end_location
+
+        corrector.replace(location, end_location, name.tr("B", "C"))
       end
     end
   end
@@ -177,7 +189,10 @@ module Ameba
       return unless name.includes?("C")
 
       issue_for(node.name, message: "C to A") do |corrector|
-        corrector.replace(node.name, name.tr("C", "A"))
+        next unless location = node.name.location
+        next unless end_location = node.name.end_location
+
+        corrector.replace(location, end_location, name.tr("C", "A"))
       end
     end
   end
