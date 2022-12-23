@@ -38,7 +38,7 @@ module Ameba::Rule::Lint
     it "reports if block arg is not used" do
       source = expect_issue subject, <<-CRYSTAL
         def method(a, b, c, &block)
-                           # ^ error: Unused block argument `block`. [...]
+                           # ^^^^^ error: Unused block argument `block`. [...]
         end
         CRYSTAL
 
@@ -51,7 +51,7 @@ module Ameba::Rule::Lint
     it "reports if unused and there is yield" do
       source = expect_issue subject, <<-CRYSTAL
         def method(a, b, c, &block)
-                           # ^ error: Use `&` as an argument name to indicate that it won't be referenced.
+                           # ^^^^^ error: Use `&` as an argument name to indicate that it won't be referenced.
           3.times do |i|
             i.try do
               yield i
@@ -94,7 +94,7 @@ module Ameba::Rule::Lint
         source = expect_issue subject, <<-CRYSTAL
           class Bar < Foo
             def method(a, b, c, &block)
-                               # ^ error: Unused block argument `block`. [...]
+                               # ^^^^^ error: Unused block argument `block`. [...]
               super a, b, c
             end
           end
