@@ -43,18 +43,21 @@ module Ameba::Rule::Lint
       end
 
       return unless bool && exp
-      return unless exp_code = node_source(exp, source.lines)
-
-      not =
-        case node.name
-        when "==", "===" then !bool.value # foo == false
-        when "!="        then bool.value  # foo != true
-        end
-
-      exp_code = "!#{exp_code}" if not
 
       issue_for node, MSG do |corrector|
-        corrector.replace(node, exp_code)
+        next unless location = node.location
+        next unless end_location = node.end_location
+        next unless exp_code = node_source(exp, source.lines)
+
+        not =
+          case node.name
+          when "==", "===" then !bool.value # foo == false
+          when "!="        then bool.value  # foo != true
+          end
+
+        exp_code = "!#{exp_code}" if not
+
+        corrector.replace(location, end_location, exp_code)
       end
     end
   end

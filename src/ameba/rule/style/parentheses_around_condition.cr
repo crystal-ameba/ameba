@@ -57,7 +57,10 @@ module Ameba::Rule::Style
 
       if cond.is_a?(Crystal::Assign) && allow_safe_assignment?
         issue_for cond, MSG_MISSING do |corrector|
-          corrector.wrap(cond, '(', ')')
+          next unless location = cond.location
+          next unless end_location = cond.end_location
+
+          corrector.wrap(location, end_location, '(', ')')
         end
         return
       end
@@ -73,8 +76,11 @@ module Ameba::Rule::Style
       return unless strip_parentheses?(exp, is_ternary)
 
       issue_for cond, MSG_REDUNDANT do |corrector|
-        corrector.remove_trailing(cond, 1)
-        corrector.remove_leading(cond, 1)
+        next unless location = cond.location
+        next unless end_location = cond.end_location
+
+        corrector.remove_trailing(location, end_location, 1)
+        corrector.remove_leading(location, end_location, 1)
       end
     end
   end

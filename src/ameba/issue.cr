@@ -35,8 +35,10 @@ module Ameba
       rule.is_a?(Rule::Lint::Syntax)
     end
 
-    def correctable?
-      !@block.nil?
+    getter? correctable : Bool do
+      corrector = Source::Corrector.new(code)
+      correct(corrector)
+      !corrector.empty?
     end
 
     def correct(corrector)

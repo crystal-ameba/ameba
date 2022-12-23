@@ -35,7 +35,10 @@ module Ameba::Rule::Style
       return unless path_named?(const, "Nil")
 
       issue_for const, MSG do |corrector|
-        corrector.replace(node, "#{node.obj}.nil?")
+        next unless location = node.location
+        next unless end_location = node.end_location
+
+        corrector.replace(location, end_location, "#{node.obj}.nil?")
       end
     end
   end
