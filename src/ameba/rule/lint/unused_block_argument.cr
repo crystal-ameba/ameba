@@ -58,7 +58,7 @@ module Ameba::Rule::Lint
 
       if scope.yields?
         if location && end_location
-          issue_for block_arg.node, MSG_YIELDED do |corrector|
+          issue_for location, end_location, MSG_YIELDED do |corrector|
             corrector.remove(location, end_location)
           end
         else
@@ -67,7 +67,7 @@ module Ameba::Rule::Lint
       else
         return if block_arg.ignored?
         if location && end_location
-          issue_for block_arg.node, MSG_UNUSED % block_arg.name do |corrector|
+          issue_for location, end_location, MSG_UNUSED % block_arg.name do |corrector|
             corrector.insert_before(location, '_')
           end
         else
