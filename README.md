@@ -162,16 +162,16 @@ $ brew install ameba
 Build the image:
 
 ```sh
-$ docker build -t crystal-ameba/ameba .
+$ docker build -t ghcr.io/crystal-ameba/ameba .
 ```
 
 To use the resulting image on a local source folder, mount the current (or target) directory into `/src`:
 
 ```sh
-$ docker run -v $(pwd):/src crystal-ameba/ameba
+$ docker run -v $(pwd):/src ghcr.io/crystal-ameba/ameba
 ```
 
-Also available on DockerHub: https://hub.docker.com/r/veelenga/ameba
+Also available on GitHub: https://github.com/crystal-ameba/ameba/pkgs/container/ameba
 
 ### From sources
 
