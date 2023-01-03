@@ -754,6 +754,22 @@
 
 <div class="main-content">
 <p><a href="https://github.com/vshymanskyy/StandWithUkraine/blob/main/docs/README.md"><img src="https://raw.githubusercontent.com/vshymanskyy/StandWithUkraine/main/banner-direct.svg" alt="SWUbanner" /></a></p>
+<p align="center">
+  <img src="https://raw.githubusercontent.com/veelenga/bin/master/ameba/logo.png" width="800">
+  <h3 align="center">Ameba</h3>
+  <p align="center">Code style linter for Crystal<p>
+  <p align="center">
+    <sup>
+      <i>(a single-celled animal that catches food and moves about by extending fingerlike projections of protoplasm)</i>
+    </sup>
+  </p>
+  <p align="center">
+    <a href="https://github.com/crystal-ameba/ameba/actions?query=workflow%3ACI"><img src="https://github.com/crystal-ameba/ameba/workflows/CI/badge.svg"></a>
+    <a href="https://github.com/crystal-ameba/ameba/releases"><img src="https://img.shields.io/github/release/crystal-ameba/ameba.svg?maxAge=360"></a>
+    <a href="https://github.com/crystal-ameba/ameba/blob/master/LICENSE"><img src="https://img.shields.io/github/license/crystal-ameba/ameba.svg"></a>
+  <a href="https://gitter.im/veelenga/ameba?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge"><img src="https://badges.gitter.im/veelenga/ameba.svg"></a>
+  </p>
+</p>
 <ul>
 <li><a href="#about">About</a></li>
 <li><a href="#usage">Usage</a>
@@ -825,6 +841,7 @@ Finished in 389.45 milliseconds
     <use href="#octicon-link"/>
   </svg>
 </a>Watch a tutorial</h3>
+<p><a href="https://luckycasts.com/videos/ameba"><img src="https://i.imgur.com/uOETQlM.png" title="Write Better Crystal Code with the Ameba Shard" width="500" /></a></p>
 <p><a href="https://luckycasts.com/videos/ameba">🎬 Watch the LuckyCast showing how to use Ameba</a></p>
 <h3><a id="autocorrection" class="anchor" href="#autocorrection">
   <svg class="octicon-link" aria-hidden="true">
@@ -898,10 +915,10 @@ $ brew install ameba</code></pre>
   </svg>
 </a>Docker</h3>
 <p>Build the image:</p>
-<pre><code class="language-sh">$ docker build -t crystal-ameba/ameba .</code></pre>
+<pre><code class="language-sh">$ docker build -t ghcr.io/crystal-ameba/ameba .</code></pre>
 <p>To use the resulting image on a local source folder, mount the current (or target) directory into <code>/src</code>:</p>
-<pre><code class="language-sh">$ docker run -v $(pwd):/src crystal-ameba/ameba</code></pre>
-<p>Also available on DockerHub: https://hub.docker.com/r/veelenga/ameba</p>
+<pre><code class="language-sh">$ docker run -v $(pwd):/src ghcr.io/crystal-ameba/ameba</code></pre>
+<p>Also available on GitHub: https://github.com/crystal-ameba/ameba/pkgs/container/ameba</p>
 <h3><a id="from-sources" class="anchor" href="#from-sources">
   <svg class="octicon-link" aria-hidden="true">
     <use href="#octicon-link"/>

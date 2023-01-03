@@ -800,7 +800,7 @@ on the different correction actions supplied.</p>
   </h2>
   
     
-      <a href="https://github.com/crystal-ameba/ameba/blob/b9bc5aaa/src/ameba/source/corrector.cr#L6" target="_blank">
+      <a href="https://github.com/crystal-ameba/ameba/blob/f7cb5bb/src/ameba/source/corrector.cr#L6" target="_blank">
         ameba/source/corrector.cr
       </a>
     
@@ -850,9 +850,23 @@ on the different correction actions supplied.</p>
       </li>
     
       <li class="entry-summary">
+        <a href="#insert_after%28range%3ARange%28Int32%2CInt32%29%2Ccontent%29-instance-method" class="signature"><strong>#insert_after</strong>(range : Range(Int32, Int32), content)</a>
+        
+          <div class="summary"><p>Shortcut for <code><a href="../../Ameba/Source/Corrector.html#wrap%28range%3ARange%28Int32%2CInt32%29%2Cinsert_before%2Cinsert_after%29-instance-method">#wrap(range, nil, content)</a></code></p></div>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#insert_after%28pos%3AInt32%2Ccontent%29-instance-method" class="signature"><strong>#insert_after</strong>(pos : Int32, content)</a>
+        
+          <div class="summary"><p>Shortcut for <code><a href="../../Ameba/Source/Corrector.html#insert_after%28range%3ARange%28Int32%2CInt32%29%2Ccontent%29-instance-method">#insert_after(...pos, content)</a></code></p></div>
+        
+      </li>
+    
+      <li class="entry-summary">
         <a href="#insert_after%28node%3ACrystal%3A%3AASTNode%2Ccontent%29-instance-method" class="signature"><strong>#insert_after</strong>(node : Crystal::ASTNode, content)</a>
         
-          <div class="summary"><p>Shortcut for <code><a href="../../Ameba/Source/Corrector.html#wrap%28node%3ACrystal%3A%3AASTNode%2Cinsert_before%2Cinsert_after%29-instance-method">#wrap(node, nil, content)</a></code></p></div>
+          <div class="summary"><p>Shortcut for <code><a href="../../Ameba/Source/Corrector.html#wrap%28range%3ARange%28Int32%2CInt32%29%2Cinsert_before%2Cinsert_after%29-instance-method">#wrap(node, nil, content)</a></code></p></div>
         
       </li>
     
@@ -871,9 +885,23 @@ on the different correction actions supplied.</p>
       </li>
     
       <li class="entry-summary">
+        <a href="#insert_before%28range%3ARange%28Int32%2CInt32%29%2Ccontent%29-instance-method" class="signature"><strong>#insert_before</strong>(range : Range(Int32, Int32), content)</a>
+        
+          <div class="summary"><p>Shortcut for <code><a href="../../Ameba/Source/Corrector.html#wrap%28range%3ARange%28Int32%2CInt32%29%2Cinsert_before%2Cinsert_after%29-instance-method">#wrap(range, content, nil)</a></code></p></div>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#insert_before%28pos%3AInt32%2Ccontent%29-instance-method" class="signature"><strong>#insert_before</strong>(pos : Int32, content)</a>
+        
+          <div class="summary"><p>Shortcut for <code><a href="../../Ameba/Source/Corrector.html#insert_before%28range%3ARange%28Int32%2CInt32%29%2Ccontent%29-instance-method">#insert_before(pos.., content)</a></code></p></div>
+        
+      </li>
+    
+      <li class="entry-summary">
         <a href="#insert_before%28node%3ACrystal%3A%3AASTNode%2Ccontent%29-instance-method" class="signature"><strong>#insert_before</strong>(node : Crystal::ASTNode, content)</a>
         
-          <div class="summary"><p>Shortcut for <code><a href="../../Ameba/Source/Corrector.html#wrap%28node%3ACrystal%3A%3AASTNode%2Cinsert_before%2Cinsert_after%29-instance-method">#wrap(node, content, nil)</a></code></p></div>
+          <div class="summary"><p>Shortcut for <code><a href="../../Ameba/Source/Corrector.html#wrap%28range%3ARange%28Int32%2CInt32%29%2Cinsert_before%2Cinsert_after%29-instance-method">#wrap(node, content, nil)</a></code></p></div>
         
       </li>
     
@@ -899,14 +927,28 @@ on the different correction actions supplied.</p>
       </li>
     
       <li class="entry-summary">
+        <a href="#remove%28range%3ARange%28Int32%2CInt32%29%29-instance-method" class="signature"><strong>#remove</strong>(range : Range(Int32, Int32))</a>
+        
+          <div class="summary"><p>Shortcut for <code><a href="../../Ameba/Source/Corrector.html#replace%28range%3ARange%28Int32%2CInt32%29%2Ccontent%29-instance-method">#replace(range, &quot;&quot;)</a></code></p></div>
+        
+      </li>
+    
+      <li class="entry-summary">
         <a href="#remove%28node%3ACrystal%3A%3AASTNode%29-instance-method" class="signature"><strong>#remove</strong>(node : Crystal::ASTNode)</a>
         
-          <div class="summary"><p>Shortcut for <code><a href="../../Ameba/Source/Corrector.html#replace%28node%3ACrystal%3A%3AASTNode%2Ccontent%29-instance-method">#replace(node, &quot;&quot;)</a></code></p></div>
+          <div class="summary"><p>Shortcut for <code><a href="../../Ameba/Source/Corrector.html#replace%28range%3ARange%28Int32%2CInt32%29%2Ccontent%29-instance-method">#replace(node, &quot;&quot;)</a></code></p></div>
         
       </li>
     
       <li class="entry-summary">
         <a href="#remove_leading%28location%2Cend_location%2Csize%29-instance-method" class="signature"><strong>#remove_leading</strong>(location, end_location, size)</a>
+        
+          <div class="summary"><p>Removes <em>size</em> characters from the beginning of the given range.</p></div>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#remove_leading%28range%3ARange%28Int32%2CInt32%29%2Csize%29-instance-method" class="signature"><strong>#remove_leading</strong>(range : Range(Int32, Int32), size)</a>
         
           <div class="summary"><p>Removes <em>size</em> characters from the beginning of the given range.</p></div>
         
@@ -927,6 +969,13 @@ on the different correction actions supplied.</p>
       </li>
     
       <li class="entry-summary">
+        <a href="#remove_preceding%28range%3ARange%28Int32%2CInt32%29%2Csize%29-instance-method" class="signature"><strong>#remove_preceding</strong>(range : Range(Int32, Int32), size)</a>
+        
+          <div class="summary"><p>Removes <em>size</em> characters prior to the source range.</p></div>
+        
+      </li>
+    
+      <li class="entry-summary">
         <a href="#remove_preceding%28node%3ACrystal%3A%3AASTNode%2Csize%29-instance-method" class="signature"><strong>#remove_preceding</strong>(node : Crystal::ASTNode, size)</a>
         
           <div class="summary"><p>Removes <em>size</em> characters prior to the given node.</p></div>
@@ -935,6 +984,13 @@ on the different correction actions supplied.</p>
     
       <li class="entry-summary">
         <a href="#remove_trailing%28location%2Cend_location%2Csize%29-instance-method" class="signature"><strong>#remove_trailing</strong>(location, end_location, size)</a>
+        
+          <div class="summary"><p>Removes <em>size</em> characters from the end of the given range.</p></div>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#remove_trailing%28range%3ARange%28Int32%2CInt32%29%2Csize%29-instance-method" class="signature"><strong>#remove_trailing</strong>(range : Range(Int32, Int32), size)</a>
         
           <div class="summary"><p>Removes <em>size</em> characters from the end of the given range.</p></div>
         
@@ -955,6 +1011,13 @@ on the different correction actions supplied.</p>
       </li>
     
       <li class="entry-summary">
+        <a href="#replace%28range%3ARange%28Int32%2CInt32%29%2Ccontent%29-instance-method" class="signature"><strong>#replace</strong>(range : Range(Int32, Int32), content)</a>
+        
+          <div class="summary"><p>Replaces the code of the given range with <em>content</em>.</p></div>
+        
+      </li>
+    
+      <li class="entry-summary">
         <a href="#replace%28node%3ACrystal%3A%3AASTNode%2Ccontent%29-instance-method" class="signature"><strong>#replace</strong>(node : Crystal::ASTNode, content)</a>
         
           <div class="summary"><p>Replaces the code of the given node with <em>content</em>.</p></div>
@@ -963,6 +1026,13 @@ on the different correction actions supplied.</p>
     
       <li class="entry-summary">
         <a href="#wrap%28location%2Cend_location%2Cinsert_before%2Cinsert_after%29-instance-method" class="signature"><strong>#wrap</strong>(location, end_location, insert_before, insert_after)</a>
+        
+          <div class="summary"><p>Inserts the given strings before and after the given range.</p></div>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#wrap%28range%3ARange%28Int32%2CInt32%29%2Cinsert_before%2Cinsert_after%29-instance-method" class="signature"><strong>#wrap</strong>(range : Range(Int32, Int32), insert_before, insert_after)</a>
         
           <div class="summary"><p>Inserts the given strings before and after the given range.</p></div>
         
@@ -1026,7 +1096,7 @@ on the different correction actions supplied.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/b9bc5aaa/src/ameba/source/corrector.cr#L9" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/f7cb5bb/src/ameba/source/corrector.cr#L9" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1061,7 +1131,49 @@ on the different correction actions supplied.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/b9bc5aaa/src/ameba/source/corrector.cr#L37" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/f7cb5bb/src/ameba/source/corrector.cr#L65" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="insert_after(range:Range(Int32,Int32),content)-instance-method">
+      <div class="signature">
+        
+        def <strong>insert_after</strong>(range : Range(Int32, Int32), content)
+
+        <a class="method-permalink" href="#insert_after%28range%3ARange%28Int32%2CInt32%29%2Ccontent%29-instance-method">#</a>
+      </div>
+      
+        <div class="doc">
+          
+          <p>Shortcut for <code><a href="../../Ameba/Source/Corrector.html#wrap%28range%3ARange%28Int32%2CInt32%29%2Cinsert_before%2Cinsert_after%29-instance-method">#wrap(range, nil, content)</a></code></p>
+        </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/crystal-ameba/ameba/blob/f7cb5bb/src/ameba/source/corrector.cr#L70" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="insert_after(pos:Int32,content)-instance-method">
+      <div class="signature">
+        
+        def <strong>insert_after</strong>(pos : Int32, content)
+
+        <a class="method-permalink" href="#insert_after%28pos%3AInt32%2Ccontent%29-instance-method">#</a>
+      </div>
+      
+        <div class="doc">
+          
+          <p>Shortcut for <code><a href="../../Ameba/Source/Corrector.html#insert_after%28range%3ARange%28Int32%2CInt32%29%2Ccontent%29-instance-method">#insert_after(...pos, content)</a></code></p>
+        </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/crystal-ameba/ameba/blob/f7cb5bb/src/ameba/source/corrector.cr#L92" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1076,13 +1188,13 @@ on the different correction actions supplied.</p>
       
         <div class="doc">
           
-          <p>Shortcut for <code><a href="../../Ameba/Source/Corrector.html#wrap%28node%3ACrystal%3A%3AASTNode%2Cinsert_before%2Cinsert_after%29-instance-method">#wrap(node, nil, content)</a></code></p>
+          <p>Shortcut for <code><a href="../../Ameba/Source/Corrector.html#wrap%28range%3ARange%28Int32%2CInt32%29%2Cinsert_before%2Cinsert_after%29-instance-method">#wrap(node, nil, content)</a></code></p>
         </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/b9bc5aaa/src/ameba/source/corrector.cr#L100" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/f7cb5bb/src/ameba/source/corrector.cr#L164" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1103,7 +1215,7 @@ on the different correction actions supplied.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/b9bc5aaa/src/ameba/source/corrector.cr#L47" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/f7cb5bb/src/ameba/source/corrector.cr#L87" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1124,7 +1236,49 @@ on the different correction actions supplied.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/b9bc5aaa/src/ameba/source/corrector.cr#L32" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/f7cb5bb/src/ameba/source/corrector.cr#L53" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="insert_before(range:Range(Int32,Int32),content)-instance-method">
+      <div class="signature">
+        
+        def <strong>insert_before</strong>(range : Range(Int32, Int32), content)
+
+        <a class="method-permalink" href="#insert_before%28range%3ARange%28Int32%2CInt32%29%2Ccontent%29-instance-method">#</a>
+      </div>
+      
+        <div class="doc">
+          
+          <p>Shortcut for <code><a href="../../Ameba/Source/Corrector.html#wrap%28range%3ARange%28Int32%2CInt32%29%2Cinsert_before%2Cinsert_after%29-instance-method">#wrap(range, content, nil)</a></code></p>
+        </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/crystal-ameba/ameba/blob/f7cb5bb/src/ameba/source/corrector.cr#L58" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="insert_before(pos:Int32,content)-instance-method">
+      <div class="signature">
+        
+        def <strong>insert_before</strong>(pos : Int32, content)
+
+        <a class="method-permalink" href="#insert_before%28pos%3AInt32%2Ccontent%29-instance-method">#</a>
+      </div>
+      
+        <div class="doc">
+          
+          <p>Shortcut for <code><a href="../../Ameba/Source/Corrector.html#insert_before%28range%3ARange%28Int32%2CInt32%29%2Ccontent%29-instance-method">#insert_before(pos.., content)</a></code></p>
+        </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/crystal-ameba/ameba/blob/f7cb5bb/src/ameba/source/corrector.cr#L82" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1139,13 +1293,13 @@ on the different correction actions supplied.</p>
       
         <div class="doc">
           
-          <p>Shortcut for <code><a href="../../Ameba/Source/Corrector.html#wrap%28node%3ACrystal%3A%3AASTNode%2Cinsert_before%2Cinsert_after%29-instance-method">#wrap(node, content, nil)</a></code></p>
+          <p>Shortcut for <code><a href="../../Ameba/Source/Corrector.html#wrap%28range%3ARange%28Int32%2CInt32%29%2Cinsert_before%2Cinsert_after%29-instance-method">#wrap(node, content, nil)</a></code></p>
         </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/b9bc5aaa/src/ameba/source/corrector.cr#L95" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/f7cb5bb/src/ameba/source/corrector.cr#L159" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1166,7 +1320,7 @@ on the different correction actions supplied.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/b9bc5aaa/src/ameba/source/corrector.cr#L42" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/f7cb5bb/src/ameba/source/corrector.cr#L77" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1187,7 +1341,7 @@ on the different correction actions supplied.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/b9bc5aaa/src/ameba/source/corrector.cr#L132" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/f7cb5bb/src/ameba/source/corrector.cr#L196" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1208,7 +1362,28 @@ on the different correction actions supplied.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/b9bc5aaa/src/ameba/source/corrector.cr#L27" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/f7cb5bb/src/ameba/source/corrector.cr#L41" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="remove(range:Range(Int32,Int32))-instance-method">
+      <div class="signature">
+        
+        def <strong>remove</strong>(range : Range(Int32, Int32))
+
+        <a class="method-permalink" href="#remove%28range%3ARange%28Int32%2CInt32%29%29-instance-method">#</a>
+      </div>
+      
+        <div class="doc">
+          
+          <p>Shortcut for <code><a href="../../Ameba/Source/Corrector.html#replace%28range%3ARange%28Int32%2CInt32%29%2Ccontent%29-instance-method">#replace(range, &quot;&quot;)</a></code></p>
+        </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/crystal-ameba/ameba/blob/f7cb5bb/src/ameba/source/corrector.cr#L46" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1223,13 +1398,13 @@ on the different correction actions supplied.</p>
       
         <div class="doc">
           
-          <p>Shortcut for <code><a href="../../Ameba/Source/Corrector.html#replace%28node%3ACrystal%3A%3AASTNode%2Ccontent%29-instance-method">#replace(node, &quot;&quot;)</a></code></p>
+          <p>Shortcut for <code><a href="../../Ameba/Source/Corrector.html#replace%28range%3ARange%28Int32%2CInt32%29%2Ccontent%29-instance-method">#replace(node, &quot;&quot;)</a></code></p>
         </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/b9bc5aaa/src/ameba/source/corrector.cr#L90" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/f7cb5bb/src/ameba/source/corrector.cr#L154" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1252,7 +1427,30 @@ overrun the end of the range.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/b9bc5aaa/src/ameba/source/corrector.cr#L59" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/f7cb5bb/src/ameba/source/corrector.cr#L110" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="remove_leading(range:Range(Int32,Int32),size)-instance-method">
+      <div class="signature">
+        
+        def <strong>remove_leading</strong>(range : Range(Int32, Int32), size)
+
+        <a class="method-permalink" href="#remove_leading%28range%3ARange%28Int32%2CInt32%29%2Csize%29-instance-method">#</a>
+      </div>
+      
+        <div class="doc">
+          
+          <p>Removes <em>size</em> characters from the beginning of the given range.
+If <em>size</em> is greater than the size of the range, the removed region can
+overrun the end of the range.</p>
+        </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/crystal-ameba/ameba/blob/f7cb5bb/src/ameba/source/corrector.cr#L115" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1275,7 +1473,7 @@ overrun the end of the node.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/b9bc5aaa/src/ameba/source/corrector.cr#L112" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/f7cb5bb/src/ameba/source/corrector.cr#L176" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1296,7 +1494,28 @@ overrun the end of the node.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/b9bc5aaa/src/ameba/source/corrector.cr#L52" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/f7cb5bb/src/ameba/source/corrector.cr#L97" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="remove_preceding(range:Range(Int32,Int32),size)-instance-method">
+      <div class="signature">
+        
+        def <strong>remove_preceding</strong>(range : Range(Int32, Int32), size)
+
+        <a class="method-permalink" href="#remove_preceding%28range%3ARange%28Int32%2CInt32%29%2Csize%29-instance-method">#</a>
+      </div>
+      
+        <div class="doc">
+          
+          <p>Removes <em>size</em> characters prior to the source range.</p>
+        </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/crystal-ameba/ameba/blob/f7cb5bb/src/ameba/source/corrector.cr#L102" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1317,7 +1536,7 @@ overrun the end of the node.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/b9bc5aaa/src/ameba/source/corrector.cr#L105" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/f7cb5bb/src/ameba/source/corrector.cr#L169" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1340,7 +1559,30 @@ overrun the beginning of the range.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/b9bc5aaa/src/ameba/source/corrector.cr#L66" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/f7cb5bb/src/ameba/source/corrector.cr#L123" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="remove_trailing(range:Range(Int32,Int32),size)-instance-method">
+      <div class="signature">
+        
+        def <strong>remove_trailing</strong>(range : Range(Int32, Int32), size)
+
+        <a class="method-permalink" href="#remove_trailing%28range%3ARange%28Int32%2CInt32%29%2Csize%29-instance-method">#</a>
+      </div>
+      
+        <div class="doc">
+          
+          <p>Removes <em>size</em> characters from the end of the given range.
+If <em>size</em> is greater than the size of the range, the removed region can
+overrun the beginning of the range.</p>
+        </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/crystal-ameba/ameba/blob/f7cb5bb/src/ameba/source/corrector.cr#L128" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1363,7 +1605,7 @@ overrun the beginning of the node.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/b9bc5aaa/src/ameba/source/corrector.cr#L119" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/f7cb5bb/src/ameba/source/corrector.cr#L183" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1384,7 +1626,28 @@ overrun the beginning of the node.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/b9bc5aaa/src/ameba/source/corrector.cr#L17" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/f7cb5bb/src/ameba/source/corrector.cr#L17" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="replace(range:Range(Int32,Int32),content)-instance-method">
+      <div class="signature">
+        
+        def <strong>replace</strong>(range : Range(Int32, Int32), content)
+
+        <a class="method-permalink" href="#replace%28range%3ARange%28Int32%2CInt32%29%2Ccontent%29-instance-method">#</a>
+      </div>
+      
+        <div class="doc">
+          
+          <p>Replaces the code of the given range with <em>content</em>.</p>
+        </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/crystal-ameba/ameba/blob/f7cb5bb/src/ameba/source/corrector.cr#L22" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1405,7 +1668,7 @@ overrun the beginning of the node.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/b9bc5aaa/src/ameba/source/corrector.cr#L80" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/f7cb5bb/src/ameba/source/corrector.cr#L144" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1426,7 +1689,28 @@ overrun the beginning of the node.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/b9bc5aaa/src/ameba/source/corrector.cr#L22" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/f7cb5bb/src/ameba/source/corrector.cr#L29" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="wrap(range:Range(Int32,Int32),insert_before,insert_after)-instance-method">
+      <div class="signature">
+        
+        def <strong>wrap</strong>(range : Range(Int32, Int32), insert_before, insert_after)
+
+        <a class="method-permalink" href="#wrap%28range%3ARange%28Int32%2CInt32%29%2Cinsert_before%2Cinsert_after%29-instance-method">#</a>
+      </div>
+      
+        <div class="doc">
+          
+          <p>Inserts the given strings before and after the given range.</p>
+        </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/crystal-ameba/ameba/blob/f7cb5bb/src/ameba/source/corrector.cr#L34" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1447,7 +1731,7 @@ overrun the beginning of the node.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/b9bc5aaa/src/ameba/source/corrector.cr#L85" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/f7cb5bb/src/ameba/source/corrector.cr#L149" target="_blank">View source</a>]
         
       </div>
     </div>
