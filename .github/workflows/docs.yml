@@ -25,9 +25,7 @@ jobs:
         run: shards install
 
       - name: Build docs
-        run: |
-          sed -i -e 's:<.*>::g' README.md
-          crystal docs --project-version="${{ env.GITHUB_REF_SLUG }}" --source-refname="${{ env.GITHUB_SHA_SHORT }}"
+        run: crystal docs --project-version="${{ env.GITHUB_REF_SLUG }}" --source-refname="${{ env.GITHUB_SHA_SHORT }}"
 
       - name: Deploy docs 🚀
         uses: JamesIves/github-pages-deploy-action@v4
