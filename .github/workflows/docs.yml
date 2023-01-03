@@ -4,8 +4,12 @@ on:
   push:
     branches: [master]
 
+permissions:
+  contents: write
+
 jobs:
-  build:
+  build-and-deploy:
+    concurrency: ci-${{ github.ref }}
     runs-on: ubuntu-latest
     steps:
       - name: Inject slug/short variables
@@ -16,32 +20,12 @@ jobs:
 
       - name: Download source
         uses: actions/checkout@v3
-        with:
-          persist-credentials: false
 
       - name: Install dependencies
         run: shards install
 
       - name: Build docs
-        run: |
-          sed -i -e 's:<.*>::g' README.md
-          crystal docs --project-version="${{ env.GITHUB_REF_SLUG }}" --source-refname="${{ env.GITHUB_SHA_SHORT }}"
-
-      - name: Upload artifacts
-        uses: actions/upload-artifact@v3
-        with:
-          name: docs
-          path: docs
-
-  deploy:
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
-      - name: Download artifacts
-        uses: actions/download-artifact@v3
-        with:
-          name: docs
-          path: docs
+        run: crystal docs --project-version="${{ env.GITHUB_REF_SLUG }}" --source-refname="${{ env.GITHUB_SHA_SHORT }}"
 
       - name: Deploy docs 🚀
         uses: JamesIves/github-pages-deploy-action@v4
