@@ -42,14 +42,10 @@ module Ameba::Rule::Performance
       return unless node.block.nil? && node.args.empty?
       return unless node.obj
 
-      return unless location = node.location
       return unless name_location = node.name_location
       return unless end_location = name_end_location(node)
 
-      issue_for name_location, end_location, MSG do |corrector|
-        corrector.insert_before(location, '!')
-        corrector.replace(name_location, end_location, "empty?")
-      end
+      issue_for name_location, end_location, MSG
     end
   end
 end
