@@ -14,7 +14,7 @@ module Ameba::Rule::Performance
     it "reports if there is map followed by sum without a block" do
       expect_issue subject, <<-CRYSTAL
         (1..3).map(&.to_u64).sum
-             # ^^^^^^^^^^^^^^^^^^ error: Use `sum {...}` instead of `map {...}.sum`
+             # ^^^^^^^^^^^^^^^^^ error: Use `sum {...}` instead of `map {...}.sum`
         CRYSTAL
     end
 
@@ -27,14 +27,14 @@ module Ameba::Rule::Performance
     it "reports if there is map followed by sum without a block (with argument)" do
       expect_issue subject, <<-CRYSTAL
         (1..3).map(&.to_u64).sum(0)
-             # ^^^^^^^^^^^^^^^^^^ error: Use `sum {...}` instead of `map {...}.sum`
+             # ^^^^^^^^^^^^^^^^^ error: Use `sum {...}` instead of `map {...}.sum`
         CRYSTAL
     end
 
     it "reports if there is map followed by sum with a block" do
       expect_issue subject, <<-CRYSTAL
         (1..3).map(&.to_u64).sum(&.itself)
-             # ^^^^^^^^^^^^^^^^^^ error: Use `sum {...}` instead of `map {...}.sum`
+             # ^^^^^^^^^^^^^^^^^ error: Use `sum {...}` instead of `map {...}.sum`
         CRYSTAL
     end
 

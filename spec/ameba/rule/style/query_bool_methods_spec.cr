@@ -51,7 +51,7 @@ module Ameba::Rule::Style
         expect_issue subject, <<-CRYSTAL, call: {{ call }}
           class Foo
             %{call}   foo : Bool = true
-            _{call} # ^ error: Consider using '%{call}?' for 'foo'
+            _{call} # ^^^ error: Consider using '%{call}?' for 'foo'
           end
           CRYSTAL
       end
@@ -60,7 +60,7 @@ module Ameba::Rule::Style
         expect_issue subject, <<-CRYSTAL, call: {{ call }}
           class Foo
             %{call}   foo : Bool
-            _{call} # ^ error: Consider using '%{call}?' for 'foo'
+            _{call} # ^^^ error: Consider using '%{call}?' for 'foo'
 
             def initialize(@foo = true)
             end

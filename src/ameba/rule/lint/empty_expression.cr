@@ -34,19 +34,11 @@ module Ameba::Rule::Lint
       description "Disallows empty expressions"
     end
 
-    MSG      = "Avoid empty expression %s"
-    MSG_EXRS = "Avoid empty expressions"
-
-    def test(source, node : Crystal::NilLiteral)
-      exp = node_source(node, source.lines)
-      return if exp.in?(nil, "nil")
-
-      issue_for node, MSG % exp
-    end
+    MSG = "Avoid empty expressions"
 
     def test(source, node : Crystal::Expressions)
       return unless node.expressions.size == 1 && node.expressions.first.nop?
-      issue_for node, MSG_EXRS
+      issue_for node, MSG
     end
   end
 end

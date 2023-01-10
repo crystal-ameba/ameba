@@ -86,11 +86,6 @@ module Ameba
     )
     it_detects_empty_expression %(
       begin
-        nil
-      end
-    )
-    it_detects_empty_expression %(
-      begin
         ()
       end
     )

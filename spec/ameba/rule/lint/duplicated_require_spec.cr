@@ -17,7 +17,7 @@ module Ameba::Rule::Lint
         require "big"
         require "math"
         require "big"
-        # ^{} error: Duplicated require of `big`
+        # ^^^^^^^^^^^ error: Duplicated require of `big`
         CRYSTAL
 
       expect_no_corrections source

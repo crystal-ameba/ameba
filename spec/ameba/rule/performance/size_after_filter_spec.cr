@@ -19,7 +19,7 @@ module Ameba::Rule::Performance
     it "reports if there is a select followed by size" do
       expect_issue subject, <<-CRYSTAL
         [1, 2, 3].select { |e| e > 2 }.size
-                # ^^^^^^^^^^^^^^^^^^^^^^^^^^ error: Use `count {...}` instead of `select {...}.size`.
+                # ^^^^^^^^^^^^^^^^^^^^^^^^^ error: Use `count {...}` instead of `select {...}.size`.
         CRYSTAL
     end
 
@@ -32,14 +32,14 @@ module Ameba::Rule::Performance
     it "reports if there is a reject followed by size" do
       expect_issue subject, <<-CRYSTAL
         [1, 2, 3].reject { |e| e < 2 }.size
-                # ^^^^^^^^^^^^^^^^^^^^^^^^^^ error: Use `count {...}` instead of `reject {...}.size`.
+                # ^^^^^^^^^^^^^^^^^^^^^^^^^ error: Use `count {...}` instead of `reject {...}.size`.
         CRYSTAL
     end
 
     it "reports if a block shorthand used" do
       expect_issue subject, <<-CRYSTAL
         [1, 2, 3].reject(&.empty?).size
-                # ^^^^^^^^^^^^^^^^^^^^^^ error: Use `count {...}` instead of `reject {...}.size`.
+                # ^^^^^^^^^^^^^^^^^^^^^ error: Use `count {...}` instead of `reject {...}.size`.
         CRYSTAL
     end
 

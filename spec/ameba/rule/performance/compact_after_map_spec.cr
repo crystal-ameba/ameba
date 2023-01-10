@@ -19,7 +19,7 @@ module Ameba::Rule::Performance
     it "reports if there is map followed by compact call" do
       expect_issue subject, <<-CRYSTAL
         (1..3).map(&.itself).compact
-             # ^^^^^^^^^^^^^^^^^^^^^^ error: Use `compact_map {...}` instead of `map {...}.compact`
+             # ^^^^^^^^^^^^^^^^^^^^^ error: Use `compact_map {...}` instead of `map {...}.compact`
         CRYSTAL
     end
 

@@ -77,7 +77,7 @@ module Ameba::Rule::Lint
         issue = s.issues.first
         issue.rule.should_not be_nil
         issue.location.to_s.should eq "source.cr:2:19"
-        issue.end_location.to_s.should eq "source.cr:2:29"
+        issue.end_location.to_s.should eq "source.cr:2:28"
         issue.message.should eq "Remove redundant with_index"
       end
     end
@@ -155,7 +155,7 @@ module Ameba::Rule::Lint
         issue = s.issues.first
         issue.rule.should_not be_nil
         issue.location.to_s.should eq "source.cr:2:14"
-        issue.end_location.to_s.should eq "source.cr:2:29"
+        issue.end_location.to_s.should eq "source.cr:2:28"
         issue.message.should eq "Use each instead of each_with_index"
       end
     end
