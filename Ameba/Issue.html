@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="generator" content="Crystal Docs 1.5.0">
+<meta name="generator" content="Crystal Docs 1.6.2">
 <meta name="crystal_docs.project_version" content="master">
 <meta name="crystal_docs.project_name" content="ameba">
 
@@ -799,7 +799,7 @@
   </h2>
   
     
-      <a href="https://github.com/crystal-ameba/ameba/blob/a091af1/src/ameba/issue.cr#L3" target="_blank">
+      <a href="https://github.com/crystal-ameba/ameba/blob/e58f900/src/ameba/issue.cr#L3" target="_blank">
         ameba/issue.cr
       </a>
     
@@ -821,7 +821,7 @@
   <ul class="list-summary">
     
       <li class="entry-summary">
-        <a href="#new%28code%3AString%2Crule%3AAmeba%3A%3ARule%3A%3ABase%2Clocation%3ACrystal%3A%3ALocation%3F%2Cend_location%3ACrystal%3A%3ALocation%3F%2Cmessage%3AString%2Cstatus%3AStatus%3F%3Dnil%2Cblock%3ASource%3A%3ACorrector-%3E%3F%3Dnil%29-class-method" class="signature"><strong>.new</strong>(code : String, rule : Ameba::Rule::Base, location : Crystal::Location?, end_location : Crystal::Location?, message : String, status : Status? = <span class="n">nil</span>, block : Source::Corrector -> ? = <span class="n">nil</span>)</a>
+        <a href="#new%28code%3AString%2Crule%3AAmeba%3A%3ARule%3A%3ABase%2Clocation%3ANil%7CCrystal%3A%3ALocation%2Cend_location%3ANil%7CCrystal%3A%3ALocation%2Cmessage%3AString%2Cstatus%3AStatus%7CNil%3Dnil%2Cblock%3ASource%3A%3ACorrector-%3E%7CNil%3Dnil%29-class-method" class="signature"><strong>.new</strong>(code : String, rule : Ameba::Rule::Base, location : Nil | Crystal::Location, end_location : Nil | Crystal::Location, message : String, status : Status | Nil = <span class="n">nil</span>, block : Source::Corrector ->  | Nil = <span class="n">nil</span>)</a>
         
       </li>
     
@@ -879,14 +879,14 @@
       </li>
     
       <li class="entry-summary">
-        <a href="#end_location%3ACrystal%3A%3ALocation%3F-instance-method" class="signature"><strong>#end_location</strong> : Crystal::Location?</a>
+        <a href="#end_location%3ACrystal%3A%3ALocation%7CNil-instance-method" class="signature"><strong>#end_location</strong> : Crystal::Location | Nil</a>
         
           <div class="summary"><p>End location of the issue.</p></div>
         
       </li>
     
       <li class="entry-summary">
-        <a href="#location%3ACrystal%3A%3ALocation%3F-instance-method" class="signature"><strong>#location</strong> : Crystal::Location?</a>
+        <a href="#location%3ACrystal%3A%3ALocation%7CNil-instance-method" class="signature"><strong>#location</strong> : Crystal::Location | Nil</a>
         
           <div class="summary"><p>Location of the issue.</p></div>
         
@@ -968,18 +968,18 @@
     Constructor Detail
   </h2>
   
-    <div class="entry-detail" id="new(code:String,rule:Ameba::Rule::Base,location:Crystal::Location?,end_location:Crystal::Location?,message:String,status:Status?=nil,block:Source::Corrector-&gt;?=nil)-class-method">
+    <div class="entry-detail" id="new(code:String,rule:Ameba::Rule::Base,location:Nil|Crystal::Location,end_location:Nil|Crystal::Location,message:String,status:Status|Nil=nil,block:Source::Corrector-&gt;|Nil=nil)-class-method">
       <div class="signature">
         
-        def self.<strong>new</strong>(code : String, rule : <a href="../Ameba/Rule/Base.html">Ameba::Rule::Base</a>, location : <a href="../Crystal/Location.html">Crystal::Location</a>?, end_location : <a href="../Crystal/Location.html">Crystal::Location</a>?, message : String, status : <a href="../Ameba/Issue/Status.html">Status</a>? = <span class="n">nil</span>, block : <a href="../Ameba/Source/Corrector.html">Source::Corrector</a> -> ? = <span class="n">nil</span>)
+        def self.<strong>new</strong>(code : String, rule : <a href="../Ameba/Rule/Base.html">Ameba::Rule::Base</a>, location : Nil | <a href="../Crystal/Location.html">Crystal::Location</a>, end_location : Nil | <a href="../Crystal/Location.html">Crystal::Location</a>, message : String, status : <a href="../Ameba/Issue/Status.html">Status</a> | Nil = <span class="n">nil</span>, block : <a href="../Ameba/Source/Corrector.html">Source::Corrector</a> ->  | Nil = <span class="n">nil</span>)
 
-        <a class="method-permalink" href="#new%28code%3AString%2Crule%3AAmeba%3A%3ARule%3A%3ABase%2Clocation%3ACrystal%3A%3ALocation%3F%2Cend_location%3ACrystal%3A%3ALocation%3F%2Cmessage%3AString%2Cstatus%3AStatus%3F%3Dnil%2Cblock%3ASource%3A%3ACorrector-%3E%3F%3Dnil%29-class-method">#</a>
+        <a class="method-permalink" href="#new%28code%3AString%2Crule%3AAmeba%3A%3ARule%3A%3ABase%2Clocation%3ANil%7CCrystal%3A%3ALocation%2Cend_location%3ANil%7CCrystal%3A%3ALocation%2Cmessage%3AString%2Cstatus%3AStatus%7CNil%3Dnil%2Cblock%3ASource%3A%3ACorrector-%3E%7CNil%3Dnil%29-class-method">#</a>
       </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/a091af1/src/ameba/issue.cr#L30" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/e58f900/src/ameba/issue.cr#L30" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1014,7 +1014,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/a091af1/src/ameba/issue.cr#L10" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/e58f900/src/ameba/issue.cr#L10" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1030,7 +1030,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/a091af1/src/ameba/issue.cr#L42" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/e58f900/src/ameba/issue.cr#L42" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1046,7 +1046,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/a091af1/src/ameba/issue.cr#L38" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/e58f900/src/ameba/issue.cr#L38" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1062,7 +1062,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/a091af1/src/ameba/issue.cr#L27" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/e58f900/src/ameba/issue.cr#L27" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1078,7 +1078,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/a091af1/src/ameba/issue.cr#L27" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/e58f900/src/ameba/issue.cr#L27" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1094,7 +1094,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/a091af1/src/ameba/issue.cr#L27" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/e58f900/src/ameba/issue.cr#L27" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1110,17 +1110,17 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/a091af1/src/ameba/issue.cr#L27" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/e58f900/src/ameba/issue.cr#L27" target="_blank">View source</a>]
         
       </div>
     </div>
   
-    <div class="entry-detail" id="end_location:Crystal::Location?-instance-method">
+    <div class="entry-detail" id="end_location:Crystal::Location|Nil-instance-method">
       <div class="signature">
         
-        def <strong>end_location</strong> : <a href="../Crystal/Location.html">Crystal::Location</a>?
+        def <strong>end_location</strong> : <a href="../Crystal/Location.html">Crystal::Location</a> | Nil
 
-        <a class="method-permalink" href="#end_location%3ACrystal%3A%3ALocation%3F-instance-method">#</a>
+        <a class="method-permalink" href="#end_location%3ACrystal%3A%3ALocation%7CNil-instance-method">#</a>
       </div>
       
         <div class="doc">
@@ -1131,17 +1131,17 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/a091af1/src/ameba/issue.cr#L19" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/e58f900/src/ameba/issue.cr#L19" target="_blank">View source</a>]
         
       </div>
     </div>
   
-    <div class="entry-detail" id="location:Crystal::Location?-instance-method">
+    <div class="entry-detail" id="location:Crystal::Location|Nil-instance-method">
       <div class="signature">
         
-        def <strong>location</strong> : <a href="../Crystal/Location.html">Crystal::Location</a>?
+        def <strong>location</strong> : <a href="../Crystal/Location.html">Crystal::Location</a> | Nil
 
-        <a class="method-permalink" href="#location%3ACrystal%3A%3ALocation%3F-instance-method">#</a>
+        <a class="method-permalink" href="#location%3ACrystal%3A%3ALocation%7CNil-instance-method">#</a>
       </div>
       
         <div class="doc">
@@ -1152,7 +1152,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/a091af1/src/ameba/issue.cr#L16" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/e58f900/src/ameba/issue.cr#L16" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1173,7 +1173,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/a091af1/src/ameba/issue.cr#L22" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/e58f900/src/ameba/issue.cr#L22" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1194,7 +1194,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/a091af1/src/ameba/issue.cr#L13" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/e58f900/src/ameba/issue.cr#L13" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1215,7 +1215,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/a091af1/src/ameba/issue.cr#L25" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/e58f900/src/ameba/issue.cr#L25" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1231,7 +1231,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/a091af1/src/ameba/issue.cr#L34" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/e58f900/src/ameba/issue.cr#L34" target="_blank">View source</a>]
         
       </div>
     </div>

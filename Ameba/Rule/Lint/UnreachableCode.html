@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="generator" content="Crystal Docs 1.5.0">
+<meta name="generator" content="Crystal Docs 1.6.2">
 <meta name="crystal_docs.project_version" content="master">
 <meta name="crystal_docs.project_name" content="ameba">
 
@@ -840,7 +840,7 @@ loop <span class="k">do</span>
   </h2>
   
     
-      <a href="https://github.com/crystal-ameba/ameba/blob/a091af1/src/ameba/rule/lint/unreachable_code.cr#L44" target="_blank">
+      <a href="https://github.com/crystal-ameba/ameba/blob/e58f900/src/ameba/rule/lint/unreachable_code.cr#L44" target="_blank">
         ameba/rule/lint/unreachable_code.cr
       </a>
     
@@ -907,7 +907,7 @@ loop <span class="k">do</span>
   <ul class="list-summary">
     
       <li class="entry-summary">
-        <a href="#parsed_doc%3AString%3F-class-method" class="signature"><strong>.parsed_doc</strong> : String?</a>
+        <a href="#parsed_doc%3AString%7CNil-class-method" class="signature"><strong>.parsed_doc</strong> : String | Nil</a>
         
           <div class="summary"><p>Returns documentation for this rule, if there is any.</p></div>
         
@@ -948,12 +948,12 @@ loop <span class="k">do</span>
       </li>
     
       <li class="entry-summary">
-        <a href="#excluded%3AArray%28String%29%3F-instance-method" class="signature"><strong>#excluded</strong> : Array(String)?</a>
+        <a href="#excluded%3AArray%28String%29%7CNil-instance-method" class="signature"><strong>#excluded</strong> : Array(String) | Nil</a>
         
       </li>
     
       <li class="entry-summary">
-        <a href="#excluded%3D%28excluded%3AArray%28String%29%3F%29-instance-method" class="signature"><strong>#excluded=</strong>(excluded : Array(String)?)</a>
+        <a href="#excluded%3D%28excluded%3AArray%28String%29%7CNil%29-instance-method" class="signature"><strong>#excluded=</strong>(excluded : Array(String) | Nil)</a>
         
       </li>
     
@@ -1060,8 +1060,8 @@ loop <span class="k">do</span>
     raise?</a>, 
     
   
-    <a href="../../../Ameba/AST/Util.html#source_between%28loc%2Cend_loc%2Ccode_lines%29%3AString%3F-instance-method" class="tooltip">
-      <span>source_between(loc, end_loc, code_lines) : String?</span>
+    <a href="../../../Ameba/AST/Util.html#source_between%28loc%2Cend_loc%2Ccode_lines%29%3AString%7CNil-instance-method" class="tooltip">
+      <span>source_between(loc, end_loc, code_lines) : String | Nil</span>
     source_between</a>, 
     
   
@@ -1257,7 +1257,7 @@ loop <span class="k">do</span>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/a091af1/src/ameba/rule/lint/unreachable_code.cr#L44" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/e58f900/src/ameba/rule/lint/unreachable_code.cr#L44" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1274,12 +1274,12 @@ loop <span class="k">do</span>
     Class Method Detail
   </h2>
   
-    <div class="entry-detail" id="parsed_doc:String?-class-method">
+    <div class="entry-detail" id="parsed_doc:String|Nil-class-method">
       <div class="signature">
         
-        def self.<strong>parsed_doc</strong> : String?
+        def self.<strong>parsed_doc</strong> : String | Nil
 
-        <a class="method-permalink" href="#parsed_doc%3AString%3F-class-method">#</a>
+        <a class="method-permalink" href="#parsed_doc%3AString%7CNil-class-method">#</a>
       </div>
       
         <div class="doc">
@@ -1371,12 +1371,12 @@ loop <span class="k">do</span>
       </div>
     </div>
   
-    <div class="entry-detail" id="excluded:Array(String)?-instance-method">
+    <div class="entry-detail" id="excluded:Array(String)|Nil-instance-method">
       <div class="signature">
         
-        def <strong>excluded</strong> : Array(String)?
+        def <strong>excluded</strong> : Array(String) | Nil
 
-        <a class="method-permalink" href="#excluded%3AArray%28String%29%3F-instance-method">#</a>
+        <a class="method-permalink" href="#excluded%3AArray%28String%29%7CNil-instance-method">#</a>
       </div>
       
       <br/>
@@ -1385,12 +1385,12 @@ loop <span class="k">do</span>
       </div>
     </div>
   
-    <div class="entry-detail" id="excluded=(excluded:Array(String)?)-instance-method">
+    <div class="entry-detail" id="excluded=(excluded:Array(String)|Nil)-instance-method">
       <div class="signature">
         
-        def <strong>excluded=</strong>(excluded : Array(String)?)
+        def <strong>excluded=</strong>(excluded : Array(String) | Nil)
 
-        <a class="method-permalink" href="#excluded%3D%28excluded%3AArray%28String%29%3F%29-instance-method">#</a>
+        <a class="method-permalink" href="#excluded%3D%28excluded%3AArray%28String%29%7CNil%29-instance-method">#</a>
       </div>
       
       <br/>
@@ -1438,7 +1438,7 @@ loop <span class="k">do</span>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/a091af1/src/ameba/rule/lint/unreachable_code.cr#L57" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/e58f900/src/ameba/rule/lint/unreachable_code.cr#L57" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1454,7 +1454,7 @@ loop <span class="k">do</span>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/a091af1/src/ameba/rule/lint/unreachable_code.cr#L53" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/e58f900/src/ameba/rule/lint/unreachable_code.cr#L53" target="_blank">View source</a>]
         
       </div>
     </div>
