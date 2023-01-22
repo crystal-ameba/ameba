@@ -19,7 +19,7 @@ module Ameba::Rule::Performance
     it "reports if there is map followed by compact call" do
       expect_issue subject, <<-CRYSTAL
         (1..3).map(&.itself).compact
-             # ^^^^^^^^^^^^^^^^^^^^^^ error: Use `compact_map {...}` instead of `map {...}.compact`
+             # ^^^^^^^^^^^^^^^^^^^^^ error: Use `compact_map {...}` instead of `map {...}.compact`
         CRYSTAL
     end
 
@@ -35,19 +35,6 @@ module Ameba::Rule::Performance
           {{ [1, 2, 3].map(&.to_s).compact }}
           CRYSTAL
       end
-    end
-
-    it "reports rule, pos and message" do
-      s = Source.new %(
-        (1..3).map(&.itself).compact
-      ), "source.cr"
-      subject.catch(s).should_not be_valid
-      issue = s.issues.first
-
-      issue.rule.should_not be_nil
-      issue.location.to_s.should eq "source.cr:1:8"
-      issue.end_location.to_s.should eq "source.cr:1:29"
-      issue.message.should eq "Use `compact_map {...}` instead of `map {...}.compact`"
     end
   end
 end

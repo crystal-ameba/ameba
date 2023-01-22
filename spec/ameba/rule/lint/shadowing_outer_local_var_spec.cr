@@ -157,20 +157,6 @@ module Ameba::Rule::Lint
         CRYSTAL
     end
 
-    it "reports rule, location and message" do
-      source = Source.new %(
-        foo = 1
-        3.times { |foo| foo + 1 }
-      ), "source.cr"
-      subject.catch(source).should_not be_valid
-
-      issue = source.issues.first
-      issue.rule.should_not be_nil
-      issue.location.to_s.should eq "source.cr:2:12"
-      issue.end_location.should be_nil
-      issue.message.should eq "Shadowing outer local variable `foo`"
-    end
-
     context "macro" do
       it "does not report shadowed vars in outer scope" do
         expect_no_issues subject, <<-CRYSTAL

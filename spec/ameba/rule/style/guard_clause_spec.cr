@@ -3,11 +3,11 @@ require "../../../spec_helper"
 module Ameba
   subject = Rule::Style::GuardClause.new
 
-  def it_reports_body(body, *, line = __LINE__)
+  private def it_reports_body(body, *, file = __FILE__, line = __LINE__)
     rule = Rule::Style::GuardClause.new
 
-    it "reports an issue if method body is if / unless without else" do
-      source = expect_issue rule, <<-CRYSTAL, line: line
+    it "reports an issue if method body is if / unless without else", file, line do
+      source = expect_issue rule, <<-CRYSTAL, file: file, line: line
         def func
           if something
         # ^^ error: Use a guard clause (`return unless something`) instead of wrapping the code inside a conditional expression.
@@ -23,7 +23,7 @@ module Ameba
         end
         CRYSTAL
 
-      expect_correction source, <<-CRYSTAL, line: line
+      expect_correction source, <<-CRYSTAL, file: file, line: line
         def func
           return unless something
             #{body}
@@ -38,8 +38,8 @@ module Ameba
         CRYSTAL
     end
 
-    it "reports an issue if method body ends with if / unless without else" do
-      source = expect_issue rule, <<-CRYSTAL, line: line
+    it "reports an issue if method body ends with if / unless without else", file, line do
+      source = expect_issue rule, <<-CRYSTAL, file: file, line: line
         def func
           test
           if something
@@ -57,7 +57,7 @@ module Ameba
         end
         CRYSTAL
 
-      expect_correction source, <<-CRYSTAL, line: line
+      expect_correction source, <<-CRYSTAL, file: file, line: line
         def func
           test
           return unless something
@@ -75,11 +75,11 @@ module Ameba
     end
   end
 
-  def it_reports_control_expression(kw, *, line = __LINE__)
+  private def it_reports_control_expression(kw, *, file = __FILE__, line = __LINE__)
     rule = Rule::Style::GuardClause.new
 
-    it "reports an issue with #{kw} in the if branch" do
-      source = expect_issue rule, <<-CRYSTAL, line: line
+    it "reports an issue with #{kw} in the if branch", file, line do
+      source = expect_issue rule, <<-CRYSTAL, file: file, line: line
         def func
           if something
         # ^^ error: Use a guard clause (`#{kw} if something`) instead of wrapping the code inside a conditional expression.
@@ -90,11 +90,11 @@ module Ameba
         end
         CRYSTAL
 
-      expect_no_corrections source, line: line
+      expect_no_corrections source, file: file, line: line
     end
 
-    it "reports an issue with #{kw} in the else branch" do
-      source = expect_issue rule, <<-CRYSTAL, line: line
+    it "reports an issue with #{kw} in the else branch", file, line do
+      source = expect_issue rule, <<-CRYSTAL, file: file, line: line
         def func
           if something
         # ^^ error: Use a guard clause (`#{kw} unless something`) instead of wrapping the code inside a conditional expression.
@@ -105,11 +105,11 @@ module Ameba
         end
         CRYSTAL
 
-      expect_no_corrections source, line: line
+      expect_no_corrections source, file: file, line: line
     end
 
-    it "doesn't report an issue if condition has multiple lines" do
-      expect_no_issues rule, <<-CRYSTAL, line: line
+    it "doesn't report an issue if condition has multiple lines", file, line do
+      expect_no_issues rule, <<-CRYSTAL, file: file, line: line
         def func
           if something &&
                something_else
@@ -121,8 +121,8 @@ module Ameba
         CRYSTAL
     end
 
-    it "does not report an issue if #{kw} is inside elsif" do
-      expect_no_issues rule, <<-CRYSTAL, line: line
+    it "does not report an issue if #{kw} is inside elsif", file, line do
+      expect_no_issues rule, <<-CRYSTAL, file: file, line: line
         def func
           if something
             a
@@ -133,8 +133,8 @@ module Ameba
         CRYSTAL
     end
 
-    it "does not report an issue if #{kw} is inside if..elsif..else..end" do
-      expect_no_issues rule, <<-CRYSTAL, line: line
+    it "does not report an issue if #{kw} is inside if..elsif..else..end", file, line do
+      expect_no_issues rule, <<-CRYSTAL, file: file, line: line
         def func
           if something
             a
@@ -147,8 +147,8 @@ module Ameba
         CRYSTAL
     end
 
-    it "doesn't report an issue if control flow expr has multiple lines" do
-      expect_no_issues rule, <<-CRYSTAL, line: line
+    it "doesn't report an issue if control flow expr has multiple lines", file, line do
+      expect_no_issues rule, <<-CRYSTAL, file: file, line: line
         def func
           if something
             #{kw} \\
@@ -161,8 +161,8 @@ module Ameba
         CRYSTAL
     end
 
-    it "reports an issue if non-control-flow branch has multiple lines" do
-      source = expect_issue rule, <<-CRYSTAL, line: line
+    it "reports an issue if non-control-flow branch has multiple lines", file, line do
+      source = expect_issue rule, <<-CRYSTAL, file: file, line: line
         def func
           if something
         # ^^ error: Use a guard clause (`#{kw} if something`) instead of wrapping the code inside a conditional expression.
@@ -174,7 +174,7 @@ module Ameba
         end
         CRYSTAL
 
-      expect_no_corrections source, line: line
+      expect_no_corrections source, file: file, line: line
     end
   end
 

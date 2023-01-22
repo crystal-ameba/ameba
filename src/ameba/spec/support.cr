@@ -14,9 +14,5 @@ module Ameba
   end
 end
 
-def trailing_whitespace
-  ' '
-end
-
 include Ameba::Spec::BeValid
 include Ameba::Spec::ExpectIssue

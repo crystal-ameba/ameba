@@ -2,7 +2,8 @@
 class Ameba::Spec::AnnotatedSource
   ANNOTATION_PATTERN_1 = /\A\s*(# )?(\^+|\^{})( error:)? /
   ANNOTATION_PATTERN_2 = " # error: "
-  ABBREV               = "[...]"
+
+  ABBREV = "[...]"
 
   getter lines : Array(String)
 
@@ -15,6 +16,7 @@ class Ameba::Spec::AnnotatedSource
   def self.parse(annotated_code)
     lines = [] of String
     annotations = [] of {Int32, String, String}
+
     code_lines = annotated_code.split('\n') # must preserve trailing newline
     code_lines.each do |code_line|
       case
@@ -39,7 +41,9 @@ class Ameba::Spec::AnnotatedSource
   # NOTE: Annotations are sorted so that reconstructing the annotation
   #       text via `#to_s` is deterministic.
   def initialize(@lines, annotations : Enumerable({Int32, String, String}))
-    @annotations = annotations.to_a.sort_by { |line, _, message| {line, message} }
+    @annotations = annotations.to_a.sort_by do |line, _, message|
+      {line, message}
+    end
   end
 
   # Annotates the source code with the Ameba issues provided.
@@ -47,7 +51,9 @@ class Ameba::Spec::AnnotatedSource
   # NOTE: Annotations are sorted so that reconstructing the annotation
   #       text via `#to_s` is deterministic.
   def initialize(@lines, issues : Enumerable(Issue))
-    @annotations = issues_to_annotations(issues).sort_by { |line, _, message| {line, message} }
+    @annotations = issues_to_annotations(issues).sort_by do |line, _, message|
+      {line, message}
+    end
   end
 
   def ==(other)

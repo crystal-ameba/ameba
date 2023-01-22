@@ -43,7 +43,7 @@ module Ameba::Rule::Style
     end
 
     context "properties" do
-      context "#exclude_ternary=" do
+      context "#exclude_ternary" do
         it "skips ternary control expressions by default" do
           expect_no_issues subject, <<-CRYSTAL
             (foo > bar) ? true : false
@@ -51,7 +51,7 @@ module Ameba::Rule::Style
         end
 
         it "allows to configure assignments" do
-          rule = Rule::Style::ParenthesesAroundCondition.new
+          rule = ParenthesesAroundCondition.new
           rule.exclude_ternary = false
 
           expect_issue rule, <<-CRYSTAL
@@ -75,7 +75,7 @@ module Ameba::Rule::Style
         end
       end
 
-      context "#allow_safe_assignment=" do
+      context "#allow_safe_assignment" do
         it "reports assignments by default" do
           expect_issue subject, <<-CRYSTAL
             if (foo = @foo)
@@ -98,7 +98,7 @@ module Ameba::Rule::Style
         end
 
         it "allows to configure assignments" do
-          rule = Rule::Style::ParenthesesAroundCondition.new
+          rule = ParenthesesAroundCondition.new
           rule.allow_safe_assignment = true
 
           expect_issue rule, <<-CRYSTAL

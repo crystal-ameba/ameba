@@ -294,24 +294,5 @@ module Ameba::Rule::Style
         }
         CRYSTAL
     end
-
-    it "reports rule, pos and message" do
-      s = Source.new %q(
-        def method
-          begin
-            open_connection
-          ensure
-            close_connection
-          end
-        end
-      ), "source.cr"
-      subject.catch(s).should_not be_valid
-
-      issue = s.issues.first
-      issue.rule.should_not be_nil
-      issue.location.to_s.should eq "source.cr:2:3"
-      issue.end_location.to_s.should eq "source.cr:2:7"
-      issue.message.should eq "Redundant `begin` block detected"
-    end
   end
 end

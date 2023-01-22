@@ -49,14 +49,14 @@ module Ameba::AST
 
   describe "#references?" do
     it "returns true if current scope references variable" do
-      nodes = as_nodes %(
+      nodes = as_nodes <<-CRYSTAL
         def method
           a = 2
           block do
             3.times { |i| a = a + i }
           end
         end
-      )
+        CRYSTAL
       scope = Scope.new nodes.def_nodes.first
       var_node = nodes.var_nodes.first
       scope.add_variable var_node
@@ -69,14 +69,14 @@ module Ameba::AST
     end
 
     it "returns false if inner scopes are not checked" do
-      nodes = as_nodes %(
+      nodes = as_nodes <<-CRYSTAL
         def method
           a = 2
           block do
             3.times { |i| a = a + i }
           end
         end
-      )
+        CRYSTAL
       scope = Scope.new nodes.def_nodes.first
       var_node = nodes.var_nodes.first
       scope.add_variable var_node
@@ -89,7 +89,7 @@ module Ameba::AST
     end
 
     it "returns false if current scope does not reference variable" do
-      nodes = as_nodes %(
+      nodes = as_nodes <<-CRYSTAL
         def method
           a = 2
           block do
@@ -97,7 +97,7 @@ module Ameba::AST
             3.times { |i| b = b + i }
           end
         end
-      )
+        CRYSTAL
       scope = Scope.new nodes.def_nodes.first
       var_node = nodes.var_nodes.first
       scope.add_variable var_node
@@ -150,57 +150,53 @@ module Ameba::AST
 
   describe "#block?" do
     it "returns true if Crystal::Block" do
-      nodes = as_nodes %(
-        3.times {}
-      )
+      nodes = as_nodes("3.times {}")
       scope = Scope.new nodes.block_nodes.first
       scope.block?.should be_true
     end
 
     it "returns false otherwise" do
-      scope = Scope.new as_node "a = 1"
+      scope = Scope.new as_node("a = 1")
       scope.block?.should be_false
     end
   end
 
   describe "#spawn_block?" do
     it "returns true if a node is a spawn block" do
-      nodes = as_nodes %(
-        spawn {}
-      )
+      nodes = as_nodes("spawn {}")
       scope = Scope.new nodes.block_nodes.first
       scope.spawn_block?.should be_true
     end
 
     it "returns false otherwise" do
-      scope = Scope.new as_node "a = 1"
+      scope = Scope.new as_node("a = 1")
       scope.spawn_block?.should be_false
     end
   end
 
   describe "#in_macro?" do
     it "returns true if Crystal::Macro" do
-      nodes = as_nodes %(
+      nodes = as_nodes <<-CRYSTAL
         macro included
         end
-      )
+        CRYSTAL
       scope = Scope.new nodes.macro_nodes.first
       scope.in_macro?.should be_true
     end
 
     it "returns true if node is nested to Crystal::Macro" do
-      nodes = as_nodes %(
+      nodes = as_nodes <<-CRYSTAL
         macro included
           {{ @type.each do |type| a = type end }}
         end
-      )
+        CRYSTAL
       outer_scope = Scope.new nodes.macro_nodes.first
       scope = Scope.new nodes.block_nodes.first, outer_scope
       scope.in_macro?.should be_true
     end
 
     it "returns false otherwise" do
-      scope = Scope.new as_node "a = 1"
+      scope = Scope.new as_node("a = 1")
       scope.in_macro?.should be_false
     end
   end

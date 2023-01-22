@@ -3,12 +3,12 @@ require "../../../spec_helper"
 module Ameba
   subject = Rule::Style::LargeNumbers.new
 
-  private def it_transforms(number, expected)
-    it "transforms large number #{number}" do
+  private def it_transforms(number, expected, *, file = __FILE__, line = __LINE__)
+    it "transforms large number #{number}", file, line do
       rule = Rule::Style::LargeNumbers.new
       rule.int_min_digits = 5
 
-      source = expect_issue rule, <<-CRYSTAL, number: number
+      source = expect_issue rule, <<-CRYSTAL, number: number, file: file, line: line
         number = %{number}
                # ^{number} error: Large numbers should be written with underscores: #{expected}
         CRYSTAL
@@ -97,10 +97,12 @@ module Ameba
     it_transforms "10000_i16", "10_000_i16"
     it_transforms "10000_i32", "10_000_i32"
     it_transforms "10000_i64", "10_000_i64"
+    it_transforms "10000_i128", "10_000_i128"
 
     it_transforms "10000_u16", "10_000_u16"
     it_transforms "10000_u32", "10_000_u32"
     it_transforms "10000_u64", "10_000_u64"
+    it_transforms "10000_u128", "10_000_u128"
 
     it_transforms "123456_f32", "123_456_f32"
     it_transforms "123456_f64", "123_456_f64"
@@ -117,20 +119,8 @@ module Ameba
     it_transforms "3.001234", "3.001_234"
     it_transforms "3.0012345", "3.001_234_5"
 
-    it "reports rule, pos and message" do
-      s = Source.new %q(
-        1200000
-      ), "source.cr"
-      subject.catch(s).should_not be_valid
-      issue = s.issues.first
-      issue.rule.should_not be_nil
-      issue.location.to_s.should eq "source.cr:1:1"
-      issue.end_location.to_s.should eq "source.cr:1:7"
-      issue.message.should match /1_200_000/
-    end
-
     context "properties" do
-      it "allows to configure integer min digits" do
+      it "#int_min_digits" do
         rule = Rule::Style::LargeNumbers.new
         rule.int_min_digits = 10
         expect_no_issues rule, %q(1200000)

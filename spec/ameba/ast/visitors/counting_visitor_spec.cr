@@ -19,33 +19,33 @@ module Ameba::AST
       end
 
       it "is 1 if there is Macro::For" do
-        code = %(
-          def initialize()
+        code = <<-CRYSTAL
+          def initialize
             {% for c in ALL_NODES %}
               true || false
             {% end %}
           end
-        )
+          CRYSTAL
         node = Crystal::Parser.new(code).parse
         visitor = CountingVisitor.new node
         visitor.count.should eq 1
       end
 
       it "is 1 if there is Macro::If" do
-        code = %(
-          def initialize()
+        code = <<-CRYSTAL
+          def initialize
             {% if foo.bar? %}
               true || false
             {% end %}
           end
-        )
+          CRYSTAL
         node = Crystal::Parser.new(code).parse
         visitor = CountingVisitor.new node
         visitor.count.should eq 1
       end
 
       it "increases count for every exhaustive case" do
-        code = %(
+        code = <<-CRYSTAL
           def hello(a : Int32 | Int64 | Float32 | Float64)
             case a
             in Int32   then "int32"
@@ -54,7 +54,7 @@ module Ameba::AST
             in Float64 then "float64"
             end
           end
-        )
+          CRYSTAL
         node = Crystal::Parser.new(code).parse
         visitor = CountingVisitor.new node
         visitor.count.should eq 2

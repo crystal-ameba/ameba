@@ -58,18 +58,5 @@ module Ameba::Rule::Lint
           CRYSTAL
       end
     end
-
-    it "reports rule, pos and message" do
-      s = Source.new %(
-        (1..3).index(1).not_nil!
-      ), "source.cr"
-      subject.catch(s).should_not be_valid
-      issue = s.issues.first
-
-      issue.rule.should_not be_nil
-      issue.location.to_s.should eq "source.cr:1:8"
-      issue.end_location.to_s.should eq "source.cr:1:24"
-      issue.message.should eq "Use `index! {...}` instead of `index {...}.not_nil!`"
-    end
   end
 end

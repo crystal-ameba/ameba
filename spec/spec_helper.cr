@@ -286,3 +286,7 @@ end
 def as_nodes(source)
   Ameba::TestNodeVisitor.new(as_node source)
 end
+
+def trailing_whitespace
+  ' '
+end

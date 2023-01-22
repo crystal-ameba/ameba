@@ -24,9 +24,10 @@ module Ameba
 
     # Corrects any correctable issues and updates `code`.
     # Returns `false` if no issues were corrected.
-    def correct
+    def correct?
       corrector = Corrector.new(code)
       issues.each(&.correct(corrector))
+
       corrected_code = corrector.process
       return false if code == corrected_code
 
@@ -74,6 +75,14 @@ module Ameba
     # Returns `true` if *filepath* matches the source's path, `false` otherwise.
     def matches_path?(filepath)
       path.in?(filepath, File.expand_path(filepath))
+    end
+
+    # Converts an AST location to a string position.
+    def pos(location : Crystal::Location, end end_pos = false) : Int32
+      line, column = location.line_number, location.column_number
+      pos = lines[0...line - 1].sum(&.size) + line + column - 2
+      pos += 1 if end_pos
+      pos
     end
   end
 end

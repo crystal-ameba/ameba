@@ -63,7 +63,18 @@ module Ameba::Rule::Lint
         next if scope.references?(argument.variable)
 
         name_suggestion = scope.node.is_a?(Crystal::Block) ? '_' : "_#{argument.name}"
-        issue_for argument.node, MSG % {argument.name, name_suggestion}
+        message = MSG % {argument.name, name_suggestion}
+
+        location = argument.node.location
+        end_location = location.try &.adjust(column_number: argument.name.size - 1)
+
+        if location && end_location
+          issue_for argument.node, message do |corrector|
+            corrector.replace(location, end_location, name_suggestion)
+          end
+        else
+          issue_for argument.node, message
+        end
       end
     end
   end

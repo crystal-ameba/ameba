@@ -3,17 +3,17 @@ require "../../../spec_helper"
 module Ameba
   subject = Rule::Lint::EmptyExpression.new
 
-  def it_detects_empty_expression(code)
-    it "detects empty expression" do
+  private def it_detects_empty_expression(code, *, file = __FILE__, line = __LINE__)
+    it %(detects empty expression "#{code}"), file, line do
       s = Source.new code
       rule = Rule::Lint::EmptyExpression.new
-      rule.catch(s).should_not be_valid
+      rule.catch(s).should_not be_valid, file: file, line: line
     end
   end
 
   describe Rule::Lint::EmptyExpression do
     it "passes if there is no empty expression" do
-      s = Source.new %(
+      s = Source.new <<-CRYSTAL
         def method()
         end
 
@@ -30,7 +30,7 @@ module Ameba
 
         begin "" end
         [nil] << nil
-      )
+        CRYSTAL
       subject.catch(s).should be_valid
     end
 
@@ -86,11 +86,6 @@ module Ameba
     )
     it_detects_empty_expression %(
       begin
-        nil
-      end
-    )
-    it_detects_empty_expression %(
-      begin
         ()
       end
     )
@@ -109,19 +104,6 @@ module Ameba
         end
       )
       subject.catch(s).should be_valid
-    end
-
-    it "reports rule, location and message" do
-      s = Source.new %(
-        if ()
-        end
-      ), "source.cr"
-      subject.catch(s).should_not be_valid
-      issue = s.issues.first
-      issue.rule.should_not be_nil
-      issue.location.to_s.should eq "source.cr:1:4"
-      issue.end_location.to_s.should eq "source.cr:1:5"
-      issue.message.should eq "Avoid empty expressions"
     end
   end
 end

@@ -14,7 +14,7 @@ module Ameba::Rule::Performance
     it "reports if there is map followed by sum without a block" do
       expect_issue subject, <<-CRYSTAL
         (1..3).map(&.to_u64).sum
-             # ^^^^^^^^^^^^^^^^^^ error: Use `sum {...}` instead of `map {...}.sum`
+             # ^^^^^^^^^^^^^^^^^ error: Use `sum {...}` instead of `map {...}.sum`
         CRYSTAL
     end
 
@@ -27,14 +27,14 @@ module Ameba::Rule::Performance
     it "reports if there is map followed by sum without a block (with argument)" do
       expect_issue subject, <<-CRYSTAL
         (1..3).map(&.to_u64).sum(0)
-             # ^^^^^^^^^^^^^^^^^^ error: Use `sum {...}` instead of `map {...}.sum`
+             # ^^^^^^^^^^^^^^^^^ error: Use `sum {...}` instead of `map {...}.sum`
         CRYSTAL
     end
 
     it "reports if there is map followed by sum with a block" do
       expect_issue subject, <<-CRYSTAL
         (1..3).map(&.to_u64).sum(&.itself)
-             # ^^^^^^^^^^^^^^^^^^ error: Use `sum {...}` instead of `map {...}.sum`
+             # ^^^^^^^^^^^^^^^^^ error: Use `sum {...}` instead of `map {...}.sum`
         CRYSTAL
     end
 
@@ -44,19 +44,6 @@ module Ameba::Rule::Performance
           {{ [1, 2, 3].map(&.to_u64).sum }}
           CRYSTAL
       end
-    end
-
-    it "reports rule, pos and message" do
-      s = Source.new %(
-        (1..3).map(&.to_u64).sum
-      ), "source.cr"
-      subject.catch(s).should_not be_valid
-      issue = s.issues.first
-
-      issue.rule.should_not be_nil
-      issue.location.to_s.should eq "source.cr:1:8"
-      issue.end_location.to_s.should eq "source.cr:1:25"
-      issue.message.should eq "Use `sum {...}` instead of `map {...}.sum`"
     end
   end
 end
