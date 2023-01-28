@@ -134,21 +134,6 @@ development_dependencies:
 
 Build `bin/ameba` binary within your project directory while running `shards install`.
 
-You may also want to use it on [Travis](travis-ci.org):
-
-```yaml
-# .travis.yml
-language: crystal
-install:
-  - shards install
-script:
-  - crystal spec
-  - crystal bin/ameba.cr
-```
-
-Using this config Ameba will inspect files just after the specs run. Travis will also fail
-the build if some problems detected.
-
 ### OS X
 
 ```sh
