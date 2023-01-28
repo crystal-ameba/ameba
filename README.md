@@ -1,5 +1,3 @@
-[![SWUbanner](https://raw.githubusercontent.com/vshymanskyy/StandWithUkraine/main/banner-direct.svg)](https://github.com/vshymanskyy/StandWithUkraine/blob/main/docs/README.md)
-
 <p align="center">
   <img src="https://raw.githubusercontent.com/veelenga/bin/master/ameba/logo.png" width="800">
   <h3 align="center">Ameba</h3>
