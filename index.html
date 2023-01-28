@@ -891,16 +891,6 @@ $ CRYSTAL_WORKERS=8 ameba #=&gt; 10.14 seconds</code></pre>
     github: crystal-ameba/ameba
     version: ~&gt; 1.4.0</code></pre>
 <p>Build <code>bin/ameba</code> binary within your project directory while running <code>shards install</code>.</p>
-<p>You may also want to use it on <a href="travis-ci.org">Travis</a>:</p>
-<pre><code class="language-yaml"># .travis.yml
-language: crystal
-install:
-  - shards install
-script:
-  - crystal spec
-  - crystal bin/ameba.cr</code></pre>
-<p>Using this config Ameba will inspect files just after the specs run. Travis will also fail
-the build if some problems detected.</p>
 <h3><a id="os-x" class="anchor" href="#os-x">
   <svg class="octicon-link" aria-hidden="true">
     <use href="#octicon-link"/>
