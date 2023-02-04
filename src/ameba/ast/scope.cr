@@ -161,7 +161,7 @@ module Ameba::AST
 
     # Returns `true` if this scope is a top level scope, `false` otherwise.
     def top_level?
-      outer_scope.nil?
+      outer_scope.nil? || type_definition?
     end
 
     # Returns `true` if var is an argument in current scope, `false` otherwise.

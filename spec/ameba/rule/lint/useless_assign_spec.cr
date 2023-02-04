@@ -475,6 +475,32 @@ module Ameba::Rule::Lint
         issue.location.to_s.should eq "source.cr:1:1"
         issue.message.should eq "Useless assignment to variable `foo`"
       end
+
+      it "doesn't report if top level variable defined inside class is referenced" do
+        s = Source.new %(
+          class A
+            foo : String? = "foo"
+          end
+
+          puts foo
+        )
+        subject.catch(s).should be_valid
+      end
+
+      it "doesn't report if top level variable assigned inside class and referenced" do
+        s = Source.new %(
+          class A
+            foo : String? = "foo"
+
+            bar do
+              foo = "bar"
+            end
+          end
+
+          puts foo
+        )
+        subject.catch(s).should be_valid
+      end
     end
 
     context "branching" do

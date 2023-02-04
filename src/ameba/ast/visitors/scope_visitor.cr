@@ -102,10 +102,18 @@ module Ameba::AST
 
     # :nodoc:
     def visit(node : Crystal::TypeDeclaration)
-      return if @current_scope.type_definition?
-      return if !(var = node.var).is_a?(Crystal::Var)
+      return unless (var = node.var).is_a?(Crystal::Var)
 
       @current_scope.add_variable(var)
+      @current_assign = node.value unless node.value.nil?
+    end
+
+    def end_visit(node : Crystal::TypeDeclaration)
+      return unless (var = node.var).is_a?(Crystal::Var)
+
+      on_assign_end(node.var, node)
+      @current_assign = nil
+      on_scope_end(node) if @current_scope.eql?(node)
     end
 
     # :nodoc:
