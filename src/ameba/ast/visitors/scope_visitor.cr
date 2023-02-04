@@ -105,13 +105,14 @@ module Ameba::AST
       return unless (var = node.var).is_a?(Crystal::Var)
 
       @current_scope.add_variable(var)
+      @current_scope.add_type_dec_variable(node)
       @current_assign = node.value unless node.value.nil?
     end
 
     def end_visit(node : Crystal::TypeDeclaration)
       return unless (var = node.var).is_a?(Crystal::Var)
 
-      on_assign_end(node.var, node)
+      on_assign_end(var, node)
       @current_assign = nil
       on_scope_end(node) if @current_scope.eql?(node)
     end
