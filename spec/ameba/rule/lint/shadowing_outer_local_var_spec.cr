@@ -136,7 +136,7 @@ module Ameba::Rule::Lint
         CRYSTAL
     end
 
-    it "doesn't report if it shadows type definition" do
+    it "doesn't report if it shadows type declaration" do
       expect_no_issues subject, <<-CRYSTAL
         class FooBar
           getter index : String

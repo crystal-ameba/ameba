@@ -476,7 +476,7 @@ module Ameba::Rule::Lint
         issue.message.should eq "Useless assignment to variable `foo`"
       end
 
-      it "doesn't report if top level variable defined inside module and referenced" do
+      it "doesn't report if type declaration assigned inside module and referenced" do
         s = Source.new %(
           module A
             foo : String? = "foo"
@@ -492,7 +492,7 @@ module Ameba::Rule::Lint
         subject.catch(s).should be_valid
       end
 
-      it "doesn't report if top level variable assigned inside class and referenced" do
+      it "doesn't report if type declaration assigned inside class" do
         s = Source.new %(
           class A
             foo : String? = "foo"
