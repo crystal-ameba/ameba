@@ -13,16 +13,10 @@ module Ameba::AST
       var = @node.var
 
       case var
-      when Crystal::Var
-        var.name
-      when Crystal::InstanceVar
-        var.name
-      when Crystal::ClassVar
-        var.name
-      when Crystal::Global
+      when Crystal::Var, Crystal::InstanceVar, Crystal::ClassVar, Crystal::Global
         var.name
       else
-        raise "unsupported type declaration var node"
+        raise "unsupported var node type: #{var.class}"
       end
     end
   end
