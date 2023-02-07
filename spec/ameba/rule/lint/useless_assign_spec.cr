@@ -476,13 +476,18 @@ module Ameba::Rule::Lint
         issue.message.should eq "Useless assignment to variable `foo`"
       end
 
-      it "doesn't report if top level variable defined inside class is referenced" do
+      it "doesn't report if top level variable defined inside module and referenced" do
         s = Source.new %(
-          class A
+          module A
             foo : String? = "foo"
+
+            bar do
+              foo = "bar"
+            end
+
+            p foo
           end
 
-          puts foo
         )
         subject.catch(s).should be_valid
       end
@@ -492,12 +497,10 @@ module Ameba::Rule::Lint
           class A
             foo : String? = "foo"
 
-            bar do
+            def method
               foo = "bar"
             end
           end
-
-          puts foo
         )
         subject.catch(s).should be_valid
       end
