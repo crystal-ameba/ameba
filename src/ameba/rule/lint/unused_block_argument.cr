@@ -47,6 +47,8 @@ module Ameba::Rule::Lint
     end
 
     def test(source, node : Crystal::Def, scope : AST::Scope)
+      return if node.abstract?
+
       return unless block_arg = node.block_arg
       return unless block_arg = scope.arguments.find(&.node.== block_arg)
 

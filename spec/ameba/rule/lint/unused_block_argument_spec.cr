@@ -89,6 +89,13 @@ module Ameba::Rule::Lint
         CRYSTAL
     end
 
+    it "doesn't report if used in abstract def" do
+      expect_no_issues subject, <<-CRYSTAL
+        abstract def debug(id : String, &on_message: Callback)
+        abstract def info(&on_message: Callback)
+        CRYSTAL
+    end
+
     context "super" do
       it "reports if variable is not referenced implicitly by super" do
         source = expect_issue subject, <<-CRYSTAL
