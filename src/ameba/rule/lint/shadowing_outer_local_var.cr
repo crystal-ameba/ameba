@@ -57,6 +57,7 @@ module Ameba::Rule::Lint
 
         next if variable.nil? || !variable.declared_before?(arg)
         next if outer_scope.assigns_ivar?(arg.name)
+        next if outer_scope.assigns_type_dec?(arg.name)
 
         issue_for arg.node, MSG % arg.name
       end

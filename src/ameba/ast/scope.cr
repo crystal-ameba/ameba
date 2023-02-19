@@ -19,6 +19,9 @@ module Ameba::AST
     # Link to the instance variables used in current scope
     getter ivariables = [] of InstanceVariable
 
+    # Link to the type declaration variables used in current scope
+    getter type_dec_variables = [] of TypeDecVariable
+
     # Link to the outer scope
     getter outer_scope : Scope?
 
@@ -74,6 +77,16 @@ module Ameba::AST
       ivariables << InstanceVariable.new(node)
     end
 
+    # Adds a new type declaration variable to the current scope.
+    #
+    # ```
+    # scope = Scope.new(class_node, nil)
+    # scope.add_type_dec_variable(node)
+    # ```
+    def add_type_dec_variable(node)
+      type_dec_variables << TypeDecVariable.new(node)
+    end
+
     # Returns variable by its name or `nil` if it does not exist.
     #
     # ```
@@ -122,8 +135,13 @@ module Ameba::AST
 
     # Returns `true` if instance variable is assigned in this scope.
     def assigns_ivar?(name)
-      arguments.find(&.name.== name) &&
-        ivariables.find(&.name.== "@#{name}")
+      arguments.any?(&.name.== name) &&
+        ivariables.any?(&.name.== "@#{name}")
+    end
+
+    # Returns `true` if type declaration variable is assigned in this scope.
+    def assigns_type_dec?(name)
+      type_dec_variables.any?(&.name.== name) || !!outer_scope.try(&.assigns_type_dec?(name))
     end
 
     # Returns `true` if and only if current scope represents some
@@ -161,7 +179,7 @@ module Ameba::AST
 
     # Returns `true` if this scope is a top level scope, `false` otherwise.
     def top_level?
-      outer_scope.nil?
+      outer_scope.nil? || type_definition?
     end
 
     # Returns `true` if var is an argument in current scope, `false` otherwise.

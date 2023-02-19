@@ -136,6 +136,19 @@ module Ameba::Rule::Lint
         CRYSTAL
     end
 
+    it "doesn't report if it shadows type declaration" do
+      expect_no_issues subject, <<-CRYSTAL
+        class FooBar
+          getter index : String
+
+          def bar
+            3.times do |index|
+            end
+          end
+        end
+        CRYSTAL
+    end
+
     it "doesn't report if it shadows throwaway arguments" do
       expect_no_issues subject, <<-CRYSTAL
         data = [{1, "a"}, {2, "b"}, {3, "c"}]

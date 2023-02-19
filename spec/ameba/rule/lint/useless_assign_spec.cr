@@ -475,6 +475,35 @@ module Ameba::Rule::Lint
         issue.location.to_s.should eq "source.cr:1:1"
         issue.message.should eq "Useless assignment to variable `foo`"
       end
+
+      it "doesn't report if type declaration assigned inside module and referenced" do
+        s = Source.new %(
+          module A
+            foo : String? = "foo"
+
+            bar do
+              foo = "bar"
+            end
+
+            p foo
+          end
+
+        )
+        subject.catch(s).should be_valid
+      end
+
+      it "doesn't report if type declaration assigned inside class" do
+        s = Source.new %(
+          class A
+            foo : String? = "foo"
+
+            def method
+              foo = "bar"
+            end
+          end
+        )
+        subject.catch(s).should be_valid
+      end
     end
 
     context "branching" do
