@@ -3,19 +3,15 @@ module Ameba::Rule::Lint
   #
   # For example, this is considered invalid:
   #
-  # ```
-  # def foo
-  #   yield 42
-  # end
-  # ```
+  #     def foo
+  #       yield 42
+  #     end
   #
   # And has to be written as the following:
   #
-  # ```
-  # def foo(&)
-  #   yield 42
-  # end
-  # ```
+  #     def foo(&)
+  #       yield 42
+  #     end
   #
   # YAML configuration example:
   #
