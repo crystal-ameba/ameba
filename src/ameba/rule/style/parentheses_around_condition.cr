@@ -1,6 +1,6 @@
 module Ameba::Rule::Style
   # A rule that checks for the presence of superfluous parentheses
-  # around the condition of `if`, `unless`, `case, `while` and `until`.
+  # around the condition of `if`, `unless`, `case`, `while` and `until`.
   #
   # For example, this is considered invalid:
   #
