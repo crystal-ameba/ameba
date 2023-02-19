@@ -34,7 +34,7 @@ module Ameba
       end
 
       it "raises when name is incorrect" do
-        expect_raises(Exception, "Incorrect severity name BadName. Try one of [Error, Warning, Convention]") do
+        expect_raises(Exception, "Incorrect severity name BadName. Try one of available names") do
           Severity.parse("BadName")
         end
       end
