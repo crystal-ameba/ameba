@@ -24,9 +24,10 @@ class Ameba::Config
     json:     Formatter::JSONFormatter,
   }
 
-  DEFAULT_PATHS = {
-    "~/.ameba.yml",
-    "~/.config/ameba/config.yml",
+  XDG_CONFIG_HOME = ENV.fetch("XDG_CONFIG_HOME", "~/.config")
+  DEFAULT_PATHS   = {
+    Path["~/.ameba.yml"],
+    Path[XDG_CONFIG_HOME] / "ameba/config.yml",
   }
   FILENAME     = ".ameba.yml"
   DEFAULT_PATH = Path[Dir.current] / FILENAME
