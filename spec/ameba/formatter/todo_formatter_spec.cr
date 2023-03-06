@@ -45,7 +45,7 @@ module Ameba
           s = Source.new "a = 1", "source.cr"
           s.add_issue DummyRule.new, {1, 2}, "message"
           formatter.finished([s])
-          io.to_s.should contain "Created .ameba.yml"
+          io.to_s.should contain "Created #{Config::PATH}"
         end
       end
 

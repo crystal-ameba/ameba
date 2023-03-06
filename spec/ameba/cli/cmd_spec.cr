@@ -21,7 +21,7 @@ module Ameba::Cli
       %w(-c --config).each do |f|
         it "accepts #{f} flag" do
           c = Cli.parse_args [f, "config.yml"]
-          c.config.should eq "config.yml"
+          c.config.should eq Path["config.yml"]
         end
       end
 
@@ -80,12 +80,6 @@ module Ameba::Cli
       it "doesn't disable colors by default" do
         c = Cli.parse_args %w(--all)
         c.colors?.should be_true
-      end
-
-      it "ignores --config if --gen-config flag passed" do
-        c = Cli.parse_args %w(--gen-config --config my_config.yml)
-        c.formatter.should eq :todo
-        c.config.should eq ""
       end
 
       describe "-e/--explain" do
@@ -166,7 +160,7 @@ module Ameba::Cli
         c.globs.should be_nil
         c.only.should be_nil
         c.except.should be_nil
-        c.config.should eq Config::PATH
+        c.config.should be_nil
       end
     end
   end

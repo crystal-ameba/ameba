@@ -44,7 +44,7 @@ module Ameba::Cli
   end
 
   private class Opts
-    property config = Config::PATH
+    property config : Path?
     property formatter : Symbol | String | Nil
     property globs : Array(String)?
     property only : Array(String)?
@@ -76,7 +76,7 @@ module Ameba::Cli
 
       parser.on("-c", "--config PATH",
         "Specify a configuration file") do |path|
-        opts.config = path unless opts.config.empty?
+        opts.config = Path[path] unless path.empty?
       end
 
       parser.on("-f", "--format FORMATTER",
@@ -105,7 +105,6 @@ module Ameba::Cli
       parser.on("--gen-config",
         "Generate a configuration file acting as a TODO list") do
         opts.formatter = :todo
-        opts.config = ""
       end
 
       parser.on("--fail-level SEVERITY",

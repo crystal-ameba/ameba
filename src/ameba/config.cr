@@ -24,7 +24,12 @@ class Ameba::Config
     json:     Formatter::JSONFormatter,
   }
 
-  PATH = ".ameba.yml"
+  DEFAULT_PATHS = {
+    "~/.ameba.yml",
+    "~/.config/ameba/config.yml",
+  }
+  FILENAME = ".ameba.yml"
+  PATH     = Path[Dir.current] / FILENAME
 
   DEFAULT_GLOBS = %w(
     **/*.cr
@@ -77,12 +82,31 @@ class Ameba::Config
   # ```
   # config = Ameba::Config.load
   # ```
-  def self.load(path = PATH, colors = true)
+  def self.load(path = nil, colors = true)
     Colorize.enabled = colors
-    content = File.exists?(path) ? File.read path : "{}"
+    content = read_config(path) || "{}"
     Config.new YAML.parse(content)
   rescue e
     raise "Config file is invalid: #{e.message}"
+  end
+
+  protected def self.read_config(path) : String?
+    if path
+      return File.exists?(path) ? File.read(path) : nil
+    end
+    path = Path[PATH].expand(home: true)
+
+    search_paths = path
+      .parents
+      .map! { |search_path| search_path / FILENAME }
+
+    search_paths.reverse_each do |search_path|
+      return File.read(search_path) if File.exists?(search_path)
+    end
+
+    DEFAULT_PATHS.each do |default_path|
+      return File.read(default_path) if File.exists?(default_path)
+    end
   end
 
   def self.formatter_names
