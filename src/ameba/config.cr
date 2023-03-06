@@ -114,22 +114,25 @@ class Ameba::Config
     raise "Config file is invalid: #{e.message}"
   end
 
-  protected def self.read_config(path) : String?
+  protected def self.read_config(path = nil)
     if path
       return File.exists?(path) ? File.read(path) : nil
     end
+    each_config_path do |config_path|
+      return File.read(config_path) if File.exists?(config_path)
+    end
+  end
+
+  protected def self.each_config_path(&)
     path = Path[DEFAULT_PATH].expand(home: true)
 
-    search_paths = path
-      .parents
-      .map! { |search_path| search_path / FILENAME }
-
+    search_paths = path.parents
     search_paths.reverse_each do |search_path|
-      return File.read(search_path) if File.exists?(search_path)
+      yield search_path / FILENAME
     end
 
     DEFAULT_PATHS.each do |default_path|
-      return File.read(default_path) if File.exists?(default_path)
+      yield default_path
     end
   end
 
