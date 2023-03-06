@@ -28,8 +28,8 @@ class Ameba::Config
     "~/.ameba.yml",
     "~/.config/ameba/config.yml",
   }
-  FILENAME = ".ameba.yml"
-  PATH     = Path[Dir.current] / FILENAME
+  FILENAME     = ".ameba.yml"
+  DEFAULT_PATH = Path[Dir.current] / FILENAME
 
   DEFAULT_GLOBS = %w(
     **/*.cr
@@ -94,7 +94,7 @@ class Ameba::Config
     if path
       return File.exists?(path) ? File.read(path) : nil
     end
-    path = Path[PATH].expand(home: true)
+    path = Path[DEFAULT_PATH].expand(home: true)
 
     search_paths = path
       .parents

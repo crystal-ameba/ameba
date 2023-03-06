@@ -20,7 +20,7 @@ module Ameba
 
   describe Formatter::TODOFormatter do
     ::Spec.after_each do
-      FileUtils.rm_rf(Ameba::Config::PATH)
+      FileUtils.rm_rf(Ameba::Config::DEFAULT_PATH)
     end
 
     context "problems not found" do
@@ -45,7 +45,7 @@ module Ameba
           s = Source.new "a = 1", "source.cr"
           s.add_issue DummyRule.new, {1, 2}, "message"
           formatter.finished([s])
-          io.to_s.should contain "Created #{Config::PATH}"
+          io.to_s.should contain "Created #{Config::DEFAULT_PATH}"
         end
       end
 
