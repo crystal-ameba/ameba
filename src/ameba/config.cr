@@ -10,8 +10,30 @@ require "./glob_utils"
 # config.formatter = my_formatter
 # ```
 #
-# By default config loads `.ameba.yml` file in a current directory.
+# By default config loads `.ameba.yml` file located in a current
+# working directory.
 #
+# If it cannot be found until reaching the root directory, then it will be
+# searched for in the user’s global config locations, which consists of a
+# dotfile or a config file inside the XDG Base Directory specification.
+#
+# - `~/.ameba.yml`
+# - `$XDG_CONFIG_HOME/ameba/config.yml` (expands to `~/.config/ameba/config.yml`
+#   if `$XDG_CONFIG_HOME` is not set)
+#
+# If both files exist, the dotfile will be selected.
+#
+# As an example, if Ameba is invoked from inside `/path/to/project/lib/utils`,
+# then it will use the config as specified inside the first of the following files:
+#
+# - `/path/to/project/lib/utils/.ameba.yml`
+# - `/path/to/project/lib/.ameba.yml`
+# - `/path/to/project/.ameba.yml`
+# - `/path/to/.ameba.yml`
+# - `/path/.ameba.yml`
+# - `/.ameba.yml`
+# - `~/.ameba.yml`
+# - `~/.config/ameba/config.yml`
 class Ameba::Config
   include GlobUtils
 
