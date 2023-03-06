@@ -25,12 +25,13 @@ class Ameba::Config
   }
 
   XDG_CONFIG_HOME = ENV.fetch("XDG_CONFIG_HOME", "~/.config")
-  DEFAULT_PATHS   = {
-    Path["~/.ameba.yml"],
+
+  FILENAME      = ".ameba.yml"
+  DEFAULT_PATH  = Path[Dir.current] / FILENAME
+  DEFAULT_PATHS = {
+    Path["~"] / FILENAME,
     Path[XDG_CONFIG_HOME] / "ameba/config.yml",
   }
-  FILENAME     = ".ameba.yml"
-  DEFAULT_PATH = Path[Dir.current] / FILENAME
 
   DEFAULT_GLOBS = %w(
     **/*.cr
