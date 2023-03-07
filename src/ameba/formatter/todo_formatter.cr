@@ -26,7 +26,7 @@ module Ameba::Formatter
     end
 
     private def generate_todo_config(issues)
-      file = File.new(Config::PATH, mode: "w")
+      file = File.new(Config::DEFAULT_PATH, mode: "w")
       file << header
       rule_issues_map(issues).each do |rule, rule_issues|
         file << "\n# Problems found: #{rule_issues.size}"

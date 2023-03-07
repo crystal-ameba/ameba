@@ -10,8 +10,30 @@ require "./glob_utils"
 # config.formatter = my_formatter
 # ```
 #
-# By default config loads `.ameba.yml` file in a current directory.
+# By default config loads `.ameba.yml` file located in a current
+# working directory.
 #
+# If it cannot be found until reaching the root directory, then it will be
+# searched for in the user’s global config locations, which consists of a
+# dotfile or a config file inside the XDG Base Directory specification.
+#
+# - `~/.ameba.yml`
+# - `$XDG_CONFIG_HOME/ameba/config.yml` (expands to `~/.config/ameba/config.yml`
+#   if `$XDG_CONFIG_HOME` is not set)
+#
+# If both files exist, the dotfile will be selected.
+#
+# As an example, if Ameba is invoked from inside `/path/to/project/lib/utils`,
+# then it will use the config as specified inside the first of the following files:
+#
+# - `/path/to/project/lib/utils/.ameba.yml`
+# - `/path/to/project/lib/.ameba.yml`
+# - `/path/to/project/.ameba.yml`
+# - `/path/to/.ameba.yml`
+# - `/path/.ameba.yml`
+# - `/.ameba.yml`
+# - `~/.ameba.yml`
+# - `~/.config/ameba/config.yml`
 class Ameba::Config
   include GlobUtils
 
@@ -24,7 +46,14 @@ class Ameba::Config
     json:     Formatter::JSONFormatter,
   }
 
-  PATH = ".ameba.yml"
+  XDG_CONFIG_HOME = ENV.fetch("XDG_CONFIG_HOME", "~/.config")
+
+  FILENAME      = ".ameba.yml"
+  DEFAULT_PATH  = Path[Dir.current] / FILENAME
+  DEFAULT_PATHS = {
+    Path["~"] / FILENAME,
+    Path[XDG_CONFIG_HOME] / "ameba/config.yml",
+  }
 
   DEFAULT_GLOBS = %w(
     **/*.cr
@@ -77,12 +106,34 @@ class Ameba::Config
   # ```
   # config = Ameba::Config.load
   # ```
-  def self.load(path = PATH, colors = true)
+  def self.load(path = nil, colors = true)
     Colorize.enabled = colors
-    content = File.exists?(path) ? File.read path : "{}"
+    content = read_config(path) || "{}"
     Config.new YAML.parse(content)
   rescue e
     raise "Config file is invalid: #{e.message}"
+  end
+
+  protected def self.read_config(path = nil)
+    if path
+      return File.exists?(path) ? File.read(path) : nil
+    end
+    each_config_path do |config_path|
+      return File.read(config_path) if File.exists?(config_path)
+    end
+  end
+
+  protected def self.each_config_path(&)
+    path = Path[DEFAULT_PATH].expand(home: true)
+
+    search_paths = path.parents
+    search_paths.reverse_each do |search_path|
+      yield search_path / FILENAME
+    end
+
+    DEFAULT_PATHS.each do |default_path|
+      yield default_path
+    end
   end
 
   def self.formatter_names
