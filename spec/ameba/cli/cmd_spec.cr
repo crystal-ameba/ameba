@@ -47,6 +47,11 @@ module Ameba::Cli
         c.rules?.should eq false
       end
 
+      it "defaults skip_reading_config? flag to false" do
+        c = Cli.parse_args %w(file.cr)
+        c.skip_reading_config?.should eq false
+      end
+
       it "accepts --rules flag" do
         c = Cli.parse_args %w(--rules)
         c.rules?.should eq true
