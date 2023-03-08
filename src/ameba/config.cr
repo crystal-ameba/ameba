@@ -106,9 +106,13 @@ class Ameba::Config
   # ```
   # config = Ameba::Config.load
   # ```
-  def self.load(path = nil, colors = true)
+  def self.load(path = nil, colors = true, skip_reading_config = false)
     Colorize.enabled = colors
-    content = read_config(path) || "{}"
+    content = if skip_reading_config
+                "{}"
+              else
+                read_config(path) || "{}"
+              end
     Config.new YAML.parse(content)
   rescue e
     raise "Config file is invalid: #{e.message}"

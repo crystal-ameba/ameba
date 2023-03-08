@@ -14,7 +14,7 @@ module Ameba::Cli
       raise "Invalid usage: Cannot explain an issue and autocorrect at the same time."
     end
 
-    config = Config.load opts.config, opts.colors?
+    config = Config.load path: opts.config, colors: opts.colors?, skip_reading_config: opts.skip_reading_config?
     config.autocorrect = autocorrect
 
     if globs = opts.globs
@@ -51,6 +51,7 @@ module Ameba::Cli
     property except : Array(String)?
     property location_to_explain : NamedTuple(file: String, line: Int32, column: Int32)?
     property fail_level : Severity?
+    property? skip_reading_config = false
     property? rules = false
     property? all = false
     property? colors = true
@@ -105,6 +106,7 @@ module Ameba::Cli
       parser.on("--gen-config",
         "Generate a configuration file acting as a TODO list") do
         opts.formatter = :todo
+        opts.skip_reading_config = true
       end
 
       parser.on("--fail-level SEVERITY",

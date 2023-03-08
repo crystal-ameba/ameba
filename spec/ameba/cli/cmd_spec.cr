@@ -82,6 +82,12 @@ module Ameba::Cli
         c.colors?.should be_true
       end
 
+      it "ignores --config if --gen-config flag passed" do
+        c = Cli.parse_args %w(--gen-config --config my_config.yml)
+        c.formatter.should eq :todo
+        c.skip_reading_config?.should be_true
+      end
+
       describe "-e/--explain" do
         it "configures file/line/column" do
           c = Cli.parse_args %w(--explain src/file.cr:3:5)
