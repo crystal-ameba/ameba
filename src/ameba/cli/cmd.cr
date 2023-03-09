@@ -14,7 +14,7 @@ module Ameba::Cli
       raise "Invalid usage: Cannot explain an issue and autocorrect at the same time."
     end
 
-    config = Config.load path: opts.config, colors: opts.colors?, skip_reading_config: opts.skip_reading_config?
+    config = Config.load opts.config, opts.colors?, opts.skip_reading_config?
     config.autocorrect = autocorrect
 
     if globs = opts.globs
