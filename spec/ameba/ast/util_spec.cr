@@ -93,7 +93,7 @@ module Ameba::AST
 
       it "returns false if this is a break out of loop" do
         node = as_node("break")
-        subject.flow_command?(node, false).should eq false
+        subject.flow_command?(node, false).should be_false
       end
 
       it "returns true if this is a next in a loop" do
@@ -103,7 +103,7 @@ module Ameba::AST
 
       it "returns false if this is a next out of loop" do
         node = as_node("next")
-        subject.flow_command?(node, false).should eq false
+        subject.flow_command?(node, false).should be_false
       end
 
       it "returns true if this is raise" do
@@ -123,7 +123,7 @@ module Ameba::AST
 
       it "returns false otherwise" do
         node = as_node("foobar")
-        subject.flow_command?(node, false).should eq false
+        subject.flow_command?(node, false).should be_false
       end
     end
 
@@ -195,7 +195,7 @@ module Ameba::AST
             break
           end
           CRYSTAL
-        subject.flow_expression?(node).should eq false
+        subject.flow_expression?(node).should be_false
       end
 
       it "returns true if this until consumed by flow expressions" do
@@ -213,7 +213,7 @@ module Ameba::AST
             break
           end
           CRYSTAL
-        subject.flow_expression?(node).should eq false
+        subject.flow_expression?(node).should be_false
       end
 
       it "returns true if this expressions consumed by flow expressions" do
@@ -230,7 +230,7 @@ module Ameba::AST
           exp1
           exp2
           CRYSTAL
-        subject.flow_expression?(node).should eq false
+        subject.flow_expression?(node).should be_false
       end
     end
 
@@ -242,12 +242,12 @@ module Ameba::AST
 
       it "returns false if it has a receiver" do
         node = as_node "obj.raise e"
-        subject.raise?(node).should eq false
+        subject.raise?(node).should be_false
       end
 
       it "returns false if size of the arguments doesn't match" do
         node = as_node "raise"
-        subject.raise?(node).should eq false
+        subject.raise?(node).should be_false
       end
     end
 
@@ -264,12 +264,12 @@ module Ameba::AST
 
       it "returns false if it has a receiver" do
         node = as_node "obj.exit"
-        subject.exit?(node).should eq false
+        subject.exit?(node).should be_false
       end
 
       it "returns false if size of the arguments doesn't match" do
         node = as_node "exit 1, 1"
-        subject.exit?(node).should eq false
+        subject.exit?(node).should be_false
       end
     end
 
@@ -291,12 +291,12 @@ module Ameba::AST
 
       it "returns false if it has a receiver" do
         node = as_node "obj.abort"
-        subject.abort?(node).should eq false
+        subject.abort?(node).should be_false
       end
 
       it "returns false if size of the arguments doesn't match" do
         node = as_node "abort 1, 1, 1"
-        subject.abort?(node).should eq false
+        subject.abort?(node).should be_false
       end
     end
 
@@ -308,12 +308,12 @@ module Ameba::AST
 
       it "returns false if it has a receiver" do
         node = as_node "obj.loop"
-        subject.loop?(node).should eq false
+        subject.loop?(node).should be_false
       end
 
       it "returns false if size of the arguments doesn't match" do
         node = as_node "loop 1"
-        subject.loop?(node).should eq false
+        subject.loop?(node).should be_false
       end
     end
 

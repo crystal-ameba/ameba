@@ -44,12 +44,12 @@ module Ameba::Cli
 
       it "defaults rules? flag to false" do
         c = Cli.parse_args %w(file.cr)
-        c.rules?.should eq false
+        c.rules?.should be_false
       end
 
       it "defaults skip_reading_config? flag to false" do
         c = Cli.parse_args %w(file.cr)
-        c.skip_reading_config?.should eq false
+        c.skip_reading_config?.should be_false
       end
 
       it "accepts --rules flag" do
@@ -59,7 +59,7 @@ module Ameba::Cli
 
       it "defaults all? flag to false" do
         c = Cli.parse_args %w(file.cr)
-        c.all?.should eq false
+        c.all?.should be_false
       end
 
       it "accepts --all flag" do

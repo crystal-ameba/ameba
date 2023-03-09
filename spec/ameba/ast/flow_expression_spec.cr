@@ -7,7 +7,7 @@ module Ameba::AST
         node = as_node("return 22")
         flow_expression = FlowExpression.new node, false
         flow_expression.node.should_not be_nil
-        flow_expression.in_loop?.should eq false
+        flow_expression.in_loop?.should be_false
       end
 
       describe "#delegation" do
