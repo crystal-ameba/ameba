@@ -45,7 +45,7 @@ module Ameba
     include YAML::Serializable
 
     @[YAML::Field(converter: Ameba::SeverityYamlConverter)]
-    property severity : Severity
+    property severity : Severity?
   end
 
   describe SeverityYamlConverter do
