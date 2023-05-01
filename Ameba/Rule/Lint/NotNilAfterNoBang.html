@@ -779,7 +779,8 @@
     Overview
   </h2>
 
-  <p>This rule is used to identify usage of <code>index/find</code> calls followed by <code>not_nil!</code>.</p>
+  <p>This rule is used to identify usage of <code>index/rindex/find</code> calls
+followed by a call to <code>not_nil!</code>.</p>
 <p>For example, this is considered a code smell:</p>
 <pre><code class="language-crystal"><span class="s">%w[Alice Bob]</span>.find(<span class="o">&amp;</span>.match(<span class="o">/</span><span class="o">^</span><span class="t">A</span>.<span class="o">/</span>)).not_nil!</code></pre>
 <p>And can be written as this:</p>
@@ -829,7 +830,7 @@
   </h2>
   
     
-      <a href="https://github.com/crystal-ameba/ameba/blob/149080a/src/ameba/rule/lint/not_nil_after_no_bang.cr#L22" target="_blank">
+      <a href="https://github.com/crystal-ameba/ameba/blob/14f6ba0/src/ameba/rule/lint/not_nil_after_no_bang.cr#L23" target="_blank">
         ameba/rule/lint/not_nil_after_no_bang.cr
       </a>
     
@@ -851,12 +852,12 @@
   <dl>
     
       <dt class="entry-const" id="BLOCK_CALL_NAMES">
-        <strong>BLOCK_CALL_NAMES</strong> = <code>[<span class="s">&quot;index&quot;</span>, <span class="s">&quot;find&quot;</span>] <span class="k">of</span> <span class="t">::</span><span class="t">String</span></code>
+        <strong>BLOCK_CALL_NAMES</strong> = <code>[<span class="s">&quot;index&quot;</span>, <span class="s">&quot;rindex&quot;</span>, <span class="s">&quot;find&quot;</span>] <span class="k">of</span> <span class="t">::</span><span class="t">String</span></code>
       </dt>
       
     
       <dt class="entry-const" id="CALL_NAMES">
-        <strong>CALL_NAMES</strong> = <code>[<span class="s">&quot;index&quot;</span>] <span class="k">of</span> <span class="t">::</span><span class="t">String</span></code>
+        <strong>CALL_NAMES</strong> = <code>[<span class="s">&quot;index&quot;</span>, <span class="s">&quot;rindex&quot;</span>] <span class="k">of</span> <span class="t">::</span><span class="t">String</span></code>
       </dt>
       
     
@@ -892,7 +893,7 @@
       <li class="entry-summary">
         <a href="#new%28config%3Dnil%29-class-method" class="signature"><strong>.new</strong>(config = <span class="n">nil</span>)</a>
         
-          <div class="summary"><p>This rule is used to identify usage of <code>index/find</code> calls followed by <code>not_nil!</code>.</p></div>
+          <div class="summary"><p>This rule is used to identify usage of <code>index/rindex/find</code> calls followed by a call to <code>not_nil!</code>.</p></div>
         
       </li>
     
@@ -1232,7 +1233,8 @@
       
         <div class="doc">
           
-          <p>This rule is used to identify usage of <code>index/find</code> calls followed by <code>not_nil!</code>.</p>
+          <p>This rule is used to identify usage of <code>index/rindex/find</code> calls
+followed by a call to <code>not_nil!</code>.</p>
 <p>For example, this is considered a code smell:</p>
 <pre><code class="language-crystal"><span class="s">%w[Alice Bob]</span>.find(<span class="o">&amp;</span>.match(<span class="o">/</span><span class="o">^</span><span class="t">A</span>.<span class="o">/</span>)).not_nil!</code></pre>
 <p>And can be written as this:</p>
@@ -1245,7 +1247,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/149080a/src/ameba/rule/lint/not_nil_after_no_bang.cr#L22" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/14f6ba0/src/ameba/rule/lint/not_nil_after_no_bang.cr#L23" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1426,7 +1428,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/149080a/src/ameba/rule/lint/not_nil_after_no_bang.cr#L44" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/14f6ba0/src/ameba/rule/lint/not_nil_after_no_bang.cr#L45" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1442,7 +1444,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/149080a/src/ameba/rule/lint/not_nil_after_no_bang.cr#L35" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/14f6ba0/src/ameba/rule/lint/not_nil_after_no_bang.cr#L36" target="_blank">View source</a>]
         
       </div>
     </div>
