@@ -1,5 +1,6 @@
 module Ameba::Rule::Lint
-  # This rule is used to identify usage of `index/find` calls followed by `not_nil!`.
+  # This rule is used to identify usage of `index/rindex/find` calls
+  # followed by a call to `not_nil!`.
   #
   # For example, this is considered a code smell:
   #
@@ -23,11 +24,11 @@ module Ameba::Rule::Lint
     include AST::Util
 
     properties do
-      description "Identifies usage of `index/find` calls followed by `not_nil!`"
+      description "Identifies usage of `index/rindex/find` calls followed by `not_nil!`"
     end
 
-    BLOCK_CALL_NAMES = %w(index find)
-    CALL_NAMES       = %w(index)
+    BLOCK_CALL_NAMES = %w(index rindex find)
+    CALL_NAMES       = %w(index rindex)
 
     NOT_NIL_NAME = "not_nil!"
     MSG          = "Use `%s! {...}` instead of `%s {...}.not_nil!`"
