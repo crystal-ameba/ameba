@@ -54,7 +54,7 @@ module Ameba
 
       case value = node.value
       when String then Severity.parse(value)
-      when Nil    then nil
+      when Nil    then raise "Missing severity"
       else
         raise "Incorrect severity: #{value}"
       end
