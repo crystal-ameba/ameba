@@ -22,10 +22,10 @@ module Ameba::Rule::Lint
     MSG = "Missing documentation"
 
     def test(source)
-      AST::ScopeVisitor.new self, source
+      DocumentationVisitor.new self, source
     end
 
-    def test(source, node : Crystal::ClassDef | Crystal::ModuleDef | Crystal::EnumDef | Crystal::Def | Crystal::Macro, scope : AST::Scope)
+    def test(source, node)
       return unless node.visibility.public?
 
       case node
@@ -37,6 +37,34 @@ module Ameba::Rule::Lint
       end
 
       issue_for(node, MSG) unless node.doc.presence
+    end
+
+    # :nodoc:
+    private class DocumentationVisitor < AST::BaseVisitor
+      NODES = {
+        ClassDef,
+        ModuleDef,
+        EnumDef,
+        Def,
+        Macro,
+      }
+
+      @visibility : Crystal::Visibility = :public
+
+      def visit(node : Crystal::VisibilityModifier)
+        @visibility = node.modifier
+        true
+      end
+
+      {% for name in NODES %}
+        def visit(node : Crystal::{{ name }})
+          node.visibility = @visibility
+          @visibility = :public
+
+          @rule.test @source, node
+          true
+        end
+      {% end %}
     end
   end
 end
