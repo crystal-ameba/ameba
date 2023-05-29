@@ -21,22 +21,44 @@ module Ameba::Rule::Lint
 
     MSG = "Missing documentation"
 
+    HOOK_NAMES = %w[
+      inherited
+      included extended
+      method_missing method_added
+      finished
+    ]
+
     def test(source)
       DocumentationVisitor.new self, source
     end
 
-    def test(source, node)
+    def test(source, node : Crystal::ClassDef)
+      ignore_classes? || check_missing_doc(source, node)
+    end
+
+    def test(source, node : Crystal::ModuleDef)
+      ignore_modules? || check_missing_doc(source, node)
+    end
+
+    def test(source, node : Crystal::EnumDef)
+      ignore_enums? || check_missing_doc(source, node)
+    end
+
+    def test(source, node : Crystal::Def)
+      ignore_defs? || check_missing_doc(source, node)
+    end
+
+    def test(source, node : Crystal::Macro)
+      return if node.name.in?(HOOK_NAMES)
+
+      ignore_macros? || check_missing_doc(source, node)
+    end
+
+    private def check_missing_doc(source, node)
       return unless node.visibility.public?
+      return if node.doc.presence
 
-      case node
-      when Crystal::ClassDef  then return if ignore_classes?
-      when Crystal::ModuleDef then return if ignore_modules?
-      when Crystal::EnumDef   then return if ignore_enums?
-      when Crystal::Def       then return if ignore_defs?
-      when Crystal::Macro     then return if ignore_macros?
-      end
-
-      issue_for(node, MSG) unless node.doc.presence
+      issue_for(node, MSG)
     end
 
     # :nodoc:
