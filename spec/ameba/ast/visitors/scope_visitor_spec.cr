@@ -2,6 +2,17 @@ require "../../../spec_helper"
 
 module Ameba::AST
   describe ScopeVisitor do
+    {% for type in %w[class module enum].map(&.id) %}
+      it "creates a scope for the {{ type }} def" do
+        rule = ScopeRule.new
+        ScopeVisitor.new rule, Source.new <<-CRYSTAL
+          {{ type }} Foo
+          end
+          CRYSTAL
+        rule.scopes.size.should eq 1
+      end
+    {% end %}
+
     it "creates a scope for the def" do
       rule = ScopeRule.new
       ScopeVisitor.new rule, Source.new <<-CRYSTAL
@@ -52,6 +63,32 @@ module Ameba::AST
         outer_block = rule.scopes.last
         inner_block.outer_scope.should_not eq outer_block
         outer_block.outer_scope.should be_nil
+      end
+    end
+
+    context "#visibility" do
+      it "is being properly set" do
+        rule = ScopeRule.new
+        ScopeVisitor.new rule, Source.new <<-CRYSTAL
+          private class Foo
+          end
+          CRYSTAL
+        rule.scopes.size.should eq 1
+        rule.scopes.first.visibility.should eq Crystal::Visibility::Private
+      end
+
+      it "is being inherited from the outer scope(s)" do
+        rule = ScopeRule.new
+        ScopeVisitor.new rule, Source.new <<-CRYSTAL
+          private class Foo
+            class Bar
+              def baz
+              end
+            end
+          end
+          CRYSTAL
+        rule.scopes.size.should eq 3
+        rule.scopes.each &.visibility.should eq Crystal::Visibility::Private
       end
     end
   end

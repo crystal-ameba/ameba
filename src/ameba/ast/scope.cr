@@ -7,6 +7,9 @@ module Ameba::AST
     # Whether the scope yields.
     setter yields = false
 
+    # Scope visibility level
+    setter visibility : Crystal::Visibility?
+
     # Link to local variables
     getter variables = [] of Variable
 
@@ -170,6 +173,11 @@ module Ameba::AST
       return true if @yields
       return inner_scopes.any?(&.yields?) if check_inner_scopes
       false
+    end
+
+    # Returns visibility of the current scope (could be inherited from the outer scope).
+    def visibility
+      @visibility || outer_scope.try(&.visibility)
     end
 
     # Returns `true` if current scope is a def, `false` otherwise.

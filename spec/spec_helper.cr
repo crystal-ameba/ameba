@@ -43,6 +43,9 @@ module Ameba
       description "Internal rule to test scopes"
     end
 
+    def test(source, node : Crystal::VisibilityModifier, scope : AST::Scope)
+    end
+
     def test(source, node : Crystal::ASTNode, scope : AST::Scope)
       @scopes << scope
     end
