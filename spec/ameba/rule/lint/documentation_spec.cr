@@ -4,15 +4,21 @@ module Ameba::Rule::Lint
   subject = Documentation.new
     .tap(&.ignore_classes = false)
     .tap(&.ignore_modules = false)
+    .tap(&.ignore_enums = false)
     .tap(&.ignore_defs = false)
+    .tap(&.ignore_macros = false)
 
   describe Documentation do
     it "passes for undocumented private types" do
       expect_no_issues subject, <<-CRYSTAL
         private class Foo
+          def foo
+          end
         end
 
         private module Bar
+          def bar
+          end
         end
 
         private enum Baz
@@ -30,10 +36,16 @@ module Ameba::Rule::Lint
       expect_no_issues subject, <<-CRYSTAL
         # Foo
         class Foo
+          # foo
+          def foo
+          end
         end
 
         # Bar
         module Bar
+          # bar
+          def bar
+          end
         end
 
         # Baz
