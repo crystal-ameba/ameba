@@ -1,34 +1,6 @@
 require "./base_visitor"
 
 module Ameba::AST
-  # List of nodes to be visited by Ameba's rules.
-  NODES = {
-    Alias,
-    IsA,
-    Assign,
-    Call,
-    Block,
-    Case,
-    ClassDef,
-    ClassVar,
-    Def,
-    EnumDef,
-    ExceptionHandler,
-    Expressions,
-    HashLiteral,
-    If,
-    InstanceVar,
-    LibDef,
-    ModuleDef,
-    NilLiteral,
-    StringInterpolation,
-    Unless,
-    Var,
-    When,
-    While,
-    Until,
-  }
-
   # An AST Visitor that traverses the source and allows all nodes
   # to be inspected by rules.
   #
@@ -36,11 +8,44 @@ module Ameba::AST
   # visitor = Ameba::AST::NodeVisitor.new(rule, source)
   # ```
   class NodeVisitor < BaseVisitor
+    # List of nodes to be visited by Ameba's rules.
+    NODES = {
+      Alias,
+      IsA,
+      Assign,
+      Call,
+      Block,
+      Case,
+      ClassDef,
+      ClassVar,
+      Def,
+      EnumDef,
+      ExceptionHandler,
+      Expressions,
+      HashLiteral,
+      If,
+      InstanceVar,
+      LibDef,
+      ModuleDef,
+      NilLiteral,
+      StringInterpolation,
+      Unless,
+      Var,
+      When,
+      While,
+      Until,
+    }
+
     @skip : Array(Crystal::ASTNode.class)?
 
     def initialize(@rule, @source, skip = nil)
       @skip = skip.try &.map(&.as(Crystal::ASTNode.class))
       super @rule, @source
+    end
+
+    def visit(node : Crystal::VisibilityModifier)
+      node.exp.visibility = node.modifier
+      true
     end
 
     {% for name in NODES %}

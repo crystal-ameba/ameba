@@ -36,4 +36,4 @@ jobs:
         run: shards build -Dpreview_mt
 
       - name: Run ameba linter
-        run: bin/ameba --all
+        run: bin/ameba

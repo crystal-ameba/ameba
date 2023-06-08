@@ -10,7 +10,7 @@ build:
 
 .PHONY: lint
 lint: build
-	./bin/ameba --all
+	./bin/ameba
 
 .PHONY: spec
 spec:

@@ -112,6 +112,7 @@ module Ameba::Rule
       name.hash
     end
 
+    # Adds an issue to the *source*
     macro issue_for(*args, **kwargs, &block)
       source.add_issue(self, {{ *args }}, {{ **kwargs }}) {{ block }}
     end
