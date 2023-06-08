@@ -240,6 +240,7 @@ class Ameba::Config
 
   # :nodoc:
   module RuleConfig
+    # Define rule properties
     macro properties(&block)
       {% definitions = [] of NamedTuple %}
       {% if block.body.is_a? Assign %}
