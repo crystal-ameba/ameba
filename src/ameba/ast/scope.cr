@@ -124,10 +124,7 @@ module Ameba::AST
     # end
     # ```
     def spawn_block?
-      return false unless node.is_a?(Crystal::Block)
-
-      call = node.as(Crystal::Block).call
-      call.try(&.name) == "spawn"
+      node.as?(Crystal::Block).try(&.call).try(&.name) == "spawn"
     end
 
     # Returns `true` if current scope sits inside a macro.
@@ -170,9 +167,7 @@ module Ameba::AST
     # Returns `true` if current scope (or any of inner scopes) yields,
     # `false` otherwise.
     def yields?(check_inner_scopes = true)
-      return true if @yields
-      return inner_scopes.any?(&.yields?) if check_inner_scopes
-      false
+      @yields || (check_inner_scopes && inner_scopes.any?(&.yields?))
     end
 
     # Returns visibility of the current scope (could be inherited from the outer scope).

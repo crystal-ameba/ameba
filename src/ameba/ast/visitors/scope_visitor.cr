@@ -122,6 +122,7 @@ module Ameba::AST
       @current_assign = node.value unless node.value.nil?
     end
 
+    # :nodoc:
     def end_visit(node : Crystal::TypeDeclaration)
       return unless (var = node.var).is_a?(Crystal::Var)
 
