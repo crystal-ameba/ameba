@@ -13,7 +13,7 @@
 <script type="text/javascript" src="../../../js/doc.js"></script>
 
   <meta name="repository-name" content="ameba">
-  <title>Ameba::Rule::Style::PredicateName - ameba master</title>
+  <title>Ameba::Rule::Lint::Documentation - ameba master</title>
   <script type="text/javascript">
     CrystalDocs.base_path = "../../../";
   </script>
@@ -301,7 +301,7 @@
       
     </li>
   
-  <li class="parent " data-id="ameba/Ameba/Rule/Lint" data-name="ameba::rule::lint">
+  <li class="parent open current" data-id="ameba/Ameba/Rule/Lint" data-name="ameba::rule::lint">
       <a href="../../../Ameba/Rule/Lint.html">Lint</a>
       
         <ul>
@@ -331,7 +331,7 @@
       
     </li>
   
-  <li class=" " data-id="ameba/Ameba/Rule/Lint/Documentation" data-name="ameba::rule::lint::documentation">
+  <li class=" current" data-id="ameba/Ameba/Rule/Lint/Documentation" data-name="ameba::rule::lint::documentation">
       <a href="../../../Ameba/Rule/Lint/Documentation.html">Documentation</a>
       
     </li>
@@ -561,7 +561,7 @@
       
     </li>
   
-  <li class="parent open current" data-id="ameba/Ameba/Rule/Style" data-name="ameba::rule::style">
+  <li class="parent " data-id="ameba/Ameba/Rule/Style" data-name="ameba::rule::style">
       <a href="../../../Ameba/Rule/Style.html">Style</a>
       
         <ul>
@@ -606,7 +606,7 @@
       
     </li>
   
-  <li class=" current" data-id="ameba/Ameba/Rule/Style/PredicateName" data-name="ameba::rule::style::predicatename">
+  <li class=" " data-id="ameba/Ameba/Rule/Style/PredicateName" data-name="ameba::rule::style::predicatename">
       <a href="../../../Ameba/Rule/Style/PredicateName.html">PredicateName</a>
       
     </li>
@@ -765,12 +765,12 @@
 <div class="main-content">
 <h1 class="type-name">
 
-  <span class="kind">class</span> Ameba::Rule::Style::PredicateName
+  <span class="kind">class</span> Ameba::Rule::Lint::Documentation
 
 </h1>
 
 
-  <ul class="superclass-hierarchy"><li class="superclass"><a href="../../../Ameba/Rule/Style/PredicateName.html">Ameba::Rule::Style::PredicateName</a></li><li class="superclass"><a href="../../../Ameba/Rule/Base.html">Ameba::Rule::Base</a></li><li class="superclass">Reference</li><li class="superclass">Object</li></ul>
+  <ul class="superclass-hierarchy"><li class="superclass"><a href="../../../Ameba/Rule/Lint/Documentation.html">Ameba::Rule::Lint::Documentation</a></li><li class="superclass"><a href="../../../Ameba/Rule/Base.html">Ameba::Rule::Base</a></li><li class="superclass">Reference</li><li class="superclass">Object</li></ul>
 
 
 
@@ -784,17 +784,10 @@
     Overview
   </h2>
 
-  <p>A rule that disallows tautological predicate names -
-meaning those that start with the prefix <code>is_</code>, except for
-the ones that are not valid Crystal code (e.g. <code>is_404?</code>).</p>
-<p>Favour this:</p>
-<pre><code class="language-crystal"><span class="k">def</span> <span class="m">valid?</span>(x)
-<span class="k">end</span></code></pre>
-<p>Over this:</p>
-<pre><code class="language-crystal"><span class="k">def</span> <span class="m">is_valid?</span>(x)
-<span class="k">end</span></code></pre>
+  <p>A rule that enforces documentation for public types:
+modules, classes, enums, methods and macros.</p>
 <p>YAML configuration example:</p>
-<pre><code class="language-crystal"><span class="t">Style</span><span class="o">/</span><span class="t">PredicateName</span>:
+<pre><code class="language-crystal"><span class="t">Lint</span><span class="o">/</span><span class="t">Documentation</span>:
   <span class="t">Enabled</span>: <span class="n">true</span></code></pre>
 
 
@@ -836,8 +829,8 @@ the ones that are not valid Crystal code (e.g. <code>is_404?</code>).</p>
   </h2>
   
     
-      <a href="https://github.com/crystal-ameba/ameba/blob/aceb054/src/ameba/rule/style/predicate_name.cr#L26" target="_blank">
-        ameba/rule/style/predicate_name.cr
+      <a href="https://github.com/crystal-ameba/ameba/blob/aceb054/src/ameba/rule/lint/documentation.cr#L11" target="_blank">
+        ameba/rule/lint/documentation.cr
       </a>
     
     <br/>
@@ -857,8 +850,13 @@ the ones that are not valid Crystal code (e.g. <code>is_404?</code>).</p>
   
   <dl>
     
+      <dt class="entry-const" id="MACRO_HOOK_NAMES">
+        <strong>MACRO_HOOK_NAMES</strong> = <code>[<span class="s">&quot;inherited&quot;</span>, <span class="s">&quot;included&quot;</span>, <span class="s">&quot;extended&quot;</span>, <span class="s">&quot;method_missing&quot;</span>, <span class="s">&quot;method_added&quot;</span>, <span class="s">&quot;finished&quot;</span>] <span class="k">of</span> <span class="t">::</span><span class="t">String</span></code>
+      </dt>
+      
+    
       <dt class="entry-const" id="MSG">
-        <strong>MSG</strong> = <code><span class="s">&quot;Favour method name &#39;%s?&#39; over &#39;%s&#39;&quot;</span></code>
+        <strong>MSG</strong> = <code><span class="s">&quot;Missing documentation&quot;</span></code>
       </dt>
       
     
@@ -884,7 +882,7 @@ the ones that are not valid Crystal code (e.g. <code>is_404?</code>).</p>
       <li class="entry-summary">
         <a href="#new%28config%3Dnil%29-class-method" class="signature"><strong>.new</strong>(config = <span class="n">nil</span>)</a>
         
-          <div class="summary"><p>A rule that disallows tautological predicate names - meaning those that start with the prefix <code>is_</code>, except for the ones that are not valid Crystal code (e.g.</p></div>
+          <div class="summary"><p>A rule that enforces documentation for public types: modules, classes, enums, methods and macros.</p></div>
         
       </li>
     
@@ -954,6 +952,56 @@ the ones that are not valid Crystal code (e.g. <code>is_404?</code>).</p>
       </li>
     
       <li class="entry-summary">
+        <a href="#ignore_classes%3D%28ignore_classes%3ABool%29-instance-method" class="signature"><strong>#ignore_classes=</strong>(ignore_classes : Bool)</a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#ignore_classes%3F%3ABool-instance-method" class="signature"><strong>#ignore_classes?</strong> : Bool</a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#ignore_defs%3D%28ignore_defs%3ABool%29-instance-method" class="signature"><strong>#ignore_defs=</strong>(ignore_defs : Bool)</a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#ignore_defs%3F%3ABool-instance-method" class="signature"><strong>#ignore_defs?</strong> : Bool</a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#ignore_enums%3D%28ignore_enums%3ABool%29-instance-method" class="signature"><strong>#ignore_enums=</strong>(ignore_enums : Bool)</a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#ignore_enums%3F%3ABool-instance-method" class="signature"><strong>#ignore_enums?</strong> : Bool</a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#ignore_macros%3D%28ignore_macros%3ABool%29-instance-method" class="signature"><strong>#ignore_macros=</strong>(ignore_macros : Bool)</a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#ignore_macros%3F%3ABool-instance-method" class="signature"><strong>#ignore_macros?</strong> : Bool</a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#ignore_modules%3D%28ignore_modules%3ABool%29-instance-method" class="signature"><strong>#ignore_modules=</strong>(ignore_modules : Bool)</a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#ignore_modules%3F%3ABool-instance-method" class="signature"><strong>#ignore_modules?</strong> : Bool</a>
+        
+      </li>
+    
+      <li class="entry-summary">
         <a href="#severity%3AAmeba%3A%3ASeverity-instance-method" class="signature"><strong>#severity</strong> : Ameba::Severity</a>
         
       </li>
@@ -964,7 +1012,32 @@ the ones that are not valid Crystal code (e.g. <code>is_404?</code>).</p>
       </li>
     
       <li class="entry-summary">
-        <a href="#test%28source%2Cnode%3ACrystal%3A%3ADef%29-instance-method" class="signature"><strong>#test</strong>(source, node : Crystal::Def)</a>
+        <a href="#test%28source%2Cnode%3ACrystal%3A%3AClassDef%2Cscope%3AAST%3A%3AScope%29-instance-method" class="signature"><strong>#test</strong>(source, node : Crystal::ClassDef, scope : AST::Scope)</a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#test%28source%2Cnode%3ACrystal%3A%3AModuleDef%2Cscope%3AAST%3A%3AScope%29-instance-method" class="signature"><strong>#test</strong>(source, node : Crystal::ModuleDef, scope : AST::Scope)</a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#test%28source%2Cnode%3ACrystal%3A%3AEnumDef%2Cscope%3AAST%3A%3AScope%29-instance-method" class="signature"><strong>#test</strong>(source, node : Crystal::EnumDef, scope : AST::Scope)</a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#test%28source%2Cnode%3ACrystal%3A%3ADef%2Cscope%3AAST%3A%3AScope%29-instance-method" class="signature"><strong>#test</strong>(source, node : Crystal::Def, scope : AST::Scope)</a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#test%28source%2Cnode%3ACrystal%3A%3AMacro%2Cscope%3AAST%3A%3AScope%29-instance-method" class="signature"><strong>#test</strong>(source, node : Crystal::Macro, scope : AST::Scope)</a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#test%28source%29-instance-method" class="signature"><strong>#test</strong>(source)</a>
         
       </li>
     
@@ -1125,24 +1198,17 @@ the ones that are not valid Crystal code (e.g. <code>is_404?</code>).</p>
       
         <div class="doc">
           
-          <p>A rule that disallows tautological predicate names -
-meaning those that start with the prefix <code>is_</code>, except for
-the ones that are not valid Crystal code (e.g. <code>is_404?</code>).</p>
-<p>Favour this:</p>
-<pre><code class="language-crystal"><span class="k">def</span> <span class="m">valid?</span>(x)
-<span class="k">end</span></code></pre>
-<p>Over this:</p>
-<pre><code class="language-crystal"><span class="k">def</span> <span class="m">is_valid?</span>(x)
-<span class="k">end</span></code></pre>
+          <p>A rule that enforces documentation for public types:
+modules, classes, enums, methods and macros.</p>
 <p>YAML configuration example:</p>
-<pre><code class="language-crystal"><span class="t">Style</span><span class="o">/</span><span class="t">PredicateName</span>:
+<pre><code class="language-crystal"><span class="t">Lint</span><span class="o">/</span><span class="t">Documentation</span>:
   <span class="t">Enabled</span>: <span class="n">true</span></code></pre>
         </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/aceb054/src/ameba/rule/style/predicate_name.cr#L26" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/aceb054/src/ameba/rule/lint/documentation.cr#L11" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1284,6 +1350,146 @@ the ones that are not valid Crystal code (e.g. <code>is_404?</code>).</p>
       </div>
     </div>
   
+    <div class="entry-detail" id="ignore_classes=(ignore_classes:Bool)-instance-method">
+      <div class="signature">
+        
+        def <strong>ignore_classes=</strong>(ignore_classes : Bool)
+
+        <a class="method-permalink" href="#ignore_classes%3D%28ignore_classes%3ABool%29-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="ignore_classes?:Bool-instance-method">
+      <div class="signature">
+        
+        def <strong>ignore_classes?</strong> : Bool
+
+        <a class="method-permalink" href="#ignore_classes%3F%3ABool-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="ignore_defs=(ignore_defs:Bool)-instance-method">
+      <div class="signature">
+        
+        def <strong>ignore_defs=</strong>(ignore_defs : Bool)
+
+        <a class="method-permalink" href="#ignore_defs%3D%28ignore_defs%3ABool%29-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="ignore_defs?:Bool-instance-method">
+      <div class="signature">
+        
+        def <strong>ignore_defs?</strong> : Bool
+
+        <a class="method-permalink" href="#ignore_defs%3F%3ABool-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="ignore_enums=(ignore_enums:Bool)-instance-method">
+      <div class="signature">
+        
+        def <strong>ignore_enums=</strong>(ignore_enums : Bool)
+
+        <a class="method-permalink" href="#ignore_enums%3D%28ignore_enums%3ABool%29-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="ignore_enums?:Bool-instance-method">
+      <div class="signature">
+        
+        def <strong>ignore_enums?</strong> : Bool
+
+        <a class="method-permalink" href="#ignore_enums%3F%3ABool-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="ignore_macros=(ignore_macros:Bool)-instance-method">
+      <div class="signature">
+        
+        def <strong>ignore_macros=</strong>(ignore_macros : Bool)
+
+        <a class="method-permalink" href="#ignore_macros%3D%28ignore_macros%3ABool%29-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="ignore_macros?:Bool-instance-method">
+      <div class="signature">
+        
+        def <strong>ignore_macros?</strong> : Bool
+
+        <a class="method-permalink" href="#ignore_macros%3F%3ABool-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="ignore_modules=(ignore_modules:Bool)-instance-method">
+      <div class="signature">
+        
+        def <strong>ignore_modules=</strong>(ignore_modules : Bool)
+
+        <a class="method-permalink" href="#ignore_modules%3D%28ignore_modules%3ABool%29-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="ignore_modules?:Bool-instance-method">
+      <div class="signature">
+        
+        def <strong>ignore_modules?</strong> : Bool
+
+        <a class="method-permalink" href="#ignore_modules%3F%3ABool-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+      </div>
+    </div>
+  
     <div class="entry-detail" id="severity:Ameba::Severity-instance-method">
       <div class="signature">
         
@@ -1312,18 +1518,98 @@ the ones that are not valid Crystal code (e.g. <code>is_404?</code>).</p>
       </div>
     </div>
   
-    <div class="entry-detail" id="test(source,node:Crystal::Def)-instance-method">
+    <div class="entry-detail" id="test(source,node:Crystal::ClassDef,scope:AST::Scope)-instance-method">
       <div class="signature">
         
-        def <strong>test</strong>(source, node : Crystal::Def)
+        def <strong>test</strong>(source, node : Crystal::ClassDef, scope : <a href="../../../Ameba/AST/Scope.html">AST::Scope</a>)
 
-        <a class="method-permalink" href="#test%28source%2Cnode%3ACrystal%3A%3ADef%29-instance-method">#</a>
+        <a class="method-permalink" href="#test%28source%2Cnode%3ACrystal%3A%3AClassDef%2Cscope%3AAST%3A%3AScope%29-instance-method">#</a>
       </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/aceb054/src/ameba/rule/style/predicate_name.cr#L33" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/aceb054/src/ameba/rule/lint/documentation.cr#L36" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="test(source,node:Crystal::ModuleDef,scope:AST::Scope)-instance-method">
+      <div class="signature">
+        
+        def <strong>test</strong>(source, node : Crystal::ModuleDef, scope : <a href="../../../Ameba/AST/Scope.html">AST::Scope</a>)
+
+        <a class="method-permalink" href="#test%28source%2Cnode%3ACrystal%3A%3AModuleDef%2Cscope%3AAST%3A%3AScope%29-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/crystal-ameba/ameba/blob/aceb054/src/ameba/rule/lint/documentation.cr#L40" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="test(source,node:Crystal::EnumDef,scope:AST::Scope)-instance-method">
+      <div class="signature">
+        
+        def <strong>test</strong>(source, node : Crystal::EnumDef, scope : <a href="../../../Ameba/AST/Scope.html">AST::Scope</a>)
+
+        <a class="method-permalink" href="#test%28source%2Cnode%3ACrystal%3A%3AEnumDef%2Cscope%3AAST%3A%3AScope%29-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/crystal-ameba/ameba/blob/aceb054/src/ameba/rule/lint/documentation.cr#L44" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="test(source,node:Crystal::Def,scope:AST::Scope)-instance-method">
+      <div class="signature">
+        
+        def <strong>test</strong>(source, node : Crystal::Def, scope : <a href="../../../Ameba/AST/Scope.html">AST::Scope</a>)
+
+        <a class="method-permalink" href="#test%28source%2Cnode%3ACrystal%3A%3ADef%2Cscope%3AAST%3A%3AScope%29-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/crystal-ameba/ameba/blob/aceb054/src/ameba/rule/lint/documentation.cr#L48" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="test(source,node:Crystal::Macro,scope:AST::Scope)-instance-method">
+      <div class="signature">
+        
+        def <strong>test</strong>(source, node : Crystal::Macro, scope : <a href="../../../Ameba/AST/Scope.html">AST::Scope</a>)
+
+        <a class="method-permalink" href="#test%28source%2Cnode%3ACrystal%3A%3AMacro%2Cscope%3AAST%3A%3AScope%29-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/crystal-ameba/ameba/blob/aceb054/src/ameba/rule/lint/documentation.cr#L52" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="test(source)-instance-method">
+      <div class="signature">
+        
+        def <strong>test</strong>(source)
+
+        <a class="method-permalink" href="#test%28source%29-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/crystal-ameba/ameba/blob/aceb054/src/ameba/rule/lint/documentation.cr#L32" target="_blank">View source</a>]
         
       </div>
     </div>

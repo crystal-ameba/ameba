@@ -331,6 +331,11 @@
       
     </li>
   
+  <li class=" " data-id="ameba/Ameba/Rule/Lint/Documentation" data-name="ameba::rule::lint::documentation">
+      <a href="Ameba/Rule/Lint/Documentation.html">Documentation</a>
+      
+    </li>
+  
   <li class=" " data-id="ameba/Ameba/Rule/Lint/DuplicatedRequire" data-name="ameba::rule::lint::duplicatedrequire">
       <a href="Ameba/Rule/Lint/DuplicatedRequire.html">DuplicatedRequire</a>
       
@@ -869,11 +874,6 @@ $ ameba --explain crystal/command/format.cr:26:83 # same thing</code></pre>
     <use href="#octicon-link"/>
   </svg>
 </a>Run in parallel</h3>
-<p>Starting from 0.31.0 Crystal <a href="https://crystal-lang.org/2019/09/06/parallelism-in-crystal.html">supports parallelism</a>.
-It allows to run linting in parallel too.
-In order to take advantage of this feature you need to build ameba with preview_mt support:</p>
-<pre><code class="language-sh">$ crystal build src/cli.cr -Dpreview_mt -o bin/ameba
-$ make install</code></pre>
 <p>Some quick benchmark results measured while running Ameba on Crystal repo:</p>
 <pre><code class="language-sh">$ CRYSTAL_WORKERS=1 ameba #=&gt; 29.11 seconds
 $ CRYSTAL_WORKERS=2 ameba #=&gt; 19.49 seconds
