@@ -99,15 +99,6 @@ $ ameba --explain crystal/command/format.cr:26:83 # same thing
 
 ### Run in parallel
 
-Starting from 0.31.0 Crystal [supports parallelism](https://crystal-lang.org/2019/09/06/parallelism-in-crystal.html).
-It allows to run linting in parallel too.
-In order to take advantage of this feature you need to build ameba with preview_mt support:
-
-```sh
-$ crystal build src/cli.cr -Dpreview_mt -o bin/ameba
-$ make install
-```
-
 Some quick benchmark results measured while running Ameba on Crystal repo:
 
 ```sh
