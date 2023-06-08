@@ -43,6 +43,11 @@ module Ameba::AST
       super @rule, @source
     end
 
+    def visit(node : Crystal::VisibilityModifier)
+      node.exp.visibility = node.modifier
+      true
+    end
+
     {% for name in NODES %}
       # A visit callback for `Crystal::{{ name }}` node.
       #
