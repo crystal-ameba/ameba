@@ -73,7 +73,7 @@ module Ameba::AST
 
     # :nodoc:
     def visit(node : Crystal::VisibilityModifier)
-      @visibility_modifier = node.modifier
+      @visibility_modifier = node.exp.visibility = node.modifier
       true
     end
 
