@@ -126,7 +126,7 @@ Build `bin/ameba` binary within your project directory while running `shards ins
 ### OS X
 
 ```sh
-$ brew tap veelenga/tap
+$ brew tap crystal-ameba/ameba
 $ brew install ameba
 ```
 
