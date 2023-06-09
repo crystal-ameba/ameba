@@ -52,7 +52,7 @@ module Ameba::Rule::Lint
     it "reports if proc argument is unused" do
       source = expect_issue subject, <<-CRYSTAL
         -> (a : Int32, b : String) do
-                     # ^ error: Unused argument `b`. If it's necessary, use `_b` as an argument name to indicate that it won't be used.
+                     # ^^^^^^^^^^ error: Unused argument `b`. If it's necessary, use `_b` as an argument name to indicate that it won't be used.
           a = a + 1
         end
         CRYSTAL
@@ -306,7 +306,7 @@ module Ameba::Rule::Lint
 
           expect_issue rule, <<-CRYSTAL
             ->(a : Int32) {}
-             # ^ error: Unused argument `a`. If it's necessary, use `_a` as an argument name to indicate that it won't be used.
+             # ^^^^^^^^^ error: Unused argument `a`. If it's necessary, use `_a` as an argument name to indicate that it won't be used.
             CRYSTAL
         end
       end
