@@ -8,6 +8,7 @@ module Ameba::AST
   # visitor = Ameba::AST::NodeVisitor.new(rule, source)
   # ```
   class NodeVisitor < BaseVisitor
+    @[Flags]
     enum Category
       Macro
     end
@@ -43,14 +44,13 @@ module Ameba::AST
     @skip : Array(Crystal::ASTNode.class)?
 
     def self.category_to_node_classes(category : Category)
-      case category
-      in .macro?
-        [
+      ([] of Crystal::ASTNode.class).tap do |classes|
+        classes.push(
           Crystal::Macro,
           Crystal::MacroExpression,
           Crystal::MacroIf,
           Crystal::MacroFor,
-        ]
+        ) if category.macro?
       end
     end
 
