@@ -54,12 +54,12 @@ module Ameba::AST
       end
     end
 
-    def initialize(@rule, @source, skip : Category)
+    def initialize(@rule, @source, *, skip : Category)
       initialize @rule, @source,
         skip: NodeVisitor.category_to_node_classes(skip)
     end
 
-    def initialize(@rule, @source, skip : Array? = nil)
+    def initialize(@rule, @source, *, skip : Array? = nil)
       @skip = skip.try &.map(&.as(Crystal::ASTNode.class))
       super @rule, @source
     end
