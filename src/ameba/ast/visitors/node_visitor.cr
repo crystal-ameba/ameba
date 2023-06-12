@@ -8,13 +8,16 @@ module Ameba::AST
   # visitor = Ameba::AST::NodeVisitor.new(rule, source)
   # ```
   class NodeVisitor < BaseVisitor
+    enum Category
+      Macro
+    end
+
     # List of nodes to be visited by Ameba's rules.
     NODES = {
       Alias,
-      IsA,
       Assign,
-      Call,
       Block,
+      Call,
       Case,
       ClassDef,
       ClassVar,
@@ -25,20 +28,38 @@ module Ameba::AST
       HashLiteral,
       If,
       InstanceVar,
+      IsA,
       LibDef,
       ModuleDef,
       NilLiteral,
       StringInterpolation,
       Unless,
+      Until,
       Var,
       When,
       While,
-      Until,
     }
 
     @skip : Array(Crystal::ASTNode.class)?
 
-    def initialize(@rule, @source, skip = nil)
+    def self.category_to_node_classes(category : Category)
+      case category
+      in .macro?
+        [
+          Crystal::Macro,
+          Crystal::MacroExpression,
+          Crystal::MacroIf,
+          Crystal::MacroFor,
+        ]
+      end
+    end
+
+    def initialize(@rule, @source, skip : Category)
+      initialize @rule, @source,
+        skip: NodeVisitor.category_to_node_classes(skip)
+    end
+
+    def initialize(@rule, @source, skip : Array? = nil)
       @skip = skip.try &.map(&.as(Crystal::ASTNode.class))
       super @rule, @source
     end

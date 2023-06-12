@@ -34,12 +34,7 @@ module Ameba::Rule::Lint
     MSG          = "Use `%s! {...}` instead of `%s {...}.not_nil!`"
 
     def test(source)
-      AST::NodeVisitor.new self, source, skip: [
-        Crystal::Macro,
-        Crystal::MacroExpression,
-        Crystal::MacroIf,
-        Crystal::MacroFor,
-      ]
+      AST::NodeVisitor.new self, source, skip: :macro
     end
 
     def test(source, node : Crystal::Call)

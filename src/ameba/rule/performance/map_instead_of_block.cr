@@ -32,12 +32,7 @@ module Ameba::Rule::Performance
     MSG        = "Use `%s {...}` instead of `map {...}.%s`"
 
     def test(source)
-      AST::NodeVisitor.new self, source, skip: [
-        Crystal::Macro,
-        Crystal::MacroExpression,
-        Crystal::MacroIf,
-        Crystal::MacroFor,
-      ]
+      AST::NodeVisitor.new self, source, skip: :macro
     end
 
     def test(source, node : Crystal::Call)
