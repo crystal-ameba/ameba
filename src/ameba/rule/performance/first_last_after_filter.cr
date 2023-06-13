@@ -36,12 +36,7 @@ module Ameba::Rule::Performance
     MSG_REVERSE = "Use `reverse_each.find {...}` instead of `%s {...}.%s`"
 
     def test(source)
-      AST::NodeVisitor.new self, source, skip: [
-        Crystal::Macro,
-        Crystal::MacroExpression,
-        Crystal::MacroIf,
-        Crystal::MacroFor,
-      ]
+      AST::NodeVisitor.new self, source, skip: :macro
     end
 
     def test(source, node : Crystal::Call)
