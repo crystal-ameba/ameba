@@ -170,17 +170,13 @@ module Ameba::AST
     private class MacroReferenceFinder < Crystal::Visitor
       property? references = false
 
-      def initialize(node, @reference : String = reference)
+      def initialize(node, @reference : String)
         node.accept self
       end
 
       @[AlwaysInline]
       private def includes_reference?(val)
         val.to_s.includes?(@reference)
-      end
-
-      def visit(node : Crystal::ASTNode)
-        true
       end
 
       def visit(node : Crystal::MacroLiteral)
@@ -201,14 +197,20 @@ module Ameba::AST
                           includes_reference?(node.then) ||
                           includes_reference?(node.else))
       end
+
+      def visit(node : Crystal::ASTNode)
+        true
+      end
     end
 
     private def update_assign_reference!
-      if @assign_before_reference.nil? &&
-         references.size <= assignments.size &&
-         assignments.none?(&.op_assign?)
-        @assign_before_reference = assignments.find { |ass| !ass.in_branch? }.try &.node
-      end
+      return if @assign_before_reference
+      return if references.size > assignments.size
+      return if assignments.any?(&.op_assign?)
+
+      @assign_before_reference = assignments.find { |ass|
+        !ass.in_branch?
+      }.try &.node
     end
   end
 end

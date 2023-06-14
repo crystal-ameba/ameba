@@ -8,11 +8,6 @@ module Ameba::AST
 
     @loop_stack = [] of Crystal::ASTNode
 
-    # Creates a new flow expression visitor.
-    def initialize(@rule, @source)
-      @source.ast.accept self
-    end
-
     # :nodoc:
     def visit(node)
       if flow_expression?(node, in_loop?)
@@ -22,12 +17,7 @@ module Ameba::AST
     end
 
     # :nodoc:
-    def visit(node : Crystal::While)
-      on_loop_started(node)
-    end
-
-    # :nodoc:
-    def visit(node : Crystal::Until)
+    def visit(node : Crystal::While | Crystal::Until)
       on_loop_started(node)
     end
 
@@ -37,12 +27,7 @@ module Ameba::AST
     end
 
     # :nodoc:
-    def end_visit(node : Crystal::While)
-      on_loop_ended(node)
-    end
-
-    # :nodoc:
-    def end_visit(node : Crystal::Until)
+    def end_visit(node : Crystal::While | Crystal::Until)
       on_loop_ended(node)
     end
 

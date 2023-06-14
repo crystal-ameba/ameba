@@ -29,7 +29,7 @@ module Ameba::Rule::Performance
   class AnyAfterFilter < Base
     properties do
       description "Identifies usage of `any?` calls that follow filters"
-      filter_names : Array(String) = %w(select reject)
+      filter_names %w(select reject)
     end
 
     ANY_NAME = "any?"

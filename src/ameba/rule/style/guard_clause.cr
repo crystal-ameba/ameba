@@ -63,7 +63,9 @@ module Ameba::Rule::Style
           "code inside a conditional expression."
 
     def test(source)
-      AST::NodeVisitor.new self, source, skip: [Crystal::Assign]
+      AST::NodeVisitor.new self, source, skip: [
+        Crystal::Assign,
+      ]
     end
 
     def test(source, node : Crystal::Def)
@@ -118,6 +120,7 @@ module Ameba::Rule::Style
 
         issue_for keyword_loc, keyword_end_loc, MSG % example do |corrector|
           replacement = "#{scope_exiting_keyword} #{conditional_keyword}"
+
           corrector.replace(keyword_loc, keyword_end_loc, replacement)
           corrector.remove(end_loc, end_end_loc)
         end

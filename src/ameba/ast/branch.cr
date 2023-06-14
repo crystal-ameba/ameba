@@ -62,7 +62,7 @@ module Ameba::AST
     # Branch.of(assign_node, def_node)
     # ```
     def self.of(node : Crystal::ASTNode, parent_node : Crystal::ASTNode)
-      BranchVisitor.new(node).tap(&.accept parent_node).branch
+      BranchVisitor.new(node).tap(&.accept(parent_node)).branch
     end
 
     # :nodoc:
@@ -84,6 +84,7 @@ module Ameba::AST
 
         branches.each do |branch_node|
           break if branch # branch found
+
           @current_branch = branch_node if branch_node && !branch_node.nop?
           branch_node.try &.accept(self)
         end
@@ -108,19 +109,11 @@ module Ameba::AST
         true
       end
 
-      def visit(node : Crystal::If)
+      def visit(node : Crystal::If | Crystal::Unless)
         on_branchable_start node, node.cond, node.then, node.else
       end
 
-      def end_visit(node : Crystal::If)
-        on_branchable_end node
-      end
-
-      def visit(node : Crystal::Unless)
-        on_branchable_start node, node.cond, node.then, node.else
-      end
-
-      def end_visit(node : Crystal::Unless)
+      def end_visit(node : Crystal::If | Crystal::Unless)
         on_branchable_end node
       end
 
@@ -140,19 +133,11 @@ module Ameba::AST
         on_branchable_end node
       end
 
-      def visit(node : Crystal::While)
+      def visit(node : Crystal::While | Crystal::Until)
         on_branchable_start node, node.cond, node.body
       end
 
-      def end_visit(node : Crystal::While)
-        on_branchable_end node
-      end
-
-      def visit(node : Crystal::Until)
-        on_branchable_start node, node.cond, node.body
-      end
-
-      def end_visit(node : Crystal::Until)
+      def end_visit(node : Crystal::While | Crystal::Until)
         on_branchable_end node
       end
 

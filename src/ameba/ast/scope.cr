@@ -46,7 +46,7 @@ module Ameba::AST
     # scope = Scope.new(class_node, nil)
     # ```
     def initialize(@node, @outer_scope = nil)
-      @outer_scope.try &.inner_scopes.<<(self)
+      @outer_scope.try &.inner_scopes.<< self
     end
 
     # Creates a new variable in the current scope.
@@ -97,7 +97,8 @@ module Ameba::AST
     # scope.find_variable("foo")
     # ```
     def find_variable(name : String)
-      variables.find(&.name.==(name)) || outer_scope.try &.find_variable(name)
+      variables.find(&.name.==(name)) ||
+        outer_scope.try &.find_variable(name)
     end
 
     # Creates a new assignment for the variable.
@@ -113,7 +114,8 @@ module Ameba::AST
     # Returns `true` if current scope represents a block (or proc),
     # `false` otherwise.
     def block?
-      node.is_a?(Crystal::Block) || node.is_a?(Crystal::ProcLiteral)
+      node.is_a?(Crystal::Block) ||
+        node.is_a?(Crystal::ProcLiteral)
     end
 
     # Returns `true` if current scope represents a spawn block, e. g.
@@ -129,7 +131,9 @@ module Ameba::AST
 
     # Returns `true` if current scope sits inside a macro.
     def in_macro?
-      (node.is_a?(Crystal::Macro) || node.is_a?(Crystal::MacroFor)) ||
+      (node.is_a?(Crystal::Macro) ||
+        node.is_a?(Crystal::MacroIf) ||
+        node.is_a?(Crystal::MacroFor)) ||
         !!outer_scope.try(&.in_macro?)
     end
 
@@ -141,7 +145,8 @@ module Ameba::AST
 
     # Returns `true` if type declaration variable is assigned in this scope.
     def assigns_type_dec?(name)
-      type_dec_variables.any?(&.name.== name) || !!outer_scope.try(&.assigns_type_dec?(name))
+      type_dec_variables.any?(&.name.== name) ||
+        !!outer_scope.try(&.assigns_type_dec?(name))
     end
 
     # Returns `true` if and only if current scope represents some
@@ -149,6 +154,7 @@ module Ameba::AST
     def type_definition?
       node.is_a?(Crystal::ClassDef) ||
         node.is_a?(Crystal::ModuleDef) ||
+        node.is_a?(Crystal::EnumDef) ||
         node.is_a?(Crystal::LibDef) ||
         node.is_a?(Crystal::FunDef) ||
         node.is_a?(Crystal::TypeDef) ||
@@ -159,8 +165,8 @@ module Ameba::AST
     # `false` otherwise.
     def references?(variable : Variable, check_inner_scopes = true)
       variable.references.any? do |reference|
-        return true if reference.scope == self
-        check_inner_scopes && inner_scopes.any?(&.references?(variable))
+        (reference.scope == self) ||
+          (check_inner_scopes && inner_scopes.any?(&.references?(variable)))
       end || variable.used_in_macro?
     end
 

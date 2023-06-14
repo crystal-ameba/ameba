@@ -42,23 +42,26 @@ module Ameba::Rule::Lint
     end
 
     def test(source, node : Crystal::ProcLiteral, scope : AST::Scope)
-      ignore_procs? || find_unused_arguments source, scope
+      ignore_procs? || find_unused_arguments(source, scope)
     end
 
     def test(source, node : Crystal::Block, scope : AST::Scope)
-      ignore_blocks? || find_unused_arguments source, scope
+      ignore_blocks? || find_unused_arguments(source, scope)
     end
 
     def test(source, node : Crystal::Def, scope : AST::Scope)
+      arguments = scope.arguments.dup
+
       # `Lint/UnusedBlockArgument` rule covers this case explicitly
       if block_arg = node.block_arg
-        scope.arguments.reject!(&.node.== block_arg)
+        arguments.reject!(&.node.== block_arg)
       end
-      ignore_defs? || find_unused_arguments source, scope
+
+      ignore_defs? || find_unused_arguments(source, scope, arguments)
     end
 
-    private def find_unused_arguments(source, scope)
-      scope.arguments.each do |argument|
+    private def find_unused_arguments(source, scope, arguments = scope.arguments)
+      arguments.each do |argument|
         next if argument.anonymous? || argument.ignored?
         next if scope.references?(argument.variable)
 
