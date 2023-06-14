@@ -45,7 +45,7 @@ module Ameba::Rule::Performance
       # All of those have bang method variants returning `self`
       # and are not modifying the receiver type (like `compact` does),
       # thus are safe to switch to the bang variant.
-      call_names : Array(String) = %w(uniq sort sort_by shuffle reverse)
+      call_names %w(uniq sort sort_by shuffle reverse)
     end
 
     # All these methods are allocating a new object

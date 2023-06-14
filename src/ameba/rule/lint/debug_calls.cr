@@ -18,7 +18,7 @@ module Ameba::Rule::Lint
   class DebugCalls < Base
     properties do
       description "Disallows debug-related calls"
-      method_names : Array(String) = %w(p p! pp pp!)
+      method_names %w(p p! pp pp!)
     end
 
     MSG = "Possibly forgotten debug-related `%s` call detected"

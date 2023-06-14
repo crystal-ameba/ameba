@@ -35,7 +35,7 @@ module Ameba::Rule::Performance
   class SizeAfterFilter < Base
     properties do
       description "Identifies usage of `size` calls that follow filter"
-      filter_names : Array(String) = %w(select reject)
+      filter_names %w(select reject)
     end
 
     SIZE_NAME = "size"

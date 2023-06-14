@@ -292,17 +292,15 @@ class Ameba::Config
               {% type = Float64 %}
             {% end %}
           {% end %}
-
-          {% type = Nil if type == nil %}
         {% end %}
 
         {% properties[name] = {key: key, default: value, type: type, converter: converter} %}
 
-        @[YAML::Field(key: {{ key }}, converter: {{ converter }}, type: {{ type }})]
+        @[YAML::Field(key: {{ key }}, converter: {{ converter }})]
         {% if type == Bool %}
-          property? {{ name }} : {{ type }} = {{ value }}
+          property? {{ name }}{{ " : #{type}".id if type }} = {{ value }}
         {% else %}
-          property {{ name }} : {{ type }} = {{ value }}
+          property {{ name }}{{ " : #{type}".id if type }} = {{ value }}
         {% end %}
       {% end %}
 
