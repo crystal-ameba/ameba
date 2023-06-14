@@ -7,6 +7,12 @@ module Ameba::Rule::Lint
   # ```
   # Lint/Documentation:
   #   Enabled: true
+  #   IgnoreClasses: false
+  #   IgnoreModules: true
+  #   IgnoreEnums: false
+  #   IgnoreDefs: true
+  #   IgnoreMacros: false
+  #   IgnoreMacroHooks: true
   # ```
   class Documentation < Base
     properties do
@@ -18,6 +24,7 @@ module Ameba::Rule::Lint
       ignore_enums false
       ignore_defs true
       ignore_macros false
+      ignore_macro_hooks true
     end
 
     MSG = "Missing documentation"
@@ -50,14 +57,21 @@ module Ameba::Rule::Lint
     end
 
     def test(source, node : Crystal::Macro, scope : AST::Scope)
-      node.name.in?(MACRO_HOOK_NAMES) ||
-        ignore_macros? || check_missing_doc(source, node, scope)
+      return if ignore_macro_hooks? && node.name.in?(MACRO_HOOK_NAMES)
+
+      ignore_macros? || check_missing_doc(source, node, scope)
     end
 
     private def check_missing_doc(source, node, scope)
-      visibility = scope.visibility
+      # bail out if the node is not public,
+      # i.e. `private def foo`
+      return if !node.visibility.public?
 
-      return if visibility && !visibility.public?
+      # bail out if the scope is not public,
+      # i.e. `def bar` inside `private class Foo`
+      return if (visibility = scope.visibility) && !visibility.public?
+
+      # bail out if the node has the documentation present
       return if node.doc.presence
 
       issue_for(node, MSG)

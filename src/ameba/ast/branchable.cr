@@ -15,13 +15,14 @@ module Ameba::AST
   class Branchable
     include Util
 
-    getter branches = [] of Crystal::ASTNode
-
-    # The actual Crystal node.
-    getter node : Crystal::ASTNode
-
     # Parent branchable (if any)
     getter parent : Branchable?
+
+    # Array of branches
+    getter branches = [] of Crystal::ASTNode
+
+    # The actual Crystal node
+    getter node : Crystal::ASTNode
 
     delegate to_s, to: @node
     delegate location, to: @node

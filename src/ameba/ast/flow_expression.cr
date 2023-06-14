@@ -53,8 +53,11 @@ module Ameba::AST
       case current_node = node
       when Crystal::Expressions
         control_flow_found = false
+
         current_node.expressions.each do |exp|
-          unreachable_nodes << exp if control_flow_found
+          if control_flow_found
+            unreachable_nodes << exp
+          end
           control_flow_found ||= !loop?(exp) && flow_expression?(exp, in_loop?)
         end
       when Crystal::BinaryOp

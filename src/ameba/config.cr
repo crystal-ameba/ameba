@@ -246,7 +246,7 @@ class Ameba::Config
       {% if block.body.is_a? Assign %}
         {% definitions << {var: block.body.target, value: block.body.value} %}
       {% elsif block.body.is_a? Call %}
-          {% definitions << {var: block.body.name, value: block.body.args.first} %}
+        {% definitions << {var: block.body.name, value: block.body.args.first} %}
       {% elsif block.body.is_a? TypeDeclaration %}
         {% definitions << {var: block.body.var, value: block.body.value, type: block.body.type} %}
       {% elsif block.body.is_a? Expressions %}
@@ -274,7 +274,7 @@ class Ameba::Config
           {% converter = SeverityYamlConverter %}
         {% end %}
 
-        {% if type == nil %}
+        {% unless type %}
           {% if value.is_a? BoolLiteral %}
             {% type = Bool %}
           {% elsif value.is_a? StringLiteral %}
@@ -284,6 +284,8 @@ class Ameba::Config
               {% type = Int32 %}
             {% elsif value.kind == :i64 %}
               {% type = Int64 %}
+            {% elsif value.kind == :i128 %}
+              {% type = Int128 %}
             {% elsif value.kind == :f32 %}
               {% type = Float32 %}
             {% elsif value.kind == :f64 %}

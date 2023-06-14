@@ -16,6 +16,7 @@ module Ameba::AST
       ProcLiteral,
       Block,
       Macro,
+      MacroIf,
       MacroFor,
     }
 
@@ -25,21 +26,25 @@ module Ameba::AST
     @scope_queue = [] of Scope
     @current_scope : Scope
     @current_assign : Crystal::ASTNode?
-    @visibility_modifier : Crystal::Visibility?
+    @current_visibility : Crystal::Visibility?
     @skip : Array(Crystal::ASTNode.class)?
 
     def initialize(@rule, @source, skip = nil)
-      @skip = skip.try &.map(&.as(Crystal::ASTNode.class))
       @current_scope = Scope.new(@source.ast) # top level scope
-      @source.ast.accept self
-      @scope_queue.each { |scope| @rule.test @source, scope.node, scope }
+      @skip = skip.try &.map(&.as(Crystal::ASTNode.class))
+
+      super @rule, @source
+
+      @scope_queue.each do |scope|
+        @rule.test @source, scope.node, scope
+      end
     end
 
     private def on_scope_enter(node)
       return if skip?(node)
 
       scope = Scope.new(node, @current_scope)
-      scope.visibility = @visibility_modifier
+      scope.visibility = @current_visibility
 
       @current_scope = scope
     end
@@ -47,11 +52,12 @@ module Ameba::AST
     private def on_scope_end(node)
       @scope_queue << @current_scope
 
-      @visibility_modifier = nil
+      @current_visibility = nil
 
       # go up if this is not a top level scope
-      return unless outer_scope = @current_scope.outer_scope
-      @current_scope = outer_scope
+      if outer_scope = @current_scope.outer_scope
+        @current_scope = outer_scope
+      end
     end
 
     private def on_assign_end(target, node)
@@ -73,7 +79,7 @@ module Ameba::AST
 
     # :nodoc:
     def visit(node : Crystal::VisibilityModifier)
-      @visibility_modifier = node.exp.visibility = node.modifier
+      @current_visibility = node.exp.visibility = node.modifier
       true
     end
 
@@ -96,6 +102,7 @@ module Ameba::AST
     def end_visit(node : Crystal::Assign | Crystal::OpAssign)
       on_assign_end(node.target, node)
       @current_assign = nil
+
       on_scope_end(node) if @current_scope.eql?(node)
     end
 
@@ -103,6 +110,7 @@ module Ameba::AST
     def end_visit(node : Crystal::MultiAssign)
       node.targets.each { |target| on_assign_end(target, node) }
       @current_assign = nil
+
       on_scope_end(node) if @current_scope.eql?(node)
     end
 
@@ -110,6 +118,7 @@ module Ameba::AST
     def end_visit(node : Crystal::UninitializedVar)
       on_assign_end(node.var, node)
       @current_assign = nil
+
       on_scope_end(node) if @current_scope.eql?(node)
     end
 
@@ -119,7 +128,8 @@ module Ameba::AST
 
       @current_scope.add_variable(var)
       @current_scope.add_type_dec_variable(node)
-      @current_assign = node.value unless node.value.nil?
+
+      @current_assign = node.value if node.value
     end
 
     # :nodoc:
@@ -128,6 +138,7 @@ module Ameba::AST
 
       on_assign_end(var, node)
       @current_assign = nil
+
       on_scope_end(node) if @current_scope.eql?(node)
     end
 
@@ -165,7 +176,9 @@ module Ameba::AST
         if node.name.in?(SPECIAL_NODE_NAMES) && node.args.empty?
           @current_scope.arguments.each do |arg|
             variable = arg.variable
-            variable.reference(variable.node, @current_scope).explicit = false
+
+            ref = variable.reference(variable.node, @current_scope)
+            ref.explicit = false
           end
         end
         true

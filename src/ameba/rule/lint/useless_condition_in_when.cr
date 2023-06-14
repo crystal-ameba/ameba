@@ -37,11 +37,11 @@ module Ameba::Rule::Lint
 
     MSG = "Useless condition in when detected"
 
-    # TODO: condition.cond may be a complex ASTNode with
+    # TODO: condition *cond* may be a complex ASTNode with
     # useless inner conditions. We might need to improve this
     # simple implementation in future.
     protected def check_node(source, when_node, cond)
-      cond_s = cond.to_s
+      return unless cond_s = cond.to_s.presence
       return if when_node.conds.none?(&.to_s.==(cond_s))
 
       issue_for cond, MSG
