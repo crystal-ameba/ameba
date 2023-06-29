@@ -99,6 +99,9 @@ module Ameba::Rule::Style
         node.named_args.try &.each do |arg|
           i += reference_count(arg.value, obj)
         end
+      when Crystal::BinaryOp
+        i += reference_count(node.left, obj)
+        i += reference_count(node.right, obj)
       when Crystal::Block
         i += reference_count(node.body, obj)
       when Crystal::Var
@@ -230,7 +233,7 @@ module Ameba::Rule::Style
       # we filter out the blocks that are of call type - `i.to_i64.odd?`
       return unless (body = block.body).is_a?(Crystal::Call)
 
-      # we need to "unwind" the chain challs, so the final receiver object
+      # we need to "unwind" the chain calls, so the final receiver object
       # ends up being a variable - `i`
       obj = body.obj
       while obj.is_a?(Crystal::Call)
