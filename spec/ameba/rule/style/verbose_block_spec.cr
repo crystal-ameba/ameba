@@ -25,6 +25,7 @@ module Ameba::Rule::Style
         (1..3).map { |l| l.to_i64 * l.to_i64 }
         (1..3).map { |m| m.to_s[start: m.to_i64, count: 3]? }
         (1..3).map { |n| n.to_s.split.map { |z| n.to_i * z.to_i }.join }
+        (1..3).map { |o| o.foo = foos[o.abs]? || 0 }
         CRYSTAL
     end
 
