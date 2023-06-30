@@ -13,7 +13,7 @@
 <script type="text/javascript" src="../../../js/doc.js"></script>
 
   <meta name="repository-name" content="ameba">
-  <title>Ameba::Rule::Style::TypeNames - ameba master</title>
+  <title>Ameba::Rule::Performance::ExcessiveAllocations - ameba master</title>
   <script type="text/javascript">
     CrystalDocs.base_path = "../../../";
   </script>
@@ -516,7 +516,7 @@
       
     </li>
   
-  <li class="parent " data-id="ameba/Ameba/Rule/Performance" data-name="ameba::rule::performance">
+  <li class="parent open current" data-id="ameba/Ameba/Rule/Performance" data-name="ameba::rule::performance">
       <a href="../../../Ameba/Rule/Performance.html">Performance</a>
       
         <ul>
@@ -546,7 +546,7 @@
       
     </li>
   
-  <li class=" " data-id="ameba/Ameba/Rule/Performance/ExcessiveAllocations" data-name="ameba::rule::performance::excessiveallocations">
+  <li class=" current" data-id="ameba/Ameba/Rule/Performance/ExcessiveAllocations" data-name="ameba::rule::performance::excessiveallocations">
       <a href="../../../Ameba/Rule/Performance/ExcessiveAllocations.html">ExcessiveAllocations</a>
       
     </li>
@@ -576,7 +576,7 @@
       
     </li>
   
-  <li class="parent open current" data-id="ameba/Ameba/Rule/Style" data-name="ameba::rule::style">
+  <li class="parent " data-id="ameba/Ameba/Rule/Style" data-name="ameba::rule::style">
       <a href="../../../Ameba/Rule/Style.html">Style</a>
       
         <ul>
@@ -646,7 +646,7 @@
       
     </li>
   
-  <li class=" current" data-id="ameba/Ameba/Rule/Style/TypeNames" data-name="ameba::rule::style::typenames">
+  <li class=" " data-id="ameba/Ameba/Rule/Style/TypeNames" data-name="ameba::rule::style::typenames">
       <a href="../../../Ameba/Rule/Style/TypeNames.html">TypeNames</a>
       
     </li>
@@ -780,12 +780,12 @@
 <div class="main-content">
 <h1 class="type-name">
 
-  <span class="kind">class</span> Ameba::Rule::Style::TypeNames
+  <span class="kind">class</span> Ameba::Rule::Performance::ExcessiveAllocations
 
 </h1>
 
 
-  <ul class="superclass-hierarchy"><li class="superclass"><a href="../../../Ameba/Rule/Style/TypeNames.html">Ameba::Rule::Style::TypeNames</a></li><li class="superclass"><a href="../../../Ameba/Rule/Base.html">Ameba::Rule::Base</a></li><li class="superclass">Reference</li><li class="superclass">Object</li></ul>
+  <ul class="superclass-hierarchy"><li class="superclass"><a href="../../../Ameba/Rule/Performance/ExcessiveAllocations.html">Ameba::Rule::Performance::ExcessiveAllocations</a></li><li class="superclass"><a href="../../../Ameba/Rule/Performance/Base.html">Ameba::Rule::Performance::Base</a></li><li class="superclass"><a href="../../../Ameba/Rule/Base.html">Ameba::Rule::Base</a></li><li class="superclass">Reference</li><li class="superclass">Object</li></ul>
 
 
 
@@ -799,46 +799,22 @@
     Overview
   </h2>
 
-  <p>A rule that enforces type names in camelcase manner.</p>
-<p>For example, these are considered valid:</p>
-<pre><code class="language-crystal"><span class="k">class</span> <span class="t">ParseError</span> <span class="o">&lt;</span> <span class="t">Exception</span>
-<span class="k">end</span>
-
-<span class="k">module</span> <span class="t">HTTP</span>
-  <span class="k">class</span> <span class="t">RequestHandler</span>
-  <span class="k">end</span>
-<span class="k">end</span>
-
-<span class="k">alias</span> <span class="t">NumericValue</span> <span class="o">=</span> <span class="t">Float32</span> <span class="o">|</span> <span class="t">Float64</span> <span class="o">|</span> <span class="t">Int32</span> <span class="o">|</span> <span class="t">Int64</span>
-
-<span class="k">lib</span> <span class="t">LibYAML</span>
-<span class="k">end</span>
-
-<span class="k">struct</span> <span class="t">TagDirective</span>
-<span class="k">end</span>
-
-<span class="k">enum</span> <span class="t">Time</span><span class="t">::</span><span class="t">DayOfWeek</span>
-<span class="k">end</span></code></pre>
-<p>And these are invalid type names</p>
-<pre><code class="language-crystal"><span class="k">class</span> <span class="t">My_class</span>
-<span class="k">end</span>
-
-<span class="k">module</span> <span class="t">HTT_p</span>
-<span class="k">end</span>
-
-<span class="k">alias</span> <span class="t">Numeric_value</span> <span class="o">=</span> <span class="t">Int32</span>
-
-<span class="k">lib</span> <span class="t">Lib_YAML</span>
-<span class="k">end</span>
-
-<span class="k">struct</span> <span class="t">Tag_directive</span>
-<span class="k">end</span>
-
-<span class="k">enum</span> <span class="t">Time_enum</span><span class="t">::</span><span class="t">Day_of_week</span>
-<span class="k">end</span></code></pre>
+  <p>This rule is used to identify excessive collection allocations,
+that can be avoided by using <code>each_&lt;member&gt;</code> instead of <code>&lt;collection&gt;.each</code>.</p>
+<p>For example, this is considered inefficient:</p>
+<pre><code class="language-crystal"><span class="s">&quot;Alice&quot;</span>.chars.each { <span class="o">|</span>c<span class="o">|</span> puts c }
+<span class="s">&quot;Alice\nBob&quot;</span>.lines.each { <span class="o">|</span>l<span class="o">|</span> puts l }</code></pre>
+<p>And can be written as this:</p>
+<pre><code class="language-crystal"><span class="s">&quot;Alice&quot;</span>.each_char { <span class="o">|</span>c<span class="o">|</span> puts c }
+<span class="s">&quot;Alice\nBob&quot;</span>.each_line { <span class="o">|</span>l<span class="o">|</span> puts l }</code></pre>
 <p>YAML configuration example:</p>
-<pre><code class="language-crystal"><span class="t">Style</span><span class="o">/</span><span class="t">TypeNames</span>:
-  <span class="t">Enabled</span>: <span class="n">true</span></code></pre>
+<pre><code class="language-crystal"><span class="t">Performance</span><span class="o">/</span><span class="t">ExcessiveAllocations</span>:
+  <span class="t">Enabled</span>: <span class="n">true</span>
+  <span class="t">CallNames</span>:
+    codepoints: each_codepoint
+    graphemes: each_grapheme
+    chars: each_char
+    lines: each_line</code></pre>
 
 
 
@@ -853,6 +829,8 @@
     Included Modules
   </h2>
   <ul class="other-types-list">
+    
+      <li class="other-type"><a href="../../../Ameba/AST/Util.html">Ameba::AST::Util</a></li>
     
       <li class="other-type">YAML::Serializable</li>
     
@@ -879,8 +857,8 @@
   </h2>
   
     
-      <a href="https://github.com/crystal-ameba/ameba/blob/21051ac/src/ameba/rule/style/type_names.cr#L54" target="_blank">
-        ameba/rule/style/type_names.cr
+      <a href="https://github.com/crystal-ameba/ameba/blob/21051ac/src/ameba/rule/performance/excessive_allocations.cr#L32" target="_blank">
+        ameba/rule/performance/excessive_allocations.cr
       </a>
     
     <br/>
@@ -901,7 +879,7 @@
   <dl>
     
       <dt class="entry-const" id="MSG">
-        <strong>MSG</strong> = <code><span class="s">&quot;Type name should be camelcased: %s, but it was %s&quot;</span></code>
+        <strong>MSG</strong> = <code><span class="s">&quot;Use `%s {...}` instead of `%s.each {...}` to avoid excessive allocation&quot;</span></code>
       </dt>
       
     
@@ -922,12 +900,14 @@
       <li class="entry-summary">
         <a href="#new%28ctx%3AYAML%3A%3AParseContext%2Cnode%3AYAML%3A%3ANodes%3A%3ANode%29-class-method" class="signature"><strong>.new</strong>(ctx : YAML::ParseContext, node : YAML::Nodes::Node)</a>
         
+          <div class="summary"><p>This rule is used to identify excessive collection allocations, that can be avoided by using <code>each_&lt;member&gt;</code> instead of <code>&lt;collection&gt;.each</code>.</p></div>
+        
       </li>
     
       <li class="entry-summary">
         <a href="#new%28config%3Dnil%29-class-method" class="signature"><strong>.new</strong>(config = <span class="n">nil</span>)</a>
         
-          <div class="summary"><p>A rule that enforces type names in camelcase manner.</p></div>
+          <div class="summary"><p>This rule is used to identify excessive collection allocations, that can be avoided by using <code>each_&lt;member&gt;</code> instead of <code>&lt;collection&gt;.each</code>.</p></div>
         
       </li>
     
@@ -965,6 +945,16 @@
     Instance Method Summary
   </h2>
   <ul class="list-summary">
+    
+      <li class="entry-summary">
+        <a href="#call_names%3AHash%28String%2CString%29-instance-method" class="signature"><strong>#call_names</strong> : Hash(String, String)</a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#call_names%3D%28call_names%3AHash%28String%2CString%29%29-instance-method" class="signature"><strong>#call_names=</strong>(call_names : Hash(String, String))</a>
+        
+      </li>
     
       <li class="entry-summary">
         <a href="#description%3AString-instance-method" class="signature"><strong>#description</strong> : String</a>
@@ -1007,7 +997,12 @@
       </li>
     
       <li class="entry-summary">
-        <a href="#test%28source%2Cnode%3ACrystal%3A%3AAlias%7CCrystal%3A%3AClassDef%7CCrystal%3A%3AModuleDef%7CCrystal%3A%3ALibDef%7CCrystal%3A%3AEnumDef%29-instance-method" class="signature"><strong>#test</strong>(source, node : Crystal::Alias | Crystal::ClassDef | Crystal::ModuleDef | Crystal::LibDef | Crystal::EnumDef)</a>
+        <a href="#test%28source%2Cnode%3ACrystal%3A%3ACall%29-instance-method" class="signature"><strong>#test</strong>(source, node : Crystal::Call)</a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#test%28source%29-instance-method" class="signature"><strong>#test</strong>(source)</a>
         
       </li>
     
@@ -1018,6 +1013,157 @@
 
 
 <div class="methods-inherited">
+  
+    
+
+  <h3>Instance methods inherited from module <code><a href="../../../Ameba/AST/Util.html">Ameba::AST::Util</a></code></h3>
+  
+  
+    <a href="../../../Ameba/AST/Util.html#abort%3F%28node%29-instance-method" class="tooltip">
+      <span>abort?(node)</span>
+    abort?</a>, 
+    
+  
+    <a href="../../../Ameba/AST/Util.html#control_exp_code%28node%3ACrystal%3A%3AControlExpression%2Ccode_lines%29-instance-method" class="tooltip">
+      <span>control_exp_code(node : Crystal::ControlExpression, code_lines)</span>
+    control_exp_code</a>, 
+    
+  
+    <a href="../../../Ameba/AST/Util.html#dynamic_literal%3F%28node%29%3ABool-instance-method" class="tooltip">
+      <span>dynamic_literal?(node) : Bool</span>
+    dynamic_literal?</a>, 
+    
+  
+    <a href="../../../Ameba/AST/Util.html#exit%3F%28node%29-instance-method" class="tooltip">
+      <span>exit?(node)</span>
+    exit?</a>, 
+    
+  
+    <a href="../../../Ameba/AST/Util.html#flow_command%3F%28node%2Cin_loop%29-instance-method" class="tooltip">
+      <span>flow_command?(node, in_loop)</span>
+    flow_command?</a>, 
+    
+  
+    <a href="../../../Ameba/AST/Util.html#flow_expression%3F%28node%2Cin_loop%3Dfalse%29-instance-method" class="tooltip">
+      <span>flow_expression?(node, in_loop = <span class="n">false</span>)</span>
+    flow_expression?</a>, 
+    
+  
+    <a href="../../../Ameba/AST/Util.html#literal%3F%28node%29%3ABool-instance-method" class="tooltip">
+      <span>literal?(node) : Bool</span>
+    literal?</a>, 
+    
+  
+    <a href="../../../Ameba/AST/Util.html#loop%3F%28node%29-instance-method" class="tooltip">
+      <span>loop?(node)</span>
+    loop?</a>, 
+    
+  
+    <a href="../../../Ameba/AST/Util.html#name_end_location%28node%29-instance-method" class="tooltip">
+      <span>name_end_location(node)</span>
+    name_end_location</a>, 
+    
+  
+    <a href="../../../Ameba/AST/Util.html#name_location%28node%29-instance-method" class="tooltip">
+      <span>name_location(node)</span>
+    name_location</a>, 
+    
+  
+    <a href="../../../Ameba/AST/Util.html#name_size%28node%29-instance-method" class="tooltip">
+      <span>name_size(node)</span>
+    name_size</a>, 
+    
+  
+    <a href="../../../Ameba/AST/Util.html#node_source%28node%2Ccode_lines%29-instance-method" class="tooltip">
+      <span>node_source(node, code_lines)</span>
+    node_source</a>, 
+    
+  
+    <a href="../../../Ameba/AST/Util.html#path_named%3F%28node%2Cname%29%3ABool-instance-method" class="tooltip">
+      <span>path_named?(node, name) : Bool</span>
+    path_named?</a>, 
+    
+  
+    <a href="../../../Ameba/AST/Util.html#raise%3F%28node%29-instance-method" class="tooltip">
+      <span>raise?(node)</span>
+    raise?</a>, 
+    
+  
+    <a href="../../../Ameba/AST/Util.html#source_between%28loc%2Cend_loc%2Ccode_lines%29%3AString%7CNil-instance-method" class="tooltip">
+      <span>source_between(loc, end_loc, code_lines) : String | Nil</span>
+    source_between</a>, 
+    
+  
+    <a href="../../../Ameba/AST/Util.html#static_literal%3F%28node%29%3ABool-instance-method" class="tooltip">
+      <span>static_literal?(node) : Bool</span>
+    static_literal?</a>
+    
+  
+
+
+    
+
+
+    
+
+
+  
+    
+
+
+    
+
+
+    
+
+
+  
+    
+
+
+    
+
+
+    
+
+
+  
+    
+
+  <h3>Instance methods inherited from class <code><a href="../../../Ameba/Rule/Performance/Base.html">Ameba::Rule::Performance::Base</a></code></h3>
+  
+  
+    <a href="../../../Ameba/Rule/Performance/Base.html#catch%28source%3ASource%29-instance-method" class="tooltip">
+      <span>catch(source : Source)</span>
+    catch</a>
+    
+  
+
+
+    
+
+  <h3>Constructor methods inherited from class <code><a href="../../../Ameba/Rule/Performance/Base.html">Ameba::Rule::Performance::Base</a></code></h3>
+  
+  
+    <a href="../../../Ameba/Rule/Performance/Base.html#new%28ctx%3AYAML%3A%3AParseContext%2Cnode%3AYAML%3A%3ANodes%3A%3ANode%29-class-method" class="tooltip">
+      <span>new(ctx : YAML::ParseContext, node : YAML::Nodes::Node)<br/>new(config = <span class="n">nil</span>)</span>
+    new</a>
+    
+  
+
+
+    
+
+  <h3>Class methods inherited from class <code><a href="../../../Ameba/Rule/Performance/Base.html">Ameba::Rule::Performance::Base</a></code></h3>
+  
+  
+    <a href="../../../Ameba/Rule/Performance/Base.html#parsed_doc%3AString%7CNil-class-method" class="tooltip">
+      <span>parsed_doc : String | Nil</span>
+    parsed_doc</a>
+    
+  
+
+
   
     
 
@@ -1152,6 +1298,26 @@
         <a class="method-permalink" href="#new%28ctx%3AYAML%3A%3AParseContext%2Cnode%3AYAML%3A%3ANodes%3A%3ANode%29-class-method">#</a>
       </div>
       
+        <div class="doc">
+          
+          <p>This rule is used to identify excessive collection allocations,
+that can be avoided by using <code>each_&lt;member&gt;</code> instead of <code>&lt;collection&gt;.each</code>.</p>
+<p>For example, this is considered inefficient:</p>
+<pre><code class="language-crystal"><span class="s">&quot;Alice&quot;</span>.chars.each { <span class="o">|</span>c<span class="o">|</span> puts c }
+<span class="s">&quot;Alice\nBob&quot;</span>.lines.each { <span class="o">|</span>l<span class="o">|</span> puts l }</code></pre>
+<p>And can be written as this:</p>
+<pre><code class="language-crystal"><span class="s">&quot;Alice&quot;</span>.each_char { <span class="o">|</span>c<span class="o">|</span> puts c }
+<span class="s">&quot;Alice\nBob&quot;</span>.each_line { <span class="o">|</span>l<span class="o">|</span> puts l }</code></pre>
+<p>YAML configuration example:</p>
+<pre><code class="language-crystal"><span class="t">Performance</span><span class="o">/</span><span class="t">ExcessiveAllocations</span>:
+  <span class="t">Enabled</span>: <span class="n">true</span>
+  <span class="t">CallNames</span>:
+    codepoints: each_codepoint
+    graphemes: each_grapheme
+    chars: each_char
+    lines: each_line</code></pre>
+        </div>
+      
       <br/>
       <div>
         
@@ -1168,52 +1334,28 @@
       
         <div class="doc">
           
-          <p>A rule that enforces type names in camelcase manner.</p>
-<p>For example, these are considered valid:</p>
-<pre><code class="language-crystal"><span class="k">class</span> <span class="t">ParseError</span> <span class="o">&lt;</span> <span class="t">Exception</span>
-<span class="k">end</span>
-
-<span class="k">module</span> <span class="t">HTTP</span>
-  <span class="k">class</span> <span class="t">RequestHandler</span>
-  <span class="k">end</span>
-<span class="k">end</span>
-
-<span class="k">alias</span> <span class="t">NumericValue</span> <span class="o">=</span> <span class="t">Float32</span> <span class="o">|</span> <span class="t">Float64</span> <span class="o">|</span> <span class="t">Int32</span> <span class="o">|</span> <span class="t">Int64</span>
-
-<span class="k">lib</span> <span class="t">LibYAML</span>
-<span class="k">end</span>
-
-<span class="k">struct</span> <span class="t">TagDirective</span>
-<span class="k">end</span>
-
-<span class="k">enum</span> <span class="t">Time</span><span class="t">::</span><span class="t">DayOfWeek</span>
-<span class="k">end</span></code></pre>
-<p>And these are invalid type names</p>
-<pre><code class="language-crystal"><span class="k">class</span> <span class="t">My_class</span>
-<span class="k">end</span>
-
-<span class="k">module</span> <span class="t">HTT_p</span>
-<span class="k">end</span>
-
-<span class="k">alias</span> <span class="t">Numeric_value</span> <span class="o">=</span> <span class="t">Int32</span>
-
-<span class="k">lib</span> <span class="t">Lib_YAML</span>
-<span class="k">end</span>
-
-<span class="k">struct</span> <span class="t">Tag_directive</span>
-<span class="k">end</span>
-
-<span class="k">enum</span> <span class="t">Time_enum</span><span class="t">::</span><span class="t">Day_of_week</span>
-<span class="k">end</span></code></pre>
+          <p>This rule is used to identify excessive collection allocations,
+that can be avoided by using <code>each_&lt;member&gt;</code> instead of <code>&lt;collection&gt;.each</code>.</p>
+<p>For example, this is considered inefficient:</p>
+<pre><code class="language-crystal"><span class="s">&quot;Alice&quot;</span>.chars.each { <span class="o">|</span>c<span class="o">|</span> puts c }
+<span class="s">&quot;Alice\nBob&quot;</span>.lines.each { <span class="o">|</span>l<span class="o">|</span> puts l }</code></pre>
+<p>And can be written as this:</p>
+<pre><code class="language-crystal"><span class="s">&quot;Alice&quot;</span>.each_char { <span class="o">|</span>c<span class="o">|</span> puts c }
+<span class="s">&quot;Alice\nBob&quot;</span>.each_line { <span class="o">|</span>l<span class="o">|</span> puts l }</code></pre>
 <p>YAML configuration example:</p>
-<pre><code class="language-crystal"><span class="t">Style</span><span class="o">/</span><span class="t">TypeNames</span>:
-  <span class="t">Enabled</span>: <span class="n">true</span></code></pre>
+<pre><code class="language-crystal"><span class="t">Performance</span><span class="o">/</span><span class="t">ExcessiveAllocations</span>:
+  <span class="t">Enabled</span>: <span class="n">true</span>
+  <span class="t">CallNames</span>:
+    codepoints: each_codepoint
+    graphemes: each_grapheme
+    chars: each_char
+    lines: each_line</code></pre>
         </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/21051ac/src/ameba/rule/style/type_names.cr#L54" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/21051ac/src/ameba/rule/performance/excessive_allocations.cr#L32" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1270,6 +1412,34 @@
 </a>
     Instance Method Detail
   </h2>
+  
+    <div class="entry-detail" id="call_names:Hash(String,String)-instance-method">
+      <div class="signature">
+        
+        def <strong>call_names</strong> : Hash(String, String)
+
+        <a class="method-permalink" href="#call_names%3AHash%28String%2CString%29-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="call_names=(call_names:Hash(String,String))-instance-method">
+      <div class="signature">
+        
+        def <strong>call_names=</strong>(call_names : Hash(String, String))
+
+        <a class="method-permalink" href="#call_names%3D%28call_names%3AHash%28String%2CString%29%29-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+      </div>
+    </div>
   
     <div class="entry-detail" id="description:String-instance-method">
       <div class="signature">
@@ -1383,18 +1553,34 @@
       </div>
     </div>
   
-    <div class="entry-detail" id="test(source,node:Crystal::Alias|Crystal::ClassDef|Crystal::ModuleDef|Crystal::LibDef|Crystal::EnumDef)-instance-method">
+    <div class="entry-detail" id="test(source,node:Crystal::Call)-instance-method">
       <div class="signature">
         
-        def <strong>test</strong>(source, node : Crystal::Alias | Crystal::ClassDef | Crystal::ModuleDef | Crystal::LibDef | Crystal::EnumDef)
+        def <strong>test</strong>(source, node : Crystal::Call)
 
-        <a class="method-permalink" href="#test%28source%2Cnode%3ACrystal%3A%3AAlias%7CCrystal%3A%3AClassDef%7CCrystal%3A%3AModuleDef%7CCrystal%3A%3ALibDef%7CCrystal%3A%3AEnumDef%29-instance-method">#</a>
+        <a class="method-permalink" href="#test%28source%2Cnode%3ACrystal%3A%3ACall%29-instance-method">#</a>
       </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/21051ac/src/ameba/rule/style/type_names.cr#L61" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/21051ac/src/ameba/rule/performance/excessive_allocations.cr#L54" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="test(source)-instance-method">
+      <div class="signature">
+        
+        def <strong>test</strong>(source)
+
+        <a class="method-permalink" href="#test%28source%29-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/crystal-ameba/ameba/blob/21051ac/src/ameba/rule/performance/excessive_allocations.cr#L50" target="_blank">View source</a>]
         
       </div>
     </div>
