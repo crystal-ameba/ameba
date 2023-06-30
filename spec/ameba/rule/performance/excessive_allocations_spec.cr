@@ -6,6 +6,7 @@ module Ameba::Rule::Performance
   describe ExcessiveAllocations do
     it "passes if there is no potential performance improvements" do
       expect_no_issues subject, <<-CRYSTAL
+        "Alice".chars.each
         "Alice".chars.each(arg) { |c| puts c }
         "Alice".chars(arg).each { |c| puts c }
         "Alice\nBob".lines.each(arg) { |l| puts l }
