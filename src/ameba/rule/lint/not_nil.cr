@@ -32,15 +32,14 @@ module Ameba::Rule::Lint
       description "Identifies usage of `not_nil!` calls"
     end
 
-    NOT_NIL_NAME = "not_nil!"
-    MSG          = "Avoid using `not_nil!`"
+    MSG = "Avoid using `not_nil!`"
 
     def test(source)
       AST::NodeVisitor.new self, source, skip: :macro
     end
 
     def test(source, node : Crystal::Call)
-      return unless node.name == NOT_NIL_NAME
+      return unless node.name == "not_nil!"
       return unless node.obj && node.args.empty?
 
       return unless name_location = node.name_location

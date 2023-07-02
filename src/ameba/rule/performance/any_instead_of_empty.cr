@@ -34,11 +34,10 @@ module Ameba::Rule::Performance
       description "Identifies usage of arg-less `any?` calls"
     end
 
-    ANY_NAME = "any?"
-    MSG      = "Use `!{...}.empty?` instead of `{...}.any?`"
+    MSG = "Use `!{...}.empty?` instead of `{...}.any?`"
 
     def test(source, node : Crystal::Call)
-      return unless node.name == ANY_NAME
+      return unless node.name == "any?"
       return unless node.block.nil? && node.args.empty?
       return unless node.obj
 

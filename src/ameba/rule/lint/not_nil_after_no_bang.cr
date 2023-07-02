@@ -30,15 +30,14 @@ module Ameba::Rule::Lint
     BLOCK_CALL_NAMES = %w(index rindex find)
     CALL_NAMES       = %w(index rindex)
 
-    NOT_NIL_NAME = "not_nil!"
-    MSG          = "Use `%s! {...}` instead of `%s {...}.not_nil!`"
+    MSG = "Use `%s! {...}` instead of `%s {...}.not_nil!`"
 
     def test(source)
       AST::NodeVisitor.new self, source, skip: :macro
     end
 
     def test(source, node : Crystal::Call)
-      return unless node.name == NOT_NIL_NAME && node.args.empty?
+      return unless node.name == "not_nil!" && node.args.empty?
       return unless (obj = node.obj).is_a?(Crystal::Call)
       return unless obj.name.in?(obj.block ? BLOCK_CALL_NAMES : CALL_NAMES)
 

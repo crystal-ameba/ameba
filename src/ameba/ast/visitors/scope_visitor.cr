@@ -21,7 +21,6 @@ module Ameba::AST
     }
 
     SPECIAL_NODE_NAMES = %w[super previous_def]
-    RECORD_NODE_NAME   = "record"
 
     @scope_queue = [] of Scope
     @current_scope : Scope
@@ -190,7 +189,7 @@ module Ameba::AST
     end
 
     private def record_macro?(node)
-      node.name == RECORD_NODE_NAME && node.args.first?.is_a?(Crystal::Path)
+      node.name == "record" && node.args.first?.is_a?(Crystal::Path)
     end
 
     private def skip?(node)

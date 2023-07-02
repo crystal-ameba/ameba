@@ -32,11 +32,10 @@ module Ameba::Rule::Performance
       filter_names %w(select reject)
     end
 
-    ANY_NAME = "any?"
-    MSG      = "Use `any? {...}` instead of `%s {...}.any?`"
+    MSG = "Use `any? {...}` instead of `%s {...}.any?`"
 
     def test(source, node : Crystal::Call)
-      return unless node.name == ANY_NAME && (obj = node.obj)
+      return unless node.name == "any?" && (obj = node.obj)
       return unless obj.is_a?(Crystal::Call) && obj.block && node.block.nil?
       return unless obj.name.in?(filter_names)
 

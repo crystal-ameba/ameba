@@ -26,18 +26,16 @@ module Ameba::Rule::Performance
       description "Identifies usage of `flatten` calls that follow `map`"
     end
 
-    FLATTEN_NAME = "flatten"
-    MAP_NAME     = "map"
-    MSG          = "Use `flat_map {...}` instead of `map {...}.flatten`"
+    MSG = "Use `flat_map {...}` instead of `map {...}.flatten`"
 
     def test(source)
       AST::NodeVisitor.new self, source, skip: :macro
     end
 
     def test(source, node : Crystal::Call)
-      return unless node.name == FLATTEN_NAME && (obj = node.obj)
+      return unless node.name == "flatten" && (obj = node.obj)
       return unless obj.is_a?(Crystal::Call) && obj.block
-      return unless obj.name == MAP_NAME
+      return unless obj.name == "map"
 
       issue_for obj.name_location, node.name_end_location, MSG
     end
