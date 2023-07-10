@@ -13,7 +13,7 @@
 <script type="text/javascript" src="../../../js/doc.js"></script>
 
   <meta name="repository-name" content="ameba">
-  <title>Ameba::Rule::Performance::SizeAfterFilter - ameba master</title>
+  <title>Ameba::Rule::Performance::MinMaxAfterMap - ameba master</title>
   <script type="text/javascript">
     CrystalDocs.base_path = "../../../";
   </script>
@@ -566,12 +566,12 @@
       
     </li>
   
-  <li class=" " data-id="ameba/Ameba/Rule/Performance/MinMaxAfterMap" data-name="ameba::rule::performance::minmaxaftermap">
+  <li class=" current" data-id="ameba/Ameba/Rule/Performance/MinMaxAfterMap" data-name="ameba::rule::performance::minmaxaftermap">
       <a href="../../../Ameba/Rule/Performance/MinMaxAfterMap.html">MinMaxAfterMap</a>
       
     </li>
   
-  <li class=" current" data-id="ameba/Ameba/Rule/Performance/SizeAfterFilter" data-name="ameba::rule::performance::sizeafterfilter">
+  <li class=" " data-id="ameba/Ameba/Rule/Performance/SizeAfterFilter" data-name="ameba::rule::performance::sizeafterfilter">
       <a href="../../../Ameba/Rule/Performance/SizeAfterFilter.html">SizeAfterFilter</a>
       
     </li>
@@ -785,12 +785,12 @@
 <div class="main-content">
 <h1 class="type-name">
 
-  <span class="kind">class</span> Ameba::Rule::Performance::SizeAfterFilter
+  <span class="kind">class</span> Ameba::Rule::Performance::MinMaxAfterMap
 
 </h1>
 
 
-  <ul class="superclass-hierarchy"><li class="superclass"><a href="../../../Ameba/Rule/Performance/SizeAfterFilter.html">Ameba::Rule::Performance::SizeAfterFilter</a></li><li class="superclass"><a href="../../../Ameba/Rule/Performance/Base.html">Ameba::Rule::Performance::Base</a></li><li class="superclass"><a href="../../../Ameba/Rule/Base.html">Ameba::Rule::Base</a></li><li class="superclass">Reference</li><li class="superclass">Object</li></ul>
+  <ul class="superclass-hierarchy"><li class="superclass"><a href="../../../Ameba/Rule/Performance/MinMaxAfterMap.html">Ameba::Rule::Performance::MinMaxAfterMap</a></li><li class="superclass"><a href="../../../Ameba/Rule/Performance/Base.html">Ameba::Rule::Performance::Base</a></li><li class="superclass"><a href="../../../Ameba/Rule/Base.html">Ameba::Rule::Base</a></li><li class="superclass">Reference</li><li class="superclass">Object</li></ul>
 
 
 
@@ -804,25 +804,18 @@
     Overview
   </h2>
 
-  <p>This rule is used to identify usage of <code>size</code> calls that follow filter.</p>
+  <p>This rule is used to identify usage of <code>min/max/minmax</code> calls that follow <code>map</code>.</p>
 <p>For example, this is considered invalid:</p>
-<pre><code class="language-crystal">[<span class="n">1</span>, <span class="n">2</span>, <span class="n">3</span>].<span class="k">select</span> { <span class="o">|</span>e<span class="o">|</span> e <span class="o">&gt;</span> <span class="n">2</span> }.size
-[<span class="n">1</span>, <span class="n">2</span>, <span class="n">3</span>].reject { <span class="o">|</span>e<span class="o">|</span> e <span class="o">&lt;</span> <span class="n">2</span> }.size
-[<span class="n">1</span>, <span class="n">2</span>, <span class="n">3</span>].<span class="k">select</span>(<span class="o">&amp;</span>.<span class="o">&lt;</span> <span class="n">2</span>).size
-[<span class="n">0</span>, <span class="n">1</span>, <span class="n">2</span>].<span class="k">select</span>(<span class="o">&amp;</span>.zero?).size
-[<span class="n">0</span>, <span class="n">1</span>, <span class="n">2</span>].reject(<span class="o">&amp;</span>.zero?).size</code></pre>
+<pre><code class="language-crystal"><span class="s">%w[Alice Bob]</span>.map(<span class="o">&amp;</span>.size).min
+<span class="s">%w[Alice Bob]</span>.map(<span class="o">&amp;</span>.size).max
+<span class="s">%w[Alice Bob]</span>.map(<span class="o">&amp;</span>.size).minmax</code></pre>
 <p>And it should be written as this:</p>
-<pre><code class="language-crystal">[<span class="n">1</span>, <span class="n">2</span>, <span class="n">3</span>].count { <span class="o">|</span>e<span class="o">|</span> e <span class="o">&gt;</span> <span class="n">2</span> }
-[<span class="n">1</span>, <span class="n">2</span>, <span class="n">3</span>].count { <span class="o">|</span>e<span class="o">|</span> e <span class="o">&gt;=</span> <span class="n">2</span> }
-[<span class="n">1</span>, <span class="n">2</span>, <span class="n">3</span>].count(<span class="o">&amp;</span>.<span class="o">&lt;</span> <span class="n">2</span>)
-[<span class="n">0</span>, <span class="n">1</span>, <span class="n">2</span>].count(<span class="o">&amp;</span>.zero?)
-[<span class="n">0</span>, <span class="n">1</span>, <span class="n">2</span>].count(<span class="o">&amp;</span>.<span class="o">!=</span> <span class="n">0</span>)</code></pre>
+<pre><code class="language-crystal"><span class="s">%w[Alice Bob]</span>.min_of(<span class="o">&amp;</span>.size)
+<span class="s">%w[Alice Bob]</span>.max_of(<span class="o">&amp;</span>.size)
+<span class="s">%w[Alice Bob]</span>.minmax_of(<span class="o">&amp;</span>.size)</code></pre>
 <p>YAML configuration example:</p>
-<pre><code class="language-crystal"><span class="t">Performance</span><span class="o">/</span><span class="t">SizeAfterFilter</span>:
-  <span class="t">Enabled</span>: <span class="n">true</span>
-  <span class="t">FilterNames</span>:
-    <span class="o">-</span> <span class="k">select</span>
-    <span class="o">-</span> reject</code></pre>
+<pre><code class="language-crystal"><span class="t">Performance</span><span class="o">/</span><span class="t">MinMaxAfterMap</span>:
+  <span class="t">Enabled</span>: <span class="n">true</span></code></pre>
 
 
 
@@ -863,8 +856,8 @@
   </h2>
   
     
-      <a href="https://github.com/crystal-ameba/ameba/blob/33c8273/src/ameba/rule/performance/size_after_filter.cr#L35" target="_blank">
-        ameba/rule/performance/size_after_filter.cr
+      <a href="https://github.com/crystal-ameba/ameba/blob/33c8273/src/ameba/rule/performance/minmax_after_map.cr#L28" target="_blank">
+        ameba/rule/performance/minmax_after_map.cr
       </a>
     
     <br/>
@@ -884,8 +877,13 @@
   
   <dl>
     
+      <dt class="entry-const" id="CALL_NAMES">
+        <strong>CALL_NAMES</strong> = <code>[<span class="s">&quot;min&quot;</span>, <span class="s">&quot;min?&quot;</span>, <span class="s">&quot;max&quot;</span>, <span class="s">&quot;max?&quot;</span>, <span class="s">&quot;minmax&quot;</span>, <span class="s">&quot;minmax?&quot;</span>] <span class="k">of</span> <span class="t">::</span><span class="t">String</span></code>
+      </dt>
+      
+    
       <dt class="entry-const" id="MSG">
-        <strong>MSG</strong> = <code><span class="s">&quot;Use `count {...}` instead of `%s {...}.size`.&quot;</span></code>
+        <strong>MSG</strong> = <code><span class="s">&quot;Use `%s {...}` instead of `map {...}.%s`.&quot;</span></code>
       </dt>
       
     
@@ -906,14 +904,14 @@
       <li class="entry-summary">
         <a href="#new%28ctx%3AYAML%3A%3AParseContext%2Cnode%3AYAML%3A%3ANodes%3A%3ANode%29-class-method" class="signature"><strong>.new</strong>(ctx : YAML::ParseContext, node : YAML::Nodes::Node)</a>
         
-          <div class="summary"><p>This rule is used to identify usage of <code>size</code> calls that follow filter.</p></div>
+          <div class="summary"><p>This rule is used to identify usage of <code>min/max/minmax</code> calls that follow <code>map</code>.</p></div>
         
       </li>
     
       <li class="entry-summary">
         <a href="#new%28config%3Dnil%29-class-method" class="signature"><strong>.new</strong>(config = <span class="n">nil</span>)</a>
         
-          <div class="summary"><p>This rule is used to identify usage of <code>size</code> calls that follow filter.</p></div>
+          <div class="summary"><p>This rule is used to identify usage of <code>min/max/minmax</code> calls that follow <code>map</code>.</p></div>
         
       </li>
     
@@ -979,16 +977,6 @@
     
       <li class="entry-summary">
         <a href="#excluded%3D%28excluded%3AArray%28String%29%7CNil%29-instance-method" class="signature"><strong>#excluded=</strong>(excluded : Array(String) | Nil)</a>
-        
-      </li>
-    
-      <li class="entry-summary">
-        <a href="#filter_names%3AArray%28String%29-instance-method" class="signature"><strong>#filter_names</strong> : Array(String)</a>
-        
-      </li>
-    
-      <li class="entry-summary">
-        <a href="#filter_names%3D%28filter_names%3AArray%28String%29%29-instance-method" class="signature"><strong>#filter_names=</strong>(filter_names : Array(String))</a>
         
       </li>
     
@@ -1212,25 +1200,18 @@
       
         <div class="doc">
           
-          <p>This rule is used to identify usage of <code>size</code> calls that follow filter.</p>
+          <p>This rule is used to identify usage of <code>min/max/minmax</code> calls that follow <code>map</code>.</p>
 <p>For example, this is considered invalid:</p>
-<pre><code class="language-crystal">[<span class="n">1</span>, <span class="n">2</span>, <span class="n">3</span>].<span class="k">select</span> { <span class="o">|</span>e<span class="o">|</span> e <span class="o">&gt;</span> <span class="n">2</span> }.size
-[<span class="n">1</span>, <span class="n">2</span>, <span class="n">3</span>].reject { <span class="o">|</span>e<span class="o">|</span> e <span class="o">&lt;</span> <span class="n">2</span> }.size
-[<span class="n">1</span>, <span class="n">2</span>, <span class="n">3</span>].<span class="k">select</span>(<span class="o">&amp;</span>.<span class="o">&lt;</span> <span class="n">2</span>).size
-[<span class="n">0</span>, <span class="n">1</span>, <span class="n">2</span>].<span class="k">select</span>(<span class="o">&amp;</span>.zero?).size
-[<span class="n">0</span>, <span class="n">1</span>, <span class="n">2</span>].reject(<span class="o">&amp;</span>.zero?).size</code></pre>
+<pre><code class="language-crystal"><span class="s">%w[Alice Bob]</span>.map(<span class="o">&amp;</span>.size).min
+<span class="s">%w[Alice Bob]</span>.map(<span class="o">&amp;</span>.size).max
+<span class="s">%w[Alice Bob]</span>.map(<span class="o">&amp;</span>.size).minmax</code></pre>
 <p>And it should be written as this:</p>
-<pre><code class="language-crystal">[<span class="n">1</span>, <span class="n">2</span>, <span class="n">3</span>].count { <span class="o">|</span>e<span class="o">|</span> e <span class="o">&gt;</span> <span class="n">2</span> }
-[<span class="n">1</span>, <span class="n">2</span>, <span class="n">3</span>].count { <span class="o">|</span>e<span class="o">|</span> e <span class="o">&gt;=</span> <span class="n">2</span> }
-[<span class="n">1</span>, <span class="n">2</span>, <span class="n">3</span>].count(<span class="o">&amp;</span>.<span class="o">&lt;</span> <span class="n">2</span>)
-[<span class="n">0</span>, <span class="n">1</span>, <span class="n">2</span>].count(<span class="o">&amp;</span>.zero?)
-[<span class="n">0</span>, <span class="n">1</span>, <span class="n">2</span>].count(<span class="o">&amp;</span>.<span class="o">!=</span> <span class="n">0</span>)</code></pre>
+<pre><code class="language-crystal"><span class="s">%w[Alice Bob]</span>.min_of(<span class="o">&amp;</span>.size)
+<span class="s">%w[Alice Bob]</span>.max_of(<span class="o">&amp;</span>.size)
+<span class="s">%w[Alice Bob]</span>.minmax_of(<span class="o">&amp;</span>.size)</code></pre>
 <p>YAML configuration example:</p>
-<pre><code class="language-crystal"><span class="t">Performance</span><span class="o">/</span><span class="t">SizeAfterFilter</span>:
-  <span class="t">Enabled</span>: <span class="n">true</span>
-  <span class="t">FilterNames</span>:
-    <span class="o">-</span> <span class="k">select</span>
-    <span class="o">-</span> reject</code></pre>
+<pre><code class="language-crystal"><span class="t">Performance</span><span class="o">/</span><span class="t">MinMaxAfterMap</span>:
+  <span class="t">Enabled</span>: <span class="n">true</span></code></pre>
         </div>
       
       <br/>
@@ -1249,31 +1230,24 @@
       
         <div class="doc">
           
-          <p>This rule is used to identify usage of <code>size</code> calls that follow filter.</p>
+          <p>This rule is used to identify usage of <code>min/max/minmax</code> calls that follow <code>map</code>.</p>
 <p>For example, this is considered invalid:</p>
-<pre><code class="language-crystal">[<span class="n">1</span>, <span class="n">2</span>, <span class="n">3</span>].<span class="k">select</span> { <span class="o">|</span>e<span class="o">|</span> e <span class="o">&gt;</span> <span class="n">2</span> }.size
-[<span class="n">1</span>, <span class="n">2</span>, <span class="n">3</span>].reject { <span class="o">|</span>e<span class="o">|</span> e <span class="o">&lt;</span> <span class="n">2</span> }.size
-[<span class="n">1</span>, <span class="n">2</span>, <span class="n">3</span>].<span class="k">select</span>(<span class="o">&amp;</span>.<span class="o">&lt;</span> <span class="n">2</span>).size
-[<span class="n">0</span>, <span class="n">1</span>, <span class="n">2</span>].<span class="k">select</span>(<span class="o">&amp;</span>.zero?).size
-[<span class="n">0</span>, <span class="n">1</span>, <span class="n">2</span>].reject(<span class="o">&amp;</span>.zero?).size</code></pre>
+<pre><code class="language-crystal"><span class="s">%w[Alice Bob]</span>.map(<span class="o">&amp;</span>.size).min
+<span class="s">%w[Alice Bob]</span>.map(<span class="o">&amp;</span>.size).max
+<span class="s">%w[Alice Bob]</span>.map(<span class="o">&amp;</span>.size).minmax</code></pre>
 <p>And it should be written as this:</p>
-<pre><code class="language-crystal">[<span class="n">1</span>, <span class="n">2</span>, <span class="n">3</span>].count { <span class="o">|</span>e<span class="o">|</span> e <span class="o">&gt;</span> <span class="n">2</span> }
-[<span class="n">1</span>, <span class="n">2</span>, <span class="n">3</span>].count { <span class="o">|</span>e<span class="o">|</span> e <span class="o">&gt;=</span> <span class="n">2</span> }
-[<span class="n">1</span>, <span class="n">2</span>, <span class="n">3</span>].count(<span class="o">&amp;</span>.<span class="o">&lt;</span> <span class="n">2</span>)
-[<span class="n">0</span>, <span class="n">1</span>, <span class="n">2</span>].count(<span class="o">&amp;</span>.zero?)
-[<span class="n">0</span>, <span class="n">1</span>, <span class="n">2</span>].count(<span class="o">&amp;</span>.<span class="o">!=</span> <span class="n">0</span>)</code></pre>
+<pre><code class="language-crystal"><span class="s">%w[Alice Bob]</span>.min_of(<span class="o">&amp;</span>.size)
+<span class="s">%w[Alice Bob]</span>.max_of(<span class="o">&amp;</span>.size)
+<span class="s">%w[Alice Bob]</span>.minmax_of(<span class="o">&amp;</span>.size)</code></pre>
 <p>YAML configuration example:</p>
-<pre><code class="language-crystal"><span class="t">Performance</span><span class="o">/</span><span class="t">SizeAfterFilter</span>:
-  <span class="t">Enabled</span>: <span class="n">true</span>
-  <span class="t">FilterNames</span>:
-    <span class="o">-</span> <span class="k">select</span>
-    <span class="o">-</span> reject</code></pre>
+<pre><code class="language-crystal"><span class="t">Performance</span><span class="o">/</span><span class="t">MinMaxAfterMap</span>:
+  <span class="t">Enabled</span>: <span class="n">true</span></code></pre>
         </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/33c8273/src/ameba/rule/performance/size_after_filter.cr#L35" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/33c8273/src/ameba/rule/performance/minmax_after_map.cr#L28" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1415,34 +1389,6 @@
       </div>
     </div>
   
-    <div class="entry-detail" id="filter_names:Array(String)-instance-method">
-      <div class="signature">
-        
-        def <strong>filter_names</strong> : Array(String)
-
-        <a class="method-permalink" href="#filter_names%3AArray%28String%29-instance-method">#</a>
-      </div>
-      
-      <br/>
-      <div>
-        
-      </div>
-    </div>
-  
-    <div class="entry-detail" id="filter_names=(filter_names:Array(String))-instance-method">
-      <div class="signature">
-        
-        def <strong>filter_names=</strong>(filter_names : Array(String))
-
-        <a class="method-permalink" href="#filter_names%3D%28filter_names%3AArray%28String%29%29-instance-method">#</a>
-      </div>
-      
-      <br/>
-      <div>
-        
-      </div>
-    </div>
-  
     <div class="entry-detail" id="severity:Ameba::Severity-instance-method">
       <div class="signature">
         
@@ -1482,7 +1428,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/33c8273/src/ameba/rule/performance/size_after_filter.cr#L47" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/33c8273/src/ameba/rule/performance/minmax_after_map.cr#L40" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1498,7 +1444,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/33c8273/src/ameba/rule/performance/size_after_filter.cr#L43" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/33c8273/src/ameba/rule/performance/minmax_after_map.cr#L36" target="_blank">View source</a>]
         
       </div>
     </div>
