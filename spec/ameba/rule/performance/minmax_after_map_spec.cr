@@ -4,7 +4,7 @@ module Ameba::Rule::Performance
   subject = MinMaxAfterMap.new
 
   describe MinMaxAfterMap do
-    it "passes if there is no potential performance improvements" do
+    it "passes if there are no potential performance improvements" do
       expect_no_issues subject, <<-CRYSTAL
         %w[Alice Bob].map { |name| name.size }.min(2)
         %w[Alice Bob].map { |name| name.size }.max(2)
