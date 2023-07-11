@@ -115,12 +115,12 @@ module Ameba::Rule::Lint
 
       first.rule.should_not be_nil
       first.location.to_s.should eq "source_spec.cr:1:11"
-      first.end_location.to_s.should eq ""
+      first.end_location.to_s.should eq "source_spec.cr:1:21"
       first.message.should eq "Focused spec item detected"
 
       second.rule.should_not be_nil
       second.location.to_s.should eq "source_spec.cr:2:13"
-      second.end_location.to_s.should eq ""
+      second.end_location.to_s.should eq "source_spec.cr:2:23"
       second.message.should eq "Focused spec item detected"
     end
   end

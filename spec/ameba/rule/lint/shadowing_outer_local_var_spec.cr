@@ -44,7 +44,7 @@ module Ameba::Rule::Lint
           foo = 1
 
           -> (foo : Int32) {}
-            # ^ error: Shadowing outer local variable `foo`
+            # ^^^^^^^^^^^ error: Shadowing outer local variable `foo`
         end
         CRYSTAL
     end
@@ -69,7 +69,7 @@ module Ameba::Rule::Lint
         3.times do |foo|
                   # ^ error: Shadowing outer local variable `foo`
           -> (foo : Int32) { foo + 1 }
-            # ^ error: Shadowing outer local variable `foo`
+            # ^^^^^^^^^^^ error: Shadowing outer local variable `foo`
         end
         CRYSTAL
     end
