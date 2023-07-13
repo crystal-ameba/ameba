@@ -244,7 +244,9 @@ module Ameba::Cli
       rule.severity.to_s.colorize(rule.severity.color),
       rule.enabled? ? ENABLED_MARK : DISABLED_MARK,
     }
-    output_paragraph rule.description
+    if rule_description = colorize_code_fences(rule.description)
+      output_paragraph rule_description
+    end
 
     if rule_doc = colorize_code_fences(rule.class.parsed_doc)
       output_title "Detailed description"
