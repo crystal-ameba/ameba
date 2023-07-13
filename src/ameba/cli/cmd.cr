@@ -34,6 +34,10 @@ module Ameba::Cli
       print_rules(config)
     end
 
+    if describe_rule = opts.describe
+      print_rule_description(describe_rule, config)
+    end
+
     runner = Ameba.run(config)
 
     if location_to_explain
@@ -52,6 +56,7 @@ module Ameba::Cli
     property globs : Array(String)?
     property only : Array(String)?
     property except : Array(String)?
+    property describe : String?
     property location_to_explain : NamedTuple(file: String, line: Int32, column: Int32)?
     property fail_level : Severity?
     property? skip_reading_config = false
@@ -122,6 +127,11 @@ module Ameba::Cli
         configure_explain_opts(loc, opts)
       end
 
+      parser.on("-d", "--describe Category/Rule",
+        "Describe a rule with specified name") do |rule_name|
+        configure_describe_opts(rule_name, opts)
+      end
+
       parser.on("--without-affected-code",
         "Stop showing affected code while using a default formatter") do
         opts.without_affected_code = true
@@ -153,6 +163,11 @@ module Ameba::Cli
     config.formatter.config[:autocorrect] = opts.autocorrect?
     config.formatter.config[:without_affected_code] =
       opts.without_affected_code?
+  end
+
+  private def configure_describe_opts(rule_name, opts)
+    opts.describe = rule_name.presence
+    opts.formatter = :silent
   end
 
   private def configure_explain_opts(loc, opts)
@@ -216,5 +231,48 @@ module Ameba::Cli
       rules.count(&.last.enabled?).to_s.colorize(:light_blue),
     }
     exit 0
+  end
+
+  private def print_rule_description(rule_name, config)
+    rule = config.rules.find(&.name.== rule_name)
+    raise "Unknown rule" unless rule
+
+    puts
+    output_title "Rule info"
+    output_paragraph "%s of a %s severity [enabled: %s]" % {
+      rule.name.colorize(:magenta),
+      rule.severity.to_s.colorize(rule.severity.color),
+      rule.enabled? ? ENABLED_MARK : DISABLED_MARK,
+    }
+    output_paragraph rule.description
+
+    if rule_doc = colorize_code_fences(rule.class.parsed_doc)
+      output_title "Detailed description"
+      output_paragraph rule_doc
+    end
+
+    exit 0
+  end
+
+  private def output_title(title)
+    print "### %s\n\n" % title.upcase.colorize(:yellow)
+  end
+
+  private def output_paragraph(paragraph : String)
+    output_paragraph(paragraph.lines)
+  end
+
+  private def output_paragraph(paragraph : Array)
+    paragraph.each do |line|
+      puts "    #{line}"
+    end
+    puts
+  end
+
+  private def colorize_code_fences(string)
+    return unless string
+    string
+      .gsub(/```(.+?)```/m, &.colorize(:dark_gray))
+      .gsub(/`(?!`)(.+?)`/, &.colorize(:dark_gray))
   end
 end
