@@ -10,7 +10,7 @@ targets:
 
 scripts:
   # TODO: remove pre-compiled executable in future releases
-  postinstall: make build
+  postinstall: shards build -Dpreview_mt
 
 executables:
   - ameba
