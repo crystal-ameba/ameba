@@ -10,10 +10,11 @@ targets:
 
 scripts:
   # TODO: remove pre-compiled executable in future releases
-  postinstall: make bin && make run_file
+  postinstall: shards build -Dpreview_mt
 
 executables:
   - ameba
+  - ameba.cr
 
 crystal: "~> 1.7.0"
 

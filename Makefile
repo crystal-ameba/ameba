@@ -30,9 +30,5 @@ bin: build
 	mkdir -p $(SHARD_BIN)
 	cp ./bin/ameba $(SHARD_BIN)
 
-.PHONY: run_file
-run_file:
-	cp -n ./bin/ameba.cr $(SHARD_BIN) || true
-
 .PHONY: test
 test: spec lint
