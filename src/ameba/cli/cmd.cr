@@ -77,6 +77,8 @@ module Ameba::Cli
 
       parser.on("-c", "--config PATH",
         "Specify a configuration file") do |path|
+        raise ArgumentError.new("Unable to find config file #{path}") if !File.exists?(path) && !opts.skip_reading_config?
+
         opts.config = Path[path] unless path.empty?
       end
 
