@@ -2,7 +2,7 @@ require "../spec_helper"
 
 module Ameba
   describe Config do
-    config_sample = "config/ameba.yml"
+    config_sample = "spec/ameba_fixture.yml"
 
     it "should have a list of available formatters" do
       Config::AVAILABLE_FORMATTERS.should_not be_nil
@@ -82,6 +82,12 @@ module Ameba
         config.should_not be_nil
         config.globs.should_not be_nil
         config.formatter.should_not be_nil
+      end
+
+      it "raises when custom config file doesn't exist" do
+        expect_raises(Exception, "Config file is invalid: Unable to find config file foo.yml") do
+          Config.load "foo.yml"
+        end
       end
 
       it "loads default config" do

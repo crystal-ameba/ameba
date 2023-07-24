@@ -20,14 +20,8 @@ module Ameba::Cli
 
       %w(-c --config).each do |f|
         it "accepts #{f} flag" do
-          c = Cli.parse_args [f, "shard.yml"]
-          c.config.should eq Path["shard.yml"]
-        end
-
-        it "raises when config file doesn't exist" do
-          expect_raises(ArgumentError, "Unable to find config file foo.yml") do
-            Cli.parse_args [f, "foo.yml"]
-          end
+          c = Cli.parse_args [f, "config.yml"]
+          c.config.should eq Path["config.yml"]
         end
       end
 

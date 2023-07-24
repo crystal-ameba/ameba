@@ -120,7 +120,7 @@ class Ameba::Config
 
   protected def self.read_config(path = nil)
     if path
-      return File.exists?(path) ? File.read(path) : nil
+      return File.exists?(path) ? File.read(path) : raise("Unable to find config file #{path}")
     end
     each_config_path do |config_path|
       return File.read(config_path) if File.exists?(config_path)
