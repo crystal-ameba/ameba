@@ -115,7 +115,7 @@ class Ameba::Config
               end
     Config.new YAML.parse(content)
   rescue e
-    raise "Config file is invalid: #{e.message}"
+    raise "Unable to load config file: #{e.message}"
   end
 
   protected def self.read_config(path = nil)
