@@ -85,7 +85,7 @@ module Ameba
       end
 
       it "raises when custom config file doesn't exist" do
-        expect_raises(Exception, "Config file is invalid: Unable to find config file foo.yml") do
+        expect_raises(Exception, "Config file is invalid: Config file does not exist foo.yml") do
           Config.load "foo.yml"
         end
       end
