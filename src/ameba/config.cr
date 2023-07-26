@@ -115,12 +115,13 @@ class Ameba::Config
               end
     Config.new YAML.parse(content)
   rescue e
-    raise "Config file is invalid: #{e.message}"
+    raise "Unable to load config file: #{e.message}"
   end
 
   protected def self.read_config(path = nil)
     if path
-      return File.exists?(path) ? File.read(path) : nil
+      raise ArgumentError.new("Config file does not exist #{path}") unless File.exists?(path)
+      return File.read(path)
     end
     each_config_path do |config_path|
       return File.read(config_path) if File.exists?(config_path)
