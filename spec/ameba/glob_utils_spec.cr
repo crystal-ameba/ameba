@@ -45,6 +45,12 @@ module Ameba
         subject.expand(["**/#{current_file_basename}", "**/#{current_file_basename}"])
           .should eq [current_file_path]
       end
+
+      it "raises an ArgumentError when the glob doesn't match any files" do
+        expect_raises(ArgumentError, "No files found matching foo/*") do
+          subject.expand(["foo/*"])
+        end
+      end
     end
   end
 end

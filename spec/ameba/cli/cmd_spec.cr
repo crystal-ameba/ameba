@@ -5,7 +5,7 @@ module Ameba::Cli
   describe "Cmd" do
     describe ".run" do
       it "runs ameba" do
-        r = Cli.run %w(-f silent file.cr)
+        r = Cli.run %w(-f silent -c spec/fixtures/config.yml spec/fixtures/passing_ameba.cr)
         r.should be_nil
       end
     end
@@ -43,12 +43,12 @@ module Ameba::Cli
       end
 
       it "defaults rules? flag to false" do
-        c = Cli.parse_args %w(file.cr)
+        c = Cli.parse_args %w(spec/fixtures/passing_ameba.cr)
         c.rules?.should be_false
       end
 
       it "defaults skip_reading_config? flag to false" do
-        c = Cli.parse_args %w(file.cr)
+        c = Cli.parse_args %w(spec/fixtures/passing_ameba.cr)
         c.skip_reading_config?.should be_false
       end
 
@@ -58,7 +58,7 @@ module Ameba::Cli
       end
 
       it "defaults all? flag to false" do
-        c = Cli.parse_args %w(file.cr)
+        c = Cli.parse_args %w(spec/fixtures/passing_ameba.cr)
         c.all?.should be_false
       end
 
@@ -95,35 +95,35 @@ module Ameba::Cli
 
       describe "-e/--explain" do
         it "configures file/line/column" do
-          c = Cli.parse_args %w(--explain src/file.cr:3:5)
+          c = Cli.parse_args %w(--explain spec/fixtures/passing_ameba.cr:3:5)
 
           location_to_explain = c.location_to_explain.should_not be_nil
-          location_to_explain[:file].should eq "src/file.cr"
+          location_to_explain[:file].should eq "spec/fixtures/passing_ameba.cr"
           location_to_explain[:line].should eq 3
           location_to_explain[:column].should eq 5
         end
 
         it "raises an error if location is not valid" do
           expect_raises(Exception, "location should have PATH:line:column") do
-            Cli.parse_args %w(--explain src/file.cr:3)
+            Cli.parse_args %w(--explain spec/fixtures/passing_ameba.cr:3)
           end
         end
 
         it "raises an error if line number is not valid" do
           expect_raises(Exception, "location should have PATH:line:column") do
-            Cli.parse_args %w(--explain src/file.cr:a:3)
+            Cli.parse_args %w(--explain spec/fixtures/passing_ameba.cr:a:3)
           end
         end
 
         it "raises an error if column number is not valid" do
           expect_raises(Exception, "location should have PATH:line:column") do
-            Cli.parse_args %w(--explain src/file.cr:3:&)
+            Cli.parse_args %w(--explain spec/fixtures/passing_ameba.cr:3:&)
           end
         end
 
         it "raises an error if line/column are missing" do
           expect_raises(Exception, "location should have PATH:line:column") do
-            Cli.parse_args %w(--explain src/file.cr)
+            Cli.parse_args %w(--explain spec/fixtures/passing_ameba.cr)
           end
         end
       end

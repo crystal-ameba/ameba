@@ -1,0 +1,4 @@
+Ameba/PerfRule:
+  Enabled: false
+Ameba/ErrorRule:
+  Enabled: false
