@@ -1,5 +1,5 @@
 name: ameba
-version: 1.4.3
+version: 1.5.0
 
 authors:
   - Vitalii Elenhaupt <velenhaupt@gmail.com>
@@ -16,6 +16,6 @@ executables:
   - ameba
   - ameba.cr
 
-crystal: "~> 1.7.0"
+crystal: "~> 1.9.0"
 
 license: MIT
