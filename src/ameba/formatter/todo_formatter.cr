@@ -30,7 +30,7 @@ module Ameba::Formatter
       file << header
       rule_issues_map(issues).each do |rule, rule_issues|
         file << "\n# Problems found: #{rule_issues.size}"
-        file << "\n# Run `ameba --only #{rule.name}` for details"
+        file << "\n# Remove the section below and run `ameba --only #{rule.name}` for details"
         file << rule_todo(rule, rule_issues).gsub("---", "")
       end
       file

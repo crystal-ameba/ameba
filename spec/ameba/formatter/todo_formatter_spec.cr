@@ -78,7 +78,7 @@ module Ameba
       end
 
       it "creates a todo with run details" do
-        create_todo.should contain "Run `ameba --only #{DummyRule.rule_name}`"
+        create_todo.should contain "Remove the section below and run `ameba --only #{DummyRule.rule_name}`"
       end
 
       it "excludes source from this rule" do
@@ -99,7 +99,7 @@ module Ameba
             content = File.read(file.path)
             content.should contain <<-CONTENT
               # Problems found: 3
-              # Run `ameba --only Ameba/DummyRule` for details
+              # Remove the section below and run `ameba --only Ameba/DummyRule` for details
               Ameba/DummyRule:
                 Description: Dummy rule that does nothing.
                 Dummy: true

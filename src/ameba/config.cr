@@ -194,9 +194,11 @@ class Ameba::Config
     rule = @rules.find(&.name.==(name))
     raise ArgumentError.new("Rule `#{name}` does not exist") unless rule
 
-    rule
-      .tap(&.enabled = enabled)
-      .tap(&.excluded = excluded)
+    rule.tap(&.enabled = enabled)
+
+    return if excluded.nil?
+
+    rule.tap(&.excluded = excluded)
   end
 
   # Updates rules properties.
@@ -214,10 +216,7 @@ class Ameba::Config
   def update_rules(names, enabled = true, excluded = nil)
     names.try &.each do |name|
       if rules = @rule_groups[name]?
-        rules.each do |rule|
-          rule.enabled = enabled
-          rule.excluded = excluded
-        end
+        rules.each { |rule| update_rule(rule.name, enabled, excluded) }
       else
         update_rule name, enabled, excluded
       end
