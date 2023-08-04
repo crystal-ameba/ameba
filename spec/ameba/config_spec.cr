@@ -9,10 +9,20 @@ module Ameba
     end
 
     describe ".new" do
-      it "loads default globs when config is empty" do
-        yml = YAML.parse "{}"
-        config = Config.new(yml)
-        config.globs.should eq Config::DEFAULT_GLOBS
+      context "when config is empty" do
+        it "loads default globs" do
+          yml = YAML.parse "{}"
+          config = Config.new(yml)
+          config.globs.should eq ["**/*.cr"]
+        end
+
+        it "only sets !lib as a default glob when there are .cr files in lib" do
+          File.touch "lib/shard.cr"
+          yml = YAML.parse "{}"
+          config = Config.new(yml)
+          config.globs.should eq Config::DEFAULT_GLOBS
+          File.delete "lib/shard.cr"
+        end
       end
 
       it "initializes globs as string" do
@@ -102,7 +112,7 @@ module Ameba
       config = Config.load config_sample
 
       it "holds source globs" do
-        config.globs.should eq Config::DEFAULT_GLOBS
+        config.globs.should eq ["**/*.cr"]
       end
 
       it "allows to set globs" do

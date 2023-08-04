@@ -95,7 +95,7 @@ class Ameba::Config
     @rules = Rule.rules.map &.new(config).as(Rule::Base)
     @rule_groups = @rules.group_by &.group
     @excluded = load_array_section(config, "Excluded")
-    @globs = load_array_section(config, "Globs", DEFAULT_GLOBS)
+    @globs = load_array_section(config, "Globs", default_globs)
 
     return unless formatter_name = load_formatter_name(config)
     self.formatter = formatter_name
@@ -236,6 +236,13 @@ class Ameba::Config
     when .as_a? then value.as_a.map(&.as_s)
     else
       raise "Incorrect '#{section_name}' section in a config files"
+    end
+  end
+
+  private def default_globs
+    DEFAULT_GLOBS.select do |glob|
+      !Dir[glob].empty? ||
+        (glob.starts_with?("!") && !Dir["#{glob[1..-1]}/**/*.cr"].empty?)
     end
   end
 
