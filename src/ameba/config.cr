@@ -238,7 +238,7 @@ class Ameba::Config
 
   private def default_globs
     [SOURCES_GLOB].tap do |globs|
-      globs.push("!lib") if !Dir["lib/**/*.cr"].empty?
+      globs.push("!lib") unless Dir["lib/**/*.cr"].empty?
     end
   end
 
