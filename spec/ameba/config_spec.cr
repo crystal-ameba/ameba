@@ -16,11 +16,12 @@ module Ameba
           config.globs.should eq ["**/*.cr"]
         end
 
-        it "only sets !lib as a default glob when there are .cr files in lib" do
+        it "sets !lib as a default glob when there are .cr files in lib" do
           File.touch "lib/shard.cr"
           yml = YAML.parse "{}"
           config = Config.new(yml)
           config.globs.should eq ["**/*.cr", "!lib"]
+        ensure
           File.delete "lib/shard.cr"
         end
       end
