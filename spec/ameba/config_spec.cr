@@ -20,7 +20,7 @@ module Ameba
           File.touch "lib/shard.cr"
           yml = YAML.parse "{}"
           config = Config.new(yml)
-          config.globs.should eq Config::DEFAULT_GLOBS
+          config.globs.should eq ["**/*.cr", "!lib"]
           File.delete "lib/shard.cr"
         end
       end

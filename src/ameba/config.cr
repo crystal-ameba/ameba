@@ -55,10 +55,7 @@ class Ameba::Config
     Path[XDG_CONFIG_HOME] / "ameba/config.yml",
   }
 
-  DEFAULT_GLOBS = %w(
-    **/*.cr
-    !lib
-  )
+  SOURCES_GLOB = "**/*.cr"
 
   getter rules : Array(Rule::Base)
   property severity = Severity::Convention
@@ -240,9 +237,8 @@ class Ameba::Config
   end
 
   private def default_globs
-    DEFAULT_GLOBS.select do |glob|
-      !Dir[glob].empty? ||
-        (glob.starts_with?("!") && !Dir["#{glob[1..-1]}/**/*.cr"].empty?)
+    [SOURCES_GLOB].tap do |globs|
+      globs.push("!lib") if !Dir["lib/**/*.cr"].empty?
     end
   end
 
