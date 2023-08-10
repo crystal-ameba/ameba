@@ -1,2 +1,4 @@
-Lint/ComparisonToBoolean:
-  Enabled: true
+Ameba/PerfRule:
+  Enabled: false
+Ameba/ErrorRule:
+  Enabled: false

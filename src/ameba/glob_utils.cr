@@ -22,6 +22,7 @@ module Ameba
     def expand(globs)
       globs.flat_map do |glob|
         glob += "/**/*.cr" if File.directory?(glob)
+        raise ArgumentError.new("No files found matching #{glob}") if Dir[glob].empty?
         Dir[glob]
       end.uniq!
     end
