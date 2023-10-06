@@ -85,30 +85,5 @@ module Ameba::AST
         assignment.branch.should be_nil
       end
     end
-
-    describe "#transformed?" do
-      it "returns false if the assignment is not transformed by the compiler" do
-        nodes = as_nodes <<-CRYSTAL
-          def method(a)
-            a = 2
-          end
-          CRYSTAL
-        scope = Scope.new nodes.def_nodes.first
-        variable = Variable.new(nodes.var_nodes.first, scope)
-        assignment = Assignment.new(nodes.assign_nodes.first, variable, scope)
-        assignment.transformed?.should be_false
-      end
-
-      it "returns true if the assignment is transformed by the compiler" do
-        nodes = as_nodes <<-CRYSTAL
-          array.each do |(a, b)|
-          end
-          CRYSTAL
-        scope = Scope.new nodes.block_nodes.first
-        variable = Variable.new(nodes.var_nodes.first, scope)
-        assignment = Assignment.new(nodes.assign_nodes.first, variable, scope)
-        assignment.transformed?.should be_true
-      end
-    end
   end
 end
