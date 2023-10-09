@@ -76,6 +76,9 @@ module Ameba::AST
       end
     end
 
+    # TODO: Remove in a next release. BC for crystal <= 1.9.
+    # refs https://github.com/crystal-ameba/ameba/pull/407
+    #
     # Indicates whether the node is a transformed assignment by the compiler.
     # i.e.
     #

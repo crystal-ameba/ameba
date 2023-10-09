@@ -233,7 +233,7 @@ module Ameba::Rule::Lint
       subject.catch(s).should be_valid
     end
 
-    context "when transformed" do
+    context "block unpacking" do
       it "does not report if the first arg is transformed and not used" do
         s = Source.new %(
           collection.each do |(a, b)|
