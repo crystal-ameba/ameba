@@ -5,9 +5,6 @@ require "option_parser"
 module Ameba::Cli
   extend self
 
-  private ENABLED_MARK  = "✓".colorize(:green)
-  private DISABLED_MARK = "x".colorize(:red)
-
   def run(args = ARGV)
     opts = parse_args args
     location_to_explain = opts.location_to_explain
@@ -31,11 +28,14 @@ module Ameba::Cli
     configure_rules(config, opts)
 
     if opts.rules?
-      print_rules(config)
+      print_rules(config.rules)
     end
 
-    if describe_rule = opts.describe
-      print_rule_description(describe_rule, config)
+    if describe_rule_name = opts.describe_rule
+      unless rule = config.rules.find(&.name.== describe_rule_name)
+        raise "Unknown rule"
+      end
+      describe_rule(rule)
     end
 
     runner = Ameba.run(config)
@@ -56,7 +56,7 @@ module Ameba::Cli
     property globs : Array(String)?
     property only : Array(String)?
     property except : Array(String)?
-    property describe : String?
+    property describe_rule : String?
     property location_to_explain : NamedTuple(file: String, line: Int32, column: Int32)?
     property fail_level : Severity?
     property? skip_reading_config = false
@@ -166,7 +166,7 @@ module Ameba::Cli
   end
 
   private def configure_describe_opts(rule_name, opts)
-    opts.describe = rule_name.presence
+    opts.describe_rule = rule_name.presence
     opts.formatter = :silent
   end
 
@@ -201,80 +201,13 @@ module Ameba::Cli
     exit 0
   end
 
-  private def print_rules(config)
-    rules = config.rules.to_h do |rule|
-      name = rule.name.split('/')
-      name = "%s/%s" % {
-        name[0...-1].join('/').colorize(:light_gray),
-        name.last.colorize(:white),
-      }
-      {name, rule}
-    end
-    longest_name = rules.max_of(&.first.size)
-
-    rules.group_by(&.last.group).each do |group, group_rules|
-      puts "— %s" % group.colorize(:light_blue).underline
-      puts
-      group_rules.each do |name, rule|
-        puts "  %s  [%s]    %s    %s" % {
-          rule.enabled? ? ENABLED_MARK : DISABLED_MARK,
-          rule.severity.symbol.to_s.colorize(:green),
-          name.ljust(longest_name),
-          rule.description.colorize(:dark_gray),
-        }
-      end
-      puts
-    end
-
-    puts "Total rules: %s / %s enabled" % {
-      rules.size.to_s.colorize(:light_blue),
-      rules.count(&.last.enabled?).to_s.colorize(:light_blue),
-    }
+  private def describe_rule(rule)
+    Presenter::RulePresenter.new.run(rule)
     exit 0
   end
 
-  private def print_rule_description(rule_name, config)
-    rule = config.rules.find(&.name.== rule_name)
-    raise "Unknown rule" unless rule
-
-    puts
-    output_title "Rule info"
-    output_paragraph "%s of a %s severity [enabled: %s]" % {
-      rule.name.colorize(:magenta),
-      rule.severity.to_s.colorize(rule.severity.color),
-      rule.enabled? ? ENABLED_MARK : DISABLED_MARK,
-    }
-    if rule_description = colorize_code_fences(rule.description)
-      output_paragraph rule_description
-    end
-
-    if rule_doc = colorize_code_fences(rule.class.parsed_doc)
-      output_title "Detailed description"
-      output_paragraph rule_doc
-    end
-
+  private def print_rules(rules)
+    Presenter::RuleCollectionPresenter.new.run(rules)
     exit 0
-  end
-
-  private def output_title(title)
-    print "### %s\n\n" % title.upcase.colorize(:yellow)
-  end
-
-  private def output_paragraph(paragraph : String)
-    output_paragraph(paragraph.lines)
-  end
-
-  private def output_paragraph(paragraph : Array)
-    paragraph.each do |line|
-      puts "    #{line}"
-    end
-    puts
-  end
-
-  private def colorize_code_fences(string)
-    return unless string
-    string
-      .gsub(/```(.+?)```/m, &.colorize(:dark_gray))
-      .gsub(/`(?!`)(.+?)`/, &.colorize(:dark_gray))
   end
 end

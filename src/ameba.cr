@@ -3,6 +3,7 @@ require "./ameba/ast/**"
 require "./ameba/ext/**"
 require "./ameba/rule/**"
 require "./ameba/formatter/*"
+require "./ameba/presenter/*"
 require "./ameba/source/**"
 
 # Ameba's entry module.
