@@ -282,6 +282,13 @@ module Ameba
   end
 end
 
+def with_presenter(klass, &)
+  io = IO::Memory.new
+  presenter = klass.new(io)
+
+  yield presenter, io
+end
+
 def as_node(source)
   Crystal::Parser.new(source).parse
 end
