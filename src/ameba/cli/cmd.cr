@@ -28,7 +28,14 @@ module Ameba::Cli
     configure_rules(config, opts)
 
     if opts.rules?
-      print_rules(config)
+      print_rules(config.rules)
+    end
+
+    if describe_rule_name = opts.describe_rule
+      unless rule = config.rules.find(&.name.== describe_rule_name)
+        raise "Unknown rule"
+      end
+      describe_rule(rule)
     end
 
     runner = Ameba.run(config)
@@ -49,6 +56,7 @@ module Ameba::Cli
     property globs : Array(String)?
     property only : Array(String)?
     property except : Array(String)?
+    property describe_rule : String?
     property location_to_explain : NamedTuple(file: String, line: Int32, column: Int32)?
     property fail_level : Severity?
     property? skip_reading_config = false
@@ -119,6 +127,11 @@ module Ameba::Cli
         configure_explain_opts(loc, opts)
       end
 
+      parser.on("-d", "--describe Category/Rule",
+        "Describe a rule with specified name") do |rule_name|
+        configure_describe_opts(rule_name, opts)
+      end
+
       parser.on("--without-affected-code",
         "Stop showing affected code while using a default formatter") do
         opts.without_affected_code = true
@@ -152,6 +165,11 @@ module Ameba::Cli
       opts.without_affected_code?
   end
 
+  private def configure_describe_opts(rule_name, opts)
+    opts.describe_rule = rule_name.presence
+    opts.formatter = :silent
+  end
+
   private def configure_explain_opts(loc, opts)
     location_to_explain = parse_explain_location(loc)
     opts.location_to_explain = location_to_explain
@@ -183,14 +201,13 @@ module Ameba::Cli
     exit 0
   end
 
-  private def print_rules(config)
-    config.rules.each do |rule|
-      puts "%s [%s] - %s" % {
-        rule.name.colorize(:white),
-        rule.severity.symbol.to_s.colorize(:green),
-        rule.description.colorize(:dark_gray),
-      }
-    end
+  private def describe_rule(rule)
+    Presenter::RulePresenter.new.run(rule)
+    exit 0
+  end
+
+  private def print_rules(rules)
+    Presenter::RuleCollectionPresenter.new.run(rules)
     exit 0
   end
 end

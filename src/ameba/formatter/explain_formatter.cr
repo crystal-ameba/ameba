@@ -4,8 +4,6 @@ module Ameba::Formatter
   # A formatter that shows the detailed explanation of the issue at
   # a specific location.
   class ExplainFormatter
-    HEADING_MARKER = "## "
-
     include Util
 
     getter output : IO::FileDescriptor | IO::Memory
@@ -64,9 +62,8 @@ module Ameba::Formatter
         rule.name.colorize(:magenta),
         rule.severity.to_s.colorize(rule.severity.color),
       }
-
-      if rule.responds_to?(:description)
-        output_paragraph rule.description
+      if rule_description = colorize_code_fences(rule.description)
+        output_paragraph rule_description
       end
 
       rule_doc = colorize_code_fences(rule.class.parsed_doc)
@@ -84,7 +81,7 @@ module Ameba::Formatter
     end
 
     private def output_title(title)
-      output << HEADING_MARKER.colorize(:yellow)
+      output << "### ".colorize(:yellow)
       output << title.upcase.colorize(:yellow)
       output << "\n\n"
     end
@@ -95,7 +92,7 @@ module Ameba::Formatter
 
     private def output_paragraph(paragraph : Array)
       paragraph.each do |line|
-        output << ' ' << line << '\n'
+        output << "    " << line << '\n'
       end
       output << '\n'
     end

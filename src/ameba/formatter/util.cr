@@ -1,5 +1,7 @@
 module Ameba::Formatter
   module Util
+    extend self
+
     def deansify(message : String?) : String?
       message.try &.gsub(/\x1b[^m]*m/, "").presence
     end
