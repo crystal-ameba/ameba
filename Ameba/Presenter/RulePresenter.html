@@ -14,7 +14,7 @@
 <script type="text/javascript" src="../../js/doc.js"></script>
 
   <meta name="repository-name" content="ameba">
-  <title>Ameba::AST::Assignment - ameba master</title>
+  <title>Ameba::Presenter::RulePresenter - ameba master</title>
   <script type="text/javascript">
     CrystalDocs.base_path = "../../";
   </script>
@@ -62,7 +62,7 @@
       
         <ul>
   
-  <li class="parent open current" data-id="ameba/Ameba/AST" data-name="ameba::ast">
+  <li class="parent " data-id="ameba/Ameba/AST" data-name="ameba::ast">
       <a href="../../Ameba/AST.html">AST</a>
       
         <ul>
@@ -72,7 +72,7 @@
       
     </li>
   
-  <li class=" current" data-id="ameba/Ameba/AST/Assignment" data-name="ameba::ast::assignment">
+  <li class=" " data-id="ameba/Ameba/AST/Assignment" data-name="ameba::ast::assignment">
       <a href="../../Ameba/AST/Assignment.html">Assignment</a>
       
     </li>
@@ -277,7 +277,7 @@
       
     </li>
   
-  <li class="parent " data-id="ameba/Ameba/Presenter" data-name="ameba::presenter">
+  <li class="parent open current" data-id="ameba/Ameba/Presenter" data-name="ameba::presenter">
       <a href="../../Ameba/Presenter.html">Presenter</a>
       
         <ul>
@@ -292,7 +292,7 @@
       
     </li>
   
-  <li class=" " data-id="ameba/Ameba/Presenter/RulePresenter" data-name="ameba::presenter::rulepresenter">
+  <li class=" current" data-id="ameba/Ameba/Presenter/RulePresenter" data-name="ameba::presenter::rulepresenter">
       <a href="../../Ameba/Presenter/RulePresenter.html">RulePresenter</a>
       
     </li>
@@ -816,27 +816,15 @@
 <div class="main-content">
 <h1 class="type-name">
 
-  <span class="kind">class</span> Ameba::<wbr>AST::<wbr>Assignment
+  <span class="kind">class</span> Ameba::<wbr>Presenter::<wbr>RulePresenter
 
 </h1>
 
 
-  <ul class="superclass-hierarchy"><li class="superclass"><a href="../../Ameba/AST/Assignment.html">Ameba::AST::Assignment</a></li><li class="superclass">Reference</li><li class="superclass">Object</li></ul>
+  <ul class="superclass-hierarchy"><li class="superclass"><a href="../../Ameba/Presenter/RulePresenter.html">Ameba::Presenter::RulePresenter</a></li><li class="superclass"><a href="../../Ameba/Presenter/BasePresenter.html">Ameba::Presenter::BasePresenter</a></li><li class="superclass">Reference</li><li class="superclass">Object</li></ul>
 
 
 
-
-  <h2>
-    <a id="overview" class="anchor" href="#overview">
-  <svg class="octicon-link" aria-hidden="true">
-    <use href="#octicon-link"/>
-  </svg>
-</a>
-    Overview
-  </h2>
-
-  <p>Represents the assignment to the variable.
-Holds the assign node and the variable.</p>
 
 
 
@@ -861,8 +849,8 @@ Holds the assign node and the variable.</p>
   </h2>
   
     
-      <a href="https://github.com/crystal-ameba/ameba/blob/ddb6e3c/src/ameba/ast/variabling/assignment.cr#L7" target="_blank">
-        ameba/ast/variabling/assignment.cr
+      <a href="https://github.com/crystal-ameba/ameba/blob/ddb6e3c/src/ameba/presenter/rule_presenter.cr#L2" target="_blank">
+        ameba/presenter/rule_presenter.cr
       </a>
     
     <br/>
@@ -871,25 +859,6 @@ Holds the assign node and the variable.</p>
 
 
 
-
-  <h2>
-    <a id="constructors" class="anchor" href="#constructors">
-  <svg class="octicon-link" aria-hidden="true">
-    <use href="#octicon-link"/>
-  </svg>
-</a>
-    Constructors
-  </h2>
-  <ul class="list-summary">
-    
-      <li class="entry-summary">
-        <a href="#new%28node%3ACrystal%3A%3AASTNode%2Cvariable%3AAmeba%3A%3AAST%3A%3AVariable%2Cscope%3AAmeba%3A%3AAST%3A%3AScope%29-class-method" class="signature"><strong>.new</strong>(node : Crystal::ASTNode, variable : Ameba::AST::Variable, scope : Ameba::AST::Scope)</a>
-        
-          <div class="summary"><p>Creates a new assignment.</p></div>
-        
-      </li>
-    
-  </ul>
 
 
 
@@ -906,103 +875,7 @@ Holds the assign node and the variable.</p>
   <ul class="list-summary">
     
       <li class="entry-summary">
-        <a href="#branch%3ABranch%7CNil-instance-method" class="signature"><strong>#branch</strong> : Branch | Nil</a>
-        
-          <div class="summary"><p>Branch of this assignment.</p></div>
-        
-      </li>
-    
-      <li class="entry-summary">
-        <a href="#end_location%28%2Aargs%2C%2A%2Aoptions%29-instance-method" class="signature"><strong>#end_location</strong>(*args, **options)</a>
-        
-      </li>
-    
-      <li class="entry-summary">
-        <a href="#end_location%28%2Aargs%2C%2A%2Aoptions%2C%26%29-instance-method" class="signature"><strong>#end_location</strong>(*args, **options, &)</a>
-        
-      </li>
-    
-      <li class="entry-summary">
-        <a href="#in_branch%3F-instance-method" class="signature"><strong>#in_branch?</strong></a>
-        
-          <div class="summary"><p>Returns <code>true</code> if this assignment is in a branch, <code>false</code> if not.</p></div>
-        
-      </li>
-    
-      <li class="entry-summary">
-        <a href="#location%28%2Aargs%2C%2A%2Aoptions%29-instance-method" class="signature"><strong>#location</strong>(*args, **options)</a>
-        
-      </li>
-    
-      <li class="entry-summary">
-        <a href="#location%28%2Aargs%2C%2A%2Aoptions%2C%26%29-instance-method" class="signature"><strong>#location</strong>(*args, **options, &)</a>
-        
-      </li>
-    
-      <li class="entry-summary">
-        <a href="#node%3ACrystal%3A%3AASTNode-instance-method" class="signature"><strong>#node</strong> : Crystal::ASTNode</a>
-        
-          <div class="summary"><p>The actual assignment node.</p></div>
-        
-      </li>
-    
-      <li class="entry-summary">
-        <a href="#op_assign%3F-instance-method" class="signature"><strong>#op_assign?</strong></a>
-        
-          <div class="summary"><p>Returns <code>true</code> if this assignment is an op assign, <code>false</code> if not.</p></div>
-        
-      </li>
-    
-      <li class="entry-summary">
-        <a href="#referenced%3D%28referenced%3ABool%29-instance-method" class="signature"><strong>#referenced=</strong>(referenced : Bool)</a>
-        
-      </li>
-    
-      <li class="entry-summary">
-        <a href="#referenced%3F%3ABool-instance-method" class="signature"><strong>#referenced?</strong> : Bool</a>
-        
-      </li>
-    
-      <li class="entry-summary">
-        <a href="#referenced_in_loop%3F-instance-method" class="signature"><strong>#referenced_in_loop?</strong></a>
-        
-      </li>
-    
-      <li class="entry-summary">
-        <a href="#scope%3AScope-instance-method" class="signature"><strong>#scope</strong> : Scope</a>
-        
-          <div class="summary"><p>A scope assignment belongs to</p></div>
-        
-      </li>
-    
-      <li class="entry-summary">
-        <a href="#target_node-instance-method" class="signature"><strong>#target_node</strong></a>
-        
-          <div class="summary"><p>Returns the target node of the variable in this assignment.</p></div>
-        
-      </li>
-    
-      <li class="entry-summary">
-        <a href="#to_s%28%2Aargs%2C%2A%2Aoptions%29-instance-method" class="signature"><strong>#to_s</strong>(*args, **options)</a>
-        
-      </li>
-    
-      <li class="entry-summary">
-        <a href="#to_s%28%2Aargs%2C%2A%2Aoptions%2C%26%29-instance-method" class="signature"><strong>#to_s</strong>(*args, **options, &)</a>
-        
-      </li>
-    
-      <li class="entry-summary">
-        <a href="#transformed%3F-instance-method" class="signature"><strong>#transformed?</strong></a>
-        
-          <div class="summary"><p><span class="flag orange">TODO</span>  Remove in a next release.</p></div>
-        
-      </li>
-    
-      <li class="entry-summary">
-        <a href="#variable%3AVariable-instance-method" class="signature"><strong>#variable</strong> : Variable</a>
-        
-          <div class="summary"><p>Variable of this assignment.</p></div>
+        <a href="#run%28rule%29-instance-method" class="signature"><strong>#run</strong>(rule)</a>
         
       </li>
     
@@ -1013,6 +886,34 @@ Holds the assign node and the variable.</p>
 
 
 <div class="methods-inherited">
+  
+    
+
+  <h3>Instance methods inherited from class <code><a href="../../Ameba/Presenter/BasePresenter.html">Ameba::Presenter::BasePresenter</a></code></h3>
+  
+  
+    <a href="../../Ameba/Presenter/BasePresenter.html#output%3AIO%3A%3AFileDescriptor%7CIO%3A%3AMemory-instance-method" class="tooltip">
+      <span>output : IO::FileDescriptor | IO::Memory</span>
+    output</a>
+    
+  
+
+
+    
+
+  <h3>Constructor methods inherited from class <code><a href="../../Ameba/Presenter/BasePresenter.html">Ameba::Presenter::BasePresenter</a></code></h3>
+  
+  
+    <a href="../../Ameba/Presenter/BasePresenter.html#new%28output%3AIO%3DSTDOUT%29-class-method" class="tooltip">
+      <span>new(output : IO = <span class="t">STDOUT</span>)</span>
+    new</a>
+    
+  
+
+
+    
+
+
   
     
 
@@ -1037,38 +938,6 @@ Holds the assign node and the variable.</p>
 </div>
 
 
-  <h2>
-    <a id="constructor-detail" class="anchor" href="#constructor-detail">
-  <svg class="octicon-link" aria-hidden="true">
-    <use href="#octicon-link"/>
-  </svg>
-</a>
-    Constructor Detail
-  </h2>
-  
-    <div class="entry-detail" id="new(node:Crystal::ASTNode,variable:Ameba::AST::Variable,scope:Ameba::AST::Scope)-class-method">
-      <div class="signature">
-        
-        def self.<strong>new</strong>(node : Crystal::ASTNode, variable : <a href="../../Ameba/AST/Variable.html">Ameba::AST::Variable</a>, scope : <a href="../../Ameba/AST/Scope.html">Ameba::AST::Scope</a>)
-
-        <a class="method-permalink" href="#new%28node%3ACrystal%3A%3AASTNode%2Cvariable%3AAmeba%3A%3AAST%3A%3AVariable%2Cscope%3AAmeba%3A%3AAST%3A%3AScope%29-class-method">#</a>
-      </div>
-      
-        <div class="doc">
-          
-          <p>Creates a new assignment.</p>
-<pre><code class="language-crystal"><span class="t">Assignment</span>.new(node, variable, scope)</code></pre>
-        </div>
-      
-      <br/>
-      <div>
-        
-          [<a href="https://github.com/crystal-ameba/ameba/blob/ddb6e3c/src/ameba/ast/variabling/assignment.cr#L31" target="_blank">View source</a>]
-        
-      </div>
-    </div>
-  
-
 
 
 
@@ -1082,330 +951,18 @@ Holds the assign node and the variable.</p>
     Instance Method Detail
   </h2>
   
-    <div class="entry-detail" id="branch:Branch|Nil-instance-method">
+    <div class="entry-detail" id="run(rule)-instance-method">
       <div class="signature">
         
-        def <strong>branch</strong> : <a href="../../Ameba/AST/Branch.html">Branch</a> | Nil
+        def <strong>run</strong>(rule)
 
-        <a class="method-permalink" href="#branch%3ABranch%7CNil-instance-method">#</a>
-      </div>
-      
-        <div class="doc">
-          
-          <p>Branch of this assignment.</p>
-        </div>
-      
-      <br/>
-      <div>
-        
-          [<a href="https://github.com/crystal-ameba/ameba/blob/ddb6e3c/src/ameba/ast/variabling/assignment.cr#L17" target="_blank">View source</a>]
-        
-      </div>
-    </div>
-  
-    <div class="entry-detail" id="end_location(*args,**options)-instance-method">
-      <div class="signature">
-        
-        def <strong>end_location</strong>(*args, **options)
-
-        <a class="method-permalink" href="#end_location%28%2Aargs%2C%2A%2Aoptions%29-instance-method">#</a>
+        <a class="method-permalink" href="#run%28rule%29-instance-method">#</a>
       </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/ddb6e3c/src/ameba/ast/variabling/assignment.cr#L24" target="_blank">View source</a>]
-        
-      </div>
-    </div>
-  
-    <div class="entry-detail" id="end_location(*args,**options,&amp;)-instance-method">
-      <div class="signature">
-        
-        def <strong>end_location</strong>(*args, **options, &)
-
-        <a class="method-permalink" href="#end_location%28%2Aargs%2C%2A%2Aoptions%2C%26%29-instance-method">#</a>
-      </div>
-      
-      <br/>
-      <div>
-        
-          [<a href="https://github.com/crystal-ameba/ameba/blob/ddb6e3c/src/ameba/ast/variabling/assignment.cr#L24" target="_blank">View source</a>]
-        
-      </div>
-    </div>
-  
-    <div class="entry-detail" id="in_branch?-instance-method">
-      <div class="signature">
-        
-        def <strong>in_branch?</strong>
-
-        <a class="method-permalink" href="#in_branch%3F-instance-method">#</a>
-      </div>
-      
-        <div class="doc">
-          
-          <p>Returns <code>true</code> if this assignment is in a branch, <code>false</code> if not.
-For example, this assignment is in a branch:</p>
-<pre><code class="language-crystal">a <span class="o">=</span> <span class="n">1</span> <span class="k">if</span> a.<span class="k">nil?</span></code></pre>
-        </div>
-      
-      <br/>
-      <div>
-        
-          [<a href="https://github.com/crystal-ameba/ameba/blob/ddb6e3c/src/ameba/ast/variabling/assignment.cr#L60" target="_blank">View source</a>]
-        
-      </div>
-    </div>
-  
-    <div class="entry-detail" id="location(*args,**options)-instance-method">
-      <div class="signature">
-        
-        def <strong>location</strong>(*args, **options)
-
-        <a class="method-permalink" href="#location%28%2Aargs%2C%2A%2Aoptions%29-instance-method">#</a>
-      </div>
-      
-      <br/>
-      <div>
-        
-          [<a href="https://github.com/crystal-ameba/ameba/blob/ddb6e3c/src/ameba/ast/variabling/assignment.cr#L23" target="_blank">View source</a>]
-        
-      </div>
-    </div>
-  
-    <div class="entry-detail" id="location(*args,**options,&amp;)-instance-method">
-      <div class="signature">
-        
-        def <strong>location</strong>(*args, **options, &)
-
-        <a class="method-permalink" href="#location%28%2Aargs%2C%2A%2Aoptions%2C%26%29-instance-method">#</a>
-      </div>
-      
-      <br/>
-      <div>
-        
-          [<a href="https://github.com/crystal-ameba/ameba/blob/ddb6e3c/src/ameba/ast/variabling/assignment.cr#L23" target="_blank">View source</a>]
-        
-      </div>
-    </div>
-  
-    <div class="entry-detail" id="node:Crystal::ASTNode-instance-method">
-      <div class="signature">
-        
-        def <strong>node</strong> : Crystal::ASTNode
-
-        <a class="method-permalink" href="#node%3ACrystal%3A%3AASTNode-instance-method">#</a>
-      </div>
-      
-        <div class="doc">
-          
-          <p>The actual assignment node.</p>
-        </div>
-      
-      <br/>
-      <div>
-        
-          [<a href="https://github.com/crystal-ameba/ameba/blob/ddb6e3c/src/ameba/ast/variabling/assignment.cr#L11" target="_blank">View source</a>]
-        
-      </div>
-    </div>
-  
-    <div class="entry-detail" id="op_assign?-instance-method">
-      <div class="signature">
-        
-        def <strong>op_assign?</strong>
-
-        <a class="method-permalink" href="#op_assign%3F-instance-method">#</a>
-      </div>
-      
-        <div class="doc">
-          
-          <p>Returns <code>true</code> if this assignment is an op assign, <code>false</code> if not.
-For example, this is an op assign:</p>
-<pre><code class="language-crystal">a <span class="o">||=</span> <span class="n">1</span></code></pre>
-        </div>
-      
-      <br/>
-      <div>
-        
-          [<a href="https://github.com/crystal-ameba/ameba/blob/ddb6e3c/src/ameba/ast/variabling/assignment.cr#L50" target="_blank">View source</a>]
-        
-      </div>
-    </div>
-  
-    <div class="entry-detail" id="referenced=(referenced:Bool)-instance-method">
-      <div class="signature">
-        
-        def <strong>referenced=</strong>(referenced : Bool)
-
-        <a class="method-permalink" href="#referenced%3D%28referenced%3ABool%29-instance-method">#</a>
-      </div>
-      
-      <br/>
-      <div>
-        
-          [<a href="https://github.com/crystal-ameba/ameba/blob/ddb6e3c/src/ameba/ast/variabling/assignment.cr#L8" target="_blank">View source</a>]
-        
-      </div>
-    </div>
-  
-    <div class="entry-detail" id="referenced?:Bool-instance-method">
-      <div class="signature">
-        
-        def <strong>referenced?</strong> : Bool
-
-        <a class="method-permalink" href="#referenced%3F%3ABool-instance-method">#</a>
-      </div>
-      
-      <br/>
-      <div>
-        
-          [<a href="https://github.com/crystal-ameba/ameba/blob/ddb6e3c/src/ameba/ast/variabling/assignment.cr#L8" target="_blank">View source</a>]
-        
-      </div>
-    </div>
-  
-    <div class="entry-detail" id="referenced_in_loop?-instance-method">
-      <div class="signature">
-        
-        def <strong>referenced_in_loop?</strong>
-
-        <a class="method-permalink" href="#referenced_in_loop%3F-instance-method">#</a>
-      </div>
-      
-      <br/>
-      <div>
-        
-          [<a href="https://github.com/crystal-ameba/ameba/blob/ddb6e3c/src/ameba/ast/variabling/assignment.cr#L40" target="_blank">View source</a>]
-        
-      </div>
-    </div>
-  
-    <div class="entry-detail" id="scope:Scope-instance-method">
-      <div class="signature">
-        
-        def <strong>scope</strong> : <a href="../../Ameba/AST/Scope.html">Scope</a>
-
-        <a class="method-permalink" href="#scope%3AScope-instance-method">#</a>
-      </div>
-      
-        <div class="doc">
-          
-          <p>A scope assignment belongs to</p>
-        </div>
-      
-      <br/>
-      <div>
-        
-          [<a href="https://github.com/crystal-ameba/ameba/blob/ddb6e3c/src/ameba/ast/variabling/assignment.cr#L20" target="_blank">View source</a>]
-        
-      </div>
-    </div>
-  
-    <div class="entry-detail" id="target_node-instance-method">
-      <div class="signature">
-        
-        def <strong>target_node</strong>
-
-        <a class="method-permalink" href="#target_node-instance-method">#</a>
-      </div>
-      
-        <div class="doc">
-          
-          <p>Returns the target node of the variable in this assignment.</p>
-        </div>
-      
-      <br/>
-      <div>
-        
-          [<a href="https://github.com/crystal-ameba/ameba/blob/ddb6e3c/src/ameba/ast/variabling/assignment.cr#L65" target="_blank">View source</a>]
-        
-      </div>
-    </div>
-  
-    <div class="entry-detail" id="to_s(*args,**options)-instance-method">
-      <div class="signature">
-        
-        def <strong>to_s</strong>(*args, **options)
-
-        <a class="method-permalink" href="#to_s%28%2Aargs%2C%2A%2Aoptions%29-instance-method">#</a>
-      </div>
-      
-      <br/>
-      <div>
-        
-          [<a href="https://github.com/crystal-ameba/ameba/blob/ddb6e3c/src/ameba/ast/variabling/assignment.cr#L22" target="_blank">View source</a>]
-        
-      </div>
-    </div>
-  
-    <div class="entry-detail" id="to_s(*args,**options,&amp;)-instance-method">
-      <div class="signature">
-        
-        def <strong>to_s</strong>(*args, **options, &)
-
-        <a class="method-permalink" href="#to_s%28%2Aargs%2C%2A%2Aoptions%2C%26%29-instance-method">#</a>
-      </div>
-      
-      <br/>
-      <div>
-        
-          [<a href="https://github.com/crystal-ameba/ameba/blob/ddb6e3c/src/ameba/ast/variabling/assignment.cr#L22" target="_blank">View source</a>]
-        
-      </div>
-    </div>
-  
-    <div class="entry-detail" id="transformed?-instance-method">
-      <div class="signature">
-        
-        def <strong>transformed?</strong>
-
-        <a class="method-permalink" href="#transformed%3F-instance-method">#</a>
-      </div>
-      
-        <div class="doc">
-          
-          <p><span class="flag orange">TODO</span>  Remove in a next release. BC for crystal &lt;= 1.9.
-refs https://github.com/crystal-ameba/ameba/pull/407</p>
-<p>Indicates whether the node is a transformed assignment by the compiler.
-i.e.</p>
-<pre><code class="language-crystal">collection.each <span class="k">do</span> <span class="o">|</span>(a, b)<span class="o">|</span>
-  puts b
-<span class="k">end</span></code></pre>
-<p>is transformed to:</p>
-<pre><code class="language-crystal">collection.each <span class="k">do</span> <span class="o">|</span>__arg0<span class="o">|</span>
-  a <span class="o">=</span> __arg0[<span class="n">0</span>]
-  b <span class="o">=</span> __arg0[<span class="n">1</span>]
-  puts(b)
-<span class="k">end</span></code></pre>
-        </div>
-      
-      <br/>
-      <div>
-        
-          [<a href="https://github.com/crystal-ameba/ameba/blob/ddb6e3c/src/ameba/ast/variabling/assignment.cr#L100" target="_blank">View source</a>]
-        
-      </div>
-    </div>
-  
-    <div class="entry-detail" id="variable:Variable-instance-method">
-      <div class="signature">
-        
-        def <strong>variable</strong> : <a href="../../Ameba/AST/Variable.html">Variable</a>
-
-        <a class="method-permalink" href="#variable%3AVariable-instance-method">#</a>
-      </div>
-      
-        <div class="doc">
-          
-          <p>Variable of this assignment.</p>
-        </div>
-      
-      <br/>
-      <div>
-        
-          [<a href="https://github.com/crystal-ameba/ameba/blob/ddb6e3c/src/ameba/ast/variabling/assignment.cr#L14" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/ddb6e3c/src/ameba/presenter/rule_presenter.cr#L3" target="_blank">View source</a>]
         
       </div>
     </div>
