@@ -1,10 +1,12 @@
 require "../../spec_helper"
 require "file_utils"
 
+CONFIG_PATH = Path[Dir.tempdir] / Ameba::Config::FILENAME
+
 module Ameba
   private def with_formatter(&)
     io = IO::Memory.new
-    formatter = Formatter::TODOFormatter.new(io)
+    formatter = Formatter::TODOFormatter.new(io, CONFIG_PATH)
 
     yield formatter, io
   end
@@ -20,7 +22,7 @@ module Ameba
 
   describe Formatter::TODOFormatter do
     ::Spec.after_each do
-      FileUtils.rm_rf(Ameba::Config::DEFAULT_PATH)
+      FileUtils.rm_rf(CONFIG_PATH)
     end
 
     context "problems not found" do
@@ -45,7 +47,7 @@ module Ameba
           s = Source.new "a = 1", "source.cr"
           s.add_issue DummyRule.new, {1, 2}, "message"
           formatter.finished([s])
-          io.to_s.should contain "Created #{Config::DEFAULT_PATH}"
+          io.to_s.should contain "Created #{CONFIG_PATH}"
         end
       end
 

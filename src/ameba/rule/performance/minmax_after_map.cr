@@ -51,7 +51,7 @@ module Ameba::Rule::Performance
       issue_for name_location, end_location, message do |corrector|
         next unless node_name_location = node.name_location
 
-        # FIXME: switching the order of the below calls breaks the corrector
+        # TODO: switching the order of the below calls breaks the corrector
         corrector.replace(
           name_location,
           name_location.adjust(column_number: {{ "map".size - 1 }}),

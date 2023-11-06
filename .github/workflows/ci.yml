@@ -18,6 +18,9 @@ jobs:
     runs-on: ${{ matrix.os }}
 
     steps:
+      - name: Set timezone to UTC
+        uses: szenius/set-timezone@v1.2
+
       - name: Install Crystal
         uses: crystal-lang/install-crystal@v1
         with:
