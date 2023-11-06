@@ -109,7 +109,7 @@ module Ameba::Spec::ExpectIssue
     code = lines.join('\n')
 
     if code == annotated_code
-      raise "Use `report_no_issues` to assert that no issues are found"
+      raise "Use `expect_no_issues` to assert that no issues are found"
     end
 
     source, actual_annotations = actual_annotations(rules, code, path, lines)
