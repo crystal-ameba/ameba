@@ -3,7 +3,7 @@ module Ameba::Formatter
   # Basically, it takes all issues reported and disables corresponding rules
   # or excludes failed sources from these rules.
   class TODOFormatter < DotFormatter
-    def initialize(@output = STDOUT)
+    def initialize(@output = STDOUT, @config_path : Path = Config::DEFAULT_PATH)
     end
 
     def finished(sources)
@@ -26,7 +26,7 @@ module Ameba::Formatter
     end
 
     private def generate_todo_config(issues)
-      file = File.new(Config::DEFAULT_PATH, mode: "w")
+      file = File.new(@config_path, mode: "w")
       file << header
       rule_issues_map(issues).each do |rule, rule_issues|
         file << "\n# Problems found: #{rule_issues.size}"
