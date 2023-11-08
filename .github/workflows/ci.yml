@@ -32,6 +32,10 @@ jobs:
       - name: Install dependencies
         run: shards install
 
+      - name: Install typos-cli
+        if: matrix.os == 'macos-latest'
+        run: brew install typos-cli
+
       - name: Run specs
         run: crystal spec
 
