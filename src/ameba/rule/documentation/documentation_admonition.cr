@@ -1,4 +1,4 @@
-module Ameba::Rule::Lint
+module Ameba::Rule::Documentation
   # A rule that reports documentation admonitions.
   #
   # Optionally, these can fail at an appropriate time.
@@ -27,7 +27,7 @@ module Ameba::Rule::Lint
   # YAML configuration example:
   #
   # ```
-  # Lint/DocumentationAdmonition:
+  # Documentation/DocumentationAdmonition:
   #   Enabled: true
   #   Admonitions: [TODO, FIXME, BUG]
   #   Timezone: UTC

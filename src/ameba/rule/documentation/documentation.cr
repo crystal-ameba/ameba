@@ -1,11 +1,11 @@
-module Ameba::Rule::Lint
+module Ameba::Rule::Documentation
   # A rule that enforces documentation for public types:
   # modules, classes, enums, methods and macros.
   #
   # YAML configuration example:
   #
   # ```
-  # Lint/Documentation:
+  # Documentation/Documentation:
   #   Enabled: true
   #   IgnoreClasses: false
   #   IgnoreModules: true

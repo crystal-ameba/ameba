@@ -1,6 +1,6 @@
 require "../../../spec_helper"
 
-module Ameba::Rule::Lint
+module Ameba::Rule::Documentation
   subject = DocumentationAdmonition.new
 
   describe DocumentationAdmonition do
