@@ -1,4 +1,4 @@
-module Ameba::Rule::Style
+module Ameba::Rule::Naming
   # A rule that enforces variable names to be in underscored case.
   #
   # For example, these variable names are considered valid:
@@ -19,7 +19,7 @@ module Ameba::Rule::Style
   # YAML configuration example:
   #
   # ```
-  # Style/VariableNames:
+  # Naming/VariableNames:
   #   Enabled: true
   # ```
   class VariableNames < Base

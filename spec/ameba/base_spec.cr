@@ -15,6 +15,7 @@ module Ameba::Rule
           Layout
           Lint
           Metrics
+          Naming
           Performance
           Style
         )

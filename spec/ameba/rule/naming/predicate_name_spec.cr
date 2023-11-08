@@ -1,6 +1,6 @@
 require "../../../spec_helper"
 
-module Ameba::Rule::Style
+module Ameba::Rule::Naming
   subject = PredicateName.new
 
   describe PredicateName do

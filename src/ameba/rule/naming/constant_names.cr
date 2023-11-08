@@ -1,4 +1,4 @@
-module Ameba::Rule::Style
+module Ameba::Rule::Naming
   # A rule that enforces constant names to be in screaming case.
   #
   # For example, these constant names are considered valid:
@@ -18,7 +18,7 @@ module Ameba::Rule::Style
   # YAML configuration example:
   #
   # ```
-  # Style/ConstantNames:
+  # Naming/ConstantNames:
   #   Enabled: true
   # ```
   class ConstantNames < Base

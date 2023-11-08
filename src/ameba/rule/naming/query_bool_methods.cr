@@ -1,4 +1,4 @@
-module Ameba::Rule::Style
+module Ameba::Rule::Naming
   # A rule that disallows boolean properties without the `?` suffix - defined
   # using `Object#(class_)property` or `Object#(class_)getter` macros.
   #
@@ -23,7 +23,7 @@ module Ameba::Rule::Style
   # YAML configuration example:
   #
   # ```
-  # Style/QueryBoolMethods:
+  # Naming/QueryBoolMethods:
   #   Enabled: true
   # ```
   class QueryBoolMethods < Base

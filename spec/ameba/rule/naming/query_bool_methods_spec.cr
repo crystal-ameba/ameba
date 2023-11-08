@@ -1,6 +1,6 @@
 require "../../../spec_helper"
 
-module Ameba::Rule::Style
+module Ameba::Rule::Naming
   subject = QueryBoolMethods.new
 
   describe QueryBoolMethods do
