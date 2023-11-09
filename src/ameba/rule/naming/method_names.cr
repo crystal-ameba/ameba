@@ -1,4 +1,4 @@
-module Ameba::Rule::Style
+module Ameba::Rule::Naming
   # A rule that enforces method names to be in underscored case.
   #
   # For example, these are considered valid:
@@ -34,7 +34,7 @@ module Ameba::Rule::Style
   # YAML configuration example:
   #
   # ```
-  # Style/MethodNames:
+  # Naming/MethodNames:
   #   Enabled: true
   # ```
   class MethodNames < Base

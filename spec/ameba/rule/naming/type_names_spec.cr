@@ -1,11 +1,11 @@
 require "../../../spec_helper"
 
 module Ameba
-  subject = Rule::Style::TypeNames.new
+  subject = Rule::Naming::TypeNames.new
 
   private def it_reports_name(type, name, expected, *, file = __FILE__, line = __LINE__)
     it "reports type name #{expected}", file, line do
-      rule = Rule::Style::TypeNames.new
+      rule = Rule::Naming::TypeNames.new
       expect_issue rule, <<-CRYSTAL, type: type, name: name, file: file, line: line
         %{type} %{name}; end
         # ^{type}^{name}^^^^ error: Type name should be camelcased: #{expected}, but it was %{name}
@@ -13,7 +13,7 @@ module Ameba
     end
   end
 
-  describe Rule::Style::TypeNames do
+  describe Rule::Naming::TypeNames do
     it "passes if type names are camelcased" do
       expect_no_issues subject, <<-CRYSTAL
         class ParseError < Exception

@@ -1,4 +1,4 @@
-module Ameba::Rule::Style
+module Ameba::Rule::Naming
   # A rule that enforces type names in camelcase manner.
   #
   # For example, these are considered valid:
@@ -48,7 +48,7 @@ module Ameba::Rule::Style
   # YAML configuration example:
   #
   # ```
-  # Style/TypeNames:
+  # Naming/TypeNames:
   #   Enabled: true
   # ```
   class TypeNames < Base
