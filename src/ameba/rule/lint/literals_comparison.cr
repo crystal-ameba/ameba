@@ -36,14 +36,15 @@ module Ameba::Rule::Lint
       arg_is_literal, arg_is_static = literal_kind?(arg)
 
       return unless obj_is_literal && arg_is_literal
+      return unless obj.to_s == arg.to_s
 
       is_dynamic = !obj_is_static || !arg_is_static
 
       what =
         case node.name
         when "===" then "the same"
-        when "=="  then (obj.to_s == arg.to_s).to_s
-        when "!="  then (obj.to_s != arg.to_s).to_s
+        when "=="  then "true"
+        when "!="  then "false"
         end
 
       issue_for node, (is_dynamic ? MSG_LIKELY : MSG) % what
