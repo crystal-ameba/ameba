@@ -317,6 +317,26 @@
       
     </li>
   
+  <li class="parent " data-id="ameba/Ameba/Rule/Documentation" data-name="ameba::rule::documentation">
+      <a href="../../Ameba/Rule/Documentation.html">Documentation</a>
+      
+        <ul>
+  
+  <li class=" " data-id="ameba/Ameba/Rule/Documentation/Documentation" data-name="ameba::rule::documentation::documentation">
+      <a href="../../Ameba/Rule/Documentation/Documentation.html">Documentation</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/Rule/Documentation/DocumentationAdmonition" data-name="ameba::rule::documentation::documentationadmonition">
+      <a href="../../Ameba/Rule/Documentation/DocumentationAdmonition.html">DocumentationAdmonition</a>
+      
+    </li>
+  
+</ul>
+
+      
+    </li>
+  
   <li class="parent " data-id="ameba/Ameba/Rule/Layout" data-name="ameba::rule::layout">
       <a href="../../Ameba/Rule/Layout.html">Layout</a>
       
@@ -369,16 +389,6 @@
   
   <li class=" " data-id="ameba/Ameba/Rule/Lint/DebuggerStatement" data-name="ameba::rule::lint::debuggerstatement">
       <a href="../../Ameba/Rule/Lint/DebuggerStatement.html">DebuggerStatement</a>
-      
-    </li>
-  
-  <li class=" " data-id="ameba/Ameba/Rule/Lint/Documentation" data-name="ameba::rule::lint::documentation">
-      <a href="../../Ameba/Rule/Lint/Documentation.html">Documentation</a>
-      
-    </li>
-  
-  <li class=" " data-id="ameba/Ameba/Rule/Lint/DocumentationAdmonition" data-name="ameba::rule::lint::documentationadmonition">
-      <a href="../../Ameba/Rule/Lint/DocumentationAdmonition.html">DocumentationAdmonition</a>
       
     </li>
   
@@ -904,6 +914,10 @@ that are tested by this rule, it should add an issue.</p>
   </h2>
   <ul class="other-types-list">
     
+      <li class="other-type"><a href="../../Ameba/Rule/Documentation/Documentation.html">Ameba::Rule::Documentation::Documentation</a></li>
+    
+      <li class="other-type"><a href="../../Ameba/Rule/Documentation/DocumentationAdmonition.html">Ameba::Rule::Documentation::DocumentationAdmonition</a></li>
+    
       <li class="other-type"><a href="../../Ameba/Rule/Layout/LineLength.html">Ameba::Rule::Layout::LineLength</a></li>
     
       <li class="other-type"><a href="../../Ameba/Rule/Layout/TrailingBlankLines.html">Ameba::Rule::Layout::TrailingBlankLines</a></li>
@@ -919,10 +933,6 @@ that are tested by this rule, it should add an issue.</p>
       <li class="other-type"><a href="../../Ameba/Rule/Lint/DebugCalls.html">Ameba::Rule::Lint::DebugCalls</a></li>
     
       <li class="other-type"><a href="../../Ameba/Rule/Lint/DebuggerStatement.html">Ameba::Rule::Lint::DebuggerStatement</a></li>
-    
-      <li class="other-type"><a href="../../Ameba/Rule/Lint/Documentation.html">Ameba::Rule::Lint::Documentation</a></li>
-    
-      <li class="other-type"><a href="../../Ameba/Rule/Lint/DocumentationAdmonition.html">Ameba::Rule::Lint::DocumentationAdmonition</a></li>
     
       <li class="other-type"><a href="../../Ameba/Rule/Lint/DuplicatedRequire.html">Ameba::Rule::Lint::DuplicatedRequire</a></li>
     
@@ -1043,7 +1053,7 @@ that are tested by this rule, it should add an issue.</p>
   </h2>
   
     
-      <a href="https://github.com/crystal-ameba/ameba/blob/bcb72fb/src/ameba/rule/base.cr#L29" target="_blank">
+      <a href="https://github.com/crystal-ameba/ameba/blob/881209d/src/ameba/rule/base.cr#L29" target="_blank">
         ameba/rule/base.cr
       </a>
     
@@ -1065,7 +1075,7 @@ that are tested by this rule, it should add an issue.</p>
   <dl>
     
       <dt class="entry-const" id="GROUP_SEVERITY">
-        <strong>GROUP_SEVERITY</strong> = <code>{<span class="t">Lint</span>: <span class="t">Ameba</span><span class="t">::</span><span class="t">Severity</span><span class="t">::</span><span class="t">Warning</span>, <span class="t">Metrics</span>: <span class="t">Ameba</span><span class="t">::</span><span class="t">Severity</span><span class="t">::</span><span class="t">Warning</span>, <span class="t">Performance</span>: <span class="t">Ameba</span><span class="t">::</span><span class="t">Severity</span><span class="t">::</span><span class="t">Warning</span>}</code>
+        <strong>GROUP_SEVERITY</strong> = <code>{<span class="t">Documentation</span>: <span class="t">Ameba</span><span class="t">::</span><span class="t">Severity</span><span class="t">::</span><span class="t">Warning</span>, <span class="t">Lint</span>: <span class="t">Ameba</span><span class="t">::</span><span class="t">Severity</span><span class="t">::</span><span class="t">Warning</span>, <span class="t">Metrics</span>: <span class="t">Ameba</span><span class="t">::</span><span class="t">Severity</span><span class="t">::</span><span class="t">Warning</span>, <span class="t">Performance</span>: <span class="t">Ameba</span><span class="t">::</span><span class="t">Severity</span><span class="t">::</span><span class="t">Warning</span>}</code>
       </dt>
       
     
@@ -1282,7 +1292,7 @@ that are tested by this rule, it should add an issue.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/bcb72fb/src/ameba/rule/base.cr#L107" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/881209d/src/ameba/rule/base.cr#L107" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1306,7 +1316,7 @@ source.valid?</code></pre>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/bcb72fb/src/ameba/rule/base.cr#L52" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/881209d/src/ameba/rule/base.cr#L52" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1330,7 +1340,7 @@ the one of the given source.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/bcb72fb/src/ameba/rule/base.cr#L90" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/881209d/src/ameba/rule/base.cr#L90" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1356,7 +1366,7 @@ the one of the given source.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/bcb72fb/src/ameba/rule/base.cr#L79" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/881209d/src/ameba/rule/base.cr#L79" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1386,7 +1396,7 @@ though usually the macro <code>def_hash</code> can be used to generate this meth
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/bcb72fb/src/ameba/rule/base.cr#L111" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/881209d/src/ameba/rule/base.cr#L111" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1413,7 +1423,7 @@ though usually the macro <code>def_hash</code> can be used to generate this meth
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/bcb72fb/src/ameba/rule/base.cr#L66" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/881209d/src/ameba/rule/base.cr#L66" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1436,7 +1446,7 @@ usual rules.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/bcb72fb/src/ameba/rule/base.cr#L103" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/881209d/src/ameba/rule/base.cr#L103" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1452,7 +1462,7 @@ usual rules.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/bcb72fb/src/ameba/rule/base.cr#L41" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/881209d/src/ameba/rule/base.cr#L41" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1476,7 +1486,7 @@ that are tested by this rule, it should add an issue.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/bcb72fb/src/ameba/rule/base.cr#L37" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/881209d/src/ameba/rule/base.cr#L37" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1509,7 +1519,7 @@ that are tested by this rule, it should add an issue.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/bcb72fb/src/ameba/rule/base.cr#L116" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/881209d/src/ameba/rule/base.cr#L116" target="_blank">View source</a>]
         
       </div>
     </div>

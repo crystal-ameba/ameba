@@ -14,7 +14,7 @@
 <script type="text/javascript" src="../../../js/doc.js"></script>
 
   <meta name="repository-name" content="ameba">
-  <title>Ameba::Rule::Lint::Documentation - ameba master</title>
+  <title>Ameba::Rule::Documentation::DocumentationAdmonition - ameba master</title>
   <script type="text/javascript">
     CrystalDocs.base_path = "../../../";
   </script>
@@ -317,6 +317,26 @@
       
     </li>
   
+  <li class="parent open current" data-id="ameba/Ameba/Rule/Documentation" data-name="ameba::rule::documentation">
+      <a href="../../../Ameba/Rule/Documentation.html">Documentation</a>
+      
+        <ul>
+  
+  <li class=" " data-id="ameba/Ameba/Rule/Documentation/Documentation" data-name="ameba::rule::documentation::documentation">
+      <a href="../../../Ameba/Rule/Documentation/Documentation.html">Documentation</a>
+      
+    </li>
+  
+  <li class=" current" data-id="ameba/Ameba/Rule/Documentation/DocumentationAdmonition" data-name="ameba::rule::documentation::documentationadmonition">
+      <a href="../../../Ameba/Rule/Documentation/DocumentationAdmonition.html">DocumentationAdmonition</a>
+      
+    </li>
+  
+</ul>
+
+      
+    </li>
+  
   <li class="parent " data-id="ameba/Ameba/Rule/Layout" data-name="ameba::rule::layout">
       <a href="../../../Ameba/Rule/Layout.html">Layout</a>
       
@@ -342,7 +362,7 @@
       
     </li>
   
-  <li class="parent open current" data-id="ameba/Ameba/Rule/Lint" data-name="ameba::rule::lint">
+  <li class="parent " data-id="ameba/Ameba/Rule/Lint" data-name="ameba::rule::lint">
       <a href="../../../Ameba/Rule/Lint.html">Lint</a>
       
         <ul>
@@ -369,16 +389,6 @@
   
   <li class=" " data-id="ameba/Ameba/Rule/Lint/DebuggerStatement" data-name="ameba::rule::lint::debuggerstatement">
       <a href="../../../Ameba/Rule/Lint/DebuggerStatement.html">DebuggerStatement</a>
-      
-    </li>
-  
-  <li class=" current" data-id="ameba/Ameba/Rule/Lint/Documentation" data-name="ameba::rule::lint::documentation">
-      <a href="../../../Ameba/Rule/Lint/Documentation.html">Documentation</a>
-      
-    </li>
-  
-  <li class=" " data-id="ameba/Ameba/Rule/Lint/DocumentationAdmonition" data-name="ameba::rule::lint::documentationadmonition">
-      <a href="../../../Ameba/Rule/Lint/DocumentationAdmonition.html">DocumentationAdmonition</a>
       
     </li>
   
@@ -836,12 +846,12 @@
 <div class="main-content">
 <h1 class="type-name">
 
-  <span class="kind">class</span> Ameba::<wbr>Rule::<wbr>Lint::<wbr>Documentation
+  <span class="kind">class</span> Ameba::<wbr>Rule::<wbr>Documentation::<wbr>DocumentationAdmonition
 
 </h1>
 
 
-  <ul class="superclass-hierarchy"><li class="superclass"><a href="../../../Ameba/Rule/Lint/Documentation.html">Ameba::Rule::Lint::Documentation</a></li><li class="superclass"><a href="../../../Ameba/Rule/Base.html">Ameba::Rule::Base</a></li><li class="superclass">Reference</li><li class="superclass">Object</li></ul>
+  <ul class="superclass-hierarchy"><li class="superclass"><a href="../../../Ameba/Rule/Documentation/DocumentationAdmonition.html">Ameba::Rule::Documentation::DocumentationAdmonition</a></li><li class="superclass"><a href="../../../Ameba/Rule/Base.html">Ameba::Rule::Base</a></li><li class="superclass">Reference</li><li class="superclass">Object</li></ul>
 
 
 
@@ -855,17 +865,27 @@
     Overview
   </h2>
 
-  <p>A rule that enforces documentation for public types:
-modules, classes, enums, methods and macros.</p>
+  <p>A rule that reports documentation admonitions.</p>
+<p>Optionally, these can fail at an appropriate time.</p>
+<pre><code class="language-crystal"><span class="k">def</span> <span class="m">get_user</span>(id)
+  <span class="c"># TODO(2024-04-24) Fix this hack when the database migration is complete</span>
+  <span class="k">if</span> id <span class="o">&lt;</span> <span class="n">1_000_000</span>
+    v1_api_call(id)
+  <span class="k">else</span>
+    v2_api_call(id)
+  <span class="k">end</span>
+<span class="k">end</span></code></pre>
+<p><code>TODO</code> comments are used to remind yourself of source code related things.</p>
+<p>The premise here is that <code>TODO</code> should be dealt with in the near future
+and are therefore reported by Ameba.</p>
+<p><code>FIXME</code> comments are used to indicate places where source code needs fixing.</p>
+<p>The premise here is that <code>FIXME</code> should indeed be fixed as soon as possible
+and are therefore reported by Ameba.</p>
 <p>YAML configuration example:</p>
-<pre><code class="language-crystal"><span class="t">Lint</span><span class="o">/</span><span class="t">Documentation</span>:
+<pre><code class="language-crystal"><span class="t">Documentation</span><span class="o">/</span><span class="t">DocumentationAdmonition</span>:
   <span class="t">Enabled</span>: <span class="n">true</span>
-  <span class="t">IgnoreClasses</span>: <span class="n">false</span>
-  <span class="t">IgnoreModules</span>: <span class="n">true</span>
-  <span class="t">IgnoreEnums</span>: <span class="n">false</span>
-  <span class="t">IgnoreDefs</span>: <span class="n">true</span>
-  <span class="t">IgnoreMacros</span>: <span class="n">false</span>
-  <span class="t">IgnoreMacroHooks</span>: <span class="n">true</span></code></pre>
+  <span class="t">Admonitions</span>: [<span class="t">TODO</span>, <span class="t">FIXME</span>, <span class="t">BUG</span>]
+  <span class="t">Timezone</span>: <span class="t">UTC</span></code></pre>
 
 
 
@@ -906,8 +926,8 @@ modules, classes, enums, methods and macros.</p>
   </h2>
   
     
-      <a href="https://github.com/crystal-ameba/ameba/blob/bcb72fb/src/ameba/rule/lint/documentation.cr#L17" target="_blank">
-        ameba/rule/lint/documentation.cr
+      <a href="https://github.com/crystal-ameba/ameba/blob/881209d/src/ameba/rule/documentation/documentation_admonition.cr#L35" target="_blank">
+        ameba/rule/documentation/documentation_admonition.cr
       </a>
     
     <br/>
@@ -927,13 +947,18 @@ modules, classes, enums, methods and macros.</p>
   
   <dl>
     
-      <dt class="entry-const" id="MACRO_HOOK_NAMES">
-        <strong>MACRO_HOOK_NAMES</strong> = <code>[<span class="s">&quot;inherited&quot;</span>, <span class="s">&quot;included&quot;</span>, <span class="s">&quot;extended&quot;</span>, <span class="s">&quot;method_missing&quot;</span>, <span class="s">&quot;method_added&quot;</span>, <span class="s">&quot;finished&quot;</span>] <span class="k">of</span> <span class="t">::</span><span class="t">String</span></code>
+      <dt class="entry-const" id="MSG">
+        <strong>MSG</strong> = <code><span class="s">&quot;Found a %s admonition in a comment&quot;</span></code>
       </dt>
       
     
-      <dt class="entry-const" id="MSG">
-        <strong>MSG</strong> = <code><span class="s">&quot;Missing documentation&quot;</span></code>
+      <dt class="entry-const" id="MSG_ERR">
+        <strong>MSG_ERR</strong> = <code><span class="s">&quot;%s admonition error: %s&quot;</span></code>
+      </dt>
+      
+    
+      <dt class="entry-const" id="MSG_LATE">
+        <strong>MSG_LATE</strong> = <code><span class="s">&quot;Found a %s admonition in a comment (%s)&quot;</span></code>
       </dt>
       
     
@@ -959,7 +984,7 @@ modules, classes, enums, methods and macros.</p>
       <li class="entry-summary">
         <a href="#new%28config%3Dnil%29-class-method" class="signature"><strong>.new</strong>(config = <span class="n">nil</span>)</a>
         
-          <div class="summary"><p>A rule that enforces documentation for public types: modules, classes, enums, methods and macros.</p></div>
+          <div class="summary"><p>A rule that reports documentation admonitions.</p></div>
         
       </li>
     
@@ -999,6 +1024,16 @@ modules, classes, enums, methods and macros.</p>
   <ul class="list-summary">
     
       <li class="entry-summary">
+        <a href="#admonitions%3AArray%28String%29-instance-method" class="signature"><strong>#admonitions</strong> : Array(String)</a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#admonitions%3D%28admonitions%3AArray%28String%29%29-instance-method" class="signature"><strong>#admonitions=</strong>(admonitions : Array(String))</a>
+        
+      </li>
+    
+      <li class="entry-summary">
         <a href="#description%3AString-instance-method" class="signature"><strong>#description</strong> : String</a>
         
       </li>
@@ -1029,66 +1064,6 @@ modules, classes, enums, methods and macros.</p>
       </li>
     
       <li class="entry-summary">
-        <a href="#ignore_classes%3D%28ignore_classes%3ABool%29-instance-method" class="signature"><strong>#ignore_classes=</strong>(ignore_classes : Bool)</a>
-        
-      </li>
-    
-      <li class="entry-summary">
-        <a href="#ignore_classes%3F%3ABool-instance-method" class="signature"><strong>#ignore_classes?</strong> : Bool</a>
-        
-      </li>
-    
-      <li class="entry-summary">
-        <a href="#ignore_defs%3D%28ignore_defs%3ABool%29-instance-method" class="signature"><strong>#ignore_defs=</strong>(ignore_defs : Bool)</a>
-        
-      </li>
-    
-      <li class="entry-summary">
-        <a href="#ignore_defs%3F%3ABool-instance-method" class="signature"><strong>#ignore_defs?</strong> : Bool</a>
-        
-      </li>
-    
-      <li class="entry-summary">
-        <a href="#ignore_enums%3D%28ignore_enums%3ABool%29-instance-method" class="signature"><strong>#ignore_enums=</strong>(ignore_enums : Bool)</a>
-        
-      </li>
-    
-      <li class="entry-summary">
-        <a href="#ignore_enums%3F%3ABool-instance-method" class="signature"><strong>#ignore_enums?</strong> : Bool</a>
-        
-      </li>
-    
-      <li class="entry-summary">
-        <a href="#ignore_macro_hooks%3D%28ignore_macro_hooks%3ABool%29-instance-method" class="signature"><strong>#ignore_macro_hooks=</strong>(ignore_macro_hooks : Bool)</a>
-        
-      </li>
-    
-      <li class="entry-summary">
-        <a href="#ignore_macro_hooks%3F%3ABool-instance-method" class="signature"><strong>#ignore_macro_hooks?</strong> : Bool</a>
-        
-      </li>
-    
-      <li class="entry-summary">
-        <a href="#ignore_macros%3D%28ignore_macros%3ABool%29-instance-method" class="signature"><strong>#ignore_macros=</strong>(ignore_macros : Bool)</a>
-        
-      </li>
-    
-      <li class="entry-summary">
-        <a href="#ignore_macros%3F%3ABool-instance-method" class="signature"><strong>#ignore_macros?</strong> : Bool</a>
-        
-      </li>
-    
-      <li class="entry-summary">
-        <a href="#ignore_modules%3D%28ignore_modules%3ABool%29-instance-method" class="signature"><strong>#ignore_modules=</strong>(ignore_modules : Bool)</a>
-        
-      </li>
-    
-      <li class="entry-summary">
-        <a href="#ignore_modules%3F%3ABool-instance-method" class="signature"><strong>#ignore_modules?</strong> : Bool</a>
-        
-      </li>
-    
-      <li class="entry-summary">
         <a href="#severity%3AAmeba%3A%3ASeverity-instance-method" class="signature"><strong>#severity</strong> : Ameba::Severity</a>
         
       </li>
@@ -1099,32 +1074,17 @@ modules, classes, enums, methods and macros.</p>
       </li>
     
       <li class="entry-summary">
-        <a href="#test%28source%2Cnode%3ACrystal%3A%3AClassDef%2Cscope%3AAST%3A%3AScope%29-instance-method" class="signature"><strong>#test</strong>(source, node : Crystal::ClassDef, scope : AST::Scope)</a>
-        
-      </li>
-    
-      <li class="entry-summary">
-        <a href="#test%28source%2Cnode%3ACrystal%3A%3AModuleDef%2Cscope%3AAST%3A%3AScope%29-instance-method" class="signature"><strong>#test</strong>(source, node : Crystal::ModuleDef, scope : AST::Scope)</a>
-        
-      </li>
-    
-      <li class="entry-summary">
-        <a href="#test%28source%2Cnode%3ACrystal%3A%3AEnumDef%2Cscope%3AAST%3A%3AScope%29-instance-method" class="signature"><strong>#test</strong>(source, node : Crystal::EnumDef, scope : AST::Scope)</a>
-        
-      </li>
-    
-      <li class="entry-summary">
-        <a href="#test%28source%2Cnode%3ACrystal%3A%3ADef%2Cscope%3AAST%3A%3AScope%29-instance-method" class="signature"><strong>#test</strong>(source, node : Crystal::Def, scope : AST::Scope)</a>
-        
-      </li>
-    
-      <li class="entry-summary">
-        <a href="#test%28source%2Cnode%3ACrystal%3A%3AMacro%2Cscope%3AAST%3A%3AScope%29-instance-method" class="signature"><strong>#test</strong>(source, node : Crystal::Macro, scope : AST::Scope)</a>
-        
-      </li>
-    
-      <li class="entry-summary">
         <a href="#test%28source%29-instance-method" class="signature"><strong>#test</strong>(source)</a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#timezone%3AString-instance-method" class="signature"><strong>#timezone</strong> : String</a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#timezone%3D%28timezone%3AString%29-instance-method" class="signature"><strong>#timezone=</strong>(timezone : String)</a>
         
       </li>
     
@@ -1285,23 +1245,33 @@ modules, classes, enums, methods and macros.</p>
       
         <div class="doc">
           
-          <p>A rule that enforces documentation for public types:
-modules, classes, enums, methods and macros.</p>
+          <p>A rule that reports documentation admonitions.</p>
+<p>Optionally, these can fail at an appropriate time.</p>
+<pre><code class="language-crystal"><span class="k">def</span> <span class="m">get_user</span>(id)
+  <span class="c"># TODO(2024-04-24) Fix this hack when the database migration is complete</span>
+  <span class="k">if</span> id <span class="o">&lt;</span> <span class="n">1_000_000</span>
+    v1_api_call(id)
+  <span class="k">else</span>
+    v2_api_call(id)
+  <span class="k">end</span>
+<span class="k">end</span></code></pre>
+<p><code>TODO</code> comments are used to remind yourself of source code related things.</p>
+<p>The premise here is that <code>TODO</code> should be dealt with in the near future
+and are therefore reported by Ameba.</p>
+<p><code>FIXME</code> comments are used to indicate places where source code needs fixing.</p>
+<p>The premise here is that <code>FIXME</code> should indeed be fixed as soon as possible
+and are therefore reported by Ameba.</p>
 <p>YAML configuration example:</p>
-<pre><code class="language-crystal"><span class="t">Lint</span><span class="o">/</span><span class="t">Documentation</span>:
+<pre><code class="language-crystal"><span class="t">Documentation</span><span class="o">/</span><span class="t">DocumentationAdmonition</span>:
   <span class="t">Enabled</span>: <span class="n">true</span>
-  <span class="t">IgnoreClasses</span>: <span class="n">false</span>
-  <span class="t">IgnoreModules</span>: <span class="n">true</span>
-  <span class="t">IgnoreEnums</span>: <span class="n">false</span>
-  <span class="t">IgnoreDefs</span>: <span class="n">true</span>
-  <span class="t">IgnoreMacros</span>: <span class="n">false</span>
-  <span class="t">IgnoreMacroHooks</span>: <span class="n">true</span></code></pre>
+  <span class="t">Admonitions</span>: [<span class="t">TODO</span>, <span class="t">FIXME</span>, <span class="t">BUG</span>]
+  <span class="t">Timezone</span>: <span class="t">UTC</span></code></pre>
         </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/bcb72fb/src/ameba/rule/lint/documentation.cr#L17" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/881209d/src/ameba/rule/documentation/documentation_admonition.cr#L35" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1358,6 +1328,34 @@ modules, classes, enums, methods and macros.</p>
 </a>
     Instance Method Detail
   </h2>
+  
+    <div class="entry-detail" id="admonitions:Array(String)-instance-method">
+      <div class="signature">
+        
+        def <strong>admonitions</strong> : Array(String)
+
+        <a class="method-permalink" href="#admonitions%3AArray%28String%29-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="admonitions=(admonitions:Array(String))-instance-method">
+      <div class="signature">
+        
+        def <strong>admonitions=</strong>(admonitions : Array(String))
+
+        <a class="method-permalink" href="#admonitions%3D%28admonitions%3AArray%28String%29%29-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+      </div>
+    </div>
   
     <div class="entry-detail" id="description:String-instance-method">
       <div class="signature">
@@ -1443,174 +1441,6 @@ modules, classes, enums, methods and macros.</p>
       </div>
     </div>
   
-    <div class="entry-detail" id="ignore_classes=(ignore_classes:Bool)-instance-method">
-      <div class="signature">
-        
-        def <strong>ignore_classes=</strong>(ignore_classes : Bool)
-
-        <a class="method-permalink" href="#ignore_classes%3D%28ignore_classes%3ABool%29-instance-method">#</a>
-      </div>
-      
-      <br/>
-      <div>
-        
-      </div>
-    </div>
-  
-    <div class="entry-detail" id="ignore_classes?:Bool-instance-method">
-      <div class="signature">
-        
-        def <strong>ignore_classes?</strong> : Bool
-
-        <a class="method-permalink" href="#ignore_classes%3F%3ABool-instance-method">#</a>
-      </div>
-      
-      <br/>
-      <div>
-        
-      </div>
-    </div>
-  
-    <div class="entry-detail" id="ignore_defs=(ignore_defs:Bool)-instance-method">
-      <div class="signature">
-        
-        def <strong>ignore_defs=</strong>(ignore_defs : Bool)
-
-        <a class="method-permalink" href="#ignore_defs%3D%28ignore_defs%3ABool%29-instance-method">#</a>
-      </div>
-      
-      <br/>
-      <div>
-        
-      </div>
-    </div>
-  
-    <div class="entry-detail" id="ignore_defs?:Bool-instance-method">
-      <div class="signature">
-        
-        def <strong>ignore_defs?</strong> : Bool
-
-        <a class="method-permalink" href="#ignore_defs%3F%3ABool-instance-method">#</a>
-      </div>
-      
-      <br/>
-      <div>
-        
-      </div>
-    </div>
-  
-    <div class="entry-detail" id="ignore_enums=(ignore_enums:Bool)-instance-method">
-      <div class="signature">
-        
-        def <strong>ignore_enums=</strong>(ignore_enums : Bool)
-
-        <a class="method-permalink" href="#ignore_enums%3D%28ignore_enums%3ABool%29-instance-method">#</a>
-      </div>
-      
-      <br/>
-      <div>
-        
-      </div>
-    </div>
-  
-    <div class="entry-detail" id="ignore_enums?:Bool-instance-method">
-      <div class="signature">
-        
-        def <strong>ignore_enums?</strong> : Bool
-
-        <a class="method-permalink" href="#ignore_enums%3F%3ABool-instance-method">#</a>
-      </div>
-      
-      <br/>
-      <div>
-        
-      </div>
-    </div>
-  
-    <div class="entry-detail" id="ignore_macro_hooks=(ignore_macro_hooks:Bool)-instance-method">
-      <div class="signature">
-        
-        def <strong>ignore_macro_hooks=</strong>(ignore_macro_hooks : Bool)
-
-        <a class="method-permalink" href="#ignore_macro_hooks%3D%28ignore_macro_hooks%3ABool%29-instance-method">#</a>
-      </div>
-      
-      <br/>
-      <div>
-        
-      </div>
-    </div>
-  
-    <div class="entry-detail" id="ignore_macro_hooks?:Bool-instance-method">
-      <div class="signature">
-        
-        def <strong>ignore_macro_hooks?</strong> : Bool
-
-        <a class="method-permalink" href="#ignore_macro_hooks%3F%3ABool-instance-method">#</a>
-      </div>
-      
-      <br/>
-      <div>
-        
-      </div>
-    </div>
-  
-    <div class="entry-detail" id="ignore_macros=(ignore_macros:Bool)-instance-method">
-      <div class="signature">
-        
-        def <strong>ignore_macros=</strong>(ignore_macros : Bool)
-
-        <a class="method-permalink" href="#ignore_macros%3D%28ignore_macros%3ABool%29-instance-method">#</a>
-      </div>
-      
-      <br/>
-      <div>
-        
-      </div>
-    </div>
-  
-    <div class="entry-detail" id="ignore_macros?:Bool-instance-method">
-      <div class="signature">
-        
-        def <strong>ignore_macros?</strong> : Bool
-
-        <a class="method-permalink" href="#ignore_macros%3F%3ABool-instance-method">#</a>
-      </div>
-      
-      <br/>
-      <div>
-        
-      </div>
-    </div>
-  
-    <div class="entry-detail" id="ignore_modules=(ignore_modules:Bool)-instance-method">
-      <div class="signature">
-        
-        def <strong>ignore_modules=</strong>(ignore_modules : Bool)
-
-        <a class="method-permalink" href="#ignore_modules%3D%28ignore_modules%3ABool%29-instance-method">#</a>
-      </div>
-      
-      <br/>
-      <div>
-        
-      </div>
-    </div>
-  
-    <div class="entry-detail" id="ignore_modules?:Bool-instance-method">
-      <div class="signature">
-        
-        def <strong>ignore_modules?</strong> : Bool
-
-        <a class="method-permalink" href="#ignore_modules%3F%3ABool-instance-method">#</a>
-      </div>
-      
-      <br/>
-      <div>
-        
-      </div>
-    </div>
-  
     <div class="entry-detail" id="severity:Ameba::Severity-instance-method">
       <div class="signature">
         
@@ -1639,86 +1469,6 @@ modules, classes, enums, methods and macros.</p>
       </div>
     </div>
   
-    <div class="entry-detail" id="test(source,node:Crystal::ClassDef,scope:AST::Scope)-instance-method">
-      <div class="signature">
-        
-        def <strong>test</strong>(source, node : Crystal::ClassDef, scope : <a href="../../../Ameba/AST/Scope.html">AST::Scope</a>)
-
-        <a class="method-permalink" href="#test%28source%2Cnode%3ACrystal%3A%3AClassDef%2Cscope%3AAST%3A%3AScope%29-instance-method">#</a>
-      </div>
-      
-      <br/>
-      <div>
-        
-          [<a href="https://github.com/crystal-ameba/ameba/blob/bcb72fb/src/ameba/rule/lint/documentation.cr#L43" target="_blank">View source</a>]
-        
-      </div>
-    </div>
-  
-    <div class="entry-detail" id="test(source,node:Crystal::ModuleDef,scope:AST::Scope)-instance-method">
-      <div class="signature">
-        
-        def <strong>test</strong>(source, node : Crystal::ModuleDef, scope : <a href="../../../Ameba/AST/Scope.html">AST::Scope</a>)
-
-        <a class="method-permalink" href="#test%28source%2Cnode%3ACrystal%3A%3AModuleDef%2Cscope%3AAST%3A%3AScope%29-instance-method">#</a>
-      </div>
-      
-      <br/>
-      <div>
-        
-          [<a href="https://github.com/crystal-ameba/ameba/blob/bcb72fb/src/ameba/rule/lint/documentation.cr#L47" target="_blank">View source</a>]
-        
-      </div>
-    </div>
-  
-    <div class="entry-detail" id="test(source,node:Crystal::EnumDef,scope:AST::Scope)-instance-method">
-      <div class="signature">
-        
-        def <strong>test</strong>(source, node : Crystal::EnumDef, scope : <a href="../../../Ameba/AST/Scope.html">AST::Scope</a>)
-
-        <a class="method-permalink" href="#test%28source%2Cnode%3ACrystal%3A%3AEnumDef%2Cscope%3AAST%3A%3AScope%29-instance-method">#</a>
-      </div>
-      
-      <br/>
-      <div>
-        
-          [<a href="https://github.com/crystal-ameba/ameba/blob/bcb72fb/src/ameba/rule/lint/documentation.cr#L51" target="_blank">View source</a>]
-        
-      </div>
-    </div>
-  
-    <div class="entry-detail" id="test(source,node:Crystal::Def,scope:AST::Scope)-instance-method">
-      <div class="signature">
-        
-        def <strong>test</strong>(source, node : Crystal::Def, scope : <a href="../../../Ameba/AST/Scope.html">AST::Scope</a>)
-
-        <a class="method-permalink" href="#test%28source%2Cnode%3ACrystal%3A%3ADef%2Cscope%3AAST%3A%3AScope%29-instance-method">#</a>
-      </div>
-      
-      <br/>
-      <div>
-        
-          [<a href="https://github.com/crystal-ameba/ameba/blob/bcb72fb/src/ameba/rule/lint/documentation.cr#L55" target="_blank">View source</a>]
-        
-      </div>
-    </div>
-  
-    <div class="entry-detail" id="test(source,node:Crystal::Macro,scope:AST::Scope)-instance-method">
-      <div class="signature">
-        
-        def <strong>test</strong>(source, node : Crystal::Macro, scope : <a href="../../../Ameba/AST/Scope.html">AST::Scope</a>)
-
-        <a class="method-permalink" href="#test%28source%2Cnode%3ACrystal%3A%3AMacro%2Cscope%3AAST%3A%3AScope%29-instance-method">#</a>
-      </div>
-      
-      <br/>
-      <div>
-        
-          [<a href="https://github.com/crystal-ameba/ameba/blob/bcb72fb/src/ameba/rule/lint/documentation.cr#L59" target="_blank">View source</a>]
-        
-      </div>
-    </div>
-  
     <div class="entry-detail" id="test(source)-instance-method">
       <div class="signature">
         
@@ -1730,7 +1480,35 @@ modules, classes, enums, methods and macros.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/bcb72fb/src/ameba/rule/lint/documentation.cr#L39" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/881209d/src/ameba/rule/documentation/documentation_admonition.cr#L51" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="timezone:String-instance-method">
+      <div class="signature">
+        
+        def <strong>timezone</strong> : String
+
+        <a class="method-permalink" href="#timezone%3AString-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="timezone=(timezone:String)-instance-method">
+      <div class="signature">
+        
+        def <strong>timezone=</strong>(timezone : String)
+
+        <a class="method-permalink" href="#timezone%3D%28timezone%3AString%29-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
         
       </div>
     </div>
