@@ -14,7 +14,7 @@
 <script type="text/javascript" src="../../../js/doc.js"></script>
 
   <meta name="repository-name" content="ameba">
-  <title>Ameba::Rule::Lint::ShadowingOuterLocalVar - ameba master</title>
+  <title>Ameba::Rule::Naming::AccessorMethodName - ameba master</title>
   <script type="text/javascript">
     CrystalDocs.base_path = "../../../";
   </script>
@@ -362,7 +362,7 @@
       
     </li>
   
-  <li class="parent open current" data-id="ameba/Ameba/Rule/Lint" data-name="ameba::rule::lint">
+  <li class="parent " data-id="ameba/Ameba/Rule/Lint" data-name="ameba::rule::lint">
       <a href="../../../Ameba/Rule/Lint.html">Lint</a>
       
         <ul>
@@ -492,7 +492,7 @@
       
     </li>
   
-  <li class=" current" data-id="ameba/Ameba/Rule/Lint/ShadowingOuterLocalVar" data-name="ameba::rule::lint::shadowingouterlocalvar">
+  <li class=" " data-id="ameba/Ameba/Rule/Lint/ShadowingOuterLocalVar" data-name="ameba::rule::lint::shadowingouterlocalvar">
       <a href="../../../Ameba/Rule/Lint/ShadowingOuterLocalVar.html">ShadowingOuterLocalVar</a>
       
     </li>
@@ -567,12 +567,12 @@
       
     </li>
   
-  <li class="parent " data-id="ameba/Ameba/Rule/Naming" data-name="ameba::rule::naming">
+  <li class="parent open current" data-id="ameba/Ameba/Rule/Naming" data-name="ameba::rule::naming">
       <a href="../../../Ameba/Rule/Naming.html">Naming</a>
       
         <ul>
   
-  <li class=" " data-id="ameba/Ameba/Rule/Naming/AccessorMethodName" data-name="ameba::rule::naming::accessormethodname">
+  <li class=" current" data-id="ameba/Ameba/Rule/Naming/AccessorMethodName" data-name="ameba::rule::naming::accessormethodname">
       <a href="../../../Ameba/Rule/Naming/AccessorMethodName.html">AccessorMethodName</a>
       
     </li>
@@ -856,12 +856,12 @@
 <div class="main-content">
 <h1 class="type-name">
 
-  <span class="kind">class</span> Ameba::<wbr>Rule::<wbr>Lint::<wbr>ShadowingOuterLocalVar
+  <span class="kind">class</span> Ameba::<wbr>Rule::<wbr>Naming::<wbr>AccessorMethodName
 
 </h1>
 
 
-  <ul class="superclass-hierarchy"><li class="superclass"><a href="../../../Ameba/Rule/Lint/ShadowingOuterLocalVar.html">Ameba::Rule::Lint::ShadowingOuterLocalVar</a></li><li class="superclass"><a href="../../../Ameba/Rule/Base.html">Ameba::Rule::Base</a></li><li class="superclass">Reference</li><li class="superclass">Object</li></ul>
+  <ul class="superclass-hierarchy"><li class="superclass"><a href="../../../Ameba/Rule/Naming/AccessorMethodName.html">Ameba::Rule::Naming::AccessorMethodName</a></li><li class="superclass"><a href="../../../Ameba/Rule/Base.html">Ameba::Rule::Base</a></li><li class="superclass">Reference</li><li class="superclass">Object</li></ul>
 
 
 
@@ -875,24 +875,29 @@
     Overview
   </h2>
 
-  <p>A rule that disallows the usage of the same name as outer local variables
-for block or proc arguments.</p>
-<p>For example, this is considered incorrect:</p>
-<pre><code class="language-crystal"><span class="k">def</span> <span class="m">some_method</span>
-  foo <span class="o">=</span> <span class="n">1</span>
+  <p>A rule that makes sure that accessor methods are named properly.</p>
+<p>Favour this:</p>
+<pre><code class="language-crystal"><span class="k">class</span> <span class="t">Foo</span>
+  <span class="k">def</span> <span class="m">user</span>
+    @user
+  <span class="k">end</span>
 
-  <span class="n">3</span>.times <span class="k">do</span> <span class="o">|</span>foo<span class="o">|</span> <span class="c"># shadowing outer `foo`</span>
+  <span class="k">def</span> <span class="m">user</span><span class="o">=</span>(value)
+    @user <span class="o">=</span> value
   <span class="k">end</span>
 <span class="k">end</span></code></pre>
-<p>and should be written as:</p>
-<pre><code class="language-crystal"><span class="k">def</span> <span class="m">some_method</span>
-  foo <span class="o">=</span> <span class="n">1</span>
+<p>Over this:</p>
+<pre><code class="language-crystal"><span class="k">class</span> <span class="t">Foo</span>
+  <span class="k">def</span> <span class="m">get_user</span>
+    @user
+  <span class="k">end</span>
 
-  <span class="n">3</span>.times <span class="k">do</span> <span class="o">|</span>bar<span class="o">|</span>
+  <span class="k">def</span> <span class="m">set_user</span>(value)
+    @user <span class="o">=</span> value
   <span class="k">end</span>
 <span class="k">end</span></code></pre>
 <p>YAML configuration example:</p>
-<pre><code class="language-crystal"><span class="t">Lint</span><span class="o">/</span><span class="t">ShadowingOuterLocalVar</span>:
+<pre><code class="language-crystal"><span class="t">Naming</span><span class="o">/</span><span class="t">AccessorMethodName</span>:
   <span class="t">Enabled</span>: <span class="n">true</span></code></pre>
 
 
@@ -908,6 +913,8 @@ for block or proc arguments.</p>
     Included Modules
   </h2>
   <ul class="other-types-list">
+    
+      <li class="other-type"><a href="../../../Ameba/AST/Util.html">Ameba::AST::Util</a></li>
     
       <li class="other-type">YAML::Serializable</li>
     
@@ -934,8 +941,8 @@ for block or proc arguments.</p>
   </h2>
   
     
-      <a href="https://github.com/crystal-ameba/ameba/blob/cc23e7a/src/ameba/rule/lint/shadowing_outer_local_var.cr#L33" target="_blank">
-        ameba/rule/lint/shadowing_outer_local_var.cr
+      <a href="https://github.com/crystal-ameba/ameba/blob/cc23e7a/src/ameba/rule/naming/accessor_method_name.cr#L38" target="_blank">
+        ameba/rule/naming/accessor_method_name.cr
       </a>
     
     <br/>
@@ -956,7 +963,7 @@ for block or proc arguments.</p>
   <dl>
     
       <dt class="entry-const" id="MSG">
-        <strong>MSG</strong> = <code><span class="s">&quot;Shadowing outer local variable `%s`&quot;</span></code>
+        <strong>MSG</strong> = <code><span class="s">&quot;Favour method name &#39;%s&#39; over &#39;%s&#39;&quot;</span></code>
       </dt>
       
     
@@ -982,7 +989,7 @@ for block or proc arguments.</p>
       <li class="entry-summary">
         <a href="#new%28config%3Dnil%29-class-method" class="signature"><strong>.new</strong>(config = <span class="n">nil</span>)</a>
         
-          <div class="summary"><p>A rule that disallows the usage of the same name as outer local variables for block or proc arguments.</p></div>
+          <div class="summary"><p>A rule that makes sure that accessor methods are named properly.</p></div>
         
       </li>
     
@@ -1062,12 +1069,12 @@ for block or proc arguments.</p>
       </li>
     
       <li class="entry-summary">
-        <a href="#test%28source%2Cnode%3ACrystal%3A%3AProcLiteral%7CCrystal%3A%3ABlock%2Cscope%3AAST%3A%3AScope%29-instance-method" class="signature"><strong>#test</strong>(source, node : Crystal::ProcLiteral | Crystal::Block, scope : AST::Scope)</a>
+        <a href="#test%28source%2Cnode%3ACrystal%3A%3AClassDef%7CCrystal%3A%3AModuleDef%29-instance-method" class="signature"><strong>#test</strong>(source, node : Crystal::ClassDef | Crystal::ModuleDef)</a>
         
       </li>
     
       <li class="entry-summary">
-        <a href="#test%28source%29-instance-method" class="signature"><strong>#test</strong>(source)</a>
+        <a href="#test%28source%2Cnode%3ACrystal%3A%3ADef%29-instance-method" class="signature"><strong>#test</strong>(source, node : Crystal::Def)</a>
         
       </li>
     
@@ -1078,6 +1085,100 @@ for block or proc arguments.</p>
 
 
 <div class="methods-inherited">
+  
+    
+
+  <h3>Instance methods inherited from module <code><a href="../../../Ameba/AST/Util.html">Ameba::AST::Util</a></code></h3>
+  
+  
+    <a href="../../../Ameba/AST/Util.html#abort%3F%28node%29-instance-method" class="tooltip">
+      <span>abort?(node)</span>
+    abort?</a>, 
+    
+  
+    <a href="../../../Ameba/AST/Util.html#control_exp_code%28node%3ACrystal%3A%3AControlExpression%2Ccode_lines%29-instance-method" class="tooltip">
+      <span>control_exp_code(node : Crystal::ControlExpression, code_lines)</span>
+    control_exp_code</a>, 
+    
+  
+    <a href="../../../Ameba/AST/Util.html#dynamic_literal%3F%28node%29%3ABool-instance-method" class="tooltip">
+      <span>dynamic_literal?(node) : Bool</span>
+    dynamic_literal?</a>, 
+    
+  
+    <a href="../../../Ameba/AST/Util.html#exit%3F%28node%29-instance-method" class="tooltip">
+      <span>exit?(node)</span>
+    exit?</a>, 
+    
+  
+    <a href="../../../Ameba/AST/Util.html#flow_command%3F%28node%2Cin_loop%29-instance-method" class="tooltip">
+      <span>flow_command?(node, in_loop)</span>
+    flow_command?</a>, 
+    
+  
+    <a href="../../../Ameba/AST/Util.html#flow_expression%3F%28node%2Cin_loop%3Dfalse%29-instance-method" class="tooltip">
+      <span>flow_expression?(node, in_loop = <span class="n">false</span>)</span>
+    flow_expression?</a>, 
+    
+  
+    <a href="../../../Ameba/AST/Util.html#literal%3F%28node%29%3ABool-instance-method" class="tooltip">
+      <span>literal?(node) : Bool</span>
+    literal?</a>, 
+    
+  
+    <a href="../../../Ameba/AST/Util.html#loop%3F%28node%29-instance-method" class="tooltip">
+      <span>loop?(node)</span>
+    loop?</a>, 
+    
+  
+    <a href="../../../Ameba/AST/Util.html#name_end_location%28node%29-instance-method" class="tooltip">
+      <span>name_end_location(node)</span>
+    name_end_location</a>, 
+    
+  
+    <a href="../../../Ameba/AST/Util.html#name_location%28node%29-instance-method" class="tooltip">
+      <span>name_location(node)</span>
+    name_location</a>, 
+    
+  
+    <a href="../../../Ameba/AST/Util.html#name_size%28node%29-instance-method" class="tooltip">
+      <span>name_size(node)</span>
+    name_size</a>, 
+    
+  
+    <a href="../../../Ameba/AST/Util.html#node_source%28node%2Ccode_lines%29-instance-method" class="tooltip">
+      <span>node_source(node, code_lines)</span>
+    node_source</a>, 
+    
+  
+    <a href="../../../Ameba/AST/Util.html#path_named%3F%28node%2Cname%29%3ABool-instance-method" class="tooltip">
+      <span>path_named?(node, name) : Bool</span>
+    path_named?</a>, 
+    
+  
+    <a href="../../../Ameba/AST/Util.html#raise%3F%28node%29-instance-method" class="tooltip">
+      <span>raise?(node)</span>
+    raise?</a>, 
+    
+  
+    <a href="../../../Ameba/AST/Util.html#source_between%28loc%2Cend_loc%2Ccode_lines%29%3AString%7CNil-instance-method" class="tooltip">
+      <span>source_between(loc, end_loc, code_lines) : String | Nil</span>
+    source_between</a>, 
+    
+  
+    <a href="../../../Ameba/AST/Util.html#static_literal%3F%28node%29%3ABool-instance-method" class="tooltip">
+      <span>static_literal?(node) : Bool</span>
+    static_literal?</a>
+    
+  
+
+
+    
+
+
+    
+
+
   
     
 
@@ -1228,31 +1329,36 @@ for block or proc arguments.</p>
       
         <div class="doc">
           
-          <p>A rule that disallows the usage of the same name as outer local variables
-for block or proc arguments.</p>
-<p>For example, this is considered incorrect:</p>
-<pre><code class="language-crystal"><span class="k">def</span> <span class="m">some_method</span>
-  foo <span class="o">=</span> <span class="n">1</span>
+          <p>A rule that makes sure that accessor methods are named properly.</p>
+<p>Favour this:</p>
+<pre><code class="language-crystal"><span class="k">class</span> <span class="t">Foo</span>
+  <span class="k">def</span> <span class="m">user</span>
+    @user
+  <span class="k">end</span>
 
-  <span class="n">3</span>.times <span class="k">do</span> <span class="o">|</span>foo<span class="o">|</span> <span class="c"># shadowing outer `foo`</span>
+  <span class="k">def</span> <span class="m">user</span><span class="o">=</span>(value)
+    @user <span class="o">=</span> value
   <span class="k">end</span>
 <span class="k">end</span></code></pre>
-<p>and should be written as:</p>
-<pre><code class="language-crystal"><span class="k">def</span> <span class="m">some_method</span>
-  foo <span class="o">=</span> <span class="n">1</span>
+<p>Over this:</p>
+<pre><code class="language-crystal"><span class="k">class</span> <span class="t">Foo</span>
+  <span class="k">def</span> <span class="m">get_user</span>
+    @user
+  <span class="k">end</span>
 
-  <span class="n">3</span>.times <span class="k">do</span> <span class="o">|</span>bar<span class="o">|</span>
+  <span class="k">def</span> <span class="m">set_user</span>(value)
+    @user <span class="o">=</span> value
   <span class="k">end</span>
 <span class="k">end</span></code></pre>
 <p>YAML configuration example:</p>
-<pre><code class="language-crystal"><span class="t">Lint</span><span class="o">/</span><span class="t">ShadowingOuterLocalVar</span>:
+<pre><code class="language-crystal"><span class="t">Naming</span><span class="o">/</span><span class="t">AccessorMethodName</span>:
   <span class="t">Enabled</span>: <span class="n">true</span></code></pre>
         </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/cc23e7a/src/ameba/rule/lint/shadowing_outer_local_var.cr#L33" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/cc23e7a/src/ameba/rule/naming/accessor_method_name.cr#L38" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1422,34 +1528,34 @@ for block or proc arguments.</p>
       </div>
     </div>
   
-    <div class="entry-detail" id="test(source,node:Crystal::ProcLiteral|Crystal::Block,scope:AST::Scope)-instance-method">
+    <div class="entry-detail" id="test(source,node:Crystal::ClassDef|Crystal::ModuleDef)-instance-method">
       <div class="signature">
         
-        def <strong>test</strong>(source, node : Crystal::ProcLiteral | Crystal::Block, scope : <a href="../../../Ameba/AST/Scope.html">AST::Scope</a>)
+        def <strong>test</strong>(source, node : Crystal::ClassDef | Crystal::ModuleDef)
 
-        <a class="method-permalink" href="#test%28source%2Cnode%3ACrystal%3A%3AProcLiteral%7CCrystal%3A%3ABlock%2Cscope%3AAST%3A%3AScope%29-instance-method">#</a>
+        <a class="method-permalink" href="#test%28source%2Cnode%3ACrystal%3A%3AClassDef%7CCrystal%3A%3AModuleDef%29-instance-method">#</a>
       </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/cc23e7a/src/ameba/rule/lint/shadowing_outer_local_var.cr#L48" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/cc23e7a/src/ameba/rule/naming/accessor_method_name.cr#L47" target="_blank">View source</a>]
         
       </div>
     </div>
   
-    <div class="entry-detail" id="test(source)-instance-method">
+    <div class="entry-detail" id="test(source,node:Crystal::Def)-instance-method">
       <div class="signature">
         
-        def <strong>test</strong>(source)
+        def <strong>test</strong>(source, node : Crystal::Def)
 
-        <a class="method-permalink" href="#test%28source%29-instance-method">#</a>
+        <a class="method-permalink" href="#test%28source%2Cnode%3ACrystal%3A%3ADef%29-instance-method">#</a>
       </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/cc23e7a/src/ameba/rule/lint/shadowing_outer_local_var.cr#L41" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/cc23e7a/src/ameba/rule/naming/accessor_method_name.cr#L63" target="_blank">View source</a>]
         
       </div>
     </div>
