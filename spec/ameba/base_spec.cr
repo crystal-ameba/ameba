@@ -12,6 +12,7 @@ module Ameba::Rule
       it "contains rules across all the available groups" do
         Rule.rules.map(&.group_name).uniq!.reject!(&.empty?).sort.should eq %w(
           Ameba
+          Documentation
           Layout
           Lint
           Metrics

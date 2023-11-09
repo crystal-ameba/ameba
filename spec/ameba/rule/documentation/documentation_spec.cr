@@ -1,6 +1,6 @@
 require "../../../spec_helper"
 
-module Ameba::Rule::Lint
+module Ameba::Rule::Documentation
   subject = Documentation.new
     .tap(&.ignore_classes = false)
     .tap(&.ignore_modules = false)

@@ -1,4 +1,4 @@
-Lint/DocumentationAdmonition:
+Documentation/DocumentationAdmonition:
   Timezone: UTC
   Admonitions: [FIXME, BUG]
 
