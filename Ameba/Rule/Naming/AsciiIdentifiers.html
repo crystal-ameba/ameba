@@ -14,7 +14,7 @@
 <script type="text/javascript" src="../../../js/doc.js"></script>
 
   <meta name="repository-name" content="ameba">
-  <title>Ameba::Rule::Lint::UnreachableCode - ameba master</title>
+  <title>Ameba::Rule::Naming::AsciiIdentifiers - ameba master</title>
   <script type="text/javascript">
     CrystalDocs.base_path = "../../../";
   </script>
@@ -362,7 +362,7 @@
       
     </li>
   
-  <li class="parent open current" data-id="ameba/Ameba/Rule/Lint" data-name="ameba::rule::lint">
+  <li class="parent " data-id="ameba/Ameba/Rule/Lint" data-name="ameba::rule::lint">
       <a href="../../../Ameba/Rule/Lint.html">Lint</a>
       
         <ul>
@@ -522,7 +522,7 @@
       
     </li>
   
-  <li class=" current" data-id="ameba/Ameba/Rule/Lint/UnreachableCode" data-name="ameba::rule::lint::unreachablecode">
+  <li class=" " data-id="ameba/Ameba/Rule/Lint/UnreachableCode" data-name="ameba::rule::lint::unreachablecode">
       <a href="../../../Ameba/Rule/Lint/UnreachableCode.html">UnreachableCode</a>
       
     </li>
@@ -567,7 +567,7 @@
       
     </li>
   
-  <li class="parent " data-id="ameba/Ameba/Rule/Naming" data-name="ameba::rule::naming">
+  <li class="parent open current" data-id="ameba/Ameba/Rule/Naming" data-name="ameba::rule::naming">
       <a href="../../../Ameba/Rule/Naming.html">Naming</a>
       
         <ul>
@@ -577,7 +577,7 @@
       
     </li>
   
-  <li class=" " data-id="ameba/Ameba/Rule/Naming/AsciiIdentifiers" data-name="ameba::rule::naming::asciiidentifiers">
+  <li class=" current" data-id="ameba/Ameba/Rule/Naming/AsciiIdentifiers" data-name="ameba::rule::naming::asciiidentifiers">
       <a href="../../../Ameba/Rule/Naming/AsciiIdentifiers.html">AsciiIdentifiers</a>
       
     </li>
@@ -861,12 +861,12 @@
 <div class="main-content">
 <h1 class="type-name">
 
-  <span class="kind">class</span> Ameba::<wbr>Rule::<wbr>Lint::<wbr>UnreachableCode
+  <span class="kind">class</span> Ameba::<wbr>Rule::<wbr>Naming::<wbr>AsciiIdentifiers
 
 </h1>
 
 
-  <ul class="superclass-hierarchy"><li class="superclass"><a href="../../../Ameba/Rule/Lint/UnreachableCode.html">Ameba::Rule::Lint::UnreachableCode</a></li><li class="superclass"><a href="../../../Ameba/Rule/Base.html">Ameba::Rule::Base</a></li><li class="superclass">Reference</li><li class="superclass">Object</li></ul>
+  <ul class="superclass-hierarchy"><li class="superclass"><a href="../../../Ameba/Rule/Naming/AsciiIdentifiers.html">Ameba::Rule::Naming::AsciiIdentifiers</a></li><li class="superclass"><a href="../../../Ameba/Rule/Base.html">Ameba::Rule::Base</a></li><li class="superclass">Reference</li><li class="superclass">Object</li></ul>
 
 
 
@@ -880,29 +880,15 @@
     Overview
   </h2>
 
-  <p>A rule that reports unreachable code.</p>
-<p>For example, this is considered invalid:</p>
-<pre><code class="language-crystal"><span class="k">def</span> <span class="m">method</span>(a)
-  <span class="k">return</span> <span class="n">42</span>
-  a <span class="o">+</span> <span class="n">1</span>
+  <p>A rule that reports non-ascii characters in identifiers.</p>
+<p>Favour this:</p>
+<pre><code class="language-crystal"><span class="k">class</span> <span class="t">BigAwesomeWolf</span>
 <span class="k">end</span></code></pre>
-<pre><code class="language-crystal">a <span class="o">=</span> <span class="n">1</span>
-loop <span class="k">do</span>
-  <span class="k">break</span>
-  a <span class="o">+=</span> <span class="n">1</span>
-<span class="k">end</span></code></pre>
-<p>And has to be written as the following:</p>
-<pre><code class="language-crystal"><span class="k">def</span> <span class="m">method</span>(a)
-  <span class="k">return</span> <span class="n">42</span> <span class="k">if</span> a <span class="o">==</span> <span class="n">0</span>
-  a <span class="o">+</span> <span class="n">1</span>
-<span class="k">end</span></code></pre>
-<pre><code class="language-crystal">a <span class="o">=</span> <span class="n">1</span>
-loop <span class="k">do</span>
-  <span class="k">break</span> a <span class="o">&gt;</span> <span class="n">3</span>
-  a <span class="o">+=</span> <span class="n">1</span>
+<p>Over this:</p>
+<pre><code class="language-crystal"><span class="k">class</span> <span class="t">BigAwesome🐺</span>
 <span class="k">end</span></code></pre>
 <p>YAML configuration example:</p>
-<pre><code class="language-crystal"><span class="t">Lint</span><span class="o">/</span><span class="t">UnreachableCode</span>:
+<pre><code class="language-crystal"><span class="t">Naming</span><span class="o">/</span><span class="t">AsciiIdentifiers</span>:
   <span class="t">Enabled</span>: <span class="n">true</span></code></pre>
 
 
@@ -946,8 +932,8 @@ loop <span class="k">do</span>
   </h2>
   
     
-      <a href="https://github.com/crystal-ameba/ameba/blob/0abb73f/src/ameba/rule/lint/unreachable_code.cr#L44" target="_blank">
-        ameba/rule/lint/unreachable_code.cr
+      <a href="https://github.com/crystal-ameba/ameba/blob/0abb73f/src/ameba/rule/naming/ascii_identifiers.cr#L24" target="_blank">
+        ameba/rule/naming/ascii_identifiers.cr
       </a>
     
     <br/>
@@ -968,7 +954,7 @@ loop <span class="k">do</span>
   <dl>
     
       <dt class="entry-const" id="MSG">
-        <strong>MSG</strong> = <code><span class="s">&quot;Unreachable code detected&quot;</span></code>
+        <strong>MSG</strong> = <code><span class="s">&quot;Identifier contains non-ascii characters&quot;</span></code>
       </dt>
       
     
@@ -994,7 +980,7 @@ loop <span class="k">do</span>
       <li class="entry-summary">
         <a href="#new%28config%3Dnil%29-class-method" class="signature"><strong>.new</strong>(config = <span class="n">nil</span>)</a>
         
-          <div class="summary"><p>A rule that reports unreachable code.</p></div>
+          <div class="summary"><p>A rule that reports non-ascii characters in identifiers.</p></div>
         
       </li>
     
@@ -1074,12 +1060,27 @@ loop <span class="k">do</span>
       </li>
     
       <li class="entry-summary">
-        <a href="#test%28source%2Cnode%2Cflow_expression%3AAST%3A%3AFlowExpression%29-instance-method" class="signature"><strong>#test</strong>(source, node, flow_expression : AST::FlowExpression)</a>
+        <a href="#test%28source%2Cnode%3ACrystal%3A%3AAssign%29-instance-method" class="signature"><strong>#test</strong>(source, node : Crystal::Assign)</a>
         
       </li>
     
       <li class="entry-summary">
-        <a href="#test%28source%29-instance-method" class="signature"><strong>#test</strong>(source)</a>
+        <a href="#test%28source%2Cnode%3ACrystal%3A%3AMultiAssign%29-instance-method" class="signature"><strong>#test</strong>(source, node : Crystal::MultiAssign)</a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#test%28source%2Cnode%3ACrystal%3A%3ADef%29-instance-method" class="signature"><strong>#test</strong>(source, node : Crystal::Def)</a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#test%28source%2Cnode%3ACrystal%3A%3AClassVar%7CCrystal%3A%3AInstanceVar%7CCrystal%3A%3AVar%7CCrystal%3A%3AAlias%29-instance-method" class="signature"><strong>#test</strong>(source, node : Crystal::ClassVar | Crystal::InstanceVar | Crystal::Var | Crystal::Alias)</a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#test%28source%2Cnode%3ACrystal%3A%3AClassDef%7CCrystal%3A%3AModuleDef%7CCrystal%3A%3AEnumDef%7CCrystal%3A%3ALibDef%29-instance-method" class="signature"><strong>#test</strong>(source, node : Crystal::ClassDef | Crystal::ModuleDef | Crystal::EnumDef | Crystal::LibDef)</a>
         
       </li>
     
@@ -1334,36 +1335,22 @@ loop <span class="k">do</span>
       
         <div class="doc">
           
-          <p>A rule that reports unreachable code.</p>
-<p>For example, this is considered invalid:</p>
-<pre><code class="language-crystal"><span class="k">def</span> <span class="m">method</span>(a)
-  <span class="k">return</span> <span class="n">42</span>
-  a <span class="o">+</span> <span class="n">1</span>
+          <p>A rule that reports non-ascii characters in identifiers.</p>
+<p>Favour this:</p>
+<pre><code class="language-crystal"><span class="k">class</span> <span class="t">BigAwesomeWolf</span>
 <span class="k">end</span></code></pre>
-<pre><code class="language-crystal">a <span class="o">=</span> <span class="n">1</span>
-loop <span class="k">do</span>
-  <span class="k">break</span>
-  a <span class="o">+=</span> <span class="n">1</span>
-<span class="k">end</span></code></pre>
-<p>And has to be written as the following:</p>
-<pre><code class="language-crystal"><span class="k">def</span> <span class="m">method</span>(a)
-  <span class="k">return</span> <span class="n">42</span> <span class="k">if</span> a <span class="o">==</span> <span class="n">0</span>
-  a <span class="o">+</span> <span class="n">1</span>
-<span class="k">end</span></code></pre>
-<pre><code class="language-crystal">a <span class="o">=</span> <span class="n">1</span>
-loop <span class="k">do</span>
-  <span class="k">break</span> a <span class="o">&gt;</span> <span class="n">3</span>
-  a <span class="o">+=</span> <span class="n">1</span>
+<p>Over this:</p>
+<pre><code class="language-crystal"><span class="k">class</span> <span class="t">BigAwesome🐺</span>
 <span class="k">end</span></code></pre>
 <p>YAML configuration example:</p>
-<pre><code class="language-crystal"><span class="t">Lint</span><span class="o">/</span><span class="t">UnreachableCode</span>:
+<pre><code class="language-crystal"><span class="t">Naming</span><span class="o">/</span><span class="t">AsciiIdentifiers</span>:
   <span class="t">Enabled</span>: <span class="n">true</span></code></pre>
         </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/0abb73f/src/ameba/rule/lint/unreachable_code.cr#L44" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/0abb73f/src/ameba/rule/naming/ascii_identifiers.cr#L24" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1533,34 +1520,82 @@ loop <span class="k">do</span>
       </div>
     </div>
   
-    <div class="entry-detail" id="test(source,node,flow_expression:AST::FlowExpression)-instance-method">
+    <div class="entry-detail" id="test(source,node:Crystal::Assign)-instance-method">
       <div class="signature">
         
-        def <strong>test</strong>(source, node, flow_expression : <a href="../../../Ameba/AST/FlowExpression.html">AST::FlowExpression</a>)
+        def <strong>test</strong>(source, node : Crystal::Assign)
 
-        <a class="method-permalink" href="#test%28source%2Cnode%2Cflow_expression%3AAST%3A%3AFlowExpression%29-instance-method">#</a>
+        <a class="method-permalink" href="#test%28source%2Cnode%3ACrystal%3A%3AAssign%29-instance-method">#</a>
       </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/0abb73f/src/ameba/rule/lint/unreachable_code.cr#L57" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/0abb73f/src/ameba/rule/naming/ascii_identifiers.cr#L33" target="_blank">View source</a>]
         
       </div>
     </div>
   
-    <div class="entry-detail" id="test(source)-instance-method">
+    <div class="entry-detail" id="test(source,node:Crystal::MultiAssign)-instance-method">
       <div class="signature">
         
-        def <strong>test</strong>(source)
+        def <strong>test</strong>(source, node : Crystal::MultiAssign)
 
-        <a class="method-permalink" href="#test%28source%29-instance-method">#</a>
+        <a class="method-permalink" href="#test%28source%2Cnode%3ACrystal%3A%3AMultiAssign%29-instance-method">#</a>
       </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/0abb73f/src/ameba/rule/lint/unreachable_code.cr#L53" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/0abb73f/src/ameba/rule/naming/ascii_identifiers.cr#L39" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="test(source,node:Crystal::Def)-instance-method">
+      <div class="signature">
+        
+        def <strong>test</strong>(source, node : Crystal::Def)
+
+        <a class="method-permalink" href="#test%28source%2Cnode%3ACrystal%3A%3ADef%29-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/crystal-ameba/ameba/blob/0abb73f/src/ameba/rule/naming/ascii_identifiers.cr#L45" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="test(source,node:Crystal::ClassVar|Crystal::InstanceVar|Crystal::Var|Crystal::Alias)-instance-method">
+      <div class="signature">
+        
+        def <strong>test</strong>(source, node : Crystal::ClassVar | Crystal::InstanceVar | Crystal::Var | Crystal::Alias)
+
+        <a class="method-permalink" href="#test%28source%2Cnode%3ACrystal%3A%3AClassVar%7CCrystal%3A%3AInstanceVar%7CCrystal%3A%3AVar%7CCrystal%3A%3AAlias%29-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/crystal-ameba/ameba/blob/0abb73f/src/ameba/rule/naming/ascii_identifiers.cr#L53" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="test(source,node:Crystal::ClassDef|Crystal::ModuleDef|Crystal::EnumDef|Crystal::LibDef)-instance-method">
+      <div class="signature">
+        
+        def <strong>test</strong>(source, node : Crystal::ClassDef | Crystal::ModuleDef | Crystal::EnumDef | Crystal::LibDef)
+
+        <a class="method-permalink" href="#test%28source%2Cnode%3ACrystal%3A%3AClassDef%7CCrystal%3A%3AModuleDef%7CCrystal%3A%3AEnumDef%7CCrystal%3A%3ALibDef%29-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/crystal-ameba/ameba/blob/0abb73f/src/ameba/rule/naming/ascii_identifiers.cr#L57" target="_blank">View source</a>]
         
       </div>
     </div>
