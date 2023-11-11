@@ -136,7 +136,7 @@ module Ameba::AST
       case assign
       when Crystal::Assign           then eql?(assign.target)
       when Crystal::OpAssign         then eql?(assign.target)
-      when Crystal::MultiAssign      then assign.targets.any? { |t| eql?(t) }
+      when Crystal::MultiAssign      then assign.targets.any? { |target| eql?(target) }
       when Crystal::UninitializedVar then eql?(assign.var)
       else
         false

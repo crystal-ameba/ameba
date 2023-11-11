@@ -21,8 +21,8 @@ module Ameba::AST::Util
         static_literal?(node.to)}
     when Crystal::ArrayLiteral,
          Crystal::TupleLiteral
-      {true, node.elements.all? do |el|
-        static_literal?(el)
+      {true, node.elements.all? do |element|
+        static_literal?(element)
       end}
     when Crystal::HashLiteral
       {true, node.entries.all? do |entry|

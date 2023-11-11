@@ -43,7 +43,7 @@ module Ameba::AST
     end
 
     private def traverse_case(node)
-      node.whens.each { |n| traverse_node n.body }
+      node.whens.each { |when_node| traverse_node when_node.body }
       traverse_node(node.else)
     end
 
@@ -54,7 +54,7 @@ module Ameba::AST
     private def traverse_exception_handler(node)
       traverse_node node.body
       traverse_node node.else
-      node.rescues.try &.each { |n| traverse_node n.body }
+      node.rescues.try &.each { |rescue_node| traverse_node rescue_node.body }
     end
   end
 end
