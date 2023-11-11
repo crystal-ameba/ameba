@@ -14,7 +14,7 @@
 <script type="text/javascript" src="../../../js/doc.js"></script>
 
   <meta name="repository-name" content="ameba">
-  <title>Ameba::Rule::Lint::DuplicatedRequire - ameba master</title>
+  <title>Ameba::Rule::Lint::SpecFilename - ameba master</title>
   <script type="text/javascript">
     CrystalDocs.base_path = "../../../";
   </script>
@@ -392,7 +392,7 @@
       
     </li>
   
-  <li class=" current" data-id="ameba/Ameba/Rule/Lint/DuplicatedRequire" data-name="ameba::rule::lint::duplicatedrequire">
+  <li class=" " data-id="ameba/Ameba/Rule/Lint/DuplicatedRequire" data-name="ameba::rule::lint::duplicatedrequire">
       <a href="../../../Ameba/Rule/Lint/DuplicatedRequire.html">DuplicatedRequire</a>
       
     </li>
@@ -502,7 +502,7 @@
       
     </li>
   
-  <li class=" " data-id="ameba/Ameba/Rule/Lint/SpecFilename" data-name="ameba::rule::lint::specfilename">
+  <li class=" current" data-id="ameba/Ameba/Rule/Lint/SpecFilename" data-name="ameba::rule::lint::specfilename">
       <a href="../../../Ameba/Rule/Lint/SpecFilename.html">SpecFilename</a>
       
     </li>
@@ -871,12 +871,12 @@
 <div class="main-content">
 <h1 class="type-name">
 
-  <span class="kind">class</span> Ameba::<wbr>Rule::<wbr>Lint::<wbr>DuplicatedRequire
+  <span class="kind">class</span> Ameba::<wbr>Rule::<wbr>Lint::<wbr>SpecFilename
 
 </h1>
 
 
-  <ul class="superclass-hierarchy"><li class="superclass"><a href="../../../Ameba/Rule/Lint/DuplicatedRequire.html">Ameba::Rule::Lint::DuplicatedRequire</a></li><li class="superclass"><a href="../../../Ameba/Rule/Base.html">Ameba::Rule::Base</a></li><li class="superclass">Reference</li><li class="superclass">Object</li></ul>
+  <ul class="superclass-hierarchy"><li class="superclass"><a href="../../../Ameba/Rule/Lint/SpecFilename.html">Ameba::Rule::Lint::SpecFilename</a></li><li class="superclass"><a href="../../../Ameba/Rule/Base.html">Ameba::Rule::Base</a></li><li class="superclass">Reference</li><li class="superclass">Object</li></ul>
 
 
 
@@ -890,12 +890,9 @@
     Overview
   </h2>
 
-  <p>A rule that reports duplicated require statements.</p>
-<pre><code class="language-crystal"><span class="k">require</span> <span class="s">&quot;./thing&quot;</span>
-<span class="k">require</span> <span class="s">&quot;./stuff&quot;</span>
-<span class="k">require</span> <span class="s">&quot;./thing&quot;</span> <span class="c"># duplicated require</span></code></pre>
+  <p>A rule that enforces spec filenames to have <code>_spec</code> suffix.</p>
 <p>YAML configuration example:</p>
-<pre><code class="language-crystal"><span class="t">Lint</span><span class="o">/</span><span class="t">DuplicatedRequire</span>:
+<pre><code class="language-crystal"><span class="t">Lint</span><span class="o">/</span><span class="t">SpecFilename</span>:
   <span class="t">Enabled</span>: <span class="n">true</span></code></pre>
 
 
@@ -937,8 +934,8 @@
   </h2>
   
     
-      <a href="https://github.com/crystal-ameba/ameba/blob/a40f02f/src/ameba/rule/lint/duplicated_require.cr#L16" target="_blank">
-        ameba/rule/lint/duplicated_require.cr
+      <a href="https://github.com/crystal-ameba/ameba/blob/a40f02f/src/ameba/rule/lint/spec_filename.cr#L12" target="_blank">
+        ameba/rule/lint/spec_filename.cr
       </a>
     
     <br/>
@@ -959,7 +956,7 @@
   <dl>
     
       <dt class="entry-const" id="MSG">
-        <strong>MSG</strong> = <code><span class="s">&quot;Duplicated require of `%s`&quot;</span></code>
+        <strong>MSG</strong> = <code><span class="s">&quot;Spec filename should have `_spec` suffix: %s.cr, not %s.cr&quot;</span></code>
       </dt>
       
     
@@ -985,7 +982,7 @@
       <li class="entry-summary">
         <a href="#new%28config%3Dnil%29-class-method" class="signature"><strong>.new</strong>(config = <span class="n">nil</span>)</a>
         
-          <div class="summary"><p>A rule that reports duplicated require statements.</p></div>
+          <div class="summary"><p>A rule that enforces spec filenames to have <code>_spec</code> suffix.</p></div>
         
       </li>
     
@@ -1055,6 +1052,26 @@
       </li>
     
       <li class="entry-summary">
+        <a href="#ignored_dirs%3AArray%28String%29-instance-method" class="signature"><strong>#ignored_dirs</strong> : Array(String)</a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#ignored_dirs%3D%28ignored_dirs%3AArray%28String%29%29-instance-method" class="signature"><strong>#ignored_dirs=</strong>(ignored_dirs : Array(String))</a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#ignored_filenames%3AArray%28String%29-instance-method" class="signature"><strong>#ignored_filenames</strong> : Array(String)</a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#ignored_filenames%3D%28ignored_filenames%3AArray%28String%29%29-instance-method" class="signature"><strong>#ignored_filenames=</strong>(ignored_filenames : Array(String))</a>
+        
+      </li>
+    
+      <li class="entry-summary">
         <a href="#severity%3AAmeba%3A%3ASeverity-instance-method" class="signature"><strong>#severity</strong> : Ameba::Severity</a>
         
       </li>
@@ -1065,7 +1082,9 @@
       </li>
     
       <li class="entry-summary">
-        <a href="#test%28source%29-instance-method" class="signature"><strong>#test</strong>(source)</a>
+        <a href="#test%28source%3ASource%29-instance-method" class="signature"><strong>#test</strong>(source : Source)</a>
+        
+          <div class="summary"><p><span class="flag orange">TODO</span>  fix the assumption that <em>source.path</em> contains relative path</p></div>
         
       </li>
     
@@ -1226,19 +1245,16 @@
       
         <div class="doc">
           
-          <p>A rule that reports duplicated require statements.</p>
-<pre><code class="language-crystal"><span class="k">require</span> <span class="s">&quot;./thing&quot;</span>
-<span class="k">require</span> <span class="s">&quot;./stuff&quot;</span>
-<span class="k">require</span> <span class="s">&quot;./thing&quot;</span> <span class="c"># duplicated require</span></code></pre>
+          <p>A rule that enforces spec filenames to have <code>_spec</code> suffix.</p>
 <p>YAML configuration example:</p>
-<pre><code class="language-crystal"><span class="t">Lint</span><span class="o">/</span><span class="t">DuplicatedRequire</span>:
+<pre><code class="language-crystal"><span class="t">Lint</span><span class="o">/</span><span class="t">SpecFilename</span>:
   <span class="t">Enabled</span>: <span class="n">true</span></code></pre>
         </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/a40f02f/src/ameba/rule/lint/duplicated_require.cr#L16" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/a40f02f/src/ameba/rule/lint/spec_filename.cr#L12" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1380,6 +1396,62 @@
       </div>
     </div>
   
+    <div class="entry-detail" id="ignored_dirs:Array(String)-instance-method">
+      <div class="signature">
+        
+        def <strong>ignored_dirs</strong> : Array(String)
+
+        <a class="method-permalink" href="#ignored_dirs%3AArray%28String%29-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="ignored_dirs=(ignored_dirs:Array(String))-instance-method">
+      <div class="signature">
+        
+        def <strong>ignored_dirs=</strong>(ignored_dirs : Array(String))
+
+        <a class="method-permalink" href="#ignored_dirs%3D%28ignored_dirs%3AArray%28String%29%29-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="ignored_filenames:Array(String)-instance-method">
+      <div class="signature">
+        
+        def <strong>ignored_filenames</strong> : Array(String)
+
+        <a class="method-permalink" href="#ignored_filenames%3AArray%28String%29-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="ignored_filenames=(ignored_filenames:Array(String))-instance-method">
+      <div class="signature">
+        
+        def <strong>ignored_filenames=</strong>(ignored_filenames : Array(String))
+
+        <a class="method-permalink" href="#ignored_filenames%3D%28ignored_filenames%3AArray%28String%29%29-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+      </div>
+    </div>
+  
     <div class="entry-detail" id="severity:Ameba::Severity-instance-method">
       <div class="signature">
         
@@ -1408,18 +1480,23 @@
       </div>
     </div>
   
-    <div class="entry-detail" id="test(source)-instance-method">
+    <div class="entry-detail" id="test(source:Source)-instance-method">
       <div class="signature">
         
-        def <strong>test</strong>(source)
+        def <strong>test</strong>(source : <a href="../../../Ameba/Source.html">Source</a>)
 
-        <a class="method-permalink" href="#test%28source%29-instance-method">#</a>
+        <a class="method-permalink" href="#test%28source%3ASource%29-instance-method">#</a>
       </div>
+      
+        <div class="doc">
+          
+          <p><span class="flag orange">TODO</span>  fix the assumption that <em>source.path</em> contains relative path</p>
+        </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/a40f02f/src/ameba/rule/lint/duplicated_require.cr#L23" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/a40f02f/src/ameba/rule/lint/spec_filename.cr#L24" target="_blank">View source</a>]
         
       </div>
     </div>
