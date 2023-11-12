@@ -14,7 +14,7 @@
 <script type="text/javascript" src="../../../js/doc.js"></script>
 
   <meta name="repository-name" content="ameba">
-  <title>Ameba::Rule::Lint::LiteralInInterpolation - ameba master</title>
+  <title>Ameba::Rule::Naming::BinaryOperatorParameterName - ameba master</title>
   <script type="text/javascript">
     CrystalDocs.base_path = "../../../";
   </script>
@@ -362,7 +362,7 @@
       
     </li>
   
-  <li class="parent open current" data-id="ameba/Ameba/Rule/Lint" data-name="ameba::rule::lint">
+  <li class="parent " data-id="ameba/Ameba/Rule/Lint" data-name="ameba::rule::lint">
       <a href="../../../Ameba/Rule/Lint.html">Lint</a>
       
         <ul>
@@ -432,7 +432,7 @@
       
     </li>
   
-  <li class=" current" data-id="ameba/Ameba/Rule/Lint/LiteralInInterpolation" data-name="ameba::rule::lint::literalininterpolation">
+  <li class=" " data-id="ameba/Ameba/Rule/Lint/LiteralInInterpolation" data-name="ameba::rule::lint::literalininterpolation">
       <a href="../../../Ameba/Rule/Lint/LiteralInInterpolation.html">LiteralInInterpolation</a>
       
     </li>
@@ -572,7 +572,7 @@
       
     </li>
   
-  <li class="parent " data-id="ameba/Ameba/Rule/Naming" data-name="ameba::rule::naming">
+  <li class="parent open current" data-id="ameba/Ameba/Rule/Naming" data-name="ameba::rule::naming">
       <a href="../../../Ameba/Rule/Naming.html">Naming</a>
       
         <ul>
@@ -587,7 +587,7 @@
       
     </li>
   
-  <li class=" " data-id="ameba/Ameba/Rule/Naming/BinaryOperatorParameterName" data-name="ameba::rule::naming::binaryoperatorparametername">
+  <li class=" current" data-id="ameba/Ameba/Rule/Naming/BinaryOperatorParameterName" data-name="ameba::rule::naming::binaryoperatorparametername">
       <a href="../../../Ameba/Rule/Naming/BinaryOperatorParameterName.html">BinaryOperatorParameterName</a>
       
     </li>
@@ -881,12 +881,12 @@
 <div class="main-content">
 <h1 class="type-name">
 
-  <span class="kind">class</span> Ameba::<wbr>Rule::<wbr>Lint::<wbr>LiteralInInterpolation
+  <span class="kind">class</span> Ameba::<wbr>Rule::<wbr>Naming::<wbr>BinaryOperatorParameterName
 
 </h1>
 
 
-  <ul class="superclass-hierarchy"><li class="superclass"><a href="../../../Ameba/Rule/Lint/LiteralInInterpolation.html">Ameba::Rule::Lint::LiteralInInterpolation</a></li><li class="superclass"><a href="../../../Ameba/Rule/Base.html">Ameba::Rule::Base</a></li><li class="superclass">Reference</li><li class="superclass">Object</li></ul>
+  <ul class="superclass-hierarchy"><li class="superclass"><a href="../../../Ameba/Rule/Naming/BinaryOperatorParameterName.html">Ameba::Rule::Naming::BinaryOperatorParameterName</a></li><li class="superclass"><a href="../../../Ameba/Rule/Base.html">Ameba::Rule::Base</a></li><li class="superclass">Reference</li><li class="superclass">Object</li></ul>
 
 
 
@@ -900,14 +900,22 @@
     Overview
   </h2>
 
-  <p>A rule that disallows useless string interpolations
-that contain a literal value instead of a variable or function.</p>
-<p>For example:</p>
-<pre><code class="language-crystal"><span class="s">&quot;Hello, </span><span class="i">#{</span><span class="n">:Ary</span><span class="i">}</span><span class="s">&quot;</span>
-<span class="s">&quot;There are </span><span class="i">#{</span><span class="n">4</span><span class="i">}</span><span class="s"> cats&quot;</span></code></pre>
+  <p>A rule that enforces that certain binary operator methods have
+their sole parameter named <code>other</code>.</p>
+<p>For example, this is considered valid:</p>
+<pre><code class="language-crystal"><span class="k">class</span> <span class="t">Money</span>
+  <span class="k">def</span> <span class="m">+</span>(other)
+  <span class="k">end</span>
+<span class="k">end</span></code></pre>
+<p>And this is invalid parameter name:</p>
+<pre><code class="language-crystal"><span class="k">class</span> <span class="t">Money</span>
+  <span class="k">def</span> <span class="m">+</span>(amount)
+  <span class="k">end</span>
+<span class="k">end</span></code></pre>
 <p>YAML configuration example:</p>
-<pre><code class="language-crystal"><span class="t">Lint</span><span class="o">/</span><span class="t">LiteralInInterpolation</span>
-  <span class="t">Enabled</span>: <span class="n">true</span></code></pre>
+<pre><code class="language-crystal"><span class="t">Naming</span><span class="o">/</span><span class="t">BinaryOperatorParameterName</span>:
+  <span class="t">Enabled</span>: <span class="n">true</span>
+  <span class="t">ExcludedOperators</span>: [<span class="s">&quot;[]&quot;</span>, <span class="s">&quot;[]?&quot;</span>, <span class="s">&quot;[]=&quot;</span>, <span class="s">&quot;&lt;&lt;&quot;</span>, <span class="s">&quot;=~&quot;</span>]</code></pre>
 
 
 
@@ -922,8 +930,6 @@ that contain a literal value instead of a variable or function.</p>
     Included Modules
   </h2>
   <ul class="other-types-list">
-    
-      <li class="other-type"><a href="../../../Ameba/AST/Util.html">Ameba::AST::Util</a></li>
     
       <li class="other-type">YAML::Serializable</li>
     
@@ -950,8 +956,8 @@ that contain a literal value instead of a variable or function.</p>
   </h2>
   
     
-      <a href="https://github.com/crystal-ameba/ameba/blob/6caf24a/src/ameba/rule/lint/literal_in_interpolation.cr#L18" target="_blank">
-        ameba/rule/lint/literal_in_interpolation.cr
+      <a href="https://github.com/crystal-ameba/ameba/blob/6caf24a/src/ameba/rule/naming/binary_operator_parameter_name.cr#L30" target="_blank">
+        ameba/rule/naming/binary_operator_parameter_name.cr
       </a>
     
     <br/>
@@ -972,7 +978,7 @@ that contain a literal value instead of a variable or function.</p>
   <dl>
     
       <dt class="entry-const" id="MSG">
-        <strong>MSG</strong> = <code><span class="s">&quot;Literal value found in interpolation&quot;</span></code>
+        <strong>MSG</strong> = <code><span class="s">&quot;When defining the `%s` operator, name its argument `other`&quot;</span></code>
       </dt>
       
     
@@ -998,7 +1004,7 @@ that contain a literal value instead of a variable or function.</p>
       <li class="entry-summary">
         <a href="#new%28config%3Dnil%29-class-method" class="signature"><strong>.new</strong>(config = <span class="n">nil</span>)</a>
         
-          <div class="summary"><p>A rule that disallows useless string interpolations that contain a literal value instead of a variable or function.</p></div>
+          <div class="summary"><p>A rule that enforces that certain binary operator methods have their sole parameter named <code>other</code>.</p></div>
         
       </li>
     
@@ -1068,6 +1074,16 @@ that contain a literal value instead of a variable or function.</p>
       </li>
     
       <li class="entry-summary">
+        <a href="#excluded_operators%3AArray%28String%29-instance-method" class="signature"><strong>#excluded_operators</strong> : Array(String)</a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#excluded_operators%3D%28excluded_operators%3AArray%28String%29%29-instance-method" class="signature"><strong>#excluded_operators=</strong>(excluded_operators : Array(String))</a>
+        
+      </li>
+    
+      <li class="entry-summary">
         <a href="#severity%3AAmeba%3A%3ASeverity-instance-method" class="signature"><strong>#severity</strong> : Ameba::Severity</a>
         
       </li>
@@ -1078,7 +1094,7 @@ that contain a literal value instead of a variable or function.</p>
       </li>
     
       <li class="entry-summary">
-        <a href="#test%28source%2Cnode%3ACrystal%3A%3AStringInterpolation%29-instance-method" class="signature"><strong>#test</strong>(source, node : Crystal::StringInterpolation)</a>
+        <a href="#test%28source%2Cnode%3ACrystal%3A%3ADef%29-instance-method" class="signature"><strong>#test</strong>(source, node : Crystal::Def)</a>
         
       </li>
     
@@ -1089,100 +1105,6 @@ that contain a literal value instead of a variable or function.</p>
 
 
 <div class="methods-inherited">
-  
-    
-
-  <h3>Instance methods inherited from module <code><a href="../../../Ameba/AST/Util.html">Ameba::AST::Util</a></code></h3>
-  
-  
-    <a href="../../../Ameba/AST/Util.html#abort%3F%28node%29-instance-method" class="tooltip">
-      <span>abort?(node)</span>
-    abort?</a>, 
-    
-  
-    <a href="../../../Ameba/AST/Util.html#control_exp_code%28node%3ACrystal%3A%3AControlExpression%2Ccode_lines%29-instance-method" class="tooltip">
-      <span>control_exp_code(node : Crystal::ControlExpression, code_lines)</span>
-    control_exp_code</a>, 
-    
-  
-    <a href="../../../Ameba/AST/Util.html#dynamic_literal%3F%28node%29%3ABool-instance-method" class="tooltip">
-      <span>dynamic_literal?(node) : Bool</span>
-    dynamic_literal?</a>, 
-    
-  
-    <a href="../../../Ameba/AST/Util.html#exit%3F%28node%29-instance-method" class="tooltip">
-      <span>exit?(node)</span>
-    exit?</a>, 
-    
-  
-    <a href="../../../Ameba/AST/Util.html#flow_command%3F%28node%2Cin_loop%29-instance-method" class="tooltip">
-      <span>flow_command?(node, in_loop)</span>
-    flow_command?</a>, 
-    
-  
-    <a href="../../../Ameba/AST/Util.html#flow_expression%3F%28node%2Cin_loop%3Dfalse%29-instance-method" class="tooltip">
-      <span>flow_expression?(node, in_loop = <span class="n">false</span>)</span>
-    flow_expression?</a>, 
-    
-  
-    <a href="../../../Ameba/AST/Util.html#literal%3F%28node%29%3ABool-instance-method" class="tooltip">
-      <span>literal?(node) : Bool</span>
-    literal?</a>, 
-    
-  
-    <a href="../../../Ameba/AST/Util.html#loop%3F%28node%29-instance-method" class="tooltip">
-      <span>loop?(node)</span>
-    loop?</a>, 
-    
-  
-    <a href="../../../Ameba/AST/Util.html#name_end_location%28node%29-instance-method" class="tooltip">
-      <span>name_end_location(node)</span>
-    name_end_location</a>, 
-    
-  
-    <a href="../../../Ameba/AST/Util.html#name_location%28node%29-instance-method" class="tooltip">
-      <span>name_location(node)</span>
-    name_location</a>, 
-    
-  
-    <a href="../../../Ameba/AST/Util.html#name_size%28node%29-instance-method" class="tooltip">
-      <span>name_size(node)</span>
-    name_size</a>, 
-    
-  
-    <a href="../../../Ameba/AST/Util.html#node_source%28node%2Ccode_lines%29-instance-method" class="tooltip">
-      <span>node_source(node, code_lines)</span>
-    node_source</a>, 
-    
-  
-    <a href="../../../Ameba/AST/Util.html#path_named%3F%28node%2Cname%29%3ABool-instance-method" class="tooltip">
-      <span>path_named?(node, name) : Bool</span>
-    path_named?</a>, 
-    
-  
-    <a href="../../../Ameba/AST/Util.html#raise%3F%28node%29-instance-method" class="tooltip">
-      <span>raise?(node)</span>
-    raise?</a>, 
-    
-  
-    <a href="../../../Ameba/AST/Util.html#source_between%28loc%2Cend_loc%2Ccode_lines%29%3AString%7CNil-instance-method" class="tooltip">
-      <span>source_between(loc, end_loc, code_lines) : String | Nil</span>
-    source_between</a>, 
-    
-  
-    <a href="../../../Ameba/AST/Util.html#static_literal%3F%28node%29%3ABool-instance-method" class="tooltip">
-      <span>static_literal?(node) : Bool</span>
-    static_literal?</a>
-    
-  
-
-
-    
-
-
-    
-
-
   
     
 
@@ -1333,20 +1255,28 @@ that contain a literal value instead of a variable or function.</p>
       
         <div class="doc">
           
-          <p>A rule that disallows useless string interpolations
-that contain a literal value instead of a variable or function.</p>
-<p>For example:</p>
-<pre><code class="language-crystal"><span class="s">&quot;Hello, </span><span class="i">#{</span><span class="n">:Ary</span><span class="i">}</span><span class="s">&quot;</span>
-<span class="s">&quot;There are </span><span class="i">#{</span><span class="n">4</span><span class="i">}</span><span class="s"> cats&quot;</span></code></pre>
+          <p>A rule that enforces that certain binary operator methods have
+their sole parameter named <code>other</code>.</p>
+<p>For example, this is considered valid:</p>
+<pre><code class="language-crystal"><span class="k">class</span> <span class="t">Money</span>
+  <span class="k">def</span> <span class="m">+</span>(other)
+  <span class="k">end</span>
+<span class="k">end</span></code></pre>
+<p>And this is invalid parameter name:</p>
+<pre><code class="language-crystal"><span class="k">class</span> <span class="t">Money</span>
+  <span class="k">def</span> <span class="m">+</span>(amount)
+  <span class="k">end</span>
+<span class="k">end</span></code></pre>
 <p>YAML configuration example:</p>
-<pre><code class="language-crystal"><span class="t">Lint</span><span class="o">/</span><span class="t">LiteralInInterpolation</span>
-  <span class="t">Enabled</span>: <span class="n">true</span></code></pre>
+<pre><code class="language-crystal"><span class="t">Naming</span><span class="o">/</span><span class="t">BinaryOperatorParameterName</span>:
+  <span class="t">Enabled</span>: <span class="n">true</span>
+  <span class="t">ExcludedOperators</span>: [<span class="s">&quot;[]&quot;</span>, <span class="s">&quot;[]?&quot;</span>, <span class="s">&quot;[]=&quot;</span>, <span class="s">&quot;&lt;&lt;&quot;</span>, <span class="s">&quot;=~&quot;</span>]</code></pre>
         </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/6caf24a/src/ameba/rule/lint/literal_in_interpolation.cr#L18" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/6caf24a/src/ameba/rule/naming/binary_operator_parameter_name.cr#L30" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1488,6 +1418,34 @@ that contain a literal value instead of a variable or function.</p>
       </div>
     </div>
   
+    <div class="entry-detail" id="excluded_operators:Array(String)-instance-method">
+      <div class="signature">
+        
+        def <strong>excluded_operators</strong> : Array(String)
+
+        <a class="method-permalink" href="#excluded_operators%3AArray%28String%29-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="excluded_operators=(excluded_operators:Array(String))-instance-method">
+      <div class="signature">
+        
+        def <strong>excluded_operators=</strong>(excluded_operators : Array(String))
+
+        <a class="method-permalink" href="#excluded_operators%3D%28excluded_operators%3AArray%28String%29%29-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+      </div>
+    </div>
+  
     <div class="entry-detail" id="severity:Ameba::Severity-instance-method">
       <div class="signature">
         
@@ -1516,18 +1474,18 @@ that contain a literal value instead of a variable or function.</p>
       </div>
     </div>
   
-    <div class="entry-detail" id="test(source,node:Crystal::StringInterpolation)-instance-method">
+    <div class="entry-detail" id="test(source,node:Crystal::Def)-instance-method">
       <div class="signature">
         
-        def <strong>test</strong>(source, node : Crystal::StringInterpolation)
+        def <strong>test</strong>(source, node : Crystal::Def)
 
-        <a class="method-permalink" href="#test%28source%2Cnode%3ACrystal%3A%3AStringInterpolation%29-instance-method">#</a>
+        <a class="method-permalink" href="#test%28source%2Cnode%3ACrystal%3A%3ADef%29-instance-method">#</a>
       </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/6caf24a/src/ameba/rule/lint/literal_in_interpolation.cr#L27" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/6caf24a/src/ameba/rule/naming/binary_operator_parameter_name.cr#L39" target="_blank">View source</a>]
         
       </div>
     </div>
