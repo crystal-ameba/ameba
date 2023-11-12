@@ -26,6 +26,8 @@ module Ameba::Rule::Performance
   #     - select
   # ```
   class FirstLastAfterFilter < Base
+    include AST::Util
+
     properties do
       description "Identifies usage of `first/last/first?/last?` calls that follow filters"
       filter_names %w(select)
@@ -47,7 +49,7 @@ module Ameba::Rule::Performance
 
       message = node.name.includes?(CALL_NAMES.first) ? MSG : MSG_REVERSE
 
-      issue_for obj.name_location, node.name_end_location,
+      issue_for name_location(obj), name_end_location(node),
         message % {obj.name, node.name}
     end
   end
