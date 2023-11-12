@@ -1,6 +1,10 @@
+require "./ast/util"
+
 module Ameba
   # Represents a module used to report issues.
   module Reportable
+    include AST::Util
+
     # List of reported issues.
     getter issues = [] of Issue
 
@@ -30,13 +34,19 @@ module Ameba
     end
 
     # Adds a new issue for Crystal AST *node*.
-    def add_issue(rule, node : Crystal::ASTNode, message, status : Issue::Status? = nil, block : (Source::Corrector ->)? = nil) : Issue
-      add_issue rule, node.location, node.end_location, message, status, block
+    def add_issue(rule, node : Crystal::ASTNode, message, status : Issue::Status? = nil, block : (Source::Corrector ->)? = nil, *, prefer_name_location = false) : Issue
+      location = name_location(node) if prefer_name_location
+      location ||= node.location
+
+      end_location = name_end_location(node) if prefer_name_location
+      end_location ||= node.end_location
+
+      add_issue rule, location, end_location, message, status, block
     end
 
     # :ditto:
-    def add_issue(rule, node : Crystal::ASTNode, message, status : Issue::Status? = nil, &block : Source::Corrector ->) : Issue
-      add_issue rule, node, message, status, block
+    def add_issue(rule, node : Crystal::ASTNode, message, status : Issue::Status? = nil, *, prefer_name_location = false, &block : Source::Corrector ->) : Issue
+      add_issue rule, node, message, status, block, prefer_name_location: prefer_name_location
     end
 
     # Adds a new issue for Crystal *token*.

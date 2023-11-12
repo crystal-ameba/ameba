@@ -26,8 +26,6 @@ module Ameba::Rule::Lint
   #   Enabled: true
   # ```
   class NotNil < Base
-    include AST::Util
-
     properties do
       description "Identifies usage of `not_nil!` calls"
     end
@@ -42,10 +40,7 @@ module Ameba::Rule::Lint
       return unless node.name == "not_nil!"
       return unless node.obj && node.args.empty?
 
-      return unless name_location = node.name_location
-      return unless end_location = name_end_location(node)
-
-      issue_for name_location, end_location, MSG
+      issue_for node, MSG, prefer_name_location: true
     end
   end
 end

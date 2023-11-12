@@ -22,8 +22,6 @@ module Ameba::Rule::Naming
   #   Enabled: true
   # ```
   class AsciiIdentifiers < Base
-    include AST::Util
-
     properties do
       description "Disallows non-ascii characters in identifiers"
     end
@@ -43,38 +41,27 @@ module Ameba::Rule::Naming
     end
 
     def test(source, node : Crystal::Def)
-      check_issue_with_location(source, node)
+      check_issue(source, node, prefer_name_location: true)
 
       node.args.each do |arg|
-        check_issue_with_location(source, arg)
+        check_issue(source, arg, prefer_name_location: true)
       end
     end
 
     def test(source, node : Crystal::ClassVar | Crystal::InstanceVar | Crystal::Var | Crystal::Alias)
-      check_issue_with_location(source, node)
+      check_issue(source, node, prefer_name_location: true)
     end
 
     def test(source, node : Crystal::ClassDef | Crystal::ModuleDef | Crystal::EnumDef | Crystal::LibDef)
       check_issue(source, node.name, node.name)
     end
 
-    private def check_issue_with_location(source, node)
-      location = name_location(node)
-      end_location = name_end_location(node)
-
-      if location && end_location
-        check_issue(source, location, end_location, node.name)
-      else
-        check_issue(source, node, node.name)
-      end
-    end
-
     private def check_issue(source, location, end_location, name)
       issue_for location, end_location, MSG unless name.to_s.ascii_only?
     end
 
-    private def check_issue(source, node, name)
-      issue_for node, MSG unless name.to_s.ascii_only?
+    private def check_issue(source, node, name = node.name, *, prefer_name_location = false)
+      issue_for node, MSG, prefer_name_location: prefer_name_location unless name.to_s.ascii_only?
     end
   end
 end

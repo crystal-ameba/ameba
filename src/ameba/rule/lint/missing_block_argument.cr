@@ -20,8 +20,6 @@ module Ameba::Rule::Lint
   #   Enabled: true
   # ```
   class MissingBlockArgument < Base
-    include AST::Util
-
     properties do
       description "Disallows yielding method definitions without block argument"
     end
@@ -36,10 +34,7 @@ module Ameba::Rule::Lint
     def test(source, node : Crystal::Def, scope : AST::Scope)
       return if !scope.yields? || node.block_arg
 
-      return unless location = node.name_location
-      end_location = name_end_location(node)
-
-      issue_for location, end_location, MSG
+      issue_for node, MSG, prefer_name_location: true
     end
   end
 end

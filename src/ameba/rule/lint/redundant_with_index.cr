@@ -51,7 +51,7 @@ module Ameba::Rule::Lint
     end
 
     private def report(source, node, msg)
-      issue_for node.name_location, node.name_end_location, msg
+      issue_for node, msg, prefer_name_location: true
     end
   end
 end
