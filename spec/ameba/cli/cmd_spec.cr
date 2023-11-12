@@ -11,23 +11,23 @@ module Ameba::Cli
     end
 
     describe ".parse_args" do
-      %w(-s --silent).each do |f|
-        it "accepts #{f} flag" do
-          c = Cli.parse_args [f]
+      %w(-s --silent).each do |flag|
+        it "accepts #{flag} flag" do
+          c = Cli.parse_args [flag]
           c.formatter.should eq :silent
         end
       end
 
-      %w(-c --config).each do |f|
-        it "accepts #{f} flag" do
-          c = Cli.parse_args [f, "config.yml"]
+      %w(-c --config).each do |flag|
+        it "accepts #{flag} flag" do
+          c = Cli.parse_args [flag, "config.yml"]
           c.config.should eq Path["config.yml"]
         end
       end
 
-      %w(-f --format).each do |f|
-        it "accepts #{f} flag" do
-          c = Cli.parse_args [f, "my-formatter"]
+      %w(-f --format).each do |flag|
+        it "accepts #{flag} flag" do
+          c = Cli.parse_args [flag, "my-formatter"]
           c.formatter.should eq "my-formatter"
         end
       end

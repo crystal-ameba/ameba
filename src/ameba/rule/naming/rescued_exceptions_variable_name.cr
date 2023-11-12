@@ -34,13 +34,13 @@ module Ameba::Rule::Naming
     MSG_SINGULAR = "Disallowed variable name, use '%s' instead"
 
     def test(source, node : Crystal::ExceptionHandler)
-      node.rescues.try &.each do |r|
-        next if valid_name?(r.name)
+      node.rescues.try &.each do |rescue_node|
+        next if valid_name?(rescue_node.name)
 
         message =
           allowed_names.size == 1 ? MSG_SINGULAR : MSG
 
-        issue_for r, message % allowed_names.join("', '")
+        issue_for rescue_node, message % allowed_names.join("', '")
       end
     end
 

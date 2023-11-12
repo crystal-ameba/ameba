@@ -75,11 +75,11 @@ module Ameba::Cli
       parser.on("-h", "--help", "Show this help") { print_help(parser) }
       parser.on("-r", "--rules", "Show all available rules") { opts.rules = true }
       parser.on("-s", "--silent", "Disable output") { opts.formatter = :silent }
-      parser.unknown_args do |f|
-        if f.size == 1 && f.first =~ /.+:\d+:\d+/
-          configure_explain_opts(f.first, opts)
+      parser.unknown_args do |arr|
+        if arr.size == 1 && arr.first.matches?(/.+:\d+:\d+/)
+          configure_explain_opts(arr.first, opts)
         else
-          opts.globs = f unless f.empty?
+          opts.globs = arr unless arr.empty?
         end
       end
 

@@ -15,7 +15,7 @@ Benchmark.ips do |x|
     20,
     30,
     40,
-  ].each do |n|
+  ].each do |n| # ameba:disable Naming/BlockParameterName
     config = Ameba::Config.load
     config.formatter = Ameba::Formatter::BaseFormatter.new
     config.globs = get_files(n)
