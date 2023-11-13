@@ -926,6 +926,8 @@
     
       <li class="other-type"><a href="../../Ameba/AST/FlowExpressionVisitor.html">Ameba::AST::FlowExpressionVisitor</a></li>
     
+      <li class="other-type"><a href="../../Ameba/Reportable.html">Ameba::Reportable</a></li>
+    
       <li class="other-type"><a href="../../Ameba/Rule/Lint/AmbiguousAssignment.html">Ameba::Rule::Lint::AmbiguousAssignment</a></li>
     
       <li class="other-type"><a href="../../Ameba/Rule/Lint/ComparisonToBoolean.html">Ameba::Rule::Lint::ComparisonToBoolean</a></li>
@@ -942,10 +944,6 @@
     
       <li class="other-type"><a href="../../Ameba/Rule/Lint/LiteralsComparison.html">Ameba::Rule::Lint::LiteralsComparison</a></li>
     
-      <li class="other-type"><a href="../../Ameba/Rule/Lint/MissingBlockArgument.html">Ameba::Rule::Lint::MissingBlockArgument</a></li>
-    
-      <li class="other-type"><a href="../../Ameba/Rule/Lint/NotNil.html">Ameba::Rule::Lint::NotNil</a></li>
-    
       <li class="other-type"><a href="../../Ameba/Rule/Lint/NotNilAfterNoBang.html">Ameba::Rule::Lint::NotNilAfterNoBang</a></li>
     
       <li class="other-type"><a href="../../Ameba/Rule/Lint/RedundantStringCoercion.html">Ameba::Rule::Lint::RedundantStringCoercion</a></li>
@@ -954,23 +952,29 @@
     
       <li class="other-type"><a href="../../Ameba/Rule/Lint/UnusedBlockArgument.html">Ameba::Rule::Lint::UnusedBlockArgument</a></li>
     
-      <li class="other-type"><a href="../../Ameba/Rule/Metrics/CyclomaticComplexity.html">Ameba::Rule::Metrics::CyclomaticComplexity</a></li>
-    
-      <li class="other-type"><a href="../../Ameba/Rule/Naming/AccessorMethodName.html">Ameba::Rule::Naming::AccessorMethodName</a></li>
-    
-      <li class="other-type"><a href="../../Ameba/Rule/Naming/AsciiIdentifiers.html">Ameba::Rule::Naming::AsciiIdentifiers</a></li>
-    
-      <li class="other-type"><a href="../../Ameba/Rule/Naming/MethodNames.html">Ameba::Rule::Naming::MethodNames</a></li>
-    
       <li class="other-type"><a href="../../Ameba/Rule/Naming/QueryBoolMethods.html">Ameba::Rule::Naming::QueryBoolMethods</a></li>
     
-      <li class="other-type"><a href="../../Ameba/Rule/Performance/AnyInsteadOfEmpty.html">Ameba::Rule::Performance::AnyInsteadOfEmpty</a></li>
+      <li class="other-type"><a href="../../Ameba/Rule/Performance/AnyAfterFilter.html">Ameba::Rule::Performance::AnyAfterFilter</a></li>
     
       <li class="other-type"><a href="../../Ameba/Rule/Performance/ChainedCallWithNoBang.html">Ameba::Rule::Performance::ChainedCallWithNoBang</a></li>
     
+      <li class="other-type"><a href="../../Ameba/Rule/Performance/CompactAfterMap.html">Ameba::Rule::Performance::CompactAfterMap</a></li>
+    
       <li class="other-type"><a href="../../Ameba/Rule/Performance/ExcessiveAllocations.html">Ameba::Rule::Performance::ExcessiveAllocations</a></li>
     
+      <li class="other-type"><a href="../../Ameba/Rule/Performance/FirstLastAfterFilter.html">Ameba::Rule::Performance::FirstLastAfterFilter</a></li>
+    
+      <li class="other-type"><a href="../../Ameba/Rule/Performance/FlattenAfterMap.html">Ameba::Rule::Performance::FlattenAfterMap</a></li>
+    
+      <li class="other-type"><a href="../../Ameba/Rule/Performance/MapInsteadOfBlock.html">Ameba::Rule::Performance::MapInsteadOfBlock</a></li>
+    
+      <li class="other-type"><a href="../../Ameba/Rule/Performance/MinMaxAfterMap.html">Ameba::Rule::Performance::MinMaxAfterMap</a></li>
+    
+      <li class="other-type"><a href="../../Ameba/Rule/Performance/SizeAfterFilter.html">Ameba::Rule::Performance::SizeAfterFilter</a></li>
+    
       <li class="other-type"><a href="../../Ameba/Rule/Style/GuardClause.html">Ameba::Rule::Style::GuardClause</a></li>
+    
+      <li class="other-type"><a href="../../Ameba/Rule/Style/IsAFilter.html">Ameba::Rule::Style::IsAFilter</a></li>
     
       <li class="other-type"><a href="../../Ameba/Rule/Style/IsANil.html">Ameba::Rule::Style::IsANil</a></li>
     
@@ -997,7 +1001,7 @@
   </h2>
   
     
-      <a href="https://github.com/crystal-ameba/ameba/blob/6caf24a/src/ameba/ast/util.cr#L2" target="_blank">
+      <a href="https://github.com/crystal-ameba/ameba/blob/0b225da/src/ameba/ast/util.cr#L2" target="_blank">
         ameba/ast/util.cr
       </a>
     
@@ -1174,7 +1178,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/6caf24a/src/ameba/ast/util.cr#L180" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/0b225da/src/ameba/ast/util.cr#L180" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1196,7 +1200,7 @@ Wraps implicit tuple literal with curly brackets (e.g. multi-return).</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/6caf24a/src/ameba/ast/util.cr#L199" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/0b225da/src/ameba/ast/util.cr#L199" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1217,7 +1221,7 @@ Wraps implicit tuple literal with curly brackets (e.g. multi-return).</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/6caf24a/src/ameba/ast/util.cr#L48" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/0b225da/src/ameba/ast/util.cr#L48" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1238,7 +1242,7 @@ Wraps implicit tuple literal with curly brackets (e.g. multi-return).</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/6caf24a/src/ameba/ast/util.cr#L174" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/0b225da/src/ameba/ast/util.cr#L174" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1261,7 +1265,7 @@ or special call node that interrupts execution (i.e. raise, exit, abort).</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/6caf24a/src/ameba/ast/util.cr#L102" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/0b225da/src/ameba/ast/util.cr#L102" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1297,7 +1301,7 @@ a flow command <code>return</code>:</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/6caf24a/src/ameba/ast/util.cr#L140" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/0b225da/src/ameba/ast/util.cr#L140" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1318,7 +1322,7 @@ a flow command <code>return</code>:</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/6caf24a/src/ameba/ast/util.cr#L54" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/0b225da/src/ameba/ast/util.cr#L54" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1339,7 +1343,7 @@ a flow command <code>return</code>:</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/6caf24a/src/ameba/ast/util.cr#L186" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/0b225da/src/ameba/ast/util.cr#L186" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1362,7 +1366,7 @@ off-by-one error.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/6caf24a/src/ameba/ast/util.cr#L242" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/0b225da/src/ameba/ast/util.cr#L242" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1383,7 +1387,7 @@ off-by-one error.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/6caf24a/src/ameba/ast/util.cr#L210" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/0b225da/src/ameba/ast/util.cr#L210" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1404,7 +1408,7 @@ off-by-one error.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/6caf24a/src/ameba/ast/util.cr#L224" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/0b225da/src/ameba/ast/util.cr#L224" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1427,7 +1431,7 @@ to determine and cut a piece of source of the node.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/6caf24a/src/ameba/ast/util.cr#L69" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/0b225da/src/ameba/ast/util.cr#L69" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1449,7 +1453,7 @@ matching given <em>name</em>, <code>false</code> otherwise.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/6caf24a/src/ameba/ast/util.cr#L61" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/0b225da/src/ameba/ast/util.cr#L61" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1470,7 +1474,7 @@ matching given <em>name</em>, <code>false</code> otherwise.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/6caf24a/src/ameba/ast/util.cr#L168" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/0b225da/src/ameba/ast/util.cr#L168" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1491,7 +1495,7 @@ matching given <em>name</em>, <code>false</code> otherwise.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/6caf24a/src/ameba/ast/util.cr#L77" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/0b225da/src/ameba/ast/util.cr#L77" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1512,7 +1516,7 @@ matching given <em>name</em>, <code>false</code> otherwise.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/6caf24a/src/ameba/ast/util.cr#L42" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/0b225da/src/ameba/ast/util.cr#L42" target="_blank">View source</a>]
         
       </div>
     </div>
