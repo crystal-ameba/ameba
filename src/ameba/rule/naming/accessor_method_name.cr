@@ -36,8 +36,6 @@ module Ameba::Rule::Naming
   #   Enabled: true
   # ```
   class AccessorMethodName < Base
-    include AST::Util
-
     properties do
       description "Makes sure that accessor methods are named properly"
     end
@@ -66,24 +64,13 @@ module Ameba::Rule::Naming
     end
 
     private def check_issue(source, node : Crystal::Def)
-      location = name_location(node)
-      end_location = name_end_location(node)
-
       case node.name
       when /^get_([a-z]\w*)$/
         return unless node.args.empty?
-        if location && end_location
-          issue_for location, end_location, MSG % {$1, node.name}
-        else
-          issue_for node, MSG % {$1, node.name}
-        end
+        issue_for node, MSG % {$1, node.name}, prefer_name_location: true
       when /^set_([a-z]\w*)$/
         return unless node.args.size == 1
-        if location && end_location
-          issue_for location, end_location, MSG % {"#{$1}=", node.name}
-        else
-          issue_for node, MSG % {"#{$1}=", node.name}
-        end
+        issue_for node, MSG % {"#{$1}=", node.name}, prefer_name_location: true
       end
     end
   end

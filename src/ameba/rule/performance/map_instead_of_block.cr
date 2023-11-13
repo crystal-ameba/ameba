@@ -23,6 +23,8 @@ module Ameba::Rule::Performance
   #   Enabled: true
   # ```
   class MapInsteadOfBlock < Base
+    include AST::Util
+
     properties do
       description "Identifies usage of `sum/product` calls that follow `map`"
     end
@@ -40,7 +42,7 @@ module Ameba::Rule::Performance
       return unless obj.is_a?(Crystal::Call) && obj.block
       return unless obj.name == MAP_NAME
 
-      issue_for obj.name_location, node.name_end_location,
+      issue_for name_location(obj), name_end_location(node),
         MSG % {node.name, node.name}
     end
   end

@@ -47,7 +47,7 @@ module Ameba::Rule::Style
     CALL_PATTERN = "%s(%s&.%s)"
 
     protected def same_location_lines?(a, b)
-      return unless a_location = a.name_location
+      return unless a_location = name_location(a)
       return unless b_location = b.location
 
       a_location.line_number == b_location.line_number
@@ -78,7 +78,7 @@ module Ameba::Rule::Style
 
     protected def valid_line_length?(node, code)
       if max_line_length = self.max_line_length
-        if location = node.name_location
+        if location = name_location(node)
           final_line_length = location.column_number + code.size
           return final_line_length <= max_line_length
         end
@@ -203,7 +203,7 @@ module Ameba::Rule::Style
       return unless valid_line_length?(call, call_code)
       return unless valid_length?(call_code)
 
-      return unless location = call.name_location
+      return unless location = name_location(call)
       return unless end_location = block.end_location
 
       if call_code.includes?("{...}")

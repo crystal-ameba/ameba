@@ -26,6 +26,8 @@ module Ameba::Rule::Performance
   #   Enabled: true
   # ```
   class MinMaxAfterMap < Base
+    include AST::Util
+
     properties do
       description "Identifies usage of `min/max/minmax` calls that follow `map`"
     end
@@ -42,14 +44,14 @@ module Ameba::Rule::Performance
       return unless (obj = node.obj) && obj.is_a?(Crystal::Call)
       return unless obj.name == "map" && obj.block && obj.args.empty?
 
-      return unless name_location = obj.name_location
-      return unless end_location = node.name_end_location
+      return unless name_location = name_location(obj)
+      return unless end_location = name_end_location(node)
 
       of_name = node.name.sub(/(.+?)(\?)?$/, "\\1_of\\2")
       message = MSG % {of_name, node.name}
 
       issue_for name_location, end_location, message do |corrector|
-        next unless node_name_location = node.name_location
+        next unless node_name_location = name_location(node)
 
         # TODO: switching the order of the below calls breaks the corrector
         corrector.replace(

@@ -57,7 +57,7 @@ module Ameba::Rule::Performance
       return unless obj.args.empty? && obj.block.nil?
       return unless method = call_names[obj.name]?
 
-      return unless name_location = obj.name_location
+      return unless name_location = name_location(obj)
       return unless end_location = name_end_location(node)
 
       msg = MSG % {method, obj.name}

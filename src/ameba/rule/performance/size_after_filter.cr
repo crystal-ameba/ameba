@@ -33,6 +33,8 @@ module Ameba::Rule::Performance
   #     - reject
   # ```
   class SizeAfterFilter < Base
+    include AST::Util
+
     properties do
       description "Identifies usage of `size` calls that follow filter"
       filter_names %w(select reject)
@@ -49,7 +51,7 @@ module Ameba::Rule::Performance
       return unless obj.is_a?(Crystal::Call) && obj.block
       return unless obj.name.in?(filter_names)
 
-      issue_for obj.name_location, node.name_end_location, MSG % obj.name
+      issue_for name_location(obj), name_end_location(node), MSG % obj.name
     end
   end
 end

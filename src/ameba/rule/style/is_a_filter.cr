@@ -39,6 +39,8 @@ module Ameba::Rule::Style
   #     - one?
   # ```
   class IsAFilter < Base
+    include AST::Util
+
     properties do
       description "Identifies usage of `is_a?/nil?` calls within filters"
       filter_names %w(select reject any? all? none? one?)
@@ -54,7 +56,7 @@ module Ameba::Rule::Style
 
     def test(source, node : Crystal::Call)
       return unless node.name.in?(filter_names)
-      return unless filter_location = node.name_location
+      return unless filter_location = name_location(node)
       return unless block = node.block
       return unless (body = block.body).is_a?(Crystal::IsA)
       return unless (path = body.const).is_a?(Crystal::Path)

@@ -41,7 +41,7 @@ module Ameba::Rule::Lint
       return unless (obj = node.obj).is_a?(Crystal::Call)
       return unless obj.name.in?(obj.block ? BLOCK_CALL_NAMES : CALL_NAMES)
 
-      return unless name_location = obj.name_location
+      return unless name_location = name_location(obj)
       return unless name_location_end = name_end_location(obj)
       return unless end_location = name_end_location(node)
 

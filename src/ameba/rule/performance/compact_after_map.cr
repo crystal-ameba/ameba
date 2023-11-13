@@ -22,6 +22,8 @@ module Ameba::Rule::Performance
   #   Enabled: true
   # ```
   class CompactAfterMap < Base
+    include AST::Util
+
     properties do
       description "Identifies usage of `compact` calls that follow `map`"
     end
@@ -37,7 +39,7 @@ module Ameba::Rule::Performance
       return unless obj.is_a?(Crystal::Call) && obj.block
       return unless obj.name == "map"
 
-      issue_for obj.name_location, node.name_end_location, MSG
+      issue_for name_location(obj), name_end_location(node), MSG
     end
   end
 end

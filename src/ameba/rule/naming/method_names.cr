@@ -38,8 +38,6 @@ module Ameba::Rule::Naming
   #   Enabled: true
   # ```
   class MethodNames < Base
-    include AST::Util
-
     properties do
       description "Enforces method names to be in underscored case"
     end
@@ -49,10 +47,7 @@ module Ameba::Rule::Naming
     def test(source, node : Crystal::Def)
       return if (expected = node.name.underscore) == node.name
 
-      return unless location = name_location(node)
-      return unless end_location = name_end_location(node)
-
-      issue_for location, end_location, MSG % {expected, node.name}
+      issue_for node, MSG % {expected, node.name}, prefer_name_location: true
     end
   end
 end

@@ -67,11 +67,12 @@ module Ameba::Rule::Performance
       return unless node.name.in?(call_names)
       return unless obj.name.in?(call_names) || obj.name.in?(ALLOCATING_METHOD_NAMES)
 
-      return unless location = node.name_location
-      return unless end_location = name_end_location(node)
-
-      issue_for location, end_location, MSG % {node.name, obj.name} do |corrector|
-        corrector.insert_after(end_location, '!')
+      if end_location = name_end_location(node)
+        issue_for node, MSG % {node.name, obj.name}, prefer_name_location: true do |corrector|
+          corrector.insert_after(end_location, '!')
+        end
+      else
+        issue_for node, MSG % {node.name, obj.name}, prefer_name_location: true
       end
     end
   end
