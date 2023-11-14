@@ -909,7 +909,8 @@
 <span class="k">end</span></code></pre>
 <p>YAML configuration example:</p>
 <pre><code class="language-crystal"><span class="t">Naming</span><span class="o">/</span><span class="t">AsciiIdentifiers</span>:
-  <span class="t">Enabled</span>: <span class="n">true</span></code></pre>
+  <span class="t">Enabled</span>: <span class="n">true</span>
+  <span class="t">IgnoreSymbols</span>: <span class="n">false</span></code></pre>
 
 
 
@@ -950,7 +951,7 @@
   </h2>
   
     
-      <a href="https://github.com/crystal-ameba/ameba/blob/0b225da/src/ameba/rule/naming/ascii_identifiers.cr#L24" target="_blank">
+      <a href="https://github.com/crystal-ameba/ameba/blob/3b87aa6/src/ameba/rule/naming/ascii_identifiers.cr#L25" target="_blank">
         ameba/rule/naming/ascii_identifiers.cr
       </a>
     
@@ -1068,6 +1069,16 @@
       </li>
     
       <li class="entry-summary">
+        <a href="#ignore_symbols%3D%28ignore_symbols%3ABool%29-instance-method" class="signature"><strong>#ignore_symbols=</strong>(ignore_symbols : Bool)</a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#ignore_symbols%3F%3ABool-instance-method" class="signature"><strong>#ignore_symbols?</strong> : Bool</a>
+        
+      </li>
+    
+      <li class="entry-summary">
         <a href="#severity%3AAmeba%3A%3ASeverity-instance-method" class="signature"><strong>#severity</strong> : Ameba::Severity</a>
         
       </li>
@@ -1084,6 +1095,11 @@
     
       <li class="entry-summary">
         <a href="#test%28source%2Cnode%3ACrystal%3A%3AMultiAssign%29-instance-method" class="signature"><strong>#test</strong>(source, node : Crystal::MultiAssign)</a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#test%28source%2Cnode%3ACrystal%3A%3ACall%29-instance-method" class="signature"><strong>#test</strong>(source, node : Crystal::Call)</a>
         
       </li>
     
@@ -1268,13 +1284,14 @@
 <span class="k">end</span></code></pre>
 <p>YAML configuration example:</p>
 <pre><code class="language-crystal"><span class="t">Naming</span><span class="o">/</span><span class="t">AsciiIdentifiers</span>:
-  <span class="t">Enabled</span>: <span class="n">true</span></code></pre>
+  <span class="t">Enabled</span>: <span class="n">true</span>
+  <span class="t">IgnoreSymbols</span>: <span class="n">false</span></code></pre>
         </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/0b225da/src/ameba/rule/naming/ascii_identifiers.cr#L24" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/3b87aa6/src/ameba/rule/naming/ascii_identifiers.cr#L25" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1416,6 +1433,34 @@
       </div>
     </div>
   
+    <div class="entry-detail" id="ignore_symbols=(ignore_symbols:Bool)-instance-method">
+      <div class="signature">
+        
+        def <strong>ignore_symbols=</strong>(ignore_symbols : Bool)
+
+        <a class="method-permalink" href="#ignore_symbols%3D%28ignore_symbols%3ABool%29-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="ignore_symbols?:Bool-instance-method">
+      <div class="signature">
+        
+        def <strong>ignore_symbols?</strong> : Bool
+
+        <a class="method-permalink" href="#ignore_symbols%3F%3ABool-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+      </div>
+    </div>
+  
     <div class="entry-detail" id="severity:Ameba::Severity-instance-method">
       <div class="signature">
         
@@ -1455,7 +1500,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/0b225da/src/ameba/rule/naming/ascii_identifiers.cr#L31" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/3b87aa6/src/ameba/rule/naming/ascii_identifiers.cr#L33" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1471,7 +1516,23 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/0b225da/src/ameba/rule/naming/ascii_identifiers.cr#L37" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/3b87aa6/src/ameba/rule/naming/ascii_identifiers.cr#L40" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="test(source,node:Crystal::Call)-instance-method">
+      <div class="signature">
+        
+        def <strong>test</strong>(source, node : Crystal::Call)
+
+        <a class="method-permalink" href="#test%28source%2Cnode%3ACrystal%3A%3ACall%29-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/crystal-ameba/ameba/blob/3b87aa6/src/ameba/rule/naming/ascii_identifiers.cr#L46" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1487,7 +1548,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/0b225da/src/ameba/rule/naming/ascii_identifiers.cr#L43" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/3b87aa6/src/ameba/rule/naming/ascii_identifiers.cr#L55" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1503,7 +1564,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/0b225da/src/ameba/rule/naming/ascii_identifiers.cr#L51" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/3b87aa6/src/ameba/rule/naming/ascii_identifiers.cr#L64" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1519,7 +1580,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/0b225da/src/ameba/rule/naming/ascii_identifiers.cr#L55" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/3b87aa6/src/ameba/rule/naming/ascii_identifiers.cr#L68" target="_blank">View source</a>]
         
       </div>
     </div>
