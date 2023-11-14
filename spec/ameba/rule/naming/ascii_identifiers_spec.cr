@@ -49,10 +49,32 @@ module Ameba::Rule::Naming
         CRYSTAL
     end
 
+    it "reports defs with parameter default values containing non-ascii characters" do
+      expect_issue subject, <<-CRYSTAL
+        def forest_adventure(animal_type = :🐺)
+                                         # ^^ error: Identifier contains non-ascii characters
+        end
+        CRYSTAL
+    end
+
     it "reports argument names containing non-ascii characters" do
       expect_issue subject, <<-CRYSTAL
         %w[wensleydale cheddar brie].each { |🧀| nil }
                                            # ^ error: Identifier contains non-ascii characters
+        CRYSTAL
+    end
+
+    it "reports calls with arguments containing non-ascii characters" do
+      expect_issue subject, <<-CRYSTAL
+        %i[🐺 🐿].index!(:🐺)
+                     # ^^ error: Identifier contains non-ascii characters
+        CRYSTAL
+    end
+
+    it "reports calls with named arguments containing non-ascii characters" do
+      expect_issue subject, <<-CRYSTAL
+        %i[🐺 🐿].index!(obj: :🐺)
+                          # ^^ error: Identifier contains non-ascii characters
         CRYSTAL
     end
 
@@ -81,6 +103,20 @@ module Ameba::Rule::Naming
       expect_issue subject, <<-CRYSTAL
         foo, space_👾 = true, true
            # ^^^^^^^ error: Identifier contains non-ascii characters
+        CRYSTAL
+    end
+
+    it "reports assignments with symbol literals containing non-ascii characters" do
+      expect_issue subject, <<-CRYSTAL
+        foo = :신장
+            # ^^^ error: Identifier contains non-ascii characters
+        CRYSTAL
+    end
+
+    it "reports multiple assignments with symbol literals containing non-ascii characters" do
+      expect_issue subject, <<-CRYSTAL
+        foo, bar = :신장, true
+                 # ^^^ error: Identifier contains non-ascii characters
         CRYSTAL
     end
 

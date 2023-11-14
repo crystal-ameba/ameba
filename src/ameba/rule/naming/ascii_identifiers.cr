@@ -32,11 +32,21 @@ module Ameba::Rule::Naming
       if (target = node.target).is_a?(Crystal::Path)
         check_issue(source, target, target)
       end
+      check_symbol_literal(source, node.value)
     end
 
     def test(source, node : Crystal::MultiAssign)
-      node.targets.each do |target|
-        check_issue(source, target, target)
+      node.values.each do |value|
+        check_symbol_literal(source, value)
+      end
+    end
+
+    def test(source, node : Crystal::Call)
+      node.args.each do |arg|
+        check_symbol_literal(source, arg)
+      end
+      node.named_args.try &.each do |arg|
+        check_symbol_literal(source, arg.value)
       end
     end
 
@@ -45,6 +55,7 @@ module Ameba::Rule::Naming
 
       node.args.each do |arg|
         check_issue(source, arg, prefer_name_location: true)
+        check_symbol_literal(source, arg.default_value)
       end
     end
 
@@ -54,6 +65,12 @@ module Ameba::Rule::Naming
 
     def test(source, node : Crystal::ClassDef | Crystal::ModuleDef | Crystal::EnumDef | Crystal::LibDef)
       check_issue(source, node.name, node.name)
+    end
+
+    private def check_symbol_literal(source, node)
+      if node.is_a?(Crystal::SymbolLiteral)
+        check_issue(source, node, node.value)
+      end
     end
 
     private def check_issue(source, location, end_location, name)
