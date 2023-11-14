@@ -34,7 +34,7 @@ module Ameba::Rule::Naming
       return unless node.name =~ /^is_([a-z]\w*)\?$/
       alternative = $1
 
-      issue_for node, MSG % {alternative, node.name}
+      issue_for node, MSG % {alternative, node.name}, prefer_name_location: true
     end
   end
 end

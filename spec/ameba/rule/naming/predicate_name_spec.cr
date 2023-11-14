@@ -21,8 +21,14 @@ module Ameba::Rule::Naming
 
     it "fails if predicate name is wrong" do
       expect_issue subject, <<-CRYSTAL
+        class Image
+          def self.is_valid?(x)
+                 # ^^^^^^^^^ error: Favour method name 'valid?' over 'is_valid?'
+          end
+        end
+
         def is_valid?(x)
-        # ^^^^^^^^^^^^^^ error: Favour method name 'valid?' over 'is_valid?'
+          # ^^^^^^^^^ error: Favour method name 'valid?' over 'is_valid?'
         end
         CRYSTAL
     end
