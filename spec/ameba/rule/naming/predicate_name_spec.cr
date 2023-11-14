@@ -30,6 +30,10 @@ module Ameba::Rule::Naming
         def is_valid?(x)
           # ^^^^^^^^^ error: Favour method name 'valid?' over 'is_valid?'
         end
+
+        def is_valid(x)
+          # ^^^^^^^^ error: Favour method name 'valid?' over 'is_valid'
+        end
         CRYSTAL
     end
 
