@@ -126,5 +126,26 @@ module Ameba::Rule::Naming
         space = :invader # 👾
         CRYSTAL
     end
+
+    context "properties" do
+      context "#ignore_symbols" do
+        it "returns `false` by default" do
+          rule = AsciiIdentifiers.new
+          rule.ignore_symbols?.should be_false
+        end
+
+        it "stops reporting symbol literals if set to `true`" do
+          rule = AsciiIdentifiers.new
+          rule.ignore_symbols = true
+
+          expect_no_issues rule, <<-CRYSTAL
+            def forest_adventure(animal_type = :🐺); end
+            %i[🐺 🐿].index!(:🐺)
+            foo, bar = :신장, true
+            foo = :신장
+            CRYSTAL
+        end
+      end
+    end
   end
 end
