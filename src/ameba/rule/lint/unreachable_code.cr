@@ -42,8 +42,6 @@ module Ameba::Rule::Lint
   #   Enabled: true
   # ```
   class UnreachableCode < Base
-    include AST::Util
-
     properties do
       description "Reports unreachable code"
     end
