@@ -11,6 +11,7 @@ module Ameba::Rule::Lint
         (1..3).index { |i| i > 2 }.not_nil!(:foo)
         (1..3).rindex { |i| i > 2 }.not_nil!(:foo)
         (1..3).find { |i| i > 2 }.not_nil!(:foo)
+        /(.)(.)(.)/.match("abc", &.itself).not_nil!
         CRYSTAL
     end
 
@@ -33,6 +34,17 @@ module Ameba::Rule::Lint
 
       expect_correction source, <<-CRYSTAL
         (1..3).rindex!(1)
+        CRYSTAL
+    end
+
+    it "reports if there is an `match` call followed by `not_nil!`" do
+      source = expect_issue subject, <<-CRYSTAL
+        /(.)(.)(.)/.match("abc").not_nil![2]
+                  # ^^^^^^^^^^^^^^^^^^^^^ error: Use `match! {...}` instead of `match {...}.not_nil!`
+        CRYSTAL
+
+      expect_correction source, <<-CRYSTAL
+        /(.)(.)(.)/.match!("abc")[2]
         CRYSTAL
     end
 
