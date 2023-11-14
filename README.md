@@ -239,4 +239,4 @@ time = Time.epoch(1483859302) # ameba:disable Style, Lint
 ## Contributors
 
 - [veelenga](https://github.com/veelenga) Vitalii Elenhaupt - creator, maintainer
-- [Sija](https://github.com/Sija) Sijawusz Pur Rahnama - maintainer
+- [Sija](https://github.com/Sija) Sijawusz Pur Rahnama - contributor, maintainer
