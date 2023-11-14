@@ -123,7 +123,7 @@ module Ameba
       it "#int_min_digits" do
         rule = Rule::Style::LargeNumbers.new
         rule.int_min_digits = 10
-        expect_no_issues rule, %q(1200000)
+        expect_no_issues rule, "1200000"
       end
     end
   end

@@ -47,8 +47,9 @@ module Ameba::Rule::Style
     end
 
     MSG = "Use `%s` instead of `%s`"
-    NEW = "%s(%s)"
+
     OLD = "%s {...}"
+    NEW = "%s(%s)"
 
     def test(source)
       AST::NodeVisitor.new self, source, skip: :macro

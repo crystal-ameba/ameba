@@ -9,9 +9,9 @@ targets:
     main: src/cli.cr
 
 scripts:
-  # TODO: remove pre-compiled executable in future releases
   postinstall: shards build -Dpreview_mt
 
+# TODO: remove pre-compiled executable in future releases
 executables:
   - ameba
   - ameba.cr

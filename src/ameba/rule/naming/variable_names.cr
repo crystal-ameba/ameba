@@ -35,8 +35,8 @@ module Ameba::Rule::Naming
 
     def test(source, node : Crystal::Var | Crystal::InstanceVar | Crystal::ClassVar)
       name = node.name.to_s
-      expected = name.underscore
-      return if name == expected
+
+      return if (expected = name.underscore) == name
 
       issue_for node, MSG % {expected, name}
     end

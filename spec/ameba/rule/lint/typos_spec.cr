@@ -19,12 +19,15 @@ module Ameba::Rule::Lint
                        # ^^^^^^^^^ error: Typo found: arugments -> arguments
         def tpos
           # ^^^^ error: Typo found: tpos -> typos
+          :otput
+         # ^^^^^ error: Typo found: otput -> output
         end
         CRYSTAL
 
       expect_correction source, <<-CRYSTAL
         # method with no arguments
         def typos
+          :output
         end
         CRYSTAL
     end

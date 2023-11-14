@@ -186,8 +186,8 @@ Excluded:
 ``` yaml
 Style/RedundantBegin:
   Excluded:
-  - src/server/processor.cr
-  - src/server/api.cr
+    - src/server/processor.cr
+    - src/server/api.cr
 ```
 
 ### Rules
