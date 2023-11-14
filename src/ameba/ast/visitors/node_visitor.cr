@@ -32,6 +32,7 @@ module Ameba::AST
       IsA,
       LibDef,
       ModuleDef,
+      MultiAssign,
       NilLiteral,
       StringInterpolation,
       Unless,
