@@ -63,7 +63,7 @@ module Ameba::Rule::Naming
       expected = name.camelcase
       return if name == expected
 
-      issue_for node, MSG % {expected, name}
+      issue_for node.name, MSG % {expected, name}
     end
   end
 end
