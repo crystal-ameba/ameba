@@ -1,17 +1,17 @@
 module Ameba::Rule::Lint
-  # This rule is used to identify usage of `index/rindex/find` calls
+  # This rule is used to identify usage of `index/rindex/find/match` calls
   # followed by a call to `not_nil!`.
   #
   # For example, this is considered a code smell:
   #
   # ```
-  # %w[Alice Bob].find(&.match(/^A./)).not_nil!
+  # %w[Alice Bob].find(&.chars.any?(&.in?('o', 'b'))).not_nil!
   # ```
   #
   # And can be written as this:
   #
   # ```
-  # %w[Alice Bob].find!(&.match(/^A./))
+  # %w[Alice Bob].find!(&.chars.any?(&.in?('o', 'b')))
   # ```
   #
   # YAML configuration example:
@@ -24,11 +24,11 @@ module Ameba::Rule::Lint
     include AST::Util
 
     properties do
-      description "Identifies usage of `index/rindex/find` calls followed by `not_nil!`"
+      description "Identifies usage of `index/rindex/find/match` calls followed by `not_nil!`"
     end
 
     BLOCK_CALL_NAMES = %w(index rindex find)
-    CALL_NAMES       = %w(index rindex)
+    CALL_NAMES       = %w(index rindex match)
 
     MSG = "Use `%s! {...}` instead of `%s {...}.not_nil!`"
 
