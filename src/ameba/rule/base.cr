@@ -114,7 +114,7 @@ module Ameba::Rule
 
     # Adds an issue to the *source*
     macro issue_for(*args, **kwargs, &block)
-      source.add_issue(self, {{ *args }}, {{ **kwargs }}) {{ block }}
+      source.add_issue(self, {{ args.splat }}, {{ kwargs.double_splat }}) {{ block }}
     end
 
     protected def self.rule_name
