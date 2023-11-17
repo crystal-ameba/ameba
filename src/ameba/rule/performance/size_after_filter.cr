@@ -37,7 +37,7 @@ module Ameba::Rule::Performance
 
     properties do
       description "Identifies usage of `size` calls that follow filter"
-      filter_names %w(select reject)
+      filter_names %w[select reject]
     end
 
     MSG = "Use `count {...}` instead of `%s {...}.size`."

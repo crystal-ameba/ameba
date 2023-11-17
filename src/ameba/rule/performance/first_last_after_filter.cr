@@ -30,12 +30,13 @@ module Ameba::Rule::Performance
 
     properties do
       description "Identifies usage of `first/last/first?/last?` calls that follow filters"
-      filter_names %w(select)
+      filter_names %w[select]
     end
 
-    CALL_NAMES  = %w(first last first? last?)
     MSG         = "Use `find {...}` instead of `%s {...}.%s`"
     MSG_REVERSE = "Use `reverse_each.find {...}` instead of `%s {...}.%s`"
+
+    CALL_NAMES = %w[first last first? last?]
 
     def test(source)
       AST::NodeVisitor.new self, source, skip: :macro

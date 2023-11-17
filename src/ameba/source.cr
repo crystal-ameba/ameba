@@ -74,7 +74,7 @@ module Ameba
 
     # Returns `true` if *filepath* matches the source's path, `false` otherwise.
     def matches_path?(filepath)
-      path.in?(filepath, File.expand_path(filepath))
+      fullpath == File.expand_path(filepath)
     end
 
     # Converts an AST location to a string position.

@@ -4,4 +4,4 @@ Documentation/DocumentationAdmonition:
 
 Lint/Typos:
   Excluded:
-  - spec/ameba/rule/lint/typos_spec.cr
+    - spec/ameba/rule/lint/typos_spec.cr

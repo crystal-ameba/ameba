@@ -28,8 +28,6 @@ module Ameba::Rule::Lint
   #   Enabled: true
   # ```
   class EmptyExpression < Base
-    include AST::Util
-
     properties do
       description "Disallows empty expressions"
     end

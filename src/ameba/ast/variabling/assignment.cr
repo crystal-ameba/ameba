@@ -75,34 +75,5 @@ module Ameba::AST
         node
       end
     end
-
-    # TODO: Remove in a next release. BC for crystal <= 1.9.
-    # refs https://github.com/crystal-ameba/ameba/pull/407
-    #
-    # Indicates whether the node is a transformed assignment by the compiler.
-    # i.e.
-    #
-    # ```
-    # collection.each do |(a, b)|
-    #   puts b
-    # end
-    # ```
-    #
-    # is transformed to:
-    #
-    # ```
-    # collection.each do |__arg0|
-    #   a = __arg0[0]
-    #   b = __arg0[1]
-    #   puts(b)
-    # end
-    # ```
-    def transformed?
-      return false unless (assign = node).is_a?(Crystal::Assign)
-      return false unless (value = assign.value).is_a?(Crystal::Call)
-      return false unless (obj = value.obj).is_a?(Crystal::Var)
-
-      obj.name.starts_with? "__arg"
-    end
   end
 end

@@ -977,7 +977,7 @@ module Ameba::Rule::Lint
         s = Source.new %(
           foo = 22
 
-          {% for x in %w(foo) %}
+          {% for x in %w[foo] %}
             add({{ x.id }})
           {% end %}
         )
@@ -988,7 +988,7 @@ module Ameba::Rule::Lint
         s = Source.new %(
           foo = 22
 
-          {% for x in %w(bar) %}
+          {% for x in %w[bar] %}
             puts {{ "foo".id }}
           {% end %}
         )

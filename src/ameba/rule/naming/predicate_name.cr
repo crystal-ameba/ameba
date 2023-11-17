@@ -31,10 +31,10 @@ module Ameba::Rule::Naming
     MSG = "Favour method name '%s?' over '%s'"
 
     def test(source, node : Crystal::Def)
-      return unless node.name =~ /^is_([a-z]\w*)\?$/
+      return unless node.name =~ /^is_([a-z]\w*)\??$/
       alternative = $1
 
-      issue_for node, MSG % {alternative, node.name}
+      issue_for node, MSG % {alternative, node.name}, prefer_name_location: true
     end
   end
 end

@@ -7,8 +7,8 @@ module Ameba
     it "reports type name #{expected}", file, line do
       rule = Rule::Naming::TypeNames.new
       expect_issue rule, <<-CRYSTAL, type: type, name: name, file: file, line: line
-        %{type} %{name}; end
-        # ^{type}^{name}^^^^ error: Type name should be camelcased: #{expected}, but it was %{name}
+        %{type}   %{name}; end
+        _{type} # ^{name} error: Type name should be camelcased: #{expected}, but it was %{name}
         CRYSTAL
     end
   end
@@ -46,7 +46,7 @@ module Ameba
     it "reports alias name" do
       expect_issue subject, <<-CRYSTAL
         alias Numeric_value = Int32
-        # ^{} error: Type name should be camelcased: NumericValue, but it was Numeric_value
+            # ^^^^^^^^^^^^^ error: Type name should be camelcased: NumericValue, but it was Numeric_value
         CRYSTAL
     end
   end

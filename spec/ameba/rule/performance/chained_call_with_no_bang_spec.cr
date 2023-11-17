@@ -46,7 +46,7 @@ module Ameba::Rule::Performance
     context "properties" do
       it "#call_names" do
         rule = ChainedCallWithNoBang.new
-        rule.call_names = %w(uniq)
+        rule.call_names = %w[uniq]
 
         expect_no_issues rule, <<-CRYSTAL
           [1, 2, 3].select { |e| e > 2 }.reverse

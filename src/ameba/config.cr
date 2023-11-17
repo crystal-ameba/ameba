@@ -200,13 +200,13 @@ class Ameba::Config
   #
   # ```
   # config = Ameba::Config.load
-  # config.update_rules %w(Rule1 Rule2), enabled: true
+  # config.update_rules %w[Rule1 Rule2], enabled: true
   # ```
   #
   # also it allows to update groups of rules:
   #
   # ```
-  # config.update_rules %w(Group1 Group2), enabled: true
+  # config.update_rules %w[Group1 Group2], enabled: true
   # ```
   def update_rules(names, enabled = true, excluded = nil)
     names.try &.each do |name|

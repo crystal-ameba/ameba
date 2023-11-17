@@ -118,7 +118,6 @@ Add this to your application's `shard.yml`:
 development_dependencies:
   ameba:
     github: crystal-ameba/ameba
-    version: ~> 1.4.0
 ```
 
 Build `bin/ameba` binary within your project directory while running `shards install`.
@@ -165,7 +164,7 @@ Generate new file by running `ameba --gen-config`.
 **List of sources to run Ameba on can be configured globally via:**
 
 - `Globs` section - an array of wildcards (or paths) to include to the
-  inspection. Defaults to `%w(**/*.cr !lib)`, meaning it includes all project
+  inspection. Defaults to `%w[**/*.cr !lib]`, meaning it includes all project
   files with `*.cr` extension except those which exist in `lib` folder.
 - `Excluded` section - an array of wildcards (or paths) to exclude from the
   source list defined by `Globs`. Defaults to an empty array.
@@ -186,8 +185,8 @@ Excluded:
 ``` yaml
 Style/RedundantBegin:
   Excluded:
-  - src/server/processor.cr
-  - src/server/api.cr
+    - src/server/processor.cr
+    - src/server/api.cr
 ```
 
 ### Rules
@@ -240,4 +239,4 @@ time = Time.epoch(1483859302) # ameba:disable Style, Lint
 ## Contributors
 
 - [veelenga](https://github.com/veelenga) Vitalii Elenhaupt - creator, maintainer
-- [Sija](https://github.com/Sija) Sijawusz Pur Rahnama - maintainer
+- [Sija](https://github.com/Sija) Sijawusz Pur Rahnama - contributor, maintainer

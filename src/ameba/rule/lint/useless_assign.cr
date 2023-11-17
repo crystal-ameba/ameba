@@ -42,7 +42,7 @@ module Ameba::Rule::Lint
         next if scope.assigns_type_dec?(var.name)
 
         var.assignments.each do |assign|
-          next if assign.referenced? || assign.transformed?
+          next if assign.referenced?
           issue_for assign.target_node, MSG % var.name
         end
       end

@@ -36,6 +36,43 @@ module Ameba::AST
       end
     end
 
+    describe "#static/dynamic_literal?" do
+      [
+        Crystal::ArrayLiteral.new,
+        Crystal::ArrayLiteral.new([Crystal::StringLiteral.new("foo")] of Crystal::ASTNode),
+        Crystal::BoolLiteral.new(false),
+        Crystal::CharLiteral.new('a'),
+        Crystal::HashLiteral.new,
+        Crystal::NamedTupleLiteral.new,
+        Crystal::NilLiteral.new,
+        Crystal::NumberLiteral.new(42),
+        Crystal::RegexLiteral.new(Crystal::StringLiteral.new("")),
+        Crystal::StringLiteral.new("foo"),
+        Crystal::SymbolLiteral.new("foo"),
+        Crystal::TupleLiteral.new([] of Crystal::ASTNode),
+        Crystal::TupleLiteral.new([Crystal::StringLiteral.new("foo")] of Crystal::ASTNode),
+        Crystal::RangeLiteral.new(
+          Crystal::NumberLiteral.new(0),
+          Crystal::NumberLiteral.new(10),
+          true),
+      ].each do |literal|
+        it "properly identifies static node #{literal}" do
+          subject.static_literal?(literal).should be_true
+          subject.dynamic_literal?(literal).should be_false
+        end
+      end
+
+      [
+        Crystal::ArrayLiteral.new([Crystal::Path.new(%w[IO])] of Crystal::ASTNode),
+        Crystal::TupleLiteral.new([Crystal::Path.new(%w[IO])] of Crystal::ASTNode),
+      ].each do |literal|
+        it "properly identifies dynamic node #{literal}" do
+          subject.dynamic_literal?(literal).should be_true
+          subject.static_literal?(literal).should be_false
+        end
+      end
+    end
+
     describe "#node_source" do
       it "returns original source of the node" do
         s = <<-CRYSTAL

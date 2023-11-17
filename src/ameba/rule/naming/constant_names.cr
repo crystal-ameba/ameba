@@ -30,7 +30,8 @@ module Ameba::Rule::Naming
 
     def test(source, node : Crystal::Assign)
       return unless (target = node.target).is_a?(Crystal::Path)
-      name = target.names.first
+
+      name = target.to_s
       expected = name.upcase
 
       return if name.in?(expected, name.camelcase)

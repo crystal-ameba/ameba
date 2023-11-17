@@ -60,10 +60,10 @@ module Ameba::Rule::Naming
 
     def test(source, node : Crystal::Alias | Crystal::ClassDef | Crystal::ModuleDef | Crystal::LibDef | Crystal::EnumDef)
       name = node.name.to_s
-      expected = name.camelcase
-      return if name == expected
 
-      issue_for node, MSG % {expected, name}
+      return if (expected = name.camelcase) == name
+
+      issue_for node.name, MSG % {expected, name}
     end
   end
 end

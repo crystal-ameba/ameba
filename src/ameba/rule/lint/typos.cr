@@ -15,7 +15,7 @@ module Ameba::Rule::Lint
   class Typos < Base
     properties do
       description "Reports typos found in source files"
-      bin_path nil.as(String?)
+      bin_path : String? = nil
       fail_on_error false
     end
 

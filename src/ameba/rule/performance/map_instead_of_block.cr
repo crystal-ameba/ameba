@@ -29,9 +29,9 @@ module Ameba::Rule::Performance
       description "Identifies usage of `sum/product` calls that follow `map`"
     end
 
-    CALL_NAMES = %w(sum product)
-    MAP_NAME   = "map"
-    MSG        = "Use `%s {...}` instead of `map {...}.%s`"
+    MSG = "Use `%s {...}` instead of `map {...}.%s`"
+
+    CALL_NAMES = %w[sum product]
 
     def test(source)
       AST::NodeVisitor.new self, source, skip: :macro
@@ -40,7 +40,7 @@ module Ameba::Rule::Performance
     def test(source, node : Crystal::Call)
       return unless node.name.in?(CALL_NAMES) && (obj = node.obj)
       return unless obj.is_a?(Crystal::Call) && obj.block
-      return unless obj.name == MAP_NAME
+      return unless obj.name == "map"
 
       issue_for name_location(obj), name_end_location(node),
         MSG % {node.name, node.name}

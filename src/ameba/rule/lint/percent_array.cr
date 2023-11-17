@@ -4,15 +4,15 @@ module Ameba::Rule::Lint
   # For example, this is usually written by mistake:
   #
   # ```
-  # %i(:one, :two)
-  # %w("one", "two")
+  # %i[:one, :two]
+  # %w["one", "two"]
   # ```
   #
   # And the expected example is:
   #
   # ```
-  # %i(one two)
-  # %w(one two)
+  # %i[one two]
+  # %w[one two]
   # ```
   #
   # YAML configuration example:
@@ -42,7 +42,7 @@ module Ameba::Rule::Lint
           start_token = token.dup
         when .string?
           if (_start = start_token) && !issue
-            issue = array_entry_invalid?(token.value, _start.raw)
+            issue = array_entry_invalid?(token.value.to_s, _start.raw)
           end
         when .string_array_end?
           if (_start = start_token) && (_issue = issue)
@@ -63,7 +63,7 @@ module Ameba::Rule::Lint
     end
 
     private def check_array_entry(entry, symbols, literal)
-      MSG % {symbols, literal} if entry =~ /[#{symbols}]/
+      MSG % {symbols, literal} if entry.matches?(/[#{Regex.escape(symbols)}]/)
     end
   end
 end

@@ -72,12 +72,15 @@ class Ameba::Source
 
     # Replaces the code of the given range with *content*.
     def replace(begin_pos, end_pos, content)
-      combine(begin_pos, end_pos, replacement: content.to_s)
+      combine begin_pos, end_pos,
+        replacement: content.to_s
     end
 
     # Inserts the given strings before and after the given range.
     def wrap(begin_pos, end_pos, insert_before, insert_after)
-      combine(begin_pos, end_pos, insert_before: insert_before.to_s, insert_after: insert_after.to_s)
+      combine begin_pos, end_pos,
+        insert_before: insert_before.to_s,
+        insert_after: insert_after.to_s
     end
 
     # Shortcut for `replace(begin_pos, end_pos, "")`

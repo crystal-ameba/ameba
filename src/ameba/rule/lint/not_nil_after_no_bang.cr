@@ -27,10 +27,10 @@ module Ameba::Rule::Lint
       description "Identifies usage of `index/rindex/find/match` calls followed by `not_nil!`"
     end
 
-    BLOCK_CALL_NAMES = %w(index rindex find)
-    CALL_NAMES       = %w(index rindex match)
-
     MSG = "Use `%s! {...}` instead of `%s {...}.not_nil!`"
+
+    BLOCK_CALL_NAMES = %w[index rindex find]
+    CALL_NAMES       = %w[index rindex match]
 
     def test(source)
       AST::NodeVisitor.new self, source, skip: :macro

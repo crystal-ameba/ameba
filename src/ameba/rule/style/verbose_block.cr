@@ -227,9 +227,6 @@ module Ameba::Rule::Style
 
       arg = block.args.first
 
-      # we skip auto-generated blocks - `(1..3).any?(&.odd?)`
-      return if arg.name.starts_with?("__arg")
-
       # we filter out the blocks that are of call type - `i.to_i64.odd?`
       return unless (body = block.body).is_a?(Crystal::Call)
 

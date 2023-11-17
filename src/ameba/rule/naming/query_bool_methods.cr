@@ -48,9 +48,7 @@ module Ameba::Rule::Naming
             .select!(&.name.in?(CALL_NAMES))
         end
 
-      return unless calls
-
-      calls.each do |exp|
+      calls.try &.each do |exp|
         exp.args.each do |arg|
           name_node, is_bool =
             case arg

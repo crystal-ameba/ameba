@@ -67,7 +67,7 @@ module Ameba
 
       @unneeded_disable_directive_rule =
         config.rules
-          .find &.name.==(Rule::Lint::UnneededDisableDirective.rule_name)
+          .find &.class.==(Rule::Lint::UnneededDisableDirective)
     end
 
     protected def initialize(@rules, @sources, @formatter, @severity, @autocorrect = false)
