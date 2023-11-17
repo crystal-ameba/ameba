@@ -53,13 +53,16 @@ module Ameba::Rule::Lint
       return unless outer_scope = scope.outer_scope
 
       scope.arguments.reject(&.ignored?).each do |arg|
-        variable = outer_scope.find_variable(arg.name)
+        # TODO: handle unpacked variables from `Block#unpacks`
+        next unless name = arg.name.presence
+
+        variable = outer_scope.find_variable(name)
 
         next if variable.nil? || !variable.declared_before?(arg)
-        next if outer_scope.assigns_ivar?(arg.name)
-        next if outer_scope.assigns_type_dec?(arg.name)
+        next if outer_scope.assigns_ivar?(name)
+        next if outer_scope.assigns_type_dec?(name)
 
-        issue_for arg.node, MSG % arg.name
+        issue_for arg.node, MSG % name
       end
     end
   end

@@ -31,6 +31,30 @@ module Ameba::Rule::Lint
         CRYSTAL
     end
 
+    pending "reports if there is a shadowing in an unpacked variable in a block" do
+      expect_issue subject, <<-CRYSTAL
+        def some_method
+          foo = 1
+
+          [{3}].each do |(foo)|
+                        # ^ error: Shadowing outer local variable `foo`
+          end
+        end
+        CRYSTAL
+    end
+
+    pending "reports if there is a shadowing in an unpacked variable in a block (2)" do
+      expect_issue subject, <<-CRYSTAL
+        def some_method
+          foo = 1
+
+          [{[3]}].each do |((foo))|
+                           # ^ error: Shadowing outer local variable `foo`
+          end
+        end
+        CRYSTAL
+    end
+
     it "does not report outer vars declared below shadowed block" do
       expect_no_issues subject, <<-CRYSTAL
         methods = klass.methods.select { |m| m.annotation(MyAnn) }
