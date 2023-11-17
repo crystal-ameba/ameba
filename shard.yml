@@ -17,6 +17,6 @@ executables:
   - ameba
   - ameba.cr
 
-crystal: ~> 1.9
+crystal: ~> 1.10
 
 license: MIT
