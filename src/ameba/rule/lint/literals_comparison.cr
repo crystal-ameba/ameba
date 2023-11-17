@@ -23,7 +23,7 @@ module Ameba::Rule::Lint
       description "Identifies comparisons between literals"
     end
 
-    OP_NAMES = %w(=== == !=)
+    OP_NAMES = %w[=== == !=]
 
     MSG        = "Comparison always evaluates to %s"
     MSG_LIKELY = "Comparison most likely evaluates to %s"

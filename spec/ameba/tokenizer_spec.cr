@@ -22,23 +22,23 @@ module Ameba
         DELIMITER_START STRING INTERPOLATION_START NUMBER } DELIMITER_END EOF
       )
 
-      it_tokenizes %(%w(1 2)),
-        %w(STRING_ARRAY_START STRING STRING STRING_ARRAY_END EOF)
+      it_tokenizes %(%w[1 2]),
+        %w[STRING_ARRAY_START STRING STRING STRING_ARRAY_END EOF]
 
-      it_tokenizes %(%i(one two)),
-        %w(SYMBOL_ARRAY_START STRING STRING STRING_ARRAY_END EOF)
+      it_tokenizes %(%i[one two]),
+        %w[SYMBOL_ARRAY_START STRING STRING STRING_ARRAY_END EOF]
 
       it_tokenizes %(
-          class A
-            def method
-              puts "hello"
-            end
+        class A
+          def method
+            puts "hello"
           end
-      ), %w(
+        end
+      ), %w[
         NEWLINE SPACE IDENT SPACE CONST NEWLINE SPACE IDENT SPACE IDENT
         NEWLINE SPACE IDENT SPACE DELIMITER_START STRING DELIMITER_END
         NEWLINE SPACE IDENT NEWLINE SPACE IDENT NEWLINE SPACE EOF
-      )
+      ]
     end
   end
 end

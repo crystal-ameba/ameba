@@ -46,7 +46,7 @@ module Ameba::Rule::Performance
     context "properties" do
       it "#filter_names" do
         rule = SizeAfterFilter.new
-        rule.filter_names = %w(select)
+        rule.filter_names = %w[select]
 
         expect_no_issues rule, <<-CRYSTAL
           [1, 2, 3].reject(&.empty?).size

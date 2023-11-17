@@ -4,7 +4,7 @@ module Ameba::Rule::Style
   subject = ParenthesesAroundCondition.new
 
   describe ParenthesesAroundCondition do
-    {% for keyword in %w(if unless while until) %}
+    {% for keyword in %w[if unless while until] %}
       context "{{ keyword.id }}" do
         it "reports if redundant parentheses are found" do
           source = expect_issue subject, <<-CRYSTAL, keyword: {{ keyword }}

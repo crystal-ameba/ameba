@@ -32,7 +32,7 @@ module Ameba
           Globs: src/*.cr
           CONFIG
         config = Config.new(yml)
-        config.globs.should eq %w(src/*.cr)
+        config.globs.should eq %w[src/*.cr]
       end
 
       it "initializes globs as array" do
@@ -43,7 +43,7 @@ module Ameba
            - "!spec"
           CONFIG
         config = Config.new(yml)
-        config.globs.should eq %w(src/*.cr !spec)
+        config.globs.should eq %w[src/*.cr !spec]
       end
 
       it "raises if Globs has a wrong type" do
@@ -62,7 +62,7 @@ module Ameba
           Excluded: spec
           CONFIG
         config = Config.new(yml)
-        config.excluded.should eq %w(spec)
+        config.excluded.should eq %w[spec]
       end
 
       it "initializes excluded as array" do
@@ -73,7 +73,7 @@ module Ameba
            - lib/*.cr
           CONFIG
         config = Config.new(yml)
-        config.excluded.should eq %w(spec lib/*.cr)
+        config.excluded.should eq %w[spec lib/*.cr]
       end
 
       it "raises if Excluded has a wrong type" do
@@ -145,12 +145,12 @@ module Ameba
       end
 
       it "returns a list of sources matching globs" do
-        config.globs = %w(**/config_spec.cr)
+        config.globs = %w[**/config_spec.cr]
         config.sources.size.should eq(1)
       end
 
       it "returns a list of sources excluding 'Excluded'" do
-        config.excluded = %w(**/config_spec.cr)
+        config.excluded = %w[**/config_spec.cr]
         config.sources.any?(&.fullpath.==(__FILE__)).should be_false
       end
     end
@@ -192,7 +192,7 @@ module Ameba
 
       it "updates excluded property" do
         name = DummyRule.rule_name
-        excluded = %w(spec/source.cr)
+        excluded = %w[spec/source.cr]
         config.update_rule name, excluded: excluded
         rule = config.rules.find!(&.name.== name)
         rule.excluded.should eq excluded
@@ -211,7 +211,7 @@ module Ameba
 
       it "updates multiple rules by excluded property" do
         name = DummyRule.rule_name
-        excluded = %w(spec/source.cr)
+        excluded = %w[spec/source.cr]
         config.update_rules [name], excluded: excluded
         rule = config.rules.find!(&.name.== name)
         rule.excluded.should eq excluded
@@ -226,7 +226,7 @@ module Ameba
 
       it "updates a group by excluded property" do
         name = DummyRule.group_name
-        excluded = %w(spec/source.cr)
+        excluded = %w[spec/source.cr]
         config.update_rules [name], excluded: excluded
         rule = config.rules.find!(&.name.== DummyRule.rule_name)
         rule.excluded.should eq excluded

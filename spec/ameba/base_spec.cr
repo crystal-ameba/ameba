@@ -10,7 +10,7 @@ module Ameba::Rule
       end
 
       it "contains rules across all the available groups" do
-        Rule.rules.map(&.group_name).uniq!.reject!(&.empty?).sort.should eq %w(
+        Rule.rules.map(&.group_name).uniq!.reject!(&.empty?).sort.should eq %w[
           Ameba
           Documentation
           Layout
@@ -19,7 +19,7 @@ module Ameba::Rule
           Naming
           Performance
           Style
-        )
+        ]
       end
     end
 
@@ -50,25 +50,25 @@ module Ameba::Rule
 
       it "returns false if source is not excluded from this rule" do
         rule = DummyRule.new
-        rule.excluded = %w(some_source.cr)
+        rule.excluded = %w[some_source.cr]
         rule.excluded?(Source.new "", "another_source.cr").should_not be_true
       end
 
       it "returns true if source is excluded from this rule" do
         rule = DummyRule.new
-        rule.excluded = %w(source.cr)
+        rule.excluded = %w[source.cr]
         rule.excluded?(Source.new "", "source.cr").should be_true
       end
 
       it "returns true if source matches the wildcard" do
         rule = DummyRule.new
-        rule.excluded = %w(**/*.cr)
+        rule.excluded = %w[**/*.cr]
         rule.excluded?(Source.new "", __FILE__).should be_true
       end
 
       it "returns false if source does not match the wildcard" do
         rule = DummyRule.new
-        rule.excluded = %w(*_spec.cr)
+        rule.excluded = %w[*_spec.cr]
         rule.excluded?(Source.new "", "source.cr").should be_false
       end
     end

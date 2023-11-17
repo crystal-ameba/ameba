@@ -164,7 +164,7 @@ Generate new file by running `ameba --gen-config`.
 **List of sources to run Ameba on can be configured globally via:**
 
 - `Globs` section - an array of wildcards (or paths) to include to the
-  inspection. Defaults to `%w(**/*.cr !lib)`, meaning it includes all project
+  inspection. Defaults to `%w[**/*.cr !lib]`, meaning it includes all project
   files with `*.cr` extension except those which exist in `lib` folder.
 - `Excluded` section - an array of wildcards (or paths) to exclude from the
   source list defined by `Globs`. Defaults to an empty array.

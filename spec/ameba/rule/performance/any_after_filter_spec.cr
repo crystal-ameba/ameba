@@ -48,7 +48,7 @@ module Ameba::Rule::Performance
     context "properties" do
       it "#filter_names" do
         rule = AnyAfterFilter.new
-        rule.filter_names = %w(select)
+        rule.filter_names = %w[select]
 
         expect_no_issues rule, <<-CRYSTAL
           [1, 2, 3].reject { |e| e > 2 }.any?

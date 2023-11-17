@@ -31,7 +31,7 @@ module Ameba::Rule::Performance
 
     MSG = "Use `%s {...}` instead of `map {...}.%s`"
 
-    CALL_NAMES = %w(sum product)
+    CALL_NAMES = %w[sum product]
 
     def test(source)
       AST::NodeVisitor.new self, source, skip: :macro

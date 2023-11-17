@@ -49,8 +49,9 @@ module Ameba::Rule::Lint
       description "Reports focused spec items"
     end
 
-    MSG             = "Focused spec item detected"
-    SPEC_ITEM_NAMES = %w(describe context it pending)
+    MSG = "Focused spec item detected"
+
+    SPEC_ITEM_NAMES = %w[describe context it pending]
 
     def test(source)
       return unless source.spec?

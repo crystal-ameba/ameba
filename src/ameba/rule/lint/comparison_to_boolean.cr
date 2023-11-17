@@ -28,7 +28,7 @@ module Ameba::Rule::Lint
     end
 
     MSG      = "Comparison to a boolean is pointless"
-    OP_NAMES = %w(== != ===)
+    OP_NAMES = %w[== != ===]
 
     def test(source, node : Crystal::Call)
       return unless node.name.in?(OP_NAMES)

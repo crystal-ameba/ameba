@@ -44,7 +44,7 @@ module Ameba::Rule::Style
     context "properties" do
       it "#filter_names" do
         rule = IsAFilter.new
-        rule.filter_names = %w(select)
+        rule.filter_names = %w[select]
 
         expect_no_issues rule, <<-CRYSTAL
           [1, 2, nil].reject(&.nil?)

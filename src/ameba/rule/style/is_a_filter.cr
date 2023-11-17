@@ -43,7 +43,7 @@ module Ameba::Rule::Style
 
     properties do
       description "Identifies usage of `is_a?/nil?` calls within filters"
-      filter_names %w(select reject any? all? none? one?)
+      filter_names %w[select reject any? all? none? one?]
     end
 
     MSG = "Use `%s` instead of `%s`"

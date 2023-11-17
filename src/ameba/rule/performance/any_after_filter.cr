@@ -31,7 +31,7 @@ module Ameba::Rule::Performance
 
     properties do
       description "Identifies usage of `any?` calls that follow filters"
-      filter_names %w(select reject)
+      filter_names %w[select reject]
     end
 
     MSG = "Use `any? {...}` instead of `%s {...}.any?`"
