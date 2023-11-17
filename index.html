@@ -1008,8 +1008,7 @@ $ CRYSTAL_WORKERS=8 ameba #=&gt; 10.14 seconds</code></pre>
 <p>Add this to your application's <code>shard.yml</code>:</p>
 <pre><code class="language-yaml">development_dependencies:
   ameba:
-    github: crystal-ameba/ameba
-    version: ~&gt; 1.4.0</code></pre>
+    github: crystal-ameba/ameba</code></pre>
 <p>Build <code>bin/ameba</code> binary within your project directory while running <code>shards install</code>.</p>
 <h3><a id="os-x" class="anchor" href="#os-x">
   <svg class="octicon-link" aria-hidden="true">
@@ -1051,7 +1050,7 @@ It allows to configure rule properties, disable specific rules and exclude sourc
 <p><strong>List of sources to run Ameba on can be configured globally via:</strong></p>
 <ul>
 <li><code>Globs</code> section - an array of wildcards (or paths) to include to the
-inspection. Defaults to <code>%w(**/*.cr !lib)</code>, meaning it includes all project
+inspection. Defaults to <code>%w[**/*.cr !lib]</code>, meaning it includes all project
 files with <code>*.cr</code> extension except those which exist in <code>lib</code> folder.</li>
 <li><code>Excluded</code> section - an array of wildcards (or paths) to exclude from the
 source list defined by <code>Globs</code>. Defaults to an empty array.</li>
@@ -1066,8 +1065,8 @@ Excluded:
 <p><strong>Specific sources can be excluded at rule level</strong>:</p>
 <pre><code class="language-yaml">Style/RedundantBegin:
   Excluded:
-  - src/server/processor.cr
-  - src/server/api.cr</code></pre>
+    - src/server/processor.cr
+    - src/server/api.cr</code></pre>
 <h3><a id="rules" class="anchor" href="#rules">
   <svg class="octicon-link" aria-hidden="true">
     <use href="#octicon-link"/>
@@ -1124,7 +1123,7 @@ time <span class="o">=</span> <span class="t">Time</span>.epoch(<span class="n">
 </a>Contributors</h2>
 <ul>
 <li><a href="https://github.com/veelenga">veelenga</a> Vitalii Elenhaupt - creator, maintainer</li>
-<li><a href="https://github.com/Sija">Sija</a> Sijawusz Pur Rahnama - maintainer</li>
+<li><a href="https://github.com/Sija">Sija</a> Sijawusz Pur Rahnama - contributor, maintainer</li>
 </ul>
 </div>
 </body>

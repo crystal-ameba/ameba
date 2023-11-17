@@ -902,11 +902,11 @@
 
   <p>A rule that disallows some unwanted symbols in percent array literals.</p>
 <p>For example, this is usually written by mistake:</p>
-<pre><code class="language-crystal"><span class="s">%i(:one, :two)</span>
-<span class="s">%w(&quot;one&quot;, &quot;two&quot;)</span></code></pre>
+<pre><code class="language-crystal"><span class="s">%i[:one, :two]</span>
+<span class="s">%w[&quot;one&quot;, &quot;two&quot;]</span></code></pre>
 <p>And the expected example is:</p>
-<pre><code class="language-crystal"><span class="s">%i(one two)</span>
-<span class="s">%w(one two)</span></code></pre>
+<pre><code class="language-crystal"><span class="s">%i[one two]</span>
+<span class="s">%w[one two]</span></code></pre>
 <p>YAML configuration example:</p>
 <pre><code class="language-crystal">Lint/PercentArrays:
   Enabled: true
@@ -952,7 +952,7 @@
   </h2>
   
     
-      <a href="https://github.com/crystal-ameba/ameba/blob/52a3e47/src/ameba/rule/lint/percent_array.cr#L26" target="_blank">
+      <a href="https://github.com/crystal-ameba/ameba/blob/5aac63e/src/ameba/rule/lint/percent_array.cr#L26" target="_blank">
         ameba/rule/lint/percent_array.cr
       </a>
     
@@ -1263,11 +1263,11 @@
           
           <p>A rule that disallows some unwanted symbols in percent array literals.</p>
 <p>For example, this is usually written by mistake:</p>
-<pre><code class="language-crystal"><span class="s">%i(:one, :two)</span>
-<span class="s">%w(&quot;one&quot;, &quot;two&quot;)</span></code></pre>
+<pre><code class="language-crystal"><span class="s">%i[:one, :two]</span>
+<span class="s">%w[&quot;one&quot;, &quot;two&quot;]</span></code></pre>
 <p>And the expected example is:</p>
-<pre><code class="language-crystal"><span class="s">%i(one two)</span>
-<span class="s">%w(one two)</span></code></pre>
+<pre><code class="language-crystal"><span class="s">%i[one two]</span>
+<span class="s">%w[one two]</span></code></pre>
 <p>YAML configuration example:</p>
 <pre><code class="language-crystal">Lint/PercentArrays:
   Enabled: true
@@ -1278,7 +1278,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/52a3e47/src/ameba/rule/lint/percent_array.cr#L26" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/5aac63e/src/ameba/rule/lint/percent_array.cr#L26" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1515,7 +1515,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/52a3e47/src/ameba/rule/lint/percent_array.cr#L36" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/5aac63e/src/ameba/rule/lint/percent_array.cr#L36" target="_blank">View source</a>]
         
       </div>
     </div>
