@@ -25,13 +25,13 @@ module Ameba::Rule::Naming
   # ```
   # Naming/BinaryOperatorParameterName:
   #   Enabled: true
-  #   ExcludedOperators: ["[]", "[]?", "[]=", "<<", "=~"]
+  #   ExcludedOperators: ["[]", "[]?", "[]=", "<<", ">>", "=~", "!~"]
   # ```
   class BinaryOperatorParameterName < Base
     properties do
       description "Enforces that certain binary operator methods have " \
                   "their sole parameter named `other`"
-      excluded_operators %w[[] []? []= << ` =~]
+      excluded_operators %w[[] []? []= << >> ` =~ !~]
     end
 
     MSG = "When defining the `%s` operator, name its argument `other`"
