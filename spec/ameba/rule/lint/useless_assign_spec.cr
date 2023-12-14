@@ -492,8 +492,8 @@ module Ameba::Rule::Lint
         subject.catch(s).should be_valid
       end
 
-      it "doesn't report if type declaration assigned inside class" do
-        s = Source.new %(
+      it "reports if type declaration assigned inside class" do
+        s = Source.new path: "source.cr", code: %(
           class A
             foo : String? = "foo"
 
@@ -502,7 +502,11 @@ module Ameba::Rule::Lint
             end
           end
         )
-        subject.catch(s).should be_valid
+        subject.catch(s).should_not be_valid
+
+        issue = s.issues.first
+        issue.location.to_s.should eq "source.cr:2:3"
+        issue.message.should eq "Useless assignment to variable `foo`"
       end
     end
 
@@ -1066,6 +1070,43 @@ module Ameba::Rule::Lint
         response
        )
       subject.catch(s).should be_valid
+    end
+
+    context "type declaration" do
+      it "reports if it's not referenced at a top level" do
+        s = Source.new %(
+          a : String?
+        )
+        subject.catch(s).should_not be_valid
+      end
+
+      it "reports if it's not referenced in a method" do
+        s = Source.new %(
+          def foo
+            a : String?
+          end
+        )
+        subject.catch(s).should_not be_valid
+      end
+
+      it "reports if it's not referenced in a class" do
+        s = Source.new %(
+          class Foo
+            a : String?
+          end
+        )
+        subject.catch(s).should_not be_valid
+      end
+
+      it "doesn't report if it's referenced" do
+        s = Source.new %(
+          def foo
+            a : String?
+            a
+          end
+        )
+        subject.catch(s).should be_valid
+      end
     end
 
     context "uninitialized" do
