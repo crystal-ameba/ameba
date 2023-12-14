@@ -32,9 +32,7 @@ module Ameba::AST
       return unless scope = @variable.scope
 
       @branch = Branch.of(@node, scope)
-      @referenced = true if @variable.special? ||
-                            @variable.scope.type_definition? ||
-                            referenced_in_loop?
+      @referenced = true if @variable.special? || referenced_in_loop?
     end
 
     def referenced_in_loop?
