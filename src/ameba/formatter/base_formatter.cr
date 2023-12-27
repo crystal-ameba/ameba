@@ -17,13 +17,13 @@ module Ameba::Formatter
     # A list of sources to inspect is passed as an argument.
     def started(sources); end
 
-    # Callback that indicates when source inspection is finished.
+    # Callback that indicates when source inspection is started.
     # A corresponding source is passed as an argument.
-    def source_finished(source : Source); end
+    def source_started(source : Source); end
 
     # Callback that indicates when source inspection is finished.
     # A corresponding source is passed as an argument.
-    def source_started(source : Source); end
+    def source_finished(source : Source); end
 
     # Callback that indicates when inspection is finished.
     # A list of inspected sources is passed as an argument.

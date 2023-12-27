@@ -230,7 +230,7 @@ module Ameba::Rule::Style
       # we filter out the blocks that are of call type - `i.to_i64.odd?`
       return unless (body = block.body).is_a?(Crystal::Call)
 
-      # we need to "unwind" the chain calls, so the final receiver object
+      # we need to "unwind" the call chain, so the final receiver object
       # ends up being a variable - `i`
       obj = body.obj
       while obj.is_a?(Crystal::Call)
