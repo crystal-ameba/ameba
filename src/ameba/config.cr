@@ -55,7 +55,10 @@ class Ameba::Config
     Path[XDG_CONFIG_HOME] / "ameba/config.yml",
   }
 
-  SOURCES_GLOB = "**/*.cr"
+  DEFAULT_GLOBS = %w(
+    **/*.cr
+    !lib
+  )
 
   getter rules : Array(Rule::Base)
   property severity = Severity::Convention
@@ -92,7 +95,7 @@ class Ameba::Config
     @rules = Rule.rules.map &.new(config).as(Rule::Base)
     @rule_groups = @rules.group_by &.group
     @excluded = load_array_section(config, "Excluded")
-    @globs = load_array_section(config, "Globs", default_globs)
+    @globs = load_array_section(config, "Globs", DEFAULT_GLOBS)
 
     return unless formatter_name = load_formatter_name(config)
     self.formatter = formatter_name
@@ -233,12 +236,6 @@ class Ameba::Config
     when .as_a? then value.as_a.map(&.as_s)
     else
       raise "Incorrect '#{section_name}' section in a config files"
-    end
-  end
-
-  private def default_globs
-    [SOURCES_GLOB].tap do |globs|
-      globs.push("!lib") unless Dir["lib/**/*.cr"].empty?
     end
   end
 
