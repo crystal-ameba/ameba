@@ -17,10 +17,8 @@ module Ameba::AST
     # Node of the first assignment which can be available before any reference.
     getter assign_before_reference : Crystal::ASTNode?
 
-    delegate location, to: @node
-    delegate end_location, to: @node
-    delegate name, to: @node
-    delegate to_s, to: @node
+    delegate location, end_location, name, to_s,
+      to: @node
 
     # Creates a new variable(in the scope).
     #

@@ -19,9 +19,8 @@ module Ameba::AST
     # A scope assignment belongs to
     getter scope : Scope
 
-    delegate to_s, to: @node
-    delegate location, to: @node
-    delegate end_location, to: @node
+    delegate location, end_location, to_s,
+      to: @node
 
     # Creates a new assignment.
     #

@@ -2,9 +2,8 @@ module Ameba::AST
   class TypeDecVariable
     getter node : Crystal::TypeDeclaration
 
-    delegate location, to: @node
-    delegate end_location, to: @node
-    delegate to_s, to: @node
+    delegate location, end_location, to_s,
+      to: @node
 
     def initialize(@node)
     end
