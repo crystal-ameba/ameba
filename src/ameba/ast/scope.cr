@@ -186,6 +186,16 @@ module Ameba::AST
       node.is_a?(Crystal::Def)
     end
 
+    # Returns `true` if current scope is a class, `false` otherwise.
+    def class_def?
+      node.is_a?(Crystal::ClassDef)
+    end
+
+    # Returns `true` if current scope is a module, `false` otherwise.
+    def module_def?
+      node.is_a?(Crystal::ModuleDef)
+    end
+
     # Returns `true` if this scope is a top level scope, `false` otherwise.
     def top_level?
       outer_scope.nil? || type_definition?
