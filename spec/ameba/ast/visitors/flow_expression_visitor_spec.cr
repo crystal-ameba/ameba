@@ -1,8 +1,6 @@
 require "../../../spec_helper"
 
 module Ameba::AST
-  source = Source.new ""
-
   describe FlowExpressionVisitor do
     it "creates an expression for return" do
       rule = FlowExpressionRule.new
