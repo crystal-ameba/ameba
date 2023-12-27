@@ -57,13 +57,15 @@ module Ameba::AST
           end
         end
         CRYSTAL
-      scope = Scope.new nodes.def_nodes.first
+
       var_node = nodes.var_nodes.first
-      scope.add_variable var_node
+
+      scope = Scope.new nodes.def_nodes.first
+      scope.add_variable(var_node)
       scope.inner_scopes << Scope.new(nodes.block_nodes.first, scope)
 
       variable = Variable.new(var_node, scope)
-      variable.reference nodes.var_nodes.first, scope.inner_scopes.first
+      variable.reference(nodes.var_nodes.first, scope.inner_scopes.first)
 
       scope.references?(variable).should be_true
     end
@@ -77,13 +79,15 @@ module Ameba::AST
           end
         end
         CRYSTAL
-      scope = Scope.new nodes.def_nodes.first
+
       var_node = nodes.var_nodes.first
-      scope.add_variable var_node
+
+      scope = Scope.new nodes.def_nodes.first
+      scope.add_variable(var_node)
       scope.inner_scopes << Scope.new(nodes.block_nodes.first, scope)
 
       variable = Variable.new(var_node, scope)
-      variable.reference nodes.var_nodes.first, scope.inner_scopes.first
+      variable.reference(nodes.var_nodes.first, scope.inner_scopes.first)
 
       scope.references?(variable, check_inner_scopes: false).should be_false
     end
@@ -98,9 +102,11 @@ module Ameba::AST
           end
         end
         CRYSTAL
-      scope = Scope.new nodes.def_nodes.first
+
       var_node = nodes.var_nodes.first
-      scope.add_variable var_node
+
+      scope = Scope.new nodes.def_nodes.first
+      scope.add_variable(var_node)
       scope.inner_scopes << Scope.new(nodes.block_nodes.first, scope)
 
       variable = Variable.new(var_node, scope)
@@ -120,7 +126,7 @@ module Ameba::AST
   describe "#find_variable" do
     it "returns the variable in the scope by name" do
       scope = Scope.new as_node("foo = 1")
-      scope.add_variable Crystal::Var.new "foo"
+      scope.add_variable(Crystal::Var.new "foo")
       scope.find_variable("foo").should_not be_nil
     end
 
@@ -133,7 +139,7 @@ module Ameba::AST
   describe "#assign_variable" do
     it "creates a new assignment" do
       scope = Scope.new as_node("foo = 1")
-      scope.add_variable Crystal::Var.new "foo"
+      scope.add_variable(Crystal::Var.new "foo")
       scope.assign_variable("foo", Crystal::Var.new "foo")
       var = scope.find_variable("foo").should_not be_nil
       var.assignments.size.should eq 1
@@ -141,7 +147,7 @@ module Ameba::AST
 
     it "does not create the assignment if variable is wrong" do
       scope = Scope.new as_node("foo = 1")
-      scope.add_variable Crystal::Var.new "foo"
+      scope.add_variable(Crystal::Var.new "foo")
       scope.assign_variable("bar", Crystal::Var.new "bar")
       var = scope.find_variable("foo").should_not be_nil
       var.assignments.size.should eq 0

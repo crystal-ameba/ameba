@@ -26,16 +26,21 @@ module Ameba::Formatter
     end
 
     private def generate_todo_config(issues)
-      file = File.new(@config_path, mode: "w")
-      file << header
-      rule_issues_map(issues).each do |rule, rule_issues|
-        file << "\n# Problems found: #{rule_issues.size}"
-        file << "\n# Run `ameba --only #{rule.name}` for details"
-        file << rule_todo(rule, rule_issues).gsub("---", "")
+      File.open(@config_path, mode: "w") do |file|
+        file << header
+
+        rule_issues_map(issues).each do |rule, rule_issues|
+          rule_todo = rule_todo(rule, rule_issues)
+          rule_todo =
+            {rule_todo.name => rule_todo}
+              .to_yaml.gsub("---", "")
+
+          file << "\n# Problems found: #{rule_issues.size}"
+          file << "\n# Run `ameba --only #{rule.name}` for details"
+          file << rule_todo
+        end
+        file
       end
-      file
-    ensure
-      file.close if file
     end
 
     private def rule_issues_map(issues)
@@ -60,11 +65,11 @@ module Ameba::Formatter
     end
 
     private def rule_todo(rule, issues)
-      rule.excluded = issues
-        .compact_map(&.location.try &.filename.try &.to_s)
-        .uniq!
-
-      {rule.name => rule}.to_yaml
+      rule.dup.tap do |rule_todo|
+        rule_todo.excluded = issues
+          .compact_map(&.location.try &.filename.try &.to_s)
+          .uniq!
+      end
     end
   end
 end

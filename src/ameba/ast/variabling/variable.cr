@@ -52,7 +52,7 @@ module Ameba::AST
     #
     # ```
     # variable = Variable.new(node, scope)
-    # variable.reference(var_node)
+    # variable.reference(var_node, some_scope)
     # variable.referenced? # => true
     # ```
     def referenced?
@@ -206,9 +206,9 @@ module Ameba::AST
       return if references.size > assignments.size
       return if assignments.any?(&.op_assign?)
 
-      @assign_before_reference = assignments.find { |ass|
-        !ass.in_branch?
-      }.try &.node
+      @assign_before_reference = assignments
+        .find(&.in_branch?.!)
+        .try(&.node)
     end
   end
 end

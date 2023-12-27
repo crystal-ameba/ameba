@@ -110,23 +110,22 @@ module Ameba::Rule::Style
       i
     end
 
-    protected def args_to_s(io : IO, node : Crystal::Call, short_block = nil, skip_last_arg = false)
-      node.args.dup.tap do |args|
-        args.pop? if skip_last_arg
-        args.join io, ", "
+    protected def args_to_s(io : IO, node : Crystal::Call, short_block = nil, skip_last_arg = false) : Nil
+      args = node.args.dup
+      args.pop? if skip_last_arg
+      args.join io, ", "
 
-        named_args = node.named_args
-        if named_args
-          io << ", " unless args.empty? || named_args.empty?
-          named_args.join io, ", " do |arg, inner_io|
-            inner_io << arg.name << ": " << arg.value
-          end
+      named_args = node.named_args
+      if named_args
+        io << ", " unless args.empty? || named_args.empty?
+        named_args.join io, ", " do |arg, inner_io|
+          inner_io << arg.name << ": " << arg.value
         end
+      end
 
-        if short_block
-          io << ", " unless args.empty? && (named_args.nil? || named_args.empty?)
-          io << short_block
-        end
+      if short_block
+        io << ", " unless args.empty? && (named_args.nil? || named_args.empty?)
+        io << short_block
       end
     end
 
@@ -164,9 +163,7 @@ module Ameba::Rule::Style
       return unless block_end_location = block.body.end_location
 
       block_code = source_between(block_location, block_end_location, source.lines)
-      return unless block_code.try(&.starts_with?("&."))
-
-      block_code
+      block_code if block_code.try(&.starts_with?("&."))
     end
 
     protected def call_code(source, call, body)
