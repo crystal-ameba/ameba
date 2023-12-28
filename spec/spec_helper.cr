@@ -6,7 +6,7 @@ module Ameba
   # Dummy Rule which does nothing.
   class DummyRule < Rule::Base
     properties do
-      description : String = "Dummy rule that does nothing."
+      description "Dummy rule that does nothing."
       dummy true
     end
 
@@ -92,7 +92,7 @@ module Ameba
 
   class PerfRule < Rule::Performance::Base
     properties do
-      description : String = "Sample performance rule"
+      description "Sample performance rule"
     end
 
     def test(source)
