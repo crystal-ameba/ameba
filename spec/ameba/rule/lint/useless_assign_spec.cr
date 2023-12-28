@@ -393,6 +393,23 @@ module Ameba::Rule::Lint
           CRYSTAL
       end
 
+      it "doesn't report if this is an accessor declaration" do
+        accessor_macros = %w[setter class_setter]
+        %w[getter class_getter property class_property].each do |name|
+          accessor_macros << name
+          accessor_macros << "#{name}?"
+          accessor_macros << "#{name}!"
+        end
+        accessor_macros.each do |accessor|
+          expect_no_issues subject, <<-CRYSTAL
+            class Foo
+              #{accessor} foo : String?
+              #{accessor} bar = "bar"
+            end
+            CRYSTAL
+        end
+      end
+
       it "does not report if assignment is referenced after the record declaration" do
         expect_no_issues subject, <<-CRYSTAL
           foo = 2
