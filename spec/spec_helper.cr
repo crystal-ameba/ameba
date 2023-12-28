@@ -259,6 +259,7 @@ module Ameba
       Crystal::MacroLiteral,
       Crystal::Expressions,
       Crystal::ControlExpression,
+      Crystal::Call,
     }
 
     def initialize(node)
