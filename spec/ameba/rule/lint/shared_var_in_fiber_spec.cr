@@ -39,10 +39,28 @@ module Ameba::Rule::Lint
         CRYSTAL
     end
 
-    it "reports if there is a shared var in spawn" do
+    it "reports if there is a shared var in spawn (while)" do
       source = expect_issue subject, <<-CRYSTAL
         i = 0
         while i < 10
+          spawn do
+            puts(i)
+               # ^ error: Shared variable `i` is used in fiber
+          end
+          i += 1
+        end
+
+        Fiber.yield
+        CRYSTAL
+
+      expect_no_corrections source
+    end
+
+    it "reports if there is a shared var in spawn (loop)" do
+      source = expect_issue subject, <<-CRYSTAL
+        i = 0
+        loop do
+          break if i >= 10
           spawn do
             puts(i)
                # ^ error: Shared variable `i` is used in fiber
