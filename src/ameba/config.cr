@@ -244,20 +244,20 @@ class Ameba::Config
     # Define rule properties
     macro properties(&block)
       {% definitions = [] of NamedTuple %}
-      {% if block.body.is_a? Assign %}
-        {% definitions << {var: block.body.target, value: block.body.value} %}
-      {% elsif block.body.is_a? Call %}
-        {% definitions << {var: block.body.name, value: block.body.args.first} %}
-      {% elsif block.body.is_a? TypeDeclaration %}
-        {% definitions << {var: block.body.var, value: block.body.value, type: block.body.type} %}
+      {% if (prop = block.body).is_a? Call %}
+        {% if (named_args = prop.named_args) && (type = named_args.select(&.name.== "as".id).first) %}
+          {% definitions << {var: prop.name, value: prop.args.first, type: type.value} %}
+        {% else %}
+          {% definitions << {var: prop.name, value: prop.args.first} %}
+        {% end %}
       {% elsif block.body.is_a? Expressions %}
         {% for prop in block.body.expressions %}
-          {% if prop.is_a? Assign %}
-            {% definitions << {var: prop.target, value: prop.value} %}
-          {% elsif prop.is_a? Call %}
-            {% definitions << {var: prop.name, value: prop.args.first} %}
-          {% elsif prop.is_a? TypeDeclaration %}
-            {% definitions << {var: prop.var, value: prop.value, type: prop.type} %}
+          {% if prop.is_a? Call %}
+            {% if (named_args = prop.named_args) && (type = named_args.select(&.name.== "as".id).first) %}
+              {% definitions << {var: prop.name, value: prop.args.first, type: type.value} %}
+            {% else %}
+              {% definitions << {var: prop.name, value: prop.args.first} %}
+            {% end %}
           {% end %}
         {% end %}
       {% end %}
