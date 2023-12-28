@@ -72,6 +72,11 @@ module Ameba::AST
       end
     end
 
+    # :ditto:
+    def reference(scope : Scope)
+      reference(node, scope)
+    end
+
     # Reference variable's assignments.
     #
     # ```

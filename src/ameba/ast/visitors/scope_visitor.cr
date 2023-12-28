@@ -178,9 +178,7 @@ module Ameba::AST
       when scope.type_definition? && accessor_macro?(node) then return false
       when scope.def? && special_node?(node)
         scope.arguments.each do |arg|
-          variable = arg.variable
-
-          ref = variable.reference(variable.node, scope)
+          ref = arg.variable.reference(scope)
           ref.explicit = false
         end
       end
