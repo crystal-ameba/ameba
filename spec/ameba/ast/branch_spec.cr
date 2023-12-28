@@ -298,6 +298,34 @@ module Ameba::AST
       end
     end
 
+    context "Crystal::Call" do
+      context "loop" do
+        it "constructs a branch in block" do
+          branch = branch_of_assign_in_def <<-CRYSTAL
+            def method(a)
+              loop do
+                b = (a = 1)
+              end
+            end
+            CRYSTAL
+          branch.to_s.should eq "b = (a = 1)"
+        end
+      end
+
+      context "other" do
+        it "skips constructing a branch in block" do
+          branch = branch_of_assign_in_def <<-CRYSTAL
+            def method(a)
+              1.upto(10) do
+                b = (a = 1)
+              end
+            end
+            CRYSTAL
+          branch.should be_nil
+        end
+      end
+    end
+
     describe "#initialize" do
       it "creates new branch" do
         nodes = as_nodes <<-CRYSTAL
@@ -357,6 +385,30 @@ module Ameba::AST
         branchable = Branchable.new nodes.if_nodes.first
         branch = Branch.new nodes.assign_nodes.first, branchable
         branch.in_loop?.should be_false
+      end
+
+      context "Crystal::Call" do
+        it "returns true if branch is in a loop" do
+          nodes = as_nodes <<-CRYSTAL
+            loop do
+              a = 1
+            end
+            CRYSTAL
+          branchable = Branchable.new nodes.call_nodes.first
+          branch = Branch.new nodes.assign_nodes.first, branchable
+          branch.in_loop?.should be_true
+        end
+
+        it "returns false if branch is not in a loop" do
+          nodes = as_nodes <<-CRYSTAL
+            1.upto(10) do
+              a = 1
+            end
+            CRYSTAL
+          branchable = Branchable.new nodes.call_nodes.first
+          branch = Branch.new nodes.assign_nodes.first, branchable
+          branch.in_loop?.should be_false
+        end
       end
     end
   end

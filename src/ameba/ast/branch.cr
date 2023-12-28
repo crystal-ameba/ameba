@@ -1,3 +1,5 @@
+require "./util"
+
 module Ameba::AST
   # Represents the branch in Crystal code.
   # Branch is a part of a branchable statement.
@@ -67,6 +69,8 @@ module Ameba::AST
 
     # :nodoc:
     private class BranchVisitor < Crystal::Visitor
+      include Util
+
       @current_branch : Crystal::ASTNode?
 
       property branchable : Branchable?
@@ -79,7 +83,7 @@ module Ameba::AST
         on_branchable_start(node, branches)
       end
 
-      private def on_branchable_start(node, branches : Array | Tuple)
+      private def on_branchable_start(node, branches : Enumerable)
         @branchable = Branchable.new(node, @branchable)
 
         branches.each do |branch_node|
@@ -171,6 +175,18 @@ module Ameba::AST
 
       def end_visit(node : Crystal::MacroFor)
         on_branchable_end node
+      end
+
+      def visit(node : Crystal::Call)
+        if loop?(node) && (block = node.block)
+          on_branchable_start node, block.body
+        end
+      end
+
+      def end_visit(node : Crystal::Call)
+        if loop?(node) && node.block
+          on_branchable_end node
+        end
       end
     end
   end
