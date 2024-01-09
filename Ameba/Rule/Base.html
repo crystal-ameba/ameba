@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="generator" content="Crystal Docs 1.9.2">
+<meta name="generator" content="Crystal Docs 1.10.1">
 <meta name="crystal_docs.project_version" content="master">
 <meta name="crystal_docs.project_name" content="ameba">
 
@@ -1102,7 +1102,7 @@ that are tested by this rule, it should add an issue.</p>
   </h2>
   
     
-      <a href="https://github.com/crystal-ameba/ameba/blob/452a7a8/src/ameba/rule/base.cr#L29" target="_blank">
+      <a href="https://github.com/crystal-ameba/ameba/blob/b6bd74e/src/ameba/rule/base.cr#L29" target="_blank">
         ameba/rule/base.cr
       </a>
     
@@ -1146,6 +1146,27 @@ that are tested by this rule, it should add an issue.</p>
     
       <li class="entry-summary">
         <a href="#default_severity%3AAmeba%3A%3ASeverity-class-method" class="signature"><strong>.default_severity</strong> : Ameba::Severity</a>
+        
+      </li>
+    
+  </ul>
+
+
+
+  <h2>
+    <a id="macro-summary" class="anchor" href="#macro-summary">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>
+    Macro Summary
+  </h2>
+  <ul class="list-summary">
+    
+      <li class="entry-summary">
+        <a href="#issue_for%28%2Aargs%2C%2A%2Akwargs%2C%26block%29-macro" class="signature"><strong>issue_for</strong>(*args, **kwargs, &block)</a>
+        
+          <div class="summary"><p>Adds an issue to the <em>source</em></p></div>
         
       </li>
     
@@ -1215,33 +1236,14 @@ that are tested by this rule, it should add an issue.</p>
       <li class="entry-summary">
         <a href="#test%28source%3ASource%2Cnode%3ACrystal%3A%3AASTNode%2C%2Aopts%29-instance-method" class="signature"><strong>#test</strong>(source : Source, node : Crystal::ASTNode, *opts)</a>
         
+          <div class="summary"><p><span class="flag purple">NOTE</span>  Can't be abstract</p></div>
+        
       </li>
     
       <li class="entry-summary">
         <a href="#test%28source%3ASource%29-instance-method" class="signature"><strong>#test</strong>(source : Source)</a>
         
           <div class="summary"><p>This method is designed to test the source passed in.</p></div>
-        
-      </li>
-    
-  </ul>
-
-
-
-  <h2>
-    <a id="macro-summary" class="anchor" href="#macro-summary">
-  <svg class="octicon-link" aria-hidden="true">
-    <use href="#octicon-link"/>
-  </svg>
-</a>
-    Macro Summary
-  </h2>
-  <ul class="list-summary">
-    
-      <li class="entry-summary">
-        <a href="#issue_for%28%2Aargs%2C%2A%2Akwargs%2C%26block%29-macro" class="signature"><strong>issue_for</strong>(*args, **kwargs, &block)</a>
-        
-          <div class="summary"><p>Adds an issue to the <em>source</em></p></div>
         
       </li>
     
@@ -1260,6 +1262,18 @@ that are tested by this rule, it should add an issue.</p>
     
 
 
+    
+
+  <h3>Macros inherited from module <code>Ameba::Config::RuleConfig</code></h3>
+  
+  
+    <a href="../../Ameba/Config/RuleConfig.html#properties%28%26block%29-macro" class="tooltip">
+      <span>properties(&block)</span>
+    properties</a>
+    
+  
+
+
   
     
 
@@ -1270,7 +1284,13 @@ that are tested by this rule, it should add an issue.</p>
     
 
 
+    
+
+
   
+    
+
+
     
 
 
@@ -1313,6 +1333,39 @@ that are tested by this rule, it should add an issue.</p>
 
 
   <h2>
+    <a id="macro-detail" class="anchor" href="#macro-detail">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>
+    Macro Detail
+  </h2>
+  
+    <div class="entry-detail" id="issue_for(*args,**kwargs,&amp;block)-macro">
+      <div class="signature">
+        
+        macro <strong>issue_for</strong>(*args, **kwargs, &block)
+
+        <a class="method-permalink" href="#issue_for%28%2Aargs%2C%2A%2Akwargs%2C%26block%29-macro">#</a>
+      </div>
+      
+        <div class="doc">
+          
+          <p>Adds an issue to the <em>source</em></p>
+        </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/crystal-ameba/ameba/blob/b6bd74e/src/ameba/rule/base.cr#L117" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+
+
+
+  <h2>
     <a id="instance-method-detail" class="anchor" href="#instance-method-detail">
   <svg class="octicon-link" aria-hidden="true">
     <use href="#octicon-link"/>
@@ -1341,7 +1394,7 @@ that are tested by this rule, it should add an issue.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/452a7a8/src/ameba/rule/base.cr#L107" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/b6bd74e/src/ameba/rule/base.cr#L108" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1365,7 +1418,7 @@ source.valid?</code></pre>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/452a7a8/src/ameba/rule/base.cr#L52" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/b6bd74e/src/ameba/rule/base.cr#L53" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1389,7 +1442,7 @@ the one of the given source.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/452a7a8/src/ameba/rule/base.cr#L90" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/b6bd74e/src/ameba/rule/base.cr#L91" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1415,7 +1468,7 @@ the one of the given source.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/452a7a8/src/ameba/rule/base.cr#L79" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/b6bd74e/src/ameba/rule/base.cr#L80" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1445,7 +1498,7 @@ though usually the macro <code>def_hash</code> can be used to generate this meth
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/452a7a8/src/ameba/rule/base.cr#L111" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/b6bd74e/src/ameba/rule/base.cr#L112" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1472,7 +1525,7 @@ though usually the macro <code>def_hash</code> can be used to generate this meth
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/452a7a8/src/ameba/rule/base.cr#L66" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/b6bd74e/src/ameba/rule/base.cr#L67" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1495,7 +1548,7 @@ usual rules.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/452a7a8/src/ameba/rule/base.cr#L103" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/b6bd74e/src/ameba/rule/base.cr#L104" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1508,10 +1561,15 @@ usual rules.</p>
         <a class="method-permalink" href="#test%28source%3ASource%2Cnode%3ACrystal%3A%3AASTNode%2C%2Aopts%29-instance-method">#</a>
       </div>
       
+        <div class="doc">
+          
+          <p><span class="flag purple">NOTE</span>  Can't be abstract</p>
+        </div>
+      
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/452a7a8/src/ameba/rule/base.cr#L41" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/b6bd74e/src/ameba/rule/base.cr#L43" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1528,47 +1586,14 @@ usual rules.</p>
           
           <p>This method is designed to test the source passed in. If source has issues
 that are tested by this rule, it should add an issue.</p>
-<p>Be default it uses a node visitor to traverse all the nodes in the source.</p>
+<p>By default it uses a node visitor to traverse all the nodes in the source.</p>
 <p><span class="flag purple">NOTE</span>  Must be overridden for other type of rules.</p>
         </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/452a7a8/src/ameba/rule/base.cr#L37" target="_blank">View source</a>]
-        
-      </div>
-    </div>
-  
-
-
-
-  <h2>
-    <a id="macro-detail" class="anchor" href="#macro-detail">
-  <svg class="octicon-link" aria-hidden="true">
-    <use href="#octicon-link"/>
-  </svg>
-</a>
-    Macro Detail
-  </h2>
-  
-    <div class="entry-detail" id="issue_for(*args,**kwargs,&amp;block)-macro">
-      <div class="signature">
-        
-        macro <strong>issue_for</strong>(*args, **kwargs, &block)
-
-        <a class="method-permalink" href="#issue_for%28%2Aargs%2C%2A%2Akwargs%2C%26block%29-macro">#</a>
-      </div>
-      
-        <div class="doc">
-          
-          <p>Adds an issue to the <em>source</em></p>
-        </div>
-      
-      <br/>
-      <div>
-        
-          [<a href="https://github.com/crystal-ameba/ameba/blob/452a7a8/src/ameba/rule/base.cr#L116" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/b6bd74e/src/ameba/rule/base.cr#L38" target="_blank">View source</a>]
         
       </div>
     </div>
