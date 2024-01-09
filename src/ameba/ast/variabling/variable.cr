@@ -17,10 +17,8 @@ module Ameba::AST
     # Node of the first assignment which can be available before any reference.
     getter assign_before_reference : Crystal::ASTNode?
 
-    delegate location, to: @node
-    delegate end_location, to: @node
-    delegate name, to: @node
-    delegate to_s, to: @node
+    delegate location, end_location, name, to_s,
+      to: @node
 
     # Creates a new variable(in the scope).
     #
@@ -54,7 +52,7 @@ module Ameba::AST
     #
     # ```
     # variable = Variable.new(node, scope)
-    # variable.reference(var_node)
+    # variable.reference(var_node, some_scope)
     # variable.referenced? # => true
     # ```
     def referenced?
@@ -72,6 +70,11 @@ module Ameba::AST
         references << reference
         scope.references << reference
       end
+    end
+
+    # :ditto:
+    def reference(scope : Scope)
+      reference(node, scope)
     end
 
     # Reference variable's assignments.
@@ -208,9 +211,9 @@ module Ameba::AST
       return if references.size > assignments.size
       return if assignments.any?(&.op_assign?)
 
-      @assign_before_reference = assignments.find { |ass|
-        !ass.in_branch?
-      }.try &.node
+      @assign_before_reference = assignments
+        .find(&.in_branch?.!)
+        .try(&.node)
     end
   end
 end

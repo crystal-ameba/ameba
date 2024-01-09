@@ -2,10 +2,8 @@ module Ameba::AST
   class InstanceVariable
     getter node : Crystal::InstanceVar
 
-    delegate location, to: @node
-    delegate end_location, to: @node
-    delegate name, to: @node
-    delegate to_s, to: @node
+    delegate location, end_location, name, to_s,
+      to: @node
 
     def initialize(@node)
     end

@@ -10,6 +10,8 @@ module Ameba::Rule::Lint
         ["foo"] === [foo]
         "foo" == foo
         "foo" != foo
+        "foo" == FOO
+        FOO == "foo"
         foo == "foo"
         foo != "foo"
         CRYSTAL

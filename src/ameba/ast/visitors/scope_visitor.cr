@@ -153,7 +153,7 @@ module Ameba::AST
 
     # :nodoc:
     def visit(node : Crystal::Var)
-      variable = @current_scope.find_variable node.name
+      variable = @current_scope.find_variable(node.name)
 
       case
       when @current_scope.arg?(node) # node is an argument
@@ -161,7 +161,7 @@ module Ameba::AST
       when variable.nil? && @current_assign # node is a variable
         @current_scope.add_variable(node)
       when variable # node is a reference
-        reference = variable.reference node, @current_scope
+        reference = variable.reference(node, @current_scope)
         if @current_assign.is_a?(Crystal::OpAssign) || !reference.target_of?(@current_assign)
           variable.reference_assignments!
         end
@@ -178,9 +178,7 @@ module Ameba::AST
       when scope.type_definition? && accessor_macro?(node) then return false
       when scope.def? && special_node?(node)
         scope.arguments.each do |arg|
-          variable = arg.variable
-
-          ref = variable.reference(variable.node, scope)
+          ref = arg.variable.reference(scope)
           ref.explicit = false
         end
       end

@@ -41,7 +41,7 @@ module Ameba::Rule::Naming
     end
 
     private def valid_name?(name)
-      return true if name.blank? # happens with compound names like `(arg1, arg2)`
+      return true if name.blank? # TODO: handle unpacked variables
       return true if name.in?(allowed_names)
 
       return false if name.in?(forbidden_names)

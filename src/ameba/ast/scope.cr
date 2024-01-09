@@ -34,9 +34,8 @@ module Ameba::AST
     # The actual AST node that represents a current scope.
     getter node : Crystal::ASTNode
 
-    delegate to_s, to: node
-    delegate location, to: node
-    delegate end_location, to: node
+    delegate location, end_location, to_s,
+      to: @node
 
     def_equals_and_hash node, location
 

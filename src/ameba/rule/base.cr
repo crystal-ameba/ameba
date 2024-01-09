@@ -32,14 +32,15 @@ module Ameba::Rule
     # This method is designed to test the source passed in. If source has issues
     # that are tested by this rule, it should add an issue.
     #
-    # Be default it uses a node visitor to traverse all the nodes in the source.
+    # By default it uses a node visitor to traverse all the nodes in the source.
+    #
     # NOTE: Must be overridden for other type of rules.
     def test(source : Source)
       AST::NodeVisitor.new self, source
     end
 
+    # NOTE: Can't be abstract
     def test(source : Source, node : Crystal::ASTNode, *opts)
-      # can't be abstract
     end
 
     # A convenient addition to `#test` method that does the same

@@ -85,13 +85,16 @@ module Ameba::AST
             3.times { |i| a = a + i }
           end
           CRYSTAL
-        scope = Scope.new nodes.def_nodes.first
+
         var_node = nodes.var_nodes.first
-        scope.add_variable var_node
+
+        scope = Scope.new(nodes.def_nodes.first)
+        scope.add_variable(var_node)
         scope.inner_scopes << Scope.new(nodes.block_nodes.first, scope)
 
         variable = Variable.new(var_node, scope)
-        variable.reference nodes.var_nodes.last, scope.inner_scopes.last
+        variable.reference(nodes.var_nodes.last, scope.inner_scopes.last)
+
         variable.captured_by_block?.should be_truthy
       end
 
@@ -101,8 +104,10 @@ module Ameba::AST
             a = 1
           end
           CRYSTAL
-        scope.add_variable Crystal::Var.new "a"
+
+        scope.add_variable(Crystal::Var.new "a")
         variable = scope.variables.first
+
         variable.captured_by_block?.should be_falsey
       end
     end
