@@ -180,6 +180,28 @@ module Ameba::AST
     end
   end
 
+  describe "#def?" do
+    context "when check_outer_scopes: true" do
+      it "returns true if outer scope is Crystal::Def" do
+        nodes = as_nodes("def foo; 3.times {}; end")
+        outer_scope = Scope.new nodes.def_nodes.first
+        scope = Scope.new nodes.block_nodes.first, outer_scope
+        scope.def?(check_outer_scopes: true).should be_true
+      end
+    end
+
+    it "returns true if Crystal::Def" do
+      nodes = as_nodes("def foo; end")
+      scope = Scope.new nodes.def_nodes.first
+      scope.def?.should be_true
+    end
+
+    it "returns false otherwise" do
+      scope = Scope.new as_node("a = 1")
+      scope.def?.should be_false
+    end
+  end
+
   describe "#in_macro?" do
     it "returns true if Crystal::Macro" do
       nodes = as_nodes <<-CRYSTAL

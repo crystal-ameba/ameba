@@ -998,6 +998,16 @@ module Ameba::Rule::Lint
           CRYSTAL
       end
 
+      it "doesn't report if it's referenced in a lib" do
+        expect_no_issues subject, <<-CRYSTAL
+          lib LibFoo
+            struct Foo
+              a : Int32
+            end
+          end
+          CRYSTAL
+      end
+
       it "doesn't report if it's referenced" do
         expect_no_issues subject, <<-CRYSTAL
           def foo

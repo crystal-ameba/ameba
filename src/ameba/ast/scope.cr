@@ -180,20 +180,15 @@ module Ameba::AST
       @visibility || outer_scope.try(&.visibility)
     end
 
-    # Returns `true` if current scope is a def, `false` otherwise.
-    def def?
-      node.is_a?(Crystal::Def)
-    end
-
-    # Returns `true` if current scope is a class, `false` otherwise.
-    def class_def?
-      node.is_a?(Crystal::ClassDef)
-    end
-
-    # Returns `true` if current scope is a module, `false` otherwise.
-    def module_def?
-      node.is_a?(Crystal::ModuleDef)
-    end
+    {% for type in %w[Def ClassDef ModuleDef EnumDef LibDef FunDef].map(&.id) %}
+      {% method_name = type.underscore %}
+      # Returns `true` if current scope is a {{ method_name[0..-5] }} def, `false` otherwise.
+      def {{ method_name }}?(*, check_outer_scopes = false)
+        node.is_a?(Crystal::{{ type }}) ||
+          !!(check_outer_scopes &&
+            outer_scope.try(&.{{ method_name }}?(check_outer_scopes: true)))
+      end
+    {% end %}
 
     # Returns `true` if this scope is a top level scope, `false` otherwise.
     def top_level?

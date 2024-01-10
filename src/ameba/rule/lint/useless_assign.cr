@@ -39,6 +39,8 @@ module Ameba::Rule::Lint
     end
 
     def test(source, node, scope : AST::Scope)
+      return if scope.lib_def?(check_outer_scopes: true)
+
       scope.variables.each do |var|
         next if var.ignored? || var.used_in_macro? || var.captured_by_block?
         next if exclude_type_declarations? && scope.assigns_type_dec?(var.name)
