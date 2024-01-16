@@ -173,9 +173,10 @@ module Ameba::AST
       scope = @current_scope
 
       case
-      when scope.top_level? && record_macro?(node)         then return false
-      when scope.type_definition? && record_macro?(node)   then return false
-      when scope.type_definition? && accessor_macro?(node) then return false
+      when (scope.top_level? || scope.type_definition?) && record_macro?(node)
+        return false
+      when scope.type_definition? && accessor_macro?(node)
+        return false
       when scope.def? && special_node?(node)
         scope.arguments.each do |arg|
           ref = arg.variable.reference(scope)
@@ -194,7 +195,14 @@ module Ameba::AST
     end
 
     private def record_macro?(node)
-      node.name == "record" && node.args.first?.is_a?(Crystal::Path)
+      return false unless node.name == "record"
+
+      case node.args.first?
+      when Crystal::Path, Crystal::Generic
+        true
+      else
+        false
+      end
     end
 
     private def skip?(node)

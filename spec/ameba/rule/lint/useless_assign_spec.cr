@@ -394,6 +394,12 @@ module Ameba::Rule::Lint
           CRYSTAL
       end
 
+      it "doesn't report if this is a record declaration (generics)" do
+        expect_no_issues subject, <<-CRYSTAL
+          record Foo(T), foo : T
+          CRYSTAL
+      end
+
       it "doesn't report if this is an accessor declaration" do
         accessor_macros = %w[setter class_setter]
         %w[getter class_getter property class_property].each do |name|
