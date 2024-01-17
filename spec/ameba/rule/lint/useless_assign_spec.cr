@@ -388,19 +388,29 @@ module Ameba::Rule::Lint
           CRYSTAL
       end
 
-      it "doesn't report if this is a record declaration" do
+      it "doesn't report record declaration" do
         expect_no_issues subject, <<-CRYSTAL
+          record Foo, foo : String
           record Foo, foo = "foo"
           CRYSTAL
       end
 
-      it "doesn't report if this is a record declaration (generics)" do
+      it "doesn't report record declarations (generics)" do
         expect_no_issues subject, <<-CRYSTAL
           record Foo(T), foo : T
+          record Foo(T), foo = T.new
           CRYSTAL
       end
 
-      it "doesn't report if this is an accessor declaration" do
+      it "doesn't report type declaration as a call argument" do
+        expect_no_issues subject, <<-CRYSTAL
+          foo Foo(T), foo : T
+          foo Foo, foo : Nil
+          foo foo : String, bar : Int32?
+          CRYSTAL
+      end
+
+      it "doesn't report accessor declarations" do
         accessor_macros = %w[setter class_setter]
         %w[getter class_getter property class_property].each do |name|
           accessor_macros << name
