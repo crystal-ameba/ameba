@@ -43,8 +43,13 @@ module Ameba::Rule::Lint
 
       scope.variables.each do |var|
         next if var.ignored? || var.used_in_macro? || var.captured_by_block?
-        next if exclude_type_declarations? && scope.assigns_type_dec?(var.name)
-
+        if scope.assigns_type_dec?(var.name)
+          next if exclude_type_declarations?
+          # exclude type declarations within calls
+          if node.is_a?(Crystal::Expressions)
+            next if node.expressions.first?.is_a?(Crystal::Call)
+          end
+        end
         var.assignments.each do |assign|
           next if assign.referenced?
           issue_for assign.target_node, MSG % var.name
