@@ -461,7 +461,7 @@ module Ameba::Rule::Lint
         expect_issue subject, <<-CRYSTAL
           class A
             foo : String? = "foo"
-          # ^^^^^^^^^^^^^^^^^^^^^ error: Useless assignment to variable `foo`
+          # ^^^ error: Useless assignment to variable `foo`
 
             def method
               foo = "bar"
@@ -992,7 +992,7 @@ module Ameba::Rule::Lint
       it "reports if it's not referenced at a top level" do
         expect_issue subject, <<-CRYSTAL
           a : String?
-          # ^^^^^^^^^ error: Useless assignment to variable `a`
+          # ^{} error: Useless assignment to variable `a`
           CRYSTAL
       end
 
@@ -1000,7 +1000,7 @@ module Ameba::Rule::Lint
         expect_issue subject, <<-CRYSTAL
           def foo
             a : String?
-          # ^^^^^^^^^^^ error: Useless assignment to variable `a`
+          # ^ error: Useless assignment to variable `a`
           end
           CRYSTAL
       end
@@ -1009,7 +1009,7 @@ module Ameba::Rule::Lint
         expect_issue subject, <<-CRYSTAL
           class Foo
             a : String?
-          # ^^^^^^^^^^^ error: Useless assignment to variable `a`
+          # ^ error: Useless assignment to variable `a`
           end
           CRYSTAL
       end
