@@ -9,6 +9,11 @@ module Ameba::Rule::Lint
       expect_no_issues subject, code: "", path: "src/spec/foo/bar.cr"
     end
 
+    it "passes if file extension is not `.cr`" do
+      expect_no_issues subject, code: "", path: "spec/foo.json"
+      expect_no_issues subject, code: "", path: "spec/foo/bar.json"
+    end
+
     it "passes if filename is correct" do
       expect_no_issues subject, code: "", path: "spec/foo_spec.cr"
       expect_no_issues subject, code: "", path: "spec/foo/bar_spec.cr"
