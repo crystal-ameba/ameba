@@ -8,6 +8,8 @@ module Ameba::Rule::Lint
   # ```
   # Lint/SpecFilename:
   #   Enabled: true
+  #   IgnoredDirs: [spec/support spec/fixtures spec/data]
+  #   IgnoredFilenames: [spec_helper]
   # ```
   class SpecFilename < Base
     properties do
