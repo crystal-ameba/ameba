@@ -1,6 +1,8 @@
 module Ameba
   # Helper module that is utilizes helpers for working with globs.
   module GlobUtils
+    extend self
+
     # Returns all files that match specified globs.
     # Globs can have wildcards or be rejected:
     #

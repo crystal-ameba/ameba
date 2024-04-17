@@ -1,11 +1,7 @@
 require "../spec_helper"
 
 module Ameba
-  struct GlobUtilsClass
-    include GlobUtils
-  end
-
-  subject = GlobUtilsClass.new
+  subject = GlobUtils
   current_file_basename = File.basename(__FILE__)
   current_file_path = "spec/ameba/#{current_file_basename}"
 
