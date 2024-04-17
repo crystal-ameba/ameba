@@ -1,11 +1,7 @@
 require "../spec_helper"
 
 module Ameba
-  struct GlobUtilsClass
-    include GlobUtils
-  end
-
-  subject = GlobUtilsClass.new
+  subject = GlobUtils
   current_file_basename = File.basename(__FILE__)
   current_file_path = "spec/ameba/#{current_file_basename}"
 
@@ -44,6 +40,12 @@ module Ameba
       it "does not list duplicated files" do
         subject.expand(["**/#{current_file_basename}", "**/#{current_file_basename}"])
           .should eq [current_file_path]
+      end
+
+      it "does not list folders" do
+        subject.expand(["**/*"]).each do |path|
+          fail "#{path.inspect} should be a file" unless File.file?(path)
+        end
       end
     end
   end
