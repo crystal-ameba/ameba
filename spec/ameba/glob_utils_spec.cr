@@ -41,6 +41,12 @@ module Ameba
         subject.expand(["**/#{current_file_basename}", "**/#{current_file_basename}"])
           .should eq [current_file_path]
       end
+
+      it "does not list folders" do
+        subject.expand(["**/*"]).each do |path|
+          fail "#{path.inspect} should be a file" unless File.file?(path)
+        end
+      end
     end
   end
 end
