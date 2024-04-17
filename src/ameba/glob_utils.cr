@@ -20,10 +20,13 @@ module Ameba
     # expand(["spec/*.cr", "src"]) # => all files in src folder + first level specs
     # ```
     def expand(globs)
-      globs.flat_map do |glob|
-        glob += "/**/*.cr" if File.directory?(glob)
-        Dir[glob]
-      end.uniq!
+      globs
+        .flat_map do |glob|
+          glob += "/**/*.cr" if File.directory?(glob)
+          Dir[glob]
+        end
+        .uniq!
+        .select! { |path| File.file?(path) }
     end
 
     private def rejected_globs(globs)
