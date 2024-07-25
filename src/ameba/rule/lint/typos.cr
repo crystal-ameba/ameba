@@ -22,7 +22,7 @@ module Ameba::Rule::Lint
 
     MSG = "Typo found: %s -> %s"
 
-    BIN_PATH = Process.find_executable("typos")
+    BIN_PATH = Process.find_executable("typos") rescue nil
 
     def bin_path : String?
       @bin_path || BIN_PATH
