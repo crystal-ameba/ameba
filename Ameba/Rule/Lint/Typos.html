@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="generator" content="Crystal Docs 1.11.2">
+<meta name="generator" content="Crystal Docs 1.12.2">
 <meta name="crystal_docs.project_version" content="master">
 <meta name="crystal_docs.project_name" content="ameba">
 
@@ -948,7 +948,7 @@
   </h2>
   
     
-      <a href="https://github.com/crystal-ameba/ameba/blob/e0fa8bb/src/ameba/rule/lint/typos.cr#L15" target="_blank">
+      <a href="https://github.com/crystal-ameba/ameba/blob/a42b218/src/ameba/rule/lint/typos.cr#L15" target="_blank">
         ameba/rule/lint/typos.cr
       </a>
     
@@ -970,7 +970,11 @@
   <dl>
     
       <dt class="entry-const" id="BIN_PATH">
-        <strong>BIN_PATH</strong> = <code><span class="t">Process</span>.find_executable(<span class="s">&quot;typos&quot;</span>)</code>
+        <strong>BIN_PATH</strong> = <code><span class="k">begin</span>
+  <span class="t">Process</span>.find_executable(<span class="s">&quot;typos&quot;</span>)
+<span class="k">rescue</span>
+  <span class="n">nil</span>
+<span class="k">end</span></code>
       </dt>
       
     
@@ -1313,7 +1317,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/e0fa8bb/src/ameba/rule/lint/typos.cr#L15" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/a42b218/src/ameba/rule/lint/typos.cr#L15" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1384,7 +1388,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/e0fa8bb/src/ameba/rule/lint/typos.cr#L27" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/a42b218/src/ameba/rule/lint/typos.cr#L27" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1566,7 +1570,7 @@ that are tested by this rule, it should add an issue.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/e0fa8bb/src/ameba/rule/lint/typos.cr#L31" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/a42b218/src/ameba/rule/lint/typos.cr#L31" target="_blank">View source</a>]
         
       </div>
     </div>
