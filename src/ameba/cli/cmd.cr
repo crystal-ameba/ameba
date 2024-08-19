@@ -60,7 +60,7 @@ module Ameba::Cli
     property describe_rule : String?
     property location_to_explain : NamedTuple(file: String, line: Int32, column: Int32)?
     property fail_level : Severity?
-    property stdin_filename : String? = nil
+    property stdin_filename : String?
     property? skip_reading_config = false
     property? rules = false
     property? all = false
