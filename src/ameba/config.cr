@@ -159,12 +159,14 @@ class Ameba::Config
   # config.sources # => list of sources pointing to files found by the wildcards
   # ```
   def sources
+    srcs = (find_files_by_globs(globs) - find_files_by_globs(excluded))
+      .map { |path| Source.new File.read(path), path }
+
     if file = stdin_filename
-      [Source.new(STDIN.gets_to_end, file)]
-    else
-      (find_files_by_globs(globs) - find_files_by_globs(excluded))
-        .map { |path| Source.new File.read(path), path }
+      srcs << Source.new(STDIN.gets_to_end, file)
     end
+
+    srcs
   end
 
   # Returns a formatter to be used while inspecting files.
