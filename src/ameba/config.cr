@@ -86,6 +86,9 @@ class Ameba::Config
   # Returns `true` if correctable issues should be autocorrected.
   property? autocorrect = false
 
+  # Returns a filename if reading source file from STDIN.
+  property stdin_filename : String? = nil
+
   @rule_groups : Hash(String, Array(Rule::Base))
 
   # Creates a new instance of `Ameba::Config` based on YAML parameters.
@@ -156,8 +159,14 @@ class Ameba::Config
   # config.sources # => list of sources pointing to files found by the wildcards
   # ```
   def sources
-    (find_files_by_globs(globs) - find_files_by_globs(excluded))
+    srcs = (find_files_by_globs(globs) - find_files_by_globs(excluded))
       .map { |path| Source.new File.read(path), path }
+
+    if file = stdin_filename
+      srcs << Source.new(STDIN.gets_to_end, file)
+    end
+
+    srcs
   end
 
   # Returns a formatter to be used while inspecting files.

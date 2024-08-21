@@ -16,6 +16,7 @@ module Ameba::Cli
 
     config = Config.load opts.config, opts.colors?, opts.skip_reading_config?
     config.autocorrect = autocorrect
+    config.stdin_filename = opts.stdin_filename
 
     if globs = opts.globs
       config.globs = globs
@@ -59,6 +60,7 @@ module Ameba::Cli
     property describe_rule : String?
     property location_to_explain : NamedTuple(file: String, line: Int32, column: Int32)?
     property fail_level : Severity?
+    property stdin_filename : String?
     property? skip_reading_config = false
     property? rules = false
     property? all = false
@@ -139,6 +141,10 @@ module Ameba::Cli
 
       parser.on("--no-color", "Disable colors") do
         opts.colors = false
+      end
+
+      parser.on("--stdin-filename FILENAME", "Read source from STDIN") do |file|
+        opts.stdin_filename = file
       end
     end
 
