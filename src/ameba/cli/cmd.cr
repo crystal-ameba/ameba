@@ -5,6 +5,26 @@ require "option_parser"
 module Ameba::Cli
   extend self
 
+  private class Opts
+    property config : Path?
+    property version : String?
+    property formatter : Symbol | String | Nil
+    property globs : Array(String)?
+    property only : Array(String)?
+    property except : Array(String)?
+    property describe_rule : String?
+    property location_to_explain : NamedTuple(file: String, line: Int32, column: Int32)?
+    property fail_level : Severity?
+    property stdin_filename : String?
+    property? skip_reading_config = false
+    property? rules = false
+    property? rule_versions = false
+    property? all = false
+    property? colors = true
+    property? without_affected_code = false
+    property? autocorrect = false
+  end
+
   def run(args = ARGV) : Nil
     opts = parse_args(args)
 
@@ -43,26 +63,6 @@ module Ameba::Cli
   rescue e
     puts "Error: #{e.message}"
     exit 255
-  end
-
-  private class Opts
-    property config : Path?
-    property version : String?
-    property formatter : Symbol | String | Nil
-    property globs : Array(String)?
-    property only : Array(String)?
-    property except : Array(String)?
-    property describe_rule : String?
-    property location_to_explain : NamedTuple(file: String, line: Int32, column: Int32)?
-    property fail_level : Severity?
-    property stdin_filename : String?
-    property? skip_reading_config = false
-    property? rules = false
-    property? rule_versions = false
-    property? all = false
-    property? colors = true
-    property? without_affected_code = false
-    property? autocorrect = false
   end
 
   def parse_args(args, opts = Opts.new)
