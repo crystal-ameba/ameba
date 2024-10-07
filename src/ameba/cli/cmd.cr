@@ -41,6 +41,10 @@ module Ameba::Cli
       print_rules(config.rules)
     end
 
+    if opts.rule_versions?
+      print_rule_versions(config.rules)
+    end
+
     if describe_rule_name = opts.describe_rule
       unless rule = config.rules.find(&.name.== describe_rule_name)
         raise "Unknown rule"
@@ -73,6 +77,7 @@ module Ameba::Cli
     property stdin_filename : String?
     property? skip_reading_config = false
     property? rules = false
+    property? rule_versions = false
     property? all = false
     property? colors = true
     property? without_affected_code = false
@@ -86,6 +91,7 @@ module Ameba::Cli
       parser.on("-v", "--version", "Print version") { print_version }
       parser.on("-h", "--help", "Show this help") { print_help(parser) }
       parser.on("-r", "--rules", "Show all available rules") { opts.rules = true }
+      parser.on("-R", "--rule-versions", "Show all available rule versions") { opts.rule_versions = true }
       parser.on("-s", "--silent", "Disable output") { opts.formatter = :silent }
       parser.unknown_args do |arr|
         case
@@ -232,6 +238,11 @@ module Ameba::Cli
 
   private def print_rules(rules)
     Presenter::RuleCollectionPresenter.new.run(rules)
+    exit 0
+  end
+
+  private def print_rule_versions(rules)
+    Presenter::RuleVersionsPresenter.new.run(rules)
     exit 0
   end
 end
