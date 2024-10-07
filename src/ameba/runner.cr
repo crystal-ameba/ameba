@@ -62,23 +62,25 @@ module Ameba
     # Ameba::Runner.new config
     # ```
     def initialize(config : Config)
-      @sources = config.sources
-      @formatter = config.formatter
-      @severity = config.severity
-      @version = config.version
-      @rules = config.rules.select do |rule|
-        rule.enabled? && !rule.special? &&
-          (!(version = @version) || !(since_version = rule.since_version) ||
-            since_version <= version)
-      end
-      @autocorrect = config.autocorrect?
-
-      @unneeded_disable_directive_rule =
-        config.rules
-          .find &.class.==(Rule::Lint::UnneededDisableDirective)
+      initialize(
+        config.rules,
+        config.sources,
+        config.formatter,
+        config.severity,
+        config.autocorrect?,
+        config.version,
+      )
     end
 
-    protected def initialize(@rules, @sources, @formatter, @severity, @autocorrect = false, @version = nil)
+    protected def initialize(rules, @sources, @formatter, @severity, @autocorrect = false, @version = nil)
+      @rules =
+        rules.select do |rule|
+          rule.enabled? && !rule.special? &&
+            (!(version = @version) || !(since_version = rule.since_version) ||
+              since_version <= version)
+        end
+      @unneeded_disable_directive_rule =
+        rules.find &.class.==(Rule::Lint::UnneededDisableDirective)
     end
 
     # Performs the inspection. Iterates through all sources and test it using
