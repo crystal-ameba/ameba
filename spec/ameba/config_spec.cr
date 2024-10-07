@@ -95,6 +95,7 @@ module Ameba
       it "loads custom config" do
         config = Config.load config_sample
         config.should_not be_nil
+        config.version.should_not be_nil
         config.globs.should_not be_nil
         config.formatter.should_not be_nil
       end
@@ -108,6 +109,7 @@ module Ameba
       it "loads default config" do
         config = Config.load
         config.should_not be_nil
+        config.version.should be_nil
         config.globs.should_not be_nil
         config.formatter.should_not be_nil
       end
@@ -180,6 +182,31 @@ module Ameba
       it "raises an error if not available formatter is set" do
         expect_raises(Exception) do
           config.formatter = :no_such_formatter
+        end
+      end
+    end
+
+    describe "#version, version=" do
+      config = Config.load config_sample
+      version = SemanticVersion.parse("1.5.0")
+
+      it "contains default version" do
+        config.version.should_not be_nil
+      end
+
+      it "allows to set version" do
+        config.version = version
+        config.version.should eq version
+      end
+
+      it "allows to set version using a string" do
+        config.version = version.to_s
+        config.version.should eq version
+      end
+
+      it "raises an error if version is not valid" do
+        expect_raises(Exception) do
+          config.version = "foo"
         end
       end
     end
