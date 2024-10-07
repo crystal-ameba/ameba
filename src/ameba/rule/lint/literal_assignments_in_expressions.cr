@@ -28,6 +28,7 @@ module Ameba::Rule::Lint
     include AST::Util
 
     properties do
+      since_version "1.4.0"
       description "Disallows assignments with literal values in control expressions"
     end
 

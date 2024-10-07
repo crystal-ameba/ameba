@@ -24,6 +24,7 @@ module Ameba::Rule::Naming
   # ```
   class AsciiIdentifiers < Base
     properties do
+      since_version "1.6.0"
       description "Disallows non-ascii characters in identifiers"
       ignore_symbols false
     end
