@@ -18,6 +18,9 @@ module Ameba::Cli
     config.autocorrect = autocorrect
     config.stdin_filename = opts.stdin_filename
 
+    if version = opts.version
+      config.version = version
+    end
     if globs = opts.globs
       config.globs = globs
     end
@@ -53,6 +56,7 @@ module Ameba::Cli
 
   private class Opts
     property config : Path?
+    property version : String?
     property formatter : Symbol | String | Nil
     property globs : Array(String)?
     property only : Array(String)?
@@ -88,6 +92,11 @@ module Ameba::Cli
       parser.on("-c", "--config PATH",
         "Specify a configuration file") do |path|
         opts.config = Path[path] unless path.empty?
+      end
+
+      parser.on("-u", "--up-to-version VERSION",
+        "Choose a version") do |version|
+        opts.version = version
       end
 
       parser.on("-f", "--format FORMATTER",
