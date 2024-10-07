@@ -37,6 +37,7 @@ module Ameba::Rule::Naming
   # ```
   class AccessorMethodName < Base
     properties do
+      since_version "1.6.0"
       description "Makes sure that accessor methods are named properly"
     end
 

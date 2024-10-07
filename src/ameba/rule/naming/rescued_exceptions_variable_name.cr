@@ -26,6 +26,7 @@ module Ameba::Rule::Naming
   # ```
   class RescuedExceptionsVariableName < Base
     properties do
+      since_version "1.6.0"
       description "Makes sure that rescued exceptions variables are named as expected"
       allowed_names %w[e ex exception error]
     end

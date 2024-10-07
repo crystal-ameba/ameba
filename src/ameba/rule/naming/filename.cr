@@ -9,6 +9,7 @@ module Ameba::Rule::Naming
   # ```
   class Filename < Base
     properties do
+      since_version "1.6.0"
       description "Enforces file names to be in underscored case"
     end
 

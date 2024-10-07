@@ -25,6 +25,7 @@ module Ameba::Rule::Naming
   # ```
   class BlockParameterName < Base
     properties do
+      since_version "1.6.0"
       description "Disallows non-descriptive block parameter names"
       min_name_length 3
       allow_names_ending_in_numbers true

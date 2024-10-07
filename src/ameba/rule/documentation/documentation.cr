@@ -16,6 +16,7 @@ module Ameba::Rule::Documentation
   # ```
   class Documentation < Base
     properties do
+      since_version "1.5.0"
       enabled false
       description "Enforces public types to be documented"
 

@@ -28,6 +28,7 @@ module Ameba::Rule::Style
   # ```
   class ParenthesesAroundCondition < Base
     properties do
+      since_version "1.4.0"
       description "Disallows redundant parentheses around control expressions"
 
       exclude_ternary false
