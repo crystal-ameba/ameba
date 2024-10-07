@@ -74,13 +74,15 @@ module Ameba
 
     protected def initialize(rules, @sources, @formatter, @severity, @autocorrect = false, @version = nil)
       @rules =
-        rules.select do |rule|
-          rule.enabled? && !rule.special? &&
-            (!(version = @version) || !(since_version = rule.since_version) ||
-              since_version <= version)
-        end
+        rules.select { |rule| rule_runnable?(rule) }
       @unneeded_disable_directive_rule =
         rules.find &.class.==(Rule::Lint::UnneededDisableDirective)
+    end
+
+    protected def rule_runnable?(rule)
+      rule.enabled? && !rule.special? &&
+        (!(version = @version) || !(since_version = rule.since_version) ||
+          since_version <= version)
     end
 
     # Performs the inspection. Iterates through all sources and test it using
