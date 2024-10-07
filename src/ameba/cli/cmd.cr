@@ -6,30 +6,13 @@ module Ameba::Cli
   extend self
 
   def run(args = ARGV)
-    opts = parse_args args
-    location_to_explain = opts.location_to_explain
-    autocorrect = opts.autocorrect?
+    opts = parse_args(args)
 
-    if location_to_explain && autocorrect
+    if (location_to_explain = opts.location_to_explain) && opts.autocorrect?
       raise "Invalid usage: Cannot explain an issue and autocorrect at the same time."
     end
 
-    config = Config.load opts.config, opts.colors?, opts.skip_reading_config?
-    config.autocorrect = autocorrect
-    config.stdin_filename = opts.stdin_filename
-
-    if version = opts.version
-      config.version = version
-    end
-    if globs = opts.globs
-      config.globs = globs
-    end
-    if fail_level = opts.fail_level
-      config.severity = fail_level
-    end
-
-    configure_formatter(config, opts)
-    configure_rules(config, opts)
+    config = config_from_opts(opts)
 
     if opts.rules?
       print_rules(config.rules)
@@ -164,6 +147,27 @@ module Ameba::Cli
     end
 
     opts
+  end
+
+  private def config_from_opts(opts)
+    config = Config.load opts.config, opts.colors?, opts.skip_reading_config?
+    config.autocorrect = opts.autocorrect?
+    config.stdin_filename = opts.stdin_filename
+
+    if version = opts.version
+      config.version = version
+    end
+    if globs = opts.globs
+      config.globs = globs
+    end
+    if fail_level = opts.fail_level
+      config.severity = fail_level
+    end
+
+    configure_formatter(config, opts)
+    configure_rules(config, opts)
+
+    config
   end
 
   private def configure_rules(config, opts)
