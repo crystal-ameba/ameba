@@ -68,7 +68,6 @@ module Ameba::Rule::Lint
     end
 
     private record Typo,
-      path : String,
       typo : String,
       corrections : Array(String),
       location : {Int32, Int32},
@@ -83,24 +82,23 @@ module Ameba::Rule::Lint
 
         return if typo.empty? || corrections.empty?
 
-        path = issue["path"].as_s
         line_no = issue["line_num"].as_i
         col_no = issue["byte_offset"].as_i + 1
         end_col_no = col_no + typo.size - 1
 
-        new(path, typo, corrections,
-          {line_no, col_no}, {line_no, end_col_no})
+        new(typo, corrections,
+          {line_no, col_no},
+          {line_no, end_col_no})
       end
     end
 
     protected def typos_from(source : Source) : Array(Typo)?
-      unless bin_path = self.bin_path
-        if fail_on_error?
-          raise RuntimeError.new "Could not find `typos` executable"
-        end
-        return
+      if bin_path = self.bin_path
+        return Typos.typos_from(bin_path, source)
       end
-      Typos.typos_from(bin_path, source)
+      if fail_on_error?
+        raise RuntimeError.new "Could not find `typos` executable"
+      end
     end
   end
 end
