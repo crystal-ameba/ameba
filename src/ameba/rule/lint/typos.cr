@@ -24,6 +24,26 @@ module Ameba::Rule::Lint
 
     BIN_PATH = Process.find_executable("typos") rescue nil
 
+    @@mutex = Mutex.new
+
+    protected def self.typos_from(bin_path : String, source : Source) : Array(Typo)?
+      result = @@mutex.synchronize do
+        status = Process.run(bin_path, args: %w[--format json -],
+          input: IO::Memory.new(source.code),
+          output: output = IO::Memory.new,
+        )
+        output.to_s unless status.success?
+      end
+      return unless result
+
+      ([] of Typo).tap do |typos|
+        # NOTE: `--format json` is actually JSON Lines (`jsonl`)
+        result.each_line do |line|
+          Typo.parse(line).try { |typo| typos << typo }
+        end
+      end
+    end
+
     def bin_path : String?
       @bin_path || BIN_PATH
     end
@@ -80,18 +100,7 @@ module Ameba::Rule::Lint
         end
         return
       end
-      status = Process.run(bin_path, args: %w[--format json -],
-        input: IO::Memory.new(source.code),
-        output: output = IO::Memory.new,
-      )
-      return if status.success?
-
-      ([] of Typo).tap do |typos|
-        # NOTE: `--format json` is actually JSON Lines (`jsonl`)
-        output.to_s.each_line do |line|
-          Typo.parse(line).try { |typo| typos << typo }
-        end
-      end
+      Typos.typos_from(bin_path, source)
     end
   end
 end
