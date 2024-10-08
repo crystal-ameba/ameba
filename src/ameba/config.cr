@@ -109,7 +109,7 @@ class Ameba::Config
     @excluded = load_array_section(config, "Excluded")
     @globs = load_array_section(config, "Globs", DEFAULT_GLOBS)
 
-    if version = config["version"]?.try(&.as_s).presence
+    if version = config["Version"]?.try(&.as_s).presence
       self.version = version
     end
     if formatter_name = load_formatter_name(config)
