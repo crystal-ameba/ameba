@@ -20,6 +20,7 @@ module Ameba::Rule::Lint
   # ```
   class Syntax < Base
     properties do
+      since_version "0.4.2"
       description "Reports invalid Crystal syntax"
       severity :error
     end

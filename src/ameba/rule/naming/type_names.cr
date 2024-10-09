@@ -53,6 +53,7 @@ module Ameba::Rule::Naming
   # ```
   class TypeNames < Base
     properties do
+      since_version "0.2.0"
       description "Enforces type names in camelcase manner"
     end
 

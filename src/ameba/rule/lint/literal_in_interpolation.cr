@@ -19,6 +19,7 @@ module Ameba::Rule::Lint
     include AST::Util
 
     properties do
+      since_version "0.1.0"
       description "Disallows useless string interpolations"
     end
 

@@ -9,6 +9,7 @@ module Ameba::Rule::Layout
   # ```
   class TrailingBlankLines < Base
     properties do
+      since_version "0.1.0"
       description "Disallows trailing blank lines"
     end
 

@@ -29,6 +29,7 @@ module Ameba::Rule::Lint
   # ```
   class EmptyExpression < Base
     properties do
+      since_version "0.2.0"
       description "Disallows empty expressions"
     end
 

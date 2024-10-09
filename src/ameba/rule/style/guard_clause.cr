@@ -55,6 +55,7 @@ module Ameba::Rule::Style
     include AST::Util
 
     properties do
+      since_version "1.0.0"
       enabled false
       description "Check for conditionals that can be replaced with guard clauses"
     end

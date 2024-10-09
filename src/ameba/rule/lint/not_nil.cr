@@ -27,6 +27,7 @@ module Ameba::Rule::Lint
   # ```
   class NotNil < Base
     properties do
+      since_version "1.3.0"
       description "Identifies usage of `not_nil!` calls"
     end
 

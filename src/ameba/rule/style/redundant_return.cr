@@ -97,6 +97,7 @@ module Ameba::Rule::Style
     include AST::Util
 
     properties do
+      since_version "0.9.0"
       description "Reports redundant return expressions"
 
       allow_multi_return true

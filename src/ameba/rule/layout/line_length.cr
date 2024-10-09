@@ -10,6 +10,7 @@ module Ameba::Rule::Layout
   # ```
   class LineLength < Base
     properties do
+      since_version "0.1.0"
       enabled false
       description "Disallows lines longer than `MaxLength` number of symbols"
       max_length 140

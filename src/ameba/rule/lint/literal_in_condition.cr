@@ -24,6 +24,7 @@ module Ameba::Rule::Lint
     include AST::Util
 
     properties do
+      since_version "0.1.0"
       description "Disallows useless conditional statements that contain \
         a literal in place of a variable or predicate function"
     end

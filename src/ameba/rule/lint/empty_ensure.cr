@@ -39,6 +39,7 @@ module Ameba::Rule::Lint
   # ```
   class EmptyEnsure < Base
     properties do
+      since_version "0.3.0"
       description "Disallows empty ensure statement"
     end
 

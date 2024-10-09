@@ -29,6 +29,7 @@ module Ameba::Rule::Performance
   # ```
   class AnyInsteadOfEmpty < Base
     properties do
+      since_version "0.14.0"
       description "Identifies usage of arg-less `any?` calls"
     end
 

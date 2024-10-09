@@ -28,6 +28,7 @@ module Ameba::Rule::Lint
   # ```
   class UselessAssign < Base
     properties do
+      since_version "0.6.0"
       description "Disallows useless variable assignments"
       exclude_type_declarations false
     end

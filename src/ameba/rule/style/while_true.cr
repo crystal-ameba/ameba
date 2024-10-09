@@ -27,6 +27,7 @@ module Ameba::Rule::Style
   # ```
   class WhileTrue < Base
     properties do
+      since_version "0.3.0"
       description "Disallows while statements with a true literal as condition"
     end
 
