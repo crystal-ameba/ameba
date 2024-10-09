@@ -15,6 +15,7 @@ module Ameba::Rule::Lint
   # ```
   class DuplicatedRequire < Base
     properties do
+      since_version "0.14.0"
       description "Reports duplicated require statements"
     end
 

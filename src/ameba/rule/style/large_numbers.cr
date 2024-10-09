@@ -28,6 +28,7 @@ module Ameba::Rule::Style
   # ```
   class LargeNumbers < Base
     properties do
+      since_version "0.2.0"
       enabled false
       description "Disallows usage of large numbers without underscore"
       int_min_digits 6

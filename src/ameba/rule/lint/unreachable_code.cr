@@ -43,6 +43,7 @@ module Ameba::Rule::Lint
   # ```
   class UnreachableCode < Base
     properties do
+      since_version "0.9.0"
       description "Reports unreachable code"
     end
 

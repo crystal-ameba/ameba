@@ -28,6 +28,7 @@ module Ameba::Rule::Style
   # ```
   class NegatedConditionsInUnless < Base
     properties do
+      since_version "0.2.0"
       description "Disallows negated conditions in unless"
     end
 

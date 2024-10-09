@@ -40,6 +40,7 @@ module Ameba::Rule::Performance
     include AST::Util
 
     properties do
+      since_version "0.14.0"
       description "Identifies usage of chained calls not utilizing the bang method variants"
 
       # All of those have bang method variants returning `self`
