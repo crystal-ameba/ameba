@@ -36,6 +36,7 @@ module Ameba::Rule::Performance
     include AST::Util
 
     properties do
+      since_version "0.8.1"
       description "Identifies usage of `size` calls that follow filter"
       filter_names %w[select reject]
     end

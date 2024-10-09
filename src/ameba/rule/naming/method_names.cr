@@ -39,6 +39,7 @@ module Ameba::Rule::Naming
   # ```
   class MethodNames < Base
     properties do
+      since_version "0.2.0"
       description "Enforces method names to be in underscored case"
     end
 

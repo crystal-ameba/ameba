@@ -21,6 +21,7 @@ module Ameba::Rule::Lint
   # ```
   class HashDuplicatedKey < Base
     properties do
+      since_version "0.3.0"
       description "Disallows duplicated keys in hash literals"
     end
 

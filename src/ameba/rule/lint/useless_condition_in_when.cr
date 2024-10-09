@@ -32,6 +32,7 @@ module Ameba::Rule::Lint
   # ```
   class UselessConditionInWhen < Base
     properties do
+      since_version "0.3.0"
       description "Disallows useless conditions in when"
     end
 
