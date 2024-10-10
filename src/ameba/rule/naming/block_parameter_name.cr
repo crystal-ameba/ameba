@@ -28,7 +28,7 @@ module Ameba::Rule::Naming
       description "Disallows non-descriptive block parameter names"
       min_name_length 3
       allow_names_ending_in_numbers true
-      allowed_names %w[_ e i j k v x y ex io ws op tx id ip k1 k2 v1 v2]
+      allowed_names %w[e i j k v x y ex io ws op tx id ip k1 k2 v1 v2]
       forbidden_names %w[]
     end
 
@@ -42,7 +42,7 @@ module Ameba::Rule::Naming
 
     private def valid_name?(name)
       return true if name.blank? # TODO: handle unpacked variables
-      return true if name.in?(allowed_names)
+      return true if name.starts_with?('_') || name.in?(allowed_names)
 
       return false if name.in?(forbidden_names)
       return false if name.size < min_name_length
