@@ -29,6 +29,7 @@ module Ameba::Rule::Performance
     include AST::Util
 
     properties do
+      since_version "0.8.1"
       description "Identifies usage of `first/last/first?/last?` calls that follow filters"
       filter_names %w[select]
     end

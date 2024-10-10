@@ -19,6 +19,7 @@ module Ameba::Rule::Lint
   # ```
   class BadDirective < Base
     properties do
+      since_version "0.13.0"
       description "Reports bad comment directives"
     end
 

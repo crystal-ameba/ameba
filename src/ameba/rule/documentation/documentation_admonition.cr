@@ -34,6 +34,7 @@ module Ameba::Rule::Documentation
   # ```
   class DocumentationAdmonition < Base
     properties do
+      since_version "1.6.0"
       description "Reports documentation admonitions"
       admonitions %w[TODO FIXME BUG]
       timezone "UTC"

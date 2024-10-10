@@ -37,6 +37,7 @@ module Ameba::Rule::Lint
   # ```
   class ShadowedArgument < Base
     properties do
+      since_version "0.7.0"
       description "Disallows shadowed arguments"
     end
 

@@ -24,6 +24,7 @@ module Ameba::Rule::Naming
   # ```
   class VariableNames < Base
     properties do
+      since_version "0.2.0"
       description "Enforces variable names to be in underscored case"
     end
 

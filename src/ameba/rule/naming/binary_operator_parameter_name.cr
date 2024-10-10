@@ -29,6 +29,7 @@ module Ameba::Rule::Naming
   # ```
   class BinaryOperatorParameterName < Base
     properties do
+      since_version "1.6.0"
       description "Enforces that certain binary operator methods have " \
                   "their sole parameter named `other`"
       excluded_operators %w[[] []? []= << >> ` =~ !~]

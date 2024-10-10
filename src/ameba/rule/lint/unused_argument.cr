@@ -27,6 +27,7 @@ module Ameba::Rule::Lint
   # ```
   class UnusedArgument < Base
     properties do
+      since_version "0.6.0"
       description "Disallows unused arguments"
 
       ignore_defs true
