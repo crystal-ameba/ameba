@@ -29,7 +29,7 @@ SHARD_BIN ?= ../../bin
 CRFLAGS ?= -Dpreview_mt
 
 SRC_SOURCES := $(shell find src -name '*.cr' 2>/dev/null)
-DOC_SOURCE   := src/**
+DOC_SOURCE   := src/cli.cr
 
 .PHONY: all
 all: build
