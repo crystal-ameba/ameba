@@ -16,8 +16,8 @@ all:
 
 BUILD_TARGET := bin/ameba
 
-DESTDIR ?=           ## Install destination dir
-PREFIX ?= /usr/local ## Install path prefix
+DESTDIR ?=          ## Install destination dir
+PREFIX ?= /usr/local## Install path prefix
 BINDIR ?= $(DESTDIR)$(PREFIX)/bin
 
 # The crystal command to use
