@@ -5,8 +5,10 @@ all:
 
 ## Build ameba
 ##   $ make
+##
 ## Run tests
 ##   $ make test
+##
 ## Install ameba
 ##   $ sudo make install
 
@@ -14,8 +16,8 @@ all:
 
 BUILD_TARGET := bin/ameba
 
-DESTDIR ?=          ## Install destination dir
-PREFIX ?= /usr/local## Install path prefix
+DESTDIR ?=           ## Install destination dir
+PREFIX ?= /usr/local ## Install path prefix
 BINDIR ?= $(DESTDIR)$(PREFIX)/bin
 
 # The crystal command to use
@@ -29,7 +31,6 @@ SHARD_BIN ?= ../../bin
 CRFLAGS ?= -Dpreview_mt
 
 SRC_SOURCES := $(shell find src -name '*.cr' 2>/dev/null)
-DOC_SOURCE   := src/cli.cr
 
 .PHONY: all
 all: build
@@ -43,10 +44,10 @@ $(BUILD_TARGET): $(SRC_SOURCES)
 
 docs: ## Generate API docs
 docs: $(SRC_SOURCES)
-	$(CRYSTAL_BIN) docs -o docs $(DOC_SOURCE)
+	$(CRYSTAL_BIN) docs
 
 .PHONY: lint
-lint: ## Run ameba on ameba's code base
+lint: ## Run ameba on its own code base
 lint: $(BUILD_TARGET)
 	$(BUILD_TARGET)
 
@@ -56,9 +57,10 @@ spec:
 	$(CRYSTAL_BIN) spec
 
 .PHONY: clean
-clean: ## Remove application binary
+clean: ## Remove application binary and API docs
 clean:
 	@rm -f "$(BUILD_TARGET)" "$(BUILD_TARGET).dwarf"
+	@rm -rf docs
 
 .PHONY: install
 install: ## Install application binary into $DESTDIR
@@ -68,7 +70,7 @@ install: $(BUILD_TARGET)
 .PHONY: bin
 bin: build
 	mkdir -p $(SHARD_BIN)
-	cp $(BUILD_TARGET) $(SHARD_BIN)
+	cp "$(BUILD_TARGET)" $(SHARD_BIN)
 
 .PHONY: test
 test: ## Run the spec suite and linter
@@ -76,7 +78,6 @@ test: spec lint
 
 .PHONY: help
 help: ## Show this help
-	@echo
 	@printf '\033[34mtargets:\033[0m\n'
 	@grep -hE '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) |\
 		sort |\
