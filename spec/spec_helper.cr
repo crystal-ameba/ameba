@@ -294,11 +294,16 @@ module Ameba
   end
 end
 
-def with_presenter(klass, &)
+def with_presenter(klass, *args, deansify = true, **kwargs, &)
   io = IO::Memory.new
-  presenter = klass.new(io)
 
-  yield presenter, io
+  presenter = klass.new(io)
+  presenter.run(*args, **kwargs)
+
+  output = io.to_s
+  output = Ameba::Formatter::Util.deansify(output).to_s if deansify
+
+  yield presenter, output
 end
 
 def as_node(source)

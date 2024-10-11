@@ -2,14 +2,10 @@ require "../../spec_helper"
 
 module Ameba
   private def rule_presenter_each_rule(&)
-    with_presenter(Presenter::RulePresenter) do |presenter, io|
-      rules = Config.load.rules
-      rules.each do |rule|
-        presenter.run(rule)
+    rules = Config.load.rules
 
-        output = io.to_s
-        output = Formatter::Util.deansify(output).to_s
-
+    rules.each do |rule|
+      with_presenter(Presenter::RulePresenter, rule) do |presenter, output|
         yield rule, output, presenter
       end
     end
