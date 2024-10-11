@@ -9,7 +9,7 @@ module Ameba::AST
   #   3.times do |i|
   #   end
   #
-  #   ->(x : Int32) {}
+  #   ->(x : Int32) { }
   # end
   # ```
   class Argument
