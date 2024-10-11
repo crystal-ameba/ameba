@@ -2,13 +2,9 @@ require "../../spec_helper"
 
 module Ameba
   private def with_rule_versions_presenter(&)
-    with_presenter(Presenter::RuleVersionsPresenter) do |presenter, io|
-      rules = Config.load.rules
-      presenter.run(rules)
+    rules = Config.load.rules
 
-      output = io.to_s
-      output = Formatter::Util.deansify(output).to_s
-
+    with_presenter(Presenter::RuleVersionsPresenter, rules) do |presenter, output|
       yield rules, output, presenter
     end
   end
