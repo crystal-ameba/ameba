@@ -12,7 +12,7 @@ all:
 
 -include Makefile.local # for optional local options
 
-BUILD_TARGET ::= bin/ameba
+BUILD_TARGET := bin/ameba
 
 DESTDIR ?=          ## Install destination dir
 PREFIX ?= /usr/local## Install path prefix
@@ -28,8 +28,8 @@ INSTALL_BIN ?= /usr/bin/install
 SHARD_BIN ?= ../../bin
 CRFLAGS ?= -Dpreview_mt
 
-SRC_SOURCES ::= $(shell find src -name '*.cr' 2>/dev/null)
-DOC_SOURCE   ::= src/**
+SRC_SOURCES := $(shell find src -name '*.cr' 2>/dev/null)
+DOC_SOURCE   := src/cli.cr
 
 .PHONY: all
 all: build
