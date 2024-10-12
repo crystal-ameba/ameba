@@ -26,13 +26,38 @@ module Ameba::Rule::Lint
 
     @@mutex = Mutex.new
 
+    protected record Typo,
+      typo : String,
+      corrections : Array(String),
+      location : {Int32, Int32},
+      end_location : {Int32, Int32} do
+      def self.parse(str) : self?
+        issue = JSON.parse(str)
+
+        return unless issue["type"] == "typo"
+
+        typo = issue["typo"].as_s
+        corrections = issue["corrections"].as_a.map(&.as_s)
+
+        return if typo.empty? || corrections.empty?
+
+        line_no = issue["line_num"].as_i
+        col_no = issue["byte_offset"].as_i + 1
+        end_col_no = col_no + typo.size - 1
+
+        new(typo, corrections,
+          {line_no, col_no},
+          {line_no, end_col_no})
+      end
+    end
+
     protected def self.typos_from(bin_path : String, source : Source) : Array(Typo)?
       result = @@mutex.synchronize do
         status = Process.run(bin_path, args: %w[--format json -],
           input: IO::Memory.new(source.code),
           output: output = IO::Memory.new,
         )
-        output.to_s unless status.success?
+        output.to_s.presence unless status.success?
       end
       return unless result
 
@@ -65,31 +90,6 @@ module Ameba::Rule::Lint
       end
     rescue ex
       raise ex if fail_on_error?
-    end
-
-    private record Typo,
-      typo : String,
-      corrections : Array(String),
-      location : {Int32, Int32},
-      end_location : {Int32, Int32} do
-      def self.parse(str) : self?
-        issue = JSON.parse(str)
-
-        return unless issue["type"] == "typo"
-
-        typo = issue["typo"].as_s
-        corrections = issue["corrections"].as_a.map(&.as_s)
-
-        return if typo.empty? || corrections.empty?
-
-        line_no = issue["line_num"].as_i
-        col_no = issue["byte_offset"].as_i + 1
-        end_col_no = col_no + typo.size - 1
-
-        new(typo, corrections,
-          {line_no, col_no},
-          {line_no, end_col_no})
-      end
     end
 
     protected def typos_from(source : Source) : Array(Typo)?
