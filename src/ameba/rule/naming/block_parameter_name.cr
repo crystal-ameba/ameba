@@ -20,7 +20,7 @@ module Ameba::Rule::Naming
   #   Enabled: true
   #   MinNameLength: 3
   #   AllowNamesEndingInNumbers: true
-  #   AllowedNames: [_, e, i, j, k, v, x, y, ex, io, ws, op, tx, id, ip, k1, k2, v1, v2]
+  #   AllowedNames: [e, i, j, k, v, x, y, ex, io, ws, op, tx, id, ip, k1, k2, v1, v2]
   #   ForbiddenNames: []
   # ```
   class BlockParameterName < Base
