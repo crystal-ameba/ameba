@@ -27,7 +27,6 @@ SHARDS_BIN ?= shards
 # The install command to use
 INSTALL_BIN ?= /usr/bin/install
 
-SHARD_BIN ?= ../../bin
 CRFLAGS ?= -Dpreview_mt
 
 SRC_SOURCES := $(shell find src -name '*.cr' 2>/dev/null)
@@ -67,11 +66,6 @@ install: ## Install application binary into $DESTDIR
 install: $(BUILD_TARGET)
 	mkdir -p "$(BINDIR)"
 	$(INSTALL_BIN) -m 0755 "$(BUILD_TARGET)" "$(BINDIR)/ameba"
-
-.PHONY: bin
-bin: build
-	mkdir -p $(SHARD_BIN)
-	cp "$(BUILD_TARGET)" $(SHARD_BIN)
 
 .PHONY: test
 test: ## Run the spec suite and linter
