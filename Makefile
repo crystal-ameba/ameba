@@ -65,6 +65,7 @@ clean:
 .PHONY: install
 install: ## Install application binary into $DESTDIR
 install: $(BUILD_TARGET)
+	mkdir -p "$(BINDIR)"
 	$(INSTALL_BIN) -m 0755 "$(BUILD_TARGET)" "$(BINDIR)/ameba"
 
 .PHONY: bin
