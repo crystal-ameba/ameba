@@ -41,6 +41,7 @@ build: $(BUILD_TARGET)
 $(BUILD_TARGET): $(SRC_SOURCES)
 	$(SHARDS_BIN) build $(CRFLAGS)
 
+.PHONY: docs
 docs: ## Generate API docs
 docs: $(SRC_SOURCES)
 	$(CRYSTAL_BIN) docs
