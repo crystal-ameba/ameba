@@ -5,7 +5,7 @@ module Ameba::Rule::Lint
     subject = PercentArrays.new
 
     it "passes if percent arrays are written correctly" do
-      s = Source.new %q(
+      expect_no_issues subject, <<-CRYSTAL
         %i[one two three]
         %w[one two three]
 
@@ -14,72 +14,64 @@ module Ameba::Rule::Lint
 
         %i[]
         %w[]
-      )
-      subject.catch(s).should be_valid
+        CRYSTAL
     end
 
     it "fails if string percent array has commas" do
-      s = Source.new %( %w[one, two] )
-      subject.catch(s).should_not be_valid
+      expect_issue subject, <<-CRYSTAL
+        %w[one, two]
+        # ^{} error: Symbols `,"` may be unwanted in %w array literals
+        CRYSTAL
     end
 
     it "fails if string percent array has quotes" do
-      s = Source.new %( %w["one" "two"] )
-      subject.catch(s).should_not be_valid
+      expect_issue subject, <<-CRYSTAL
+        %w["one" "two"]
+        # ^{} error: Symbols `,"` may be unwanted in %w array literals
+        CRYSTAL
     end
 
     it "fails if symbols percent array has commas" do
-      s = Source.new %( %i[one, two] )
-      subject.catch(s).should_not be_valid
+      expect_issue subject, <<-CRYSTAL
+        %i[one, two]
+        # ^{} error: Symbols `,:` may be unwanted in %i array literals
+        CRYSTAL
     end
 
     it "fails if symbols percent array has a colon" do
-      s = Source.new %( %i[:one :two] )
-      subject.catch(s).should_not be_valid
+      expect_issue subject, <<-CRYSTAL
+        %i[:one :two]
+        # ^{} error: Symbols `,:` may be unwanted in %i array literals
+        CRYSTAL
     end
 
     it "reports rule, location and message for %i" do
-      s = Source.new %(
+      expect_issue subject, <<-CRYSTAL
         %i[:one]
-      ), "source.cr"
-
-      subject.catch(s).should_not be_valid
-      issue = s.issues.first
-      issue.rule.should_not be_nil
-      issue.location.to_s.should eq "source.cr:1:1"
-      issue.message.should eq(
-        "Symbols `,:` may be unwanted in %i array literals"
-      )
+        # ^{} error: Symbols `,:` may be unwanted in %i array literals
+        CRYSTAL
     end
 
     it "reports rule, location and message for %w" do
-      s = Source.new %(
+      expect_issue subject, <<-CRYSTAL
         %w["one"]
-      ), "source.cr"
-
-      subject.catch(s).should_not be_valid
-      issue = s.issues.first
-      issue.rule.should_not be_nil
-      issue.location.to_s.should eq "source.cr:1:1"
-      issue.end_location.should be_nil
-      issue.message.should eq(
-        "Symbols `,\"` may be unwanted in %w array literals"
-      )
+        # ^{} error: Symbols `,"` may be unwanted in %w array literals
+        CRYSTAL
     end
 
     context "properties" do
       it "#string_array_unwanted_symbols" do
         rule = PercentArrays.new
         rule.string_array_unwanted_symbols = ","
-        s = Source.new %( %w["one"] )
-        rule.catch(s).should be_valid
+
+        expect_no_issues rule, %( %w[one] )
       end
 
       it "#symbol_array_unwanted_symbols" do
         rule = PercentArrays.new
         rule.symbol_array_unwanted_symbols = ","
-        s = Source.new %( %i[:one] )
-        rule.catch(s).should be_valid
+
+        expect_no_issues rule, %( %i[:one] )
       end
     end
   end

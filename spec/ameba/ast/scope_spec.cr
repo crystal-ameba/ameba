@@ -187,6 +187,7 @@ module Ameba::AST
         outer_scope = Scope.new nodes.def_nodes.first
         scope = Scope.new nodes.block_nodes.first, outer_scope
         scope.def?(check_outer_scopes: true).should be_true
+        scope.def?.should be_false
       end
     end
 
