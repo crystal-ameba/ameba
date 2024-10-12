@@ -55,7 +55,7 @@ module Ameba::Rule::Performance
       keys values values_at map map_with_index flat_map compact_map
       flatten compact select reject sample group_by chunks tally merge
       combinations repeated_combinations permutations repeated_permutations
-      transpose invert chars captures named_captures clone
+      transpose invert split chars lines captures named_captures clone
     ]
 
     def test(source)
