@@ -45,15 +45,19 @@ docs: ## Generate API docs
 docs: $(SRC_SOURCES)
 	$(CRYSTAL_BIN) docs
 
+.PHONY: spec
+spec: ## Run the spec suite
+spec:
+	$(CRYSTAL_BIN) spec
+
 .PHONY: lint
 lint: ## Run ameba on its own code base
 lint: $(BUILD_TARGET)
 	$(BUILD_TARGET)
 
-.PHONY: spec
-spec: ## Run the spec suite
-spec:
-	$(CRYSTAL_BIN) spec
+.PHONY: test
+test: ## Run the spec suite and linter
+test: spec lint
 
 .PHONY: clean
 clean: ## Remove application binary and API docs
@@ -66,10 +70,6 @@ install: ## Install application binary into $DESTDIR
 install: $(BUILD_TARGET)
 	mkdir -p "$(BINDIR)"
 	$(INSTALL_BIN) -m 0755 "$(BUILD_TARGET)" "$(BINDIR)/ameba"
-
-.PHONY: test
-test: ## Run the spec suite and linter
-test: spec lint
 
 .PHONY: help
 help: ## Show this help
