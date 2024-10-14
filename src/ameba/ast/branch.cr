@@ -181,6 +181,8 @@ module Ameba::AST
         if loop?(node) && (block = node.block)
           on_branchable_start node, block.body
         end
+
+        true
       end
 
       def end_visit(node : Crystal::Call)
