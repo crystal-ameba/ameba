@@ -44,6 +44,7 @@ module Ameba::Rule::Style
   # ```
   class UnlessElse < Base
     properties do
+      since_version "0.1.0"
       description "Disallows the use of an `else` block with the `unless`"
     end
 

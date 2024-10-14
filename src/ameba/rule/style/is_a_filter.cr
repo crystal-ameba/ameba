@@ -42,6 +42,7 @@ module Ameba::Rule::Style
     include AST::Util
 
     properties do
+      since_version "0.14.0"
       description "Identifies usage of `is_a?/nil?` calls within filters"
       filter_names %w[select reject any? all? none? one?]
     end

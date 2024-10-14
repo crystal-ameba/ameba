@@ -46,6 +46,7 @@ module Ameba::Rule::Lint
   # ```
   class SpecFocus < Base
     properties do
+      since_version "0.14.0"
       description "Reports focused spec items"
     end
 

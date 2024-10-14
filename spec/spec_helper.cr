@@ -24,6 +24,17 @@ module Ameba
     end
   end
 
+  class VersionedRule < Rule::Base
+    properties do
+      since_version "1.5.0"
+      description "Rule with a custom version."
+    end
+
+    def test(source)
+      issue_for({1, 1}, "This rule always adds an error")
+    end
+  end
+
   # Rule extended description
   class ErrorRule < Rule::Base
     properties do
@@ -283,11 +294,16 @@ module Ameba
   end
 end
 
-def with_presenter(klass, &)
+def with_presenter(klass, *args, deansify = true, **kwargs, &)
   io = IO::Memory.new
-  presenter = klass.new(io)
 
-  yield presenter, io
+  presenter = klass.new(io)
+  presenter.run(*args, **kwargs)
+
+  output = io.to_s
+  output = Ameba::Formatter::Util.deansify(output).to_s if deansify
+
+  yield presenter, output
 end
 
 def as_node(source)

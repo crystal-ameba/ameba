@@ -13,6 +13,7 @@ module Ameba::Rule::Lint
   # ```
   class SpecFilename < Base
     properties do
+      since_version "1.6.0"
       description "Enforces spec filenames to have `_spec` suffix"
       ignored_dirs %w[spec/support spec/fixtures spec/data]
       ignored_filenames %w[spec_helper]

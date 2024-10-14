@@ -32,6 +32,7 @@ module Ameba::Rule::Lint
   # ```
   class UnusedBlockArgument < Base
     properties do
+      since_version "1.4.0"
       description "Disallows unused block arguments"
     end
 
