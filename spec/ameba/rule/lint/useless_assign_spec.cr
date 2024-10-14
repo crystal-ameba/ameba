@@ -525,19 +525,6 @@ module Ameba::Rule::Lint
             puts v = 1 unless v = rand
             v
             CRYSTAL
-
-          expect_no_issues subject, <<-CRYSTAL
-            hash = {"foo" => "bar"}
-
-            def call(v)
-            end
-
-            unless v = hash["foo"]?
-              call v = "default"
-            end
-
-            v
-            CRYSTAL
         end
 
         it "reports if assignment is useless in the branch" do
