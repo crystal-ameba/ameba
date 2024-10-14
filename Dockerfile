@@ -1,4 +1,4 @@
-FROM alpine:edge as builder
+FROM alpine:edge AS builder
 RUN apk add --update crystal shards yaml-dev musl-dev make
 RUN mkdir /ameba
 WORKDIR /ameba
