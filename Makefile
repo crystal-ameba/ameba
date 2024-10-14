@@ -27,7 +27,6 @@ SHARDS_BIN ?= shards
 # The install command to use
 INSTALL_BIN ?= /usr/bin/install
 
-SHARD_BIN ?= ../../bin
 CRFLAGS ?= -Dpreview_mt
 
 SRC_SOURCES := $(shell find src -name '*.cr' 2>/dev/null)
@@ -42,19 +41,24 @@ build: $(BUILD_TARGET)
 $(BUILD_TARGET): $(SRC_SOURCES)
 	$(SHARDS_BIN) build $(CRFLAGS)
 
+.PHONY: docs
 docs: ## Generate API docs
 docs: $(SRC_SOURCES)
 	$(CRYSTAL_BIN) docs
+
+.PHONY: spec
+spec: ## Run the spec suite
+spec:
+	$(CRYSTAL_BIN) spec
 
 .PHONY: lint
 lint: ## Run ameba on its own code base
 lint: $(BUILD_TARGET)
 	$(BUILD_TARGET)
 
-.PHONY: spec
-spec: ## Run the spec suite
-spec:
-	$(CRYSTAL_BIN) spec
+.PHONY: test
+test: ## Run the spec suite and linter
+test: spec lint
 
 .PHONY: clean
 clean: ## Remove application binary and API docs
@@ -65,16 +69,8 @@ clean:
 .PHONY: install
 install: ## Install application binary into $DESTDIR
 install: $(BUILD_TARGET)
+	mkdir -p "$(BINDIR)"
 	$(INSTALL_BIN) -m 0755 "$(BUILD_TARGET)" "$(BINDIR)/ameba"
-
-.PHONY: bin
-bin: build
-	mkdir -p $(SHARD_BIN)
-	cp "$(BUILD_TARGET)" $(SHARD_BIN)
-
-.PHONY: test
-test: ## Run the spec suite and linter
-test: spec lint
 
 .PHONY: help
 help: ## Show this help

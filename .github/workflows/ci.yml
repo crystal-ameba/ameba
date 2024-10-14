@@ -36,11 +36,11 @@ jobs:
         if: matrix.os == 'macos-latest'
         run: brew install typos-cli
 
-      - name: Build ameba binary
-        run: make build
-
       - name: Run specs
         run: make spec
+
+      - name: Build ameba binary
+        run: make build
 
       - name: Run ameba linter
         run: make lint

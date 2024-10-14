@@ -14,10 +14,19 @@ module Ameba::Rule::Lint
     end
 
     it "reports if source is not formatted" do
-      expect_issue subject, <<-CRYSTAL
-        def method(a,b)
+      source = expect_issue subject, <<-CRYSTAL
+        def method(a,b,c=0)
         # ^{} error: Use built-in formatter to format this source
+          a+b+c
         end
+
+        CRYSTAL
+
+      expect_correction source, <<-CRYSTAL
+        def method(a, b, c = 0)
+          a + b + c
+        end
+
         CRYSTAL
     end
 

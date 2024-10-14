@@ -271,7 +271,7 @@ module Ameba
     end
 
     {% for node in NODES %}
-      {{ getter_name = node.stringify.split("::").last.underscore + "_nodes" }}
+      {% getter_name = node.stringify.split("::").last.underscore + "_nodes" %}
 
       getter {{ getter_name.id }} = [] of {{ node }}
 
