@@ -38,17 +38,9 @@ module Ameba::Rule::Naming
     CALL_NAMES = %w[getter class_getter property class_property]
 
     def test(source, node : Crystal::ClassDef | Crystal::ModuleDef)
-      calls =
-        case body = node.body
-        when Crystal::Call
-          [body] if body.name.in?(CALL_NAMES)
-        when Crystal::Expressions
-          body.expressions
-            .select(Crystal::Call)
-            .select!(&.name.in?(CALL_NAMES))
-        end
+      each_call_node(node) do |exp|
+        next unless exp.name.in?(CALL_NAMES)
 
-      calls.try &.each do |exp|
         exp.args.each do |arg|
           name_node, is_bool =
             case arg
@@ -63,6 +55,17 @@ module Ameba::Rule::Naming
           if name_node && is_bool
             issue_for name_node, MSG % {exp.name, name_node}
           end
+        end
+      end
+    end
+
+    private def each_call_node(node, &)
+      case body = node.body
+      when Crystal::Call
+        yield body
+      when Crystal::Expressions
+        body.expressions.each do |exp|
+          yield exp if exp.is_a?(Crystal::Call)
         end
       end
     end

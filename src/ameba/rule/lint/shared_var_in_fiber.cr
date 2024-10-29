@@ -75,11 +75,11 @@ module Ameba::Rule::Lint
     private def mutated_in_loop?(variable)
       declared_in = variable.assignments.first?.try &.branch
 
-      variable.assignments
-        .reject(&.scope.spawn_block?)
-        .any? do |assign|
-          assign.branch.try(&.in_loop?) && assign.branch != declared_in
-        end
+      variable.assignments.any? do |assign|
+        !assign.scope.spawn_block? &&
+          assign.branch.try(&.in_loop?) &&
+          assign.branch != declared_in
+      end
     end
   end
 end

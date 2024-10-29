@@ -43,15 +43,7 @@ module Ameba::Rule::Naming
     MSG = "Favour method name '%s' over '%s'"
 
     def test(source, node : Crystal::ClassDef | Crystal::ModuleDef)
-      defs =
-        case body = node.body
-        when Crystal::Def
-          [body]
-        when Crystal::Expressions
-          body.expressions.select(Crystal::Def)
-        end
-
-      defs.try &.each do |def_node|
+      each_def_node(node) do |def_node|
         # skip defs with explicit receiver, as they'll be handled
         # by the `test(source, node : Crystal::Def)` overload
         check_issue(source, def_node) unless def_node.receiver
@@ -61,6 +53,17 @@ module Ameba::Rule::Naming
     def test(source, node : Crystal::Def)
       # check only defs with explicit receiver (`def self.foo`)
       check_issue(source, node) if node.receiver
+    end
+
+    private def each_def_node(node, &)
+      case body = node.body
+      when Crystal::Def
+        yield body
+      when Crystal::Expressions
+        body.expressions.each do |exp|
+          yield exp if exp.is_a?(Crystal::Def)
+        end
+      end
     end
 
     private def check_issue(source, node : Crystal::Def)
