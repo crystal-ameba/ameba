@@ -5,7 +5,8 @@ module Ameba::Formatter
       output << "Disabled rules using inline directives:\n\n"
 
       sources.each do |source|
-        source.issues.select(&.disabled?).each do |issue|
+        source.issues.each do |issue|
+          next unless issue.disabled?
           next unless loc = issue.location
 
           output << "#{source.path}:#{loc.line_number}".colorize(:cyan)

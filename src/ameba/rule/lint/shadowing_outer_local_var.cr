@@ -52,7 +52,7 @@ module Ameba::Rule::Lint
     private def find_shadowing(source, scope)
       return unless outer_scope = scope.outer_scope
 
-      scope.arguments.reject(&.ignored?).each do |arg|
+      each_argument_node(scope) do |arg|
         # TODO: handle unpacked variables from `Block#unpacks`
         next unless name = arg.name.presence
 
@@ -63,6 +63,12 @@ module Ameba::Rule::Lint
         next if outer_scope.assigns_type_dec?(name)
 
         issue_for arg.node, MSG % name
+      end
+    end
+
+    private def each_argument_node(scope, &)
+      scope.arguments.each do |arg|
+        yield arg unless arg.ignored?
       end
     end
   end

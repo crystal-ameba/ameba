@@ -30,18 +30,18 @@ module Ameba::Rule::Lint
     MSG = "Redundant use of `Object#to_s` in interpolation"
 
     def test(source, node : Crystal::StringInterpolation)
-      string_coercion_nodes(node).each do |expr|
+      each_string_coercion_node(node) do |expr|
         issue_for name_location(expr), expr.end_location, MSG
       end
     end
 
-    private def string_coercion_nodes(node)
-      node.expressions.select do |exp|
-        exp.is_a?(Crystal::Call) &&
-          exp.name == "to_s" &&
-          exp.args.size.zero? &&
-          exp.named_args.nil? &&
-          exp.obj
+    private def each_string_coercion_node(node, &)
+      node.expressions.each do |exp|
+        yield exp if exp.is_a?(Crystal::Call) &&
+                     exp.name == "to_s" &&
+                     exp.args.size.zero? &&
+                     exp.named_args.nil? &&
+                     exp.obj
       end
     end
   end

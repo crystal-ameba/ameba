@@ -170,10 +170,8 @@ module Ameba
     # runner.success? # => true or false
     # ```
     def success?
-      @sources.all? do |source|
-        source.issues
-          .reject(&.disabled?)
-          .none?(&.rule.severity.<=(@severity))
+      @sources.all? &.issues.none? do |issue|
+        issue.enabled? && issue.rule.severity <= @severity
       end
     end
 
