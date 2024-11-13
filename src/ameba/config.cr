@@ -95,6 +95,9 @@ class Ameba::Config
   #
   # `Config.load` uses this constructor to instantiate new config by YAML file.
   protected def initialize(config : YAML::Any)
+    if config.raw.nil?
+      config = YAML.parse("{}")
+    end
     @rules = Rule.rules.map &.new(config).as(Rule::Base)
     @rule_groups = @rules.group_by &.group
     @excluded = load_array_section(config, "Excluded")
