@@ -76,6 +76,15 @@ module Ameba::Formatter
         subject.affected_code(code, location).should be_nil
       end
 
+      it "works with file-wide location (1, 1) + indented code" do
+        code = <<-CRYSTAL
+                  a = 1
+          CRYSTAL
+        location = Crystal::Location.new("filename", 1, 1)
+        subject.deansify(subject.affected_code(code, location))
+          .should eq "> a = 1\n  ^\n"
+      end
+
       it "returns correct line if it is found" do
         code = <<-CRYSTAL
           a = 1
