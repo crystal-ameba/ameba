@@ -63,9 +63,8 @@ module Ameba::Formatter
   # }
   # ```
   class JSONFormatter < BaseFormatter
-    def initialize(@output = STDOUT)
-      @result = AsJSON::Result.new
-    end
+    @result = AsJSON::Result.new
+    @mutex = Mutex.new
 
     def started(sources)
       @result.summary.target_sources_count = sources.size
@@ -88,7 +87,7 @@ module Ameba::Formatter
         @result.summary.issues_count += 1
       end
 
-      @result.sources << json_source
+      @mutex.synchronize { @result.sources << json_source }
     end
 
     def finished(sources)
