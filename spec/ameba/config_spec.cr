@@ -15,11 +15,11 @@ module Ameba
         config.globs.should eq Config::DEFAULT_GLOBS
       end
 
-      it "loads default globs when config is empty" do
+      it "loads default globs when config has no value" do
         yml = YAML.parse <<-CONFIG
           # Empty config with comment
 
-        CONFIG
+          CONFIG
         config = Config.new(yml)
         config.globs.should eq Config::DEFAULT_GLOBS
       end
