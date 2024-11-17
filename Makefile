@@ -51,6 +51,11 @@ spec: ## Run the spec suite
 spec:
 	$(CRYSTAL_BIN) spec
 
+.PHONY: schema
+schema: ## Build the latest schema
+schema:
+	$(SHARDS_BIN) run schema
+
 .PHONY: lint
 lint: ## Run ameba on its own code base
 lint: $(BUILD_TARGET)
