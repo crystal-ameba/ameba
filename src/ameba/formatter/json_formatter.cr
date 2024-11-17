@@ -84,10 +84,12 @@ module Ameba::Formatter
           issue.end_location,
           issue.message
         )
-        @result.summary.issues_count += 1
       end
 
-      @mutex.synchronize { @result.sources << json_source }
+      @mutex.synchronize do
+        @result.summary.issues_count += json_source.issues.size
+        @result.sources << json_source
+      end
     end
 
     def finished(sources)
