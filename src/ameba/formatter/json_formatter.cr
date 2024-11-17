@@ -5,10 +5,10 @@ module Ameba::Formatter
   #
   # Example:
   #
-  # ```
+  # ```json
   # {
   #   "metadata": {
-  #     "ameba_version":   "x.x.x",
+  #     "ameba_version": "x.x.x",
   #     "crystal_version": "x.x.x",
   #   },
   #   "sources": [
@@ -17,47 +17,47 @@ module Ameba::Formatter
   #         {
   #           "location": {
   #             "column": 7,
-  #             "line":   17,
+  #             "line": 17,
   #           },
   #           "end_location": {
   #             "column": 20,
-  #             "line":   17,
+  #             "line": 17,
   #           },
-  #           "message":   "Useless assignment to variable `a`",
+  #           "message": "Useless assignment to variable `a`",
   #           "rule_name": "UselessAssign",
-  #           "severity":  "Convention",
+  #           "severity": "Convention",
   #         },
   #         {
   #           "location": {
   #             "column": 7,
-  #             "line":   18,
+  #             "line": 18,
   #           },
   #           "end_location": {
   #             "column": 8,
-  #             "line":   18,
+  #             "line": 18,
   #           },
-  #           "message":   "Useless assignment to variable `a`",
+  #           "message": "Useless assignment to variable `a`",
   #           "rule_name": "UselessAssign",
   #         },
   #         {
   #           "location": {
   #             "column": 7,
-  #             "line":   19,
+  #             "line": 19,
   #           },
   #           "end_location": {
   #             "column": 9,
-  #             "line":   19,
+  #             "line": 19,
   #           },
-  #           "message":   "Useless assignment to variable `a`",
+  #           "message": "Useless assignment to variable `a`",
   #           "rule_name": "UselessAssign",
-  #           "severity":  "Convention",
+  #           "severity": "Convention",
   #         },
   #       ],
   #       "path": "src/ameba/formatter/json_formatter.cr",
   #     },
   #   ],
   #   "summary": {
-  #     "issues_count":         3,
+  #     "issues_count": 3,
   #     "target_sources_count": 1,
   #   },
   # }
