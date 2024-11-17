@@ -97,6 +97,8 @@ class Ameba::Config
   protected def initialize(config : YAML::Any)
     if config.raw.nil?
       config = YAML.parse("{}")
+    elsif !config.raw.is_a?(Hash)
+      raise "Invalid config file format"
     end
     @rules = Rule.rules.map &.new(config).as(Rule::Base)
     @rule_groups = @rules.group_by &.group

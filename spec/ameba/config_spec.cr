@@ -9,6 +9,13 @@ module Ameba
     end
 
     describe ".new" do
+      it "raises when the config is not a Hash" do
+        yml = YAML.parse "[]"
+        expect_raises(Exception, "Invalid config file format") do
+          Config.new(yml)
+        end
+      end
+
       it "loads default globs when config is empty" do
         yml = YAML.parse "{}"
         config = Config.new(yml)
