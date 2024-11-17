@@ -2,7 +2,7 @@ module Ameba::Formatter
   class FlycheckFormatter < BaseFormatter
     @mutex = Mutex.new
 
-    def source_finished(source : Source)
+    def source_finished(source : Source) : Nil
       source.issues.each do |issue|
         next if issue.disabled?
         next if issue.correctable? && config[:autocorrect]?

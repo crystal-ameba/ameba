@@ -30,7 +30,7 @@ module Ameba::Formatter
     end
 
     # Reports the explanations at the *@location*.
-    def finished(sources)
+    def finished(sources) : Nil
       source = sources.find(&.path.==(@location.filename))
       return unless source
 
@@ -40,7 +40,7 @@ module Ameba::Formatter
       explain(source, issue)
     end
 
-    private def explain(source, issue)
+    private def explain(source, issue) : Nil
       return unless location = issue.location
 
       output << '\n'

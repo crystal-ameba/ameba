@@ -1,6 +1,6 @@
 module Ameba::Presenter
   class RuleCollectionPresenter < BasePresenter
-    def run(rules)
+    def run(rules) : Nil
       rules = rules.to_h do |rule|
         name = rule.name.split('/')
         name = "%s/%s" % {

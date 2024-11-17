@@ -8,7 +8,7 @@ module Ameba::Formatter
     def initialize(@output = STDOUT, @config_path = Config::DEFAULT_PATH)
     end
 
-    def finished(sources)
+    def finished(sources) : Nil
       super
 
       issues = sources.flat_map(&.issues)
@@ -22,12 +22,12 @@ module Ameba::Formatter
         return
       end
 
-      generate_todo_config(issues).tap do |file|
-        @output.puts "Created #{file.path}"
-      end
+      generate_todo_config(issues)
+
+      @output.puts "Created #{@config_path}"
     end
 
-    private def generate_todo_config(issues)
+    private def generate_todo_config(issues) : Nil
       File.open(@config_path, mode: "w") do |file|
         file << header
 
@@ -41,7 +41,6 @@ module Ameba::Formatter
           file << "\n# Run `ameba --only #{rule.name}` for details"
           file << rule_todo
         end
-        file
       end
     end
 

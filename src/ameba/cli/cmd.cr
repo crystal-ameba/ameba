@@ -5,7 +5,7 @@ require "option_parser"
 module Ameba::Cli
   extend self
 
-  def run(args = ARGV)
+  def run(args = ARGV) : Nil
     opts = parse_args args
     location_to_explain = opts.location_to_explain
     autocorrect = opts.autocorrect?
@@ -151,7 +151,7 @@ module Ameba::Cli
     opts
   end
 
-  private def configure_rules(config, opts)
+  private def configure_rules(config, opts) : Nil
     case
     when only = opts.only
       config.rules.each(&.enabled = false)
@@ -162,7 +162,7 @@ module Ameba::Cli
     config.update_rules(opts.except, enabled: false)
   end
 
-  private def configure_formatter(config, opts)
+  private def configure_formatter(config, opts) : Nil
     if name = opts.formatter
       config.formatter = name
     end
@@ -171,12 +171,12 @@ module Ameba::Cli
       opts.without_affected_code?
   end
 
-  private def configure_describe_opts(rule_name, opts)
+  private def configure_describe_opts(rule_name, opts) : Nil
     opts.describe_rule = rule_name.presence
     opts.formatter = :silent
   end
 
-  private def configure_explain_opts(loc, opts)
+  private def configure_explain_opts(loc, opts) : Nil
     location_to_explain = parse_explain_location(loc)
     opts.location_to_explain = location_to_explain
     opts.globs = [location_to_explain[:file]]
