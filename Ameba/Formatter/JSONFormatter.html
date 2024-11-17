@@ -912,59 +912,59 @@
 
   <p>A formatter that produces the result in a json format.</p>
 <p>Example:</p>
-<pre><code class="language-crystal">{
-  <span class="s">&quot;metadata&quot;</span>: {
-    <span class="s">&quot;ameba_version&quot;</span>:   <span class="s">&quot;x.x.x&quot;</span>,
-    <span class="s">&quot;crystal_version&quot;</span>: <span class="s">&quot;x.x.x&quot;</span>,
+<pre><code class="language-json">{
+  &quot;metadata&quot;: {
+    &quot;ameba_version&quot;: &quot;x.x.x&quot;,
+    &quot;crystal_version&quot;: &quot;x.x.x&quot;,
   },
-  <span class="s">&quot;sources&quot;</span>: [
+  &quot;sources&quot;: [
     {
-      <span class="s">&quot;issues&quot;</span>: [
+      &quot;issues&quot;: [
         {
-          <span class="s">&quot;location&quot;</span>: {
-            <span class="s">&quot;column&quot;</span>: <span class="n">7</span>,
-            <span class="s">&quot;line&quot;</span>:   <span class="n">17</span>,
+          &quot;location&quot;: {
+            &quot;column&quot;: 7,
+            &quot;line&quot;: 17,
           },
-          <span class="s">&quot;end_location&quot;</span>: {
-            <span class="s">&quot;column&quot;</span>: <span class="n">20</span>,
-            <span class="s">&quot;line&quot;</span>:   <span class="n">17</span>,
+          &quot;end_location&quot;: {
+            &quot;column&quot;: 20,
+            &quot;line&quot;: 17,
           },
-          <span class="s">&quot;message&quot;</span>:   <span class="s">&quot;Useless assignment to variable `a`&quot;</span>,
-          <span class="s">&quot;rule_name&quot;</span>: <span class="s">&quot;UselessAssign&quot;</span>,
-          <span class="s">&quot;severity&quot;</span>:  <span class="s">&quot;Convention&quot;</span>,
+          &quot;message&quot;: &quot;Useless assignment to variable `a`&quot;,
+          &quot;rule_name&quot;: &quot;UselessAssign&quot;,
+          &quot;severity&quot;: &quot;Convention&quot;,
         },
         {
-          <span class="s">&quot;location&quot;</span>: {
-            <span class="s">&quot;column&quot;</span>: <span class="n">7</span>,
-            <span class="s">&quot;line&quot;</span>:   <span class="n">18</span>,
+          &quot;location&quot;: {
+            &quot;column&quot;: 7,
+            &quot;line&quot;: 18,
           },
-          <span class="s">&quot;end_location&quot;</span>: {
-            <span class="s">&quot;column&quot;</span>: <span class="n">8</span>,
-            <span class="s">&quot;line&quot;</span>:   <span class="n">18</span>,
+          &quot;end_location&quot;: {
+            &quot;column&quot;: 8,
+            &quot;line&quot;: 18,
           },
-          <span class="s">&quot;message&quot;</span>:   <span class="s">&quot;Useless assignment to variable `a`&quot;</span>,
-          <span class="s">&quot;rule_name&quot;</span>: <span class="s">&quot;UselessAssign&quot;</span>,
+          &quot;message&quot;: &quot;Useless assignment to variable `a`&quot;,
+          &quot;rule_name&quot;: &quot;UselessAssign&quot;,
         },
         {
-          <span class="s">&quot;location&quot;</span>: {
-            <span class="s">&quot;column&quot;</span>: <span class="n">7</span>,
-            <span class="s">&quot;line&quot;</span>:   <span class="n">19</span>,
+          &quot;location&quot;: {
+            &quot;column&quot;: 7,
+            &quot;line&quot;: 19,
           },
-          <span class="s">&quot;end_location&quot;</span>: {
-            <span class="s">&quot;column&quot;</span>: <span class="n">9</span>,
-            <span class="s">&quot;line&quot;</span>:   <span class="n">19</span>,
+          &quot;end_location&quot;: {
+            &quot;column&quot;: 9,
+            &quot;line&quot;: 19,
           },
-          <span class="s">&quot;message&quot;</span>:   <span class="s">&quot;Useless assignment to variable `a`&quot;</span>,
-          <span class="s">&quot;rule_name&quot;</span>: <span class="s">&quot;UselessAssign&quot;</span>,
-          <span class="s">&quot;severity&quot;</span>:  <span class="s">&quot;Convention&quot;</span>,
+          &quot;message&quot;: &quot;Useless assignment to variable `a`&quot;,
+          &quot;rule_name&quot;: &quot;UselessAssign&quot;,
+          &quot;severity&quot;: &quot;Convention&quot;,
         },
       ],
-      <span class="s">&quot;path&quot;</span>: <span class="s">&quot;src/ameba/formatter/json_formatter.cr&quot;</span>,
+      &quot;path&quot;: &quot;src/ameba/formatter/json_formatter.cr&quot;,
     },
   ],
-  <span class="s">&quot;summary&quot;</span>: {
-    <span class="s">&quot;issues_count&quot;</span>:         <span class="n">3</span>,
-    <span class="s">&quot;target_sources_count&quot;</span>: <span class="n">1</span>,
+  &quot;summary&quot;: {
+    &quot;issues_count&quot;: 3,
+    &quot;target_sources_count&quot;: 1,
   },
 }</code></pre>
 
@@ -991,7 +991,7 @@
   </h2>
   
     
-      <a href="https://github.com/crystal-ameba/ameba/blob/e082eeb/src/ameba/formatter/json_formatter.cr#L65" target="_blank">
+      <a href="https://github.com/crystal-ameba/ameba/blob/13ba303/src/ameba/formatter/json_formatter.cr#L65" target="_blank">
         ameba/formatter/json_formatter.cr
       </a>
     
@@ -1001,23 +1001,6 @@
 
 
 
-
-  <h2>
-    <a id="constructors" class="anchor" href="#constructors">
-  <svg class="octicon-link" aria-hidden="true">
-    <use href="#octicon-link"/>
-  </svg>
-</a>
-    Constructors
-  </h2>
-  <ul class="list-summary">
-    
-      <li class="entry-summary">
-        <a href="#new%28output%3DSTDOUT%29-class-method" class="signature"><strong>.new</strong>(output = <span class="t">STDOUT</span>)</a>
-        
-      </li>
-    
-  </ul>
 
 
 
@@ -1147,32 +1130,6 @@
 </div>
 
 
-  <h2>
-    <a id="constructor-detail" class="anchor" href="#constructor-detail">
-  <svg class="octicon-link" aria-hidden="true">
-    <use href="#octicon-link"/>
-  </svg>
-</a>
-    Constructor Detail
-  </h2>
-  
-    <div class="entry-detail" id="new(output=STDOUT)-class-method">
-      <div class="signature">
-        
-        def self.<strong>new</strong>(output = <span class="t">STDOUT</span>)
-
-        <a class="method-permalink" href="#new%28output%3DSTDOUT%29-class-method">#</a>
-      </div>
-      
-      <br/>
-      <div>
-        
-          [<a href="https://github.com/crystal-ameba/ameba/blob/e082eeb/src/ameba/formatter/json_formatter.cr#L66" target="_blank">View source</a>]
-        
-      </div>
-    </div>
-  
-
 
 
 
@@ -1209,7 +1166,7 @@ A list of inspected sources is passed as an argument.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/e082eeb/src/ameba/formatter/json_formatter.cr#L94" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/13ba303/src/ameba/formatter/json_formatter.cr#L95" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1235,7 +1192,7 @@ A corresponding source is passed as an argument.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/e082eeb/src/ameba/formatter/json_formatter.cr#L74" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/13ba303/src/ameba/formatter/json_formatter.cr#L73" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1261,7 +1218,7 @@ A list of sources to inspect is passed as an argument.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/e082eeb/src/ameba/formatter/json_formatter.cr#L70" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/13ba303/src/ameba/formatter/json_formatter.cr#L69" target="_blank">View source</a>]
         
       </div>
     </div>
