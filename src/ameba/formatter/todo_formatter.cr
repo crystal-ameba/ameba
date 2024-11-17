@@ -3,7 +3,9 @@ module Ameba::Formatter
   # Basically, it takes all issues reported and disables corresponding rules
   # or excludes failed sources from these rules.
   class TODOFormatter < DotFormatter
-    def initialize(@output = STDOUT, @config_path : Path = Config::DEFAULT_PATH)
+    @config_path : Path
+
+    def initialize(@output = STDOUT, @config_path = Config::DEFAULT_PATH)
     end
 
     def finished(sources)

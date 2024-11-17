@@ -7,7 +7,7 @@ module Ameba::Formatter
     include Util
 
     @started_at : Time::Span?
-    @mutex = Thread::Mutex.new
+    @mutex = Mutex.new
 
     # Reports a message when inspection is started.
     def started(sources)
