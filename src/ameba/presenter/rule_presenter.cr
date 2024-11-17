@@ -1,6 +1,6 @@
 module Ameba::Presenter
   class RulePresenter < BasePresenter
-    def run(rule)
+    def run(rule) : Nil
       output.puts
       output_title "Rule info"
       output_paragraph "%s of a %s severity [enabled: %s]" % {

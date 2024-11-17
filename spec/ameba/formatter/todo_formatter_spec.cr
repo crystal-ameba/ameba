@@ -13,10 +13,12 @@ module Ameba
 
   private def create_todo
     with_formatter do |formatter|
-      s = Source.new "a = 1", "source.cr"
-      s.add_issue DummyRule.new, {1, 2}, "message"
-      file = formatter.finished([s])
-      file ? File.read(file.path) : ""
+      source = Source.new "a = 1", "source.cr"
+      source.add_issue DummyRule.new, {1, 2}, "message"
+
+      formatter.finished([source])
+
+      File.exists?(CONFIG_PATH) ? File.read(CONFIG_PATH) : ""
     end
   end
 
@@ -97,8 +99,9 @@ module Ameba
             s1.add_issue DummyRule.new, {2, 2}, "message1"
             s2.add_issue DummyRule.new, {2, 2}, "message2"
 
-            file = formatter.finished([s1, s2]).should_not be_nil
-            content = File.read(file.path)
+            formatter.finished([s1, s2])
+
+            content = File.read(CONFIG_PATH)
             content.should contain <<-CONTENT
               # Problems found: 3
               # Run `ameba --only Ameba/DummyRule` for details

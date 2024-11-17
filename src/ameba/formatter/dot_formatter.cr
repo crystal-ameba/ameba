@@ -10,7 +10,7 @@ module Ameba::Formatter
     @mutex = Mutex.new
 
     # Reports a message when inspection is started.
-    def started(sources)
+    def started(sources) : Nil
       @started_at = Time.monotonic
 
       output.puts started_message(sources.size)
@@ -18,13 +18,13 @@ module Ameba::Formatter
     end
 
     # Reports a result of the inspection of a corresponding source.
-    def source_finished(source : Source)
+    def source_finished(source : Source) : Nil
       sym = source.valid? ? ".".colorize(:green) : "F".colorize(:red)
       @mutex.synchronize { output << sym }
     end
 
     # Reports a message when inspection is finished.
-    def finished(sources)
+    def finished(sources) : Nil
       output.flush
       output << "\n\n"
 

@@ -15,22 +15,22 @@ module Ameba::Formatter
 
     # Callback that indicates when inspecting is started.
     # A list of sources to inspect is passed as an argument.
-    def started(sources); end
+    def started(sources) : Nil; end
 
     # Callback that indicates when source inspection is started.
     # A corresponding source is passed as an argument.
     #
     # WARNING: This method needs to be MT safe
-    def source_started(source : Source); end
+    def source_started(source : Source) : Nil; end
 
     # Callback that indicates when source inspection is finished.
     # A corresponding source is passed as an argument.
     #
     # WARNING: This method needs to be MT safe
-    def source_finished(source : Source); end
+    def source_finished(source : Source) : Nil; end
 
     # Callback that indicates when inspection is finished.
     # A list of inspected sources is passed as an argument.
-    def finished(sources); end
+    def finished(sources) : Nil; end
   end
 end

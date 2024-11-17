@@ -107,7 +107,7 @@ module Ameba
       @formatter.finished @sources
     end
 
-    private def run_source(source)
+    private def run_source(source) : Nil
       @formatter.source_started source
 
       # This variable is a 2D array used to track corrected issues after each

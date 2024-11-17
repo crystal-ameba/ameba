@@ -66,11 +66,11 @@ module Ameba::Formatter
     @result = AsJSON::Result.new
     @mutex = Mutex.new
 
-    def started(sources)
+    def started(sources) : Nil
       @result.summary.target_sources_count = sources.size
     end
 
-    def source_finished(source : Source)
+    def source_finished(source : Source) : Nil
       json_source = AsJSON::Source.new source.path
 
       source.issues.each do |issue|
@@ -92,7 +92,7 @@ module Ameba::Formatter
       end
     end
 
-    def finished(sources)
+    def finished(sources) : Nil
       @result.to_json @output
     end
   end
