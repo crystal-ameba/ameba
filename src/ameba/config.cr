@@ -87,7 +87,7 @@ class Ameba::Config
   property? autocorrect = false
 
   # Returns a filename if reading source file from STDIN.
-  property stdin_filename : String? = nil
+  property stdin_filename : String?
 
   @rule_groups : Hash(String, Array(Rule::Base))
 
