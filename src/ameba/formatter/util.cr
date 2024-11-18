@@ -59,20 +59,22 @@ module Ameba::Formatter
         affected_line = trim(affected_line, max_length, ellipsis)
       end
 
+      position = prompt.size + column
+      position -= 1
+
       show_context = context_lines > 0
 
       if show_context
         pre_context, post_context =
           context(lines, lineno, context_lines)
-
-        position = prompt.size + column
-        position -= 1
       else
         affected_line_size, affected_line =
           affected_line.size, affected_line.lstrip
 
-        position = column - (affected_line_size - affected_line.size) + prompt.size
-        position -= 1
+        indent_size_diff = affected_line_size - affected_line.size
+        if column > indent_size_diff
+          position -= indent_size_diff
+        end
       end
 
       String.build do |str|
