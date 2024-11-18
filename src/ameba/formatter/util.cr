@@ -72,7 +72,7 @@ module Ameba::Formatter
           affected_line.size, affected_line.lstrip
 
         indent_size_diff = affected_line_size - affected_line.size
-        if indent_size_diff < position
+        if column > indent_size_diff
           position -= indent_size_diff
         end
       end
