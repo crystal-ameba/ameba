@@ -1,4 +1,32 @@
 module Ameba::Rule::Typing
+  # A rule that enforces that Proc literals have a return type.
+  #
+  # For example, these are considered valid:
+  #
+  # ```
+  # my_proc = ->(arg : String) : String { a + "proc" }
+  # ```
+  #
+  # ```
+  # task -> : Task { Task.new("execute this command") }
+  # ```
+  #
+  # And these are invalid:
+  #
+  # ```
+  # my_proc = ->(arg : String) { a + "proc" }
+  # ```
+  #
+  # ```
+  # task -> { Task.new("execute this command") }
+  # ```
+  #
+  # YAML configuration example:
+  #
+  # ```
+  # Typing/ProcReturnTypeRestriction:
+  #   Enabled: true
+  # ```
   class ProcReturnTypeRestriction < Base
     properties do
       description "Disallows proc literals without return type restrictions"
