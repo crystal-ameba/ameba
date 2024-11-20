@@ -78,7 +78,10 @@ module Ameba::Cli
       parser.on("-r", "--rules", "Show all available rules") { opts.rules = true }
       parser.on("-s", "--silent", "Disable output") { opts.formatter = :silent }
       parser.unknown_args do |arr|
-        if arr.size == 1 && arr.first.matches?(/.+:\d+:\d+/)
+        case
+        when arr.size == 1 && arr.first == "-"
+          opts.stdin_filename = arr.first
+        when arr.size == 1 && arr.first.matches?(/.+:\d+:\d+/)
           configure_explain_opts(arr.first, opts)
         else
           opts.globs = arr unless arr.empty?

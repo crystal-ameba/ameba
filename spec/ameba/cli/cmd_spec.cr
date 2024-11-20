@@ -156,6 +156,11 @@ module Ameba::Cli
         c.globs.should eq %w[source1.cr source2.cr]
       end
 
+      it "accepts single '-' argument as STDIN" do
+        c = Cli.parse_args %w[-]
+        c.stdin_filename.should eq "-"
+      end
+
       it "accepts one unknown arg as explain location if it has correct format" do
         c = Cli.parse_args %w[source.cr:3:22]
 
