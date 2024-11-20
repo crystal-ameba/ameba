@@ -46,11 +46,14 @@ module Ameba::Rule::Typing
   # end
   # ```
   #
+  # The config option `Undocumented` controls whether this rule applies to undocumented methods and methods with a `:nodoc:` directive.
+  #
   # YAML configuration example:
   #
   # ```
   # Typing/MethodParamTypeRestriction:
   #   Enabled: true
+  #   Undocumented: true
   #   PrivateMethods: true
   #   ProtectedMethods: true
   #   BlockParam: false
@@ -59,16 +62,16 @@ module Ameba::Rule::Typing
     properties do
       description "Enforce method parameters have type restrictions"
       enabled false
-      private_methods true
-      protected_methods true
+      undocumented false
+      private_methods false
+      protected_methods false
       block_param false
     end
 
     MSG = "Method parameters require a type restriction"
 
     def test(source, node : Crystal::Def)
-      return if (!private_methods? && node.visibility.private?) ||
-                (!protected_methods? && node.visibility.protected?)
+      return if check_config(node)
 
       node.args.each do |arg|
         next if arg.restriction
@@ -83,6 +86,13 @@ module Ameba::Rule::Typing
           issue_for block_arg, MSG, prefer_name_location: true
         end
       end
+    end
+
+    def check_config(node : Crystal::ASTNode) : Bool
+      (!private_methods? && node.visibility.private?) ||
+        (!protected_methods? && node.visibility.protected?) ||
+        (!undocumented? && (node.doc.nil? || node.doc.try(&.starts_with?(":nodoc:")))) ||
+        false
     end
   end
 end
