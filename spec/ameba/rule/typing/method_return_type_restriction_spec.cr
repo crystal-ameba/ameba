@@ -45,10 +45,21 @@ module Ameba::Rule::Typing
       CRYSTAL
   end
 
+  it "fails if a documented method doesn't have a return type" do
+    expect_issue subject, <<-CRYSTAL
+      # This is documentation about `hello`
+      def hello(a)
+        # ^^^^^ error: Methods require a return type restriction
+        "hello world" + a
+      end
+      CRYSTAL
+  end
+
   context "properties" do
     context "#private_methods" do
       it "allows relaxing restriction requirement for private methods" do
         rule = MethodReturnTypeRestriction.new
+        rule.undocumented = true
         rule.private_methods = false
 
         expect_no_issues rule, <<-CRYSTAL
@@ -64,6 +75,7 @@ module Ameba::Rule::Typing
     context "#protected_methods" do
       it "allows relaxing restriction requirement for protected methods" do
         rule = MethodReturnTypeRestriction.new
+        rule.undocumented = true
         rule.protected_methods = false
 
         expect_no_issues rule, <<-CRYSTAL
@@ -97,16 +109,6 @@ module Ameba::Rule::Typing
             def hello
               "hello world"
             end
-          end
-          CRYSTAL
-      end
-
-      it "fails if a documented method doesn't have a return type" do
-        expect_issue subject, <<-CRYSTAL
-          # This is documentation about `hello`
-          def hello(a)
-            # ^^^^^ error: Methods require a return type restriction
-            "hello world" + a
           end
           CRYSTAL
       end

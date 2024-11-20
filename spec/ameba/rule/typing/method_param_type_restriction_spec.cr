@@ -5,6 +5,7 @@ module Ameba::Rule::Typing
   subject.private_methods = true
   subject.protected_methods = true
   subject.undocumented = true
+  subject.default_value = true
 
   it "passes if a method param has a type" do
     expect_no_issues subject, <<-CRYSTAL
@@ -45,10 +46,30 @@ module Ameba::Rule::Typing
       CRYSTAL
   end
 
+  it "fails if a documented method param doesn't have a type" do
+    expect_issue subject, <<-CRYSTAL
+      # This is documentation about `hello`
+      def hello(a)
+              # ^ error: Method parameters require a type restriction
+        "hello world" + a
+      end
+      CRYSTAL
+  end
+
+  it "fails if a method param with a default value doesn't have a type" do
+    expect_issue subject, <<-CRYSTAL
+      def hello(a = "jim")
+              # ^ error: Method parameters require a type restriction
+        "hello there, " + a
+      end
+      CRYSTAL
+  end
+
   context "properties" do
     context "#private_methods" do
       it "allows relaxing restriction requirement for private methods" do
         rule = MethodParamTypeRestriction.new
+        rule.undocumented = true
         rule.private_methods = false
 
         expect_no_issues rule, <<-CRYSTAL
@@ -64,12 +85,29 @@ module Ameba::Rule::Typing
     context "#protected_methods" do
       it "allows relaxing restriction requirement for protected methods" do
         rule = MethodParamTypeRestriction.new
+        rule.undocumented = true
         rule.protected_methods = false
 
         expect_no_issues rule, <<-CRYSTAL
           class Greeter
             protected def hello
               "hello world"
+            end
+          end
+          CRYSTAL
+      end
+    end
+
+    context "#default_value" do
+      it "allows relaxing restriction requirement for params with default value" do
+        rule = MethodParamTypeRestriction.new
+        rule.undocumented = true
+        rule.default_value = false
+
+        expect_no_issues rule, <<-CRYSTAL
+          class Greeter
+            def hello(a = "world")
+              "hello \#{a}"
             end
           end
           CRYSTAL
@@ -97,16 +135,6 @@ module Ameba::Rule::Typing
             def hello(a)
               "hello world"
             end
-          end
-          CRYSTAL
-      end
-
-      it "fails if a documented method param doesn't have a type" do
-        expect_issue subject, <<-CRYSTAL
-          # This is documentation about `hello`
-          def hello(a)
-                  # ^ error: Method parameters require a type restriction
-            "hello world" + a
           end
           CRYSTAL
       end

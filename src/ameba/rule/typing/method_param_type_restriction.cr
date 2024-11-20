@@ -48,11 +48,14 @@ module Ameba::Rule::Typing
   #
   # The config option `Undocumented` controls whether this rule applies to undocumented methods and methods with a `:nodoc:` directive.
   #
+  # The config option `DefaultValue` controls whether this rule applies to parameters that have a default value.
+  #
   # YAML configuration example:
   #
   # ```
   # Typing/MethodParamTypeRestriction:
   #   Enabled: true
+  #   DefaultValue: true
   #   Undocumented: true
   #   PrivateMethods: true
   #   ProtectedMethods: true
@@ -62,6 +65,7 @@ module Ameba::Rule::Typing
     properties do
       description "Enforce method parameters have type restrictions"
       enabled false
+      default_value false
       undocumented false
       private_methods false
       protected_methods false
@@ -74,7 +78,7 @@ module Ameba::Rule::Typing
       return if check_config(node)
 
       node.args.each do |arg|
-        next if arg.restriction
+        next if arg.restriction || (!default_value? && arg.default_value)
 
         issue_for arg, MSG, prefer_name_location: true
       end
