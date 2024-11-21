@@ -46,7 +46,7 @@ module Ameba::Rule::Typing
   # ```
   class MacroCallVarTypeRestriction < Base
     properties do
-      description "Enforces variable args to certain macros have type restrictions"
+      description "Recommends that variable args to certain macros have type restrictions"
       enabled false
       macro_names %w(
         getter getter? getter! class_getter class_getter? class_getter!
@@ -56,31 +56,18 @@ module Ameba::Rule::Typing
       )
     end
 
-    MSG = "Variable arguments to `%s` require a type restriction"
+    MSG = "Variable arguments to `%s` should have a type restriction"
 
-    def test(source, node : Crystal::ClassDef | Crystal::ModuleDef)
-      each_call_node(node) do |exp|
-        return unless exp.name.in?(macro_names)
+    def test(source, node : Crystal::Call)
+      return unless node.name.in?(macro_names)
 
-        exp.args.each do |arg|
-          case arg
-          when Crystal::Assign
-            issue_for arg.target, MSG % {exp.name}, prefer_name_location: true
-          when Crystal::Path, Crystal::TypeDeclaration # Allowed
-          else
-            issue_for arg, MSG % {exp.name}, prefer_name_location: true
-          end
-        end
-      end
-    end
-
-    private def each_call_node(node, &)
-      case body = node.body
-      when Crystal::Call
-        yield body
-      when Crystal::Expressions
-        body.expressions.each do |exp|
-          yield exp if exp.is_a?(Crystal::Call)
+      node.args.each do |arg|
+        case arg
+        when Crystal::Assign
+          issue_for arg.target, MSG % {node.name}, prefer_name_location: true
+        when Crystal::Path, Crystal::TypeDeclaration # Allowed
+        else
+          issue_for arg, MSG % {node.name}, prefer_name_location: true
         end
       end
     end

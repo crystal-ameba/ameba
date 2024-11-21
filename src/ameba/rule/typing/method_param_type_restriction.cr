@@ -63,7 +63,7 @@ module Ameba::Rule::Typing
   # ```
   class MethodParamTypeRestriction < Base
     properties do
-      description "Enforce method parameters have type restrictions"
+      description "Recommends that method parameters have type restrictions"
       enabled false
       default_value false
       undocumented false
@@ -72,7 +72,7 @@ module Ameba::Rule::Typing
       block_param false
     end
 
-    MSG = "Method parameters require a type restriction"
+    MSG = "Method parameters should have a type restriction"
 
     def test(source, node : Crystal::Def)
       return if check_config(node)

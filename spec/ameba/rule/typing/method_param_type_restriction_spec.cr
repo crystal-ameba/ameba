@@ -18,7 +18,7 @@ module Ameba::Rule::Typing
   it "fails if a method param doesn't have a type" do
     expect_issue subject, <<-CRYSTAL
       def hello(a)
-              # ^ error: Method parameters require a type restriction
+              # ^ error: Method parameters should have a type restriction
         "hello world" + a
       end
       CRYSTAL
@@ -28,7 +28,7 @@ module Ameba::Rule::Typing
     expect_issue subject, <<-CRYSTAL
       class Greeter
         private def hello(a)
-                        # ^ error: Method parameters require a type restriction
+                        # ^ error: Method parameters should have a type restriction
           "hello world" + a
         end
       end
@@ -39,7 +39,7 @@ module Ameba::Rule::Typing
     expect_issue subject, <<-CRYSTAL
       class Greeter
         protected def hello(a)
-                          # ^ error: Method parameters require a type restriction
+                          # ^ error: Method parameters should have a type restriction
           "hello world" + a
         end
       end
@@ -50,7 +50,7 @@ module Ameba::Rule::Typing
     expect_issue subject, <<-CRYSTAL
       # This is documentation about `hello`
       def hello(a)
-              # ^ error: Method parameters require a type restriction
+              # ^ error: Method parameters should have a type restriction
         "hello world" + a
       end
       CRYSTAL
@@ -59,7 +59,7 @@ module Ameba::Rule::Typing
   it "fails if a method param with a default value doesn't have a type" do
     expect_issue subject, <<-CRYSTAL
       def hello(a = "jim")
-              # ^ error: Method parameters require a type restriction
+              # ^ error: Method parameters should have a type restriction
         "hello there, " + a
       end
       CRYSTAL

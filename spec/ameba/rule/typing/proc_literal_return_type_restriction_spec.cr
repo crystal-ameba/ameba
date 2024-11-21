@@ -13,7 +13,7 @@ module Ameba::Rule::Typing
   it "fails if a proc literal doesn't have a return type" do
     expect_issue subject, <<-CRYSTAL
       my_proc = ->(var : Nil) { puts var }
-              # ^^^^^^^^^^^^^^^^^^^^^^^^^^ error: Proc literals require a return type
+              # ^^^^^^^^^^^^^^^^^^^^^^^^^^ error: Proc literals should have a return type
       my_proc.call(nil)
       CRYSTAL
   end

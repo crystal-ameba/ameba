@@ -17,7 +17,7 @@ module Ameba::Rule::Typing
   it "fails if a method doesn't have a return type" do
     expect_issue subject, <<-CRYSTAL
       def hello
-        # ^^^^^ error: Methods require a return type restriction
+        # ^^^^^ error: Methods should have a return type restriction
         "hello world"
       end
       CRYSTAL
@@ -27,7 +27,7 @@ module Ameba::Rule::Typing
     expect_issue subject, <<-CRYSTAL
       class Greeter
         private def hello
-                  # ^^^^^ error: Methods require a return type restriction
+                  # ^^^^^ error: Methods should have a return type restriction
           "hello world"
         end
       end
@@ -38,7 +38,7 @@ module Ameba::Rule::Typing
     expect_issue subject, <<-CRYSTAL
       class Greeter
         protected def hello
-                    # ^^^^^ error: Methods require a return type restriction
+                    # ^^^^^ error: Methods should have a return type restriction
           "hello world"
         end
       end
@@ -49,7 +49,7 @@ module Ameba::Rule::Typing
     expect_issue subject, <<-CRYSTAL
       # This is documentation about `hello`
       def hello(a)
-        # ^^^^^ error: Methods require a return type restriction
+        # ^^^^^ error: Methods should have a return type restriction
         "hello world" + a
       end
       CRYSTAL

@@ -41,14 +41,14 @@ module Ameba::Rule::Typing
   # ```
   class MethodReturnTypeRestriction < Base
     properties do
-      description "Enforce methods have a return type restriction"
+      description "Recommends that methods have a return type restriction"
       enabled false
       undocumented false
       private_methods false
       protected_methods false
     end
 
-    MSG = "Methods require a return type restriction"
+    MSG = "Methods should have a return type restriction"
 
     def test(source, node : Crystal::Def)
       return if node.return_type || check_config(node)

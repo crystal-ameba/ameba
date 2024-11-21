@@ -29,10 +29,10 @@ module Ameba::Rule::Typing
   # ```
   class ProcReturnTypeRestriction < Base
     properties do
-      description "Disallows proc literals without return type restrictions"
+      description "Recommends that proc literals have a return type restriction"
     end
 
-    MSG = "Proc literals require a return type"
+    MSG = "Proc literals should have a return type"
 
     def test(source, node : Crystal::ProcLiteral)
       return if node.def.return_type
