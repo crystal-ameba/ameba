@@ -143,6 +143,11 @@ module Ameba::Rule::Lint
         node.else.try &.accept(self)
       end
 
+      def visit(node : Crystal::When) : Nil
+        incr_stack { node.conds.each &.accept(self) }
+        node.body.accept(self)
+      end
+
       def visit(node : Crystal::Rescue) : Nil
         swap_stack { node.body.accept(self) }
       end

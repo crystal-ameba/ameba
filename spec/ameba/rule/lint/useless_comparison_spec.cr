@@ -21,6 +21,15 @@ module Ameba::Rule::Lint
         CRYSTAL
     end
 
+    it "passes for implicit object comparisons" do
+      expect_no_issues subject, <<-CRYSTAL
+        case obj
+        when .> 1 then true
+        when .< 0 then false
+        end
+        CRYSTAL
+    end
+
     it "fails for all comparison operators" do
       expect_issue subject, <<-CRYSTAL
           x == 2
