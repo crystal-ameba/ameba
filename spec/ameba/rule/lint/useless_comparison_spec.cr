@@ -21,11 +21,37 @@ module Ameba::Rule::Lint
         CRYSTAL
     end
 
+    it "fails for all comparison operators" do
+      expect_issue subject, <<-CRYSTAL
+          x == 2
+        # ^^^^^^ error: Comparison operation has no effect
+          x != 2
+        # ^^^^^^ error: Comparison operation has no effect
+          x =~ 2
+        # ^^^^^^ error: Comparison operation has no effect
+          x !~ 2
+        # ^^^^^^ error: Comparison operation has no effect
+          x === 2
+        # ^^^^^^^ error: Comparison operation has no effect
+          x < 2
+        # ^^^^^ error: Comparison operation has no effect
+          x <= 2
+        # ^^^^^^ error: Comparison operation has no effect
+          x > 2
+        # ^^^^^ error: Comparison operation has no effect
+          x >= 2
+        # ^^^^^^ error: Comparison operation has no effect
+          x <=> 2
+        # ^^^^^^^ error: Comparison operation has no effect
+        puts x
+        CRYSTAL
+    end
+
     it "fails for an unused top-level comparison" do
       expect_issue subject, <<-CRYSTAL
         x = 1
-        x == 2
-        # ^ error: Comparison operation has no effect
+          x == 2
+        # ^^^^^^ error: Comparison operation has no effect
         puts x
         CRYSTAL
     end
@@ -35,7 +61,7 @@ module Ameba::Rule::Lint
         begin
           x = 1
           x == 2
-          # ^ error: Comparison operation has no effect
+        # ^^^^^^ error: Comparison operation has no effect
           puts x
         end
         CRYSTAL
@@ -43,21 +69,21 @@ module Ameba::Rule::Lint
 
     it "fails for unused comparisons in if/elsif/else bodies" do
       expect_issue subject, <<-CRYSTAL
-        if x = 1
-          x == 1
-          # ^ error: Comparison operation has no effect
-          x == 2
-        elsif true
-          x == 1
-          # ^ error: Comparison operation has no effect
-          x == 2
-        else
-          x == 2
-          # ^ error: Comparison operation has no effect
-          x == 1
-          # ^ error: Comparison operation has no effect
-          x == 3
-        end
+        a = if x = 1
+              x == 1
+            # ^^^^^^ error: Comparison operation has no effect
+              x == 2
+            elsif true
+              x == 1
+            # ^^^^^^ error: Comparison operation has no effect
+              x == 2
+            else
+              x == 2
+            # ^^^^^^ error: Comparison operation has no effect
+              x == 1
+            # ^^^^^^ error: Comparison operation has no effect
+              x == 3
+            end
         CRYSTAL
     end
 
@@ -65,9 +91,72 @@ module Ameba::Rule::Lint
       expect_issue subject, <<-CRYSTAL
         a = -> {
           x == 1
-          # ^ error: Comparison operation has no effect
+        # ^^^^^^ error: Comparison operation has no effect
           "meow"
         }
+        CRYSTAL
+    end
+
+    it "fails for unused comparison in if when not assigning" do
+      expect_issue subject, <<-CRYSTAL
+        if true
+          x == 1
+        # ^^^^^^ error: Comparison operation has no effect
+        else
+          x == 2
+        # ^^^^^^ error: Comparison operation has no effect
+        end
+        CRYSTAL
+    end
+
+    it "fails on useless comparisons" do
+      expect_issue subject, <<-CRYSTAL
+        def hello
+          if x == 3
+            x < 1
+          else
+            x > 1
+          end
+        end
+
+        def world
+          if x == 3
+            x < 1
+          # ^^^^^ error: Comparison operation has no effect
+          else
+            x > 1
+          # ^^^^^ error: Comparison operation has no effect
+          end
+
+          return
+        end
+
+        if x == 3
+          x < 1
+        # ^^^^^ error: Comparison operation has no effect
+        else
+          x > 1
+        # ^^^^^ error: Comparison operation has no effect
+        end
+
+        a = if x == 3
+              x > 1
+            # ^^^^^ error: Comparison operation has no effect
+              x < 1
+            else
+              x > 1
+            end
+
+        a = if begin
+                x == 1
+              # ^^^^^^ error: Comparison operation has no effect
+                x == 3
+              end
+              x == 4
+            end
+
+          x == 4
+        # ^^^^^^ error: Comparison operation has no effect
         CRYSTAL
     end
   end
