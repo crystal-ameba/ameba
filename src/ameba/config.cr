@@ -1,5 +1,6 @@
 require "semantic_version"
 require "yaml"
+require "ecr/processor"
 require "./glob_utils"
 
 # A configuration entry for `Ameba::Runner`.
@@ -57,10 +58,18 @@ class Ameba::Config
     Path[XDG_CONFIG_HOME] / "ameba/config.yml",
   }
 
-  DEFAULT_GLOBS = %w(
-    **/*.cr
-    !lib
-  )
+  {% if compare_versions(Crystal::VERSION, "1.15.0") >= 0 %}
+    DEFAULT_GLOBS = %w(
+      **/*.cr
+      **/*.ecr
+      !lib
+    )
+  {% else %}
+    DEFAULT_GLOBS = %w(
+      **/*.cr
+      !lib
+    )
+  {% end %}
 
   getter rules : Array(Rule::Base)
   property severity = Severity::Convention
@@ -167,7 +176,7 @@ class Ameba::Config
   # ```
   # config = Ameba::Config.load
   # config.sources # => list of default sources
-  # config.globs = ["**/*.cr"]
+  # config.globs = ["**/*.cr", "**/*.ecr"]
   # config.excluded = ["spec"]
   # config.sources # => list of sources pointing to files found by the wildcards
   # ```

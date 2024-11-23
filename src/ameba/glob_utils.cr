@@ -25,6 +25,11 @@ module Ameba
       globs
         .flat_map do |glob|
           glob += "/**/*.cr" if File.directory?(glob)
+
+          {% if compare_versions(Crystal::VERSION, "1.15.0") >= 0 %}
+            glob += "/**/*.ecr" if File.directory?(glob)
+          {% end %}
+
           Dir[glob]
         end
         .uniq!
