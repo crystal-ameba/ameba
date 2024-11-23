@@ -2,7 +2,6 @@ module Ameba::AST
   class ImplicitReturnVisitor < BaseVisitor
     # When greater than zero, indicates the current node's return value is used
     @stack : Int32 = 0
-    @hello : String = "world"
 
     def visit(node : Crystal::Expressions) : Nil
       @rule.test(@source, node, @stack > 0)
