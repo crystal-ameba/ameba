@@ -28,11 +28,13 @@ module Ameba::Rule::Lint
 
     MSG = "Logical operator in method args without parenthesis is not allowed"
 
+    ALLOWED_CALL_NAMES = %w{[]? []}
+
     def test(source, node : Crystal::Call)
-      return if node.args.size == 0 ||
+      return if node.args.empty? ||
                 node.has_parentheses? ||
-                node.name.ends_with?("=") ||
-                node.name.in?(["[]?", "[]"])
+                node.name.ends_with?('=') ||
+                node.name.in?(ALLOWED_CALL_NAMES)
 
       node.args.each do |arg|
         if arg.is_a?(Crystal::BinaryOp)
