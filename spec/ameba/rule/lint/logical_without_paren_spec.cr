@@ -6,17 +6,17 @@ module Ameba::Rule::Lint
 
     it "passes if logical operator in call args has parenthesis" do
       expect_no_issues subject, <<-CRYSTAL
-        if foo.includes?("bar" || foo.includes? "batz")
-          puts "this code is bug-free"
-        end
-
         if foo.includes?("bar") || foo.includes?("batz")
           puts "this code is bug-free"
         end
 
+        if foo.includes?("bar" || foo.includes? "batz")
+          puts "this code is bug-free"
+        end
+
         form.add("query", "val_1" || "val_2")
-        form.add "query", ("val_1" || "val_2")
         form.add "query", "val_1" || "val_2"
+        form.add "query", ("val_1" || "val_2")
         CRYSTAL
     end
 
