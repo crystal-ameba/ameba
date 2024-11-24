@@ -11,12 +11,7 @@ module Ameba::Rule::Lint
   # And need to be written as:
   #
   # ```
-  # if a.includes?("b") && c.includes?("c")
-  # end
-  #
-  # # or
-  #
-  # if a.includes?("b" && c.includes? "c")
+  # if foo.includes?("bar") || foo.includes?("batz")
   # end
   # ```
   #
