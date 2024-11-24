@@ -63,7 +63,7 @@ module Ameba::Rule::Lint
 
     private class InstanceVarReadVisitor < AST::NodeVisitor
       @class_name : String?
-      @param_names : Array(String) = [] of String
+      @param_names = [] of String
 
       def visit(node : Crystal::ClassDef) : Nil
         prev_class = @class_name
