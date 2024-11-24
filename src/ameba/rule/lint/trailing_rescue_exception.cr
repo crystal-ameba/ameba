@@ -19,7 +19,7 @@ module Ameba::Rule::Lint
   # end
   # ```
   #
-  # Or to capture all exceptions (instead of just `MyException`):
+  # Or to rescue all exceptions (instead of just `MyException`):
   #
   # ```
   # value = method.call("param") rescue "default value"
