@@ -30,6 +30,7 @@ module Ameba::Rule::Lint
     it "passes if logical operator in square bracket call" do
       expect_no_issues subject, <<-CRYSTAL
         hello["world" || :thing]
+        hello["world" || :thing]?
         this.is[1 || method.call]
         CRYSTAL
     end
