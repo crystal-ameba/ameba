@@ -50,7 +50,7 @@ module Ameba::Rule::Lint
       InstanceVarReadVisitor.new(self, source)
     end
 
-    def test(source, node : Crystal::ReadInstanceVar, allowed_names)
+    def test(source, node : Crystal::ReadInstanceVar, allowed_names : Enumerable(String))
       case obj = node.obj
       when Crystal::Var
         unless obj.name.in?(allowed_names)
