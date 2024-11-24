@@ -8,13 +8,13 @@ module Ameba::Rule::Lint
   # For example, this is not allowed:
   #
   # ```
-  # class Greeter
-  #   def combine(other)
+  # class Foo
+  #   def <=>(other)
   #     @ivar <=> other.@ivar
   #   end
   #
-  #   def split(other : Smiler)
-  #     @ivar - other.@ivar
+  #   def <=>(other : Bar)
+  #     @ivar <=> other.@ivar
   #   end
   # end
   # ```
