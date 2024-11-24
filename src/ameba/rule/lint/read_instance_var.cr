@@ -37,7 +37,7 @@ module Ameba::Rule::Lint
   #
   # ```
   # Lint/ReadInstanceVar:
-  #   Enabled: false
+  #   Enabled: true
   # ```
   class ReadInstanceVar < Base
     properties do
