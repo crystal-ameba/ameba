@@ -22,13 +22,13 @@ module Ameba::Rule::Lint
   # And this is allowed:
   #
   # ```
-  # class Greeter
-  #   def combine(other : self)
+  # class Foo
+  #   def <=>(other : self)
   #     @ivar <=> other.@ivar
   #   end
   #
-  #   def split(other : Greeter)
-  #     @ivar - other.@ivar
+  #   def <=>(other : Foo)
+  #     @ivar <=> other.@ivar
   #   end
   # end
   # ```
