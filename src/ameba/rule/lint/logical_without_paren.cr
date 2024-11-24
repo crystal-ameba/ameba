@@ -36,8 +36,7 @@ module Ameba::Rule::Lint
 
       node.args.each do |arg|
         if arg.is_a?(Crystal::BinaryOp)
-          case right = arg.right
-          when Crystal::Call
+          if (right = arg.right).is_a?(Crystal::Call)
             if right.args.size > 0
               issue_for node, MSG
             end
