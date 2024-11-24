@@ -44,7 +44,7 @@ module Ameba::Rule::Lint
       description "Disallows external reading of instance vars"
     end
 
-    MSG = "Reading instance variables externally is not allowed."
+    MSG = "Reading instance variables externally is not allowed"
 
     def test(source)
       InstanceVarReadVisitor.new(self, source)
