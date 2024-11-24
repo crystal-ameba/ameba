@@ -65,13 +65,14 @@ module Ameba::Rule::Lint
       @class_name : String?
       @param_names = [] of String
 
-      def visit(node : Crystal::ClassDef) : Nil
+      def visit(node : Crystal::ClassDef)
         prev_class = @class_name
         @class_name = node.name.names[-1]?
 
         node.body.accept(self)
 
         @class_name = prev_class
+        false
       end
 
       def visit(node : Crystal::Def)
