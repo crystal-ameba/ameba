@@ -4,7 +4,7 @@ module Ameba::Rule::Lint
   describe LogicalWithoutParenthesis do
     subject = LogicalWithoutParenthesis.new
 
-    it "passes if logical operator in call args has parenthesis" do
+    it "passes if logical operator in call args has parentheses" do
       expect_no_issues subject, <<-CRYSTAL
         if foo.includes?("bar") || foo.includes?("batz")
           puts "this code is bug-free"
