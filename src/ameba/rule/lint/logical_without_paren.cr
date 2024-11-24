@@ -4,7 +4,7 @@ module Ameba::Rule::Lint
   # For example, this is considered invalid:
   #
   # ```
-  # if a.includes? "b" && c.includes? "c"
+  # if foo.includes? "bar" || foo.includes? "batz"
   # end
   # ```
   #
