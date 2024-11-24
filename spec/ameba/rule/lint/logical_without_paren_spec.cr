@@ -23,6 +23,7 @@ module Ameba::Rule::Lint
     it "passes if logical operator in assignment call" do
       expect_no_issues subject, <<-CRYSTAL
         hello.there = "world" || method.call
+        hello.there ||= "world" || method.call
         CRYSTAL
     end
 
