@@ -6,8 +6,6 @@ module Ameba::Rule::Lint
   # ```
   # if a.includes? "b" && c.includes? "c"
   # end
-  #
-  # form.add "query", "val_1" || "val_2"
   # ```
   #
   # And need to be written as:
@@ -16,9 +14,10 @@ module Ameba::Rule::Lint
   # if a.includes?("b") && c.includes?("c")
   # end
   #
-  # form.add("query", "val_1" || "val_2")
-  # # OR
-  # form.add "query", ("val_1" || "val_2")
+  # # or
+  #
+  # if a.includes?("b" && c.includes? "c")
+  # end
   # ```
   #
   # YAML configuration example:
@@ -43,7 +42,12 @@ module Ameba::Rule::Lint
       node.args.each do |arg|
         case arg
         when Crystal::BinaryOp
-          issue_for arg, MSG
+          case right = arg.right
+          when Crystal::Call
+            if right.args.size > 0
+              issue_for node, MSG
+            end
+          end
         end
       end
     end
