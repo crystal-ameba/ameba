@@ -35,8 +35,7 @@ module Ameba::Rule::Lint
                 node.name.in?(["[]?", "[]"])
 
       node.args.each do |arg|
-        case arg
-        when Crystal::BinaryOp
+        if arg.is_a?(Crystal::BinaryOp)
           case right = arg.right
           when Crystal::Call
             if right.args.size > 0
