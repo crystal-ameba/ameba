@@ -36,7 +36,7 @@ module Ameba::Rule::Lint
       description "Disallows trailing rescue with a path"
     end
 
-    MSG = "Trailing rescues with a path aren't allowed; use a block rescue instead to filter by exception type"
+    MSG = "Trailing rescues with a path aren't allowed, use a block rescue instead to filter by exception type"
 
     def test(source, node : Crystal::ExceptionHandler)
       return unless node.suffix &&
