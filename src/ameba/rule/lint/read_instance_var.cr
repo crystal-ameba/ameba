@@ -86,7 +86,6 @@ module Ameba::Rule::Lint
             @param_names << arg.name
           end
         end
-
         super
       end
 
