@@ -16,6 +16,7 @@ module Ameba::Rule::Lint
 
         form.add("query", "val_1" || "val_2")
         form.add "query", ("val_1" || "val_2")
+        form.add "query", "val_1" || "val_2"
         CRYSTAL
     end
 
