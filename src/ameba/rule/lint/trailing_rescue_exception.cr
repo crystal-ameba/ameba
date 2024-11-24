@@ -6,7 +6,7 @@ module Ameba::Rule::Lint
   # For example, this is considered invalid:
   #
   # ```
-  #  value = method.call('param') rescue MyException
+  # value = method.call("param") rescue MyException
   # ```
   #
   # And should instead be written as:
