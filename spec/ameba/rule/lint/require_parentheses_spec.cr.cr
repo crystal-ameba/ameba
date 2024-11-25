@@ -1,8 +1,8 @@
 require "../../../spec_helper"
 
 module Ameba::Rule::Lint
-  describe LogicalWithoutParenthesis do
-    subject = LogicalWithoutParenthesis.new
+  describe RequireParentheses do
+    subject = RequireParentheses.new
 
     it "passes if logical operator in call args has parentheses" do
       expect_no_issues subject, <<-CRYSTAL
