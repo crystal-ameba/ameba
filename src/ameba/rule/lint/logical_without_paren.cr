@@ -20,15 +20,15 @@ module Ameba::Rule::Lint
   # YAML configuration example:
   #
   # ```
-  # Lint/LogicalWithoutParenthesis:
+  # Lint/RequireParentheses:
   #   Enabled: true
   # ```
-  class LogicalWithoutParenthesis < Base
+  class RequireParentheses < Base
     properties do
-      description "Disallows logical operators in method args without parenthesis"
+      description "Disallows method calls with no parentheses and a logical operator in the argument list"
     end
 
-    MSG = "Logical operator in method args without parenthesis is not allowed"
+    MSG = "Use parentheses in the method call to avoid confusion about precedence"
 
     ALLOWED_CALL_NAMES = %w{[]? []}
 
