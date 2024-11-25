@@ -5,18 +5,24 @@ require "option_parser"
 module Ameba::Cli
   extend self
 
+  # ameba:disable Metrics/CyclomaticComplexity
   def run(args = ARGV) : Nil
     opts = parse_args args
     location_to_explain = opts.location_to_explain
+    stdin_filename = opts.stdin_filename
     autocorrect = opts.autocorrect?
 
     if location_to_explain && autocorrect
       raise "Invalid usage: Cannot explain an issue and autocorrect at the same time."
     end
 
+    if stdin_filename && autocorrect
+      raise "Invalid usage: Cannot autocorrect from stdin."
+    end
+
     config = Config.load opts.config, opts.colors?, opts.skip_reading_config?
     config.autocorrect = autocorrect
-    config.stdin_filename = opts.stdin_filename
+    config.stdin_filename = stdin_filename
 
     if globs = opts.globs
       config.globs = globs
