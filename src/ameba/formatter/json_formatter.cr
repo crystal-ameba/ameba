@@ -59,7 +59,7 @@ module Ameba::Formatter
   #   "summary": {
   #     "issues_count": 3,
   #     "target_sources_count": 1,
-  #   },
+  #   }
   # }
   # ```
   class JSONFormatter < BaseFormatter
