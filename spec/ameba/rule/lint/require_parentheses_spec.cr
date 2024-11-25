@@ -38,7 +38,12 @@ module Ameba::Rule::Lint
     it "fails if logical operator in call args doesn't have parentheses" do
       expect_issue subject, <<-CRYSTAL
         if foo.includes? "bar" || foo.includes? "batz"
-         # ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ error: Logical operator in method args without parenthesis is not allowed
+         # ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ error: Use parentheses in the method call to avoid confusion about precedence
+          puts "this code is not bug-free"
+        end
+
+        if foo.in? "bar", "baz" || foo.ends_with? "qux"
+         # ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ error: Use parentheses in the method call to avoid confusion about precedence
           puts "this code is not bug-free"
         end
         CRYSTAL
