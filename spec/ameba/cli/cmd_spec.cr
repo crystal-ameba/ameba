@@ -32,6 +32,11 @@ module Ameba::Cli
         end
       end
 
+      it "accepts --stdin-filename flag" do
+        c = Cli.parse_args %w[--stdin-filename foo.cr]
+        c.stdin_filename.should eq "foo.cr"
+      end
+
       it "accepts --only flag" do
         c = Cli.parse_args ["--only", "RULE1,RULE2"]
         c.only.should eq %w[RULE1 RULE2]
