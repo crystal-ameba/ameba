@@ -5,6 +5,7 @@ require "option_parser"
 module Ameba::Cli
   extend self
 
+  # ameba:disable Metrics/CyclomaticComplexity
   def run(args = ARGV) : Nil
     opts = parse_args args
     location_to_explain = opts.location_to_explain
