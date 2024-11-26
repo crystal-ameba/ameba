@@ -29,6 +29,7 @@ module Ameba::Rule::Lint
   # ```
   class RedundantWithIndex < Base
     properties do
+      since_version "0.11.0"
       description "Disallows redundant `with_index` calls"
     end
 

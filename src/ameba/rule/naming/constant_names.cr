@@ -23,6 +23,7 @@ module Ameba::Rule::Naming
   # ```
   class ConstantNames < Base
     properties do
+      since_version "0.2.0"
       description "Enforces constant names to be in screaming case"
     end
 

@@ -5,37 +5,45 @@ require "option_parser"
 module Ameba::Cli
   extend self
 
-  # ameba:disable Metrics/CyclomaticComplexity
-  def run(args = ARGV) : Nil
-    opts = parse_args args
-    location_to_explain = opts.location_to_explain
-    stdin_filename = opts.stdin_filename
-    autocorrect = opts.autocorrect?
+  private class Opts
+    property config : Path?
+    property version : String?
+    property formatter : Symbol | String | Nil
+    property globs : Array(String)?
+    property only : Array(String)?
+    property except : Array(String)?
+    property describe_rule : String?
+    property location_to_explain : NamedTuple(file: String, line: Int32, column: Int32)?
+    property fail_level : Severity?
+    property stdin_filename : String?
+    property? skip_reading_config = false
+    property? rules = false
+    property? rule_versions = false
+    property? all = false
+    property? colors = true
+    property? without_affected_code = false
+    property? autocorrect = false
+  end
 
-    if location_to_explain && autocorrect
+  def run(args = ARGV) : Nil
+    opts = parse_args(args)
+
+    if (location_to_explain = opts.location_to_explain) && opts.autocorrect?
       raise "Invalid usage: Cannot explain an issue and autocorrect at the same time."
     end
 
-    if stdin_filename && autocorrect
+    if opts.stdin_filename && opts.autocorrect?
       raise "Invalid usage: Cannot autocorrect from stdin."
     end
 
-    config = Config.load opts.config, opts.colors?, opts.skip_reading_config?
-    config.autocorrect = autocorrect
-    config.stdin_filename = stdin_filename
-
-    if globs = opts.globs
-      config.globs = globs
-    end
-    if fail_level = opts.fail_level
-      config.severity = fail_level
-    end
-
-    configure_formatter(config, opts)
-    configure_rules(config, opts)
+    config = config_from_opts(opts)
 
     if opts.rules?
       print_rules(config.rules)
+    end
+
+    if opts.rule_versions?
+      print_rule_versions(config.rules)
     end
 
     if describe_rule_name = opts.describe_rule
@@ -57,24 +65,6 @@ module Ameba::Cli
     exit 255
   end
 
-  private class Opts
-    property config : Path?
-    property formatter : Symbol | String | Nil
-    property globs : Array(String)?
-    property only : Array(String)?
-    property except : Array(String)?
-    property describe_rule : String?
-    property location_to_explain : NamedTuple(file: String, line: Int32, column: Int32)?
-    property fail_level : Severity?
-    property stdin_filename : String?
-    property? skip_reading_config = false
-    property? rules = false
-    property? all = false
-    property? colors = true
-    property? without_affected_code = false
-    property? autocorrect = false
-  end
-
   def parse_args(args, opts = Opts.new)
     OptionParser.parse(args) do |parser|
       parser.banner = "Usage: ameba [options] [file1 file2 ...]"
@@ -82,6 +72,7 @@ module Ameba::Cli
       parser.on("-v", "--version", "Print version") { print_version }
       parser.on("-h", "--help", "Show this help") { print_help(parser) }
       parser.on("-r", "--rules", "Show all available rules") { opts.rules = true }
+      parser.on("-R", "--rule-versions", "Show all available rule versions") { opts.rule_versions = true }
       parser.on("-s", "--silent", "Disable output") { opts.formatter = :silent }
       parser.unknown_args do |arr|
         case
@@ -97,6 +88,11 @@ module Ameba::Cli
       parser.on("-c", "--config PATH",
         "Specify a configuration file") do |path|
         opts.config = Path[path] unless path.empty?
+      end
+
+      parser.on("-u", "--up-to-version VERSION",
+        "Choose a version") do |version|
+        opts.version = version
       end
 
       parser.on("-f", "--format FORMATTER",
@@ -158,6 +154,27 @@ module Ameba::Cli
     end
 
     opts
+  end
+
+  private def config_from_opts(opts)
+    config = Config.load opts.config, opts.colors?, opts.skip_reading_config?
+    config.autocorrect = opts.autocorrect?
+    config.stdin_filename = opts.stdin_filename
+
+    if version = opts.version
+      config.version = version
+    end
+    if globs = opts.globs
+      config.globs = globs
+    end
+    if fail_level = opts.fail_level
+      config.severity = fail_level
+    end
+
+    configure_formatter(config, opts)
+    configure_rules(config, opts)
+
+    config
   end
 
   private def configure_rules(config, opts) : Nil
@@ -223,6 +240,11 @@ module Ameba::Cli
 
   private def print_rules(rules)
     Presenter::RuleCollectionPresenter.new.run(rules)
+    exit 0
+  end
+
+  private def print_rule_versions(rules)
+    Presenter::RuleVersionsPresenter.new.run(rules)
     exit 0
   end
 end

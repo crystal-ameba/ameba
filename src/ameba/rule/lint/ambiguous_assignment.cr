@@ -27,6 +27,7 @@ module Ameba::Rule::Lint
     include AST::Util
 
     properties do
+      since_version "1.0.0"
       description "Disallows ambiguous `=-/=+/=!`"
     end
 

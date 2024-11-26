@@ -1,2 +1,4 @@
+Version: "1.5.0"
+
 Lint/ComparisonToBoolean:
   Enabled: true

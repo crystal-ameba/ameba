@@ -30,6 +30,7 @@ module Ameba::Rule::Naming
     include AST::Util
 
     properties do
+      since_version "1.4.0"
       description "Reports boolean properties without the `?` suffix"
     end
 

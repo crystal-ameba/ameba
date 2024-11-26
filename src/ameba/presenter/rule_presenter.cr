@@ -1,14 +1,24 @@
 module Ameba::Presenter
   class RulePresenter < BasePresenter
     def run(rule) : Nil
-      output.puts
       output_title "Rule info"
-      output_paragraph "%s of a %s severity [enabled: %s]" % {
+
+      info = <<-INFO
+        Name:           %s
+        Severity:       %s
+        Enabled:        %s
+        Since version:  %s
+        INFO
+
+      output_paragraph info % {
         rule.name.colorize(:magenta),
         rule.severity.to_s.colorize(rule.severity.color),
         rule.enabled? ? ENABLED_MARK : DISABLED_MARK,
+        (rule.since_version.try(&.to_s) || "N/A").colorize(:white),
       }
+
       if rule_description = colorize_code_fences(rule.description)
+        output_title "Description"
         output_paragraph rule_description
       end
 

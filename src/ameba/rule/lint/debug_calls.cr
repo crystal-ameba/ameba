@@ -17,6 +17,7 @@ module Ameba::Rule::Lint
   # ```
   class DebugCalls < Base
     properties do
+      since_version "1.0.0"
       description "Disallows debug-related calls"
       method_names %w[p p! pp pp!]
     end

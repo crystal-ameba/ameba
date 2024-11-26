@@ -32,6 +32,13 @@ module Ameba::Cli
         end
       end
 
+      %w[-u --up-to-version].each do |flag|
+        it "accepts #{flag} flag" do
+          c = Cli.parse_args [flag, "1.5.0"]
+          c.version.should eq "1.5.0"
+        end
+      end
+
       it "accepts --stdin-filename flag" do
         c = Cli.parse_args %w[--stdin-filename foo.cr]
         c.stdin_filename.should eq "foo.cr"

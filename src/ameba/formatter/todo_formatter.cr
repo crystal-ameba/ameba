@@ -62,6 +62,8 @@ module Ameba::Formatter
         # The point is for the user to remove these configuration records
         # one by one as the reported problems are removed from the code base.
 
+        Version: "#{VERSION}"
+
         HEADER
     end
 

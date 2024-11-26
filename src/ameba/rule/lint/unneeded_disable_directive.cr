@@ -26,6 +26,7 @@ module Ameba::Rule::Lint
   # ```
   class UnneededDisableDirective < Base
     properties do
+      since_version "0.5.0"
       description "Reports unneeded disable directives in comments"
     end
 

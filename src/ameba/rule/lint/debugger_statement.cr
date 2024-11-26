@@ -12,6 +12,7 @@ module Ameba::Rule::Lint
   # ```
   class DebuggerStatement < Base
     properties do
+      since_version "0.1.0"
       description "Disallows calls to debugger"
     end
 

@@ -35,6 +35,7 @@ module Ameba::Rule::Lint
   # ```
   class ShadowedException < Base
     properties do
+      since_version "0.3.0"
       description "Disallows rescued exception that get shadowed"
     end
 

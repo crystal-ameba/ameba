@@ -100,6 +100,7 @@ module Ameba::Rule::Style
     include AST::Util
 
     properties do
+      since_version "0.12.0"
       description "Reports redundant next expressions"
 
       allow_multi_next true

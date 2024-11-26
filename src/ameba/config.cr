@@ -1,3 +1,4 @@
+require "semantic_version"
 require "yaml"
 require "./glob_utils"
 
@@ -63,6 +64,9 @@ class Ameba::Config
   getter rules : Array(Rule::Base)
   property severity = Severity::Convention
 
+  # Returns an ameba version to be used by `Ameba::Runner`.
+  property version : SemanticVersion?
+
   # Returns a list of paths (with wildcards) to files.
   # Represents a list of sources to be inspected.
   # If globs are not set, it will return default list of files.
@@ -105,6 +109,9 @@ class Ameba::Config
     @excluded = load_array_section(config, "Excluded")
     @globs = load_array_section(config, "Globs", DEFAULT_GLOBS)
 
+    if version = config["Version"]?.try(&.as_s).presence
+      self.version = version
+    end
     if formatter_name = load_formatter_name(config)
       self.formatter = formatter_name
     end
@@ -195,6 +202,16 @@ class Ameba::Config
       raise "Unknown formatter `#{name}`. Use one of #{Config.formatter_names}."
     end
     @formatter = formatter.new
+  end
+
+  # Sets version from string.
+  #
+  # ```
+  # config = Ameba::Config.load
+  # config.version = "1.6.0"
+  # ```
+  def version=(version : String)
+    @version = SemanticVersion.parse(version)
   end
 
   # Updates rule properties.
@@ -332,6 +349,17 @@ class Ameba::Config
         @[YAML::Field(key: "Excluded")]
         property excluded : Array(String)?
       {% end %}
+
+      {% unless properties["since_version".id] %}
+        @[YAML::Field(key: "SinceVersion")]
+        property since_version : String?
+      {% end %}
+
+      def since_version : SemanticVersion?
+        if version = @since_version
+          SemanticVersion.parse(version)
+        end
+      end
     end
 
     macro included

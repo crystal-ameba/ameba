@@ -33,6 +33,7 @@ module Ameba::Rule::Performance
     include AST::Util
 
     properties do
+      since_version "1.5.0"
       description "Identifies usage of excessive collection allocations"
       call_names({
         "codepoints" => "each_codepoint",

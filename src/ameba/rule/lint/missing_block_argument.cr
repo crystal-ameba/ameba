@@ -21,6 +21,7 @@ module Ameba::Rule::Lint
   # ```
   class MissingBlockArgument < Base
     properties do
+      since_version "1.4.0"
       description "Disallows yielding method definitions without block argument"
     end
 

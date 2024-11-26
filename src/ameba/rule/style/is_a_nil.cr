@@ -23,6 +23,7 @@ module Ameba::Rule::Style
     include AST::Util
 
     properties do
+      since_version "0.13.0"
       description "Disallows calls to `is_a?(Nil)` in favor of `nil?`"
     end
 

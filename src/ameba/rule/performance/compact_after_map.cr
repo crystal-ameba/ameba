@@ -25,6 +25,7 @@ module Ameba::Rule::Performance
     include AST::Util
 
     properties do
+      since_version "0.14.0"
       description "Identifies usage of `compact` calls that follow `map`"
     end
 

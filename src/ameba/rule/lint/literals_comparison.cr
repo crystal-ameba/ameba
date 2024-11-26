@@ -20,6 +20,7 @@ module Ameba::Rule::Lint
     include AST::Util
 
     properties do
+      since_version "1.3.0"
       description "Identifies comparisons between literals"
     end
 

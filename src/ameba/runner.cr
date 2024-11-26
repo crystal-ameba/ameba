@@ -49,6 +49,9 @@ module Ameba
     # Returns `true` if correctable issues should be autocorrected.
     private getter? autocorrect : Bool
 
+    # Returns an ameba version up to which the rules should be ran.
+    property version : SemanticVersion?
+
     # Instantiates a runner using a `config`.
     #
     # ```
@@ -59,18 +62,30 @@ module Ameba
     # Ameba::Runner.new config
     # ```
     def initialize(config : Config)
-      @sources = config.sources
-      @formatter = config.formatter
-      @severity = config.severity
-      @rules = config.rules.select(&.enabled?).reject!(&.special?)
-      @autocorrect = config.autocorrect?
-
-      @unneeded_disable_directive_rule =
-        config.rules
-          .find &.class.==(Rule::Lint::UnneededDisableDirective)
+      initialize(
+        config.rules,
+        config.sources,
+        config.formatter,
+        config.severity,
+        config.autocorrect?,
+        config.version,
+      )
     end
 
-    protected def initialize(@rules, @sources, @formatter, @severity, @autocorrect = false)
+    protected def initialize(rules, @sources, @formatter, @severity, @autocorrect = false, @version = nil)
+      @rules =
+        rules.select { |rule| rule_runnable?(rule, @version) }
+      @unneeded_disable_directive_rule =
+        rules.find &.class.==(Rule::Lint::UnneededDisableDirective)
+    end
+
+    protected def rule_runnable?(rule, version)
+      rule.enabled? && !rule.special? && rule_satisfies_version?(rule, version)
+    end
+
+    protected def rule_satisfies_version?(rule, version)
+      !version || !(since_version = rule.since_version) ||
+        since_version <= version
     end
 
     # Performs the inspection. Iterates through all sources and test it using
