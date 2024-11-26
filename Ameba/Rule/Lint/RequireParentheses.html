@@ -14,7 +14,7 @@
 <script type="text/javascript" src="../../../js/doc.js"></script>
 
   <meta name="repository-name" content="ameba">
-  <title>Ameba::Rule::Lint::Syntax - ameba master</title>
+  <title>Ameba::Rule::Lint::RequireParentheses - ameba master</title>
   <script type="text/javascript">
     CrystalDocs.base_path = "../../../";
   </script>
@@ -487,7 +487,7 @@
       
     </li>
   
-  <li class=" " data-id="ameba/Ameba/Rule/Lint/RequireParentheses" data-name="ameba::rule::lint::requireparentheses">
+  <li class=" current" data-id="ameba/Ameba/Rule/Lint/RequireParentheses" data-name="ameba::rule::lint::requireparentheses">
       <a href="../../../Ameba/Rule/Lint/RequireParentheses.html">RequireParentheses</a>
       
     </li>
@@ -522,7 +522,7 @@
       
     </li>
   
-  <li class=" current" data-id="ameba/Ameba/Rule/Lint/Syntax" data-name="ameba::rule::lint::syntax">
+  <li class=" " data-id="ameba/Ameba/Rule/Lint/Syntax" data-name="ameba::rule::lint::syntax">
       <a href="../../../Ameba/Rule/Lint/Syntax.html">Syntax</a>
       
     </li>
@@ -901,12 +901,12 @@
 <div class="main-content">
 <h1 class="type-name">
 
-  <span class="kind">class</span> Ameba::<wbr>Rule::<wbr>Lint::<wbr>Syntax
+  <span class="kind">class</span> Ameba::<wbr>Rule::<wbr>Lint::<wbr>RequireParentheses
 
 </h1>
 
 
-  <ul class="superclass-hierarchy"><li class="superclass"><a href="../../../Ameba/Rule/Lint/Syntax.html">Ameba::Rule::Lint::Syntax</a></li><li class="superclass"><a href="../../../Ameba/Rule/Base.html">Ameba::Rule::Base</a></li><li class="superclass">Reference</li><li class="superclass">Object</li></ul>
+  <ul class="superclass-hierarchy"><li class="superclass"><a href="../../../Ameba/Rule/Lint/RequireParentheses.html">Ameba::Rule::Lint::RequireParentheses</a></li><li class="superclass"><a href="../../../Ameba/Rule/Base.html">Ameba::Rule::Base</a></li><li class="superclass">Reference</li><li class="superclass">Object</li></ul>
 
 
 
@@ -920,17 +920,18 @@
     Overview
   </h2>
 
-  <p>A rule that reports invalid Crystal syntax.</p>
-<p>For example, this syntax is invalid:</p>
-<pre><code class="language-crystal"><span class="k">def</span> <span class="m">hello</span>
-  do_something
-<span class="k">rescue</span> <span class="t">Exception</span> <span class="o">=&gt;</span> e
+  <p>A rule that disallows method calls with at least one argument, where no
+parentheses are used around the argument list, and a logical operator
+(<code>&amp;&amp;</code> or <code>||</code>) is used within the argument list.</p>
+<p>For example, this is considered invalid:</p>
+<pre><code class="language-crystal"><span class="k">if</span> foo.includes? <span class="s">&quot;bar&quot;</span> <span class="o">||</span> foo.includes? <span class="s">&quot;batz&quot;</span>
 <span class="k">end</span></code></pre>
-<p>And should be properly written:</p>
-<pre><code class="language-crystal"><span class="k">def</span> <span class="m">hello</span>
-  do_something
-<span class="k">rescue</span> e : <span class="t">Exception</span>
+<p>And need to be written as:</p>
+<pre><code class="language-crystal"><span class="k">if</span> foo.includes?(<span class="s">&quot;bar&quot;</span>) <span class="o">||</span> foo.includes?(<span class="s">&quot;batz&quot;</span>)
 <span class="k">end</span></code></pre>
+<p>YAML configuration example:</p>
+<pre><code class="language-crystal"><span class="t">Lint</span><span class="o">/</span><span class="t">RequireParentheses</span>:
+  <span class="t">Enabled</span>: <span class="n">true</span></code></pre>
 
 
 
@@ -971,14 +972,38 @@
   </h2>
   
     
-      <a href="https://github.com/crystal-ameba/ameba/blob/9175e64/src/ameba/rule/lint/syntax.cr#L21" target="_blank">
-        ameba/rule/lint/syntax.cr
+      <a href="https://github.com/crystal-ameba/ameba/blob/9175e64/src/ameba/rule/lint/require_parentheses.cr#L26" target="_blank">
+        ameba/rule/lint/require_parentheses.cr
       </a>
     
     <br/>
   
 
 
+
+  
+    <h2>
+      <a id="constant-summary" class="anchor" href="#constant-summary">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>
+      Constant Summary
+    </h2>
+  
+  <dl>
+    
+      <dt class="entry-const" id="ALLOWED_CALL_NAMES">
+        <strong>ALLOWED_CALL_NAMES</strong> = <code>[<span class="s">&quot;[]?&quot;</span>, <span class="s">&quot;[]&quot;</span>] <span class="k">of</span> <span class="t">::</span><span class="t">String</span></code>
+      </dt>
+      
+    
+      <dt class="entry-const" id="MSG">
+        <strong>MSG</strong> = <code><span class="s">&quot;Use parentheses in the method call to avoid confusion about precedence&quot;</span></code>
+      </dt>
+      
+    
+  </dl>
 
 
 
@@ -1000,7 +1025,7 @@
       <li class="entry-summary">
         <a href="#new%28config%3Dnil%29-class-method" class="signature"><strong>.new</strong>(config = <span class="n">nil</span>)</a>
         
-          <div class="summary"><p>A rule that reports invalid Crystal syntax.</p></div>
+          <div class="summary"><p>A rule that disallows method calls with at least one argument, where no parentheses are used around the argument list, and a logical operator (<code>&amp;&amp;</code> or <code>||</code>) is used within the argument list.</p></div>
         
       </li>
     
@@ -1092,7 +1117,7 @@
       </li>
     
       <li class="entry-summary">
-        <a href="#test%28source%29-instance-method" class="signature"><strong>#test</strong>(source)</a>
+        <a href="#test%28source%2Cnode%3ACrystal%3A%3ACall%29-instance-method" class="signature"><strong>#test</strong>(source, node : Crystal::Call)</a>
         
       </li>
     
@@ -1287,23 +1312,24 @@
       
         <div class="doc">
           
-          <p>A rule that reports invalid Crystal syntax.</p>
-<p>For example, this syntax is invalid:</p>
-<pre><code class="language-crystal"><span class="k">def</span> <span class="m">hello</span>
-  do_something
-<span class="k">rescue</span> <span class="t">Exception</span> <span class="o">=&gt;</span> e
+          <p>A rule that disallows method calls with at least one argument, where no
+parentheses are used around the argument list, and a logical operator
+(<code>&amp;&amp;</code> or <code>||</code>) is used within the argument list.</p>
+<p>For example, this is considered invalid:</p>
+<pre><code class="language-crystal"><span class="k">if</span> foo.includes? <span class="s">&quot;bar&quot;</span> <span class="o">||</span> foo.includes? <span class="s">&quot;batz&quot;</span>
 <span class="k">end</span></code></pre>
-<p>And should be properly written:</p>
-<pre><code class="language-crystal"><span class="k">def</span> <span class="m">hello</span>
-  do_something
-<span class="k">rescue</span> e : <span class="t">Exception</span>
+<p>And need to be written as:</p>
+<pre><code class="language-crystal"><span class="k">if</span> foo.includes?(<span class="s">&quot;bar&quot;</span>) <span class="o">||</span> foo.includes?(<span class="s">&quot;batz&quot;</span>)
 <span class="k">end</span></code></pre>
+<p>YAML configuration example:</p>
+<pre><code class="language-crystal"><span class="t">Lint</span><span class="o">/</span><span class="t">RequireParentheses</span>:
+  <span class="t">Enabled</span>: <span class="n">true</span></code></pre>
         </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/9175e64/src/ameba/rule/lint/syntax.cr#L21" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/9175e64/src/ameba/rule/lint/require_parentheses.cr#L26" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1486,7 +1512,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/9175e64/src/ameba/rule/lint/syntax.cr#L22" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/9175e64/src/ameba/rule/lint/require_parentheses.cr#L27" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1505,18 +1531,18 @@
       </div>
     </div>
   
-    <div class="entry-detail" id="test(source)-instance-method">
+    <div class="entry-detail" id="test(source,node:Crystal::Call)-instance-method">
       <div class="signature">
         
-        def <strong>test</strong>(source)
+        def <strong>test</strong>(source, node : Crystal::Call)
 
-        <a class="method-permalink" href="#test%28source%29-instance-method">#</a>
+        <a class="method-permalink" href="#test%28source%2Cnode%3ACrystal%3A%3ACall%29-instance-method">#</a>
       </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/9175e64/src/ameba/rule/lint/syntax.cr#L28" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/9175e64/src/ameba/rule/lint/require_parentheses.cr#L36" target="_blank">View source</a>]
         
       </div>
     </div>
