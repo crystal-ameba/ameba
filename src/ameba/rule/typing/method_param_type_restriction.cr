@@ -54,11 +54,11 @@ module Ameba::Rule::Typing
   #
   # ```
   # Typing/MethodParamTypeRestriction:
-  #   Enabled: true
-  #   DefaultValue: true
-  #   Undocumented: true
-  #   PrivateMethods: true
-  #   ProtectedMethods: true
+  #   Enabled: false
+  #   DefaultValue: false
+  #   Undocumented: false
+  #   PrivateMethods: false
+  #   ProtectedMethods: false
   #   BlockParam: false
   # ```
   class MethodParamTypeRestriction < Base

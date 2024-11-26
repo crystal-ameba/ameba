@@ -34,14 +34,26 @@ module Ameba::Rule::Typing
   #
   # ```
   # Typing/MethodParamTypeRestriction:
-  #   Enabled: true
+  #   Enabled: false
   #   MacroNames:
   #    - getter
-  #    - setter
-  #    - property
+  #    - getter?
+  #    - getter!
   #    - class_getter
+  #    - class_getter?
+  #    - class_getter!
+  #    - setter
+  #    - setter?
+  #    - setter!
   #    - class_setter
+  #    - class_setter?
+  #    - class_setter!
+  #    - property
+  #    - property?
+  #    - property!
   #    - class_property
+  #    - class_property?
+  #    - class_property!
   #    - record
   # ```
   class MacroCallVarTypeRestriction < Base

@@ -34,10 +34,10 @@ module Ameba::Rule::Typing
   #
   # ```
   # Typing/MethodReturnTypeRestriction:
-  #   Enabled: true
-  #   Undocumented: true
-  #   PrivateMethods: true
-  #   ProtectedMethods: true
+  #   Enabled: false
+  #   Undocumented: false
+  #   PrivateMethods: false
+  #   ProtectedMethods: false
   # ```
   class MethodReturnTypeRestriction < Base
     properties do
