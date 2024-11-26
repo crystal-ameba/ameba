@@ -33,6 +33,7 @@ module Ameba::Rule::Lint
   # ```
   class TrailingRescueException < Base
     properties do
+      since_version "1.7.0"
       description "Disallows trailing rescue with a path"
     end
 
