@@ -25,6 +25,7 @@ module Ameba::Rule::Lint
   # ```
   class RequireParentheses < Base
     properties do
+      since_version "1.7.0"
       description "Disallows method calls with no parentheses and a logical operator in the argument list"
     end
 
