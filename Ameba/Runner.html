@@ -297,6 +297,11 @@
       
     </li>
   
+  <li class=" " data-id="ameba/Ameba/Presenter/RuleVersionsPresenter" data-name="ameba::presenter::ruleversionspresenter">
+      <a href="../Ameba/Presenter/RuleVersionsPresenter.html">RuleVersionsPresenter</a>
+      
+    </li>
+  
 </ul>
 
       
@@ -941,7 +946,7 @@ runner.run.success? <span class="c"># =&gt; true or false</span></code></pre>
   </h2>
   
     
-      <a href="https://github.com/crystal-ameba/ameba/blob/a21dea0/src/ameba/runner.cr#L12" target="_blank">
+      <a href="https://github.com/crystal-ameba/ameba/blob/26cfa07/src/ameba/runner.cr#L12" target="_blank">
         ameba/runner.cr
       </a>
     
@@ -1015,6 +1020,20 @@ runner.run.success? <span class="c"># =&gt; true or false</span></code></pre>
         
       </li>
     
+      <li class="entry-summary">
+        <a href="#version%3ASemanticVersion%7CNil-instance-method" class="signature"><strong>#version</strong> : SemanticVersion | Nil</a>
+        
+          <div class="summary"><p>Returns an ameba version up to which the rules should be ran.</p></div>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#version%3D%28version%3ASemanticVersion%7CNil%29-instance-method" class="signature"><strong>#version=</strong>(version : SemanticVersion | Nil)</a>
+        
+          <div class="summary"><p>Returns an ameba version up to which the rules should be ran.</p></div>
+        
+      </li>
+    
   </ul>
 
 
@@ -1080,7 +1099,7 @@ config.formatter <span class="o">=</span> formatter
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/a21dea0/src/ameba/runner.cr#L61" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/26cfa07/src/ameba/runner.cr#L64" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1122,7 +1141,7 @@ runner.explain({file: file, line: l, column: c})</code></pre>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/a21dea0/src/ameba/runner.cr#L160" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/26cfa07/src/ameba/runner.cr#L175" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1149,7 +1168,7 @@ runner.run <span class="c"># =&gt; returns runner again</span></code></pre>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/a21dea0/src/ameba/runner.cr#L87" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/26cfa07/src/ameba/runner.cr#L102" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1170,7 +1189,7 @@ runner.run <span class="c"># =&gt; returns runner again</span></code></pre>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/a21dea0/src/ameba/runner.cr#L35" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/26cfa07/src/ameba/runner.cr#L35" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1195,7 +1214,49 @@ runner.success? <span class="c"># =&gt; true or false</span></code></pre>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/a21dea0/src/ameba/runner.cr#L172" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/26cfa07/src/ameba/runner.cr#L187" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="version:SemanticVersion|Nil-instance-method">
+      <div class="signature">
+        
+        def <strong>version</strong> : SemanticVersion | Nil
+
+        <a class="method-permalink" href="#version%3ASemanticVersion%7CNil-instance-method">#</a>
+      </div>
+      
+        <div class="doc">
+          
+          <p>Returns an ameba version up to which the rules should be ran.</p>
+        </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/crystal-ameba/ameba/blob/26cfa07/src/ameba/runner.cr#L53" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="version=(version:SemanticVersion|Nil)-instance-method">
+      <div class="signature">
+        
+        def <strong>version=</strong>(version : SemanticVersion | Nil)
+
+        <a class="method-permalink" href="#version%3D%28version%3ASemanticVersion%7CNil%29-instance-method">#</a>
+      </div>
+      
+        <div class="doc">
+          
+          <p>Returns an ameba version up to which the rules should be ran.</p>
+        </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/crystal-ameba/ameba/blob/26cfa07/src/ameba/runner.cr#L53" target="_blank">View source</a>]
         
       </div>
     </div>

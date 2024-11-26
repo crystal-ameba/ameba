@@ -14,7 +14,7 @@
 <script type="text/javascript" src="../../js/doc.js"></script>
 
   <meta name="repository-name" content="ameba">
-  <title>Ameba::InlineComments::Action - ameba master</title>
+  <title>Ameba::Presenter::RuleVersionsPresenter - ameba master</title>
   <script type="text/javascript">
     CrystalDocs.base_path = "../../";
   </script>
@@ -247,12 +247,12 @@
       
     </li>
   
-  <li class="parent open current" data-id="ameba/Ameba/InlineComments" data-name="ameba::inlinecomments">
+  <li class="parent " data-id="ameba/Ameba/InlineComments" data-name="ameba::inlinecomments">
       <a href="../../Ameba/InlineComments.html">InlineComments</a>
       
         <ul>
   
-  <li class=" current" data-id="ameba/Ameba/InlineComments/Action" data-name="ameba::inlinecomments::action">
+  <li class=" " data-id="ameba/Ameba/InlineComments/Action" data-name="ameba::inlinecomments::action">
       <a href="../../Ameba/InlineComments/Action.html">Action</a>
       
     </li>
@@ -277,7 +277,7 @@
       
     </li>
   
-  <li class="parent " data-id="ameba/Ameba/Presenter" data-name="ameba::presenter">
+  <li class="parent open current" data-id="ameba/Ameba/Presenter" data-name="ameba::presenter">
       <a href="../../Ameba/Presenter.html">Presenter</a>
       
         <ul>
@@ -297,7 +297,7 @@
       
     </li>
   
-  <li class=" " data-id="ameba/Ameba/Presenter/RuleVersionsPresenter" data-name="ameba::presenter::ruleversionspresenter">
+  <li class=" current" data-id="ameba/Ameba/Presenter/RuleVersionsPresenter" data-name="ameba::presenter::ruleversionspresenter">
       <a href="../../Ameba/Presenter/RuleVersionsPresenter.html">RuleVersionsPresenter</a>
       
     </li>
@@ -896,24 +896,15 @@
 <div class="main-content">
 <h1 class="type-name">
 
-  <span class="kind">enum</span> Ameba::<wbr>InlineComments::<wbr>Action
+  <span class="kind">class</span> Ameba::<wbr>Presenter::<wbr>RuleVersionsPresenter
 
 </h1>
 
 
+  <ul class="superclass-hierarchy"><li class="superclass"><a href="../../Ameba/Presenter/RuleVersionsPresenter.html">Ameba::Presenter::RuleVersionsPresenter</a></li><li class="superclass"><a href="../../Ameba/Presenter/BasePresenter.html">Ameba::Presenter::BasePresenter</a></li><li class="superclass">Reference</li><li class="superclass">Object</li></ul>
 
 
 
-  <h2>
-    <a id="overview" class="anchor" href="#overview">
-  <svg class="octicon-link" aria-hidden="true">
-    <use href="#octicon-link"/>
-  </svg>
-</a>
-    Overview
-  </h2>
-
-  <p>Available actions in the inline comments</p>
 
 
 
@@ -938,38 +929,14 @@
   </h2>
   
     
-      <a href="https://github.com/crystal-ameba/ameba/blob/26cfa07/src/ameba/inline_comments.cr#L8" target="_blank">
-        ameba/inline_comments.cr
+      <a href="https://github.com/crystal-ameba/ameba/blob/26cfa07/src/ameba/presenter/rule_versions_presenter.cr#L2" target="_blank">
+        ameba/presenter/rule_versions_presenter.cr
       </a>
     
     <br/>
   
 
 
-
-  
-    <h2>
-      <a id="enum-members" class="anchor" href="#enum-members">
-  <svg class="octicon-link" aria-hidden="true">
-    <use href="#octicon-link"/>
-  </svg>
-</a>
-      Enum Members
-    </h2>
-  
-  <dl>
-    
-      <dt class="entry-const" id="Disable">
-        <strong>Disable</strong> = <code><span class="n">0</span></code>
-      </dt>
-      
-    
-      <dt class="entry-const" id="Enable">
-        <strong>Enable</strong> = <code><span class="n">1</span></code>
-      </dt>
-      
-    
-  </dl>
 
 
 
@@ -990,12 +957,7 @@
   <ul class="list-summary">
     
       <li class="entry-summary">
-        <a href="#disable%3F-instance-method" class="signature"><strong>#disable?</strong></a>
-        
-      </li>
-    
-      <li class="entry-summary">
-        <a href="#enable%3F-instance-method" class="signature"><strong>#enable?</strong></a>
+        <a href="#run%28rules%2Cverbose%3Dtrue%29-instance-method" class="signature"><strong>#run</strong>(rules, verbose = <span class="n">true</span>)</a>
         
       </li>
     
@@ -1007,21 +969,26 @@
   
     
 
-
-    
-
-
-    
-
-
-    
-
-
+  <h3>Instance methods inherited from class <code><a href="../../Ameba/Presenter/BasePresenter.html">Ameba::Presenter::BasePresenter</a></code></h3>
   
+  
+    <a href="../../Ameba/Presenter/BasePresenter.html#output%3AIO%3A%3AFileDescriptor%7CIO%3A%3AMemory-instance-method" class="tooltip">
+      <span>output : IO::FileDescriptor | IO::Memory</span>
+    output</a>
     
+  
 
 
     
+
+  <h3>Constructor methods inherited from class <code><a href="../../Ameba/Presenter/BasePresenter.html">Ameba::Presenter::BasePresenter</a></code></h3>
+  
+  
+    <a href="../../Ameba/Presenter/BasePresenter.html#new%28output%3AIO%3DSTDOUT%29-class-method" class="tooltip">
+      <span>new(output : IO = <span class="t">STDOUT</span>)</span>
+    new</a>
+    
+  
 
 
     
@@ -1075,34 +1042,18 @@
     Instance Method Detail
   </h2>
   
-    <div class="entry-detail" id="disable?-instance-method">
+    <div class="entry-detail" id="run(rules,verbose=true)-instance-method">
       <div class="signature">
         
-        def <strong>disable?</strong>
+        def <strong>run</strong>(rules, verbose = <span class="n">true</span>)
 
-        <a class="method-permalink" href="#disable%3F-instance-method">#</a>
+        <a class="method-permalink" href="#run%28rules%2Cverbose%3Dtrue%29-instance-method">#</a>
       </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/26cfa07/src/ameba/inline_comments.cr#L9" target="_blank">View source</a>]
-        
-      </div>
-    </div>
-  
-    <div class="entry-detail" id="enable?-instance-method">
-      <div class="signature">
-        
-        def <strong>enable?</strong>
-
-        <a class="method-permalink" href="#enable%3F-instance-method">#</a>
-      </div>
-      
-      <br/>
-      <div>
-        
-          [<a href="https://github.com/crystal-ameba/ameba/blob/26cfa07/src/ameba/inline_comments.cr#L10" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/26cfa07/src/ameba/presenter/rule_versions_presenter.cr#L3" target="_blank">View source</a>]
         
       </div>
     </div>
