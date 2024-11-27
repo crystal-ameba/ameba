@@ -36,6 +36,7 @@ module Ameba::Rule::Lint
   # ```
   class UnusedComparison < Base
     properties do
+      since_version "1.7.0"
       description "Disallows unused comparison operations"
     end
 

@@ -47,6 +47,7 @@ module Ameba::Rule::Lint
   # ```
   class UnusedLiteral < Base
     properties do
+      since_version "1.7.0"
       description "Disallows unused literal values"
     end
 
