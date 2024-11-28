@@ -1,15 +1,17 @@
 module Ameba::Rule::Lint
-  # A rule that prohibits the common misconception about trailing rescue statements,
-  # preventing the use of Paths (exception class names or otherwise) from being
-  # used as the trailing value.
+  # A rule that prohibits the common misconception about how trailing rescue statements work,
+  # preventing Paths (exception class names or otherwise) from being
+  # used as the trailing value. The value after the trailing rescue statement is the
+  # value to use if an exception occurs, not the exception for the rescue to capture.
   #
-  # For example, this is considered invalid:
+  # For example, this is considered invalid - if an exception occurs in `method.call`,
+  # `value` will be assigned the value of `MyException`:
   #
   # ```
   # value = method.call("param") rescue MyException
   # ```
   #
-  # And should instead be written as:
+  # And should instead be written as this in order to capture only `MyException` exceptions:
   #
   # ```
   # value = begin
