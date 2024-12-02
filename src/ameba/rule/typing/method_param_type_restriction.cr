@@ -65,7 +65,7 @@ module Ameba::Rule::Typing
     properties do
       description "Recommends that method parameters have type restrictions"
       enabled false
-      default_value false
+      default_value true
       undocumented false
       private_methods false
       protected_methods false
