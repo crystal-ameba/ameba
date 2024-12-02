@@ -66,10 +66,7 @@ module Ameba::Rule::Lint
              Crystal::NamedTupleLiteral,
       last_is_used : Bool
     ) : Bool
-      if !last_is_used
-        issue_for node, MSG
-      end
-
+      issue_for node, MSG unless last_is_used
       true
     end
   end

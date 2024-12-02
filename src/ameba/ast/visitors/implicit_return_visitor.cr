@@ -88,12 +88,11 @@ module Ameba::AST
         node.block_arg.try &.accept(self)
       }
 
-      return_type = node.return_type
-      case return_type
+      case return_type = node.return_type
       when Crystal::Path
         # Special case of the return type being nil, meaning the last
         # line of the method body is ignored
-        if ["::Nil", "Nil"].includes?(return_type.names.join("::"))
+        if return_type.names.join("::").in?("::Nil", "Nil")
           node.body.accept(self)
         else
           incr_stack { node.body.accept(self) }
@@ -180,11 +179,11 @@ module Ameba::AST
     def visit(node : Crystal::RangeLiteral) : Nil
       @rule.test(@source, node, @stack > 0)
 
-      if !node.from.is_a?(Crystal::NumberLiteral)
+      unless node.from.is_a?(Crystal::NumberLiteral)
         node.from.accept(self)
       end
 
-      if !node.to.is_a?(Crystal::NumberLiteral)
+      unless node.to.is_a?(Crystal::NumberLiteral)
         node.to.accept(self)
       end
     end

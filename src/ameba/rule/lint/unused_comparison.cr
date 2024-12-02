@@ -42,10 +42,10 @@ module Ameba::Rule::Lint
 
     MSG = "Comparison operation is unused"
 
-    COMPARISON_OPERATORS = %w(
+    COMPARISON_OPERATORS = %w[
       == != =~ !~ ===
       < <= > >= <=>
-    )
+    ]
 
     def test(source : Source)
       AST::ImplicitReturnVisitor.new(self, source)
@@ -55,7 +55,6 @@ module Ameba::Rule::Lint
       if !last_is_used && node.name.in?(COMPARISON_OPERATORS) && node.args.size == 1
         issue_for node, MSG
       end
-
       true
     end
   end
