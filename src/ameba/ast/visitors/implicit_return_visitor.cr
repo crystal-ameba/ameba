@@ -104,8 +104,7 @@ module Ameba::AST
         node.block_arg.try &.accept(self)
       end
 
-      case return_type = node.return_type
-      when Crystal::Path
+      if (return_type = node.return_type).is_a?(Crystal::Path)
         # Special case of the return type being nil, meaning the last
         # line of the method body is ignored
         if return_type.names.join("::").in?("::Nil", "Nil")
@@ -246,7 +245,7 @@ module Ameba::AST
       node : Crystal::BoolLiteral | Crystal::CharLiteral |
              Crystal::RegexLiteral | Crystal::NumberLiteral |
              Crystal::StringLiteral | Crystal::SymbolLiteral |
-             Crystal::ProcLiteral
+             Crystal::ProcLiteral,
     ) : Bool
       @rule.test(@source, node, @stack > 0)
 

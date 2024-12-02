@@ -10,8 +10,8 @@ module Ameba::Rule::Lint
         b = "string"
         g = "interp \#{string}"
         h = <<-HEREDOC
-        this is a heredoc
-        HEREDOC
+          this is a heredoc
+          HEREDOC
 
         c = begin
           :symbol
@@ -76,8 +76,8 @@ module Ameba::Rule::Lint
       # ^^^^^^^^^ error: Literal value is not used
         <<-HEREDOC
       # ^^^^^^^^^^ error: Literal value is not used
-        this is a heredoc
-        HEREDOC
+          this is a heredoc
+          HEREDOC
       CRYSTAL
     end
 
@@ -106,8 +106,8 @@ module Ameba::Rule::Lint
       # ^^^^^^^^^ error: Literal value is not used
         <<-HEREDOC
       # ^^^^^^^^^^ error: Literal value is not used
-        this is a heredoc
-        HEREDOC
+          this is a heredoc
+          HEREDOC
       end
       CRYSTAL
     end
@@ -138,8 +138,8 @@ module Ameba::Rule::Lint
       # ^^^^^^^^^ error: Literal value is not used
         <<-HEREDOC
       # ^^^^^^^^^^ error: Literal value is not used
-        this is a heredoc
-        HEREDOC
+          this is a heredoc
+          HEREDOC
       end
       CRYSTAL
     end
@@ -169,8 +169,8 @@ module Ameba::Rule::Lint
       # ^^^^^^^^^ error: Literal value is not used
         <<-HEREDOC
       # ^^^^^^^^^^ error: Literal value is not used
-        this is a heredoc
-        HEREDOC
+          this is a heredoc
+          HEREDOC
       end
       CRYSTAL
     end
@@ -242,8 +242,8 @@ module Ameba::Rule::Lint
           # ^^^ error: Literal value is not used
             <<-HEREDOC
           # ^^^^^^^^^^ error: Literal value is not used
-            this is a heredoc
-            HEREDOC
+              this is a heredoc
+              HEREDOC
             1..2
           ensure
             {goodnight: moon}
