@@ -63,7 +63,7 @@ module Ameba::Rule::Lint
              Crystal::ProcLiteral | Crystal::ArrayLiteral | Crystal::RangeLiteral |
              Crystal::TupleLiteral | Crystal::NumberLiteral |
              Crystal::StringLiteral | Crystal::SymbolLiteral |
-             Crystal::NamedTupleLiteral,
+             Crystal::NamedTupleLiteral | Crystal::StringInterpolation,
       last_is_used : Bool
     ) : Bool
       issue_for node, MSG unless last_is_used

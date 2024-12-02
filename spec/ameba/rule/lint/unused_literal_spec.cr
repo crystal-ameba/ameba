@@ -8,6 +8,11 @@ module Ameba::Rule::Lint
       expect_no_issues subject, <<-CRYSTAL
         a = 1
         b = "string"
+        g = "interp \#{string}"
+        h = <<-HEREDOC
+        this is a heredoc
+        HEREDOC
+
         c = begin
           :symbol
         end
@@ -55,8 +60,8 @@ module Ameba::Rule::Lint
       # ^^^^^^^^ error: Literal value is not used
         "hello world"
       # ^^^^^^^^^^^^^ error: Literal value is not used
-        "interp string"
-      # ^^^^^^^^^^^^^^^ error: Literal value is not used
+        "interp \#{string}"
+      # ^^^^^^^^^^^^^^^^^^ error: Literal value is not used
         [1, 2, 3, 4, 5]
       # ^^^^^^^^^^^^^^^ error: Literal value is not used
         {"hello" => "world"}
@@ -69,6 +74,10 @@ module Ameba::Rule::Lint
       # ^^^^^^^^^^^^^^^^^ error: Literal value is not used
         {1, 2, 3}
       # ^^^^^^^^^ error: Literal value is not used
+        <<-HEREDOC
+      # ^^^^^^^^^^ error: Literal value is not used
+        this is a heredoc
+        HEREDOC
       CRYSTAL
     end
 
@@ -81,8 +90,8 @@ module Ameba::Rule::Lint
       # ^^^^^^^^ error: Literal value is not used
         "hello world"
       # ^^^^^^^^^^^^^ error: Literal value is not used
-        "interp string"
-      # ^^^^^^^^^^^^^^^ error: Literal value is not used
+        "interp \#{string}"
+      # ^^^^^^^^^^^^^^^^^^ error: Literal value is not used
         [1, 2, 3, 4, 5]
       # ^^^^^^^^^^^^^^^ error: Literal value is not used
         {"hello" => "world"}
@@ -95,6 +104,10 @@ module Ameba::Rule::Lint
       # ^^^^^^^^^^^^^^^^^ error: Literal value is not used
         {1, 2, 3}
       # ^^^^^^^^^ error: Literal value is not used
+        <<-HEREDOC
+      # ^^^^^^^^^^ error: Literal value is not used
+        this is a heredoc
+        HEREDOC
       end
       CRYSTAL
     end
@@ -109,8 +122,8 @@ module Ameba::Rule::Lint
       # ^^^^^^^^ error: Literal value is not used
         "hello world"
       # ^^^^^^^^^^^^^ error: Literal value is not used
-        "interp string"
-      # ^^^^^^^^^^^^^^^ error: Literal value is not used
+        "interp \#{string}"
+      # ^^^^^^^^^^^^^^^^^^ error: Literal value is not used
         [1, 2, 3, 4, 5]
       # ^^^^^^^^^^^^^^^ error: Literal value is not used
         {"hello" => "world"}
@@ -123,6 +136,10 @@ module Ameba::Rule::Lint
       # ^^^^^^^^^^^^^^^^^ error: Literal value is not used
         {1, 2, 3}
       # ^^^^^^^^^ error: Literal value is not used
+        <<-HEREDOC
+      # ^^^^^^^^^^ error: Literal value is not used
+        this is a heredoc
+        HEREDOC
       end
       CRYSTAL
     end
@@ -136,8 +153,8 @@ module Ameba::Rule::Lint
       # ^^^^^^^^ error: Literal value is not used
         "hello world"
       # ^^^^^^^^^^^^^ error: Literal value is not used
-        "interp string"
-      # ^^^^^^^^^^^^^^^ error: Literal value is not used
+        "interp \#{string}"
+      # ^^^^^^^^^^^^^^^^^^ error: Literal value is not used
         [1, 2, 3, 4, 5]
       # ^^^^^^^^^^^^^^^ error: Literal value is not used
         {"hello" => "world"}
@@ -150,6 +167,10 @@ module Ameba::Rule::Lint
       # ^^^^^^^^^^^^^^^^^ error: Literal value is not used
         {1, 2, 3}
       # ^^^^^^^^^ error: Literal value is not used
+        <<-HEREDOC
+      # ^^^^^^^^^^ error: Literal value is not used
+        this is a heredoc
+        HEREDOC
       end
       CRYSTAL
     end
@@ -211,7 +232,7 @@ module Ameba::Rule::Lint
           rescue ASDF
             "hello world"
           # ^^^^^^^^^^^^^ error: Literal value is not used
-            "interp string"
+            "interp \#{string}"
           rescue QWERTY
             [1, 2, 3, 4, 5]
           # ^^^^^^^^^^^^^^^ error: Literal value is not used
@@ -219,6 +240,10 @@ module Ameba::Rule::Lint
           else
             '\t'
           # ^^^ error: Literal value is not used
+            <<-HEREDOC
+          # ^^^^^^^^^^ error: Literal value is not used
+            this is a heredoc
+            HEREDOC
             1..2
           ensure
             {goodnight: moon}
