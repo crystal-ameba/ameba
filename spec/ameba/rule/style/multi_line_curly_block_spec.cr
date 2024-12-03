@@ -18,6 +18,11 @@ module Ameba::Rule::Style
         CRYSTAL
     end
 
+    it "doesn't report for `do`...`end` blocks on a single line" do
+      expect_no_issues subject, <<-CRYSTAL
+        foo do :bar end
+        CRYSTAL
+    end
     it "reports if there is a multi-line curly block" do
       expect_issue subject, <<-CRYSTAL
         foo {
