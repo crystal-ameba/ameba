@@ -1,20 +1,20 @@
 module Ameba::Rule::Style
-  # A rule that disallows multi-line blocks that use curly brackets instead of
-  # `do`...`end`.
+  # A rule that disallows multi-line blocks that use curly brackets
+  # instead of `do`...`end`.
   #
   # For example, this is considered invalid:
   #
   # ```
-  # incr_stack {
-  #   node.body.accept(self)
+  # (0..10).map { |i|
+  #   i * 2
   # }
   # ```
   #
   # And should be rewritten to the following:
   #
   # ```
-  # incr_stack do
-  #   node.body.accept(self)
+  # (0..10).map do |i|
+  #   i * 2
   # end
   # ```
   #

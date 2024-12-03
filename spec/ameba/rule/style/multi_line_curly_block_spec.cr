@@ -6,23 +6,23 @@ module Ameba::Rule::Style
 
     it "doesn't report if a curly block is on a single line" do
       expect_no_issues subject, <<-CRYSTAL
-        incr_stack { node.accept(self) }
+        foo { :bar }
         CRYSTAL
     end
 
     it "doesn't report for `do`...`end` blocks" do
       expect_no_issues subject, <<-CRYSTAL
-        incr_stack do
-           node.accept(self)
+        foo do
+          :bar
         end
         CRYSTAL
     end
 
     it "reports if there is a multi-line curly block" do
       expect_issue subject, <<-CRYSTAL
-        incr_stack {
-                 # ^ error: Use `do`...`end` instead of curly brackets for multi-line blocks
-           node.accept(self)
+        foo {
+          # ^ error: Use `do`...`end` instead of curly brackets for multi-line blocks
+          :bar
         }
         CRYSTAL
     end
