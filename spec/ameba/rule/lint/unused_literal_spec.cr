@@ -252,5 +252,16 @@ module Ameba::Rule::Lint
           end
       CRYSTAL
     end
+
+    # Locations for Regex literals were added in Crystal v1.15.0
+    {% if compare_versions(Crystal::VERSION, "1.15.0") >= 0 %}
+      it "fails if a regex literal is unused" do
+        expect_issue subject, <<-CRYSTAL
+            a = /hello world/
+            /goodnight moon/
+          # ^^^^^^^^^^^^^^^^ error: Literal value is not used
+          CRYSTAL
+      end
+    {% end %}
   end
 end

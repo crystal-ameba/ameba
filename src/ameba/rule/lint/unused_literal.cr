@@ -57,6 +57,14 @@ module Ameba::Rule::Lint
       AST::ImplicitReturnVisitor.new(self, source)
     end
 
+    # Locations for Regex literals were added in Crystal v1.15.0
+    {% if compare_versions(Crystal::VERSION, "1.15.0") >= 0 %}
+      def test(source, node : Crystal::RegexLiteral, last_is_used : Bool) : Bool
+        issue_for node, MSG unless last_is_used
+        true
+      end
+    {% end %}
+
     def test(
       source,
       node : Crystal::BoolLiteral | Crystal::CharLiteral | Crystal::HashLiteral |
