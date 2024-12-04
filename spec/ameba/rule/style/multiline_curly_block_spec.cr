@@ -1,8 +1,8 @@
 require "../../../spec_helper"
 
 module Ameba::Rule::Style
-  describe MultiLineCurlyBlock do
-    subject = MultiLineCurlyBlock.new
+  describe MultilineCurlyBlock do
+    subject = MultilineCurlyBlock.new
 
     it "doesn't report if a curly block is on a single line" do
       expect_no_issues subject, <<-CRYSTAL

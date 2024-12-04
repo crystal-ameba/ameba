@@ -21,10 +21,10 @@ module Ameba::Rule::Style
   # YAML configuration example:
   #
   # ```
-  # Style/MultiLineCurlyBlock:
+  # Style/MultilineCurlyBlock:
   #   Enabled: true
   # ```
-  class MultiLineCurlyBlock < Base
+  class MultilineCurlyBlock < Base
     include AST::Util
 
     properties do
