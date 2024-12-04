@@ -45,9 +45,9 @@ module Ameba::Rule::Documentation
     MSG_ERR  = "%s admonition error: %s"
 
     @[YAML::Field(ignore: true)]
-    private getter location : Time::Location {
+    private getter location : Time::Location do
       Time::Location.load(self.timezone)
-    }
+    end
 
     def test(source)
       Tokenizer.new(source).run do |token|
