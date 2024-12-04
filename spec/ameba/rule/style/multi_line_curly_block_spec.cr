@@ -23,6 +23,7 @@ module Ameba::Rule::Style
         foo do :bar end
         CRYSTAL
     end
+
     it "reports if there is a multi-line curly block" do
       expect_issue subject, <<-CRYSTAL
         foo {
