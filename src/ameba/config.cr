@@ -39,12 +39,13 @@ class Ameba::Config
   include GlobUtils
 
   AVAILABLE_FORMATTERS = {
-    progress: Formatter::DotFormatter,
-    todo:     Formatter::TODOFormatter,
-    flycheck: Formatter::FlycheckFormatter,
-    silent:   Formatter::BaseFormatter,
-    disabled: Formatter::DisabledFormatter,
-    json:     Formatter::JSONFormatter,
+    progress:  Formatter::DotFormatter,
+    todo:      Formatter::TODOFormatter,
+    flycheck:  Formatter::FlycheckFormatter,
+    silent:    Formatter::BaseFormatter,
+    disabled:  Formatter::DisabledFormatter,
+    json:      Formatter::JSONFormatter,
+    github_ci: Formatter::GitHubCIFormatter,
   }
 
   XDG_CONFIG_HOME = ENV.fetch("XDG_CONFIG_HOME", "~/.config")
