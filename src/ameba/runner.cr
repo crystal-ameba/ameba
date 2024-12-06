@@ -72,7 +72,8 @@ module Ameba
       )
     end
 
-    protected def initialize(rules, @sources, @formatter, @severity, @autocorrect = false, @version = nil)
+    protected def initialize(rules, sources, @formatter, @severity, @autocorrect = false, @version = nil)
+      @sources = sources.sort_by(&.path)
       @rules =
         rules.select { |rule| rule_runnable?(rule, @version) }
       @unneeded_disable_directive_rule =
@@ -159,6 +160,10 @@ module Ameba
 
       File.write(source.path, source.code) unless corrected_issues.empty?
     ensure
+      missing_location = Crystal::Location.new(nil, 0, 0)
+      source.issues.sort_by! do |issue|
+        issue.location || missing_location
+      end
       @formatter.source_finished source
     end
 
