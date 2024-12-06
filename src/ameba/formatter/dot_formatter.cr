@@ -100,7 +100,7 @@ module Ameba::Formatter
 
     private def final_message(sources, failed_sources)
       total = sources.size
-      failures = failed_sources.sum(&.issues.size)
+      failures = failed_sources.sum(&.issues.count(&.enabled?))
       color = failures == 0 ? :green : :red
       s = failures != 1 ? "s" : ""
 

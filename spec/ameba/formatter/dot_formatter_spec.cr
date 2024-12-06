@@ -96,11 +96,14 @@ module Ameba::Formatter
         end
 
         it "does not write disabled issues" do
-          s = Source.new ""
-          s.add_issue(DummyRule.new, location: {1, 1},
-            message: "DummyRuleError", status: :disabled)
+          s = Source.new("").tap do |source|
+            source.add_issue(DummyRule.new, {1, 1}, "DummyRuleError", status: :disabled)
+            source.add_issue(NamedRule.new, {1, 2}, "NamedRuleError")
+          end
           subject.finished [s]
-          output.to_s.should contain "1 inspected, 0 failures"
+          log = output.to_s
+          log.should_not contain "DummyRuleError"
+          log.should contain "1 inspected, 1 failure"
         end
       end
     end
