@@ -260,7 +260,19 @@ module Ameba::Rule::Lint
             a = /hello world/
             /goodnight moon/
           # ^^^^^^^^^^^^^^^^ error: Literal value is not used
+            b = /goodnight moon, \#{a}/
+            /goodnight moon, \#{a}/
+          # ^^^^^^^^^^^^^^^^^^^^^^ error: Literal value is not used
           CRYSTAL
+      end
+    {% else %}
+      it "passes if a regex literal is unused" do
+        expect_no_issues subject, <<-CRYSTAL
+              a = /hello world/
+              /goodnight moon/
+              b = /goodnight moon, \#{a}/
+              /goodnight moon, \#{a}/
+            CRYSTAL
       end
     {% end %}
   end

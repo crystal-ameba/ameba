@@ -156,9 +156,7 @@ module Ameba::AST
       @rule.test(@source, node, @stack > 0)
 
       node.expressions.each do |exp|
-        unless exp.is_a?(Crystal::StringLiteral)
-          incr_stack { exp.accept(self) }
-        end
+        incr_stack { exp.accept(self) }
       end
 
       false
@@ -241,11 +239,19 @@ module Ameba::AST
       false
     end
 
+    def visit(node : Crystal::RegexLiteral) : Bool
+      @rule.test(@source, node, @stack > 0)
+
+      # Regex literals either contain string literals or string interpolations,
+      # both of which are "captured" by the parent regex literal
+      incr_stack { node.value.accept(self) }
+
+      false
+    end
+
     def visit(
-      node : Crystal::BoolLiteral | Crystal::CharLiteral |
-             Crystal::RegexLiteral | Crystal::NumberLiteral |
-             Crystal::StringLiteral | Crystal::SymbolLiteral |
-             Crystal::ProcLiteral,
+      node : Crystal::BoolLiteral | Crystal::CharLiteral | Crystal::NumberLiteral |
+             Crystal::StringLiteral | Crystal::SymbolLiteral | Crystal::ProcLiteral,
     ) : Bool
       @rule.test(@source, node, @stack > 0)
 
