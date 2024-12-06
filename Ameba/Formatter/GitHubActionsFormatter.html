@@ -14,7 +14,7 @@
 <script type="text/javascript" src="../../js/doc.js"></script>
 
   <meta name="repository-name" content="ameba">
-  <title>Ameba::AST::Reference - ameba master</title>
+  <title>Ameba::Formatter::GitHubActionsFormatter - ameba master</title>
   <script type="text/javascript">
     CrystalDocs.base_path = "../../";
   </script>
@@ -62,7 +62,7 @@
       
         <ul>
   
-  <li class="parent open current" data-id="ameba/Ameba/AST" data-name="ameba::ast">
+  <li class="parent " data-id="ameba/Ameba/AST" data-name="ameba::ast">
       <a href="../../Ameba/AST.html">AST</a>
       
         <ul>
@@ -132,7 +132,7 @@
       
     </li>
   
-  <li class=" current" data-id="ameba/Ameba/AST/Reference" data-name="ameba::ast::reference">
+  <li class=" " data-id="ameba/Ameba/AST/Reference" data-name="ameba::ast::reference">
       <a href="../../Ameba/AST/Reference.html">Reference</a>
       
     </li>
@@ -192,7 +192,7 @@
       
     </li>
   
-  <li class="parent " data-id="ameba/Ameba/Formatter" data-name="ameba::formatter">
+  <li class="parent open current" data-id="ameba/Ameba/Formatter" data-name="ameba::formatter">
       <a href="../../Ameba/Formatter.html">Formatter</a>
       
         <ul>
@@ -222,7 +222,7 @@
       
     </li>
   
-  <li class=" " data-id="ameba/Ameba/Formatter/GitHubActionsFormatter" data-name="ameba::formatter::githubactionsformatter">
+  <li class=" current" data-id="ameba/Ameba/Formatter/GitHubActionsFormatter" data-name="ameba::formatter::githubactionsformatter">
       <a href="../../Ameba/Formatter/GitHubActionsFormatter.html">GitHubActionsFormatter</a>
       
     </li>
@@ -916,12 +916,12 @@
 <div class="main-content">
 <h1 class="type-name">
 
-  <span class="kind">class</span> Ameba::<wbr>AST::<wbr>Reference
+  <span class="kind">class</span> Ameba::<wbr>Formatter::<wbr>GitHubActionsFormatter
 
 </h1>
 
 
-  <ul class="superclass-hierarchy"><li class="superclass"><a href="../../Ameba/AST/Reference.html">Ameba::AST::Reference</a></li><li class="superclass"><a href="../../Ameba/AST/Variable.html">Ameba::AST::Variable</a></li><li class="superclass">Reference</li><li class="superclass">Object</li></ul>
+  <ul class="superclass-hierarchy"><li class="superclass"><a href="../../Ameba/Formatter/GitHubActionsFormatter.html">Ameba::Formatter::GitHubActionsFormatter</a></li><li class="superclass"><a href="../../Ameba/Formatter/BaseFormatter.html">Ameba::Formatter::BaseFormatter</a></li><li class="superclass">Reference</li><li class="superclass">Object</li></ul>
 
 
 
@@ -935,9 +935,8 @@
     Overview
   </h2>
 
-  <p>Represents a reference to the variable.
-It behaves like a variable is used to distinguish a
-the variable from its reference.</p>
+  <p>A formatter that outputs issues in a GitHub Actions compatible format.</p>
+<p>See <a href="https://docs.github.com/en/actions/writing-workflows/choosing-what-your-workflow-does/workflow-commands-for-github-actions">GitHub Actions documentation</a> for details.</p>
 
 
 
@@ -962,8 +961,8 @@ the variable from its reference.</p>
   </h2>
   
     
-      <a href="https://github.com/crystal-ameba/ameba/blob/29989b0/src/ameba/ast/variabling/reference.cr#L7" target="_blank">
-        ameba/ast/variabling/reference.cr
+      <a href="https://github.com/crystal-ameba/ameba/blob/29989b0/src/ameba/formatter/github_actions_formatter.cr#L5" target="_blank">
+        ameba/formatter/github_actions_formatter.cr
       </a>
     
     <br/>
@@ -990,12 +989,9 @@ the variable from its reference.</p>
   <ul class="list-summary">
     
       <li class="entry-summary">
-        <a href="#explicit%3D%28explicit%3ABool%29-instance-method" class="signature"><strong>#explicit=</strong>(explicit : Bool)</a>
+        <a href="#source_finished%28source%3ASource%29%3ANil-instance-method" class="signature"><strong>#source_finished</strong>(source : Source) : Nil</a>
         
-      </li>
-    
-      <li class="entry-summary">
-        <a href="#explicit%3F%3ABool-instance-method" class="signature"><strong>#explicit?</strong> : Bool</a>
+          <div class="summary"><p>Reports a result of the inspection of a corresponding source.</p></div>
         
       </li>
     
@@ -1007,118 +1003,48 @@ the variable from its reference.</p>
   
     
 
-  <h3>Instance methods inherited from class <code><a href="../../Ameba/AST/Variable.html">Ameba::AST::Variable</a></code></h3>
+  <h3>Instance methods inherited from class <code><a href="../../Ameba/Formatter/BaseFormatter.html">Ameba::Formatter::BaseFormatter</a></code></h3>
   
   
-    <a href="../../Ameba/AST/Variable.html#assign%28node%2Cscope%29-instance-method" class="tooltip">
-      <span>assign(node, scope)</span>
-    assign</a>, 
+    <a href="../../Ameba/Formatter/BaseFormatter.html#config%3AHash%28Symbol%2CBool%7CString%29-instance-method" class="tooltip">
+      <span>config : Hash(Symbol, Bool | String)</span>
+    config</a>, 
     
   
-    <a href="../../Ameba/AST/Variable.html#assign_before_reference%3ACrystal%3A%3AASTNode%7CNil-instance-method" class="tooltip">
-      <span>assign_before_reference : Crystal::ASTNode | Nil</span>
-    assign_before_reference</a>, 
+    <a href="../../Ameba/Formatter/BaseFormatter.html#finished%28sources%29%3ANil-instance-method" class="tooltip">
+      <span>finished(sources) : Nil</span>
+    finished</a>, 
     
   
-    <a href="../../Ameba/AST/Variable.html#assignments%3AArray%28Ameba%3A%3AAST%3A%3AAssignment%29-instance-method" class="tooltip">
-      <span>assignments : Array(Ameba::AST::Assignment)</span>
-    assignments</a>, 
+    <a href="../../Ameba/Formatter/BaseFormatter.html#output%3AIO%3A%3AFileDescriptor%7CIO%3A%3AMemory-instance-method" class="tooltip">
+      <span>output : IO::FileDescriptor | IO::Memory</span>
+    output</a>, 
     
   
-    <a href="../../Ameba/AST/Variable.html#captured_by_block%3F%28scope%3D%40scope%29-instance-method" class="tooltip">
-      <span>captured_by_block?(scope = @scope)</span>
-    captured_by_block?</a>, 
+    <a href="../../Ameba/Formatter/BaseFormatter.html#source_finished%28source%3ASource%29%3ANil-instance-method" class="tooltip">
+      <span>source_finished(source : Source) : Nil</span>
+    source_finished</a>, 
     
   
-    <a href="../../Ameba/AST/Variable.html#declared_before%3F%28node%29-instance-method" class="tooltip">
-      <span>declared_before?(node)</span>
-    declared_before?</a>, 
+    <a href="../../Ameba/Formatter/BaseFormatter.html#source_started%28source%3ASource%29%3ANil-instance-method" class="tooltip">
+      <span>source_started(source : Source) : Nil</span>
+    source_started</a>, 
     
   
-    <a href="../../Ameba/AST/Variable.html#end_location%28%2Aargs%2C%2A%2Aoptions%29-instance-method" class="tooltip">
-      <span>end_location(*args, **options)<br/>end_location(*args, **options, &)</span>
-    end_location</a>, 
-    
-  
-    <a href="../../Ameba/AST/Variable.html#eql%3F%28node%29-instance-method" class="tooltip">
-      <span>eql?(node)</span>
-    eql?</a>, 
-    
-  
-    <a href="../../Ameba/AST/Variable.html#ignored%3F-instance-method" class="tooltip">
-      <span>ignored?</span>
-    ignored?</a>, 
-    
-  
-    <a href="../../Ameba/AST/Variable.html#location%28%2Aargs%2C%2A%2Aoptions%29-instance-method" class="tooltip">
-      <span>location(*args, **options)<br/>location(*args, **options, &)</span>
-    location</a>, 
-    
-  
-    <a href="../../Ameba/AST/Variable.html#name%28%2Aargs%2C%2A%2Aoptions%29-instance-method" class="tooltip">
-      <span>name(*args, **options)<br/>name(*args, **options, &)</span>
-    name</a>, 
-    
-  
-    <a href="../../Ameba/AST/Variable.html#node%3ACrystal%3A%3AVar-instance-method" class="tooltip">
-      <span>node : Crystal::Var</span>
-    node</a>, 
-    
-  
-    <a href="../../Ameba/AST/Variable.html#reference%28node%3ACrystal%3A%3AVar%2Cscope%3AScope%29-instance-method" class="tooltip">
-      <span>reference(node : Crystal::Var, scope : Scope)<br/>reference(scope : Scope)</span>
-    reference</a>, 
-    
-  
-    <a href="../../Ameba/AST/Variable.html#reference_assignments%21-instance-method" class="tooltip">
-      <span>reference_assignments!</span>
-    reference_assignments!</a>, 
-    
-  
-    <a href="../../Ameba/AST/Variable.html#referenced%3F-instance-method" class="tooltip">
-      <span>referenced?</span>
-    referenced?</a>, 
-    
-  
-    <a href="../../Ameba/AST/Variable.html#references%3AArray%28Ameba%3A%3AAST%3A%3AReference%29-instance-method" class="tooltip">
-      <span>references : Array(Ameba::AST::Reference)</span>
-    references</a>, 
-    
-  
-    <a href="../../Ameba/AST/Variable.html#scope%3AScope-instance-method" class="tooltip">
-      <span>scope : Scope</span>
-    scope</a>, 
-    
-  
-    <a href="../../Ameba/AST/Variable.html#special%3F-instance-method" class="tooltip">
-      <span>special?</span>
-    special?</a>, 
-    
-  
-    <a href="../../Ameba/AST/Variable.html#target_of%3F%28assign%29-instance-method" class="tooltip">
-      <span>target_of?(assign)</span>
-    target_of?</a>, 
-    
-  
-    <a href="../../Ameba/AST/Variable.html#to_s%28%2Aargs%2C%2A%2Aoptions%29-instance-method" class="tooltip">
-      <span>to_s(*args, **options)<br/>to_s(*args, **options, &)</span>
-    to_s</a>, 
-    
-  
-    <a href="../../Ameba/AST/Variable.html#used_in_macro%3F%28scope%3D%40scope%29-instance-method" class="tooltip">
-      <span>used_in_macro?(scope = @scope)</span>
-    used_in_macro?</a>
+    <a href="../../Ameba/Formatter/BaseFormatter.html#started%28sources%29%3ANil-instance-method" class="tooltip">
+      <span>started(sources) : Nil</span>
+    started</a>
     
   
 
 
     
 
-  <h3>Constructor methods inherited from class <code><a href="../../Ameba/AST/Variable.html">Ameba::AST::Variable</a></code></h3>
+  <h3>Constructor methods inherited from class <code><a href="../../Ameba/Formatter/BaseFormatter.html">Ameba::Formatter::BaseFormatter</a></code></h3>
   
   
-    <a href="../../Ameba/AST/Variable.html#new%28node%3ACrystal%3A%3AVar%2Cscope%3AAmeba%3A%3AAST%3A%3AScope%29-class-method" class="tooltip">
-      <span>new(node : Crystal::Var, scope : Ameba::AST::Scope)</span>
+    <a href="../../Ameba/Formatter/BaseFormatter.html#new%28output%3AIO%3DSTDOUT%29-class-method" class="tooltip">
+      <span>new(output : IO = <span class="t">STDOUT</span>)</span>
     new</a>
     
   
@@ -1175,34 +1101,23 @@ the variable from its reference.</p>
     Instance Method Detail
   </h2>
   
-    <div class="entry-detail" id="explicit=(explicit:Bool)-instance-method">
+    <div class="entry-detail" id="source_finished(source:Source):Nil-instance-method">
       <div class="signature">
         
-        def <strong>explicit=</strong>(explicit : Bool)
+        def <strong>source_finished</strong>(source : <a href="../../Ameba/Source.html">Source</a>) : Nil
 
-        <a class="method-permalink" href="#explicit%3D%28explicit%3ABool%29-instance-method">#</a>
+        <a class="method-permalink" href="#source_finished%28source%3ASource%29%3ANil-instance-method">#</a>
       </div>
+      
+        <div class="doc">
+          
+          <p>Reports a result of the inspection of a corresponding source.</p>
+        </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/29989b0/src/ameba/ast/variabling/reference.cr#L8" target="_blank">View source</a>]
-        
-      </div>
-    </div>
-  
-    <div class="entry-detail" id="explicit?:Bool-instance-method">
-      <div class="signature">
-        
-        def <strong>explicit?</strong> : Bool
-
-        <a class="method-permalink" href="#explicit%3F%3ABool-instance-method">#</a>
-      </div>
-      
-      <br/>
-      <div>
-        
-          [<a href="https://github.com/crystal-ameba/ameba/blob/29989b0/src/ameba/ast/variabling/reference.cr#L8" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/29989b0/src/ameba/formatter/github_actions_formatter.cr#L9" target="_blank">View source</a>]
         
       </div>
     </div>
