@@ -31,7 +31,8 @@ module Ameba::Formatter
           output << ",title="
           output << issue.rule.name
           output << "::"
-          output << issue.message.gsub('\n', "\\n")
+          # https://github.com/actions/toolkit/issues/193
+          output << issue.message.gsub('\n', "%0A")
           output << "\n"
         end
       end

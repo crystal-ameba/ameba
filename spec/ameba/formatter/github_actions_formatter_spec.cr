@@ -23,7 +23,7 @@ module Ameba::Formatter
         source.add_issue DummyRule.new, location, location, "message\n2nd line"
 
         subject.source_finished(source)
-        output.to_s.should eq("::notice file=/path/to/file.cr,line=1,col=2,endLine=1,endColumn=2,title=Ameba/DummyRule::message\\n2nd line\n")
+        output.to_s.should eq("::notice file=/path/to/file.cr,line=1,col=2,endLine=1,endColumn=2,title=Ameba/DummyRule::message%0A2nd line\n")
       end
     end
   end
