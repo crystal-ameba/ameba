@@ -48,7 +48,7 @@ module Ameba::Rule::Style
       description "Disallows the use of an `else` block with the `unless`"
     end
 
-    MSG = "Favour if over unless with else"
+    MSG = "Favour `if` over `unless` with `else`"
 
     def test(source, node : Crystal::Unless)
       return if node.else.nop?

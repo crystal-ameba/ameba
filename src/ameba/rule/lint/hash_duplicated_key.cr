@@ -30,7 +30,7 @@ module Ameba::Rule::Lint
     def test(source, node : Crystal::HashLiteral)
       return if (keys = duplicated_keys(node.entries)).empty?
 
-      issue_for node, MSG % keys.join(", ")
+      issue_for node, MSG % keys.map { |key| "`#{key}`" }.join(", ")
     end
 
     private def duplicated_keys(entries)

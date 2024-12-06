@@ -28,7 +28,7 @@ module Ameba::Rule::Naming
       description "Enforces variable names to be in underscored case"
     end
 
-    MSG = "Var name should be underscore-cased: %s, not %s"
+    MSG = "Variable name should be underscore-cased: `%s`, not `%s`"
 
     def test(source : Source)
       VarVisitor.new self, source

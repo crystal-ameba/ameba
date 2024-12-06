@@ -41,7 +41,7 @@ module Ameba::Rule::Naming
       description "Makes sure that accessor methods are named properly"
     end
 
-    MSG = "Favour method name '%s' over '%s'"
+    MSG = "Favour method name `%s` over `%s`"
 
     def test(source, node : Crystal::ClassDef | Crystal::ModuleDef)
       each_def_node(node) do |def_node|

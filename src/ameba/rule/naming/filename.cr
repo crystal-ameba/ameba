@@ -13,7 +13,7 @@ module Ameba::Rule::Naming
       description "Enforces file names to be in underscored case"
     end
 
-    MSG = "Filename should be underscore-cased: %s, not %s"
+    MSG = "Filename should be underscore-cased: `%s`, not `%s`"
 
     private LOCATION = {1, 1}
 

@@ -30,9 +30,9 @@ module Ameba::Rule::Naming
         class Foo
           class_property? foo = true
           class_property bar = true
-                       # ^^^ error: Consider using 'class_property?' for 'bar'
+                       # ^^^ error: Consider using `class_property?` for `bar`
           class_property baz = true
-                       # ^^^ error: Consider using 'class_property?' for 'baz'
+                       # ^^^ error: Consider using `class_property?` for `baz`
         end
         CRYSTAL
     end
@@ -42,7 +42,7 @@ module Ameba::Rule::Naming
         expect_issue subject, <<-CRYSTAL, call: {{ call }}
           class Foo
             %{call}   foo = true
-            _{call} # ^^^ error: Consider using '%{call}?' for 'foo'
+            _{call} # ^^^ error: Consider using `%{call}?` for `foo`
           end
           CRYSTAL
       end
@@ -51,7 +51,7 @@ module Ameba::Rule::Naming
         expect_issue subject, <<-CRYSTAL, call: {{ call }}
           class Foo
             %{call}   foo : Bool = true
-            _{call} # ^^^ error: Consider using '%{call}?' for 'foo'
+            _{call} # ^^^ error: Consider using `%{call}?` for `foo`
           end
           CRYSTAL
       end
@@ -60,7 +60,7 @@ module Ameba::Rule::Naming
         expect_issue subject, <<-CRYSTAL, call: {{ call }}
           class Foo
             %{call}   foo : Bool
-            _{call} # ^^^ error: Consider using '%{call}?' for 'foo'
+            _{call} # ^^^ error: Consider using `%{call}?` for `foo`
 
             def initialize(@foo = true)
             end

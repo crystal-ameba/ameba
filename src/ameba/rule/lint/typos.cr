@@ -21,7 +21,7 @@ module Ameba::Rule::Lint
       fail_on_error false
     end
 
-    MSG = "Typo found: %s -> %s"
+    MSG = "Typo found: `%s` -> `%s`"
 
     BIN_PATH = Process.find_executable("typos") rescue nil
 

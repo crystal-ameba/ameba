@@ -34,7 +34,7 @@ module Ameba::Rule::Naming
       description "Reports boolean properties without the `?` suffix"
     end
 
-    MSG = "Consider using '%s?' for '%s'"
+    MSG = "Consider using `%s?` for `%s`"
 
     CALL_NAMES = %w[getter class_getter property class_property]
 

@@ -15,7 +15,7 @@ module Ameba::Rule::Style
     it "fails if unless has else" do
       source = expect_issue subject, <<-CRYSTAL
         unless something
-        # ^^^^^^^^^^^^^^ error: Favour if over unless with else
+        # ^^^^^^^^^^^^^^ error: Favour `if` over `unless` with `else`
           :one
         else
           :two

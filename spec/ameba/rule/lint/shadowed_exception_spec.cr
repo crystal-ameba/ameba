@@ -35,7 +35,7 @@ module Ameba::Rule::Lint
         rescue Exception
           handle_exception
         rescue ArgumentError
-             # ^^^^^^^^^^^^^ error: Shadowed exception found: ArgumentError
+             # ^^^^^^^^^^^^^ error: Shadowed exception found: `ArgumentError`
           handle_argument_error_exception
         end
       CRYSTAL
@@ -48,7 +48,7 @@ module Ameba::Rule::Lint
         rescue Exception
           2
         rescue MySuperException
-             # ^^^^^^^^^^^^^^^^ error: Shadowed exception found: MySuperException
+             # ^^^^^^^^^^^^^^^^ error: Shadowed exception found: `MySuperException`
           3
         end
       CRYSTAL
@@ -58,7 +58,7 @@ module Ameba::Rule::Lint
       expect_issue subject, <<-CRYSTAL
         begin
         rescue Exception | IndexError
-                         # ^^^^^^^^^^ error: Shadowed exception found: IndexError
+                         # ^^^^^^^^^^ error: Shadowed exception found: `IndexError`
         end
       CRYSTAL
     end
@@ -67,9 +67,9 @@ module Ameba::Rule::Lint
       expect_issue subject, <<-CRYSTAL
         begin
         rescue IndexError | Exception
-             # ^^^^^^^^^^ error: Shadowed exception found: IndexError
+             # ^^^^^^^^^^ error: Shadowed exception found: `IndexError`
         rescue Exception
-             # ^^^^^^^^^ error: Shadowed exception found: Exception
+             # ^^^^^^^^^ error: Shadowed exception found: `Exception`
         rescue
         end
       CRYSTAL
@@ -81,7 +81,7 @@ module Ameba::Rule::Lint
         rescue IndexError
         rescue ArgumentError
         rescue IndexError
-             # ^^^^^^^^^^ error: Shadowed exception found: IndexError
+             # ^^^^^^^^^^ error: Shadowed exception found: `IndexError`
         end
       CRYSTAL
     end
@@ -91,7 +91,7 @@ module Ameba::Rule::Lint
         begin
         rescue IndexError
         rescue ArgumentError | IndexError
-                             # ^^^^^^^^^^ error: Shadowed exception found: IndexError
+                             # ^^^^^^^^^^ error: Shadowed exception found: `IndexError`
         end
       CRYSTAL
     end
@@ -101,7 +101,7 @@ module Ameba::Rule::Lint
         begin
         rescue IndexError
         rescue IndexError
-             # ^^^^^^^^^^ error: Shadowed exception found: IndexError
+             # ^^^^^^^^^^ error: Shadowed exception found: `IndexError`
         rescue Exception
         end
       CRYSTAL
@@ -111,7 +111,7 @@ module Ameba::Rule::Lint
       expect_issue subject, <<-CRYSTAL
         begin
         rescue IndexError | IndexError
-                          # ^^^^^^^^^^ error: Shadowed exception found: IndexError
+                          # ^^^^^^^^^^ error: Shadowed exception found: `IndexError`
         end
       CRYSTAL
     end
@@ -121,12 +121,12 @@ module Ameba::Rule::Lint
         begin
         rescue Exception
         rescue ArgumentError
-             # ^^^^^^^^^^^^^ error: Shadowed exception found: ArgumentError
+             # ^^^^^^^^^^^^^ error: Shadowed exception found: `ArgumentError`
         rescue IndexError
-             # ^^^^^^^^^^ error: Shadowed exception found: IndexError
+             # ^^^^^^^^^^ error: Shadowed exception found: `IndexError`
         rescue KeyError | IO::Error
-                        # ^^^^^^^^^ error: Shadowed exception found: IO::Error
-             # ^^^^^^^^ error: Shadowed exception found: KeyError
+                        # ^^^^^^^^^ error: Shadowed exception found: `IO::Error`
+             # ^^^^^^^^ error: Shadowed exception found: `KeyError`
         rescue
         end
       CRYSTAL
@@ -137,7 +137,7 @@ module Ameba::Rule::Lint
         begin
         rescue Exception
         rescue ex : IndexError
-                  # ^^^^^^^^^^ error: Shadowed exception found: IndexError
+                  # ^^^^^^^^^^ error: Shadowed exception found: `IndexError`
         rescue
         end
       CRYSTAL
@@ -148,9 +148,9 @@ module Ameba::Rule::Lint
         begin
         rescue Exception
         rescue ArgumentError
-             # ^^^^^^^^^^^^^ error: Shadowed exception found: ArgumentError
+             # ^^^^^^^^^^^^^ error: Shadowed exception found: `ArgumentError`
         rescue IndexError
-             # ^^^^^^^^^^ error: Shadowed exception found: IndexError
+             # ^^^^^^^^^^ error: Shadowed exception found: `IndexError`
         end
       CRYSTAL
     end
@@ -160,10 +160,10 @@ module Ameba::Rule::Lint
         begin
         rescue Exception
         rescue ArgumentError | IndexError
-                             # ^^^^^^^^^^ error: Shadowed exception found: IndexError
-             # ^^^^^^^^^^^^^ error: Shadowed exception found: ArgumentError
+                             # ^^^^^^^^^^ error: Shadowed exception found: `IndexError`
+             # ^^^^^^^^^^^^^ error: Shadowed exception found: `ArgumentError`
         rescue IO::Error
-             # ^^^^^^^^^ error: Shadowed exception found: IO::Error
+             # ^^^^^^^^^ error: Shadowed exception found: `IO::Error`
         end
         CRYSTAL
     end
@@ -173,8 +173,8 @@ module Ameba::Rule::Lint
         begin
           do_something
         rescue Exception | IndexError | ArgumentError
-                                      # ^^^^^^^^^^^^^ error: Shadowed exception found: ArgumentError
-                         # ^^^^^^^^^^ error: Shadowed exception found: IndexError
+                                      # ^^^^^^^^^^^^^ error: Shadowed exception found: `ArgumentError`
+                         # ^^^^^^^^^^ error: Shadowed exception found: `IndexError`
         end
         CRYSTAL
     end

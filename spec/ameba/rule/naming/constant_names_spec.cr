@@ -8,7 +8,7 @@ module Ameba
       rule = Rule::Naming::ConstantNames.new
       expect_issue rule, <<-CRYSTAL, name: name, file: file, line: line
           %{name} = #{value}
-        # ^{name} error: Constant name should be screaming-cased: #{expected}, not #{name}
+        # ^{name} error: Constant name should be screaming-cased: `#{expected}`, not `#{name}`
         CRYSTAL
     end
   end

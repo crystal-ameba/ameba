@@ -29,7 +29,7 @@ module Ameba::Rule::Naming
       description "Disallows tautological predicate names"
     end
 
-    MSG = "Favour method name '%s?' over '%s'"
+    MSG = "Favour method name `%s?` over `%s`"
 
     def test(source, node : Crystal::Def)
       return unless node.name =~ /^is_([a-z]\w*)\??$/

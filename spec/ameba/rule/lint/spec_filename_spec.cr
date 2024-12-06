@@ -22,7 +22,7 @@ module Ameba::Rule::Lint
     it "fails if filename is wrong" do
       expect_issue subject, <<-CRYSTAL, path: "spec/foo.cr"
 
-        # ^{} error: Spec filename should have `_spec` suffix: foo_spec.cr, not foo.cr
+        # ^{} error: Spec filename should have `_spec` suffix: `foo_spec.cr`, not `foo.cr`
         CRYSTAL
     end
 

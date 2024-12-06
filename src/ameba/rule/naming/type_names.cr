@@ -57,7 +57,7 @@ module Ameba::Rule::Naming
       description "Enforces type names in camelcase manner"
     end
 
-    MSG = "Type name should be camelcased: %s, but it was %s"
+    MSG = "Type name should be camelcased: `%s`, not `%s`"
 
     def test(source, node : Crystal::Alias | Crystal::ClassDef | Crystal::ModuleDef | Crystal::LibDef | Crystal::EnumDef)
       name = node.name.to_s

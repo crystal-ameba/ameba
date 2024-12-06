@@ -18,7 +18,7 @@ module Ameba::Rule::Style
       source = expect_issue subject, <<-CRYSTAL
         a = 1
         while true
-        # ^^^^^^^^ error: While statement using true literal as condition
+        # ^^^^^^^^ error: While statement using `true` literal as condition
           a += 1
           break if a > 5
         end

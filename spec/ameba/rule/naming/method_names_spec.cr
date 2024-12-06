@@ -8,7 +8,7 @@ module Ameba
       rule = Rule::Naming::MethodNames.new
       expect_issue rule, <<-CRYSTAL, name: name, file: file, line: line
         def %{name}; end
-          # ^{name} error: Method name should be underscore-cased: #{expected}, not %{name}
+          # ^{name} error: Method name should be underscore-cased: `#{expected}`, not `%{name}`
         CRYSTAL
     end
   end

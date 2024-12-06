@@ -31,7 +31,7 @@ module Ameba::Rule::Style
       description "Disallows while statements with a true literal as condition"
     end
 
-    MSG = "While statement using true literal as condition"
+    MSG = "While statement using `true` literal as condition"
 
     def test(source, node : Crystal::While)
       return unless node.cond.true_literal?

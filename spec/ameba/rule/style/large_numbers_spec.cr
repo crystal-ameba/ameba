@@ -10,7 +10,7 @@ module Ameba
 
       source = expect_issue rule, <<-CRYSTAL, number: number, file: file, line: line
         number = %{number}
-               # ^{number} error: Large numbers should be written with underscores: #{expected}
+               # ^{number} error: Large numbers should be written with underscores: `#{expected}`
         CRYSTAL
 
       expect_correction source, <<-CRYSTAL

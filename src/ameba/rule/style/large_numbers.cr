@@ -34,7 +34,7 @@ module Ameba::Rule::Style
       int_min_digits 6
     end
 
-    MSG = "Large numbers should be written with underscores: %s"
+    MSG = "Large numbers should be written with underscores: `%s`"
 
     def test(source)
       Tokenizer.new(source).run do |token|
