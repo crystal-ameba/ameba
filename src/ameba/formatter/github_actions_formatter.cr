@@ -15,7 +15,7 @@ module Ameba::Formatter
           output << command_name(issue.rule.severity)
           output << " "
           output << "file="
-          output << source.path
+          output << escape_property(source.path)
           if location = issue.location
             output << ",line="
             output << location.line_number
@@ -29,10 +29,9 @@ module Ameba::Formatter
             output << end_location.column_number
           end
           output << ",title="
-          output << issue.rule.name
+          output << escape_property(issue.rule.name)
           output << "::"
-          # https://github.com/actions/toolkit/issues/193
-          output << issue.message.gsub('\n', "%0A")
+          output << escape_data(issue.message)
           output << "\n"
         end
       end
@@ -44,6 +43,27 @@ module Ameba::Formatter
       in .warning?    then "warning"
       in .convention? then "notice"
       end
+    end
+
+    # See for details:
+    # - https://github.com/actions/toolkit/blob/74906bea83a0dbf6aaba2d00b732deb0c3aefd2d/packages/core/src/command.ts#L92-L97
+    # - https://github.com/actions/toolkit/issues/193
+    private def escape_data(string : String) : String
+      string
+        .gsub('%', "%25")
+        .gsub('\r', "%0D")
+        .gsub('\n', "%0A")
+    end
+
+    # See for details:
+    # - https://github.com/actions/toolkit/blob/74906bea83a0dbf6aaba2d00b732deb0c3aefd2d/packages/core/src/command.ts#L99-L106
+    private def escape_property(string : String) : String
+      string
+        .gsub('%', "%25")
+        .gsub('\r', "%0D")
+        .gsub('\n', "%0A")
+        .gsub(':', "%3A")
+        .gsub(',', "%2C")
     end
   end
 end
