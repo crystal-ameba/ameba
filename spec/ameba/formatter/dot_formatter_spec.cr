@@ -5,6 +5,10 @@ module Ameba::Formatter
     output = IO::Memory.new
     subject = DotFormatter.new output
 
+    before_each do
+      output.clear
+    end
+
     describe "#started" do
       it "writes started message" do
         subject.started [Source.new ""]
@@ -51,7 +55,6 @@ module Ameba::Formatter
         end
 
         it "writes affected code by default" do
-          output.clear
           s = Source.new(%(
             a = 22
             puts a
@@ -65,7 +68,6 @@ module Ameba::Formatter
         end
 
         it "writes severity" do
-          output.clear
           s = Source.new(%(
             a = 22
             puts a
@@ -78,7 +80,6 @@ module Ameba::Formatter
         end
 
         it "doesn't write affected code if it is disabled" do
-          output.clear
           s = Source.new(%(
             a = 22
             puts a
