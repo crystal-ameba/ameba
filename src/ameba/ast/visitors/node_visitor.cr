@@ -40,6 +40,7 @@ module Ameba::AST
       Var,
       When,
       While,
+      ProcLiteral,
     }
 
     @skip : Array(Crystal::ASTNode.class)?
