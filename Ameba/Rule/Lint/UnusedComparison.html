@@ -14,7 +14,7 @@
 <script type="text/javascript" src="../../../js/doc.js"></script>
 
   <meta name="repository-name" content="ameba">
-  <title>Ameba::Rule::Lint::RedundantStringCoercion - ameba master</title>
+  <title>Ameba::Rule::Lint::UnusedComparison - ameba master</title>
   <script type="text/javascript">
     CrystalDocs.base_path = "../../../";
   </script>
@@ -482,7 +482,7 @@
       
     </li>
   
-  <li class=" current" data-id="ameba/Ameba/Rule/Lint/RedundantStringCoercion" data-name="ameba::rule::lint::redundantstringcoercion">
+  <li class=" " data-id="ameba/Ameba/Rule/Lint/RedundantStringCoercion" data-name="ameba::rule::lint::redundantstringcoercion">
       <a href="../../../Ameba/Rule/Lint/RedundantStringCoercion.html">RedundantStringCoercion</a>
       
     </li>
@@ -577,7 +577,7 @@
       
     </li>
   
-  <li class=" " data-id="ameba/Ameba/Rule/Lint/UnusedComparison" data-name="ameba::rule::lint::unusedcomparison">
+  <li class=" current" data-id="ameba/Ameba/Rule/Lint/UnusedComparison" data-name="ameba::rule::lint::unusedcomparison">
       <a href="../../../Ameba/Rule/Lint/UnusedComparison.html">UnusedComparison</a>
       
     </li>
@@ -931,12 +931,12 @@
 <div class="main-content">
 <h1 class="type-name">
 
-  <span class="kind">class</span> Ameba::<wbr>Rule::<wbr>Lint::<wbr>RedundantStringCoercion
+  <span class="kind">class</span> Ameba::<wbr>Rule::<wbr>Lint::<wbr>UnusedComparison
 
 </h1>
 
 
-  <ul class="superclass-hierarchy"><li class="superclass"><a href="../../../Ameba/Rule/Lint/RedundantStringCoercion.html">Ameba::Rule::Lint::RedundantStringCoercion</a></li><li class="superclass"><a href="../../../Ameba/Rule/Base.html">Ameba::Rule::Base</a></li><li class="superclass">Reference</li><li class="superclass">Object</li></ul>
+  <ul class="superclass-hierarchy"><li class="superclass"><a href="../../../Ameba/Rule/Lint/UnusedComparison.html">Ameba::Rule::Lint::UnusedComparison</a></li><li class="superclass"><a href="../../../Ameba/Rule/Base.html">Ameba::Rule::Base</a></li><li class="superclass">Reference</li><li class="superclass">Object</li></ul>
 
 
 
@@ -950,14 +950,28 @@
     Overview
   </h2>
 
-  <p>A rule that disallows string conversion in string interpolation,
-which is redundant.</p>
+  <p>A rule that disallows unused comparisons.</p>
 <p>For example, this is considered invalid:</p>
-<pre><code class="language-crystal"><span class="s">&quot;Hello, </span><span class="i">#{</span>name.to_s<span class="i">}</span><span class="s">&quot;</span></code></pre>
-<p>And this is valid:</p>
-<pre><code class="language-crystal"><span class="s">&quot;Hello, </span><span class="i">#{</span>name<span class="i">}</span><span class="s">&quot;</span></code></pre>
+<pre><code class="language-crystal">a <span class="o">=</span> obj.method <span class="k">do</span> <span class="o">|</span>x<span class="o">|</span>
+  x <span class="o">==</span> <span class="n">1</span> <span class="c"># =&gt; Comparison operation has no effect</span>
+  puts x
+<span class="k">end</span>
+
+b <span class="o">=</span> <span class="k">if</span> a <span class="o">&gt;=</span> <span class="n">0</span>
+      c <span class="o">&lt;</span> <span class="n">1</span> <span class="c"># =&gt; Comparison operation has no effect</span>
+      <span class="s">&quot;hello world&quot;</span>
+    <span class="k">end</span></code></pre>
+<p>And these are considered valid:</p>
+<pre><code class="language-crystal">a <span class="o">=</span> obj.method <span class="k">do</span> <span class="o">|</span>x<span class="o">|</span>
+  x <span class="o">==</span> <span class="n">1</span>
+<span class="k">end</span>
+
+b <span class="o">=</span> <span class="k">if</span> a <span class="o">&gt;=</span> <span class="n">0</span> <span class="o">&amp;&amp;</span>
+       c <span class="o">&lt;</span> <span class="n">1</span>
+      <span class="s">&quot;hello world&quot;</span>
+    <span class="k">end</span></code></pre>
 <p>YAML configuration example:</p>
-<pre><code class="language-crystal"><span class="t">Lint</span><span class="o">/</span><span class="t">RedundantStringCoercion</span>
+<pre><code class="language-crystal"><span class="t">Lint</span><span class="o">/</span><span class="t">UnusedComparison</span>:
   <span class="t">Enabled</span>: <span class="n">true</span></code></pre>
 
 
@@ -973,8 +987,6 @@ which is redundant.</p>
     Included Modules
   </h2>
   <ul class="other-types-list">
-    
-      <li class="other-type"><a href="../../../Ameba/AST/Util.html">Ameba::AST::Util</a></li>
     
       <li class="other-type">YAML::Serializable</li>
     
@@ -1001,8 +1013,8 @@ which is redundant.</p>
   </h2>
   
     
-      <a href="https://github.com/crystal-ameba/ameba/blob/5b3c2cf/src/ameba/rule/lint/redundant_string_coercion.cr#L23" target="_blank">
-        ameba/rule/lint/redundant_string_coercion.cr
+      <a href="https://github.com/crystal-ameba/ameba/blob/5b3c2cf/src/ameba/rule/lint/unused_comparison.cr#L37" target="_blank">
+        ameba/rule/lint/unused_comparison.cr
       </a>
     
     <br/>
@@ -1022,8 +1034,13 @@ which is redundant.</p>
   
   <dl>
     
+      <dt class="entry-const" id="COMPARISON_OPERATORS">
+        <strong>COMPARISON_OPERATORS</strong> = <code>[<span class="s">&quot;==&quot;</span>, <span class="s">&quot;!=&quot;</span>, <span class="s">&quot;=~&quot;</span>, <span class="s">&quot;!~&quot;</span>, <span class="s">&quot;===&quot;</span>, <span class="s">&quot;&lt;&quot;</span>, <span class="s">&quot;&lt;=&quot;</span>, <span class="s">&quot;&gt;&quot;</span>, <span class="s">&quot;&gt;=&quot;</span>, <span class="s">&quot;&lt;=&gt;&quot;</span>] <span class="k">of</span> <span class="t">::</span><span class="t">String</span></code>
+      </dt>
+      
+    
       <dt class="entry-const" id="MSG">
-        <strong>MSG</strong> = <code><span class="s">&quot;Redundant use of `Object#to_s` in interpolation&quot;</span></code>
+        <strong>MSG</strong> = <code><span class="s">&quot;Comparison operation is unused&quot;</span></code>
       </dt>
       
     
@@ -1049,7 +1066,7 @@ which is redundant.</p>
       <li class="entry-summary">
         <a href="#new%28config%3Dnil%29-class-method" class="signature"><strong>.new</strong>(config = <span class="n">nil</span>)</a>
         
-          <div class="summary"><p>A rule that disallows string conversion in string interpolation, which is redundant.</p></div>
+          <div class="summary"><p>A rule that disallows unused comparisons.</p></div>
         
       </li>
     
@@ -1141,7 +1158,14 @@ which is redundant.</p>
       </li>
     
       <li class="entry-summary">
-        <a href="#test%28source%2Cnode%3ACrystal%3A%3AStringInterpolation%29-instance-method" class="signature"><strong>#test</strong>(source, node : Crystal::StringInterpolation)</a>
+        <a href="#test%28source%2Cnode%3ACrystal%3A%3ACall%2Clast_is_used%3ABool%29-instance-method" class="signature"><strong>#test</strong>(source, node : Crystal::Call, last_is_used : Bool)</a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#test%28source%3ASource%29-instance-method" class="signature"><strong>#test</strong>(source : Source)</a>
+        
+          <div class="summary"><p>This method is designed to test the source passed in.</p></div>
         
       </li>
     
@@ -1150,103 +1174,6 @@ which is redundant.</p>
 
 
 <div class="methods-inherited">
-  
-    
-
-  <h3>Instance methods inherited from module <code><a href="../../../Ameba/AST/Util.html">Ameba::AST::Util</a></code></h3>
-  
-  
-    <a href="../../../Ameba/AST/Util.html#abort%3F%28node%29-instance-method" class="tooltip">
-      <span>abort?(node)</span>
-    abort?</a>, 
-    
-  
-    <a href="../../../Ameba/AST/Util.html#control_exp_code%28node%3ACrystal%3A%3AControlExpression%2Ccode_lines%29-instance-method" class="tooltip">
-      <span>control_exp_code(node : Crystal::ControlExpression, code_lines)</span>
-    control_exp_code</a>, 
-    
-  
-    <a href="../../../Ameba/AST/Util.html#dynamic_literal%3F%28node%29%3ABool-instance-method" class="tooltip">
-      <span>dynamic_literal?(node) : Bool</span>
-    dynamic_literal?</a>, 
-    
-  
-    <a href="../../../Ameba/AST/Util.html#exit%3F%28node%29-instance-method" class="tooltip">
-      <span>exit?(node)</span>
-    exit?</a>, 
-    
-  
-    <a href="../../../Ameba/AST/Util.html#flow_command%3F%28node%2Cin_loop%29-instance-method" class="tooltip">
-      <span>flow_command?(node, in_loop)</span>
-    flow_command?</a>, 
-    
-  
-    <a href="../../../Ameba/AST/Util.html#flow_expression%3F%28node%2Cin_loop%3Dfalse%29-instance-method" class="tooltip">
-      <span>flow_expression?(node, in_loop = <span class="n">false</span>)</span>
-    flow_expression?</a>, 
-    
-  
-    <a href="../../../Ameba/AST/Util.html#literal%3F%28node%29%3ABool-instance-method" class="tooltip">
-      <span>literal?(node) : Bool</span>
-    literal?</a>, 
-    
-  
-    <a href="../../../Ameba/AST/Util.html#loop%3F%28node%29-instance-method" class="tooltip">
-      <span>loop?(node)</span>
-    loop?</a>, 
-    
-  
-    <a href="../../../Ameba/AST/Util.html#name_end_location%28node%29-instance-method" class="tooltip">
-      <span>name_end_location(node)</span>
-    name_end_location</a>, 
-    
-  
-    <a href="../../../Ameba/AST/Util.html#name_location%28node%29-instance-method" class="tooltip">
-      <span>name_location(node)</span>
-    name_location</a>, 
-    
-  
-    <a href="../../../Ameba/AST/Util.html#name_size%28node%29-instance-method" class="tooltip">
-      <span>name_size(node)</span>
-    name_size</a>, 
-    
-  
-    <a href="../../../Ameba/AST/Util.html#node_source%28node%2Ccode_lines%29-instance-method" class="tooltip">
-      <span>node_source(node, code_lines)</span>
-    node_source</a>, 
-    
-  
-    <a href="../../../Ameba/AST/Util.html#path_named%3F%28node%2Cname%29%3ABool-instance-method" class="tooltip">
-      <span>path_named?(node, name) : Bool</span>
-    path_named?</a>, 
-    
-  
-    <a href="../../../Ameba/AST/Util.html#raise%3F%28node%29-instance-method" class="tooltip">
-      <span>raise?(node)</span>
-    raise?</a>, 
-    
-  
-    <a href="../../../Ameba/AST/Util.html#source_between%28loc%2Cend_loc%2Ccode_lines%29%3AString%7CNil-instance-method" class="tooltip">
-      <span>source_between(loc, end_loc, code_lines) : String | Nil</span>
-    source_between</a>, 
-    
-  
-    <a href="../../../Ameba/AST/Util.html#static_literal%3F%28node%29%3ABool-instance-method" class="tooltip">
-      <span>static_literal?(node) : Bool</span>
-    static_literal?</a>
-    
-  
-
-
-    
-
-
-    
-
-
-    
-
-
   
     
 
@@ -1433,21 +1360,35 @@ which is redundant.</p>
       
         <div class="doc">
           
-          <p>A rule that disallows string conversion in string interpolation,
-which is redundant.</p>
+          <p>A rule that disallows unused comparisons.</p>
 <p>For example, this is considered invalid:</p>
-<pre><code class="language-crystal"><span class="s">&quot;Hello, </span><span class="i">#{</span>name.to_s<span class="i">}</span><span class="s">&quot;</span></code></pre>
-<p>And this is valid:</p>
-<pre><code class="language-crystal"><span class="s">&quot;Hello, </span><span class="i">#{</span>name<span class="i">}</span><span class="s">&quot;</span></code></pre>
+<pre><code class="language-crystal">a <span class="o">=</span> obj.method <span class="k">do</span> <span class="o">|</span>x<span class="o">|</span>
+  x <span class="o">==</span> <span class="n">1</span> <span class="c"># =&gt; Comparison operation has no effect</span>
+  puts x
+<span class="k">end</span>
+
+b <span class="o">=</span> <span class="k">if</span> a <span class="o">&gt;=</span> <span class="n">0</span>
+      c <span class="o">&lt;</span> <span class="n">1</span> <span class="c"># =&gt; Comparison operation has no effect</span>
+      <span class="s">&quot;hello world&quot;</span>
+    <span class="k">end</span></code></pre>
+<p>And these are considered valid:</p>
+<pre><code class="language-crystal">a <span class="o">=</span> obj.method <span class="k">do</span> <span class="o">|</span>x<span class="o">|</span>
+  x <span class="o">==</span> <span class="n">1</span>
+<span class="k">end</span>
+
+b <span class="o">=</span> <span class="k">if</span> a <span class="o">&gt;=</span> <span class="n">0</span> <span class="o">&amp;&amp;</span>
+       c <span class="o">&lt;</span> <span class="n">1</span>
+      <span class="s">&quot;hello world&quot;</span>
+    <span class="k">end</span></code></pre>
 <p>YAML configuration example:</p>
-<pre><code class="language-crystal"><span class="t">Lint</span><span class="o">/</span><span class="t">RedundantStringCoercion</span>
+<pre><code class="language-crystal"><span class="t">Lint</span><span class="o">/</span><span class="t">UnusedComparison</span>:
   <span class="t">Enabled</span>: <span class="n">true</span></code></pre>
         </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/5b3c2cf/src/ameba/rule/lint/redundant_string_coercion.cr#L23" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/5b3c2cf/src/ameba/rule/lint/unused_comparison.cr#L37" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1630,7 +1571,7 @@ which is redundant.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/5b3c2cf/src/ameba/rule/lint/redundant_string_coercion.cr#L26" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/5b3c2cf/src/ameba/rule/lint/unused_comparison.cr#L38" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1649,18 +1590,46 @@ which is redundant.</p>
       </div>
     </div>
   
-    <div class="entry-detail" id="test(source,node:Crystal::StringInterpolation)-instance-method">
+    <div class="entry-detail" id="test(source,node:Crystal::Call,last_is_used:Bool)-instance-method">
       <div class="signature">
         
-        def <strong>test</strong>(source, node : Crystal::StringInterpolation)
+        def <strong>test</strong>(source, node : Crystal::Call, last_is_used : Bool)
 
-        <a class="method-permalink" href="#test%28source%2Cnode%3ACrystal%3A%3AStringInterpolation%29-instance-method">#</a>
+        <a class="method-permalink" href="#test%28source%2Cnode%3ACrystal%3A%3ACall%2Clast_is_used%3ABool%29-instance-method">#</a>
       </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/5b3c2cf/src/ameba/rule/lint/redundant_string_coercion.cr#L33" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/5b3c2cf/src/ameba/rule/lint/unused_comparison.cr#L54" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="test(source:Source)-instance-method">
+      <div class="signature">
+        
+        def <strong>test</strong>(source : <a href="../../../Ameba/Source.html">Source</a>)
+
+        <a class="method-permalink" href="#test%28source%3ASource%29-instance-method">#</a>
+      </div>
+      
+        <div class="doc">
+          
+            <div class="doc-inherited">
+              Description copied from class <a href="../../../Ameba/Rule/Base.html">Ameba::Rule::Base</a>
+            </div>
+          
+          <p>This method is designed to test the source passed in. If source has issues
+that are tested by this rule, it should add an issue.</p>
+<p>By default it uses a node visitor to traverse all the nodes in the source.</p>
+<p><span class="flag purple">NOTE</span>  Must be overridden for other type of rules.</p>
+        </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/crystal-ameba/ameba/blob/5b3c2cf/src/ameba/rule/lint/unused_comparison.cr#L50" target="_blank">View source</a>]
         
       </div>
     </div>

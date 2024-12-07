@@ -14,7 +14,7 @@
 <script type="text/javascript" src="../../js/doc.js"></script>
 
   <meta name="repository-name" content="ameba">
-  <title>Ameba::AST::CountingVisitor - ameba master</title>
+  <title>Ameba::AST::ImplicitReturnVisitor - ameba master</title>
   <script type="text/javascript">
     CrystalDocs.base_path = "../../";
   </script>
@@ -92,7 +92,7 @@
       
     </li>
   
-  <li class=" current" data-id="ameba/Ameba/AST/CountingVisitor" data-name="ameba::ast::countingvisitor">
+  <li class=" " data-id="ameba/Ameba/AST/CountingVisitor" data-name="ameba::ast::countingvisitor">
       <a href="../../Ameba/AST/CountingVisitor.html">CountingVisitor</a>
       
     </li>
@@ -107,7 +107,7 @@
       
     </li>
   
-  <li class=" " data-id="ameba/Ameba/AST/ImplicitReturnVisitor" data-name="ameba::ast::implicitreturnvisitor">
+  <li class=" current" data-id="ameba/Ameba/AST/ImplicitReturnVisitor" data-name="ameba::ast::implicitreturnvisitor">
       <a href="../../Ameba/AST/ImplicitReturnVisitor.html">ImplicitReturnVisitor</a>
       
     </li>
@@ -931,26 +931,15 @@
 <div class="main-content">
 <h1 class="type-name">
 
-  <span class="kind">class</span> Ameba::<wbr>AST::<wbr>CountingVisitor
+  <span class="kind">class</span> Ameba::<wbr>AST::<wbr>ImplicitReturnVisitor
 
 </h1>
 
 
-  <ul class="superclass-hierarchy"><li class="superclass"><a href="../../Ameba/AST/CountingVisitor.html">Ameba::AST::CountingVisitor</a></li><li class="superclass">Crystal::Visitor</li><li class="superclass">Reference</li><li class="superclass">Object</li></ul>
+  <ul class="superclass-hierarchy"><li class="superclass"><a href="../../Ameba/AST/ImplicitReturnVisitor.html">Ameba::AST::ImplicitReturnVisitor</a></li><li class="superclass"><a href="../../Ameba/AST/BaseVisitor.html">Ameba::AST::BaseVisitor</a></li><li class="superclass">Crystal::Visitor</li><li class="superclass">Reference</li><li class="superclass">Object</li></ul>
 
 
 
-
-  <h2>
-    <a id="overview" class="anchor" href="#overview">
-  <svg class="octicon-link" aria-hidden="true">
-    <use href="#octicon-link"/>
-  </svg>
-</a>
-    Overview
-  </h2>
-
-  <p>AST Visitor that counts occurrences of certain keywords</p>
 
 
 
@@ -975,8 +964,8 @@
   </h2>
   
     
-      <a href="https://github.com/crystal-ameba/ameba/blob/5b3c2cf/src/ameba/ast/visitors/counting_visitor.cr#L3" target="_blank">
-        ameba/ast/visitors/counting_visitor.cr
+      <a href="https://github.com/crystal-ameba/ameba/blob/5b3c2cf/src/ameba/ast/visitors/implicit_return_visitor.cr#L2" target="_blank">
+        ameba/ast/visitors/implicit_return_visitor.cr
       </a>
     
     <br/>
@@ -984,45 +973,7 @@
 
 
 
-  
-    <h2>
-      <a id="constant-summary" class="anchor" href="#constant-summary">
-  <svg class="octicon-link" aria-hidden="true">
-    <use href="#octicon-link"/>
-  </svg>
-</a>
-      Constant Summary
-    </h2>
-  
-  <dl>
-    
-      <dt class="entry-const" id="DEFAULT_COMPLEXITY">
-        <strong>DEFAULT_COMPLEXITY</strong> = <code><span class="n">1</span></code>
-      </dt>
-      
-    
-  </dl>
 
-
-
-  <h2>
-    <a id="constructors" class="anchor" href="#constructors">
-  <svg class="octicon-link" aria-hidden="true">
-    <use href="#octicon-link"/>
-  </svg>
-</a>
-    Constructors
-  </h2>
-  <ul class="list-summary">
-    
-      <li class="entry-summary">
-        <a href="#new%28scope%3ACrystal%3A%3AASTNode%29-class-method" class="signature"><strong>.new</strong>(scope : Crystal::ASTNode)</a>
-        
-          <div class="summary"><p>Creates a new counting visitor</p></div>
-        
-      </li>
-    
-  </ul>
 
 
 
@@ -1041,19 +992,127 @@
   <ul class="list-summary">
     
       <li class="entry-summary">
-        <a href="#count-instance-method" class="signature"><strong>#count</strong></a>
-        
-          <div class="summary"><p>Returns the number of keywords that were found in the node</p></div>
+        <a href="#visit%28node%3ACrystal%3A%3AExpressions%29%3ABool-instance-method" class="signature"><strong>#visit</strong>(node : Crystal::Expressions) : Bool</a>
         
       </li>
     
       <li class="entry-summary">
-        <a href="#macro_condition%3F%3ABool-instance-method" class="signature"><strong>#macro_condition?</strong> : Bool</a>
+        <a href="#visit%28node%3ACrystal%3A%3ACall%29%3ABool-instance-method" class="signature"><strong>#visit</strong>(node : Crystal::Call) : Bool</a>
         
       </li>
     
       <li class="entry-summary">
-        <a href="#visit%28node%3ACrystal%3A%3AMacroIf%7CCrystal%3A%3AMacroFor%29-instance-method" class="signature"><strong>#visit</strong>(node : Crystal::MacroIf | Crystal::MacroFor)</a>
+        <a href="#visit%28node%3ACrystal%3A%3AArg%29%3ABool-instance-method" class="signature"><strong>#visit</strong>(node : Crystal::Arg) : Bool</a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#visit%28node%3ACrystal%3A%3AEnumDef%29%3ABool-instance-method" class="signature"><strong>#visit</strong>(node : Crystal::EnumDef) : Bool</a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#visit%28node%3ACrystal%3A%3AAssign%7CCrystal%3A%3AOpAssign%29%3ABool-instance-method" class="signature"><strong>#visit</strong>(node : Crystal::Assign | Crystal::OpAssign) : Bool</a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#visit%28node%3ACrystal%3A%3AMultiAssign%29%3ABool-instance-method" class="signature"><strong>#visit</strong>(node : Crystal::MultiAssign) : Bool</a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#visit%28node%3ACrystal%3A%3AIf%7CCrystal%3A%3AUnless%29%3ABool-instance-method" class="signature"><strong>#visit</strong>(node : Crystal::If | Crystal::Unless) : Bool</a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#visit%28node%3ACrystal%3A%3AWhile%7CCrystal%3A%3AUntil%29%3ABool-instance-method" class="signature"><strong>#visit</strong>(node : Crystal::While | Crystal::Until) : Bool</a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#visit%28node%3ACrystal%3A%3ADef%29%3ABool-instance-method" class="signature"><strong>#visit</strong>(node : Crystal::Def) : Bool</a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#visit%28node%3ACrystal%3A%3AAnnotation%29%3ABool-instance-method" class="signature"><strong>#visit</strong>(node : Crystal::Annotation) : Bool</a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#visit%28node%3ACrystal%3A%3ATypeDeclaration%29%3ABool-instance-method" class="signature"><strong>#visit</strong>(node : Crystal::TypeDeclaration) : Bool</a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#visit%28node%3ACrystal%3A%3AMacro%7CCrystal%3A%3AMacroIf%7CCrystal%3A%3AMacroFor%29%3ABool-instance-method" class="signature"><strong>#visit</strong>(node : Crystal::Macro | Crystal::MacroIf | Crystal::MacroFor) : Bool</a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#visit%28node%3ACrystal%3A%3AUninitializedVar%29%3ABool-instance-method" class="signature"><strong>#visit</strong>(node : Crystal::UninitializedVar) : Bool</a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#visit%28node%3ACrystal%3A%3AArrayLiteral%7CCrystal%3A%3ATupleLiteral%29%3ABool-instance-method" class="signature"><strong>#visit</strong>(node : Crystal::ArrayLiteral | Crystal::TupleLiteral) : Bool</a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#visit%28node%3ACrystal%3A%3AStringInterpolation%29%3ABool-instance-method" class="signature"><strong>#visit</strong>(node : Crystal::StringInterpolation) : Bool</a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#visit%28node%3ACrystal%3A%3AHashLiteral%7CCrystal%3A%3ANamedTupleLiteral%29%3ABool-instance-method" class="signature"><strong>#visit</strong>(node : Crystal::HashLiteral | Crystal::NamedTupleLiteral) : Bool</a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#visit%28node%3ACrystal%3A%3ACase%29%3ABool-instance-method" class="signature"><strong>#visit</strong>(node : Crystal::Case) : Bool</a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#visit%28node%3ACrystal%3A%3ASelect%29%3ABool-instance-method" class="signature"><strong>#visit</strong>(node : Crystal::Select) : Bool</a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#visit%28node%3ACrystal%3A%3AWhen%29%3ABool-instance-method" class="signature"><strong>#visit</strong>(node : Crystal::When) : Bool</a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#visit%28node%3ACrystal%3A%3ARescue%29%3ABool-instance-method" class="signature"><strong>#visit</strong>(node : Crystal::Rescue) : Bool</a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#visit%28node%3ACrystal%3A%3AExceptionHandler%29%3ABool-instance-method" class="signature"><strong>#visit</strong>(node : Crystal::ExceptionHandler) : Bool</a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#visit%28node%3ACrystal%3A%3AControlExpression%29%3ABool-instance-method" class="signature"><strong>#visit</strong>(node : Crystal::ControlExpression) : Bool</a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#visit%28node%3ACrystal%3A%3ARangeLiteral%29%3ABool-instance-method" class="signature"><strong>#visit</strong>(node : Crystal::RangeLiteral) : Bool</a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#visit%28node%3ACrystal%3A%3ARegexLiteral%29%3ABool-instance-method" class="signature"><strong>#visit</strong>(node : Crystal::RegexLiteral) : Bool</a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#visit%28node%3ACrystal%3A%3ABoolLiteral%7CCrystal%3A%3ACharLiteral%7CCrystal%3A%3ANumberLiteral%7CCrystal%3A%3AStringLiteral%7CCrystal%3A%3ASymbolLiteral%7CCrystal%3A%3AProcLiteral%29%3ABool-instance-method" class="signature"><strong>#visit</strong>(node : Crystal::BoolLiteral | Crystal::CharLiteral | Crystal::NumberLiteral | Crystal::StringLiteral | Crystal::SymbolLiteral | Crystal::ProcLiteral) : Bool</a>
         
       </li>
     
@@ -1062,6 +1121,37 @@
 
 
 <div class="methods-inherited">
+  
+    
+
+  <h3>Instance methods inherited from class <code><a href="../../Ameba/AST/BaseVisitor.html">Ameba::AST::BaseVisitor</a></code></h3>
+  
+  
+    <a href="../../Ameba/AST/BaseVisitor.html#visit%28node%3ACrystal%3A%3AASTNode%29-instance-method" class="tooltip">
+      <span>visit(node : Crystal::ASTNode)</span>
+    visit</a>
+    
+  
+
+
+    
+
+  <h3>Constructor methods inherited from class <code><a href="../../Ameba/AST/BaseVisitor.html">Ameba::AST::BaseVisitor</a></code></h3>
+  
+  
+    <a href="../../Ameba/AST/BaseVisitor.html#new%28rule%3AAmeba%3A%3ARule%3A%3ABase%2Csource%3AAmeba%3A%3ASource%29-class-method" class="tooltip">
+      <span>new(rule : Ameba::Rule::Base, source : Ameba::Source)</span>
+    new</a>
+    
+  
+
+
+    
+
+
+    
+
+
   
     
 
@@ -1105,37 +1195,6 @@
 </div>
 
 
-  <h2>
-    <a id="constructor-detail" class="anchor" href="#constructor-detail">
-  <svg class="octicon-link" aria-hidden="true">
-    <use href="#octicon-link"/>
-  </svg>
-</a>
-    Constructor Detail
-  </h2>
-  
-    <div class="entry-detail" id="new(scope:Crystal::ASTNode)-class-method">
-      <div class="signature">
-        
-        def self.<strong>new</strong>(scope : Crystal::ASTNode)
-
-        <a class="method-permalink" href="#new%28scope%3ACrystal%3A%3AASTNode%29-class-method">#</a>
-      </div>
-      
-        <div class="doc">
-          
-          <p>Creates a new counting visitor</p>
-        </div>
-      
-      <br/>
-      <div>
-        
-          [<a href="https://github.com/crystal-ameba/ameba/blob/5b3c2cf/src/ameba/ast/visitors/counting_visitor.cr#L9" target="_blank">View source</a>]
-        
-      </div>
-    </div>
-  
-
 
 
 
@@ -1151,55 +1210,402 @@
     Instance Method Detail
   </h2>
   
-    <div class="entry-detail" id="count-instance-method">
+    <div class="entry-detail" id="visit(node:Crystal::Expressions):Bool-instance-method">
       <div class="signature">
         
-        def <strong>count</strong>
+        def <strong>visit</strong>(node : Crystal::Expressions) : Bool
 
-        <a class="method-permalink" href="#count-instance-method">#</a>
+        <a class="method-permalink" href="#visit%28node%3ACrystal%3A%3AExpressions%29%3ABool-instance-method">#</a>
       </div>
-      
-        <div class="doc">
-          
-          <p>Returns the number of keywords that were found in the node</p>
-        </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/5b3c2cf/src/ameba/ast/visitors/counting_visitor.cr#L19" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/5b3c2cf/src/ameba/ast/visitors/implicit_return_visitor.cr#L6" target="_blank">View source</a>]
         
       </div>
     </div>
   
-    <div class="entry-detail" id="macro_condition?:Bool-instance-method">
+    <div class="entry-detail" id="visit(node:Crystal::Call):Bool-instance-method">
       <div class="signature">
         
-        def <strong>macro_condition?</strong> : Bool
+        def <strong>visit</strong>(node : Crystal::Call) : Bool
 
-        <a class="method-permalink" href="#macro_condition%3F%3ABool-instance-method">#</a>
+        <a class="method-permalink" href="#visit%28node%3ACrystal%3A%3ACall%29%3ABool-instance-method">#</a>
       </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/5b3c2cf/src/ameba/ast/visitors/counting_visitor.cr#L6" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/5b3c2cf/src/ameba/ast/visitors/implicit_return_visitor.cr#L27" target="_blank">View source</a>]
         
       </div>
     </div>
   
-    <div class="entry-detail" id="visit(node:Crystal::MacroIf|Crystal::MacroFor)-instance-method">
+    <div class="entry-detail" id="visit(node:Crystal::Arg):Bool-instance-method">
       <div class="signature">
         
-        def <strong>visit</strong>(node : Crystal::MacroIf | Crystal::MacroFor)
+        def <strong>visit</strong>(node : Crystal::Arg) : Bool
 
-        <a class="method-permalink" href="#visit%28node%3ACrystal%3A%3AMacroIf%7CCrystal%3A%3AMacroFor%29-instance-method">#</a>
+        <a class="method-permalink" href="#visit%28node%3ACrystal%3A%3AArg%29%3ABool-instance-method">#</a>
       </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/5b3c2cf/src/ameba/ast/visitors/counting_visitor.cr#L45" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/5b3c2cf/src/ameba/ast/visitors/implicit_return_visitor.cr#L46" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="visit(node:Crystal::EnumDef):Bool-instance-method">
+      <div class="signature">
+        
+        def <strong>visit</strong>(node : Crystal::EnumDef) : Bool
+
+        <a class="method-permalink" href="#visit%28node%3ACrystal%3A%3AEnumDef%29%3ABool-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/crystal-ameba/ameba/blob/5b3c2cf/src/ameba/ast/visitors/implicit_return_visitor.cr#L54" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="visit(node:Crystal::Assign|Crystal::OpAssign):Bool-instance-method">
+      <div class="signature">
+        
+        def <strong>visit</strong>(node : Crystal::Assign | Crystal::OpAssign) : Bool
+
+        <a class="method-permalink" href="#visit%28node%3ACrystal%3A%3AAssign%7CCrystal%3A%3AOpAssign%29%3ABool-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/crystal-ameba/ameba/blob/5b3c2cf/src/ameba/ast/visitors/implicit_return_visitor.cr#L62" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="visit(node:Crystal::MultiAssign):Bool-instance-method">
+      <div class="signature">
+        
+        def <strong>visit</strong>(node : Crystal::MultiAssign) : Bool
+
+        <a class="method-permalink" href="#visit%28node%3ACrystal%3A%3AMultiAssign%29%3ABool-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/crystal-ameba/ameba/blob/5b3c2cf/src/ameba/ast/visitors/implicit_return_visitor.cr#L70" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="visit(node:Crystal::If|Crystal::Unless):Bool-instance-method">
+      <div class="signature">
+        
+        def <strong>visit</strong>(node : Crystal::If | Crystal::Unless) : Bool
+
+        <a class="method-permalink" href="#visit%28node%3ACrystal%3A%3AIf%7CCrystal%3A%3AUnless%29%3ABool-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/crystal-ameba/ameba/blob/5b3c2cf/src/ameba/ast/visitors/implicit_return_visitor.cr#L79" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="visit(node:Crystal::While|Crystal::Until):Bool-instance-method">
+      <div class="signature">
+        
+        def <strong>visit</strong>(node : Crystal::While | Crystal::Until) : Bool
+
+        <a class="method-permalink" href="#visit%28node%3ACrystal%3A%3AWhile%7CCrystal%3A%3AUntil%29%3ABool-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/crystal-ameba/ameba/blob/5b3c2cf/src/ameba/ast/visitors/implicit_return_visitor.cr#L89" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="visit(node:Crystal::Def):Bool-instance-method">
+      <div class="signature">
+        
+        def <strong>visit</strong>(node : Crystal::Def) : Bool
+
+        <a class="method-permalink" href="#visit%28node%3ACrystal%3A%3ADef%29%3ABool-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/crystal-ameba/ameba/blob/5b3c2cf/src/ameba/ast/visitors/implicit_return_visitor.cr#L98" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="visit(node:Crystal::Annotation):Bool-instance-method">
+      <div class="signature">
+        
+        def <strong>visit</strong>(node : Crystal::Annotation) : Bool
+
+        <a class="method-permalink" href="#visit%28node%3ACrystal%3A%3AAnnotation%29%3ABool-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/crystal-ameba/ameba/blob/5b3c2cf/src/ameba/ast/visitors/implicit_return_visitor.cr#L122" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="visit(node:Crystal::TypeDeclaration):Bool-instance-method">
+      <div class="signature">
+        
+        def <strong>visit</strong>(node : Crystal::TypeDeclaration) : Bool
+
+        <a class="method-permalink" href="#visit%28node%3ACrystal%3A%3ATypeDeclaration%29%3ABool-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/crystal-ameba/ameba/blob/5b3c2cf/src/ameba/ast/visitors/implicit_return_visitor.cr#L133" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="visit(node:Crystal::Macro|Crystal::MacroIf|Crystal::MacroFor):Bool-instance-method">
+      <div class="signature">
+        
+        def <strong>visit</strong>(node : Crystal::Macro | Crystal::MacroIf | Crystal::MacroFor) : Bool
+
+        <a class="method-permalink" href="#visit%28node%3ACrystal%3A%3AMacro%7CCrystal%3A%3AMacroIf%7CCrystal%3A%3AMacroFor%29%3ABool-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/crystal-ameba/ameba/blob/5b3c2cf/src/ameba/ast/visitors/implicit_return_visitor.cr#L139" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="visit(node:Crystal::UninitializedVar):Bool-instance-method">
+      <div class="signature">
+        
+        def <strong>visit</strong>(node : Crystal::UninitializedVar) : Bool
+
+        <a class="method-permalink" href="#visit%28node%3ACrystal%3A%3AUninitializedVar%29%3ABool-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/crystal-ameba/ameba/blob/5b3c2cf/src/ameba/ast/visitors/implicit_return_visitor.cr#L143" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="visit(node:Crystal::ArrayLiteral|Crystal::TupleLiteral):Bool-instance-method">
+      <div class="signature">
+        
+        def <strong>visit</strong>(node : Crystal::ArrayLiteral | Crystal::TupleLiteral) : Bool
+
+        <a class="method-permalink" href="#visit%28node%3ACrystal%3A%3AArrayLiteral%7CCrystal%3A%3ATupleLiteral%29%3ABool-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/crystal-ameba/ameba/blob/5b3c2cf/src/ameba/ast/visitors/implicit_return_visitor.cr#L147" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="visit(node:Crystal::StringInterpolation):Bool-instance-method">
+      <div class="signature">
+        
+        def <strong>visit</strong>(node : Crystal::StringInterpolation) : Bool
+
+        <a class="method-permalink" href="#visit%28node%3ACrystal%3A%3AStringInterpolation%29%3ABool-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/crystal-ameba/ameba/blob/5b3c2cf/src/ameba/ast/visitors/implicit_return_visitor.cr#L155" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="visit(node:Crystal::HashLiteral|Crystal::NamedTupleLiteral):Bool-instance-method">
+      <div class="signature">
+        
+        def <strong>visit</strong>(node : Crystal::HashLiteral | Crystal::NamedTupleLiteral) : Bool
+
+        <a class="method-permalink" href="#visit%28node%3ACrystal%3A%3AHashLiteral%7CCrystal%3A%3ANamedTupleLiteral%29%3ABool-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/crystal-ameba/ameba/blob/5b3c2cf/src/ameba/ast/visitors/implicit_return_visitor.cr#L165" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="visit(node:Crystal::Case):Bool-instance-method">
+      <div class="signature">
+        
+        def <strong>visit</strong>(node : Crystal::Case) : Bool
+
+        <a class="method-permalink" href="#visit%28node%3ACrystal%3A%3ACase%29%3ABool-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/crystal-ameba/ameba/blob/5b3c2cf/src/ameba/ast/visitors/implicit_return_visitor.cr#L173" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="visit(node:Crystal::Select):Bool-instance-method">
+      <div class="signature">
+        
+        def <strong>visit</strong>(node : Crystal::Select) : Bool
+
+        <a class="method-permalink" href="#visit%28node%3ACrystal%3A%3ASelect%29%3ABool-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/crystal-ameba/ameba/blob/5b3c2cf/src/ameba/ast/visitors/implicit_return_visitor.cr#L183" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="visit(node:Crystal::When):Bool-instance-method">
+      <div class="signature">
+        
+        def <strong>visit</strong>(node : Crystal::When) : Bool
+
+        <a class="method-permalink" href="#visit%28node%3ACrystal%3A%3AWhen%29%3ABool-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/crystal-ameba/ameba/blob/5b3c2cf/src/ameba/ast/visitors/implicit_return_visitor.cr#L192" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="visit(node:Crystal::Rescue):Bool-instance-method">
+      <div class="signature">
+        
+        def <strong>visit</strong>(node : Crystal::Rescue) : Bool
+
+        <a class="method-permalink" href="#visit%28node%3ACrystal%3A%3ARescue%29%3ABool-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/crystal-ameba/ameba/blob/5b3c2cf/src/ameba/ast/visitors/implicit_return_visitor.cr#L201" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="visit(node:Crystal::ExceptionHandler):Bool-instance-method">
+      <div class="signature">
+        
+        def <strong>visit</strong>(node : Crystal::ExceptionHandler) : Bool
+
+        <a class="method-permalink" href="#visit%28node%3ACrystal%3A%3AExceptionHandler%29%3ABool-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/crystal-ameba/ameba/blob/5b3c2cf/src/ameba/ast/visitors/implicit_return_visitor.cr#L209" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="visit(node:Crystal::ControlExpression):Bool-instance-method">
+      <div class="signature">
+        
+        def <strong>visit</strong>(node : Crystal::ControlExpression) : Bool
+
+        <a class="method-permalink" href="#visit%28node%3ACrystal%3A%3AControlExpression%29%3ABool-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/crystal-ameba/ameba/blob/5b3c2cf/src/ameba/ast/visitors/implicit_return_visitor.cr#L220" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="visit(node:Crystal::RangeLiteral):Bool-instance-method">
+      <div class="signature">
+        
+        def <strong>visit</strong>(node : Crystal::RangeLiteral) : Bool
+
+        <a class="method-permalink" href="#visit%28node%3ACrystal%3A%3ARangeLiteral%29%3ABool-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/crystal-ameba/ameba/blob/5b3c2cf/src/ameba/ast/visitors/implicit_return_visitor.cr#L228" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="visit(node:Crystal::RegexLiteral):Bool-instance-method">
+      <div class="signature">
+        
+        def <strong>visit</strong>(node : Crystal::RegexLiteral) : Bool
+
+        <a class="method-permalink" href="#visit%28node%3ACrystal%3A%3ARegexLiteral%29%3ABool-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/crystal-ameba/ameba/blob/5b3c2cf/src/ameba/ast/visitors/implicit_return_visitor.cr#L242" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="visit(node:Crystal::BoolLiteral|Crystal::CharLiteral|Crystal::NumberLiteral|Crystal::StringLiteral|Crystal::SymbolLiteral|Crystal::ProcLiteral):Bool-instance-method">
+      <div class="signature">
+        
+        def <strong>visit</strong>(node : Crystal::BoolLiteral | Crystal::CharLiteral | Crystal::NumberLiteral | Crystal::StringLiteral | Crystal::SymbolLiteral | Crystal::ProcLiteral) : Bool
+
+        <a class="method-permalink" href="#visit%28node%3ACrystal%3A%3ABoolLiteral%7CCrystal%3A%3ACharLiteral%7CCrystal%3A%3ANumberLiteral%7CCrystal%3A%3AStringLiteral%7CCrystal%3A%3ASymbolLiteral%7CCrystal%3A%3AProcLiteral%29%3ABool-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/crystal-ameba/ameba/blob/5b3c2cf/src/ameba/ast/visitors/implicit_return_visitor.cr#L252" target="_blank">View source</a>]
         
       </div>
     </div>
