@@ -35,11 +35,11 @@ module Ameba::Rule::Naming
     it "fails if accessor method is defined with receiver in top-level scope" do
       expect_issue subject, <<-CRYSTAL
         def Foo.get_user
-              # ^^^^^^^^ error: Favour method name 'user' over 'get_user'
+              # ^^^^^^^^ error: Favour method name `user` over `get_user`
         end
 
         def Foo.set_user(user)
-              # ^^^^^^^^ error: Favour method name 'user=' over 'set_user'
+              # ^^^^^^^^ error: Favour method name `user=` over `set_user`
         end
         CRYSTAL
     end
@@ -48,19 +48,19 @@ module Ameba::Rule::Naming
       expect_issue subject, <<-CRYSTAL
         class Foo
           def self.get_instance
-                 # ^^^^^^^^^^^^ error: Favour method name 'instance' over 'get_instance'
+                 # ^^^^^^^^^^^^ error: Favour method name `instance` over `get_instance`
           end
 
           def self.set_instance(value)
-                 # ^^^^^^^^^^^^ error: Favour method name 'instance=' over 'set_instance'
+                 # ^^^^^^^^^^^^ error: Favour method name `instance=` over `set_instance`
           end
 
           def get_user
-            # ^^^^^^^^ error: Favour method name 'user' over 'get_user'
+            # ^^^^^^^^ error: Favour method name `user` over `get_user`
           end
 
           def set_user(user)
-            # ^^^^^^^^ error: Favour method name 'user=' over 'set_user'
+            # ^^^^^^^^ error: Favour method name `user=` over `set_user`
           end
         end
         CRYSTAL

@@ -39,7 +39,7 @@ module Ameba::Rule::Lint
       description "Disallows rescued exception that get shadowed"
     end
 
-    MSG = "Shadowed exception found: %s"
+    MSG = "Shadowed exception found: `%s`"
 
     def test(source, node : Crystal::ExceptionHandler)
       rescues = node.rescues

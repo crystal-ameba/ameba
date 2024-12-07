@@ -12,7 +12,7 @@ module Ameba::Rule::Naming
     it "fails if filename is wrong" do
       expect_issue subject, <<-CRYSTAL, path: "src/fooBar.cr"
 
-        # ^{} error: Filename should be underscore-cased: foo_bar.cr, not fooBar.cr
+        # ^{} error: Filename should be underscore-cased: `foo_bar.cr`, not `fooBar.cr`
         CRYSTAL
     end
   end

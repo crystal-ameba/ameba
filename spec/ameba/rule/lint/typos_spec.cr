@@ -16,11 +16,11 @@ module Ameba::Rule::Lint
 
       source = expect_issue subject, <<-CRYSTAL
         # method with no arugments
-                       # ^^^^^^^^^ error: Typo found: arugments -> arguments
+                       # ^^^^^^^^^ error: Typo found: `arugments` -> `arguments`
         def tpos
-          # ^^^^ error: Typo found: tpos -> typos
+          # ^^^^ error: Typo found: `tpos` -> `typos`
           :otput
-         # ^^^^^ error: Typo found: otput -> output
+         # ^^^^^ error: Typo found: `otput` -> `output`
         end
         CRYSTAL
 

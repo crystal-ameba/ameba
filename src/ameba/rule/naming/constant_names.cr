@@ -27,7 +27,7 @@ module Ameba::Rule::Naming
       description "Enforces constant names to be in screaming case"
     end
 
-    MSG = "Constant name should be screaming-cased: %s, not %s"
+    MSG = "Constant name should be screaming-cased: `%s`, not `%s`"
 
     def test(source, node : Crystal::Assign)
       return unless (target = node.target).is_a?(Crystal::Path)

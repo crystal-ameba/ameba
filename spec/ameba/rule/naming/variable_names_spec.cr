@@ -8,7 +8,7 @@ module Ameba
       rule = Rule::Naming::VariableNames.new
       expect_issue rule, <<-CRYSTAL, name: name, file: file, line: line
           %{name} = #{value}
-        # ^{name} error: Var name should be underscore-cased: #{expected}, not %{name}
+        # ^{name} error: Variable name should be underscore-cased: `#{expected}`, not `%{name}`
         CRYSTAL
     end
   end
@@ -37,7 +37,7 @@ module Ameba
       expect_issue subject, <<-CRYSTAL
         class Greeting
           def initialize(@badNamed = nil)
-                       # ^ error: Var name should be underscore-cased: @bad_named, not @badNamed
+                       # ^ error: Variable name should be underscore-cased: `@bad_named`, not `@badNamed`
           end
         end
         CRYSTAL
@@ -47,8 +47,8 @@ module Ameba
       expect_issue subject, <<-CRYSTAL
         class Location
           def at(@startLocation = nil, @endLocation = nil)
-               # ^ error: Var name should be underscore-cased: @start_location, not @startLocation
-                                     # ^ error: Var name should be underscore-cased: @end_location, not @endLocation
+               # ^ error: Variable name should be underscore-cased: `@start_location`, not `@startLocation`
+                                     # ^ error: Variable name should be underscore-cased: `@end_location`, not `@endLocation`
           end
         end
         CRYSTAL
@@ -58,7 +58,7 @@ module Ameba
       expect_issue subject, <<-CRYSTAL
         class Greeting
           @@defaultGreeting = "Hello world"
-        # ^^^^^^^^^^^^^^^^^ error: Var name should be underscore-cased: @@default_greeting, not @@defaultGreeting
+        # ^^^^^^^^^^^^^^^^^ error: Variable name should be underscore-cased: `@@default_greeting`, not `@@defaultGreeting`
         end
         CRYSTAL
     end

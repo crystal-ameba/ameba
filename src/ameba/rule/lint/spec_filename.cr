@@ -19,7 +19,7 @@ module Ameba::Rule::Lint
       ignored_filenames %w[spec_helper]
     end
 
-    MSG = "Spec filename should have `_spec` suffix: %s.cr, not %s.cr"
+    MSG = "Spec filename should have `_spec` suffix: `%s.cr`, not `%s.cr`"
 
     private LOCATION = {1, 1}
 
