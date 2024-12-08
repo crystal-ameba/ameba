@@ -361,6 +361,135 @@ class Ameba::Config
           SemanticVersion.parse(version)
         end
       end
+
+      def self.to_json_schema(bld : JSON::Builder)
+        bld.string(rule_name)
+        bld.object do
+          bld.field("type", "object")
+          bld.field("title", rule_name)
+          {% if properties["description".id] %}
+          bld.field("description", {{ properties["description".id][:default] }} + "\nhttps://crystal-ameba.github.io/ameba/Ameba/Rule/#{rule_name}.html")
+          {% else %}
+          bld.field("description", "https://crystal-ameba.github.io/ameba/Ameba/Rule/#{rule_name}.html")
+          {% end %}
+
+          bld.string("properties")
+          bld.object do
+            {% for prop_name in properties %}
+              {% prop = properties[prop_name] %}
+              {% default_set = false %}
+
+              bld.string({{ prop[:key] }})
+              bld.object do
+                {% if prop[:type] == String %}
+                  bld.field("type", "string")
+                {% elsif prop[:type] == Int32 %}
+                  bld.field("type", "number")
+                {% elsif prop[:type] == Bool %}
+                  bld.field("type", "boolean")
+                {% elsif prop[:type] == Nil %}
+                  bld.field("type", "null")
+                {% elsif prop[:type].stringify == "::Union(String, ::Nil)" %}
+                  bld.string("type")
+                  bld.array do
+                    bld.string("string")
+                    bld.string("null")
+                  end
+                {% elsif prop[:type].stringify == "::Union(Int32, ::Nil)" %}
+                  bld.string("type")
+                  bld.array do
+                    bld.string("number")
+                    bld.string("null")
+                  end
+                {% elsif prop[:type] == Ameba::Severity %}
+                  bld.field("type", "string")
+                  bld.string("enum")
+                  bld.array do
+                    bld.string("Error")
+                    bld.string("Warning")
+                    bld.string("Convention")
+                  end
+                  bld.field("default", {{ prop[:default].capitalize }})
+                  {% default_set = true %}
+                {% elsif prop[:default].is_a?(ArrayLiteral) %}
+                  bld.field("type", "array")
+
+                  bld.string("items")
+                  bld.object do
+                    bld.field("type", "string")
+                  end
+                {% elsif prop[:default].is_a?(HashLiteral) %}
+                  bld.field("type", "object")
+
+                  bld.string("properties")
+                  bld.object do
+                    {% for pr in prop[:default] %}
+                    bld.string({{ pr }})
+                    bld.object do
+                      bld.field("type", "string")
+                      bld.field("default", {{ prop[:default][pr] }})
+                    end
+                    {% end %}
+                  end
+                  {% default_set = true %}
+                {% else %}
+                  {% raise "Unhandled schema type for #{prop}" %}
+                {% end %}
+
+                {% if !prop[:default].is_a?(Ameba::Severity) && !default_set %}
+                  bld.field("default", {{ prop[:default] }})
+                {% end %}
+              end
+            {% end %}
+
+            {% unless properties["enabled".id] %}
+              bld.string("Enabled")
+              bld.object do
+                bld.field("type", "boolean")
+                bld.field("default", true)
+              end
+            {% end %}
+
+            {% unless properties["since_version".id] %}
+              bld.string("SinceVersion")
+              bld.object do
+                bld.field("type", "string")
+                bld.field("default", "")
+              end
+            {% end %}
+
+            {% unless properties["severity".id] %}
+              bld.string("Severity")
+              bld.object do
+                bld.field("type", "string")
+                bld.field("default", default_severity.to_s)
+                bld.string("enum")
+                bld.array do
+                  bld.string("Error")
+                  bld.string("Warning")
+                  bld.string("Convention")
+                end
+              end
+            {% end %}
+
+            {% unless properties["excluded".id] %}
+              bld.string("Excluded")
+              bld.object do
+                bld.string("type")
+                bld.array do
+                  bld.string("array")
+                  bld.string("string")
+                end
+
+                bld.string("items")
+                bld.object do
+                  bld.field("type", "string")
+                end
+              end
+            {% end %}
+          end
+        end
+      end
     end
 
     macro included
