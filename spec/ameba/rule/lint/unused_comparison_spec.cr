@@ -30,6 +30,21 @@ module Ameba::Rule::Lint
         CRYSTAL
     end
 
+    it "passes for comparisons inside '||' and '&&' where the other arg is a call" do
+      expect_no_issues subject, <<-CRYSTAL
+          IO.copy(in_var, out_var, len) == len || raise IO::EOFError.new
+        CRYSTAL
+    end
+
+    it "passes if a regex literal is part of a === or =~ comparison" do
+      expect_no_issues subject, <<-CRYSTAL
+        /f(o+)(bar?)/ === "fooba"
+        puts $~
+        "foobar" =~ /(o+)ba(r?)/
+        puts $1
+      CRYSTAL
+    end
+
     it "fails for all comparison operators" do
       expect_issue subject, <<-CRYSTAL
           x == 2
