@@ -52,6 +52,18 @@ module Ameba::Rule::Lint
         CRYSTAL
     end
 
+    it "passes if a literal is the object of a call with args" do
+      expect_no_issues subject, <<-CRYSTAL
+          { error: "abc" }.to_json(context.response)
+        CRYSTAL
+    end
+
+    it "passes for a literal in a generic type" do
+      expect_no_issues subject, <<-CRYSTAL
+          StaticArray(1, 5)
+        CRYSTAL
+    end
+
     it "fails if literals are top-level" do
       expect_issue subject, <<-CRYSTAL
         1234

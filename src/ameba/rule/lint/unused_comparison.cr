@@ -53,6 +53,9 @@ module Ameba::Rule::Lint
 
     def test(source, node : Crystal::Call, last_is_used : Bool)
       if !last_is_used && node.name.in?(COMPARISON_OPERATORS) && node.args.size == 1
+        return if node.name.in?("===", "=~") &&
+                  (node.obj.is_a?(Crystal::RegexLiteral) || node.args.first.is_a?(Crystal::RegexLiteral))
+
         issue_for node, MSG
       end
     end
