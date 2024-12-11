@@ -54,13 +54,14 @@ module Ameba::Rule::Lint
 
     it "passes if a literal is the object of a call with args" do
       expect_no_issues subject, <<-CRYSTAL
-          { error: "abc" }.to_json(context.response)
+        { foo: "bar" }.to_json(io)
         CRYSTAL
     end
 
     it "passes for a literal in a generic type" do
       expect_no_issues subject, <<-CRYSTAL
-          StaticArray(1, 5)
+        StaticArray(Int32, 3)
+        Int32[3]
         CRYSTAL
     end
 

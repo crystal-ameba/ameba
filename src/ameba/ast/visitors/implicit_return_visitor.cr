@@ -24,7 +24,7 @@ module Ameba::AST
       false
     end
 
-    def visit(node : Crystal::And | Crystal::Or) : Bool
+    def visit(node : Crystal::BinaryOp) : Bool
       @rule.test(@source, node, @stack > 0)
 
       if node.right.is_a?(Crystal::Call)
@@ -41,7 +41,7 @@ module Ameba::AST
     def visit(node : Crystal::Call) : Bool
       @rule.test(@source, node, @stack > 0)
 
-      if node.block || node.args.size > 0
+      if node.block || !node.args.empty?
         incr_stack { node.obj.try &.accept(self) }
       else
         node.obj.try &.accept(self)

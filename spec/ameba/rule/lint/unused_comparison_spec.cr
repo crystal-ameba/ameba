@@ -32,7 +32,8 @@ module Ameba::Rule::Lint
 
     it "passes for comparisons inside '||' and '&&' where the other arg is a call" do
       expect_no_issues subject, <<-CRYSTAL
-          IO.copy(in_var, out_var, len) == len || raise IO::EOFError.new
+        foo(bar) == baz || raise "bat"
+        foo(bar) == baz && raise "bat"
         CRYSTAL
     end
 
