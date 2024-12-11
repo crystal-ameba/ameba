@@ -55,7 +55,11 @@ module Ameba::Formatter
         time_elapsed = Time.monotonic - started_at
       end
 
-      File.write(step_summary_file, summary(sources, time_elapsed))
+      summary = summary(sources, time_elapsed)
+      if (info = File.info?(step_summary_file)) && !info.size.zero?
+        summary = "\n\n#{summary}"
+      end
+      File.write(step_summary_file, summary, mode: "a")
     end
 
     private def summary(sources, time_elapsed)

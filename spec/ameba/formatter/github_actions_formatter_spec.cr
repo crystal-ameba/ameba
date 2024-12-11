@@ -56,6 +56,24 @@ module Ameba::Formatter
         end
       end
 
+      it "appends a Markdown summary to a filename given in 'GITHUB_STEP_SUMMARY' ENV var" do
+        prev_summary = ENV["GITHUB_STEP_SUMMARY"]?
+        ENV["GITHUB_STEP_SUMMARY"] = summary_filename = File.tempname
+        begin
+          sources = [Source.new ""]
+
+          File.write(summary_filename, "Existing content")
+
+          subject.finished(sources)
+
+          summary = File.read(summary_filename)
+          summary.should contain "Existing content\n\n"
+        ensure
+          ENV["GITHUB_STEP_SUMMARY"] = prev_summary
+          File.delete(summary_filename) rescue nil
+        end
+      end
+
       context "when issues found" do
         it "writes each issue" do
           prev_summary = ENV["GITHUB_STEP_SUMMARY"]?
