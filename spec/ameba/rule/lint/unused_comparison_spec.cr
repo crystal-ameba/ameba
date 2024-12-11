@@ -37,7 +37,7 @@ module Ameba::Rule::Lint
         CRYSTAL
     end
 
-    it "passes if a regex literal is part of a === or =~ comparison" do
+    it "passes if a regex literal is part of a comparison" do
       expect_no_issues subject, <<-CRYSTAL
         /f(o+)(bar?)/ === "fooba"
         puts $~

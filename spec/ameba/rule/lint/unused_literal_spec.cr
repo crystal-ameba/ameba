@@ -65,6 +65,13 @@ module Ameba::Rule::Lint
         CRYSTAL
     end
 
+    it "passes if a literal is passed to with or yield" do
+      expect_no_issues subject, <<-CRYSTAL
+        yield 1
+        with "2" yield :three
+        CRYSTAL
+    end
+
     it "fails if literals are top-level" do
       expect_issue subject, <<-CRYSTAL
         1234
