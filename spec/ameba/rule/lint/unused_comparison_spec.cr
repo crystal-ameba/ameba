@@ -37,13 +37,12 @@ module Ameba::Rule::Lint
         CRYSTAL
     end
 
-    it "passes if a regex literal is part of a comparison" do
+    it "passes for unused comparisons with `===`, `=~`, and `!~`" do
       expect_no_issues subject, <<-CRYSTAL
-        /f(o+)(bar?)/ === "fooba"
-        puts $~
-        "foobar" =~ /(o+)ba(r?)/
-        puts $1
-      CRYSTAL
+        /foo(bar)?/ =~ baz
+        "foobar" !~ /(o+)ba(r?)/
+        "hello" === world
+        CRYSTAL
     end
 
     it "fails for all comparison operators" do
@@ -52,12 +51,6 @@ module Ameba::Rule::Lint
         # ^^^^^^ error: Comparison operation is unused
           x != 2
         # ^^^^^^ error: Comparison operation is unused
-          x =~ 2
-        # ^^^^^^ error: Comparison operation is unused
-          x !~ 2
-        # ^^^^^^ error: Comparison operation is unused
-          x === 2
-        # ^^^^^^^ error: Comparison operation is unused
           x < 2
         # ^^^^^ error: Comparison operation is unused
           x <= 2
