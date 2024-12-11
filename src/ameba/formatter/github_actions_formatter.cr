@@ -1,9 +1,19 @@
+require "./util"
+
 module Ameba::Formatter
   # A formatter that outputs issues in a GitHub Actions compatible format.
   #
   # See [GitHub Actions documentation](https://docs.github.com/en/actions/writing-workflows/choosing-what-your-workflow-does/workflow-commands-for-github-actions) for details.
   class GitHubActionsFormatter < BaseFormatter
+    include Util
+
+    @started_at : Time::Span?
     @mutex = Mutex.new
+
+    # Reports a message when inspection is started.
+    def started(sources) : Nil
+      @started_at = Time.monotonic
+    end
 
     # Reports a result of the inspection of a corresponding source.
     def source_finished(source : Source) : Nil
@@ -35,6 +45,108 @@ module Ameba::Formatter
           output << "\n"
         end
       end
+    end
+
+    # Reports a message when inspection is finished.
+    def finished(sources) : Nil
+      return unless step_summary_file = ENV["GITHUB_STEP_SUMMARY"]?
+
+      if started_at = @started_at
+        time_elapsed = Time.monotonic - started_at
+      end
+
+      File.write(step_summary_file, summary(sources, time_elapsed))
+    end
+
+    private def summary(sources, time_elapsed)
+      failed_sources = sources.reject(&.valid?)
+      total = sources.size
+      failures = failed_sources.sum(&.issues.count(&.enabled?))
+
+      String.build do |output|
+        output << "## Ameba Results %s\n\n" % {
+          failures == 0 ? ":green_heart:" : ":bug:",
+        }
+
+        if failures.positive?
+          output << "### Issues found:\n\n"
+
+          failed_sources.each do |source|
+            issue_count = source.issues.count(&.enabled?)
+
+            if issue_count.positive?
+              output << "#### `%s` (**%d** %s)\n\n" % {
+                source.path,
+                issue_count,
+                pluralize(issue_count, "issue"),
+              }
+
+              output.puts "| Line | Severity | Name | Message |"
+              output.puts "| ---- | -------- | ---- | ------- |"
+
+              source.issues.each do |issue|
+                next if issue.disabled?
+
+                output.puts "| %s | %s | %s | %s |" % {
+                  issue_location_value(issue) || "-",
+                  issue.rule.severity,
+                  issue.rule.name,
+                  issue.message,
+                }
+              end
+              output << "\n"
+            end
+          end
+          output << "\n"
+        end
+
+        if time_elapsed
+          output.puts "Finished in %s." % to_human(time_elapsed)
+        end
+        output.puts "**%d** sources inspected, **%d** %s." % {
+          total,
+          failures,
+          pluralize(failures, "failure"),
+        }
+        output.puts
+        output.puts "> Ameba version: **%s**" % Ameba::VERSION
+      end
+    end
+
+    private BLOB_URL = begin
+      repo = ENV["GITHUB_REPOSITORY"]?
+      sha = ENV["GITHUB_SHA"]?
+
+      if repo && sha
+        "https://github.com/#{repo}/blob/#{sha}"
+      end
+    end
+
+    private def issue_location_value(issue)
+      location, end_location =
+        issue.location, issue.end_location
+
+      return unless location
+
+      line_selector =
+        if end_location && location.line_number != end_location.line_number
+          "#{location.line_number}-#{end_location.line_number}"
+        else
+          "#{location.line_number}"
+        end
+
+      if BLOB_URL
+        location_url = "[%s](%s/%s#%s)" % {
+          line_selector,
+          BLOB_URL,
+          location.filename,
+          line_selector
+            .split('-')
+            .join('-') { |i| "L#{i}" },
+        }
+      end
+
+      location_url || line_selector
     end
 
     private def command_name(severity : Severity) : String
