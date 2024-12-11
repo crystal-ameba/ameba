@@ -957,6 +957,20 @@
 
 
 
+  <h2>
+    <a id="included-modules" class="anchor" href="#included-modules">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>
+    Included Modules
+  </h2>
+  <ul class="other-types-list">
+    
+      <li class="other-type"><a href="../../Ameba/Formatter/Util.html">Ameba::Formatter::Util</a></li>
+    
+  </ul>
+
 
 
 
@@ -976,7 +990,7 @@
   </h2>
   
     
-      <a href="https://github.com/crystal-ameba/ameba/blob/5b3c2cf/src/ameba/formatter/github_actions_formatter.cr#L5" target="_blank">
+      <a href="https://github.com/crystal-ameba/ameba/blob/2abfef0/src/ameba/formatter/github_actions_formatter.cr#L7" target="_blank">
         ameba/formatter/github_actions_formatter.cr
       </a>
     
@@ -1004,9 +1018,23 @@
   <ul class="list-summary">
     
       <li class="entry-summary">
+        <a href="#finished%28sources%29%3ANil-instance-method" class="signature"><strong>#finished</strong>(sources) : Nil</a>
+        
+          <div class="summary"><p>Reports a message when inspection is finished.</p></div>
+        
+      </li>
+    
+      <li class="entry-summary">
         <a href="#source_finished%28source%3ASource%29%3ANil-instance-method" class="signature"><strong>#source_finished</strong>(source : Source) : Nil</a>
         
           <div class="summary"><p>Reports a result of the inspection of a corresponding source.</p></div>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#started%28sources%29%3ANil-instance-method" class="signature"><strong>#started</strong>(sources) : Nil</a>
+        
+          <div class="summary"><p>Reports a message when inspection is started.</p></div>
         
       </li>
     
@@ -1015,6 +1043,53 @@
 
 
 <div class="methods-inherited">
+  
+    
+
+  <h3>Instance methods inherited from module <code><a href="../../Ameba/Formatter/Util.html">Ameba::Formatter::Util</a></code></h3>
+  
+  
+    <a href="../../Ameba/Formatter/Util.html#affected_code%28issue%3AIssue%2Ccontext_lines%3D0%2Cmax_length%3D120%2Cellipsis%3D%22...%22%2Cprompt%3D%22%3E%22%29-instance-method" class="tooltip">
+      <span>affected_code(issue : Issue, context_lines = <span class="n">0</span>, max_length = <span class="n">120</span>, ellipsis = <span class="s">&quot; ...&quot;</span>, prompt = <span class="s">&quot;&gt; &quot;</span>)<br/>affected_code(code, location, end_location = <span class="n">nil</span>, context_lines = <span class="n">0</span>, max_length = <span class="n">120</span>, ellipsis = <span class="s">&quot; ...&quot;</span>, prompt = <span class="s">&quot;&gt; &quot;</span>)</span>
+    affected_code</a>, 
+    
+  
+    <a href="../../Ameba/Formatter/Util.html#context%28lines%2Clineno%2Ccontext_lines%3D3%2Cremove_empty%3Dtrue%29-instance-method" class="tooltip">
+      <span>context(lines, lineno, context_lines = <span class="n">3</span>, remove_empty = <span class="n">true</span>)</span>
+    context</a>, 
+    
+  
+    <a href="../../Ameba/Formatter/Util.html#deansify%28message%3AString%7CNil%29%3AString%7CNil-instance-method" class="tooltip">
+      <span>deansify(message : String | Nil) : String | Nil</span>
+    deansify</a>, 
+    
+  
+    <a href="../../Ameba/Formatter/Util.html#pluralize%28count%3AInt%2Csingular%3AString%2Cplural%3D%22%23%7Bsingular%7Ds%22%29-instance-method" class="tooltip">
+      <span>pluralize(count : Int, singular : String, plural = <span class="s">&quot;</span><span class="i">#{</span>singular<span class="i">}</span><span class="s">s&quot;</span>)</span>
+    pluralize</a>, 
+    
+  
+    <a href="../../Ameba/Formatter/Util.html#to_human%28span%3ATime%3A%3ASpan%29-instance-method" class="tooltip">
+      <span>to_human(span : Time::Span)</span>
+    to_human</a>, 
+    
+  
+    <a href="../../Ameba/Formatter/Util.html#trim%28str%2Cmax_length%3D120%2Cellipsis%3D%22...%22%29-instance-method" class="tooltip">
+      <span>trim(str, max_length = <span class="n">120</span>, ellipsis = <span class="s">&quot; ...&quot;</span>)</span>
+    trim</a>
+    
+  
+
+
+    
+
+
+    
+
+
+    
+
+
   
     
 
@@ -1116,6 +1191,27 @@
     Instance Method Detail
   </h2>
   
+    <div class="entry-detail" id="finished(sources):Nil-instance-method">
+      <div class="signature">
+        
+        def <strong>finished</strong>(sources) : Nil
+
+        <a class="method-permalink" href="#finished%28sources%29%3ANil-instance-method">#</a>
+      </div>
+      
+        <div class="doc">
+          
+          <p>Reports a message when inspection is finished.</p>
+        </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/crystal-ameba/ameba/blob/2abfef0/src/ameba/formatter/github_actions_formatter.cr#L51" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
     <div class="entry-detail" id="source_finished(source:Source):Nil-instance-method">
       <div class="signature">
         
@@ -1132,7 +1228,28 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/5b3c2cf/src/ameba/formatter/github_actions_formatter.cr#L9" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/2abfef0/src/ameba/formatter/github_actions_formatter.cr#L19" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="started(sources):Nil-instance-method">
+      <div class="signature">
+        
+        def <strong>started</strong>(sources) : Nil
+
+        <a class="method-permalink" href="#started%28sources%29%3ANil-instance-method">#</a>
+      </div>
+      
+        <div class="doc">
+          
+          <p>Reports a message when inspection is started.</p>
+        </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/crystal-ameba/ameba/blob/2abfef0/src/ameba/formatter/github_actions_formatter.cr#L14" target="_blank">View source</a>]
         
       </div>
     </div>
