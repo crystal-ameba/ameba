@@ -40,7 +40,7 @@ module Ameba::Rule::Lint
     it "passes for unused comparisons with `===`, `=~`, and `!~`" do
       expect_no_issues subject, <<-CRYSTAL
         /foo(bar)?/ =~ baz
-        "foobar" !~ /(o+)ba(r?)/
+        /foo(bar)?/ !~ baz
         "hello" === world
         CRYSTAL
     end
