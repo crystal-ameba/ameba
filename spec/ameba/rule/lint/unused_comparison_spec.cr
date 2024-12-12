@@ -30,18 +30,27 @@ module Ameba::Rule::Lint
         CRYSTAL
     end
 
+    it "passes for comparisons inside '||' and '&&' where the other arg is a call" do
+      expect_no_issues subject, <<-CRYSTAL
+        foo(bar) == baz || raise "bat"
+        foo(bar) == baz && raise "bat"
+        CRYSTAL
+    end
+
+    it "passes for unused comparisons with `===`, `=~`, and `!~`" do
+      expect_no_issues subject, <<-CRYSTAL
+        /foo(bar)?/ =~ baz
+        /foo(bar)?/ !~ baz
+        "hello" === world
+        CRYSTAL
+    end
+
     it "fails for all comparison operators" do
       expect_issue subject, <<-CRYSTAL
           x == 2
         # ^^^^^^ error: Comparison operation is unused
           x != 2
         # ^^^^^^ error: Comparison operation is unused
-          x =~ 2
-        # ^^^^^^ error: Comparison operation is unused
-          x !~ 2
-        # ^^^^^^ error: Comparison operation is unused
-          x === 2
-        # ^^^^^^^ error: Comparison operation is unused
           x < 2
         # ^^^^^ error: Comparison operation is unused
           x <= 2

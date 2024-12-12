@@ -42,10 +42,7 @@ module Ameba::Rule::Lint
 
     MSG = "Comparison operation is unused"
 
-    COMPARISON_OPERATORS = %w[
-      == != =~ !~ ===
-      < <= > >= <=>
-    ]
+    COMPARISON_OPERATORS = %w[== != < <= > >= <=>]
 
     def test(source : Source)
       AST::ImplicitReturnVisitor.new(self, source)

@@ -24,10 +24,24 @@ module Ameba::AST
       false
     end
 
+    def visit(node : Crystal::BinaryOp) : Bool
+      @rule.test(@source, node, @stack > 0)
+
+      if node.right.is_a?(Crystal::Call)
+        incr_stack { node.left.accept(self) }
+      else
+        node.left.accept(self)
+      end
+
+      node.right.accept(self)
+
+      false
+    end
+
     def visit(node : Crystal::Call) : Bool
       @rule.test(@source, node, @stack > 0)
 
-      if node.block
+      if node.block || !node.args.empty?
         incr_stack { node.obj.try &.accept(self) }
       else
         node.obj.try &.accept(self)
@@ -131,6 +145,8 @@ module Ameba::AST
     end
 
     def visit(node : Crystal::TypeDeclaration) : Bool
+      @rule.test(@source, node, @stack > 0)
+
       incr_stack { node.value.try &.accept(self) }
 
       false
@@ -256,6 +272,18 @@ module Ameba::AST
       @rule.test(@source, node, @stack > 0)
 
       true
+    end
+
+    def visit(node : Crystal::Yield) : Bool
+      @rule.test(@source, node, @stack > 0)
+
+      incr_stack { node.exps.each &.accept(self) }
+
+      false
+    end
+
+    def visit(node : Crystal::Generic) : Bool
+      false
     end
 
     private def incr_stack(&) : Nil
