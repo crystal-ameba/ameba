@@ -19,6 +19,7 @@ module Ameba::Rule
           Naming
           Performance
           Style
+          Typing
         ]
       end
     end
