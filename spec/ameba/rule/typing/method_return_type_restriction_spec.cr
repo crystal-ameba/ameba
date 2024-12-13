@@ -2,20 +2,57 @@ require "../../../spec_helper"
 
 module Ameba::Rule::Typing
   subject = MethodReturnTypeRestriction.new
-  subject.private_methods = true
-  subject.protected_methods = true
-  subject.undocumented = true
 
   it "passes if a method has a return type" do
     expect_no_issues subject, <<-CRYSTAL
       def hello : String
         "hello world"
       end
+
+      # This method is documented
+      def hello : String
+        "hello world"
+      end
+
+      private def hello : String
+        "hello world"
+      end
+
+      protected def hello : String
+        "hello world"
+      end
+
+      # :nodoc:
+      def hello : String
+        "hello world"
+      end
       CRYSTAL
   end
 
-  it "fails if a method doesn't have a return type" do
+  it "passes if an undocumented method doesn't have a return type" do
+    expect_no_issues subject, <<-CRYSTAL
+      def hello
+        "hello world"
+      end
+
+      private def hello
+        "hello world"
+      end
+
+      protected def hello : String
+        "hello world"
+      end
+
+      # :nodoc:
+      def hello
+        "hello world"
+      end
+      CRYSTAL
+  end
+
+  it "fails if a documented method doesn't have a return type" do
     expect_issue subject, <<-CRYSTAL
+      # This method is documented
       def hello
         # ^^^^^ error: Methods should have a return type restriction
         "hello world"
@@ -23,66 +60,130 @@ module Ameba::Rule::Typing
       CRYSTAL
   end
 
-  it "fails if a private method doesn't have a return type" do
-    expect_issue subject, <<-CRYSTAL
-      class Greeter
-        private def hello
-                  # ^^^^^ error: Methods should have a return type restriction
-          "hello world"
-        end
-      end
-      CRYSTAL
-  end
-
-  it "fails if a protected method doesn't have a return type" do
-    expect_issue subject, <<-CRYSTAL
-      class Greeter
-        protected def hello
-                    # ^^^^^ error: Methods should have a return type restriction
-          "hello world"
-        end
-      end
-      CRYSTAL
-  end
-
-  it "fails if a documented method doesn't have a return type" do
-    expect_issue subject, <<-CRYSTAL
-      # This is documentation about `hello`
-      def hello(a)
-        # ^^^^^ error: Methods should have a return type restriction
-        "hello world" + a
-      end
-      CRYSTAL
-  end
-
   context "properties" do
     context "#private_methods" do
-      it "allows relaxing restriction requirement for private methods" do
-        rule = MethodReturnTypeRestriction.new
-        rule.undocumented = true
-        rule.private_methods = false
+      rule = MethodReturnTypeRestriction.new
+      rule.private_methods = true
 
+      it "passes if a method has a return type" do
         expect_no_issues rule, <<-CRYSTAL
-          class Greeter
-            private def hello
-              "hello world"
-            end
+          def hello : String
+            "hello world"
+          end
+
+          # This method is documented
+          def hello : String
+            "hello world"
+          end
+
+          private def hello : String
+            "hello world"
+          end
+
+          protected def hello : String
+            "hello world"
+          end
+
+          # :nodoc:
+          def hello : String
+            "hello world"
+          end
+          CRYSTAL
+      end
+
+      it "passes if an undocumented public or protected method doesn't have a return type" do
+        expect_no_issues rule, <<-CRYSTAL
+          def hello
+            "hello world"
+          end
+
+          protected def hello
+            "hello world"
+          end
+
+          # :nodoc:
+          def hello
+            "hello world"
+          end
+          CRYSTAL
+      end
+
+      it "fails if a documented public or private method doesn't have a return type" do
+        expect_issue rule, <<-CRYSTAL
+          # This method is documented
+          def hello
+            # ^^^^^ error: Methods should have a return type restriction
+            "hello world"
+          end
+
+          # This method is also documented
+          private def hello
+                    # ^^^^^ error: Methods should have a return type restriction
+            "hello world"
           end
           CRYSTAL
       end
     end
 
     context "#protected_methods" do
-      it "allows relaxing restriction requirement for protected methods" do
-        rule = MethodReturnTypeRestriction.new
-        rule.undocumented = true
-        rule.protected_methods = false
+      rule = MethodReturnTypeRestriction.new
+      rule.protected_methods = true
 
+      it "passes if a method has a return type" do
         expect_no_issues rule, <<-CRYSTAL
-          class Greeter
-            protected def hello
-              "hello world"
-            end
+          def hello : String
+            "hello world"
+          end
+
+          # This method is documented
+          def hello : String
+            "hello world"
+          end
+
+          private def hello : String
+            "hello world"
+          end
+
+          protected def hello : String
+            "hello world"
+          end
+
+          # :nodoc:
+          def hello : String
+            "hello world"
+          end
+          CRYSTAL
+      end
+
+      it "passes if an undocumented public or private method doesn't have a return type" do
+        expect_no_issues rule, <<-CRYSTAL
+          def hello
+            "hello world"
+          end
+
+          private def hello
+            "hello world"
+          end
+
+          # :nodoc:
+          def hello
+            "hello world"
+          end
+          CRYSTAL
+      end
+
+      it "fails if a documented public or protected method doesn't have a return type" do
+        expect_issue rule, <<-CRYSTAL
+          # This method is documented
+          def hello
+            # ^^^^^ error: Methods should have a return type restriction
+            "hello world"
+          end
+
+          # This method is also documented
+          protected def hello
+                      # ^^^^^ error: Methods should have a return type restriction
+            "hello world"
           end
           CRYSTAL
       end
@@ -90,25 +191,51 @@ module Ameba::Rule::Typing
 
     context "#undocumented" do
       rule = MethodReturnTypeRestriction.new
-      rule.undocumented = false
+      rule.undocumented = true
 
-      it "allows relaxing restriction requirement for undocumented methods" do
+      it "passes if a documented method has a return type" do
         expect_no_issues rule, <<-CRYSTAL
-          class Greeter
-            def hello
-              "hello world"
-            end
+          # This method is documented
+          def hello : String
+            "hello world"
+          end
+
+          # This method is documented
+          private def hello : String
+            "hello world"
+          end
+
+          # This method is documented
+          protected def hello : String
+            "hello world"
           end
           CRYSTAL
       end
 
-      it "allows relaxing restriction requirement for methods with a :nodoc: directive" do
+      it "passes if undocumented private or protected methods have a return type" do
         expect_no_issues rule, <<-CRYSTAL
-          class Greeter
-            # :nodoc:
-            def hello
-              "hello world"
-            end
+          private def hello
+            "hello world"
+          end
+
+          protected def hello
+            "hello world"
+          end
+
+          CRYSTAL
+      end
+
+      it "fails if an undocumented method doesn't have a return type" do
+        expect_issue rule, <<-CRYSTAL
+          def hello
+            # ^^^^^ error: Methods should have a return type restriction
+            "hello world"
+          end
+
+          # :nodoc:
+          def hello
+            # ^^^^^ error: Methods should have a return type restriction
+            "hello world"
           end
           CRYSTAL
       end
