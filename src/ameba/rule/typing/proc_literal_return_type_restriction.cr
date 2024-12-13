@@ -25,11 +25,12 @@ module Ameba::Rule::Typing
   #
   # ```
   # Typing/ProcReturnTypeRestriction:
-  #   Enabled: true
+  #   Enabled: false
   # ```
   class ProcLiteralReturnTypeRestriction < Base
     properties do
       description "Recommends that proc literals have a return type restriction"
+      enabled false
     end
 
     MSG = "Proc literals should have a return type"
