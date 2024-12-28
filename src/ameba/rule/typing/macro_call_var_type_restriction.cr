@@ -30,11 +30,15 @@ module Ameba::Rule::Typing
   # end
   # ```
   #
+  # The `DefaultValue` configuration option controls whether this rule applies to
+  # call arguments that have a default value.
+  #
   # YAML configuration example:
   #
   # ```
   # Typing/MethodParamTypeRestriction:
   #   Enabled: false
+  #   DefaultValue: true
   #   MacroNames:
   #    - getter
   #    - getter?
@@ -60,6 +64,7 @@ module Ameba::Rule::Typing
     properties do
       description "Recommends that variable args to certain macros have type restrictions"
       enabled false
+      default_value true
       macro_names %w[
         getter getter? getter! class_getter class_getter? class_getter!
         setter setter? setter! class_setter class_setter? class_setter!
@@ -76,6 +81,8 @@ module Ameba::Rule::Typing
       node.args.each do |arg|
         case arg
         when Crystal::Assign
+          next unless default_value?
+
           issue_for arg.target, MSG % node.name, prefer_name_location: true
         when Crystal::Path, Crystal::TypeDeclaration # Allowed
         else
