@@ -56,7 +56,7 @@ module Ameba::Rule::Typing
       issue_for node, MSG, prefer_name_location: true
     end
 
-    def check_config(node : Crystal::ASTNode) : Bool
+    def valid?(node : Crystal::ASTNode) : Bool
       (!private_methods? && node.visibility.private?) ||
         (!protected_methods? && node.visibility.protected?) ||
         (!undocumented? && (node.doc.nil? || node.doc.try(&.starts_with?(":nodoc:")))) ||

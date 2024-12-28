@@ -9,21 +9,11 @@ module Ameba::Rule::Typing
         "hello world"
       end
 
-      # This method is documented
-      def hello : String
-        "hello world"
-      end
-
       private def hello : String
         "hello world"
       end
 
       protected def hello : String
-        "hello world"
-      end
-
-      # :nodoc:
-      def hello : String
         "hello world"
       end
       CRYSTAL
@@ -131,25 +121,7 @@ module Ameba::Rule::Typing
 
       it "passes if a method has a return type" do
         expect_no_issues rule, <<-CRYSTAL
-          def hello : String
-            "hello world"
-          end
-
-          # This method is documented
-          def hello : String
-            "hello world"
-          end
-
-          private def hello : String
-            "hello world"
-          end
-
           protected def hello : String
-            "hello world"
-          end
-
-          # :nodoc:
-          def hello : String
             "hello world"
           end
           CRYSTAL
