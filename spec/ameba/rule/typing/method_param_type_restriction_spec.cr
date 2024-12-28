@@ -74,7 +74,7 @@ module Ameba::Rule::Typing
 
         expect_no_issues rule, <<-CRYSTAL
           class Greeter
-            private def hello
+            private def hello(a)
               "hello world"
             end
           end
@@ -90,7 +90,7 @@ module Ameba::Rule::Typing
 
         expect_no_issues rule, <<-CRYSTAL
           class Greeter
-            protected def hello
+            protected def hello(a)
               "hello world"
             end
           end
