@@ -29,6 +29,7 @@ module Ameba::Rule::Typing
   # ```
   class ProcLiteralReturnTypeRestriction < Base
     properties do
+      since_version "1.7.0"
       description "Disallows Proc literals without return type restrictions"
       enabled false
     end
