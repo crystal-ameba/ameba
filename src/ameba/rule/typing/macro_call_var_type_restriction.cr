@@ -68,7 +68,7 @@ module Ameba::Rule::Typing
       ]
     end
 
-    MSG = "Variable arguments to `%s` should have a type restriction"
+    MSG = "Argument should have a type restriction"
 
     def test(source, node : Crystal::Call)
       return unless node.name.in?(macro_names)
@@ -76,10 +76,10 @@ module Ameba::Rule::Typing
       node.args.each do |arg|
         case arg
         when Crystal::Assign
-          issue_for arg.target, MSG % {node.name}, prefer_name_location: true
+          issue_for arg.target, MSG % node.name, prefer_name_location: true
         when Crystal::Path, Crystal::TypeDeclaration # Allowed
         else
-          issue_for arg, MSG % {node.name}, prefer_name_location: true
+          issue_for arg, MSG % node.name, prefer_name_location: true
         end
       end
     end
