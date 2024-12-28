@@ -33,7 +33,7 @@ module Ameba::Rule::Typing
       enabled false
     end
 
-    MSG = "Proc literals should have a return type"
+    MSG = "Proc literal should have a return type"
 
     def test(source, node : Crystal::ProcLiteral)
       return if node.def.return_type
