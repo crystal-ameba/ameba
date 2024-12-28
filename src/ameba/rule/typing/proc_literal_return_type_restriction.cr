@@ -1,10 +1,10 @@
 module Ameba::Rule::Typing
-  # A rule that enforces that Proc literals have a return type.
+  # A rule that enforces that `Proc` literals have a return type.
   #
   # For example, these are considered valid:
   #
   # ```
-  # my_proc = ->(arg : String) : String { a + "proc" }
+  # greeter = ->(name : String) : String { "Hello #{name}" }
   # ```
   #
   # ```
@@ -14,7 +14,7 @@ module Ameba::Rule::Typing
   # And these are invalid:
   #
   # ```
-  # my_proc = ->(arg : String) { a + "proc" }
+  # greeter = ->(name : String) { "Hello #{name}" }
   # ```
   #
   # ```
@@ -29,11 +29,11 @@ module Ameba::Rule::Typing
   # ```
   class ProcLiteralReturnTypeRestriction < Base
     properties do
-      description "Recommends that proc literals have a return type restriction"
+      description "Disallows Proc literals without return type restrictions"
       enabled false
     end
 
-    MSG = "Proc literal should have a return type"
+    MSG = "Proc literal should have a return type restriction"
 
     def test(source, node : Crystal::ProcLiteral)
       return if node.def.return_type
