@@ -28,14 +28,11 @@ module Ameba::Rule::Typing
   # When the config options `PrivateMethods` and `ProtectedMethods`
   # are true, this rule is also applied to private and protected methods, respectively.
   #
-  # The config option `Undocumented` controls whether this rule applies to undocumented methods and methods with a `:nodoc:` directive.
-  #
   # YAML configuration example:
   #
   # ```
   # Typing/MethodReturnTypeRestriction:
   #   Enabled: false
-  #   Undocumented: false
   #   PrivateMethods: false
   #   ProtectedMethods: false
   # ```
@@ -43,7 +40,6 @@ module Ameba::Rule::Typing
     properties do
       description "Recommends that methods have a return type restriction"
       enabled false
-      undocumented false
       private_methods false
       protected_methods false
     end
@@ -59,7 +55,6 @@ module Ameba::Rule::Typing
     def valid?(node : Crystal::ASTNode) : Bool
       (!private_methods? && node.visibility.private?) ||
         (!protected_methods? && node.visibility.protected?) ||
-        (!undocumented? && (node.doc.nil? || node.doc.try(&.starts_with?(":nodoc:")))) ||
         false
     end
   end
