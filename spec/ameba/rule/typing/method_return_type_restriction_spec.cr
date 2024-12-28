@@ -44,7 +44,7 @@ module Ameba::Rule::Typing
     expect_issue subject, <<-CRYSTAL
       # This method is documented
       def hello
-        # ^^^^^ error: Methods should have a return type restriction
+        # ^^^^^ error: Method should have a return type restriction
         "hello world"
       end
       CRYSTAL
@@ -102,13 +102,13 @@ module Ameba::Rule::Typing
         expect_issue rule, <<-CRYSTAL
           # This method is documented
           def hello
-            # ^^^^^ error: Methods should have a return type restriction
+            # ^^^^^ error: Method should have a return type restriction
             "hello world"
           end
 
           # This method is also documented
           private def hello
-                    # ^^^^^ error: Methods should have a return type restriction
+                    # ^^^^^ error: Method should have a return type restriction
             "hello world"
           end
           CRYSTAL
@@ -148,13 +148,13 @@ module Ameba::Rule::Typing
         expect_issue rule, <<-CRYSTAL
           # This method is documented
           def hello
-            # ^^^^^ error: Methods should have a return type restriction
+            # ^^^^^ error: Method should have a return type restriction
             "hello world"
           end
 
           # This method is also documented
           protected def hello
-                      # ^^^^^ error: Methods should have a return type restriction
+                      # ^^^^^ error: Method should have a return type restriction
             "hello world"
           end
           CRYSTAL
@@ -200,13 +200,13 @@ module Ameba::Rule::Typing
       it "fails if an undocumented method doesn't have a return type" do
         expect_issue rule, <<-CRYSTAL
           def hello
-            # ^^^^^ error: Methods should have a return type restriction
+            # ^^^^^ error: Method should have a return type restriction
             "hello world"
           end
 
           # :nodoc:
           def hello
-            # ^^^^^ error: Methods should have a return type restriction
+            # ^^^^^ error: Method should have a return type restriction
             "hello world"
           end
           CRYSTAL
