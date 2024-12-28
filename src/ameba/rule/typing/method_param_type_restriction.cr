@@ -46,8 +46,6 @@ module Ameba::Rule::Typing
   # end
   # ```
   #
-  # The config option `Undocumented` controls whether this rule applies to undocumented methods and methods with a `:nodoc:` directive.
-  #
   # The config option `DefaultValue` controls whether this rule applies to parameters that have a default value.
   #
   # YAML configuration example:
@@ -56,7 +54,6 @@ module Ameba::Rule::Typing
   # Typing/MethodParamTypeRestriction:
   #   Enabled: false
   #   DefaultValue: false
-  #   Undocumented: false
   #   PrivateMethods: false
   #   ProtectedMethods: false
   #   BlockParam: false
@@ -66,7 +63,6 @@ module Ameba::Rule::Typing
       description "Recommends that method parameters have type restrictions"
       enabled false
       default_value false
-      undocumented false
       private_methods false
       protected_methods false
       block_param false
@@ -95,7 +91,6 @@ module Ameba::Rule::Typing
     def valid?(node : Crystal::ASTNode) : Bool
       (!private_methods? && node.visibility.private?) ||
         (!protected_methods? && node.visibility.protected?) ||
-        (!undocumented? && (node.doc.nil? || node.doc.try(&.starts_with?(":nodoc:")))) ||
         false
     end
   end
