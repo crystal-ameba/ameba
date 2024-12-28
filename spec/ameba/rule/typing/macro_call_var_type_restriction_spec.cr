@@ -24,7 +24,7 @@ module Ameba::Rule::Typing
     expect_issue subject, <<-CRYSTAL
       class Greeter
         getter name
-             # ^^^^ error: Variable arguments to `getter` should have a type restriction
+             # ^^^^ error: Argument should have a type restriction
       end
       CRYSTAL
   end
@@ -35,7 +35,7 @@ module Ameba::Rule::Typing
         record Task,
           var1 : String,
           var2 = "asdf"
-        # ^^^^ error: Variable arguments to `record` should have a type restriction
+        # ^^^^ error: Argument should have a type restriction
       end
       CRYSTAL
   end
@@ -45,7 +45,7 @@ module Ameba::Rule::Typing
       record Task,
         var1 : String,
         var2 = "asdf"
-      # ^^^^ error: Variable arguments to `record` should have a type restriction
+      # ^^^^ error: Argument should have a type restriction
       CRYSTAL
   end
 end
