@@ -24,7 +24,7 @@ module Ameba::Rule::Typing
   # YAML configuration example:
   #
   # ```
-  # Typing/ProcReturnTypeRestriction:
+  # Typing/ProcLiteralReturnTypeRestriction:
   #   Enabled: false
   # ```
   class ProcLiteralReturnTypeRestriction < Base
