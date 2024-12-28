@@ -2,44 +2,58 @@ require "../../../spec_helper"
 
 module Ameba::Rule::Typing
   subject = MethodParamTypeRestriction.new
-  subject.private_methods = true
-  subject.protected_methods = true
-  subject.undocumented = true
-  subject.default_value = true
 
   it "passes if a method param has a type" do
     expect_no_issues subject, <<-CRYSTAL
       def hello(a : String) : String
         "hello world" + a
       end
+
+      # This method is documented
+      def hello(a : Bool)
+      end
+
+      private def hello(a : String) : String
+        "hello world" + a
+      end
+
+      protected def hello(a : String) : String
+        "hello world" + a
+      end
+
+      # :nodoc:
+      def hello(a : Bool)
+      end
       CRYSTAL
   end
 
-  it "fails if a method param doesn't have a type" do
-    expect_issue subject, <<-CRYSTAL
+  it "passes if an undocumented method param doesn't have a type" do
+    expect_no_issues subject, <<-CRYSTAL
       def hello(a)
-              # ^ error: Method parameters should have a type restriction
+        "hello world" + a
+      end
+
+      # :nodoc:
+      def hello(a)
         "hello world" + a
       end
       CRYSTAL
   end
 
-  it "fails if a private method method param doesn't have a type" do
-    expect_issue subject, <<-CRYSTAL
+  it "passes if a private method method param doesn't have a type" do
+    expect_no_issues subject, <<-CRYSTAL
       class Greeter
         private def hello(a)
-                        # ^ error: Method parameters should have a type restriction
           "hello world" + a
         end
       end
       CRYSTAL
   end
 
-  it "fails if a protected method param doesn't have a type" do
-    expect_issue subject, <<-CRYSTAL
+  it "passes if a protected method param doesn't have a type" do
+    expect_no_issues subject, <<-CRYSTAL
       class Greeter
         protected def hello(a)
-                          # ^ error: Method parameters should have a type restriction
           "hello world" + a
         end
       end
@@ -50,63 +64,133 @@ module Ameba::Rule::Typing
     expect_issue subject, <<-CRYSTAL
       # This is documentation about `hello`
       def hello(a)
-              # ^ error: Method parameters should have a type restriction
+              # ^ error: Method parameter should have a type restriction
         "hello world" + a
       end
       CRYSTAL
   end
 
-  it "fails if a method param with a default value doesn't have a type" do
-    expect_issue subject, <<-CRYSTAL
+  it "passes if a method param with a default value doesn't have a type" do
+    expect_no_issues subject, <<-CRYSTAL
       def hello(a = "jim")
-              # ^ error: Method parameters should have a type restriction
         "hello there, " + a
+      end
+      CRYSTAL
+  end
+
+  it "passes if a method param with a default value doesn't have a type" do
+    expect_no_issues subject, <<-CRYSTAL
+      class Greeter
+        # This method is documented
+        def hello(a = "world")
+          "hello \#{a}"
+        end
       end
       CRYSTAL
   end
 
   context "properties" do
     context "#private_methods" do
-      it "allows relaxing restriction requirement for private methods" do
-        rule = MethodParamTypeRestriction.new
-        rule.undocumented = true
-        rule.private_methods = false
+      rule = MethodParamTypeRestriction.new
+      rule.private_methods = true
 
+      it "passes if a method has a return type" do
         expect_no_issues rule, <<-CRYSTAL
-          class Greeter
-            private def hello(a)
-              "hello world"
-            end
+          private def hello(a : String) : String
+            "hello world" + a
+          end
+          CRYSTAL
+      end
+
+      it "passes if an undocumented public or protected method param doesn't have a type" do
+        expect_no_issues rule, <<-CRYSTAL
+          def hello(a)
+            "hello world"
+          end
+
+          protected def hello(a)
+            "hello world"
+          end
+
+          # :nodoc:
+          def hello(a)
+            "hello world"
+          end
+          CRYSTAL
+      end
+
+      it "fails if a documented public or private method doesn't have a return type" do
+        expect_issue rule, <<-CRYSTAL
+          # This method is documented
+          def hello(a)
+                  # ^ error: Method parameter should have a type restriction
+            "hello world"
+          end
+
+          # This method is also documented
+          private def hello(a)
+                          # ^ error: Method parameter should have a type restriction
+            "hello world"
           end
           CRYSTAL
       end
     end
 
     context "#protected_methods" do
-      it "allows relaxing restriction requirement for protected methods" do
-        rule = MethodParamTypeRestriction.new
-        rule.undocumented = true
-        rule.protected_methods = false
+      rule = MethodParamTypeRestriction.new
+      rule.protected_methods = true
 
+      it "passes if a method has a return type" do
         expect_no_issues rule, <<-CRYSTAL
-          class Greeter
-            protected def hello(a)
-              "hello world"
-            end
+          protected def hello(a : String) : String
+            "hello world" + a
+          end
+          CRYSTAL
+      end
+
+      it "passes if an undocumented public or private method param doesn't have a type" do
+        expect_no_issues rule, <<-CRYSTAL
+          def hello(a)
+            "hello world"
+          end
+
+          private def hello(a)
+            "hello world"
+          end
+
+          # :nodoc:
+          def hello(a)
+            "hello world"
+          end
+          CRYSTAL
+      end
+
+      it "fails if a documented public or protected method doesn't have a return type" do
+        expect_issue rule, <<-CRYSTAL
+          # This method is documented
+          def hello(a)
+                  # ^ error: Method parameter should have a type restriction
+            "hello world"
+          end
+          # This method is also documented
+          protected def hello(a)
+                            # ^ error: Method parameter should have a type restriction
+            "hello world"
           end
           CRYSTAL
       end
     end
 
     context "#default_value" do
-      it "allows relaxing restriction requirement for params with default value" do
+      it "fails if a method param with a default value doesn't have a type" do
         rule = MethodParamTypeRestriction.new
-        rule.undocumented = true
-        rule.default_value = false
+        rule.default_value = true
 
-        expect_no_issues rule, <<-CRYSTAL
+        expect_issue rule, <<-CRYSTAL
           class Greeter
+            # This method is documented
             def hello(a = "world")
+                    # ^ error: Method parameter should have a type restriction
               "hello \#{a}"
             end
           end
@@ -116,23 +200,19 @@ module Ameba::Rule::Typing
 
     context "#undocumented" do
       rule = MethodParamTypeRestriction.new
-      rule.undocumented = false
+      rule.undocumented = true
 
-      it "allows relaxing restriction requirement for undocumented methods" do
-        expect_no_issues rule, <<-CRYSTAL
+      it "fails if an undocumented method param doesn't have a type" do
+        expect_issue rule, <<-CRYSTAL
           class Greeter
             def hello(a)
+                    # ^ error: Method parameter should have a type restriction
               "hello world"
             end
-          end
-          CRYSTAL
-      end
 
-      it "allows relaxing restriction requirement for methods with a :nodoc: directive" do
-        expect_no_issues rule, <<-CRYSTAL
-          class Greeter
             # :nodoc:
             def hello(a)
+                    # ^ error: Method parameter should have a type restriction
               "hello world"
             end
           end
