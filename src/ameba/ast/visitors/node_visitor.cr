@@ -34,13 +34,13 @@ module Ameba::AST
       ModuleDef,
       MultiAssign,
       NilLiteral,
+      ProcLiteral,
       StringInterpolation,
       Unless,
       Until,
       Var,
       When,
       While,
-      ProcLiteral,
     }
 
     @skip : Array(Crystal::ASTNode.class)?
