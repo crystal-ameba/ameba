@@ -8,7 +8,7 @@ module Ameba::Rule::Typing
   # ```
   #
   # ```
-  # task -> : Task { Task.new("execute this command") }
+  # task = -> : Task { Task.new("execute this command") }
   # ```
   #
   # And these are invalid:
@@ -18,7 +18,7 @@ module Ameba::Rule::Typing
   # ```
   #
   # ```
-  # task -> { Task.new("execute this command") }
+  # task = -> { Task.new("execute this command") }
   # ```
   #
   # YAML configuration example:
