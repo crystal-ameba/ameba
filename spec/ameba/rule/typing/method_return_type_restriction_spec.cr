@@ -34,7 +34,7 @@ module Ameba::Rule::Typing
   it "fails if a public method doesn't have a return type" do
     expect_issue subject, <<-CRYSTAL
       def hello
-        # ^^^^^ error: Method should have a return type restriction
+      # ^^^^^^^ error: Method should have a return type restriction
         "hello world"
       end
       CRYSTAL
@@ -77,12 +77,12 @@ module Ameba::Rule::Typing
       it "fails if a public or private method doesn't have a return type" do
         expect_issue rule, <<-CRYSTAL
           def hello
-            # ^^^^^ error: Method should have a return type restriction
+          # ^^^^^^^ error: Method should have a return type restriction
             "hello world"
           end
 
           private def hello
-                    # ^^^^^ error: Method should have a return type restriction
+                # ^^^^^^^^^ error: Method should have a return type restriction
             "hello world"
           end
           CRYSTAL
@@ -112,12 +112,12 @@ module Ameba::Rule::Typing
       it "fails if a public or protected method doesn't have a return type" do
         expect_issue rule, <<-CRYSTAL
           def hello
-            # ^^^^^ error: Method should have a return type restriction
+          # ^^^^^^^ error: Method should have a return type restriction
             "hello world"
           end
 
           protected def hello
-                      # ^^^^^ error: Method should have a return type restriction
+                  # ^^^^^^^^^ error: Method should have a return type restriction
             "hello world"
           end
           CRYSTAL
