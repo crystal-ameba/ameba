@@ -3,7 +3,7 @@ require "../../../spec_helper"
 module Ameba::Rule::Typing
   subject = MethodReturnTypeRestriction.new
 
-  it "passes if a method has a return type" do
+  it "passes if a method has a return type restriction" do
     expect_no_issues subject, <<-CRYSTAL
       def hello : String
         "hello world"
@@ -25,7 +25,7 @@ module Ameba::Rule::Typing
         "hello world"
       end
 
-      protected def hello : String
+      protected def hello
         "hello world"
       end
       CRYSTAL

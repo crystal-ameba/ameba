@@ -1,27 +1,19 @@
 module Ameba::Rule::Typing
   # A rule that enforces method definitions have a return type restriction.
   #
-  # For example, these are considered valid:
+  # For example, this are considered invalid:
   #
   # ```
-  # def hello : String
-  #   "hello world"
-  # end
-  #
-  # def listen(a, b) : Int32
-  #   0
+  # def hello(name = "World")
+  #   "Hello #{name}"
   # end
   # ```
   #
-  # And these are considered invalid:
+  # And this is valid:
   #
   # ```
-  # def hello
-  #   "hello world"
-  # end
-  #
-  # def listen(a, b)
-  #   0
+  # def hello(name = "World") : String
+  #   "Hello #{name}"
   # end
   # ```
   #
@@ -38,6 +30,7 @@ module Ameba::Rule::Typing
   # ```
   class MethodReturnTypeRestriction < Base
     properties do
+      since_version "1.7.0"
       description "Recommends that methods have a return type restriction"
       enabled false
       private_methods false
@@ -49,7 +42,7 @@ module Ameba::Rule::Typing
     def test(source, node : Crystal::Def)
       return if node.return_type || valid?(node)
 
-      issue_for node, MSG, prefer_name_location: true
+      issue_for node, MSG
     end
 
     def valid?(node : Crystal::ASTNode) : Bool
