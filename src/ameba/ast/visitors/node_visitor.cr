@@ -34,6 +34,7 @@ module Ameba::AST
       ModuleDef,
       MultiAssign,
       NilLiteral,
+      ProcLiteral,
       StringInterpolation,
       Unless,
       Until,
