@@ -52,23 +52,24 @@ module Ameba::Rule::Typing
 
     context "properties" do
       context "#default_value" do
-      rule = MacroCallArgumentTypeRestriction.new
-      rule.default_value = false
+        rule = MacroCallArgumentTypeRestriction.new
+        rule.default_value = false
 
-      it "passes if a macro call arg with a default value doesn't have a type restriction" do
-        expect_no_issues rule, <<-CRYSTAL
+        it "passes if a macro call arg with a default value doesn't have a type restriction" do
+          expect_no_issues rule, <<-CRYSTAL
           class Greeter
             getter name = "Kenobi"
           end
           CRYSTAL
-      end
+        end
 
-      it "passes if a top-level record call arg with default value doesn't have a type restriction" do
-        expect_no_issues rule, <<-CRYSTAL
+        it "passes if a top-level record call arg with default value doesn't have a type restriction" do
+          expect_no_issues rule, <<-CRYSTAL
           record Task,
             var1 : String,
             var2 = "asdf"
           CRYSTAL
+        end
       end
     end
   end
