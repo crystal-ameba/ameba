@@ -1,7 +1,19 @@
 module Ameba::Rule::Typing
   # A rule that enforces variable arguments to certain macros have a type restriction.
   #
-  # For example, these are considered valid:
+  # For example, these are considered invalid:
+  #
+  # ```
+  # class Greeter
+  #   getter name
+  #
+  #   record Task,
+  #     var1 : String,
+  #     var2 = "asdf"
+  # end
+  # ```
+  #
+  # And these are considered valid:
   #
   # ```
   # class Greeter
@@ -15,18 +27,6 @@ module Ameba::Rule::Typing
   #   record Task,
   #     var1 : String,
   #     var2 : String = "asdf"
-  # end
-  # ```
-  #
-  # And these are considered invalid:
-  #
-  # ```
-  # class Greeter
-  #   getter name
-  #
-  #   record Task,
-  #     var1 : String,
-  #     var2 = "asdf"
   # end
   # ```
   #
