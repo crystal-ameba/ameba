@@ -1,15 +1,17 @@
 module Ameba::Rule::Typing
   # A rule that enforces variable arguments to specific macros have a type restriction.
+  # By default these macros are: `(class_)getter/setter/property(?/!)` and `record`.
   #
   # For example, these are considered invalid:
   #
   # ```
   # class Greeter
   #   getter name
+  #   getter age = 0.days
   # end
   #
   # record Task,
-  #   cmd : String,
+  #   cmd = "",
   #   args = %w[]
   # ```
   #
@@ -18,11 +20,11 @@ module Ameba::Rule::Typing
   # ```
   # class Greeter
   #   getter name : String?
-  #   class_getter age : Int32 = 0
+  #   getter age : Time::Span = 0.days
   # end
   #
   # record Task,
-  #   cmd : String,
+  #   cmd : String = "",
   #   args : Array(String) = %w[]
   # ```
   #
@@ -59,7 +61,7 @@ module Ameba::Rule::Typing
   class MacroCallArgumentTypeRestriction < Base
     properties do
       since_version "1.7.0"
-      description "Recommends that variable args to certain macros have type restrictions"
+      description "Recommends that call arguments to certain macros have type restrictions"
       enabled false
       default_value true
       macro_names %w[
@@ -80,9 +82,9 @@ module Ameba::Rule::Typing
         when Crystal::Assign
           next unless default_value?
 
-          issue_for arg.target, MSG % node.name, prefer_name_location: true
+          issue_for arg.target, MSG, prefer_name_location: true
         when Crystal::Var, Crystal::Call
-          issue_for arg, MSG % node.name, prefer_name_location: true
+          issue_for arg, MSG, prefer_name_location: true
         end
       end
     end
