@@ -15,6 +15,7 @@ module Ameba::Rule::Typing
   # def add(a : String, b : String)
   #   a + b
   # end
+  # ```
   #
   # When the config options `PrivateMethods` and `ProtectedMethods`
   # are true, this rule is also applied to private and protected methods, respectively.
