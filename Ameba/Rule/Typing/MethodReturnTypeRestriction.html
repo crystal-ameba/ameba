@@ -14,7 +14,7 @@
 <script type="text/javascript" src="../../../js/doc.js"></script>
 
   <meta name="repository-name" content="ameba">
-  <title>Ameba::Rule::Performance::AnyAfterFilter - ameba master</title>
+  <title>Ameba::Rule::Typing::MethodReturnTypeRestriction - ameba master</title>
   <script type="text/javascript">
     CrystalDocs.base_path = "../../../";
   </script>
@@ -687,12 +687,12 @@
       
     </li>
   
-  <li class="parent open current" data-id="ameba/Ameba/Rule/Performance" data-name="ameba::rule::performance">
+  <li class="parent " data-id="ameba/Ameba/Rule/Performance" data-name="ameba::rule::performance">
       <a href="../../../Ameba/Rule/Performance.html">Performance</a>
       
         <ul>
   
-  <li class=" current" data-id="ameba/Ameba/Rule/Performance/AnyAfterFilter" data-name="ameba::rule::performance::anyafterfilter">
+  <li class=" " data-id="ameba/Ameba/Rule/Performance/AnyAfterFilter" data-name="ameba::rule::performance::anyafterfilter">
       <a href="../../../Ameba/Rule/Performance/AnyAfterFilter.html">AnyAfterFilter</a>
       
     </li>
@@ -827,12 +827,12 @@
       
     </li>
   
-  <li class="parent " data-id="ameba/Ameba/Rule/Typing" data-name="ameba::rule::typing">
+  <li class="parent open current" data-id="ameba/Ameba/Rule/Typing" data-name="ameba::rule::typing">
       <a href="../../../Ameba/Rule/Typing.html">Typing</a>
       
         <ul>
   
-  <li class=" " data-id="ameba/Ameba/Rule/Typing/MethodReturnTypeRestriction" data-name="ameba::rule::typing::methodreturntyperestriction">
+  <li class=" current" data-id="ameba/Ameba/Rule/Typing/MethodReturnTypeRestriction" data-name="ameba::rule::typing::methodreturntyperestriction">
       <a href="../../../Ameba/Rule/Typing/MethodReturnTypeRestriction.html">MethodReturnTypeRestriction</a>
       
     </li>
@@ -951,12 +951,12 @@
 <div class="main-content">
 <h1 class="type-name">
 
-  <span class="kind">class</span> Ameba::<wbr>Rule::<wbr>Performance::<wbr>AnyAfterFilter
+  <span class="kind">class</span> Ameba::<wbr>Rule::<wbr>Typing::<wbr>MethodReturnTypeRestriction
 
 </h1>
 
 
-  <ul class="superclass-hierarchy"><li class="superclass"><a href="../../../Ameba/Rule/Performance/AnyAfterFilter.html">Ameba::Rule::Performance::AnyAfterFilter</a></li><li class="superclass"><a href="../../../Ameba/Rule/Performance/Base.html">Ameba::Rule::Performance::Base</a></li><li class="superclass"><a href="../../../Ameba/Rule/Base.html">Ameba::Rule::Base</a></li><li class="superclass">Reference</li><li class="superclass">Object</li></ul>
+  <ul class="superclass-hierarchy"><li class="superclass"><a href="../../../Ameba/Rule/Typing/MethodReturnTypeRestriction.html">Ameba::Rule::Typing::MethodReturnTypeRestriction</a></li><li class="superclass"><a href="../../../Ameba/Rule/Base.html">Ameba::Rule::Base</a></li><li class="superclass">Reference</li><li class="superclass">Object</li></ul>
 
 
 
@@ -970,19 +970,22 @@
     Overview
   </h2>
 
-  <p>This rule is used to identify usage of <code>any?</code> calls that follow filters.</p>
-<p>For example, this is considered invalid:</p>
-<pre><code class="language-crystal">[<span class="n">1</span>, <span class="n">2</span>, <span class="n">3</span>].<span class="k">select</span> { <span class="o">|</span>e<span class="o">|</span> e <span class="o">&gt;</span> <span class="n">2</span> }.any?
-[<span class="n">1</span>, <span class="n">2</span>, <span class="n">3</span>].reject { <span class="o">|</span>e<span class="o">|</span> e <span class="o">&gt;=</span> <span class="n">2</span> }.any?</code></pre>
-<p>And it should be written as this:</p>
-<pre><code class="language-crystal">[<span class="n">1</span>, <span class="n">2</span>, <span class="n">3</span>].any? { <span class="o">|</span>e<span class="o">|</span> e <span class="o">&gt;</span> <span class="n">2</span> }
-[<span class="n">1</span>, <span class="n">2</span>, <span class="n">3</span>].any? { <span class="o">|</span>e<span class="o">|</span> e <span class="o">&lt;</span> <span class="n">2</span> }</code></pre>
+  <p>A rule that enforces method definitions have a return type restriction.</p>
+<p>For example, this are considered invalid:</p>
+<pre><code class="language-crystal"><span class="k">def</span> <span class="m">hello</span>(name <span class="o">=</span> <span class="s">&quot;World&quot;</span>)
+  <span class="s">&quot;Hello </span><span class="i">#{</span>name<span class="i">}</span><span class="s">&quot;</span>
+<span class="k">end</span></code></pre>
+<p>And this is valid:</p>
+<pre><code class="language-crystal"><span class="k">def</span> <span class="m">hello</span>(name <span class="o">=</span> <span class="s">&quot;World&quot;</span>) : <span class="t">String</span>
+  <span class="s">&quot;Hello </span><span class="i">#{</span>name<span class="i">}</span><span class="s">&quot;</span>
+<span class="k">end</span></code></pre>
+<p>When the config options <code>PrivateMethods</code> and <code>ProtectedMethods</code>
+are true, this rule is also applied to private and protected methods, respectively.</p>
 <p>YAML configuration example:</p>
-<pre><code class="language-crystal"><span class="t">Performance</span><span class="o">/</span><span class="t">AnyAfterFilter</span>:
-  <span class="t">Enabled</span>: <span class="n">true</span>
-  <span class="t">FilterNames</span>:
-    <span class="o">-</span> <span class="k">select</span>
-    <span class="o">-</span> reject</code></pre>
+<pre><code class="language-crystal"><span class="t">Typing</span><span class="o">/</span><span class="t">MethodReturnTypeRestriction</span>:
+  <span class="t">Enabled</span>: <span class="n">false</span>
+  <span class="t">PrivateMethods</span>: <span class="n">false</span>
+  <span class="t">ProtectedMethods</span>: <span class="n">false</span></code></pre>
 
 
 
@@ -997,8 +1000,6 @@
     Included Modules
   </h2>
   <ul class="other-types-list">
-    
-      <li class="other-type"><a href="../../../Ameba/AST/Util.html">Ameba::AST::Util</a></li>
     
       <li class="other-type">YAML::Serializable</li>
     
@@ -1025,8 +1026,8 @@
   </h2>
   
     
-      <a href="https://github.com/crystal-ameba/ameba/blob/bde34f4/src/ameba/rule/performance/any_after_filter.cr#L29" target="_blank">
-        ameba/rule/performance/any_after_filter.cr
+      <a href="https://github.com/crystal-ameba/ameba/blob/bde34f4/src/ameba/rule/typing/method_return_type_restriction.cr#L31" target="_blank">
+        ameba/rule/typing/method_return_type_restriction.cr
       </a>
     
     <br/>
@@ -1047,7 +1048,7 @@
   <dl>
     
       <dt class="entry-const" id="MSG">
-        <strong>MSG</strong> = <code><span class="s">&quot;Use `any? {...}` instead of `%s {...}.any?`&quot;</span></code>
+        <strong>MSG</strong> = <code><span class="s">&quot;Method should have a return type restriction&quot;</span></code>
       </dt>
       
     
@@ -1068,14 +1069,12 @@
       <li class="entry-summary">
         <a href="#new%28ctx%3AYAML%3A%3AParseContext%2Cnode%3AYAML%3A%3ANodes%3A%3ANode%29-class-method" class="signature"><strong>.new</strong>(ctx : YAML::ParseContext, node : YAML::Nodes::Node)</a>
         
-          <div class="summary"><p>This rule is used to identify usage of <code>any?</code> calls that follow filters.</p></div>
-        
       </li>
     
       <li class="entry-summary">
         <a href="#new%28config%3Dnil%29-class-method" class="signature"><strong>.new</strong>(config = <span class="n">nil</span>)</a>
         
-          <div class="summary"><p>This rule is used to identify usage of <code>any?</code> calls that follow filters.</p></div>
+          <div class="summary"><p>A rule that enforces method definitions have a return type restriction.</p></div>
         
       </li>
     
@@ -1147,12 +1146,22 @@
       </li>
     
       <li class="entry-summary">
-        <a href="#filter_names%3AArray%28String%29-instance-method" class="signature"><strong>#filter_names</strong> : Array(String)</a>
+        <a href="#private_methods%3D%28private_methods%3ABool%29-instance-method" class="signature"><strong>#private_methods=</strong>(private_methods : Bool)</a>
         
       </li>
     
       <li class="entry-summary">
-        <a href="#filter_names%3D%28filter_names%3AArray%28String%29%29-instance-method" class="signature"><strong>#filter_names=</strong>(filter_names : Array(String))</a>
+        <a href="#private_methods%3F%3ABool-instance-method" class="signature"><strong>#private_methods?</strong> : Bool</a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#protected_methods%3D%28protected_methods%3ABool%29-instance-method" class="signature"><strong>#protected_methods=</strong>(protected_methods : Bool)</a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#protected_methods%3F%3ABool-instance-method" class="signature"><strong>#protected_methods?</strong> : Bool</a>
         
       </li>
     
@@ -1177,7 +1186,12 @@
       </li>
     
       <li class="entry-summary">
-        <a href="#test%28source%2Cnode%3ACrystal%3A%3ACall%29-instance-method" class="signature"><strong>#test</strong>(source, node : Crystal::Call)</a>
+        <a href="#test%28source%2Cnode%3ACrystal%3A%3ADef%29-instance-method" class="signature"><strong>#test</strong>(source, node : Crystal::Def)</a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#valid_return_type%3F%28node%3ACrystal%3A%3AASTNode%29%3ABool-instance-method" class="signature"><strong>#valid_return_type?</strong>(node : Crystal::ASTNode) : Bool</a>
         
       </li>
     
@@ -1186,169 +1200,6 @@
 
 
 <div class="methods-inherited">
-  
-    
-
-  <h3>Instance methods inherited from module <code><a href="../../../Ameba/AST/Util.html">Ameba::AST::Util</a></code></h3>
-  
-  
-    <a href="../../../Ameba/AST/Util.html#abort%3F%28node%29-instance-method" class="tooltip">
-      <span>abort?(node)</span>
-    abort?</a>, 
-    
-  
-    <a href="../../../Ameba/AST/Util.html#control_exp_code%28node%3ACrystal%3A%3AControlExpression%2Ccode_lines%29-instance-method" class="tooltip">
-      <span>control_exp_code(node : Crystal::ControlExpression, code_lines)</span>
-    control_exp_code</a>, 
-    
-  
-    <a href="../../../Ameba/AST/Util.html#dynamic_literal%3F%28node%29%3ABool-instance-method" class="tooltip">
-      <span>dynamic_literal?(node) : Bool</span>
-    dynamic_literal?</a>, 
-    
-  
-    <a href="../../../Ameba/AST/Util.html#exit%3F%28node%29-instance-method" class="tooltip">
-      <span>exit?(node)</span>
-    exit?</a>, 
-    
-  
-    <a href="../../../Ameba/AST/Util.html#flow_command%3F%28node%2Cin_loop%29-instance-method" class="tooltip">
-      <span>flow_command?(node, in_loop)</span>
-    flow_command?</a>, 
-    
-  
-    <a href="../../../Ameba/AST/Util.html#flow_expression%3F%28node%2Cin_loop%3Dfalse%29-instance-method" class="tooltip">
-      <span>flow_expression?(node, in_loop = <span class="n">false</span>)</span>
-    flow_expression?</a>, 
-    
-  
-    <a href="../../../Ameba/AST/Util.html#literal%3F%28node%29%3ABool-instance-method" class="tooltip">
-      <span>literal?(node) : Bool</span>
-    literal?</a>, 
-    
-  
-    <a href="../../../Ameba/AST/Util.html#loop%3F%28node%29-instance-method" class="tooltip">
-      <span>loop?(node)</span>
-    loop?</a>, 
-    
-  
-    <a href="../../../Ameba/AST/Util.html#name_end_location%28node%29-instance-method" class="tooltip">
-      <span>name_end_location(node)</span>
-    name_end_location</a>, 
-    
-  
-    <a href="../../../Ameba/AST/Util.html#name_location%28node%29-instance-method" class="tooltip">
-      <span>name_location(node)</span>
-    name_location</a>, 
-    
-  
-    <a href="../../../Ameba/AST/Util.html#name_size%28node%29-instance-method" class="tooltip">
-      <span>name_size(node)</span>
-    name_size</a>, 
-    
-  
-    <a href="../../../Ameba/AST/Util.html#node_source%28node%2Ccode_lines%29-instance-method" class="tooltip">
-      <span>node_source(node, code_lines)</span>
-    node_source</a>, 
-    
-  
-    <a href="../../../Ameba/AST/Util.html#path_named%3F%28node%2Cname%29%3ABool-instance-method" class="tooltip">
-      <span>path_named?(node, name) : Bool</span>
-    path_named?</a>, 
-    
-  
-    <a href="../../../Ameba/AST/Util.html#raise%3F%28node%29-instance-method" class="tooltip">
-      <span>raise?(node)</span>
-    raise?</a>, 
-    
-  
-    <a href="../../../Ameba/AST/Util.html#source_between%28loc%2Cend_loc%2Ccode_lines%29%3AString%7CNil-instance-method" class="tooltip">
-      <span>source_between(loc, end_loc, code_lines) : String | Nil</span>
-    source_between</a>, 
-    
-  
-    <a href="../../../Ameba/AST/Util.html#static_literal%3F%28node%29%3ABool-instance-method" class="tooltip">
-      <span>static_literal?(node) : Bool</span>
-    static_literal?</a>
-    
-  
-
-
-    
-
-
-    
-
-
-    
-
-
-  
-    
-
-
-    
-
-
-    
-
-
-    
-
-
-  
-    
-
-
-    
-
-
-    
-
-
-    
-
-
-  
-    
-
-  <h3>Instance methods inherited from class <code><a href="../../../Ameba/Rule/Performance/Base.html">Ameba::Rule::Performance::Base</a></code></h3>
-  
-  
-    <a href="../../../Ameba/Rule/Performance/Base.html#catch%28source%3ASource%29-instance-method" class="tooltip">
-      <span>catch(source : Source)</span>
-    catch</a>
-    
-  
-
-
-    
-
-  <h3>Constructor methods inherited from class <code><a href="../../../Ameba/Rule/Performance/Base.html">Ameba::Rule::Performance::Base</a></code></h3>
-  
-  
-    <a href="../../../Ameba/Rule/Performance/Base.html#new%28ctx%3AYAML%3A%3AParseContext%2Cnode%3AYAML%3A%3ANodes%3A%3ANode%29-class-method" class="tooltip">
-      <span>new(ctx : YAML::ParseContext, node : YAML::Nodes::Node)<br/>new(config = <span class="n">nil</span>)</span>
-    new</a>
-    
-  
-
-
-    
-
-  <h3>Class methods inherited from class <code><a href="../../../Ameba/Rule/Performance/Base.html">Ameba::Rule::Performance::Base</a></code></h3>
-  
-  
-    <a href="../../../Ameba/Rule/Performance/Base.html#parsed_doc%3AString%7CNil-class-method" class="tooltip">
-      <span>parsed_doc : String | Nil</span>
-    parsed_doc</a>
-    
-  
-
-
-    
-
-
   
     
 
@@ -1519,23 +1370,6 @@
         <a class="method-permalink" href="#new%28ctx%3AYAML%3A%3AParseContext%2Cnode%3AYAML%3A%3ANodes%3A%3ANode%29-class-method">#</a>
       </div>
       
-        <div class="doc">
-          
-          <p>This rule is used to identify usage of <code>any?</code> calls that follow filters.</p>
-<p>For example, this is considered invalid:</p>
-<pre><code class="language-crystal">[<span class="n">1</span>, <span class="n">2</span>, <span class="n">3</span>].<span class="k">select</span> { <span class="o">|</span>e<span class="o">|</span> e <span class="o">&gt;</span> <span class="n">2</span> }.any?
-[<span class="n">1</span>, <span class="n">2</span>, <span class="n">3</span>].reject { <span class="o">|</span>e<span class="o">|</span> e <span class="o">&gt;=</span> <span class="n">2</span> }.any?</code></pre>
-<p>And it should be written as this:</p>
-<pre><code class="language-crystal">[<span class="n">1</span>, <span class="n">2</span>, <span class="n">3</span>].any? { <span class="o">|</span>e<span class="o">|</span> e <span class="o">&gt;</span> <span class="n">2</span> }
-[<span class="n">1</span>, <span class="n">2</span>, <span class="n">3</span>].any? { <span class="o">|</span>e<span class="o">|</span> e <span class="o">&lt;</span> <span class="n">2</span> }</code></pre>
-<p>YAML configuration example:</p>
-<pre><code class="language-crystal"><span class="t">Performance</span><span class="o">/</span><span class="t">AnyAfterFilter</span>:
-  <span class="t">Enabled</span>: <span class="n">true</span>
-  <span class="t">FilterNames</span>:
-    <span class="o">-</span> <span class="k">select</span>
-    <span class="o">-</span> reject</code></pre>
-        </div>
-      
       <br/>
       <div>
         
@@ -1552,25 +1386,28 @@
       
         <div class="doc">
           
-          <p>This rule is used to identify usage of <code>any?</code> calls that follow filters.</p>
-<p>For example, this is considered invalid:</p>
-<pre><code class="language-crystal">[<span class="n">1</span>, <span class="n">2</span>, <span class="n">3</span>].<span class="k">select</span> { <span class="o">|</span>e<span class="o">|</span> e <span class="o">&gt;</span> <span class="n">2</span> }.any?
-[<span class="n">1</span>, <span class="n">2</span>, <span class="n">3</span>].reject { <span class="o">|</span>e<span class="o">|</span> e <span class="o">&gt;=</span> <span class="n">2</span> }.any?</code></pre>
-<p>And it should be written as this:</p>
-<pre><code class="language-crystal">[<span class="n">1</span>, <span class="n">2</span>, <span class="n">3</span>].any? { <span class="o">|</span>e<span class="o">|</span> e <span class="o">&gt;</span> <span class="n">2</span> }
-[<span class="n">1</span>, <span class="n">2</span>, <span class="n">3</span>].any? { <span class="o">|</span>e<span class="o">|</span> e <span class="o">&lt;</span> <span class="n">2</span> }</code></pre>
+          <p>A rule that enforces method definitions have a return type restriction.</p>
+<p>For example, this are considered invalid:</p>
+<pre><code class="language-crystal"><span class="k">def</span> <span class="m">hello</span>(name <span class="o">=</span> <span class="s">&quot;World&quot;</span>)
+  <span class="s">&quot;Hello </span><span class="i">#{</span>name<span class="i">}</span><span class="s">&quot;</span>
+<span class="k">end</span></code></pre>
+<p>And this is valid:</p>
+<pre><code class="language-crystal"><span class="k">def</span> <span class="m">hello</span>(name <span class="o">=</span> <span class="s">&quot;World&quot;</span>) : <span class="t">String</span>
+  <span class="s">&quot;Hello </span><span class="i">#{</span>name<span class="i">}</span><span class="s">&quot;</span>
+<span class="k">end</span></code></pre>
+<p>When the config options <code>PrivateMethods</code> and <code>ProtectedMethods</code>
+are true, this rule is also applied to private and protected methods, respectively.</p>
 <p>YAML configuration example:</p>
-<pre><code class="language-crystal"><span class="t">Performance</span><span class="o">/</span><span class="t">AnyAfterFilter</span>:
-  <span class="t">Enabled</span>: <span class="n">true</span>
-  <span class="t">FilterNames</span>:
-    <span class="o">-</span> <span class="k">select</span>
-    <span class="o">-</span> reject</code></pre>
+<pre><code class="language-crystal"><span class="t">Typing</span><span class="o">/</span><span class="t">MethodReturnTypeRestriction</span>:
+  <span class="t">Enabled</span>: <span class="n">false</span>
+  <span class="t">PrivateMethods</span>: <span class="n">false</span>
+  <span class="t">ProtectedMethods</span>: <span class="n">false</span></code></pre>
         </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/bde34f4/src/ameba/rule/performance/any_after_filter.cr#L29" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/bde34f4/src/ameba/rule/typing/method_return_type_restriction.cr#L31" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1714,12 +1551,12 @@
       </div>
     </div>
   
-    <div class="entry-detail" id="filter_names:Array(String)-instance-method">
+    <div class="entry-detail" id="private_methods=(private_methods:Bool)-instance-method">
       <div class="signature">
         
-        def <strong>filter_names</strong> : Array(String)
+        def <strong>private_methods=</strong>(private_methods : Bool)
 
-        <a class="method-permalink" href="#filter_names%3AArray%28String%29-instance-method">#</a>
+        <a class="method-permalink" href="#private_methods%3D%28private_methods%3ABool%29-instance-method">#</a>
       </div>
       
       <br/>
@@ -1728,12 +1565,40 @@
       </div>
     </div>
   
-    <div class="entry-detail" id="filter_names=(filter_names:Array(String))-instance-method">
+    <div class="entry-detail" id="private_methods?:Bool-instance-method">
       <div class="signature">
         
-        def <strong>filter_names=</strong>(filter_names : Array(String))
+        def <strong>private_methods?</strong> : Bool
 
-        <a class="method-permalink" href="#filter_names%3D%28filter_names%3AArray%28String%29%29-instance-method">#</a>
+        <a class="method-permalink" href="#private_methods%3F%3ABool-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="protected_methods=(protected_methods:Bool)-instance-method">
+      <div class="signature">
+        
+        def <strong>protected_methods=</strong>(protected_methods : Bool)
+
+        <a class="method-permalink" href="#protected_methods%3D%28protected_methods%3ABool%29-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="protected_methods?:Bool-instance-method">
+      <div class="signature">
+        
+        def <strong>protected_methods?</strong> : Bool
+
+        <a class="method-permalink" href="#protected_methods%3F%3ABool-instance-method">#</a>
       </div>
       
       <br/>
@@ -1781,7 +1646,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/bde34f4/src/ameba/rule/performance/any_after_filter.cr#L32" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/bde34f4/src/ameba/rule/typing/method_return_type_restriction.cr#L32" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1800,18 +1665,34 @@
       </div>
     </div>
   
-    <div class="entry-detail" id="test(source,node:Crystal::Call)-instance-method">
+    <div class="entry-detail" id="test(source,node:Crystal::Def)-instance-method">
       <div class="signature">
         
-        def <strong>test</strong>(source, node : Crystal::Call)
+        def <strong>test</strong>(source, node : Crystal::Def)
 
-        <a class="method-permalink" href="#test%28source%2Cnode%3ACrystal%3A%3ACall%29-instance-method">#</a>
+        <a class="method-permalink" href="#test%28source%2Cnode%3ACrystal%3A%3ADef%29-instance-method">#</a>
       </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/bde34f4/src/ameba/rule/performance/any_after_filter.cr#L40" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/bde34f4/src/ameba/rule/typing/method_return_type_restriction.cr#L42" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="valid_return_type?(node:Crystal::ASTNode):Bool-instance-method">
+      <div class="signature">
+        
+        def <strong>valid_return_type?</strong>(node : Crystal::ASTNode) : Bool
+
+        <a class="method-permalink" href="#valid_return_type%3F%28node%3ACrystal%3A%3AASTNode%29%3ABool-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/crystal-ameba/ameba/blob/bde34f4/src/ameba/rule/typing/method_return_type_restriction.cr#L46" target="_blank">View source</a>]
         
       </div>
     </div>
