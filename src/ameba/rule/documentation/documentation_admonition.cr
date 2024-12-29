@@ -36,6 +36,7 @@ module Ameba::Rule::Documentation
     properties do
       since_version "1.6.0"
       description "Reports documentation admonitions"
+      severity :warning
       admonitions %w[TODO FIXME BUG]
       timezone "UTC"
     end
