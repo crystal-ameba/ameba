@@ -19,7 +19,7 @@ module Ameba::Rule::Typing
       CRYSTAL
   end
 
-  it "passes if a private or protected method doesn't have a return type" do
+  it "passes if a private or protected method doesn't have a return type restriction" do
     expect_no_issues subject, <<-CRYSTAL
       private def hello
         "hello world"
@@ -31,7 +31,7 @@ module Ameba::Rule::Typing
       CRYSTAL
   end
 
-  it "fails if a public method doesn't have a return type" do
+  it "fails if a public method doesn't have a return type restriction" do
     expect_issue subject, <<-CRYSTAL
       def hello
       # ^^^^^^^ error: Method should have a return type restriction
@@ -45,7 +45,7 @@ module Ameba::Rule::Typing
       rule = MethodReturnTypeRestriction.new
       rule.private_methods = true
 
-      it "passes if a method has a return type" do
+      it "passes if a method has a return type restriction" do
         expect_no_issues rule, <<-CRYSTAL
           def hello : String
             "hello world"
@@ -66,7 +66,7 @@ module Ameba::Rule::Typing
           CRYSTAL
       end
 
-      it "passes if a protected method doesn't have a return type" do
+      it "passes if a protected method doesn't have a return type restriction" do
         expect_no_issues rule, <<-CRYSTAL
           protected def hello
             "hello world"
@@ -74,7 +74,7 @@ module Ameba::Rule::Typing
           CRYSTAL
       end
 
-      it "fails if a public or private method doesn't have a return type" do
+      it "fails if a public or private method doesn't have a return type restriction" do
         expect_issue rule, <<-CRYSTAL
           def hello
           # ^^^^^^^ error: Method should have a return type restriction
@@ -93,7 +93,7 @@ module Ameba::Rule::Typing
       rule = MethodReturnTypeRestriction.new
       rule.protected_methods = true
 
-      it "passes if a method has a return type" do
+      it "passes if a method has a return type restriction" do
         expect_no_issues rule, <<-CRYSTAL
           protected def hello : String
             "hello world"
@@ -101,7 +101,7 @@ module Ameba::Rule::Typing
           CRYSTAL
       end
 
-      it "passes if a private method doesn't have a return type" do
+      it "passes if a private method doesn't have a return type restriction" do
         expect_no_issues rule, <<-CRYSTAL
           private def hello
             "hello world"
@@ -109,7 +109,7 @@ module Ameba::Rule::Typing
           CRYSTAL
       end
 
-      it "fails if a public or protected method doesn't have a return type" do
+      it "fails if a public or protected method doesn't have a return type restriction" do
         expect_issue rule, <<-CRYSTAL
           def hello
           # ^^^^^^^ error: Method should have a return type restriction
