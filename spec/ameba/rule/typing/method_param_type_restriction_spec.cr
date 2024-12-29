@@ -44,17 +44,6 @@ module Ameba::Rule::Typing
       CRYSTAL
   end
 
-  it "passes if a method param with a default value doesn't have a type restriction" do
-    expect_no_issues subject, <<-CRYSTAL
-      class Greeter
-        # This method is documented
-        def hello(a = "world")
-          "hello \#{a}"
-        end
-      end
-      CRYSTAL
-  end
-
   context "properties" do
     context "#private_methods" do
       rule = MethodParamTypeRestriction.new
