@@ -1,5 +1,5 @@
 module Ameba::Rule::Typing
-  # A rule that enforces variable arguments to specific macros have a type restriction.
+  # A rule that enforces call arguments to specific macros have a type restriction.
   # By default these macros are: `(class_)getter/setter/property(?/!)` and `record`.
   #
   # For example, these are considered invalid:
