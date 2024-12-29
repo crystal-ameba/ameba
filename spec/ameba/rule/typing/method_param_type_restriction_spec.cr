@@ -134,7 +134,7 @@ module Ameba::Rule::Typing
         expect_issue rule, <<-CRYSTAL
           def hello(a = "world")
                   # ^ error: Method parameter should have a type restriction
-            "hello #{a}"
+            "hello \#{a}"
           end
           CRYSTAL
       end
