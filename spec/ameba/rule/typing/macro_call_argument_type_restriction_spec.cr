@@ -52,11 +52,11 @@ module Ameba::Rule::Typing
             CRYSTAL
         end
 
-        it "passes if a top-level record call arg with default value doesn't have a type restriction" do
+        it "passes if a record call arg with default value doesn't have a type restriction" do
           expect_no_issues rule, <<-CRYSTAL
             record Task,
-              var1 : String,
-              var2 = "asdf"
+              cmd : String,
+              args = %[]
             CRYSTAL
         end
       end
