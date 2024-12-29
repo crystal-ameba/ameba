@@ -3,7 +3,7 @@ require "../../../spec_helper"
 module Ameba::Rule::Typing
   subject = MethodParamTypeRestriction.new
 
-  it "passes if a method param has a type" do
+  it "passes if a method param has a type restriction" do
     expect_no_issues subject, <<-CRYSTAL
       def hello(a : String) : String
         "hello world" + a
@@ -23,7 +23,7 @@ module Ameba::Rule::Typing
       CRYSTAL
   end
 
-  it "passes if a private method method param doesn't have a type" do
+  it "passes if a private method method param doesn't have a type restriction" do
     expect_no_issues subject, <<-CRYSTAL
       class Greeter
         private def hello(a)
@@ -33,7 +33,7 @@ module Ameba::Rule::Typing
       CRYSTAL
   end
 
-  it "passes if a protected method param doesn't have a type" do
+  it "passes if a protected method param doesn't have a type restriction" do
     expect_no_issues subject, <<-CRYSTAL
       class Greeter
         protected def hello(a)
@@ -43,7 +43,7 @@ module Ameba::Rule::Typing
       CRYSTAL
   end
 
-  it "fails if a public method param doesn't have a type" do
+  it "fails if a public method param doesn't have a type restriction" do
     expect_issue subject, <<-CRYSTAL
       # This is documentation about `hello`
       def hello(a)
@@ -53,7 +53,7 @@ module Ameba::Rule::Typing
       CRYSTAL
   end
 
-  it "passes if a method param with a default value doesn't have a type" do
+  it "passes if a method param with a default value doesn't have a type restriction" do
     expect_no_issues subject, <<-CRYSTAL
       def hello(a = "jim")
         "hello there, " + a
@@ -61,7 +61,7 @@ module Ameba::Rule::Typing
       CRYSTAL
   end
 
-  it "passes if a method param with a default value doesn't have a type" do
+  it "passes if a method param with a default value doesn't have a type restriction" do
     expect_no_issues subject, <<-CRYSTAL
       class Greeter
         # This method is documented
@@ -77,7 +77,7 @@ module Ameba::Rule::Typing
       rule = MethodParamTypeRestriction.new
       rule.private_methods = true
 
-      it "passes if a method has a return type" do
+      it "passes if a method has a return type restriction" do
         expect_no_issues rule, <<-CRYSTAL
           private def hello(a : String) : String
             "hello world" + a
@@ -85,7 +85,7 @@ module Ameba::Rule::Typing
           CRYSTAL
       end
 
-      it "passes if a protected method param doesn't have a type" do
+      it "passes if a protected method param doesn't have a type restriction" do
         expect_no_issues rule, <<-CRYSTAL
           protected def hello(a)
             "hello world"
@@ -93,7 +93,7 @@ module Ameba::Rule::Typing
           CRYSTAL
       end
 
-      it "fails if a public or private method doesn't have a return type" do
+      it "fails if a public or private method doesn't have a return type restriction" do
         expect_issue rule, <<-CRYSTAL
           # This method is documented
           def hello(a)
@@ -114,7 +114,7 @@ module Ameba::Rule::Typing
       rule = MethodParamTypeRestriction.new
       rule.protected_methods = true
 
-      it "passes if a method has a return type" do
+      it "passes if a method has a return type restriction" do
         expect_no_issues rule, <<-CRYSTAL
           protected def hello(a : String) : String
             "hello world" + a
@@ -122,7 +122,7 @@ module Ameba::Rule::Typing
           CRYSTAL
       end
 
-      it "passes if a private method param doesn't have a type" do
+      it "passes if a private method param doesn't have a type restriction" do
         expect_no_issues rule, <<-CRYSTAL
           private def hello(a)
             "hello world"
@@ -130,7 +130,7 @@ module Ameba::Rule::Typing
           CRYSTAL
       end
 
-      it "fails if a public or protected method doesn't have a return type" do
+      it "fails if a public or protected method doesn't have a return type restriction" do
         expect_issue rule, <<-CRYSTAL
           # This method is documented
           def hello(a)
@@ -148,7 +148,7 @@ module Ameba::Rule::Typing
     end
 
     context "#default_value" do
-      it "fails if a method param with a default value doesn't have a type" do
+      it "fails if a method param with a default value doesn't have a type restriction" do
         rule = MethodParamTypeRestriction.new
         rule.default_value = true
 

@@ -1,48 +1,40 @@
 module Ameba::Rule::Typing
   # A rule that enforces method parameters have type restrictions, with optional enforcement of block parameters
   #
-  # For example, these are considered valid:
+  # For example, this is considered invalid:
   #
   # ```
-  # def listen(a : String, b : String) : String
+  # def add(a, b)
   #   a + b
   # end
-  #
-  # def hello(name : String?)
-  #   puts "Hello, " + (name || "there") + "!"
-  # end
+  # ```
   # ```
   #
-  # And these are considered invalid:
+  # And this is considered valid:
   #
   # ```
-  # def listen(a, b) : String
+  # def add(a : String, b : String)
   #   a + b
   # end
-  #
-  # def hello(name)
-  #   puts "Hello, " + (name || "there") + "!"
-  # end
-  # ```
   #
   # When the config options `PrivateMethods` and `ProtectedMethods`
   # are true, this rule is also applied to private and protected methods, respectively.
   #
-  # The `BlockParam` configuration option will extend this to block params, where this is valid:
-  #
-  # ```
-  # def exec(&block : String -> String)
-  #   yield "cmd"
-  # end
-  # ```
-  #
-  # And these are invalid:
+  # The `BlockParam` configuration option will extend this to block params, where these are invalid:
   #
   # ```
   # def exec(&)
   # end
   #
   # def exec(&block)
+  # end
+  # ```
+  #
+  # And this is valid:
+  #
+  # ```
+  # def exec(&block : String -> String)
+  #   yield "cmd"
   # end
   # ```
   #
@@ -60,6 +52,7 @@ module Ameba::Rule::Typing
   # ```
   class MethodParamTypeRestriction < Base
     properties do
+      since_version "1.7.0"
       description "Recommends that method parameters have type restrictions"
       enabled false
       default_value false
