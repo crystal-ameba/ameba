@@ -51,11 +51,6 @@ module Ameba::Rule::Typing
             "hello world"
           end
 
-          # This method is documented
-          def hello : String
-            "hello world"
-          end
-
           private def hello : String
             "hello world"
           end
