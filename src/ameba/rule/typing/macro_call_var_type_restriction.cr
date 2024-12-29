@@ -62,6 +62,7 @@ module Ameba::Rule::Typing
   # ```
   class MacroCallVarTypeRestriction < Base
     properties do
+      since_version "1.7.0"
       description "Recommends that variable args to certain macros have type restrictions"
       enabled false
       default_value true

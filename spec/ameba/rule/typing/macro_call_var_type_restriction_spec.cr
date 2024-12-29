@@ -1,6 +1,7 @@
 require "../../../spec_helper"
 
 module Ameba::Rule::Typing
+  describe MacroCallVarTypeRestriction do
   subject = MacroCallVarTypeRestriction.new
 
   it "passes if macro call args have type restrictions" do
