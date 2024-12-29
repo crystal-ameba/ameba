@@ -57,18 +57,18 @@ module Ameba::Rule::Typing
 
         it "passes if a macro call arg with a default value doesn't have a type restriction" do
           expect_no_issues rule, <<-CRYSTAL
-          class Greeter
-            getter name = "Kenobi"
-          end
-          CRYSTAL
+            class Greeter
+              getter name = "Kenobi"
+            end
+            CRYSTAL
         end
 
         it "passes if a top-level record call arg with default value doesn't have a type restriction" do
           expect_no_issues rule, <<-CRYSTAL
-          record Task,
-            var1 : String,
-            var2 = "asdf"
-          CRYSTAL
+            record Task,
+              var1 : String,
+              var2 = "asdf"
+            CRYSTAL
         end
       end
     end
