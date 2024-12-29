@@ -46,7 +46,7 @@ module Ameba::Rule::Typing
     def valid_return_type?(node : Crystal::ASTNode) : Bool
       !!node.return_type ||
         (node.visibility.private? && !private_methods?) ||
-          (node.visibility.protected? && !protected_methods?)
+        (node.visibility.protected? && !protected_methods?)
     end
   end
 end
