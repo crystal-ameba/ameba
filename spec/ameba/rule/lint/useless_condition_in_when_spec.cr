@@ -1,9 +1,9 @@
 require "../../../spec_helper"
 
 module Ameba::Rule::Lint
-  subject = UselessConditionInWhen.new
-
   describe UselessConditionInWhen do
+    subject = UselessConditionInWhen.new
+
     it "passes if there is not useless condition" do
       expect_no_issues subject, <<-CRYSTAL
         case

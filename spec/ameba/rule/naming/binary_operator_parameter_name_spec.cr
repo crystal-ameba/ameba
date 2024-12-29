@@ -1,9 +1,9 @@
 require "../../../spec_helper"
 
 module Ameba::Rule::Naming
-  subject = BinaryOperatorParameterName.new
-
   describe BinaryOperatorParameterName do
+    subject = BinaryOperatorParameterName.new
+
     it "ignores `other` parameter name in binary method definitions" do
       expect_no_issues subject, <<-CRYSTAL
         def +(other); end

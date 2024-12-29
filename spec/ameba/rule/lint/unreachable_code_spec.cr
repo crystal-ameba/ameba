@@ -1,9 +1,9 @@
 require "../../../spec_helper"
 
 module Ameba::Rule::Lint
-  subject = UnreachableCode.new
-
   describe UnreachableCode do
+    subject = UnreachableCode.new
+
     context "return" do
       it "reports if there is unreachable code after return" do
         s = Source.new %(

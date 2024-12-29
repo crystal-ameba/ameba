@@ -5,9 +5,9 @@ module Ameba::Formatter
     include Util
   end
 
-  subject = Subject.new
-
   describe Util do
+    subject = Subject.new
+
     describe "#deansify" do
       it "returns given string without ANSI codes" do
         str = String.build do |io|

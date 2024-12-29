@@ -1,19 +1,19 @@
 require "../../../spec_helper"
 
-module Ameba
-  subject = Rule::Naming::ConstantNames.new
-
-  private def it_reports_constant(name, value, expected, *, file = __FILE__, line = __LINE__)
-    it "reports constant name #{expected}", file, line do
-      rule = Rule::Naming::ConstantNames.new
-      expect_issue rule, <<-CRYSTAL, name: name, file: file, line: line
-          %{name} = #{value}
-        # ^{name} error: Constant name should be screaming-cased: `#{expected}`, not `#{name}`
-        CRYSTAL
-    end
+private def it_reports_constant(name, value, expected, *, file = __FILE__, line = __LINE__)
+  it "reports constant name #{expected}", file, line do
+    rule = Ameba::Rule::Naming::ConstantNames.new
+    expect_issue rule, <<-CRYSTAL, name: name, file: file, line: line
+        %{name} = #{value}
+      # ^{name} error: Constant name should be screaming-cased: `#{expected}`, not `#{name}`
+      CRYSTAL
   end
+end
 
-  describe Rule::Naming::ConstantNames do
+module Ameba::Rule::Naming
+  describe ConstantNames do
+    subject = ConstantNames.new
+
     it "passes if type names are screaming-cased" do
       expect_no_issues subject, <<-CRYSTAL
         LUCKY_NUMBERS     = [3, 7, 11]

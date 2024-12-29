@@ -5,9 +5,9 @@ module Ameba::AST
     include Util
   end
 
-  subject = Test.new
-
   describe Util do
+    subject = Test.new
+
     describe "#literal?" do
       [
         Crystal::ArrayLiteral.new,

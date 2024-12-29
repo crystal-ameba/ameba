@@ -1,9 +1,9 @@
 require "../../../spec_helper"
 
 module Ameba::Rule::Performance
-  subject = AnyInsteadOfEmpty.new
-
   describe AnyInsteadOfEmpty do
+    subject = AnyInsteadOfEmpty.new
+
     it "passes if there is no potential performance improvements" do
       expect_no_issues subject, <<-CRYSTAL
         [1, 2, 3].any?(&.zero?)

@@ -1,9 +1,9 @@
 require "../../../spec_helper"
 
 module Ameba::Rule::Style
-  subject = UnlessElse.new
-
   describe UnlessElse do
+    subject = UnlessElse.new
+
     it "passes if unless hasn't else" do
       expect_no_issues subject, <<-CRYSTAL
         unless something

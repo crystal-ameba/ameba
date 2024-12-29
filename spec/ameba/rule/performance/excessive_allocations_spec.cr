@@ -1,9 +1,9 @@
 require "../../../spec_helper"
 
 module Ameba::Rule::Performance
-  subject = ExcessiveAllocations.new
-
   describe ExcessiveAllocations do
+    subject = ExcessiveAllocations.new
+
     it "passes if there is no potential performance improvements" do
       expect_no_issues subject, <<-CRYSTAL
         "Alice".chars.each(arg) { |c| puts c }

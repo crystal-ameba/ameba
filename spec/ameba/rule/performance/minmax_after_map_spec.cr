@@ -1,9 +1,9 @@
 require "../../../spec_helper"
 
 module Ameba::Rule::Performance
-  subject = MinMaxAfterMap.new
-
   describe MinMaxAfterMap do
+    subject = MinMaxAfterMap.new
+
     it "passes if there are no potential performance improvements" do
       expect_no_issues subject, <<-CRYSTAL
         %w[Alice Bob].map { |name| name.size }.min(2)

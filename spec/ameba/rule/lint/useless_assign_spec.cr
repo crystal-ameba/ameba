@@ -3,7 +3,7 @@ require "../../../spec_helper"
 module Ameba::Rule::Lint
   describe UselessAssign do
     subject = UselessAssign.new
-      .tap(&.exclude_type_declarations = false)
+    subject.exclude_type_declarations = false
 
     it "does not report used assignments" do
       expect_no_issues subject, <<-CRYSTAL

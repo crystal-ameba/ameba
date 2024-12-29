@@ -1,9 +1,9 @@
 require "../../../spec_helper"
 
 module Ameba::Rule::Naming
-  subject = QueryBoolMethods.new
-
   describe QueryBoolMethods do
+    subject = QueryBoolMethods.new
+
     it "passes for valid cases" do
       expect_no_issues subject, <<-CRYSTAL
         class Foo

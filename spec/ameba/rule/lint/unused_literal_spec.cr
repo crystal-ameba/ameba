@@ -1,9 +1,9 @@
 require "../../../spec_helper"
 
 module Ameba::Rule::Lint
-  subject = UnusedLiteral.new
-
   describe UnusedLiteral do
+    subject = UnusedLiteral.new
+
     it "passes if literals are used to assign" do
       expect_no_issues subject, <<-CRYSTAL
         a = 1

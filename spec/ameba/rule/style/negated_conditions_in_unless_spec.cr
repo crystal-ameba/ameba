@@ -1,9 +1,9 @@
 require "../../../spec_helper"
 
 module Ameba::Rule::Style
-  subject = NegatedConditionsInUnless.new
-
   describe NegatedConditionsInUnless do
+    subject = NegatedConditionsInUnless.new
+
     it "passes with a unless without negated condition" do
       expect_no_issues subject, <<-CRYSTAL
         unless a

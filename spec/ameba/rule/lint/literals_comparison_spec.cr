@@ -1,9 +1,9 @@
 require "../../../spec_helper"
 
 module Ameba::Rule::Lint
-  subject = LiteralsComparison.new
-
   describe LiteralsComparison do
+    subject = LiteralsComparison.new
+
     it "passes for valid cases" do
       expect_no_issues subject, <<-CRYSTAL
         {start.year, start.month} == {stop.year, stop.month}

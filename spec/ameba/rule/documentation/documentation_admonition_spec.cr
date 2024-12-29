@@ -1,9 +1,9 @@
 require "../../../spec_helper"
 
 module Ameba::Rule::Documentation
-  subject = DocumentationAdmonition.new
-
   describe DocumentationAdmonition do
+    subject = DocumentationAdmonition.new
+
     it "passes for comments with admonition mid-word/sentence" do
       subject.admonitions.each do |admonition|
         expect_no_issues subject, <<-CRYSTAL
