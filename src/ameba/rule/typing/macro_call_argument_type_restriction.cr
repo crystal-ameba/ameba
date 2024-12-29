@@ -1,5 +1,5 @@
 module Ameba::Rule::Typing
-  # A rule that enforces variable arguments to certain macros have a type restriction.
+  # A rule that enforces variable arguments to specific macros have a type restriction.
   #
   # For example, these are considered invalid:
   #
@@ -60,7 +60,7 @@ module Ameba::Rule::Typing
   #    - class_property!
   #    - record
   # ```
-  class MacroCallVarTypeRestriction < Base
+  class MacroCallArgumentTypeRestriction < Base
     properties do
       since_version "1.7.0"
       description "Recommends that variable args to certain macros have type restrictions"

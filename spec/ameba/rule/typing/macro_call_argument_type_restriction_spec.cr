@@ -1,8 +1,8 @@
 require "../../../spec_helper"
 
 module Ameba::Rule::Typing
-  describe MacroCallVarTypeRestriction do
-    subject = MacroCallVarTypeRestriction.new
+  describe MacroCallArgumentTypeRestriction do
+    subject = MacroCallArgumentTypeRestriction.new
 
     it "passes if macro call args have type restrictions" do
       expect_no_issues subject, <<-CRYSTAL
@@ -51,7 +51,7 @@ module Ameba::Rule::Typing
     end
 
     context "#default_value" do
-      rule = MacroCallVarTypeRestriction.new
+      rule = MacroCallArgumentTypeRestriction.new
       rule.default_value = false
 
       it "passes if a macro call arg with a default value doesn't have a type restriction" do
