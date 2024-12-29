@@ -13,11 +13,11 @@ module Ameba::Rule::Typing
           class_setter queue : Array(Int32)?
           property task_mutex : Mutex = Mutex.new
           class_property asdf : String
-
-          record Task,
-            var1 : String,
-            var2 : String = "asdf"
         end
+
+        record Task,
+          cmd : String,
+          args : Array(String) = %w[]
         CRYSTAL
     end
 
@@ -32,20 +32,9 @@ module Ameba::Rule::Typing
 
     it "fails if a record call arg doesn't have a type restriction" do
       expect_issue subject, <<-CRYSTAL
-        class Greeter
-          record Task,
-            var1 : String,
-            var2 = "asdf"
-          # ^^^^ error: Argument should have a type restriction
-        end
-        CRYSTAL
-    end
-
-    it "fails if a top-level record call arg doesn't have a type restriction" do
-      expect_issue subject, <<-CRYSTAL
         record Task,
-          var1 : String,
-          var2 = "asdf"
+          cmd : String,
+          args = %[]
         # ^^^^ error: Argument should have a type restriction
         CRYSTAL
     end
