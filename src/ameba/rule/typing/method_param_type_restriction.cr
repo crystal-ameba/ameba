@@ -8,7 +8,6 @@ module Ameba::Rule::Typing
   #   a + b
   # end
   # ```
-  # ```
   #
   # And this is considered valid:
   #
