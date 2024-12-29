@@ -6,11 +6,11 @@ module Ameba::Rule::Typing
   # ```
   # class Greeter
   #   getter name
-  #
-  #   record Task,
-  #     var1 : String,
-  #     var2 = "asdf"
   # end
+  #
+  # record Task,
+  #   cmd : String,
+  #   args = %w[]
   # ```
   #
   # And these are considered valid:
@@ -19,15 +19,11 @@ module Ameba::Rule::Typing
   # class Greeter
   #   getter name : String?
   #   class_getter age : Int32 = 0
-  #   setter tasks : Array(String) = [] of String
-  #   class_setter queue : Array(Int32)?
-  #   property task_mutex : Mutex = Mutex.new
-  #   class_property asdf : String
-
-  #   record Task,
-  #     var1 : String,
-  #     var2 : String = "asdf"
   # end
+  #
+  # record Task,
+  #   cmd : String,
+  #   args : Array(String) = %w[]
   # ```
   #
   # The `DefaultValue` configuration option controls whether this rule applies to
@@ -36,7 +32,7 @@ module Ameba::Rule::Typing
   # YAML configuration example:
   #
   # ```
-  # Typing/MethodParamTypeRestriction:
+  # Typing/MacroCallArgumentTypeRestriction:
   #   Enabled: false
   #   DefaultValue: true
   #   MacroNames:

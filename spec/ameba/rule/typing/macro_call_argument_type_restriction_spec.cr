@@ -50,7 +50,8 @@ module Ameba::Rule::Typing
         CRYSTAL
     end
 
-    context "#default_value" do
+    context "properties" do
+      context "#default_value" do
       rule = MacroCallArgumentTypeRestriction.new
       rule.default_value = false
 
