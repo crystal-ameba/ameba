@@ -67,7 +67,6 @@ module Ameba::AST
       BranchVisitor.new(node).tap(&.accept(parent_node)).branch
     end
 
-    # :nodoc:
     private class BranchVisitor < Crystal::Visitor
       include Util
 

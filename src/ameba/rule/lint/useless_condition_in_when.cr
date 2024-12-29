@@ -52,7 +52,6 @@ module Ameba::Rule::Lint
       ConditionInWhenVisitor.new self, source, node
     end
 
-    # :nodoc:
     private class ConditionInWhenVisitor < Crystal::Visitor
       @source : Source
       @rule : UselessConditionInWhen
