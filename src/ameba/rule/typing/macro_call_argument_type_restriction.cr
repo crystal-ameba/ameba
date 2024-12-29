@@ -85,8 +85,7 @@ module Ameba::Rule::Typing
           next unless default_value?
 
           issue_for arg.target, MSG % node.name, prefer_name_location: true
-        when Crystal::Path, Crystal::TypeDeclaration # Allowed
-        else
+        when Crystal::Var, Crystal::Call
           issue_for arg, MSG % node.name, prefer_name_location: true
         end
       end
