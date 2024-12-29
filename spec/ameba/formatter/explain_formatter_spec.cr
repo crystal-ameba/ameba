@@ -1,21 +1,24 @@
 require "../../spec_helper"
 
-module Ameba
-  def explanation(source)
-    output = IO::Memory.new
-    ErrorRule.new.catch(source)
-    location = {file: "source.cr", line: 1, column: 1}
-    Formatter::ExplainFormatter.new(output, location).finished([source])
-    output.to_s
-  end
+private LOCATION = {file: "source.cr", line: 1, column: 1}
 
-  describe Formatter::ExplainFormatter do
+private def explanation(source)
+  Ameba::ErrorRule.new.catch(source)
+
+  output = IO::Memory.new
+  Ameba::Formatter::ExplainFormatter.new(output, LOCATION).finished([source])
+  output.to_s
+end
+
+module Ameba::Formatter
+  describe ExplainFormatter do
     describe "#location" do
       it "returns crystal location" do
-        location = Formatter::ExplainFormatter
-          .new(STDOUT, {file: "compiler.cr", line: 3, column: 8}).location
+        location = ExplainFormatter
+          .new(STDOUT, {file: "compiler.cr", line: 3, column: 8})
+          .location
 
-        location.is_a?(Crystal::Location).should be_true
+        location.should be_a Crystal::Location
         location.filename.should eq "compiler.cr"
         location.line_number.should eq 3
         location.column_number.should eq 8
@@ -24,8 +27,10 @@ module Ameba
 
     describe "#output" do
       it "returns io" do
-        output = Formatter::ExplainFormatter
-          .new(STDOUT, {file: "compiler.cr", line: 3, column: 8}).output
+        output = ExplainFormatter
+          .new(STDOUT, {file: "compiler.cr", line: 3, column: 8})
+          .output
+
         output.should eq STDOUT
       end
     end

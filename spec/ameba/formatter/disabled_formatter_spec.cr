@@ -5,6 +5,10 @@ module Ameba::Formatter
     output = IO::Memory.new
     subject = DisabledFormatter.new output
 
+    before_each do
+      output.clear
+    end
+
     describe "#finished" do
       it "writes a final message" do
         subject.finished [Source.new ""]
@@ -24,7 +28,6 @@ module Ameba::Formatter
         log.should contain "#{path}:1 #{ErrorRule.rule_name}"
         log.should contain "#{path}:2 #{NamedRule.rule_name}"
       ensure
-        output.clear
         Colorize.enabled = true
       end
 
