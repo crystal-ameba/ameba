@@ -26,6 +26,10 @@ module Ameba::Rule::Typing
         class Greeter
           getter name
                # ^^^^ error: Argument should have a type restriction
+          getter :age
+               # ^^^^ error: Argument should have a type restriction
+          getter "height"
+               # ^^^^^^^^ error: Argument should have a type restriction
         end
         CRYSTAL
     end

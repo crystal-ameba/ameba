@@ -8,6 +8,7 @@ module Ameba::Rule::Typing
   # class Greeter
   #   getter name
   #   getter age = 0.days
+  #   getter :height
   # end
   #
   # record Task,
@@ -21,6 +22,7 @@ module Ameba::Rule::Typing
   # class Greeter
   #   getter name : String?
   #   getter age : Time::Span = 0.days
+  #   getter height : Float64?
   # end
   #
   # record Task,
@@ -83,7 +85,7 @@ module Ameba::Rule::Typing
           next unless default_value?
 
           issue_for arg.target, MSG, prefer_name_location: true
-        when Crystal::Var, Crystal::Call
+        when Crystal::Var, Crystal::Call, Crystal::StringLiteral, Crystal::SymbolLiteral
           issue_for arg, MSG, prefer_name_location: true
         end
       end
