@@ -34,33 +34,34 @@ module Ameba::Rule::Typing
         CRYSTAL
     end
 
-    it "fails if a record call arg doesn't have a type restriction" do
-      expect_issue subject, <<-CRYSTAL
+    it "passes if a record call arg with a default value doesn't have a type restriction" do
+      expect_no_issues subject, <<-CRYSTAL
         record Task,
           cmd : String,
           args = %[]
-        # ^^^^ error: Argument should have a type restriction
         CRYSTAL
     end
 
     context "properties" do
       context "#default_value" do
         rule = MacroCallArgumentTypeRestriction.new
-        rule.default_value = false
+        rule.default_value = true
 
-        it "passes if a macro call arg with a default value doesn't have a type restriction" do
-          expect_no_issues rule, <<-CRYSTAL
+        it "fails if a macro call arg with a default value doesn't have a type restriction" do
+          expect_issue rule, <<-CRYSTAL
             class Greeter
               getter name = "Kenobi"
+                   # ^^^^ error: Argument should have a type restriction
             end
             CRYSTAL
         end
 
-        it "passes if a record call arg with default value doesn't have a type restriction" do
-          expect_no_issues rule, <<-CRYSTAL
+        it "fails if a record call arg with default value doesn't have a type restriction" do
+          expect_issue rule, <<-CRYSTAL
             record Task,
               cmd : String,
               args = %[]
+            # ^^^^ error: Argument should have a type restriction
             CRYSTAL
         end
       end

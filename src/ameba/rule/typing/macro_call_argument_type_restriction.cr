@@ -38,7 +38,7 @@ module Ameba::Rule::Typing
   # ```
   # Typing/MacroCallArgumentTypeRestriction:
   #   Enabled: false
-  #   DefaultValue: true
+  #   DefaultValue: false
   #   MacroNames:
   #    - getter
   #    - getter?
@@ -65,7 +65,7 @@ module Ameba::Rule::Typing
       since_version "1.7.0"
       description "Recommends that call arguments to certain macros have type restrictions"
       enabled false
-      default_value true
+      default_value false
       macro_names %w[
         getter getter? getter! class_getter class_getter? class_getter!
         setter setter? setter! class_setter class_setter? class_setter!
