@@ -5,8 +5,8 @@ module Ameba::Rule::Typing
 
   it "passes if a method param has a type restriction" do
     expect_no_issues subject, <<-CRYSTAL
-      def hello(a : String) : String
-        "hello world" + a
+      def hello(a : String, b : _) : String
+        "hello world" + a + b
       end
 
       def hello(*a : String) : String
