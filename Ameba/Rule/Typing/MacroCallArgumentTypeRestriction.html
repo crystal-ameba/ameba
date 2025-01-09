@@ -14,7 +14,7 @@
 <script type="text/javascript" src="../../../js/doc.js"></script>
 
   <meta name="repository-name" content="ameba">
-  <title>Ameba::Rule::Lint::BadDirective - ameba master</title>
+  <title>Ameba::Rule::Typing::MacroCallArgumentTypeRestriction - ameba master</title>
   <script type="text/javascript">
     CrystalDocs.base_path = "../../../";
   </script>
@@ -377,7 +377,7 @@
       
     </li>
   
-  <li class="parent open current" data-id="ameba/Ameba/Rule/Lint" data-name="ameba::rule::lint">
+  <li class="parent " data-id="ameba/Ameba/Rule/Lint" data-name="ameba::rule::lint">
       <a href="../../../Ameba/Rule/Lint.html">Lint</a>
       
         <ul>
@@ -387,7 +387,7 @@
       
     </li>
   
-  <li class=" current" data-id="ameba/Ameba/Rule/Lint/BadDirective" data-name="ameba::rule::lint::baddirective">
+  <li class=" " data-id="ameba/Ameba/Rule/Lint/BadDirective" data-name="ameba::rule::lint::baddirective">
       <a href="../../../Ameba/Rule/Lint/BadDirective.html">BadDirective</a>
       
     </li>
@@ -827,12 +827,12 @@
       
     </li>
   
-  <li class="parent " data-id="ameba/Ameba/Rule/Typing" data-name="ameba::rule::typing">
+  <li class="parent open current" data-id="ameba/Ameba/Rule/Typing" data-name="ameba::rule::typing">
       <a href="../../../Ameba/Rule/Typing.html">Typing</a>
       
         <ul>
   
-  <li class=" " data-id="ameba/Ameba/Rule/Typing/MacroCallArgumentTypeRestriction" data-name="ameba::rule::typing::macrocallargumenttyperestriction">
+  <li class=" current" data-id="ameba/Ameba/Rule/Typing/MacroCallArgumentTypeRestriction" data-name="ameba::rule::typing::macrocallargumenttyperestriction">
       <a href="../../../Ameba/Rule/Typing/MacroCallArgumentTypeRestriction.html">MacroCallArgumentTypeRestriction</a>
       
     </li>
@@ -956,12 +956,12 @@
 <div class="main-content">
 <h1 class="type-name">
 
-  <span class="kind">class</span> Ameba::<wbr>Rule::<wbr>Lint::<wbr>BadDirective
+  <span class="kind">class</span> Ameba::<wbr>Rule::<wbr>Typing::<wbr>MacroCallArgumentTypeRestriction
 
 </h1>
 
 
-  <ul class="superclass-hierarchy"><li class="superclass"><a href="../../../Ameba/Rule/Lint/BadDirective.html">Ameba::Rule::Lint::BadDirective</a></li><li class="superclass"><a href="../../../Ameba/Rule/Base.html">Ameba::Rule::Base</a></li><li class="superclass">Reference</li><li class="superclass">Object</li></ul>
+  <ul class="superclass-hierarchy"><li class="superclass"><a href="../../../Ameba/Rule/Typing/MacroCallArgumentTypeRestriction.html">Ameba::Rule::Typing::MacroCallArgumentTypeRestriction</a></li><li class="superclass"><a href="../../../Ameba/Rule/Base.html">Ameba::Rule::Base</a></li><li class="superclass">Reference</li><li class="superclass">Object</li></ul>
 
 
 
@@ -975,16 +975,54 @@
     Overview
   </h2>
 
-  <p>A rule that reports incorrect comment directives for Ameba.</p>
-<p>For example, the user can mistakenly add a directive
-to disable a rule that even doesn't exist:</p>
-<pre><code class="language-crystal"><span class="c"># ameba:disable BadRuleName</span>
-<span class="k">def</span> <span class="m">foo</span>
-  <span class="n">:bar</span>
-<span class="k">end</span></code></pre>
+  <p>A rule that enforces call arguments to specific macros have a type restriction.
+By default these macros are: <code>(class_)getter/setter/property(?/!)</code> and <code>record</code>.</p>
+<p>For example, these are considered invalid:</p>
+<pre><code class="language-crystal"><span class="k">class</span> <span class="t">Greeter</span>
+  getter name
+  getter age <span class="o">=</span> <span class="n">0</span>.days
+  getter <span class="n">:height</span>
+<span class="k">end</span>
+
+record <span class="t">Task</span>,
+  cmd <span class="o">=</span> <span class="s">&quot;&quot;</span>,
+  args <span class="o">=</span> <span class="s">%w[]</span></code></pre>
+<p>And these are considered valid:</p>
+<pre><code class="language-crystal"><span class="k">class</span> <span class="t">Greeter</span>
+  getter name : <span class="t">String</span>?
+  getter age : <span class="t">Time</span><span class="t">::</span><span class="t">Span</span> <span class="o">=</span> <span class="n">0</span>.days
+  getter height : <span class="t">Float64</span>?
+<span class="k">end</span>
+
+record <span class="t">Task</span>,
+  cmd : <span class="t">String</span> <span class="o">=</span> <span class="s">&quot;&quot;</span>,
+  args : <span class="t">Array</span>(<span class="t">String</span>) <span class="o">=</span> <span class="s">%w[]</span></code></pre>
+<p>The <code>DefaultValue</code> configuration option controls whether this rule applies to
+call arguments that have a default value.</p>
 <p>YAML configuration example:</p>
-<pre><code class="language-crystal"><span class="t">Lint</span><span class="o">/</span><span class="t">BadDirective</span>:
-  <span class="t">Enabled</span>: <span class="n">true</span></code></pre>
+<pre><code class="language-crystal"><span class="t">Typing</span><span class="o">/</span><span class="t">MacroCallArgumentTypeRestriction</span>:
+  <span class="t">Enabled</span>: <span class="n">false</span>
+  <span class="t">DefaultValue</span>: <span class="n">false</span>
+  <span class="t">MacroNames</span>:
+   <span class="o">-</span> getter
+   <span class="o">-</span> getter?
+   <span class="o">-</span> getter!
+   <span class="o">-</span> class_getter
+   <span class="o">-</span> class_getter?
+   <span class="o">-</span> class_getter!
+   <span class="o">-</span> setter
+   <span class="o">-</span> setter?
+   <span class="o">-</span> setter!
+   <span class="o">-</span> class_setter
+   <span class="o">-</span> class_setter?
+   <span class="o">-</span> class_setter!
+   <span class="o">-</span> property
+   <span class="o">-</span> property?
+   <span class="o">-</span> property!
+   <span class="o">-</span> class_property
+   <span class="o">-</span> class_property?
+   <span class="o">-</span> class_property!
+   <span class="o">-</span> record</code></pre>
 
 
 
@@ -1025,8 +1063,8 @@ to disable a rule that even doesn't exist:</p>
   </h2>
   
     
-      <a href="https://github.com/crystal-ameba/ameba/blob/65f7db0/src/ameba/rule/lint/bad_directive.cr#L20" target="_blank">
-        ameba/rule/lint/bad_directive.cr
+      <a href="https://github.com/crystal-ameba/ameba/blob/65f7db0/src/ameba/rule/typing/macro_call_argument_type_restriction.cr#L63" target="_blank">
+        ameba/rule/typing/macro_call_argument_type_restriction.cr
       </a>
     
     <br/>
@@ -1046,18 +1084,8 @@ to disable a rule that even doesn't exist:</p>
   
   <dl>
     
-      <dt class="entry-const" id="ALL_GROUP_NAMES">
-        <strong>ALL_GROUP_NAMES</strong> = <code><span class="t">Rule</span>.rules.map(<span class="o">&amp;</span>.group_name).uniq!</code>
-      </dt>
-      
-    
-      <dt class="entry-const" id="ALL_RULE_NAMES">
-        <strong>ALL_RULE_NAMES</strong> = <code><span class="t">Rule</span>.rules.map(<span class="o">&amp;</span>.rule_name)</code>
-      </dt>
-      
-    
-      <dt class="entry-const" id="AVAILABLE_ACTIONS">
-        <strong>AVAILABLE_ACTIONS</strong> = <code><span class="t">InlineComments</span><span class="t">::</span><span class="t">Action</span>.names.map(<span class="o">&amp;</span>.downcase)</code>
+      <dt class="entry-const" id="MSG">
+        <strong>MSG</strong> = <code><span class="s">&quot;Argument should have a type restriction&quot;</span></code>
       </dt>
       
     
@@ -1083,7 +1111,7 @@ to disable a rule that even doesn't exist:</p>
       <li class="entry-summary">
         <a href="#new%28config%3Dnil%29-class-method" class="signature"><strong>.new</strong>(config = <span class="n">nil</span>)</a>
         
-          <div class="summary"><p>A rule that reports incorrect comment directives for Ameba.</p></div>
+          <div class="summary"><p>A rule that enforces call arguments to specific macros have a type restriction.</p></div>
         
       </li>
     
@@ -1125,6 +1153,16 @@ to disable a rule that even doesn't exist:</p>
   <ul class="list-summary">
     
       <li class="entry-summary">
+        <a href="#default_value%3D%28default_value%3ABool%29-instance-method" class="signature"><strong>#default_value=</strong>(default_value : Bool)</a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#default_value%3F%3ABool-instance-method" class="signature"><strong>#default_value?</strong> : Bool</a>
+        
+      </li>
+    
+      <li class="entry-summary">
         <a href="#description%3AString-instance-method" class="signature"><strong>#description</strong> : String</a>
         
       </li>
@@ -1155,6 +1193,16 @@ to disable a rule that even doesn't exist:</p>
       </li>
     
       <li class="entry-summary">
+        <a href="#macro_names%3AArray%28String%29-instance-method" class="signature"><strong>#macro_names</strong> : Array(String)</a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#macro_names%3D%28macro_names%3AArray%28String%29%29-instance-method" class="signature"><strong>#macro_names=</strong>(macro_names : Array(String))</a>
+        
+      </li>
+    
+      <li class="entry-summary">
         <a href="#severity%3AAmeba%3A%3ASeverity-instance-method" class="signature"><strong>#severity</strong> : Ameba::Severity</a>
         
       </li>
@@ -1175,7 +1223,7 @@ to disable a rule that even doesn't exist:</p>
       </li>
     
       <li class="entry-summary">
-        <a href="#test%28source%29-instance-method" class="signature"><strong>#test</strong>(source)</a>
+        <a href="#test%28source%2Cnode%3ACrystal%3A%3ACall%29-instance-method" class="signature"><strong>#test</strong>(source, node : Crystal::Call)</a>
         
       </li>
     
@@ -1370,22 +1418,60 @@ to disable a rule that even doesn't exist:</p>
       
         <div class="doc">
           
-          <p>A rule that reports incorrect comment directives for Ameba.</p>
-<p>For example, the user can mistakenly add a directive
-to disable a rule that even doesn't exist:</p>
-<pre><code class="language-crystal"><span class="c"># ameba:disable BadRuleName</span>
-<span class="k">def</span> <span class="m">foo</span>
-  <span class="n">:bar</span>
-<span class="k">end</span></code></pre>
+          <p>A rule that enforces call arguments to specific macros have a type restriction.
+By default these macros are: <code>(class_)getter/setter/property(?/!)</code> and <code>record</code>.</p>
+<p>For example, these are considered invalid:</p>
+<pre><code class="language-crystal"><span class="k">class</span> <span class="t">Greeter</span>
+  getter name
+  getter age <span class="o">=</span> <span class="n">0</span>.days
+  getter <span class="n">:height</span>
+<span class="k">end</span>
+
+record <span class="t">Task</span>,
+  cmd <span class="o">=</span> <span class="s">&quot;&quot;</span>,
+  args <span class="o">=</span> <span class="s">%w[]</span></code></pre>
+<p>And these are considered valid:</p>
+<pre><code class="language-crystal"><span class="k">class</span> <span class="t">Greeter</span>
+  getter name : <span class="t">String</span>?
+  getter age : <span class="t">Time</span><span class="t">::</span><span class="t">Span</span> <span class="o">=</span> <span class="n">0</span>.days
+  getter height : <span class="t">Float64</span>?
+<span class="k">end</span>
+
+record <span class="t">Task</span>,
+  cmd : <span class="t">String</span> <span class="o">=</span> <span class="s">&quot;&quot;</span>,
+  args : <span class="t">Array</span>(<span class="t">String</span>) <span class="o">=</span> <span class="s">%w[]</span></code></pre>
+<p>The <code>DefaultValue</code> configuration option controls whether this rule applies to
+call arguments that have a default value.</p>
 <p>YAML configuration example:</p>
-<pre><code class="language-crystal"><span class="t">Lint</span><span class="o">/</span><span class="t">BadDirective</span>:
-  <span class="t">Enabled</span>: <span class="n">true</span></code></pre>
+<pre><code class="language-crystal"><span class="t">Typing</span><span class="o">/</span><span class="t">MacroCallArgumentTypeRestriction</span>:
+  <span class="t">Enabled</span>: <span class="n">false</span>
+  <span class="t">DefaultValue</span>: <span class="n">false</span>
+  <span class="t">MacroNames</span>:
+   <span class="o">-</span> getter
+   <span class="o">-</span> getter?
+   <span class="o">-</span> getter!
+   <span class="o">-</span> class_getter
+   <span class="o">-</span> class_getter?
+   <span class="o">-</span> class_getter!
+   <span class="o">-</span> setter
+   <span class="o">-</span> setter?
+   <span class="o">-</span> setter!
+   <span class="o">-</span> class_setter
+   <span class="o">-</span> class_setter?
+   <span class="o">-</span> class_setter!
+   <span class="o">-</span> property
+   <span class="o">-</span> property?
+   <span class="o">-</span> property!
+   <span class="o">-</span> class_property
+   <span class="o">-</span> class_property?
+   <span class="o">-</span> class_property!
+   <span class="o">-</span> record</code></pre>
         </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/65f7db0/src/ameba/rule/lint/bad_directive.cr#L20" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/65f7db0/src/ameba/rule/typing/macro_call_argument_type_restriction.cr#L63" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1444,6 +1530,34 @@ to disable a rule that even doesn't exist:</p>
 </a>
     Instance Method Detail
   </h2>
+  
+    <div class="entry-detail" id="default_value=(default_value:Bool)-instance-method">
+      <div class="signature">
+        
+        def <strong>default_value=</strong>(default_value : Bool)
+
+        <a class="method-permalink" href="#default_value%3D%28default_value%3ABool%29-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="default_value?:Bool-instance-method">
+      <div class="signature">
+        
+        def <strong>default_value?</strong> : Bool
+
+        <a class="method-permalink" href="#default_value%3F%3ABool-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+      </div>
+    </div>
   
     <div class="entry-detail" id="description:String-instance-method">
       <div class="signature">
@@ -1529,6 +1643,34 @@ to disable a rule that even doesn't exist:</p>
       </div>
     </div>
   
+    <div class="entry-detail" id="macro_names:Array(String)-instance-method">
+      <div class="signature">
+        
+        def <strong>macro_names</strong> : Array(String)
+
+        <a class="method-permalink" href="#macro_names%3AArray%28String%29-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="macro_names=(macro_names:Array(String))-instance-method">
+      <div class="signature">
+        
+        def <strong>macro_names=</strong>(macro_names : Array(String))
+
+        <a class="method-permalink" href="#macro_names%3D%28macro_names%3AArray%28String%29%29-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+      </div>
+    </div>
+  
     <div class="entry-detail" id="severity:Ameba::Severity-instance-method">
       <div class="signature">
         
@@ -1568,7 +1710,7 @@ to disable a rule that even doesn't exist:</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/65f7db0/src/ameba/rule/lint/bad_directive.cr#L21" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/65f7db0/src/ameba/rule/typing/macro_call_argument_type_restriction.cr#L64" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1587,18 +1729,18 @@ to disable a rule that even doesn't exist:</p>
       </div>
     </div>
   
-    <div class="entry-detail" id="test(source)-instance-method">
+    <div class="entry-detail" id="test(source,node:Crystal::Call)-instance-method">
       <div class="signature">
         
-        def <strong>test</strong>(source)
+        def <strong>test</strong>(source, node : Crystal::Call)
 
-        <a class="method-permalink" href="#test%28source%29-instance-method">#</a>
+        <a class="method-permalink" href="#test%28source%2Cnode%3ACrystal%3A%3ACall%29-instance-method">#</a>
       </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/65f7db0/src/ameba/rule/lint/bad_directive.cr#L30" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/65f7db0/src/ameba/rule/typing/macro_call_argument_type_restriction.cr#L79" target="_blank">View source</a>]
         
       </div>
     </div>
