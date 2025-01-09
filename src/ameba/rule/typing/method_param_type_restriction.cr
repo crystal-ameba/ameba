@@ -67,7 +67,7 @@ module Ameba::Rule::Typing
       return if valid?(node)
 
       node.args.each do |arg|
-        next if arg.restriction || (!default_value? && arg.default_value) || arg.name.empty?
+        next if arg.restriction || arg.name.empty? || (!default_value? && arg.default_value)
 
         issue_for arg, MSG, prefer_name_location: true
       end
@@ -81,10 +81,9 @@ module Ameba::Rule::Typing
       end
     end
 
-    def valid?(node : Crystal::ASTNode) : Bool
+    private def valid?(node : Crystal::ASTNode) : Bool
       (!private_methods? && node.visibility.private?) ||
-        (!protected_methods? && node.visibility.protected?) ||
-        false
+        (!protected_methods? && node.visibility.protected?)
     end
   end
 end
