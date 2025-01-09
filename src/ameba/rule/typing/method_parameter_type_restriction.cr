@@ -43,14 +43,14 @@ module Ameba::Rule::Typing
   # YAML configuration example:
   #
   # ```
-  # Typing/MethodParamTypeRestriction:
+  # Typing/MethodParameterTypeRestriction:
   #   Enabled: false
   #   DefaultValue: false
   #   PrivateMethods: false
   #   ProtectedMethods: false
   #   BlockParam: false
   # ```
-  class MethodParamTypeRestriction < Base
+  class MethodParameterTypeRestriction < Base
     properties do
       since_version "1.7.0"
       description "Recommends that method parameters have type restrictions"
