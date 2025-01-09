@@ -8,6 +8,35 @@ module Ameba::Rule::Typing
       def hello(a : String) : String
         "hello world" + a
       end
+
+      def hello(*a : String) : String
+        "hello world" + a.join(", ")
+      end
+      CRYSTAL
+  end
+
+  it "fails if a splat method param with a name doesn't have a type restriction" do
+    expect_issue subject, <<-CRYSTAL
+      def hello(*a) : String
+               # ^ error: Method parameter should have a type restriction
+        "hello world" + a
+      end
+      CRYSTAL
+  end
+
+  it "passes if a splat param without a name doesn't have a type restriction" do
+    expect_no_issues subject, <<-CRYSTAL
+      def hello(hello : String, *, world : String = "world") : String
+        hello + world + a
+      end
+      CRYSTAL
+  end
+
+  it "passes if a double splat method param doesn't have a type restriction" do
+    expect_no_issues subject, <<-CRYSTAL
+      def hello(a : String, **world) : String
+        "hello world" + a
+      end
       CRYSTAL
   end
 

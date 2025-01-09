@@ -67,7 +67,7 @@ module Ameba::Rule::Typing
       return if valid?(node)
 
       node.args.each do |arg|
-        next if arg.restriction || (!default_value? && arg.default_value)
+        next if arg.restriction || (!default_value? && arg.default_value) || arg.name.empty?
 
         issue_for arg, MSG, prefer_name_location: true
       end
