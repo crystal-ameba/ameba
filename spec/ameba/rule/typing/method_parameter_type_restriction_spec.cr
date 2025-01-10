@@ -19,7 +19,7 @@ module Ameba::Rule::Typing
     it "fails if a splat method param with a name doesn't have a type restriction" do
       expect_issue subject, <<-CRYSTAL
         def hello(*a) : String
-                # ^ error: Method parameter should have a type restriction
+                 # ^ error: Method parameter should have a type restriction
           "hello world" + a
         end
         CRYSTAL
@@ -63,6 +63,12 @@ module Ameba::Rule::Typing
                 # ^ error: Method parameter should have a type restriction
           "hello world" + a
         end
+
+        def hello(a, ext b)
+                # ^ error: Method parameter should have a type restriction
+                   # ^ error: Method parameter should have a type restriction
+          "hello world" + a + b
+        end
         CRYSTAL
     end
 
@@ -70,6 +76,14 @@ module Ameba::Rule::Typing
       expect_no_issues subject, <<-CRYSTAL
         def hello(a = "jim")
           "hello there, " + a
+        end
+        CRYSTAL
+    end
+
+    it "passes if a block param doesn't have a type restriction" do
+      expect_no_issues subject, <<-CRYSTAL
+        def hello(&)
+          "hello there"
         end
         CRYSTAL
     end
@@ -154,6 +168,29 @@ module Ameba::Rule::Typing
             def hello(a = "world")
                     # ^ error: Method parameter should have a type restriction
               "hello \#{a}"
+            end
+            CRYSTAL
+        end
+      end
+
+      context "#block_param" do
+        rule = MethodParameterTypeRestriction.new
+        rule.block_param = true
+
+        it "fails if a block param without a name doesn't have a type restriction" do
+          expect_issue rule, <<-CRYSTAL
+            def hello(&)
+                     # ^ error: Method parameter should have a type restriction
+              "hello"
+            end
+            CRYSTAL
+        end
+
+        it "fails if a block param with a name doesn't have a type restriction" do
+          expect_issue rule, <<-CRYSTAL
+            def hello(&a)
+                     # ^ error: Method parameter should have a type restriction
+              "hello, \#{a.call}"
             end
             CRYSTAL
         end
