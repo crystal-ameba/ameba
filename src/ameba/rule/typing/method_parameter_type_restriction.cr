@@ -69,14 +69,14 @@ module Ameba::Rule::Typing
       node.args.each do |arg|
         next if arg.restriction || arg.name.empty? || (!default_value? && arg.default_value)
 
-        issue_for arg, MSG, prefer_name_location: true
+        issue_for arg, MSG
       end
 
       if block_param?
         node.block_arg.try do |block_arg|
           next if block_arg.restriction
 
-          issue_for block_arg, MSG, prefer_name_location: true
+          issue_for block_arg, MSG
         end
       end
     end
