@@ -114,7 +114,7 @@ module Ameba::Rule::Typing
         rule = MethodParameterTypeRestriction.new
         rule.protected_methods = true
 
-        it "passes if a method has a return type restriction" do
+        it "passes if a method has a parameter type restriction" do
           expect_no_issues rule, <<-CRYSTAL
           protected def hello(a : String) : String
             "hello world" + a
@@ -130,7 +130,7 @@ module Ameba::Rule::Typing
           CRYSTAL
         end
 
-        it "fails if a public or protected method doesn't have a return type restriction" do
+        it "fails if a public or protected method doesn't have a parameter type restriction" do
           expect_issue rule, <<-CRYSTAL
           def hello(a)
                   # ^ error: Method parameter should have a type restriction
