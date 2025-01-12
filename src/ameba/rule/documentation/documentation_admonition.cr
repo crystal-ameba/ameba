@@ -64,12 +64,10 @@ module Ameba::Rule::Documentation
           begin
             case expr = match["context"]?.presence
             when /\A\d{4}-\d{2}-\d{2}\Z/ # date
-              # ameba:disable Lint/NotNil
-              date = Time.parse(expr.not_nil!, "%F", location)
+              date = Time.parse($0, "%F", location)
               issue_for_date source, token, admonition, date
             when /\A\d{4}-\d{2}-\d{2} \d{2}:\d{2}(:\d{2})?\Z/ # date + time (no tz)
-              # ameba:disable Lint/NotNil
-              date = Time.parse(expr.not_nil!, "%F #{$1?.presence ? "%T" : "%R"}", location)
+              date = Time.parse($0, "%F #{$1?.presence ? "%T" : "%R"}", location)
               issue_for_date source, token, admonition, date
             else
               issue_for token, MSG % admonition
