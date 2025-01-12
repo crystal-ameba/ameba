@@ -58,7 +58,7 @@ module Ameba::Rule::Typing
       default_value false
       private_methods false
       protected_methods false
-      block_param false
+      block_parameters false
     end
 
     MSG = "Method parameter should have a type restriction"
@@ -72,7 +72,7 @@ module Ameba::Rule::Typing
         issue_for arg, MSG
       end
 
-      if block_param?
+      if block_parameters?
         node.block_arg.try do |block_arg|
           next if block_arg.restriction
 
