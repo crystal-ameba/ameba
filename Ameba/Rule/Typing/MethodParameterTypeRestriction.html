@@ -14,7 +14,7 @@
 <script type="text/javascript" src="../../../js/doc.js"></script>
 
   <meta name="repository-name" content="ameba">
-  <title>Ameba::Rule::Naming::PredicateName - ameba master</title>
+  <title>Ameba::Rule::Typing::MethodParameterTypeRestriction - ameba master</title>
   <script type="text/javascript">
     CrystalDocs.base_path = "../../../";
   </script>
@@ -617,7 +617,7 @@
       
     </li>
   
-  <li class="parent open current" data-id="ameba/Ameba/Rule/Naming" data-name="ameba::rule::naming">
+  <li class="parent " data-id="ameba/Ameba/Rule/Naming" data-name="ameba::rule::naming">
       <a href="../../../Ameba/Rule/Naming.html">Naming</a>
       
         <ul>
@@ -657,7 +657,7 @@
       
     </li>
   
-  <li class=" current" data-id="ameba/Ameba/Rule/Naming/PredicateName" data-name="ameba::rule::naming::predicatename">
+  <li class=" " data-id="ameba/Ameba/Rule/Naming/PredicateName" data-name="ameba::rule::naming::predicatename">
       <a href="../../../Ameba/Rule/Naming/PredicateName.html">PredicateName</a>
       
     </li>
@@ -827,7 +827,7 @@
       
     </li>
   
-  <li class="parent " data-id="ameba/Ameba/Rule/Typing" data-name="ameba::rule::typing">
+  <li class="parent open current" data-id="ameba/Ameba/Rule/Typing" data-name="ameba::rule::typing">
       <a href="../../../Ameba/Rule/Typing.html">Typing</a>
       
         <ul>
@@ -837,7 +837,7 @@
       
     </li>
   
-  <li class=" " data-id="ameba/Ameba/Rule/Typing/MethodParameterTypeRestriction" data-name="ameba::rule::typing::methodparametertyperestriction">
+  <li class=" current" data-id="ameba/Ameba/Rule/Typing/MethodParameterTypeRestriction" data-name="ameba::rule::typing::methodparametertyperestriction">
       <a href="../../../Ameba/Rule/Typing/MethodParameterTypeRestriction.html">MethodParameterTypeRestriction</a>
       
     </li>
@@ -961,12 +961,12 @@
 <div class="main-content">
 <h1 class="type-name">
 
-  <span class="kind">class</span> Ameba::<wbr>Rule::<wbr>Naming::<wbr>PredicateName
+  <span class="kind">class</span> Ameba::<wbr>Rule::<wbr>Typing::<wbr>MethodParameterTypeRestriction
 
 </h1>
 
 
-  <ul class="superclass-hierarchy"><li class="superclass"><a href="../../../Ameba/Rule/Naming/PredicateName.html">Ameba::Rule::Naming::PredicateName</a></li><li class="superclass"><a href="../../../Ameba/Rule/Base.html">Ameba::Rule::Base</a></li><li class="superclass">Reference</li><li class="superclass">Object</li></ul>
+  <ul class="superclass-hierarchy"><li class="superclass"><a href="../../../Ameba/Rule/Typing/MethodParameterTypeRestriction.html">Ameba::Rule::Typing::MethodParameterTypeRestriction</a></li><li class="superclass"><a href="../../../Ameba/Rule/Base.html">Ameba::Rule::Base</a></li><li class="superclass">Reference</li><li class="superclass">Object</li></ul>
 
 
 
@@ -980,18 +980,35 @@
     Overview
   </h2>
 
-  <p>A rule that disallows tautological predicate names -
-meaning those that start with the prefix <code>is_</code>, except for
-the ones that are not valid Crystal code (e.g. <code>is_404?</code>).</p>
-<p>Favour this:</p>
-<pre><code class="language-crystal"><span class="k">def</span> <span class="m">valid?</span>(x)
+  <p>A rule that enforces method parameters have type restrictions, with optional enforcement of block parameters.</p>
+<p>For example, this is considered invalid:</p>
+<pre><code class="language-crystal"><span class="k">def</span> <span class="m">add</span>(a, b)
+  a <span class="o">+</span> b
 <span class="k">end</span></code></pre>
-<p>Over this:</p>
-<pre><code class="language-crystal"><span class="k">def</span> <span class="m">is_valid?</span>(x)
+<p>And this is considered valid:</p>
+<pre><code class="language-crystal"><span class="k">def</span> <span class="m">add</span>(a : <span class="t">String</span>, b : <span class="t">String</span>)
+  a <span class="o">+</span> b
 <span class="k">end</span></code></pre>
+<p>When the config options <code>PrivateMethods</code> and <code>ProtectedMethods</code>
+are true, this rule is also applied to private and protected methods, respectively.</p>
+<p>The <code>BlockParameters</code> configuration option will extend this to block parameters, where these are invalid:</p>
+<pre><code class="language-crystal"><span class="k">def</span> <span class="m">exec</span>(<span class="o">&amp;</span>)
+<span class="k">end</span>
+
+<span class="k">def</span> <span class="m">exec</span>(<span class="o">&amp;</span>block)
+<span class="k">end</span></code></pre>
+<p>And this is valid:</p>
+<pre><code class="language-crystal"><span class="k">def</span> <span class="m">exec</span>(<span class="o">&amp;</span>block : <span class="t">String</span> <span class="o">-&gt;</span> <span class="t">String</span>)
+  <span class="k">yield</span> <span class="s">&quot;cmd&quot;</span>
+<span class="k">end</span></code></pre>
+<p>The config option <code>DefaultValue</code> controls whether this rule applies to parameters that have a default value.</p>
 <p>YAML configuration example:</p>
-<pre><code class="language-crystal"><span class="t">Naming</span><span class="o">/</span><span class="t">PredicateName</span>:
-  <span class="t">Enabled</span>: <span class="n">true</span></code></pre>
+<pre><code class="language-crystal"><span class="t">Typing</span><span class="o">/</span><span class="t">MethodParameterTypeRestriction</span>:
+  <span class="t">Enabled</span>: <span class="n">false</span>
+  <span class="t">DefaultValue</span>: <span class="n">false</span>
+  <span class="t">PrivateMethods</span>: <span class="n">false</span>
+  <span class="t">ProtectedMethods</span>: <span class="n">false</span>
+  <span class="t">BlockParameters</span>: <span class="n">false</span></code></pre>
 
 
 
@@ -1032,8 +1049,8 @@ the ones that are not valid Crystal code (e.g. <code>is_404?</code>).</p>
   </h2>
   
     
-      <a href="https://github.com/crystal-ameba/ameba/blob/e113669/src/ameba/rule/naming/predicate_name.cr#L26" target="_blank">
-        ameba/rule/naming/predicate_name.cr
+      <a href="https://github.com/crystal-ameba/ameba/blob/e113669/src/ameba/rule/typing/method_parameter_type_restriction.cr#L53" target="_blank">
+        ameba/rule/typing/method_parameter_type_restriction.cr
       </a>
     
     <br/>
@@ -1054,7 +1071,7 @@ the ones that are not valid Crystal code (e.g. <code>is_404?</code>).</p>
   <dl>
     
       <dt class="entry-const" id="MSG">
-        <strong>MSG</strong> = <code><span class="s">&quot;Favour method name `%s?` over `%s`&quot;</span></code>
+        <strong>MSG</strong> = <code><span class="s">&quot;Method parameter should have a type restriction&quot;</span></code>
       </dt>
       
     
@@ -1080,7 +1097,7 @@ the ones that are not valid Crystal code (e.g. <code>is_404?</code>).</p>
       <li class="entry-summary">
         <a href="#new%28config%3Dnil%29-class-method" class="signature"><strong>.new</strong>(config = <span class="n">nil</span>)</a>
         
-          <div class="summary"><p>A rule that disallows tautological predicate names - meaning those that start with the prefix <code>is_</code>, except for the ones that are not valid Crystal code (e.g.</p></div>
+          <div class="summary"><p>A rule that enforces method parameters have type restrictions, with optional enforcement of block parameters.</p></div>
         
       </li>
     
@@ -1122,6 +1139,26 @@ the ones that are not valid Crystal code (e.g. <code>is_404?</code>).</p>
   <ul class="list-summary">
     
       <li class="entry-summary">
+        <a href="#block_parameters%3D%28block_parameters%3ABool%29-instance-method" class="signature"><strong>#block_parameters=</strong>(block_parameters : Bool)</a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#block_parameters%3F%3ABool-instance-method" class="signature"><strong>#block_parameters?</strong> : Bool</a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#default_value%3D%28default_value%3ABool%29-instance-method" class="signature"><strong>#default_value=</strong>(default_value : Bool)</a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#default_value%3F%3ABool-instance-method" class="signature"><strong>#default_value?</strong> : Bool</a>
+        
+      </li>
+    
+      <li class="entry-summary">
         <a href="#description%3AString-instance-method" class="signature"><strong>#description</strong> : String</a>
         
       </li>
@@ -1148,6 +1185,26 @@ the ones that are not valid Crystal code (e.g. <code>is_404?</code>).</p>
     
       <li class="entry-summary">
         <a href="#excluded%3D%28excluded%3AArray%28String%29%7CNil%29-instance-method" class="signature"><strong>#excluded=</strong>(excluded : Array(String) | Nil)</a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#private_methods%3D%28private_methods%3ABool%29-instance-method" class="signature"><strong>#private_methods=</strong>(private_methods : Bool)</a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#private_methods%3F%3ABool-instance-method" class="signature"><strong>#private_methods?</strong> : Bool</a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#protected_methods%3D%28protected_methods%3ABool%29-instance-method" class="signature"><strong>#protected_methods=</strong>(protected_methods : Bool)</a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#protected_methods%3F%3ABool-instance-method" class="signature"><strong>#protected_methods?</strong> : Bool</a>
         
       </li>
     
@@ -1367,24 +1424,41 @@ the ones that are not valid Crystal code (e.g. <code>is_404?</code>).</p>
       
         <div class="doc">
           
-          <p>A rule that disallows tautological predicate names -
-meaning those that start with the prefix <code>is_</code>, except for
-the ones that are not valid Crystal code (e.g. <code>is_404?</code>).</p>
-<p>Favour this:</p>
-<pre><code class="language-crystal"><span class="k">def</span> <span class="m">valid?</span>(x)
+          <p>A rule that enforces method parameters have type restrictions, with optional enforcement of block parameters.</p>
+<p>For example, this is considered invalid:</p>
+<pre><code class="language-crystal"><span class="k">def</span> <span class="m">add</span>(a, b)
+  a <span class="o">+</span> b
 <span class="k">end</span></code></pre>
-<p>Over this:</p>
-<pre><code class="language-crystal"><span class="k">def</span> <span class="m">is_valid?</span>(x)
+<p>And this is considered valid:</p>
+<pre><code class="language-crystal"><span class="k">def</span> <span class="m">add</span>(a : <span class="t">String</span>, b : <span class="t">String</span>)
+  a <span class="o">+</span> b
 <span class="k">end</span></code></pre>
+<p>When the config options <code>PrivateMethods</code> and <code>ProtectedMethods</code>
+are true, this rule is also applied to private and protected methods, respectively.</p>
+<p>The <code>BlockParameters</code> configuration option will extend this to block parameters, where these are invalid:</p>
+<pre><code class="language-crystal"><span class="k">def</span> <span class="m">exec</span>(<span class="o">&amp;</span>)
+<span class="k">end</span>
+
+<span class="k">def</span> <span class="m">exec</span>(<span class="o">&amp;</span>block)
+<span class="k">end</span></code></pre>
+<p>And this is valid:</p>
+<pre><code class="language-crystal"><span class="k">def</span> <span class="m">exec</span>(<span class="o">&amp;</span>block : <span class="t">String</span> <span class="o">-&gt;</span> <span class="t">String</span>)
+  <span class="k">yield</span> <span class="s">&quot;cmd&quot;</span>
+<span class="k">end</span></code></pre>
+<p>The config option <code>DefaultValue</code> controls whether this rule applies to parameters that have a default value.</p>
 <p>YAML configuration example:</p>
-<pre><code class="language-crystal"><span class="t">Naming</span><span class="o">/</span><span class="t">PredicateName</span>:
-  <span class="t">Enabled</span>: <span class="n">true</span></code></pre>
+<pre><code class="language-crystal"><span class="t">Typing</span><span class="o">/</span><span class="t">MethodParameterTypeRestriction</span>:
+  <span class="t">Enabled</span>: <span class="n">false</span>
+  <span class="t">DefaultValue</span>: <span class="n">false</span>
+  <span class="t">PrivateMethods</span>: <span class="n">false</span>
+  <span class="t">ProtectedMethods</span>: <span class="n">false</span>
+  <span class="t">BlockParameters</span>: <span class="n">false</span></code></pre>
         </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/e113669/src/ameba/rule/naming/predicate_name.cr#L26" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/e113669/src/ameba/rule/typing/method_parameter_type_restriction.cr#L53" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1443,6 +1517,62 @@ the ones that are not valid Crystal code (e.g. <code>is_404?</code>).</p>
 </a>
     Instance Method Detail
   </h2>
+  
+    <div class="entry-detail" id="block_parameters=(block_parameters:Bool)-instance-method">
+      <div class="signature">
+        
+        def <strong>block_parameters=</strong>(block_parameters : Bool)
+
+        <a class="method-permalink" href="#block_parameters%3D%28block_parameters%3ABool%29-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="block_parameters?:Bool-instance-method">
+      <div class="signature">
+        
+        def <strong>block_parameters?</strong> : Bool
+
+        <a class="method-permalink" href="#block_parameters%3F%3ABool-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="default_value=(default_value:Bool)-instance-method">
+      <div class="signature">
+        
+        def <strong>default_value=</strong>(default_value : Bool)
+
+        <a class="method-permalink" href="#default_value%3D%28default_value%3ABool%29-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="default_value?:Bool-instance-method">
+      <div class="signature">
+        
+        def <strong>default_value?</strong> : Bool
+
+        <a class="method-permalink" href="#default_value%3F%3ABool-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+      </div>
+    </div>
   
     <div class="entry-detail" id="description:String-instance-method">
       <div class="signature">
@@ -1528,6 +1658,62 @@ the ones that are not valid Crystal code (e.g. <code>is_404?</code>).</p>
       </div>
     </div>
   
+    <div class="entry-detail" id="private_methods=(private_methods:Bool)-instance-method">
+      <div class="signature">
+        
+        def <strong>private_methods=</strong>(private_methods : Bool)
+
+        <a class="method-permalink" href="#private_methods%3D%28private_methods%3ABool%29-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="private_methods?:Bool-instance-method">
+      <div class="signature">
+        
+        def <strong>private_methods?</strong> : Bool
+
+        <a class="method-permalink" href="#private_methods%3F%3ABool-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="protected_methods=(protected_methods:Bool)-instance-method">
+      <div class="signature">
+        
+        def <strong>protected_methods=</strong>(protected_methods : Bool)
+
+        <a class="method-permalink" href="#protected_methods%3D%28protected_methods%3ABool%29-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="protected_methods?:Bool-instance-method">
+      <div class="signature">
+        
+        def <strong>protected_methods?</strong> : Bool
+
+        <a class="method-permalink" href="#protected_methods%3F%3ABool-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+      </div>
+    </div>
+  
     <div class="entry-detail" id="severity:Ameba::Severity-instance-method">
       <div class="signature">
         
@@ -1567,7 +1753,7 @@ the ones that are not valid Crystal code (e.g. <code>is_404?</code>).</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/e113669/src/ameba/rule/naming/predicate_name.cr#L27" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/e113669/src/ameba/rule/typing/method_parameter_type_restriction.cr#L54" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1597,7 +1783,7 @@ the ones that are not valid Crystal code (e.g. <code>is_404?</code>).</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/e113669/src/ameba/rule/naming/predicate_name.cr#L34" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/e113669/src/ameba/rule/typing/method_parameter_type_restriction.cr#L66" target="_blank">View source</a>]
         
       </div>
     </div>
