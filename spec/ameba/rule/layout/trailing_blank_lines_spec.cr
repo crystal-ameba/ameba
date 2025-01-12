@@ -52,5 +52,12 @@ module Ameba::Rule::Layout
         issue.message.should eq "Trailing newline missing"
       end
     end
+
+    {% if compare_versions(Crystal::VERSION, "1.15.0") >= 0 %}
+      it "fails if there more then one blank line at the end of an ECR source" do
+        source = expect_issue subject, "a = 1\n \n # error: Excessive trailing newline detected", "source.ecr"
+        expect_no_corrections source
+      end
+    {% end %}
   end
 end

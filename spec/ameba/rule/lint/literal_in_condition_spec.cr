@@ -175,5 +175,17 @@ module Ameba::Rule::Lint
       issue.end_location.to_s.should eq "source.cr:1:20"
       issue.message.should eq "Literal value found in conditional"
     end
+
+    {% if compare_versions(Crystal::VERSION, "1.15.0") >= 0 %}
+      it "fails if there is a predicate in if conditional in an ECR file" do
+        s = Source.new %(
+          <% if "string" %>
+            :ok
+          <% end %>
+        ), "source.ecr"
+
+        subject.catch(s).should_not be_valid
+      end
+    {% end %}
   end
 end
