@@ -24,7 +24,7 @@ module Ameba
         status: nil
 
       issue.location.to_s.should eq location.to_s
-      issue.end_location.should eq nil
+      issue.end_location.should be_nil
     end
 
     it "accepts end_location" do
@@ -36,7 +36,7 @@ module Ameba
         message: "Blah",
         status: nil
 
-      issue.location.should eq nil
+      issue.location.should be_nil
       issue.end_location.to_s.should eq location.to_s
     end
 
