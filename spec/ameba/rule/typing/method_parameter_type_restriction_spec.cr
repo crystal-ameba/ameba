@@ -173,9 +173,9 @@ module Ameba::Rule::Typing
         end
       end
 
-      context "#block_param" do
+      context "#block_parameters" do
         rule = MethodParameterTypeRestriction.new
-        rule.block_param = true
+        rule.block_parameters = true
 
         it "fails if a block parameter without a name doesn't have a type restriction" do
           expect_issue rule, <<-CRYSTAL

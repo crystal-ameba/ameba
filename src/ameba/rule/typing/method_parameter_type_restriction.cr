@@ -20,7 +20,7 @@ module Ameba::Rule::Typing
   # When the config options `PrivateMethods` and `ProtectedMethods`
   # are true, this rule is also applied to private and protected methods, respectively.
   #
-  # The `BlockParam` configuration option will extend this to block params, where these are invalid:
+  # The `BlockParameters` configuration option will extend this to block parameters, where these are invalid:
   #
   # ```
   # def exec(&)
@@ -48,7 +48,7 @@ module Ameba::Rule::Typing
   #   DefaultValue: false
   #   PrivateMethods: false
   #   ProtectedMethods: false
-  #   BlockParam: false
+  #   BlockParameters: false
   # ```
   class MethodParameterTypeRestriction < Base
     properties do
