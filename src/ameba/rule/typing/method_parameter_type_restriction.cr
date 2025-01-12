@@ -1,5 +1,5 @@
 module Ameba::Rule::Typing
-  # A rule that enforces method parameters have type restrictions, with optional enforcement of block parameters
+  # A rule that enforces method parameters have type restrictions, with optional enforcement of block parameters.
   #
   # For example, this is considered invalid:
   #
