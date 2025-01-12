@@ -63,7 +63,7 @@ module Ameba
         if @path.ends_with?(".ecr")
           begin
             code = ECR.process_string(code, @path)
-          rescue ex : Crystal::SyntaxException
+          rescue ex : ECR::Lexer::SyntaxException
             # Need to rescue to add the filename
             raise Crystal::SyntaxException.new(
               ex.message,
