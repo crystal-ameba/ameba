@@ -84,9 +84,9 @@ module Ameba::Rule::Typing
         when Crystal::Assign
           next unless default_value?
 
-          issue_for arg.target, MSG, prefer_name_location: true
+          issue_for arg.target, MSG
         when Crystal::Var, Crystal::Call, Crystal::StringLiteral, Crystal::SymbolLiteral
-          issue_for arg, MSG, prefer_name_location: true
+          issue_for arg, MSG
         end
       end
     end
