@@ -71,7 +71,7 @@ module Ameba
       end
     end
 
-    {% if compare_versions(Crystal::VERSION, "1.15.0") >= 0 %}
+    if Ameba.ecr_supported?
       describe "#ast" do
         it "parses an ECR file" do
           source = Source.new <<-ECR, "filename.ecr"
@@ -95,6 +95,6 @@ module Ameba
           end
         end
       end
-    {% end %}
+    end
   end
 end

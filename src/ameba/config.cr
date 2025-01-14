@@ -58,18 +58,14 @@ class Ameba::Config
     Path[XDG_CONFIG_HOME] / "ameba/config.yml",
   }
 
-  {% if compare_versions(Crystal::VERSION, "1.15.0") >= 0 %}
-    DEFAULT_GLOBS = %w(
-      **/*.cr
-      **/*.ecr
-      !lib
-    )
-  {% else %}
-    DEFAULT_GLOBS = %w(
-      **/*.cr
-      !lib
-    )
-  {% end %}
+  DEFAULT_GLOBS = %w(
+    **/*.cr
+    !lib
+  )
+
+  if Ameba.ecr_supported?
+    DEFAULT_GLOBS << "**/*.ecr"
+  end
 
   getter rules : Array(Rule::Base)
   property severity = Severity::Convention
