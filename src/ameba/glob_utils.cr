@@ -24,13 +24,13 @@ module Ameba
     def expand(globs)
       globs
         .flat_map do |glob|
-        if File.directory?(glob)
-          glob += "/**/*.cr"
+          if File.directory?(glob)
+            glob += "/**/*.cr"
 
-          {% if compare_versions(Crystal::VERSION, "1.15.0") >= 0 %}
-            glob += "/**/*.ecr"
-          {% end %}
-        end
+            Ameba.ecr_supported? do
+              glob += "/**/*.ecr"
+            end
+          end
 
           Dir[glob]
         end

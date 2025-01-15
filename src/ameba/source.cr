@@ -59,7 +59,7 @@ module Ameba
     getter ast : Crystal::ASTNode do
       code = @code
 
-      {% if compare_versions(Crystal::VERSION, "1.15.0") >= 0 %}
+      Ameba.ecr_supported? do
         if @path.ends_with?(".ecr")
           begin
             code = ECR.process_string(code, @path)
@@ -73,7 +73,7 @@ module Ameba
             )
           end
         end
-      {% end %}
+      end
 
       Crystal::Parser.new(code)
         .tap(&.wants_doc = true)
