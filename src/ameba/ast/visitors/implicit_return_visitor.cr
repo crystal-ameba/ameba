@@ -41,13 +41,8 @@ module Ameba::AST
     def visit(node : Crystal::Call) : Bool
       @rule.test(@source, node, @stack > 0)
 
-      if node.block || !node.args.empty?
-        incr_stack { node.obj.try &.accept(self) }
-      else
-        node.obj.try &.accept(self)
-      end
-
       incr_stack do
+        node.obj.try &.accept(self)
         node.args.each &.accept(self)
         node.named_args.try &.each &.accept(self)
         node.block_arg.try &.accept(self)
@@ -129,6 +124,48 @@ module Ameba::AST
       else
         incr_stack { node.body.accept(self) }
       end
+
+      false
+    end
+
+    def visit(node : Crystal::ClassDef) : Bool
+      incr_stack do
+        node.name.accept(self)
+        node.superclass.try &.accept(self)
+      end
+
+      node.body.accept(self)
+
+      false
+    end
+
+    def visit(node : Crystal::FunDef) : Bool
+      incr_stack do
+        node.args.each &.accept(self)
+        node.return_type.try &.accept(self)
+        node.body.try &.accept(self)
+      end
+
+      false
+    end
+
+    def visit(node : Crystal::ExternalVar) : Bool
+      incr_stack { node.type_spec.accept(self) }
+
+      false
+    end
+
+    def visit(node : Crystal::Include | Crystal::Extend) : Bool
+      incr_stack do
+        node.name.accept(self)
+      end
+
+      false
+    end
+
+    def visit(node : Crystal::Cast | Crystal::NilableCast) : Bool
+      node.obj.accept(self)
+      incr_stack { node.to.accept(self) }
 
       false
     end
@@ -282,7 +319,30 @@ module Ameba::AST
       false
     end
 
-    def visit(node : Crystal::Generic) : Bool
+    def visit(node : Crystal::Generic | Crystal::Path | Crystal::Union) : Bool
+      @rule.test(@source, node, @stack > 0)
+
+      false
+    end
+
+    def visit(node : Crystal::Alias)
+      @rule.test(@source, node, @stack > 0)
+
+      incr_stack do
+        node.name.accept(self)
+        node.value.accept(self)
+      end
+
+      false
+    end
+
+    def visit(node : Crystal::TypeDef)
+      @rule.test(@source, node, @stack > 0)
+
+      incr_stack do
+        node.type_spec.accept(self)
+      end
+
       false
     end
 
