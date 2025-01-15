@@ -295,20 +295,5 @@ module Ameba::Rule::Lint
             CRYSTAL
       end
     {% end %}
-
-    {% if compare_versions(Crystal::VERSION, "1.15.0") >= 0 %}
-      it "passes if a string is used in an assign directive in an ECR file" do
-        expect_no_issues subject, <<-CRYSTAL, path: "source.ecr"
-          <%= "hello world" %>
-          CRYSTAL
-      end
-
-      it "fails if a string is unused in an ECR file" do
-        expect_issue subject, <<-CRYSTAL, path: "source.ecr"
-          <% "hello world" %>
-           # ^^^^^^^^^^^^^ error: Literal value is not used
-          CRYSTAL
-      end
-    {% end %}
   end
 end

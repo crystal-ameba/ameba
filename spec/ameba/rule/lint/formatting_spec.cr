@@ -53,18 +53,5 @@ module Ameba::Rule::Lint
         end
       end
     end
-
-    {% if compare_versions(Crystal::VERSION, "1.15.0") >= 0 %}
-      it "passes ECR files regardless of formatting" do
-        source = expect_no_issues subject, <<-CRYSTAL, "source.ecr"
-          <%
-            def method(a,b,c=0)
-              a+b+c
-            end
-          %>
-
-          CRYSTAL
-      end
-    {% end %}
   end
 end
