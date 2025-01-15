@@ -1,5 +1,6 @@
 require "semantic_version"
 require "yaml"
+require "ecr/processor"
 require "./glob_utils"
 
 # A configuration entry for `Ameba::Runner`.
@@ -61,6 +62,10 @@ class Ameba::Config
     **/*.cr
     !lib
   )
+
+  if Ameba.ecr_supported?
+    DEFAULT_GLOBS << "**/*.ecr"
+  end
 
   getter rules : Array(Rule::Base)
   property severity = Severity::Convention
@@ -167,7 +172,7 @@ class Ameba::Config
   # ```
   # config = Ameba::Config.load
   # config.sources # => list of default sources
-  # config.globs = ["**/*.cr"]
+  # config.globs = ["**/*.cr", "**/*.ecr"]
   # config.excluded = ["spec"]
   # config.sources # => list of sources pointing to files found by the wildcards
   # ```

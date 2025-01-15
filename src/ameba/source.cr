@@ -57,6 +57,22 @@ module Ameba
     # source.ast
     # ```
     getter ast : Crystal::ASTNode do
+      code = @code
+
+      if Ameba.ecr_supported? && @path.ends_with?(".ecr")
+        begin
+          code = ECR.process_string(code, @path)
+        rescue ex : ECR::Lexer::SyntaxException
+          # Need to rescue to add the filename
+          raise Crystal::SyntaxException.new(
+            ex.message,
+            ex.line_number,
+            ex.column_number,
+            @path
+          )
+        end
+      end
+
       Crystal::Parser.new(code)
         .tap(&.wants_doc = true)
         .tap(&.filename = path)
