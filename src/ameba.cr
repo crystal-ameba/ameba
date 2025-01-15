@@ -20,6 +20,12 @@ module Ameba
 
   VERSION = {{ `shards version "#{__DIR__}"`.chomp.stringify }}
 
+  macro ecr_supported?(&)
+    {% if compare_versions(Crystal::VERSION, "1.15.0") >= 0 %}
+      {{ yield }}
+    {% end %}
+  end
+
   # Initializes `Ameba::Runner` and runs it.
   # Can be configured via `config` parameter.
   #
@@ -31,12 +37,6 @@ module Ameba
   # ```
   def run(config = Config.load)
     Runner.new(config).run
-  end
-
-  macro ecr_supported?(&)
-    {% if compare_versions(Crystal::VERSION, "1.15.0") >= 0 %}
-      {{ yield }}
-    {% end %}
   end
 end
 
