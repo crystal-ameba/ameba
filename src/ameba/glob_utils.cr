@@ -24,14 +24,7 @@ module Ameba
     def expand(globs)
       globs
         .flat_map do |glob|
-          if File.directory?(glob)
-            glob += "/**/*.cr"
-
-            if Ameba.ecr_supported?
-              glob += "/**/*.ecr"
-            end
-          end
-
+          glob += "/**/*.cr" if File.directory?(glob)
           Dir[glob]
         end
         .uniq!
