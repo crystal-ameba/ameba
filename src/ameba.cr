@@ -40,8 +40,4 @@ module Ameba
   def run(config = Config.load)
     Runner.new(config).run
   end
-
-  def self.ecr_supported? : Bool
-    {{ compare_versions(Crystal::VERSION, "1.15.0") >= 0 }}
-  end
 end
