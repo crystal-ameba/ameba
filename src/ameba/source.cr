@@ -60,7 +60,7 @@ module Ameba
       code = @code
 
       Ameba.ecr_supported? do
-        if @path.ends_with?(".ecr")
+        if ecr?
           begin
             code = ECR.process_string(code, @path)
           rescue ex : ECR::Lexer::SyntaxException
@@ -88,6 +88,11 @@ module Ameba
     # Returns `true` if the source is a spec file, `false` otherwise.
     def spec?
       path.ends_with?("_spec.cr")
+    end
+
+    # Returns `true` if the source is an ECR template, `false` otherwise.
+    def ecr?
+      path.ends_with?(".ecr")
     end
 
     # Returns `true` if *filepath* matches the source's path, `false` otherwise.
