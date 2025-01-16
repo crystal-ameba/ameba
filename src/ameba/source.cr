@@ -62,14 +62,14 @@ module Ameba
       Ameba.ecr_supported? do
         if ecr?
           begin
-            code = ECR.process_string(code, @path)
+            code = ECR.process_string(code, path)
           rescue ex : ECR::Lexer::SyntaxException
             # Need to rescue to add the filename
             raise Crystal::SyntaxException.new(
               ex.message,
               ex.line_number,
               ex.column_number,
-              @path
+              path
             )
           end
         end
