@@ -1,9 +1,9 @@
 require "../../../spec_helper"
 
 module Ameba::Rule::Lint
-  subject = UnusedPathGenericOrUnion.new
+  subject = UnusedTypeOrConstant.new
 
-  describe UnusedPathGenericOrUnion do
+  describe UnusedTypeOrConstant do
     it "passes if paths and generic types are used" do
       expect_no_issues subject, <<-CRYSTAL
         MyConst = 1

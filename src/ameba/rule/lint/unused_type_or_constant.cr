@@ -1,5 +1,5 @@
 module Ameba::Rule::Lint
-  # A rule that disallows unused Paths, Generics, or Unions (Int32, String?, StaticArray(Int32, 10), etc).
+  # A rule that disallows unused constants, generics, or unions (`Int32`, `String?`, `StaticArray(Int32, 10)`, etc).
   #
   # For example, these are considered invalid:
   #
@@ -33,10 +33,10 @@ module Ameba::Rule::Lint
   # YAML configuration example:
   #
   # ```
-  # Lint/UnusedPathGenericOrUnion:
+  # Lint/UnusedTypeOrConstant:
   #   Enabled: true
   # ```
-  class UnusedPathGenericOrUnion < Base
+  class UnusedTypeOrConstant < Base
     properties do
       since_version "1.7.0"
       description "Disallows unused literal values"
