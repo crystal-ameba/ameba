@@ -1,8 +1,20 @@
 module Ameba::AST
+  # AST visitor that finds nodes that are not used by their surrounding scope.
+  #
+  # A stack is used to keep track of when a node is used, incrementing every time
+  # something will capture its implicit (or explicit) return value, such as the
+  # path in a class name or the value in an assign.
+  #
+  # This also allows for passing through whether a node is captured from a nodes
+  # parent to its children, such as from an `if` statements parent to it's body,
+  # as the body is not used by the `if` itself, but by its parent scope.
   class ImplicitReturnVisitor < BaseVisitor
     # When greater than zero, indicates the current node's return value is used
     @stack : Int32 = 0
 
+    # The stack is swapped out here as `Crystal::Expressions` are isolated from
+    # their parents scope. Only the last line in an expressions node can be
+    # captured by their parent node.
     def visit(node : Crystal::Expressions) : Bool
       @rule.test(@source, node, @stack > 0)
 
@@ -346,6 +358,7 @@ module Ameba::AST
       false
     end
 
+    # Indicates that any nodes visited within the block are captured / used.
     private def incr_stack(&) : Nil
       @stack += 1
       yield
