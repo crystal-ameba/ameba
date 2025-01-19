@@ -42,7 +42,7 @@ module Ameba::Rule::Lint
       description "Disallows unused literal values"
     end
 
-    MSG = "Path or generic type is not used"
+    MSG = "Type or constant is not used"
 
     def test(source : Source)
       AST::ImplicitReturnVisitor.new(self, source)
