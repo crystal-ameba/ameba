@@ -1,26 +1,25 @@
 require "../../../spec_helper"
 
 module Ameba::Rule::Lint
-  subject = UnusedTypeOrConstant.new
+  subject = UnusedGenericOrUnion.new
 
-  describe UnusedTypeOrConstant do
-    it "passes if paths and generic types are used for assign and method calls" do
+  describe UnusedGenericOrUnion do
+    it "passes if generics and unions are used for assign and method calls" do
       expect_no_issues subject, <<-CRYSTAL
-        MyConst = 1
-
         my_var : String? = EMPTY_STRING
 
-        a : Int32 = 10
+        a : Int32? = 10
 
         klass = String?
 
-        my_var.as(String)
+        my_var.as(Array(Char))
 
         puts StaticArray(Int32, 10)
 
+        # Not a union
         Int32 | "Float64"
 
-        MyClass.run
+        MyClass(String).new.run
         CRYSTAL
     end
 

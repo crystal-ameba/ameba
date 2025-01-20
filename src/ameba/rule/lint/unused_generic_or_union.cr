@@ -1,17 +1,15 @@
 module Ameba::Rule::Lint
-  # A rule that disallows unused constants, generics, or unions (`Int32`, `String?`, `StaticArray(Int32, 10)`, etc).
+  # A rule that disallows unused generics or unions (`String?`, `StaticArray(Int32, 10)`, etc).
   #
   # For example, these are considered invalid:
   #
   # ```
-  # Int32
-  #
   # String?
   #
   # Float64 | StaticArray(Float64, 10)
   #
   # def size
-  #   Float64
+  #   Float64 | Int32
   #   0.1
   # end
   # ```
@@ -33,16 +31,16 @@ module Ameba::Rule::Lint
   # YAML configuration example:
   #
   # ```
-  # Lint/UnusedTypeOrConstant:
+  # Lint/UnusedGenericOrUnion:
   #   Enabled: true
   # ```
-  class UnusedTypeOrConstant < Base
+  class UnusedGenericOrUnion < Base
     properties do
       since_version "1.7.0"
       description "Disallows unused literal values"
     end
 
-    MSG = "Type or constant is not used"
+    MSG = "Generic or union is not used"
 
     def test(source : Source)
       AST::ImplicitReturnVisitor.new(self, source)
@@ -54,7 +52,7 @@ module Ameba::Rule::Lint
       issue_for node, MSG
     end
 
-    def test(source, node : Crystal::Path | Crystal::Generic | Crystal::Union, node_is_used : Bool)
+    def test(source, node : Crystal::Generic | Crystal::Union, node_is_used : Bool)
       issue_for node, MSG unless node_is_used
     end
 
