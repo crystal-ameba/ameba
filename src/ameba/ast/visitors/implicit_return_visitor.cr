@@ -140,11 +140,8 @@ module Ameba::AST
       false
     end
 
-    def visit(node : Crystal::ClassDef) : Bool
-      incr_stack do
-        node.name.accept(self)
-        node.superclass.try &.accept(self)
-      end
+    def visit(node : Crystal::ClassDef | Crystal::ModuleDef) : Bool
+      @rule.test(@source, node, @stack > 0)
 
       node.body.accept(self)
 
@@ -152,32 +149,20 @@ module Ameba::AST
     end
 
     def visit(node : Crystal::FunDef) : Bool
+      @rule.test(@source, node, @stack > 0)
+
       incr_stack do
         node.args.each &.accept(self)
-        node.return_type.try &.accept(self)
         node.body.try &.accept(self)
       end
 
       false
     end
 
-    def visit(node : Crystal::ExternalVar) : Bool
-      incr_stack { node.type_spec.accept(self) }
-
-      false
-    end
-
-    def visit(node : Crystal::Include | Crystal::Extend) : Bool
-      incr_stack do
-        node.name.accept(self)
-      end
-
-      false
-    end
-
     def visit(node : Crystal::Cast | Crystal::NilableCast) : Bool
+      @rule.test(@source, node, @stack > 0)
+
       node.obj.accept(self)
-      incr_stack { node.to.accept(self) }
 
       false
     end
@@ -198,14 +183,6 @@ module Ameba::AST
 
       incr_stack { node.value.try &.accept(self) }
 
-      false
-    end
-
-    def visit(node : Crystal::Macro | Crystal::MacroIf | Crystal::MacroFor) : Bool
-      false
-    end
-
-    def visit(node : Crystal::UninitializedVar) : Bool
       false
     end
 
@@ -293,11 +270,8 @@ module Ameba::AST
     def visit(node : Crystal::RangeLiteral) : Bool
       @rule.test(@source, node, @stack > 0)
 
-      unless node.from.is_a?(Crystal::NumberLiteral)
+      incr_stack do
         node.from.accept(self)
-      end
-
-      unless node.to.is_a?(Crystal::NumberLiteral)
         node.to.accept(self)
       end
 
@@ -337,25 +311,42 @@ module Ameba::AST
       false
     end
 
-    def visit(node : Crystal::Alias)
+    def visit(node : Crystal::Macro | Crystal::MacroIf | Crystal::MacroFor) : Bool
       @rule.test(@source, node, @stack > 0)
-
-      incr_stack do
-        node.name.accept(self)
-        node.value.accept(self)
-      end
 
       false
     end
 
-    def visit(node : Crystal::TypeDef)
+    def visit(node : Crystal::UninitializedVar) : Bool
       @rule.test(@source, node, @stack > 0)
 
-      incr_stack do
-        node.type_spec.accept(self)
-      end
+      false
+    end
+
+    def visit(node : Crystal::LibDef) : Bool
+      @rule.test(@source, node, @stack > 0)
 
       false
+    end
+
+    def visit(node : Crystal::Include | Crystal::Extend) : Bool
+      @rule.test(@source, node, @stack > 0)
+
+      false
+    end
+
+    def visit(node : Crystal::Alias)
+      false
+    end
+
+    def visit(node : Crystal::TypeDef)
+      false
+    end
+
+    def visit(node)
+      @rule.test(@source, node, @stack > 0)
+
+      true
     end
 
     # Indicates that any nodes visited within the block are captured / used.
