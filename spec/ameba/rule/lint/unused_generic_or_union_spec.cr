@@ -67,6 +67,16 @@ module Ameba::Rule::Lint
         class MyClass
           String?
         # ^^^^^^^ error: Generic or union is not used
+          Array(self)
+        # ^^^^^^^^^^^ error: Generic or union is not used
+          Array(typeof(1))
+        # ^^^^^^^^^^^^^^^^ error: Generic or union is not used
+
+          def hello
+            self | Nil
+          # ^^^^^^^^^^ error: Generic or union is not used
+            "Hello, Gordon!"
+          end
         end
 
         module MyModule

@@ -60,19 +60,23 @@ module Ameba::Rule::Lint
       return false unless node.name == "|" && node.args.size == 1
 
       case lhs = node.obj
-      when Crystal::Path, Crystal::Generic
+      when Crystal::Path, Crystal::Generic, Crystal::Self
         # Okay
+      when Crystal::Var
+        return false unless lhs.name == "self"
       when Crystal::Call
-        return false unless path_or_generic_union?(lhs)
+        return false unless (lhs.name == "self") || path_or_generic_union?(lhs)
       else
         return false
       end
 
       case rhs = node.args.first?
-      when Crystal::Path, Crystal::Generic
+      when Crystal::Path, Crystal::Generic, Crystal::Self
         # Okay
+      when Crystal::Var
+        return false unless rhs.name == "self"
       when Crystal::Call
-        return false unless path_or_generic_union?(rhs)
+        return false unless (rhs.name == "self") || path_or_generic_union?(rhs)
       else
         return false
       end
