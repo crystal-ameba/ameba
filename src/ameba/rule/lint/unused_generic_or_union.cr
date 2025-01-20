@@ -60,7 +60,7 @@ module Ameba::Rule::Lint
       return false unless node.name == "|" && node.args.size == 1
 
       case lhs = node.obj
-      when Crystal::Path, Crystal::Generic, Crystal::Self
+      when Crystal::Path, Crystal::Generic, Crystal::Self, Crystal::TypeOf, Crystal::Underscore
         # Okay
       when Crystal::Var
         return false unless lhs.name == "self"
@@ -71,7 +71,7 @@ module Ameba::Rule::Lint
       end
 
       case rhs = node.args.first?
-      when Crystal::Path, Crystal::Generic, Crystal::Self
+      when Crystal::Path, Crystal::Generic, Crystal::Self, Crystal::TypeOf, Crystal::Underscore
         # Okay
       when Crystal::Var
         return false unless rhs.name == "self"

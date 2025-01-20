@@ -23,6 +23,16 @@ module Ameba::Rule::Lint
         CRYSTAL
     end
 
+    it "passes plain pseudo methods, self, and paths" do
+      expect_no_issues subject, <<-CRYSTAL
+        _
+        self
+        self?
+        typeof(1)
+        Int32
+        CRYSTAL
+    end
+
     it "passes if generics and unions are used for methods" do
       expect_no_issues subject, <<-CRYSTAL
         def size(a : Float64?) : Float64?
@@ -75,6 +85,8 @@ module Ameba::Rule::Lint
           def hello
             self | Nil
           # ^^^^^^^^^^ error: Generic or union is not used
+            typeof(1) | Nil | _
+          # ^^^^^^^^^^^^^^^^^^^ error: Generic or union is not used
             "Hello, Gordon!"
           end
         end
