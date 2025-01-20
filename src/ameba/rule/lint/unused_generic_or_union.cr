@@ -37,7 +37,7 @@ module Ameba::Rule::Lint
   class UnusedGenericOrUnion < Base
     properties do
       since_version "1.7.0"
-      description "Disallows unused literal values"
+      description "Disallows unused generics or unions"
     end
 
     MSG = "Generic or union is not used"
