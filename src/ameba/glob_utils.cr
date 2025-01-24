@@ -25,11 +25,13 @@ module Ameba
       globs
         .flat_map do |glob|
           if File.directory?(glob)
-            glob += "/**/*.cr"
+            suffix = ".cr"
 
             Ameba.ecr_supported? do
-              glob += "/**/*.ecr"
+              suffix = ".{cr,ecr}"
             end
+
+            glob += "/**/*#{suffix}"
           end
 
           Dir[glob]
