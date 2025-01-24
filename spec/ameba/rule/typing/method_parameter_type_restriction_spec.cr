@@ -37,10 +37,9 @@ module Ameba::Rule::Typing
         CRYSTAL
     end
 
-    it "fails if a double splat method parameter doesn't have a type restriction" do
-      expect_issue subject, <<-CRYSTAL
+    it "passes if a double splat method parameter doesn't have a type restriction" do
+      expect_no_issues subject, <<-CRYSTAL
         def hello(**a) : String
-                  # ^ error: Method parameter should have a type restriction
           "hello world" + a.values.join(", ")
         end
         CRYSTAL
@@ -173,6 +172,20 @@ module Ameba::Rule::Typing
             def hello(a = "world")
                     # ^ error: Method parameter should have a type restriction
               "hello \#{a}"
+            end
+            CRYSTAL
+        end
+      end
+
+      context "#double_splat_parameters" do
+        rule = MethodParameterTypeRestriction.new
+        rule.double_splat_parameters = true
+
+        it "fails if a double splat method parameter doesn't have a type restriction" do
+          expect_issue rule, <<-CRYSTAL
+            def hello(**a) : String
+                      # ^ error: Method parameter should have a type restriction
+              "hello world" + a.values.join(", ")
             end
             CRYSTAL
         end

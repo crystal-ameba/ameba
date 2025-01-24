@@ -48,6 +48,7 @@ module Ameba::Rule::Typing
   #   DefaultValue: false
   #   PrivateMethods: false
   #   ProtectedMethods: false
+  #   DoubleSplatParameters: false
   #   BlockParameters: false
   # ```
   class MethodParameterTypeRestriction < Base
@@ -58,6 +59,7 @@ module Ameba::Rule::Typing
       default_value false
       private_methods false
       protected_methods false
+      double_splat_parameters false
       block_parameters false
     end
 
@@ -72,7 +74,7 @@ module Ameba::Rule::Typing
         issue_for arg, MSG
       end
 
-      if (arg = node.double_splat) && !arg.restriction
+      if double_splat_parameters? && (arg = node.double_splat) && !arg.restriction
         issue_for arg, MSG
       end
 
