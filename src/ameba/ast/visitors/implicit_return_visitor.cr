@@ -91,7 +91,6 @@ module Ameba::AST
     def visit(node : Crystal::MultiAssign) : Bool
       @rule.test(@source, node, @stack.positive?)
 
-      node.targets.each &.accept(self)
       incr_stack { node.values.each &.accept(self) }
 
       false
