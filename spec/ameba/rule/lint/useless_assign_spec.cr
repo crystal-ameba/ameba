@@ -1011,6 +1011,18 @@ module Ameba::Rule::Lint
           CRYSTAL
       end
 
+      it "reports if it's not referenced at a top level + in a method" do
+        expect_issue subject, <<-CRYSTAL
+          a : String?
+          # ^{} error: Useless assignment to variable `a`
+
+          def foo
+            b : String?
+          # ^ error: Useless assignment to variable `b`
+          end
+          CRYSTAL
+      end
+
       it "reports if it's not referenced in a method" do
         expect_issue subject, <<-CRYSTAL
           def foo
@@ -1075,6 +1087,18 @@ module Ameba::Rule::Lint
         expect_issue subject, <<-CRYSTAL
           a = uninitialized U
           # ^{} error: Useless assignment to variable `a`
+          CRYSTAL
+      end
+
+      it "reports if uninitialized assignment is not referenced at a top level + in a method" do
+        expect_issue subject, <<-CRYSTAL
+          a = uninitialized U
+          # ^{} error: Useless assignment to variable `a`
+
+          def foo
+            b = uninitialized U
+          # ^ error: Useless assignment to variable `b`
+          end
           CRYSTAL
       end
 
