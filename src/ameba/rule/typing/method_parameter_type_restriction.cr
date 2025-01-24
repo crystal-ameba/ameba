@@ -72,7 +72,7 @@ module Ameba::Rule::Typing
         issue_for arg, MSG
       end
 
-      if (arg = node.double_splat) && !(arg.restriction)
+      if (arg = node.double_splat) && !arg.restriction
         issue_for arg, MSG
       end
 
