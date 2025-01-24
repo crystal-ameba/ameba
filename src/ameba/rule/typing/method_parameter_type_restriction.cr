@@ -72,6 +72,10 @@ module Ameba::Rule::Typing
         issue_for arg, MSG
       end
 
+      if (arg = node.double_splat) && !(arg.restriction)
+        issue_for arg, MSG
+      end
+
       if block_parameters?
         node.block_arg.try do |block_arg|
           next if block_arg.restriction

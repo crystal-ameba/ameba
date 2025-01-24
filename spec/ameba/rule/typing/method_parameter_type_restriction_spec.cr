@@ -13,6 +13,10 @@ module Ameba::Rule::Typing
         def hello(*a : String) : String
           "hello world" + a.join(", ")
         end
+
+        def hello(**a : String) : String
+          "hello world" + a.values.join(", ")
+        end
         CRYSTAL
     end
 
@@ -33,10 +37,11 @@ module Ameba::Rule::Typing
         CRYSTAL
     end
 
-    it "passes if a double splat method parameter doesn't have a type restriction" do
-      expect_no_issues subject, <<-CRYSTAL
-        def hello(a : String, **world) : String
-          "hello world" + a
+    it "fails if a double splat method parameter doesn't have a type restriction" do
+      expect_issue subject, <<-CRYSTAL
+        def hello(**a) : String
+                  # ^ error: Method parameter should have a type restriction
+          "hello world" + a.values.join(", ")
         end
         CRYSTAL
     end
