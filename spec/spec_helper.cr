@@ -62,6 +62,20 @@ module Ameba
     end
   end
 
+  class SelfCallsRule < Rule::Base
+    @[YAML::Field(ignore: true)]
+    getter call_queue = {} of AST::Scope => Array(Crystal::Call)
+
+    properties do
+      description "Internal rule to self calls in test scopes"
+    end
+
+    def test(source, node : Crystal::Call, scope : AST::Scope)
+      @call_queue[scope] ||= [] of Crystal::Call
+      @call_queue[scope] << node
+    end
+  end
+
   class FlowExpressionRule < Rule::Base
     @[YAML::Field(ignore: true)]
     getter expressions = [] of AST::FlowExpression
