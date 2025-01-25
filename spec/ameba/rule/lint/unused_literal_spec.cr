@@ -245,32 +245,49 @@ module Ameba::Rule::Lint
 
     it "fails if unused literals in rescue/ensure/else block" do
       expect_issue subject, <<-CRYSTAL
-      a = begin
-            1234
-          # ^^^^ error: Literal value is not used
-            1234_f32
-          rescue ASDF
-            "hello world"
-          # ^^^^^^^^^^^^^ error: Literal value is not used
-            "interp \#{string}"
-          rescue QWERTY
-            [1, 2, 3, 4, 5]
-          # ^^^^^^^^^^^^^^^ error: Literal value is not used
-            {"hello" => "world"}
-          else
-            '\t'
-          # ^^^ error: Literal value is not used
-            <<-HEREDOC
-          # ^^^^^^^^^^ error: Literal value is not used
-              this is a heredoc
-              HEREDOC
-            1..2
-          ensure
-            {goodnight: moon}
-          # ^^^^^^^^^^^^^^^^^ error: Literal value is not used
-            {1, 2, 3}
-          end
-      CRYSTAL
+        a = begin
+              1234
+            # ^^^^ error: Literal value is not used
+              1234_f32
+            # ^^^^^^^^ error: Literal value is not used
+            rescue ASDF
+              "hello world"
+            # ^^^^^^^^^^^^^ error: Literal value is not used
+              "interp \#{string}"
+            rescue QWERTY
+              [1, 2, 3, 4, 5]
+            # ^^^^^^^^^^^^^^^ error: Literal value is not used
+              {"hello" => "world"}
+            else
+              '\t'
+            # ^^^ error: Literal value is not used
+              <<-HEREDOC
+            # ^^^^^^^^^^ error: Literal value is not used
+                this is a heredoc
+                HEREDOC
+              1..2
+            ensure
+              {goodnight: moon}
+            # ^^^^^^^^^^^^^^^^^ error: Literal value is not used
+              {1, 2, 3}
+            # ^^^^^^^^^ error: Literal value is not used
+            end
+
+        b = begin
+              1234
+            # ^^^^ error: Literal value is not used
+              1234_f32
+            rescue ASDF
+              "hello world"
+            # ^^^^^^^^^^^^^ error: Literal value is not used
+              "interp \#{string}"
+            ensure
+              {goodnight: moon}
+            # ^^^^^^^^^^^^^^^^^ error: Literal value is not used
+              {1, 2, 3}
+            # ^^^^^^^^^ error: Literal value is not used
+            end
+        CRYSTAL
     end
 
     # Locations for Regex literals were added in Crystal v1.15.0

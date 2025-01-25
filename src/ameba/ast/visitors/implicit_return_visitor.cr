@@ -225,10 +225,18 @@ module Ameba::AST
     def visit(node : Crystal::ExceptionHandler) : Bool
       @rule.test(@source, node, @stack > 0)
 
-      node.body.accept(self)
+      if node.else
+        # Last line of body isn't implicitly returned if there's an else
+        swap_stack { node.body.try &.accept(self) }
+      else
+        node.body.accept(self)
+      end
+
       node.rescues.try &.each &.accept(self)
       node.else.try &.accept(self)
-      node.ensure.try &.accept(self)
+
+      # Last line of ensure isn't implicitly returned
+      swap_stack { node.ensure.try &.accept(self) }
 
       false
     end
