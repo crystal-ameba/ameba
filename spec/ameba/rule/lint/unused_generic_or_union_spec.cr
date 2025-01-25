@@ -1,9 +1,8 @@
 require "../../../spec_helper"
 
 module Ameba::Rule::Lint
-  subject = UnusedGenericOrUnion.new
-
   describe UnusedGenericOrUnion do
+    subject = UnusedGenericOrUnion.new
     it "passes if generics and unions are used for assign and method calls" do
       expect_no_issues subject, <<-CRYSTAL
         my_var : String? = EMPTY_STRING
@@ -45,7 +44,7 @@ module Ameba::Rule::Lint
         CRYSTAL
     end
 
-    it "fails if generics or unions are unused top-level" do
+    it "fails if generics or unions are unused at top-level" do
       expect_issue subject, <<-CRYSTAL
         String?
         # ^^^^^ error: Generic or union is not used

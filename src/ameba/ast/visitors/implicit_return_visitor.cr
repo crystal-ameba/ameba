@@ -141,7 +141,7 @@ module Ameba::AST
     end
 
     def visit(node : Crystal::ClassDef | Crystal::ModuleDef) : Bool
-      @rule.test(@source, node, @stack > 0)
+      @rule.test(@source, node, @stack.positive?)
 
       node.body.accept(self)
 
