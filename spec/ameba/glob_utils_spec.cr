@@ -23,6 +23,12 @@ module Ameba
           .should_not contain current_file_path
       end
 
+      it "doesn't return rejected folders" do
+        subject
+          .find_files_by_globs(["**/*_spec.cr", "!spec"])
+          .should be_empty
+      end
+
       it "doesn't return duplicated globs" do
         subject
           .find_files_by_globs(["**/*_spec.cr", "**/*_spec.cr"])
@@ -46,6 +52,10 @@ module Ameba
         subject.expand(["**/*"]).each do |path|
           fail "#{path.inspect} should be a file" unless File.file?(path)
         end
+      end
+
+      it "expands folders" do
+        subject.expand(["spec"]).should_not be_empty
       end
     end
   end
