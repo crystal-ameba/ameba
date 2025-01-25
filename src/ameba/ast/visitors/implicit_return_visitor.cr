@@ -25,7 +25,7 @@ module Ameba::AST
           if exp.is_a?(Crystal::ControlExpression)
             incr_stack { exp.accept(self) }
             break
-          elsif idx == last_idx && old_stack > 0
+          elsif idx == last_idx && old_stack.positive?
             incr_stack { exp.accept(self) }
           else
             exp.accept(self)
@@ -162,7 +162,7 @@ module Ameba::AST
     def visit(node : Crystal::Cast | Crystal::NilableCast) : Bool
       @rule.test(@source, node, @stack.positive?)
 
-      node.obj.accept(self)
+      incr_stack { node.obj.accept(self) }
 
       false
     end
