@@ -56,32 +56,24 @@ module Ameba::Rule::Lint
       issue_for node, MSG unless node_is_used
     end
 
-    def path_or_generic_union?(node : Crystal::Call) : Bool
-      return false unless node.name == "|" && node.args.size == 1
-
-      case lhs = node.obj
-      when Crystal::Path, Crystal::Generic, Crystal::Self, Crystal::TypeOf, Crystal::Underscore
-        # Okay
-      when Crystal::Var
-        return false unless lhs.name == "self"
-      when Crystal::Call
-        return false unless (lhs.name == "self") || path_or_generic_union?(lhs)
-      else
-        return false
-      end
-
-      case rhs = node.args.first?
-      when Crystal::Path, Crystal::Generic, Crystal::Self, Crystal::TypeOf, Crystal::Underscore
-        # Okay
-      when Crystal::Var
-        return false unless rhs.name == "self"
-      when Crystal::Call
-        return false unless (rhs.name == "self") || path_or_generic_union?(rhs)
-      else
-        return false
-      end
+    private def path_or_generic_union?(node : Crystal::Call) : Bool
+      return false unless node.name == "|" && node.args.size == 1 &&
+                          valid_type_node?(node.obj) && valid_type_node?(node.args.first?)
 
       true
+    end
+
+    private def valid_type_node?(node : Crystal::ASTNode?) : Bool
+      case node
+      when Crystal::Path, Crystal::Generic, Crystal::Self, Crystal::TypeOf, Crystal::Underscore
+        true
+      when Crystal::Var
+        node.name == "self"
+      when Crystal::Call
+        (node.name == "self") || path_or_generic_union?(node)
+      else
+        false
+      end
     end
   end
 end
