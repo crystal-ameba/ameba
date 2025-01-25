@@ -313,13 +313,43 @@ module Ameba::AST
       false
     end
 
-    def visit(node : Crystal::Generic | Crystal::Path | Crystal::Union) : Bool
+    def visit(node : Crystal::MacroExpression) : Bool
+      @rule.test(@source, node, @stack.positive?)
+
+      if node.output?
+        incr_stack { node.exp.accept(self) }
+      else
+        node.exp.accept(self)
+      end
+
+      false
+    end
+
+    def visit(node : Crystal::MacroIf) : Bool
+      @rule.test(@source, node, @stack.positive?)
+
+      incr_stack { node.cond.accept(self) }
+      node.then.accept(self)
+      node.else.accept(self)
+
+      false
+    end
+
+    def visit(node : Crystal::MacroFor) : Bool
+      @rule.test(@source, node, @stack.positive?)
+
+      node.body.accept(self)
+
+      false
+    end
+
+    def visit(node : Crystal::MacroVar)
       @rule.test(@source, node, @stack.positive?)
 
       false
     end
 
-    def visit(node : Crystal::Macro | Crystal::MacroIf | Crystal::MacroFor) : Bool
+    def visit(node : Crystal::Generic | Crystal::Path | Crystal::Union) : Bool
       @rule.test(@source, node, @stack.positive?)
 
       false
