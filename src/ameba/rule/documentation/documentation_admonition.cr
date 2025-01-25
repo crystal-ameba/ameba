@@ -46,7 +46,7 @@ module Ameba::Rule::Documentation
 
     @[YAML::Field(ignore: true)]
     private getter location : Time::Location do
-      Time::Location.load(self.timezone)
+      Time::Location.load(timezone)
     end
 
     def test(source)
