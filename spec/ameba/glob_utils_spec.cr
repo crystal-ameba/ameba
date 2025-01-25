@@ -53,6 +53,10 @@ module Ameba
           fail "#{path.inspect} should be a file" unless File.file?(path)
         end
       end
+
+      it "expands folders" do
+        subject.expand(["spec"]).should_not be_empty
+      end
     end
   end
 end
