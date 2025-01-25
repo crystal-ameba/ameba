@@ -23,6 +23,12 @@ module Ameba
           .should_not contain current_file_path
       end
 
+      it "doesn't return rejected folders" do
+        subject
+          .find_files_by_globs(["**/*_spec.cr", "!spec"])
+          .should be_empty
+      end
+
       it "doesn't return duplicated globs" do
         subject
           .find_files_by_globs(["**/*_spec.cr", "**/*_spec.cr"])
