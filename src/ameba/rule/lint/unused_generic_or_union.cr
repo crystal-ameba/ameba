@@ -40,7 +40,8 @@ module Ameba::Rule::Lint
       description "Disallows unused generics or unions"
     end
 
-    MSG = "Generic or union is not used"
+    GENERIC_MSG = "Generic is not used"
+    UNION_MSG   = "Union is not used"
 
     def test(source : Source)
       AST::ImplicitReturnVisitor.new(self, source)
@@ -49,11 +50,11 @@ module Ameba::Rule::Lint
     def test(source, node : Crystal::Call, node_is_used : Bool)
       return if node_is_used || !path_or_generic_union?(node)
 
-      issue_for node, MSG
+      issue_for node, UNION_MSG
     end
 
-    def test(source, node : Crystal::Generic | Crystal::Union, node_is_used : Bool)
-      issue_for node, MSG unless node_is_used
+    def test(source, node : Crystal::Generic, node_is_used : Bool)
+      issue_for node, GENERIC_MSG unless node_is_used
     end
 
     private def path_or_generic_union?(node : Crystal::Call) : Bool

@@ -3,6 +3,7 @@ require "../../../spec_helper"
 module Ameba::Rule::Lint
   describe UnusedGenericOrUnion do
     subject = UnusedGenericOrUnion.new
+
     it "passes if generics and unions are used for assign and method calls" do
       expect_no_issues subject, <<-CRYSTAL
         my_var : String? = EMPTY_STRING
@@ -47,11 +48,11 @@ module Ameba::Rule::Lint
     it "fails if generics or unions are unused at top-level" do
       expect_issue subject, <<-CRYSTAL
         String?
-        # ^^^^^ error: Generic or union is not used
+        # ^^^^^ error: Generic is not used
         Int32 | Float64 | Nil
-        # ^^^^^^^^^^^^^^^^^^^ error: Generic or union is not used
+        # ^^^^^^^^^^^^^^^^^^^ error: Union is not used
         StaticArray(Int32, 10)
-        # ^^^^^^^^^^^^^^^^^^^^ error: Generic or union is not used
+        # ^^^^^^^^^^^^^^^^^^^^ error: Generic is not used
         CRYSTAL
     end
 
@@ -59,13 +60,13 @@ module Ameba::Rule::Lint
       expect_issue subject, <<-CRYSTAL
         def hello
           Float64?
-        # ^^^^^^^^ error: Generic or union is not used
+        # ^^^^^^^^ error: Generic is not used
           0.1
         end
 
         fun fun_name : Int32
           Array(String)
-        # ^^^^^^^^^^^^^ error: Generic or union is not used
+        # ^^^^^^^^^^^^^ error: Generic is not used
           1234
         end
         CRYSTAL
@@ -75,24 +76,24 @@ module Ameba::Rule::Lint
       expect_issue subject, <<-CRYSTAL
         class MyClass
           String?
-        # ^^^^^^^ error: Generic or union is not used
+        # ^^^^^^^ error: Generic is not used
           Array(self)
-        # ^^^^^^^^^^^ error: Generic or union is not used
+        # ^^^^^^^^^^^ error: Generic is not used
           Array(typeof(1))
-        # ^^^^^^^^^^^^^^^^ error: Generic or union is not used
+        # ^^^^^^^^^^^^^^^^ error: Generic is not used
 
           def hello
             self | Nil
-          # ^^^^^^^^^^ error: Generic or union is not used
+          # ^^^^^^^^^^ error: Union is not used
             typeof(1) | Nil | _
-          # ^^^^^^^^^^^^^^^^^^^ error: Generic or union is not used
+          # ^^^^^^^^^^^^^^^^^^^ error: Union is not used
             "Hello, Gordon!"
           end
         end
 
         module MyModule
           Array(Int32)
-        # ^^^^^^^^^^^^ error: Generic or union is not used
+        # ^^^^^^^^^^^^ error: Generic is not used
         end
         CRYSTAL
     end
