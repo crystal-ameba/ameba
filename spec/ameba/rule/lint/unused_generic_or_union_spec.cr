@@ -32,7 +32,7 @@ module Ameba::Rule::Lint
         CRYSTAL
     end
 
-    it "passes if generics and unions are used for methods" do
+    it "passes if generics and unions are used for method arguments and return type" do
       expect_no_issues subject, <<-CRYSTAL
         def size(a : Float64?) : Float64?
           0.1.try(&.+(a))
