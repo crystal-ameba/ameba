@@ -22,7 +22,7 @@ module Ameba::Rule::Lint
         CRYSTAL
     end
 
-    it "passes plain pseudo methods, self, and paths" do
+    it "passes for plain pseudo methods, self, and paths" do
       expect_no_issues subject, <<-CRYSTAL
         _
         self
