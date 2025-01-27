@@ -58,11 +58,11 @@ module Ameba::Rule::Lint
     end
 
     private def path_or_generic_union?(node : Crystal::Call) : Bool
-      node.name == "|" && node.args.size == 1 &&
-        valid_type_node?(node.obj) && valid_type_node?(node.args.first)
+      node.name == "|" && node.args.size == 1 && (obj = node.obj)
+        valid_type_node?(obj) && valid_type_node?(node.args.first)
     end
 
-    private def valid_type_node?(node : Crystal::ASTNode?) : Bool
+    private def valid_type_node?(node : Crystal::ASTNode) : Bool
       case node
       when Crystal::Path, Crystal::Generic, Crystal::Self, Crystal::TypeOf, Crystal::Underscore
         true
