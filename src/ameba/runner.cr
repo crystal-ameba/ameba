@@ -43,11 +43,16 @@ module Ameba
     # A syntax rule which always inspects a source first
     @syntax_rule = Rule::Lint::Syntax.new
 
+    # A semantic rule which generates semantic information about the sources
+    @semantic_rule = Rule::Lint::Semantic.new
+
     # Checks for unneeded disable directives. Always inspects a source last
     @unneeded_disable_directive_rule : Rule::Base?
 
     # Returns `true` if correctable issues should be autocorrected.
     private getter? autocorrect : Bool
+
+    private getter? semantic : Bool
 
     # Returns an ameba version up to which the rules should be ran.
     property version : SemanticVersion?
@@ -68,11 +73,12 @@ module Ameba
         config.formatter,
         config.severity,
         config.autocorrect?,
+        config.semantic?,
         config.version,
       )
     end
 
-    protected def initialize(rules, sources, @formatter, @severity, @autocorrect = false, @version = nil)
+    protected def initialize(rules, sources, @formatter, @severity, @autocorrect = false, @semantic = false, @version = nil)
       @sources = sources.sort_by(&.path)
       @rules =
         rules.select { |rule| rule_runnable?(rule, @version) }
@@ -103,10 +109,33 @@ module Ameba
     def run
       @formatter.started @sources
 
+      if semantic?
+        context = begin
+          # TODO: multiple entrypoints
+          entrypoint = @sources.find! { |i| i.path == "src/cli.cr" }
+          @semantic_rule.test(entrypoint, @sources)
+        rescue ex
+          # TODO: just for dev / testing, everything should be caught by the rule itself
+          puts "failed to run semantic\n\n#{ex.class}\n#{ex}\n\n#{ex.backtrace.try(&.join("\n"))}"
+          exit 1
+        end
+
+        # test the semantic rules
+        run_sources(context)
+      else
+        run_sources
+      end
+
+      self
+    ensure
+      @formatter.finished @sources
+    end
+
+    private def run_sources(context : SemanticContext? = nil) : Nil
       channels = @sources.map { Channel(Exception?).new }
       @sources.zip(channels).each do |source, channel|
         spawn do
-          run_source(source)
+          run_source(source, context)
         rescue e
           channel.send(e)
         else
@@ -117,13 +146,10 @@ module Ameba
       channels.each do |chan|
         chan.receive.try { |e| raise e }
       end
-
-      self
-    ensure
-      @formatter.finished @sources
     end
 
-    private def run_source(source) : Nil
+    private def run_source(source, context : SemanticContext? = nil) : Nil
+      # TODO: pass the current context to the formatters
       @formatter.source_started source
 
       # This variable is a 2D array used to track corrected issues after each
@@ -143,7 +169,7 @@ module Ameba
 
         @rules.each do |rule|
           next if rule.excluded?(source)
-          rule.test(source)
+          rule.test(source, context)
         end
         check_unneeded_directives(source)
         break unless autocorrect? && source.correct!

@@ -96,6 +96,10 @@ class Ameba::Config
   # Returns `true` if correctable issues should be autocorrected.
   property? autocorrect = false
 
+  # Returns `true` if semantic context should be used for linting.
+  # TODO: should this be an enum for chosing between top-level and compile?
+  property? semantic = false
+
   # Returns a filename if reading source file from STDIN.
   property stdin_filename : String?
 

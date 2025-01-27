@@ -102,6 +102,7 @@ module Ameba::Spec::ExpectIssue
                    *,
                    file = __FILE__,
                    line = __LINE__,
+                   semantic = false,
                    **replacements)
     annotated_code = format_issue(annotated_code, **replacements)
     expected_annotations = AnnotatedSource.parse(annotated_code)
@@ -112,7 +113,22 @@ module Ameba::Spec::ExpectIssue
       raise "Use `expect_no_issues` to assert that no issues are found"
     end
 
-    source, actual_annotations = actual_annotations(rules, code, path, lines)
+    if semantic
+      context = begin
+        # Using the primitive context as it's a lot faster to compute
+        SemanticContext.primitive_context(code)
+      rescue ex
+        fail <<-MSG, file, line
+        Semantic analysis failed:
+
+        #{ex}
+
+        #{ex.backtrace.try &.join("\n")}
+        MSG
+      end
+    end
+
+    source, actual_annotations = actual_annotations(rules, code, path, lines, context)
     unless actual_annotations == expected_annotations
       fail <<-MSG, file, line
         Expected:
@@ -157,11 +173,27 @@ module Ameba::Spec::ExpectIssue
                        code : String,
                        path = "",
                        *,
+                       semantic = false,
                        file = __FILE__,
                        line = __LINE__)
     lines = code.split('\n') # must preserve trailing newline
 
-    _, actual_annotations = actual_annotations(rules, code, path, lines)
+    if semantic
+      context = begin
+        # Using the primitive context as it's a lot faster to compute
+        SemanticContext.primitive_context(code)
+      rescue ex
+        fail <<-MSG, file, line
+        Semantic analysis failed:
+
+        #{ex}
+
+        #{ex.backtrace.try &.join("\n")}
+        MSG
+      end
+    end
+
+    _, actual_annotations = actual_annotations(rules, code, path, lines, context)
     return if actual_annotations.to_s == code
 
     fail <<-MSG, file, line
@@ -171,12 +203,12 @@ module Ameba::Spec::ExpectIssue
       MSG
   end
 
-  private def actual_annotations(rules, code, path, lines)
+  private def actual_annotations(rules, code, path, lines, context = nil)
     source = Source.new(code, path, normalize: false)
     if rules.is_a?(Enumerable)
-      rules.each(&.catch(source))
+      rules.each(&.catch(source, context))
     else
-      rules.catch(source)
+      rules.catch(source, context)
     end
     {source, AnnotatedSource.new(lines, source.issues)}
   end
