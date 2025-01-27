@@ -119,12 +119,12 @@ module Ameba::Spec::ExpectIssue
         SemanticContext.primitive_context(code)
       rescue ex
         fail <<-MSG, file, line
-        Semantic analysis failed:
+          Semantic analysis failed:
 
-        #{ex}
+          #{ex}
 
-        #{ex.backtrace.try &.join("\n")}
-        MSG
+          #{ex.backtrace.try &.join("\n")}
+          MSG
       end
     end
 
@@ -184,12 +184,12 @@ module Ameba::Spec::ExpectIssue
         SemanticContext.primitive_context(code)
       rescue ex
         fail <<-MSG, file, line
-        Semantic analysis failed:
+          Semantic analysis failed:
 
-        #{ex}
+          #{ex}
 
-        #{ex.backtrace.try &.join("\n")}
-        MSG
+          #{ex.backtrace.try &.join("\n")}
+          MSG
       end
     end
 

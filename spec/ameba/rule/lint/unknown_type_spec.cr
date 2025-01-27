@@ -5,11 +5,11 @@ module Ameba::Rule::Lint
 
   describe UnknownType do
     it "passes if types are known" do
-      expect_no_issues subject, <<-CRYSTAL, semantic: true
+      expect_no_issues subject, <<-'CRYSTAL', semantic: true
         a : Int32 = 1
 
         def hello(name : String)
-          puts "Hello, \#{name}!"
+          puts "Hello, #{name}!"
         end
         CRYSTAL
     end
