@@ -1,10 +1,22 @@
 module Ameba::AST
+  # AST visitor that finds nodes that are not used by their surrounding scope.
+  #
+  # A stack is used to keep track of when a node is used, incrementing every time
+  # something will capture its implicit (or explicit) return value, such as the
+  # path in a class name or the value in an assign.
+  #
+  # This also allows for passing through whether a node is captured from a nodes
+  # parent to its children, such as from an `if` statements parent to it's body,
+  # as the body is not used by the `if` itself, but by its parent scope.
   class ImplicitReturnVisitor < BaseVisitor
     # When greater than zero, indicates the current node's return value is used
     @stack : Int32 = 0
 
+    # The stack is swapped out here as `Crystal::Expressions` are isolated from
+    # their parents scope. Only the last line in an expressions node can be
+    # captured by their parent node.
     def visit(node : Crystal::Expressions) : Bool
-      @rule.test(@source, node, @stack > 0)
+      @rule.test(@source, node, @stack.positive?)
 
       last_idx = node.expressions.size - 1
 
@@ -25,7 +37,7 @@ module Ameba::AST
     end
 
     def visit(node : Crystal::BinaryOp) : Bool
-      @rule.test(@source, node, @stack > 0)
+      @rule.test(@source, node, @stack.positive?)
 
       if node.right.is_a?(Crystal::Call)
         incr_stack { node.left.accept(self) }
@@ -39,15 +51,10 @@ module Ameba::AST
     end
 
     def visit(node : Crystal::Call) : Bool
-      @rule.test(@source, node, @stack > 0)
-
-      if node.block || !node.args.empty?
-        incr_stack { node.obj.try &.accept(self) }
-      else
-        node.obj.try &.accept(self)
-      end
+      @rule.test(@source, node, @stack.positive?)
 
       incr_stack do
+        node.obj.try &.accept(self)
         node.args.each &.accept(self)
         node.named_args.try &.each &.accept(self)
         node.block_arg.try &.accept(self)
@@ -58,7 +65,7 @@ module Ameba::AST
     end
 
     def visit(node : Crystal::Arg) : Bool
-      @rule.test(@source, node, @stack > 0)
+      @rule.test(@source, node, @stack.positive?)
 
       incr_stack { node.default_value.try &.accept(self) }
 
@@ -66,7 +73,7 @@ module Ameba::AST
     end
 
     def visit(node : Crystal::EnumDef) : Bool
-      @rule.test(@source, node, @stack > 0)
+      @rule.test(@source, node, @stack.positive?)
 
       node.members.each &.accept(self)
 
@@ -74,7 +81,7 @@ module Ameba::AST
     end
 
     def visit(node : Crystal::Assign | Crystal::OpAssign) : Bool
-      @rule.test(@source, node, @stack > 0)
+      @rule.test(@source, node, @stack.positive?)
 
       incr_stack { node.value.accept(self) }
 
@@ -82,7 +89,7 @@ module Ameba::AST
     end
 
     def visit(node : Crystal::MultiAssign) : Bool
-      @rule.test(@source, node, @stack > 0)
+      @rule.test(@source, node, @stack.positive?)
 
       node.targets.each &.accept(self)
       incr_stack { node.values.each &.accept(self) }
@@ -91,7 +98,7 @@ module Ameba::AST
     end
 
     def visit(node : Crystal::If | Crystal::Unless) : Bool
-      @rule.test(@source, node, @stack > 0)
+      @rule.test(@source, node, @stack.positive?)
 
       incr_stack { node.cond.accept(self) }
       node.then.accept(self)
@@ -101,7 +108,7 @@ module Ameba::AST
     end
 
     def visit(node : Crystal::While | Crystal::Until) : Bool
-      @rule.test(@source, node, @stack > 0)
+      @rule.test(@source, node, @stack.positive?)
 
       incr_stack { node.cond.accept(self) }
       node.body.accept(self)
@@ -110,7 +117,7 @@ module Ameba::AST
     end
 
     def visit(node : Crystal::Def) : Bool
-      @rule.test(@source, node, @stack > 0)
+      @rule.test(@source, node, @stack.positive?)
 
       incr_stack do
         node.args.each &.accept(self)
@@ -133,8 +140,35 @@ module Ameba::AST
       false
     end
 
+    def visit(node : Crystal::ClassDef | Crystal::ModuleDef) : Bool
+      @rule.test(@source, node, @stack.positive?)
+
+      node.body.accept(self)
+
+      false
+    end
+
+    def visit(node : Crystal::FunDef) : Bool
+      @rule.test(@source, node, @stack.positive?)
+
+      incr_stack do
+        node.args.each &.accept(self)
+        node.body.try &.accept(self)
+      end
+
+      false
+    end
+
+    def visit(node : Crystal::Cast | Crystal::NilableCast) : Bool
+      @rule.test(@source, node, @stack.positive?)
+
+      node.obj.accept(self)
+
+      false
+    end
+
     def visit(node : Crystal::Annotation) : Bool
-      @rule.test(@source, node, @stack > 0)
+      @rule.test(@source, node, @stack.positive?)
 
       incr_stack do
         node.args.each &.accept(self)
@@ -145,23 +179,15 @@ module Ameba::AST
     end
 
     def visit(node : Crystal::TypeDeclaration) : Bool
-      @rule.test(@source, node, @stack > 0)
+      @rule.test(@source, node, @stack.positive?)
 
       incr_stack { node.value.try &.accept(self) }
 
       false
     end
 
-    def visit(node : Crystal::Macro | Crystal::MacroIf | Crystal::MacroFor) : Bool
-      false
-    end
-
-    def visit(node : Crystal::UninitializedVar) : Bool
-      false
-    end
-
     def visit(node : Crystal::ArrayLiteral | Crystal::TupleLiteral) : Bool
-      @rule.test(@source, node, @stack > 0)
+      @rule.test(@source, node, @stack.positive?)
 
       incr_stack { node.elements.each &.accept(self) }
 
@@ -169,7 +195,7 @@ module Ameba::AST
     end
 
     def visit(node : Crystal::StringInterpolation) : Bool
-      @rule.test(@source, node, @stack > 0)
+      @rule.test(@source, node, @stack.positive?)
 
       node.expressions.each do |exp|
         incr_stack { exp.accept(self) }
@@ -179,7 +205,7 @@ module Ameba::AST
     end
 
     def visit(node : Crystal::HashLiteral | Crystal::NamedTupleLiteral) : Bool
-      @rule.test(@source, node, @stack > 0)
+      @rule.test(@source, node, @stack.positive?)
 
       incr_stack { node.entries.each &.value.accept(self) }
 
@@ -187,7 +213,7 @@ module Ameba::AST
     end
 
     def visit(node : Crystal::Case) : Bool
-      @rule.test(@source, node, @stack > 0)
+      @rule.test(@source, node, @stack.positive?)
 
       incr_stack { node.cond.try &.accept(self) }
       node.whens.each &.accept(self)
@@ -197,7 +223,7 @@ module Ameba::AST
     end
 
     def visit(node : Crystal::Select) : Bool
-      @rule.test(@source, node, @stack > 0)
+      @rule.test(@source, node, @stack.positive?)
 
       node.whens.each &.accept(self)
       node.else.try &.accept(self)
@@ -206,7 +232,7 @@ module Ameba::AST
     end
 
     def visit(node : Crystal::When) : Bool
-      @rule.test(@source, node, @stack > 0)
+      @rule.test(@source, node, @stack.positive?)
 
       incr_stack { node.conds.each &.accept(self) }
       node.body.accept(self)
@@ -215,7 +241,7 @@ module Ameba::AST
     end
 
     def visit(node : Crystal::Rescue) : Bool
-      @rule.test(@source, node, @stack > 0)
+      @rule.test(@source, node, @stack.positive?)
 
       node.body.accept(self)
 
@@ -223,7 +249,7 @@ module Ameba::AST
     end
 
     def visit(node : Crystal::ExceptionHandler) : Bool
-      @rule.test(@source, node, @stack > 0)
+      @rule.test(@source, node, @stack.positive?)
 
       if node.else
         # Last line of body isn't implicitly returned if there's an else
@@ -242,7 +268,7 @@ module Ameba::AST
     end
 
     def visit(node : Crystal::ControlExpression) : Bool
-      @rule.test(@source, node, @stack > 0)
+      @rule.test(@source, node, @stack.positive?)
 
       incr_stack { node.exp.try &.accept(self) }
 
@@ -250,13 +276,10 @@ module Ameba::AST
     end
 
     def visit(node : Crystal::RangeLiteral) : Bool
-      @rule.test(@source, node, @stack > 0)
+      @rule.test(@source, node, @stack.positive?)
 
-      unless node.from.is_a?(Crystal::NumberLiteral)
+      incr_stack do
         node.from.accept(self)
-      end
-
-      unless node.to.is_a?(Crystal::NumberLiteral)
         node.to.accept(self)
       end
 
@@ -264,7 +287,7 @@ module Ameba::AST
     end
 
     def visit(node : Crystal::RegexLiteral) : Bool
-      @rule.test(@source, node, @stack > 0)
+      @rule.test(@source, node, @stack.positive?)
 
       # Regex literals either contain string literals or string interpolations,
       # both of which are "captured" by the parent regex literal
@@ -277,23 +300,64 @@ module Ameba::AST
       node : Crystal::BoolLiteral | Crystal::CharLiteral | Crystal::NumberLiteral |
              Crystal::StringLiteral | Crystal::SymbolLiteral | Crystal::ProcLiteral,
     ) : Bool
-      @rule.test(@source, node, @stack > 0)
+      @rule.test(@source, node, @stack.positive?)
 
       true
     end
 
     def visit(node : Crystal::Yield) : Bool
-      @rule.test(@source, node, @stack > 0)
+      @rule.test(@source, node, @stack.positive?)
 
       incr_stack { node.exps.each &.accept(self) }
 
       false
     end
 
-    def visit(node : Crystal::Generic) : Bool
+    def visit(node : Crystal::Generic | Crystal::Path | Crystal::Union) : Bool
+      @rule.test(@source, node, @stack.positive?)
+
       false
     end
 
+    def visit(node : Crystal::Macro | Crystal::MacroIf | Crystal::MacroFor) : Bool
+      @rule.test(@source, node, @stack.positive?)
+
+      false
+    end
+
+    def visit(node : Crystal::UninitializedVar) : Bool
+      @rule.test(@source, node, @stack.positive?)
+
+      false
+    end
+
+    def visit(node : Crystal::LibDef) : Bool
+      @rule.test(@source, node, @stack.positive?)
+
+      false
+    end
+
+    def visit(node : Crystal::Include | Crystal::Extend) : Bool
+      @rule.test(@source, node, @stack.positive?)
+
+      false
+    end
+
+    def visit(node : Crystal::Alias)
+      false
+    end
+
+    def visit(node : Crystal::TypeDef)
+      false
+    end
+
+    def visit(node)
+      @rule.test(@source, node, @stack.positive?)
+
+      true
+    end
+
+    # Indicates that any nodes visited within the block are captured / used.
     private def incr_stack(&) : Nil
       @stack += 1
       yield
