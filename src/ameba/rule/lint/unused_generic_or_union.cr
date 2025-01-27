@@ -57,7 +57,7 @@ module Ameba::Rule::Lint
       issue_for node, GENERIC_MSG unless node_is_used
     end
 
-    private def path_or_generic_union?(node : Crystal::Call) : Bool
+    private def path_or_generic_union?(node : Crystal::Call)
       node.name == "|" && node.args.size == 1 && (obj = node.obj) &&
         valid_type_node?(obj) && valid_type_node?(node.args.first)
     end
