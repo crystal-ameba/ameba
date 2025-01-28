@@ -38,7 +38,7 @@ module Ameba::Rule::Style
     MSG_REDUNDANT = "Redundant parentheses"
     MSG_MISSING   = "Missing parentheses"
 
-    protected def strip_parentheses?(node, in_ternary) : Bool
+    private def strip_parentheses?(node, in_ternary) : Bool
       case node
       when Crystal::BinaryOp, Crystal::ExceptionHandler
         !in_ternary
