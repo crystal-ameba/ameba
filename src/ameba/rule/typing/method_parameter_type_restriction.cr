@@ -46,9 +46,9 @@ module Ameba::Rule::Typing
   # Typing/MethodParameterTypeRestriction:
   #   Enabled: true
   #   DefaultValue: false
+  #   BlockParameters: false
   #   PrivateMethods: false
   #   ProtectedMethods: false
-  #   BlockParameters: false
   # ```
   class MethodParameterTypeRestriction < Base
     properties do
@@ -56,32 +56,29 @@ module Ameba::Rule::Typing
       description "Recommends that method parameters have type restrictions"
       enabled false
       default_value false
+      block_parameters false
       private_methods false
       protected_methods false
-      block_parameters false
     end
 
     MSG = "Method parameter should have a type restriction"
 
     def test(source, node : Crystal::Def)
-      return if valid?(node)
+      return if valid_visibility?(node)
 
       node.args.each do |arg|
-        next if arg.restriction || arg.name.empty? || (!default_value? && arg.default_value)
+        next if arg.restriction || arg.name.empty?
+        next if !default_value? && arg.default_value
 
         issue_for arg, MSG
       end
 
-      if block_parameters?
-        node.block_arg.try do |block_arg|
-          next if block_arg.restriction
-
-          issue_for block_arg, MSG
-        end
+      if block_parameters? && (block_arg = node.block_arg) && !block_arg.restriction
+        issue_for block_arg, MSG
       end
     end
 
-    private def valid?(node : Crystal::ASTNode) : Bool
+    private def valid_visibility?(node : Crystal::ASTNode) : Bool
       (!private_methods? && node.visibility.private?) ||
         (!protected_methods? && node.visibility.protected?)
     end

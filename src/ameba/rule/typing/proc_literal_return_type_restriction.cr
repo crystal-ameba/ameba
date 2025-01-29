@@ -37,9 +37,7 @@ module Ameba::Rule::Typing
     MSG = "Proc literal should have a return type restriction"
 
     def test(source, node : Crystal::ProcLiteral)
-      return if node.def.return_type
-
-      issue_for node, MSG
+      issue_for node, MSG unless node.def.return_type
     end
   end
 end
