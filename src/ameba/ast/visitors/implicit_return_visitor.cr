@@ -25,7 +25,7 @@ module Ameba::AST
           if exp.is_a?(Crystal::ControlExpression)
             incr_stack { exp.accept(self) }
             break
-          elsif idx == last_idx && old_stack > 0
+          elsif idx == last_idx && old_stack.positive?
             incr_stack { exp.accept(self) }
           else
             exp.accept(self)
@@ -123,18 +123,7 @@ module Ameba::AST
         node.args.each &.accept(self)
         node.double_splat.try &.accept(self)
         node.block_arg.try &.accept(self)
-      end
-
-      if (return_type = node.return_type).is_a?(Crystal::Path)
-        # Special case of the return type being nil, meaning the last
-        # line of the method body is ignored
-        if return_type.names.join("::").in?("::Nil", "Nil")
-          node.body.accept(self)
-        else
-          incr_stack { node.body.accept(self) }
-        end
-      else
-        incr_stack { node.body.accept(self) }
+        node.body.accept(self)
       end
 
       false
@@ -159,10 +148,10 @@ module Ameba::AST
       false
     end
 
-    def visit(node : Crystal::Cast | Crystal::NilableCast) : Bool
+    def visit(node : Crystal::Cast | Crystal::NilableCast)
       @rule.test(@source, node, @stack.positive?)
 
-      node.obj.accept(self)
+      incr_stack { node.obj.accept(self) }
 
       false
     end
