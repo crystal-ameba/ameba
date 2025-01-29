@@ -103,96 +103,98 @@ module Ameba::Rule::Lint
 
     it "fails if literals are in def body with Nil return" do
       expect_issue subject, <<-CRYSTAL
-      def hello : Nil
-        1234
-      # ^^^^ error: Literal value is not used
-        1234_f32
-      # ^^^^^^^^ error: Literal value is not used
-        "hello world"
-      # ^^^^^^^^^^^^^ error: Literal value is not used
-        "interp \#{string}"
-      # ^^^^^^^^^^^^^^^^^^ error: Literal value is not used
-        [1, 2, 3, 4, 5]
-      # ^^^^^^^^^^^^^^^ error: Literal value is not used
-        {"hello" => "world"}
-      # ^^^^^^^^^^^^^^^^^^^^ error: Literal value is not used
-        '\t'
-      # ^^^ error: Literal value is not used
-        1..2
-      # ^^^^ error: Literal value is not used
-        {goodnight: moon}
-      # ^^^^^^^^^^^^^^^^^ error: Literal value is not used
-        {1, 2, 3}
-      # ^^^^^^^^^ error: Literal value is not used
-        <<-HEREDOC
-      # ^^^^^^^^^^ error: Literal value is not used
-          this is a heredoc
-          HEREDOC
-      end
-      CRYSTAL
+        def hello : Nil
+          1234
+        # ^^^^ error: Literal value is not used
+          1234_f32
+        # ^^^^^^^^ error: Literal value is not used
+          "hello world"
+        # ^^^^^^^^^^^^^ error: Literal value is not used
+          "interp \#{string}"
+        # ^^^^^^^^^^^^^^^^^^ error: Literal value is not used
+          [1, 2, 3, 4, 5]
+        # ^^^^^^^^^^^^^^^ error: Literal value is not used
+          {"hello" => "world"}
+        # ^^^^^^^^^^^^^^^^^^^^ error: Literal value is not used
+          '\t'
+        # ^^^ error: Literal value is not used
+          1..2
+        # ^^^^ error: Literal value is not used
+          {goodnight: moon}
+        # ^^^^^^^^^^^^^^^^^ error: Literal value is not used
+          {1, 2, 3}
+        # ^^^^^^^^^ error: Literal value is not used
+          <<-HEREDOC
+        # ^^^^^^^^^^ error: Literal value is not used
+            this is a heredoc
+            HEREDOC
+          nil
+        end
+        CRYSTAL
     end
 
     it "fails if literals are in proc body with Nil return, alongside the proc itself" do
       expect_issue subject, <<-CRYSTAL
-      -> : Nil do
-      # ^^^^^^^^^ error: Literal value is not used
-        1234
-      # ^^^^ error: Literal value is not used
-        1234_f32
-      # ^^^^^^^^ error: Literal value is not used
-        "hello world"
-      # ^^^^^^^^^^^^^ error: Literal value is not used
-        "interp \#{string}"
-      # ^^^^^^^^^^^^^^^^^^ error: Literal value is not used
-        [1, 2, 3, 4, 5]
-      # ^^^^^^^^^^^^^^^ error: Literal value is not used
-        {"hello" => "world"}
-      # ^^^^^^^^^^^^^^^^^^^^ error: Literal value is not used
-        '\t'
-      # ^^^ error: Literal value is not used
-        1..2
-      # ^^^^ error: Literal value is not used
-        {goodnight: moon}
-      # ^^^^^^^^^^^^^^^^^ error: Literal value is not used
-        {1, 2, 3}
-      # ^^^^^^^^^ error: Literal value is not used
-        <<-HEREDOC
-      # ^^^^^^^^^^ error: Literal value is not used
-          this is a heredoc
-          HEREDOC
-      end
-      CRYSTAL
+        -> : Nil do
+        # ^^^^^^^^^ error: Literal value is not used
+          1234
+        # ^^^^ error: Literal value is not used
+          1234_f32
+        # ^^^^^^^^ error: Literal value is not used
+          "hello world"
+        # ^^^^^^^^^^^^^ error: Literal value is not used
+          "interp \#{string}"
+        # ^^^^^^^^^^^^^^^^^^ error: Literal value is not used
+          [1, 2, 3, 4, 5]
+        # ^^^^^^^^^^^^^^^ error: Literal value is not used
+          {"hello" => "world"}
+        # ^^^^^^^^^^^^^^^^^^^^ error: Literal value is not used
+          '\t'
+        # ^^^ error: Literal value is not used
+          1..2
+        # ^^^^ error: Literal value is not used
+          {goodnight: moon}
+        # ^^^^^^^^^^^^^^^^^ error: Literal value is not used
+          {1, 2, 3}
+        # ^^^^^^^^^ error: Literal value is not used
+          <<-HEREDOC
+        # ^^^^^^^^^^ error: Literal value is not used
+            this is a heredoc
+            HEREDOC
+          nil
+        end
+        CRYSTAL
     end
 
     it "fails if literals in unused if" do
       expect_issue subject, <<-CRYSTAL
-      if true
-        1234
-      # ^^^^ error: Literal value is not used
-        1234_f32
-      # ^^^^^^^^ error: Literal value is not used
-        "hello world"
-      # ^^^^^^^^^^^^^ error: Literal value is not used
-        "interp \#{string}"
-      # ^^^^^^^^^^^^^^^^^^ error: Literal value is not used
-        [1, 2, 3, 4, 5]
-      # ^^^^^^^^^^^^^^^ error: Literal value is not used
-        {"hello" => "world"}
-      # ^^^^^^^^^^^^^^^^^^^^ error: Literal value is not used
-        '\t'
-      # ^^^ error: Literal value is not used
-        1..2
-      # ^^^^ error: Literal value is not used
-        {goodnight: moon}
-      # ^^^^^^^^^^^^^^^^^ error: Literal value is not used
-        {1, 2, 3}
-      # ^^^^^^^^^ error: Literal value is not used
-        <<-HEREDOC
-      # ^^^^^^^^^^ error: Literal value is not used
-          this is a heredoc
-          HEREDOC
-      end
-      CRYSTAL
+        if true
+          1234
+        # ^^^^ error: Literal value is not used
+          1234_f32
+        # ^^^^^^^^ error: Literal value is not used
+          "hello world"
+        # ^^^^^^^^^^^^^ error: Literal value is not used
+          "interp \#{string}"
+        # ^^^^^^^^^^^^^^^^^^ error: Literal value is not used
+          [1, 2, 3, 4, 5]
+        # ^^^^^^^^^^^^^^^ error: Literal value is not used
+          {"hello" => "world"}
+        # ^^^^^^^^^^^^^^^^^^^^ error: Literal value is not used
+          '\t'
+        # ^^^ error: Literal value is not used
+          1..2
+        # ^^^^ error: Literal value is not used
+          {goodnight: moon}
+        # ^^^^^^^^^^^^^^^^^ error: Literal value is not used
+          {1, 2, 3}
+        # ^^^^^^^^^ error: Literal value is not used
+          <<-HEREDOC
+        # ^^^^^^^^^^ error: Literal value is not used
+            this is a heredoc
+            HEREDOC
+        end
+        CRYSTAL
     end
 
     it "fails if literals are unused in case" do
