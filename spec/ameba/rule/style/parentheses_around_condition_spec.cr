@@ -101,9 +101,15 @@ module Ameba::Rule::Style
           rule = ParenthesesAroundCondition.new
           rule.allow_safe_assignment = true
 
-          expect_issue rule, <<-CRYSTAL
+          source = expect_issue rule, <<-CRYSTAL
             if foo = @foo
              # ^^^^^^^^^^ error: Missing parentheses
+              foo
+            end
+            CRYSTAL
+
+          expect_correction source, <<-CRYSTAL
+            if (foo = @foo)
               foo
             end
             CRYSTAL
