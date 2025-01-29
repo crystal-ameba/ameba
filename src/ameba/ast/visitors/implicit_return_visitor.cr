@@ -140,6 +140,19 @@ module Ameba::AST
       false
     end
 
+    def visit(node : Crystal::Macro) : Bool
+      @rule.test(@source, node, @stack.positive?)
+
+      incr_stack do
+        node.args.each &.accept(self)
+        node.double_splat.try &.accept(self)
+        node.block_arg.try &.accept(self)
+        node.body.accept(self)
+      end
+
+      false
+    end
+
     def visit(node : Crystal::ClassDef | Crystal::ModuleDef) : Bool
       @rule.test(@source, node, @stack.positive?)
 

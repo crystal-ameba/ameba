@@ -302,6 +302,11 @@ module Ameba::Rule::Lint
           # ^^^ error: Literal value is not used
           end
         %}
+
+        macro name(foo)
+          {% "bar" %}
+           # ^^^^^ error: Literal value is not used
+        end
         CRYSTAL
     end
 
