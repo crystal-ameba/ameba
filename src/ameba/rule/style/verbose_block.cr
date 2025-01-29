@@ -47,6 +47,10 @@ module Ameba::Rule::Style
     MSG          = "Use short block notation instead: `%s`"
     CALL_PATTERN = "%s(%s&.%s)"
 
+    def self.autocorrect_incompatible_with
+      [Performance::MinMaxAfterMap]
+    end
+
     protected def same_location_lines?(a, b)
       return unless a_location = name_location(a)
       return unless b_location = b.location

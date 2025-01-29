@@ -141,9 +141,14 @@ module Ameba
         @syntax_rule.test(source)
         break unless source.valid?
 
+        rules_with_issues = [] of Rule::Base
         @rules.each do |rule|
+          next if autocorrect? && rules_with_issues.any?(&.class.in?(rule.class.autocorrect_incompatible_with))
           next if rule.excluded?(source)
+          size_before = source.issues.size
           rule.test(source)
+          size_after = source.issues.size
+          rules_with_issues << rule if size_before != size_after
         end
         check_unneeded_directives(source)
         break unless autocorrect? && source.correct?

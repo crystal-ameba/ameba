@@ -135,6 +135,14 @@ module Ameba
           source.issues.first.rule.name.should eq Rule::Lint::UnneededDisableDirective.rule_name
         end
       end
+
+      it "handles rules with incompatible autocorrect" do
+        rules = [Rule::Performance::MinMaxAfterMap.new, Rule::Style::VerboseBlock.new]
+        source = Source.new "list.map { |i| i.size }.max\n", File.tempfile("source", ".cr").path
+
+        Runner.new(rules, [source], formatter, default_severity, autocorrect: true).run
+        source.code.should eq "list.max_of(&.size)\n"
+      end
     end
 
     describe "#explain" do
