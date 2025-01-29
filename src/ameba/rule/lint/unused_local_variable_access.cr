@@ -70,7 +70,7 @@ module Ameba::Rule::Lint
     end
 
     def test(source, node : Crystal::Var, node_is_used : Bool)
-      return if node_is_used || node.name.in?("skip_file", "self")
+      return if node_is_used || node.name.in?("self")
 
       issue_for node, MSG
     end
