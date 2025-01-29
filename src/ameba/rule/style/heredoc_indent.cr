@@ -44,6 +44,7 @@ module Ameba::Rule::Style
 
     def test(source, node : Crystal::StringInterpolation)
       return unless start_location = node.location
+
       start_location_pos = source.pos(start_location)
       return unless source.code[start_location_pos..(start_location_pos + 2)]? == "<<-"
 
