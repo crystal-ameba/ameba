@@ -31,7 +31,7 @@ module Ameba::Rule::Style
   # ```
   # Style/HeredocIndent:
   #   Enabled: true
-  #   IndentBy: true
+  #   IndentBy: 2
   # ```
   class HeredocIndent < Base
     properties do
