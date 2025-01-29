@@ -5,8 +5,8 @@ module Ameba::AST
     getter require_nodes = [] of Crystal::Require
 
     # Creates a new instance of visitor
-    def initialize(@scope : Crystal::ASTNode)
-      @scope.accept(self)
+    def initialize(node : Crystal::ASTNode)
+      node.accept self
     end
 
     # :nodoc:

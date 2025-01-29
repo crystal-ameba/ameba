@@ -64,7 +64,7 @@ module Ameba::AST
     # Branch.of(assign_node, def_node)
     # ```
     def self.of(node : Crystal::ASTNode, parent_node : Crystal::ASTNode)
-      BranchVisitor.new(node).tap(&.accept(parent_node)).branch
+      BranchVisitor.new(node, parent_node).branch
     end
 
     private class BranchVisitor < Crystal::Visitor
@@ -75,7 +75,8 @@ module Ameba::AST
       property branchable : Branchable?
       property branch : Branch?
 
-      def initialize(@node : Crystal::ASTNode)
+      def initialize(@node : Crystal::ASTNode, parent_node : Crystal::ASTNode)
+        accept parent_node
       end
 
       private def on_branchable_start(node, *branches)
