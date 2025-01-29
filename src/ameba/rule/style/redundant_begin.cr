@@ -1,5 +1,5 @@
 module Ameba::Rule::Style
-  # A rule that disallows redundant begin blocks.
+  # A rule that disallows redundant `begin` blocks.
   #
   # Currently it is able to detect:
   #
@@ -27,7 +27,7 @@ module Ameba::Rule::Style
   # end
   # ```
   #
-  # 2. begin..end block as a top level block in a method.
+  # 2. `begin`..`end` block as a top level block in a method.
   #
   # For example this is considered invalid:
   #
@@ -60,7 +60,7 @@ module Ameba::Rule::Style
 
     properties do
       since_version "0.3.0"
-      description "Disallows redundant begin blocks"
+      description "Disallows redundant `begin` blocks"
     end
 
     MSG = "Redundant `begin` block detected"

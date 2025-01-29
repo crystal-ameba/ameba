@@ -36,7 +36,7 @@ module Ameba::Rule::Lint
   class TrailingRescueException < Base
     properties do
       since_version "1.7.0"
-      description "Disallows trailing rescue with a path"
+      description "Disallows trailing `rescue` with a path"
     end
 
     MSG = "Trailing rescues with a path aren't allowed, use a block rescue instead to filter by exception type"

@@ -1,5 +1,5 @@
 module Ameba::Rule::Style
-  # A rule that disallows negated conditions in unless.
+  # A rule that disallows negated conditions in `unless`.
   #
   # For example, this is considered invalid:
   #

@@ -20,7 +20,7 @@ module Ameba::Rule::Lint
         case
         when utc?
           io << " UTC" if utc?
-                        # ^^^^ error: Useless condition in when detected
+                        # ^^^^ error: Useless condition in `when` detected
         end
         CRYSTAL
     end
