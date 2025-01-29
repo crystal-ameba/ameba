@@ -5,43 +5,38 @@ module Ameba::Rule::Style
   # For example, this is considered invalid:
   #
   # ```
-  # call <<-HERERDOC
+  # <<-HERERDOC
   #   hello world
   # HEREDOC
   #
-  # begin
-  #   call <<-HERERDOC
+  #   <<-HERERDOC
   # hello world
   # HEREDOC
-  # end
   # ```
   #
   # And should be written as:
   #
   # ```
-  # call <<-HERERDOC
+  # <<-HERERDOC
   #     hello world
   #   HEREDOC
   #
-  # begin
-  #   call <<-HERERDOC
+  #   <<-HERERDOC
   #     hello world
   #     HEREDOC
-  # end
   # ```
   #
-  # The `SameLine` configuration option enforces that the _heredoc_ body have the same indent as the
-  # line it is used on.
+  # The `IndentBy` configuration option changes the enforced indentation level of the _heredoc_.
   #
   # ```
   # Style/HeredocIndent:
   #   Enabled: true
-  #   SameLine: true
+  #   IndentBy: true
   # ```
   class HeredocIndent < Base
     properties do
       since_version "1.7.0"
-      description "Recommends heredoc bodies be indented exactly one level above the line they're used on"
+      description "Recommends heredoc bodies are indented consistently"
       indent_by 2
     end
 
@@ -52,9 +47,9 @@ module Ameba::Rule::Style
       start_location_pos = source.pos(start_location)
       return unless source.code[start_location_pos..(start_location_pos + 2)]? == "<<-"
 
-      correct_indent = line_indent(source, start_location) + (same_line? ? 0 : 2)
+      correct_indent = line_indent(source, start_location) + indent_by
 
-      unless node.heredoc_indent == indent_by
+      unless node.heredoc_indent == correct_indent
         issue_for node, MSG % correct_indent
       end
     end

@@ -6,11 +6,11 @@ module Ameba::Rule::Style
 
     it "passes if heredoc body indented one level" do
       expect_no_issues subject, <<-CRYSTAL
-        call <<-HEREDOC
+        <<-HEREDOC
           hello world
           HEREDOC
 
-          call <<-HEREDOC
+          <<-HEREDOC
             hello world
             HEREDOC
         CRYSTAL
@@ -19,39 +19,39 @@ module Ameba::Rule::Style
     it "fails if the heredoc body is indented incorrectly" do
       expect_issue subject, <<-CRYSTAL
         call <<-ONE
-           # ^^^^^^ error: Heredoc body should be indented by 2 space(s)
+           # ^^^^^^ error: Heredoc body should be indented by 2 spaces
         hello world
         ONE
 
           call <<-TWO
-             # ^^^^^^ error: Heredoc body should be indented by 4 space(s)
+             # ^^^^^^ error: Heredoc body should be indented by 4 spaces
           hello world
           TWO
 
           call <<-THREE
-             # ^^^^^^^^ error: Heredoc body should be indented by 4 space(s)
+             # ^^^^^^^^ error: Heredoc body should be indented by 4 spaces
              hello world
              THREE
 
           call <<-FOUR
-             # ^^^^^^^ error: Heredoc body should be indented by 4 space(s)
+             # ^^^^^^^ error: Heredoc body should be indented by 4 spaces
         hello world
         FOUR
         CRYSTAL
     end
 
     context "properties" do
-      context "#same_line" do
+      context "#indent_by" do
         rule = HeredocIndent.new
-        rule.same_line = true
+        rule.indent_by = 0
 
         it "passes if heredoc body has the same indent level" do
           expect_no_issues rule, <<-CRYSTAL
-            call <<-HEREDOC
+            <<-HEREDOC
             hello world
             HEREDOC
 
-              call <<-HEREDOC
+              <<-HEREDOC
               hello world
               HEREDOC
             CRYSTAL
@@ -60,17 +60,17 @@ module Ameba::Rule::Style
         it "fails if the heredoc body is indented incorrectly" do
           expect_issue rule, <<-CRYSTAL
             call <<-ONE
-               # ^^^^^^ error: Heredoc body should be indented by 0 space(s)
+               # ^^^^^^ error: Heredoc body should be indented by 0 spaces
               hello world
               ONE
 
               call <<-TWO
-                 # ^^^^^^ error: Heredoc body should be indented by 2 space(s)
+                 # ^^^^^^ error: Heredoc body should be indented by 2 spaces
                 hello world
                 TWO
 
               call <<-FOUR
-                 # ^^^^^^^ error: Heredoc body should be indented by 2 space(s)
+                 # ^^^^^^^ error: Heredoc body should be indented by 2 spaces
             hello world
             FOUR
             CRYSTAL
