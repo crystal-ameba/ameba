@@ -582,6 +582,11 @@
       
     </li>
   
+  <li class=" " data-id="ameba/Ameba/Rule/Lint/UnusedGenericOrUnion" data-name="ameba::rule::lint::unusedgenericorunion">
+      <a href="../../../Ameba/Rule/Lint/UnusedGenericOrUnion.html">UnusedGenericOrUnion</a>
+      
+    </li>
+  
   <li class=" current" data-id="ameba/Ameba/Rule/Lint/UnusedLiteral" data-name="ameba::rule::lint::unusedliteral">
       <a href="../../../Ameba/Rule/Lint/UnusedLiteral.html">UnusedLiteral</a>
       
@@ -1054,7 +1059,7 @@ my_proc <span class="o">=</span> <span class="o">-&gt;</span> : <span class="t">
   </h2>
   
     
-      <a href="https://github.com/crystal-ameba/ameba/blob/e61f56f/src/ameba/rule/lint/unused_literal.cr#L48" target="_blank">
+      <a href="https://github.com/crystal-ameba/ameba/blob/2ef4b6c/src/ameba/rule/lint/unused_literal.cr#L48" target="_blank">
         ameba/rule/lint/unused_literal.cr
       </a>
     
@@ -1194,12 +1199,12 @@ my_proc <span class="o">=</span> <span class="o">-&gt;</span> : <span class="t">
       </li>
     
       <li class="entry-summary">
-        <a href="#test%28source%2Cnode%3ACrystal%3A%3ARegexLiteral%2Clast_is_used%3ABool%29-instance-method" class="signature"><strong>#test</strong>(source, node : Crystal::RegexLiteral, last_is_used : Bool)</a>
+        <a href="#test%28source%2Cnode%3ACrystal%3A%3ARegexLiteral%2Cnode_is_used%3ABool%29-instance-method" class="signature"><strong>#test</strong>(source, node : Crystal::RegexLiteral, node_is_used : Bool)</a>
         
       </li>
     
       <li class="entry-summary">
-        <a href="#test%28source%2Cnode%3ACrystal%3A%3ABoolLiteral%7CCrystal%3A%3ACharLiteral%7CCrystal%3A%3AHashLiteral%7CCrystal%3A%3AProcLiteral%7CCrystal%3A%3AArrayLiteral%7CCrystal%3A%3ARangeLiteral%7CCrystal%3A%3ATupleLiteral%7CCrystal%3A%3ANumberLiteral%7CCrystal%3A%3AStringLiteral%7CCrystal%3A%3ASymbolLiteral%7CCrystal%3A%3ANamedTupleLiteral%7CCrystal%3A%3AStringInterpolation%2Clast_is_used%3ABool%29-instance-method" class="signature"><strong>#test</strong>(source, node : Crystal::BoolLiteral | Crystal::CharLiteral | Crystal::HashLiteral | Crystal::ProcLiteral | Crystal::ArrayLiteral | Crystal::RangeLiteral | Crystal::TupleLiteral | Crystal::NumberLiteral | Crystal::StringLiteral | Crystal::SymbolLiteral | Crystal::NamedTupleLiteral | Crystal::StringInterpolation, last_is_used : Bool)</a>
+        <a href="#test%28source%2Cnode%3ACrystal%3A%3ABoolLiteral%7CCrystal%3A%3ACharLiteral%7CCrystal%3A%3AHashLiteral%7CCrystal%3A%3AProcLiteral%7CCrystal%3A%3AArrayLiteral%7CCrystal%3A%3ARangeLiteral%7CCrystal%3A%3ATupleLiteral%7CCrystal%3A%3ANumberLiteral%7CCrystal%3A%3AStringLiteral%7CCrystal%3A%3ASymbolLiteral%7CCrystal%3A%3ANamedTupleLiteral%7CCrystal%3A%3AStringInterpolation%2Cnode_is_used%3ABool%29-instance-method" class="signature"><strong>#test</strong>(source, node : Crystal::BoolLiteral | Crystal::CharLiteral | Crystal::HashLiteral | Crystal::ProcLiteral | Crystal::ArrayLiteral | Crystal::RangeLiteral | Crystal::TupleLiteral | Crystal::NumberLiteral | Crystal::StringLiteral | Crystal::SymbolLiteral | Crystal::NamedTupleLiteral | Crystal::StringInterpolation, node_is_used : Bool)</a>
         
       </li>
     
@@ -1440,7 +1445,7 @@ my_proc <span class="o">=</span> <span class="o">-&gt;</span> : <span class="t">
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/e61f56f/src/ameba/rule/lint/unused_literal.cr#L48" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/2ef4b6c/src/ameba/rule/lint/unused_literal.cr#L48" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1623,7 +1628,7 @@ my_proc <span class="o">=</span> <span class="o">-&gt;</span> : <span class="t">
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/e61f56f/src/ameba/rule/lint/unused_literal.cr#L49" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/2ef4b6c/src/ameba/rule/lint/unused_literal.cr#L49" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1642,34 +1647,34 @@ my_proc <span class="o">=</span> <span class="o">-&gt;</span> : <span class="t">
       </div>
     </div>
   
-    <div class="entry-detail" id="test(source,node:Crystal::RegexLiteral,last_is_used:Bool)-instance-method">
+    <div class="entry-detail" id="test(source,node:Crystal::RegexLiteral,node_is_used:Bool)-instance-method">
       <div class="signature">
         
-        def <strong>test</strong>(source, node : Crystal::RegexLiteral, last_is_used : Bool)
+        def <strong>test</strong>(source, node : Crystal::RegexLiteral, node_is_used : Bool)
 
-        <a class="method-permalink" href="#test%28source%2Cnode%3ACrystal%3A%3ARegexLiteral%2Clast_is_used%3ABool%29-instance-method">#</a>
+        <a class="method-permalink" href="#test%28source%2Cnode%3ACrystal%3A%3ARegexLiteral%2Cnode_is_used%3ABool%29-instance-method">#</a>
       </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/e61f56f/src/ameba/rule/lint/unused_literal.cr#L60" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/2ef4b6c/src/ameba/rule/lint/unused_literal.cr#L60" target="_blank">View source</a>]
         
       </div>
     </div>
   
-    <div class="entry-detail" id="test(source,node:Crystal::BoolLiteral|Crystal::CharLiteral|Crystal::HashLiteral|Crystal::ProcLiteral|Crystal::ArrayLiteral|Crystal::RangeLiteral|Crystal::TupleLiteral|Crystal::NumberLiteral|Crystal::StringLiteral|Crystal::SymbolLiteral|Crystal::NamedTupleLiteral|Crystal::StringInterpolation,last_is_used:Bool)-instance-method">
+    <div class="entry-detail" id="test(source,node:Crystal::BoolLiteral|Crystal::CharLiteral|Crystal::HashLiteral|Crystal::ProcLiteral|Crystal::ArrayLiteral|Crystal::RangeLiteral|Crystal::TupleLiteral|Crystal::NumberLiteral|Crystal::StringLiteral|Crystal::SymbolLiteral|Crystal::NamedTupleLiteral|Crystal::StringInterpolation,node_is_used:Bool)-instance-method">
       <div class="signature">
         
-        def <strong>test</strong>(source, node : Crystal::BoolLiteral | Crystal::CharLiteral | Crystal::HashLiteral | Crystal::ProcLiteral | Crystal::ArrayLiteral | Crystal::RangeLiteral | Crystal::TupleLiteral | Crystal::NumberLiteral | Crystal::StringLiteral | Crystal::SymbolLiteral | Crystal::NamedTupleLiteral | Crystal::StringInterpolation, last_is_used : Bool)
+        def <strong>test</strong>(source, node : Crystal::BoolLiteral | Crystal::CharLiteral | Crystal::HashLiteral | Crystal::ProcLiteral | Crystal::ArrayLiteral | Crystal::RangeLiteral | Crystal::TupleLiteral | Crystal::NumberLiteral | Crystal::StringLiteral | Crystal::SymbolLiteral | Crystal::NamedTupleLiteral | Crystal::StringInterpolation, node_is_used : Bool)
 
-        <a class="method-permalink" href="#test%28source%2Cnode%3ACrystal%3A%3ABoolLiteral%7CCrystal%3A%3ACharLiteral%7CCrystal%3A%3AHashLiteral%7CCrystal%3A%3AProcLiteral%7CCrystal%3A%3AArrayLiteral%7CCrystal%3A%3ARangeLiteral%7CCrystal%3A%3ATupleLiteral%7CCrystal%3A%3ANumberLiteral%7CCrystal%3A%3AStringLiteral%7CCrystal%3A%3ASymbolLiteral%7CCrystal%3A%3ANamedTupleLiteral%7CCrystal%3A%3AStringInterpolation%2Clast_is_used%3ABool%29-instance-method">#</a>
+        <a class="method-permalink" href="#test%28source%2Cnode%3ACrystal%3A%3ABoolLiteral%7CCrystal%3A%3ACharLiteral%7CCrystal%3A%3AHashLiteral%7CCrystal%3A%3AProcLiteral%7CCrystal%3A%3AArrayLiteral%7CCrystal%3A%3ARangeLiteral%7CCrystal%3A%3ATupleLiteral%7CCrystal%3A%3ANumberLiteral%7CCrystal%3A%3AStringLiteral%7CCrystal%3A%3ASymbolLiteral%7CCrystal%3A%3ANamedTupleLiteral%7CCrystal%3A%3AStringInterpolation%2Cnode_is_used%3ABool%29-instance-method">#</a>
       </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/e61f56f/src/ameba/rule/lint/unused_literal.cr#L67" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/2ef4b6c/src/ameba/rule/lint/unused_literal.cr#L67" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1697,7 +1702,7 @@ that are tested by this rule, it should add an issue.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/e61f56f/src/ameba/rule/lint/unused_literal.cr#L56" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/2ef4b6c/src/ameba/rule/lint/unused_literal.cr#L56" target="_blank">View source</a>]
         
       </div>
     </div>
