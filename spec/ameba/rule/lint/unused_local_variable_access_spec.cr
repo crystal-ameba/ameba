@@ -1,9 +1,9 @@
 require "../../../spec_helper"
 
 module Ameba::Rule::Lint
-  subject = UnusedLocalVariableAccess.new
-
   describe UnusedLocalVariableAccess do
+    subject = UnusedLocalVariableAccess.new
+
     it "passes if local variables are used" do
       expect_no_issues subject, <<-CRYSTAL
         a = 1

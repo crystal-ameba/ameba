@@ -1,9 +1,9 @@
 require "../../../spec_helper"
 
 module Ameba::Rule::Lint
-  subject = UnusedInstanceVariableAccess.new
-
   describe UnusedInstanceVariableAccess do
+    subject = UnusedInstanceVariableAccess.new
+
     it "passes if instance variables are used" do
       expect_no_issues subject, <<-CRYSTAL
         class MyClass
