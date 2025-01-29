@@ -45,7 +45,7 @@ module Ameba::Rule::Lint
       description "Disallows unused pseudo-methods"
     end
 
-    MSG = "Pesudo-method is not used"
+    MSG = "Pseudo-method is not used"
 
     def test(source : Source)
       AST::ImplicitReturnVisitor.new(self, source)

@@ -14,29 +14,29 @@ module Ameba::Rule::Lint
     it "fails if pseudo methods are unused top-level" do
       expect_issue subject, <<-CRYSTAL
         pointerof(Int32)
-        # ^^^^^^^^^^^^^^ error: Pesudo-method is not used
+        # ^^^^^^^^^^^^^^ error: Pseudo-method is not used
         sizeof(Int32)
-        # ^^^^^^^^^^^ error: Pesudo-method is not used
+        # ^^^^^^^^^^^ error: Pseudo-method is not used
         instance_sizeof(Int32)
-        # ^^^^^^^^^^^^^^^^^^^^ error: Pesudo-method is not used
+        # ^^^^^^^^^^^^^^^^^^^^ error: Pseudo-method is not used
         alignof(Int32)
-        # ^^^^^^^^^^^^ error: Pesudo-method is not used
+        # ^^^^^^^^^^^^ error: Pseudo-method is not used
         instance_alignof(Int32)
-        # ^^^^^^^^^^^^^^^^^^^^^ error: Pesudo-method is not used
+        # ^^^^^^^^^^^^^^^^^^^^^ error: Pseudo-method is not used
         offsetof(Int32, 1)
-        # ^^^^^^^^^^^^^^^^ error: Pesudo-method is not used
+        # ^^^^^^^^^^^^^^^^ error: Pseudo-method is not used
         is_a?(Int32)
-        # ^^^^^^^^^^ error: Pesudo-method is not used
+        # ^^^^^^^^^^ error: Pseudo-method is not used
         as?(Int32)
-        # ^^^^^^^^ error: Pesudo-method is not used
+        # ^^^^^^^^ error: Pseudo-method is not used
         responds_to?(:hello)
-        # ^^^^^^^^^^^^^^^^^^ error: Pesudo-method is not used
+        # ^^^^^^^^^^^^^^^^^^ error: Pseudo-method is not used
         nil?
-        # ^^ error: Pesudo-method is not used
+        # ^^ error: Pseudo-method is not used
         true.!
-        # ^^^^ error: Pesudo-method is not used
+        # ^^^^ error: Pseudo-method is not used
         !true
-        # ^^^ error: Pesudo-method is not used
+        # ^^^ error: Pseudo-method is not used
         CRYSTAL
     end
 
