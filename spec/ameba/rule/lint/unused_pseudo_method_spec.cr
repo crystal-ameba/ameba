@@ -1,9 +1,9 @@
 require "../../../spec_helper"
 
 module Ameba::Rule::Lint
-  subject = UnusedPseudoMethod.new
-
   describe UnusedPseudoMethod do
+    subject = UnusedPseudoMethod.new
+
     it "passes if return value of typeof or as isn't used" do
       expect_no_issues subject, <<-CRYSTAL
         typeof(1)

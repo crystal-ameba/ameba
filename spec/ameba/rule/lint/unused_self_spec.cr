@@ -1,9 +1,9 @@
 require "../../../spec_helper"
 
 module Ameba::Rule::Lint
-  subject = UnusedSelf.new
-
   describe UnusedSelf do
+    subject = UnusedSelf.new
+
     it "passes if self is used" do
       expect_no_issues subject, <<-CRYSTAL
         class MyClass
