@@ -148,15 +148,7 @@ module Ameba::AST
       false
     end
 
-    def visit(node : Crystal::Cast)
-      @rule.test(@source, node, @stack.positive?)
-
-      incr_stack { node.obj.accept(self) }
-
-      false
-    end
-
-    def visit(node : Crystal::NilableCast) : Bool
+    def visit(node : Crystal::Cast | Crystal::NilableCast)
       @rule.test(@source, node, @stack.positive?)
 
       incr_stack { node.obj.accept(self) }
