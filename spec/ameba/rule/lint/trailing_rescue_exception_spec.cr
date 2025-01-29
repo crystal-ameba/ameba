@@ -20,7 +20,7 @@ module Ameba::Rule::Lint
     it "fails if trailing rescue has exception name" do
       expect_issue subject, <<-CRYSTAL
         puts "hello" rescue MyException
-                          # ^^^^^^^^^^^ error: Trailing rescues with a path aren't allowed, use a block rescue instead to filter by exception type
+                          # ^^^^^^^^^^^ error: Use a block variant of `rescue` to filter by the exception type
         CRYSTAL
     end
   end

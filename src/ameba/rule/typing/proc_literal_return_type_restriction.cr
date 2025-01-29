@@ -1,17 +1,7 @@
 module Ameba::Rule::Typing
   # A rule that enforces that `Proc` literals have a return type.
   #
-  # For example, these are considered valid:
-  #
-  # ```
-  # greeter = ->(name : String) : String { "Hello #{name}" }
-  # ```
-  #
-  # ```
-  # task = -> : Task { Task.new("execute this command") }
-  # ```
-  #
-  # And these are invalid:
+  # For example, these are considered invalid:
   #
   # ```
   # greeter = ->(name : String) { "Hello #{name}" }
@@ -19,6 +9,16 @@ module Ameba::Rule::Typing
   #
   # ```
   # task = -> { Task.new("execute this command") }
+  # ```
+  #
+  # And these are valid:
+  #
+  # ```
+  # greeter = ->(name : String) : String { "Hello #{name}" }
+  # ```
+  #
+  # ```
+  # task = -> : Task { Task.new("execute this command") }
   # ```
   #
   # YAML configuration example:
@@ -30,7 +30,7 @@ module Ameba::Rule::Typing
   class ProcLiteralReturnTypeRestriction < Base
     properties do
       since_version "1.7.0"
-      description "Disallows Proc literals without return type restrictions"
+      description "Disallows proc literals without return type restriction"
       enabled false
     end
 
