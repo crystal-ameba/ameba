@@ -24,7 +24,7 @@ module Ameba::Rule::Typing
   #
   # ```
   # Typing/MethodReturnTypeRestriction:
-  #   Enabled: false
+  #   Enabled: true
   #   PrivateMethods: false
   #   ProtectedMethods: false
   # ```

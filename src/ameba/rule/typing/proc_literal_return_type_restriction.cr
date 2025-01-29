@@ -25,7 +25,7 @@ module Ameba::Rule::Typing
   #
   # ```
   # Typing/ProcLiteralReturnTypeRestriction:
-  #   Enabled: false
+  #   Enabled: true
   # ```
   class ProcLiteralReturnTypeRestriction < Base
     properties do

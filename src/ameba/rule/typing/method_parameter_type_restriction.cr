@@ -44,7 +44,7 @@ module Ameba::Rule::Typing
   #
   # ```
   # Typing/MethodParameterTypeRestriction:
-  #   Enabled: false
+  #   Enabled: true
   #   DefaultValue: false
   #   PrivateMethods: false
   #   ProtectedMethods: false

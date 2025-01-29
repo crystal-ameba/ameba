@@ -37,7 +37,7 @@ module Ameba::Rule::Typing
   #
   # ```
   # Typing/MacroCallArgumentTypeRestriction:
-  #   Enabled: false
+  #   Enabled: true
   #   DefaultValue: false
   #   MacroNames:
   #    - getter
