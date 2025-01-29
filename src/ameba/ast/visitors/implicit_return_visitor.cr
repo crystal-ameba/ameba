@@ -123,18 +123,7 @@ module Ameba::AST
         node.args.each &.accept(self)
         node.double_splat.try &.accept(self)
         node.block_arg.try &.accept(self)
-      end
-
-      if (return_type = node.return_type).is_a?(Crystal::Path)
-        # Special case of the return type being nil, meaning the last
-        # line of the method body is ignored
-        if return_type.names.join("::").in?("::Nil", "Nil")
-          node.body.accept(self)
-        else
-          incr_stack { node.body.accept(self) }
-        end
-      else
-        incr_stack { node.body.accept(self) }
+        node.body.accept(self)
       end
 
       false
@@ -170,7 +159,7 @@ module Ameba::AST
     def visit(node : Crystal::NilableCast) : Bool
       @rule.test(@source, node, @stack.positive?)
 
-      node.obj.accept(self)
+      incr_stack { node.obj.accept(self) }
 
       false
     end
