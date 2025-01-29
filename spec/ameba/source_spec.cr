@@ -71,8 +71,8 @@ module Ameba
       end
     end
 
-    Ameba.ecr_supported? do
-      describe "#ast" do
+    describe "#ast" do
+      Ameba.ecr_supported? do
         it "parses an ECR file" do
           source = Source.new <<-ECR, "filename.ecr"
             hello <%= "world" %>
