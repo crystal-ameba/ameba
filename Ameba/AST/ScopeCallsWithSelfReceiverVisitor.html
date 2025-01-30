@@ -14,7 +14,7 @@
 <script type="text/javascript" src="../../js/doc.js"></script>
 
   <meta name="repository-name" content="ameba">
-  <title>Ameba::Rule::Lint - ameba master</title>
+  <title>Ameba::AST::ScopeCallsWithSelfReceiverVisitor - ameba master</title>
   <script type="text/javascript">
     CrystalDocs.base_path = "../../";
   </script>
@@ -62,7 +62,7 @@
       
         <ul>
   
-  <li class="parent " data-id="ameba/Ameba/AST" data-name="ameba::ast">
+  <li class="parent open current" data-id="ameba/Ameba/AST" data-name="ameba::ast">
       <a href="../../Ameba/AST.html">AST</a>
       
         <ul>
@@ -147,7 +147,7 @@
       
     </li>
   
-  <li class=" " data-id="ameba/Ameba/AST/ScopeCallsWithSelfReceiverVisitor" data-name="ameba::ast::scopecallswithselfreceivervisitor">
+  <li class=" current" data-id="ameba/Ameba/AST/ScopeCallsWithSelfReceiverVisitor" data-name="ameba::ast::scopecallswithselfreceivervisitor">
       <a href="../../Ameba/AST/ScopeCallsWithSelfReceiverVisitor.html">ScopeCallsWithSelfReceiverVisitor</a>
       
     </li>
@@ -327,7 +327,7 @@
       
     </li>
   
-  <li class="parent open current" data-id="ameba/Ameba/Rule" data-name="ameba::rule">
+  <li class="parent " data-id="ameba/Ameba/Rule" data-name="ameba::rule">
       <a href="../../Ameba/Rule.html">Rule</a>
       
         <ul>
@@ -382,7 +382,7 @@
       
     </li>
   
-  <li class="parent open current" data-id="ameba/Ameba/Rule/Lint" data-name="ameba::rule::lint">
+  <li class="parent " data-id="ameba/Ameba/Rule/Lint" data-name="ameba::rule::lint">
       <a href="../../Ameba/Rule/Lint.html">Lint</a>
       
         <ul>
@@ -976,10 +976,12 @@
 <div class="main-content">
 <h1 class="type-name">
 
-  <span class="kind">module</span> Ameba::<wbr>Rule::<wbr>Lint
+  <span class="kind">class</span> Ameba::<wbr>AST::<wbr>ScopeCallsWithSelfReceiverVisitor
 
 </h1>
 
+
+  <ul class="superclass-hierarchy"><li class="superclass"><a href="../../Ameba/AST/ScopeCallsWithSelfReceiverVisitor.html">Ameba::AST::ScopeCallsWithSelfReceiverVisitor</a></li><li class="superclass">Crystal::Visitor</li><li class="superclass">Reference</li><li class="superclass">Object</li></ul>
 
 
 
@@ -1007,295 +1009,8 @@
   </h2>
   
     
-      <a href="https://github.com/crystal-ameba/ameba/blob/59c11ff/src/ameba/rule/lint/ambiguous_assignment.cr#L1" target="_blank">
-        ameba/rule/lint/ambiguous_assignment.cr
-      </a>
-    
-    <br/>
-  
-    
-      <a href="https://github.com/crystal-ameba/ameba/blob/59c11ff/src/ameba/rule/lint/bad_directive.cr#L1" target="_blank">
-        ameba/rule/lint/bad_directive.cr
-      </a>
-    
-    <br/>
-  
-    
-      <a href="https://github.com/crystal-ameba/ameba/blob/59c11ff/src/ameba/rule/lint/comparison_to_boolean.cr#L1" target="_blank">
-        ameba/rule/lint/comparison_to_boolean.cr
-      </a>
-    
-    <br/>
-  
-    
-      <a href="https://github.com/crystal-ameba/ameba/blob/59c11ff/src/ameba/rule/lint/debug_calls.cr#L1" target="_blank">
-        ameba/rule/lint/debug_calls.cr
-      </a>
-    
-    <br/>
-  
-    
-      <a href="https://github.com/crystal-ameba/ameba/blob/59c11ff/src/ameba/rule/lint/debugger_statement.cr#L1" target="_blank">
-        ameba/rule/lint/debugger_statement.cr
-      </a>
-    
-    <br/>
-  
-    
-      <a href="https://github.com/crystal-ameba/ameba/blob/59c11ff/src/ameba/rule/lint/duplicated_require.cr#L1" target="_blank">
-        ameba/rule/lint/duplicated_require.cr
-      </a>
-    
-    <br/>
-  
-    
-      <a href="https://github.com/crystal-ameba/ameba/blob/59c11ff/src/ameba/rule/lint/empty_ensure.cr#L1" target="_blank">
-        ameba/rule/lint/empty_ensure.cr
-      </a>
-    
-    <br/>
-  
-    
-      <a href="https://github.com/crystal-ameba/ameba/blob/59c11ff/src/ameba/rule/lint/empty_expression.cr#L1" target="_blank">
-        ameba/rule/lint/empty_expression.cr
-      </a>
-    
-    <br/>
-  
-    
-      <a href="https://github.com/crystal-ameba/ameba/blob/59c11ff/src/ameba/rule/lint/empty_loop.cr#L1" target="_blank">
-        ameba/rule/lint/empty_loop.cr
-      </a>
-    
-    <br/>
-  
-    
-      <a href="https://github.com/crystal-ameba/ameba/blob/59c11ff/src/ameba/rule/lint/formatting.cr#L3" target="_blank">
-        ameba/rule/lint/formatting.cr
-      </a>
-    
-    <br/>
-  
-    
-      <a href="https://github.com/crystal-ameba/ameba/blob/59c11ff/src/ameba/rule/lint/hash_duplicated_key.cr#L1" target="_blank">
-        ameba/rule/lint/hash_duplicated_key.cr
-      </a>
-    
-    <br/>
-  
-    
-      <a href="https://github.com/crystal-ameba/ameba/blob/59c11ff/src/ameba/rule/lint/literal_assignments_in_expressions.cr#L1" target="_blank">
-        ameba/rule/lint/literal_assignments_in_expressions.cr
-      </a>
-    
-    <br/>
-  
-    
-      <a href="https://github.com/crystal-ameba/ameba/blob/59c11ff/src/ameba/rule/lint/literal_in_condition.cr#L1" target="_blank">
-        ameba/rule/lint/literal_in_condition.cr
-      </a>
-    
-    <br/>
-  
-    
-      <a href="https://github.com/crystal-ameba/ameba/blob/59c11ff/src/ameba/rule/lint/literal_in_interpolation.cr#L1" target="_blank">
-        ameba/rule/lint/literal_in_interpolation.cr
-      </a>
-    
-    <br/>
-  
-    
-      <a href="https://github.com/crystal-ameba/ameba/blob/59c11ff/src/ameba/rule/lint/literals_comparison.cr#L1" target="_blank">
-        ameba/rule/lint/literals_comparison.cr
-      </a>
-    
-    <br/>
-  
-    
-      <a href="https://github.com/crystal-ameba/ameba/blob/59c11ff/src/ameba/rule/lint/missing_block_argument.cr#L1" target="_blank">
-        ameba/rule/lint/missing_block_argument.cr
-      </a>
-    
-    <br/>
-  
-    
-      <a href="https://github.com/crystal-ameba/ameba/blob/59c11ff/src/ameba/rule/lint/not_nil.cr#L1" target="_blank">
-        ameba/rule/lint/not_nil.cr
-      </a>
-    
-    <br/>
-  
-    
-      <a href="https://github.com/crystal-ameba/ameba/blob/59c11ff/src/ameba/rule/lint/not_nil_after_no_bang.cr#L1" target="_blank">
-        ameba/rule/lint/not_nil_after_no_bang.cr
-      </a>
-    
-    <br/>
-  
-    
-      <a href="https://github.com/crystal-ameba/ameba/blob/59c11ff/src/ameba/rule/lint/percent_arrays.cr#L1" target="_blank">
-        ameba/rule/lint/percent_arrays.cr
-      </a>
-    
-    <br/>
-  
-    
-      <a href="https://github.com/crystal-ameba/ameba/blob/59c11ff/src/ameba/rule/lint/rand_zero.cr#L1" target="_blank">
-        ameba/rule/lint/rand_zero.cr
-      </a>
-    
-    <br/>
-  
-    
-      <a href="https://github.com/crystal-ameba/ameba/blob/59c11ff/src/ameba/rule/lint/redundant_string_coercion.cr#L1" target="_blank">
-        ameba/rule/lint/redundant_string_coercion.cr
-      </a>
-    
-    <br/>
-  
-    
-      <a href="https://github.com/crystal-ameba/ameba/blob/59c11ff/src/ameba/rule/lint/redundant_with_index.cr#L1" target="_blank">
-        ameba/rule/lint/redundant_with_index.cr
-      </a>
-    
-    <br/>
-  
-    
-      <a href="https://github.com/crystal-ameba/ameba/blob/59c11ff/src/ameba/rule/lint/redundant_with_object.cr#L1" target="_blank">
-        ameba/rule/lint/redundant_with_object.cr
-      </a>
-    
-    <br/>
-  
-    
-      <a href="https://github.com/crystal-ameba/ameba/blob/59c11ff/src/ameba/rule/lint/require_parentheses.cr#L1" target="_blank">
-        ameba/rule/lint/require_parentheses.cr
-      </a>
-    
-    <br/>
-  
-    
-      <a href="https://github.com/crystal-ameba/ameba/blob/59c11ff/src/ameba/rule/lint/shadowed_argument.cr#L1" target="_blank">
-        ameba/rule/lint/shadowed_argument.cr
-      </a>
-    
-    <br/>
-  
-    
-      <a href="https://github.com/crystal-ameba/ameba/blob/59c11ff/src/ameba/rule/lint/shadowed_exception.cr#L1" target="_blank">
-        ameba/rule/lint/shadowed_exception.cr
-      </a>
-    
-    <br/>
-  
-    
-      <a href="https://github.com/crystal-ameba/ameba/blob/59c11ff/src/ameba/rule/lint/shadowing_outer_local_var.cr#L1" target="_blank">
-        ameba/rule/lint/shadowing_outer_local_var.cr
-      </a>
-    
-    <br/>
-  
-    
-      <a href="https://github.com/crystal-ameba/ameba/blob/59c11ff/src/ameba/rule/lint/shared_var_in_fiber.cr#L1" target="_blank">
-        ameba/rule/lint/shared_var_in_fiber.cr
-      </a>
-    
-    <br/>
-  
-    
-      <a href="https://github.com/crystal-ameba/ameba/blob/59c11ff/src/ameba/rule/lint/spec_filename.cr#L3" target="_blank">
-        ameba/rule/lint/spec_filename.cr
-      </a>
-    
-    <br/>
-  
-    
-      <a href="https://github.com/crystal-ameba/ameba/blob/59c11ff/src/ameba/rule/lint/spec_focus.cr#L1" target="_blank">
-        ameba/rule/lint/spec_focus.cr
-      </a>
-    
-    <br/>
-  
-    
-      <a href="https://github.com/crystal-ameba/ameba/blob/59c11ff/src/ameba/rule/lint/syntax.cr#L1" target="_blank">
-        ameba/rule/lint/syntax.cr
-      </a>
-    
-    <br/>
-  
-    
-      <a href="https://github.com/crystal-ameba/ameba/blob/59c11ff/src/ameba/rule/lint/trailing_rescue_exception.cr#L1" target="_blank">
-        ameba/rule/lint/trailing_rescue_exception.cr
-      </a>
-    
-    <br/>
-  
-    
-      <a href="https://github.com/crystal-ameba/ameba/blob/59c11ff/src/ameba/rule/lint/typos.cr#L1" target="_blank">
-        ameba/rule/lint/typos.cr
-      </a>
-    
-    <br/>
-  
-    
-      <a href="https://github.com/crystal-ameba/ameba/blob/59c11ff/src/ameba/rule/lint/unneeded_disable_directive.cr#L1" target="_blank">
-        ameba/rule/lint/unneeded_disable_directive.cr
-      </a>
-    
-    <br/>
-  
-    
-      <a href="https://github.com/crystal-ameba/ameba/blob/59c11ff/src/ameba/rule/lint/unreachable_code.cr#L1" target="_blank">
-        ameba/rule/lint/unreachable_code.cr
-      </a>
-    
-    <br/>
-  
-    
-      <a href="https://github.com/crystal-ameba/ameba/blob/59c11ff/src/ameba/rule/lint/unused_argument.cr#L1" target="_blank">
-        ameba/rule/lint/unused_argument.cr
-      </a>
-    
-    <br/>
-  
-    
-      <a href="https://github.com/crystal-ameba/ameba/blob/59c11ff/src/ameba/rule/lint/unused_block_argument.cr#L1" target="_blank">
-        ameba/rule/lint/unused_block_argument.cr
-      </a>
-    
-    <br/>
-  
-    
-      <a href="https://github.com/crystal-ameba/ameba/blob/59c11ff/src/ameba/rule/lint/unused_comparison.cr#L1" target="_blank">
-        ameba/rule/lint/unused_comparison.cr
-      </a>
-    
-    <br/>
-  
-    
-      <a href="https://github.com/crystal-ameba/ameba/blob/59c11ff/src/ameba/rule/lint/unused_generic_or_union.cr#L1" target="_blank">
-        ameba/rule/lint/unused_generic_or_union.cr
-      </a>
-    
-    <br/>
-  
-    
-      <a href="https://github.com/crystal-ameba/ameba/blob/59c11ff/src/ameba/rule/lint/unused_literal.cr#L1" target="_blank">
-        ameba/rule/lint/unused_literal.cr
-      </a>
-    
-    <br/>
-  
-    
-      <a href="https://github.com/crystal-ameba/ameba/blob/59c11ff/src/ameba/rule/lint/useless_assign.cr#L1" target="_blank">
-        ameba/rule/lint/useless_assign.cr
-      </a>
-    
-    <br/>
-  
-    
-      <a href="https://github.com/crystal-ameba/ameba/blob/59c11ff/src/ameba/rule/lint/useless_condition_in_when.cr#L1" target="_blank">
-        ameba/rule/lint/useless_condition_in_when.cr
+      <a href="https://github.com/crystal-ameba/ameba/blob/59c11ff/src/ameba/ast/visitors/scope_calls_with_self_receiver_visitor.cr#L2" target="_blank">
+        ameba/ast/visitors/scope_calls_with_self_receiver_visitor.cr
       </a>
     
     <br/>
@@ -1305,24 +1020,472 @@
 
 
 
+  <h2>
+    <a id="constructors" class="anchor" href="#constructors">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>
+    Constructors
+  </h2>
+  <ul class="list-summary">
+    
+      <li class="entry-summary">
+        <a href="#new%28rule%2Csource%29-class-method" class="signature"><strong>.new</strong>(rule, source)</a>
+        
+      </li>
+    
+  </ul>
 
 
 
 
 
+
+
+  <h2>
+    <a id="instance-method-summary" class="anchor" href="#instance-method-summary">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>
+    Instance Method Summary
+  </h2>
+  <ul class="list-summary">
+    
+      <li class="entry-summary">
+        <a href="#end_visit%28node%3ACrystal%3A%3AAssign%7CCrystal%3A%3AOpAssign%29-instance-method" class="signature"><strong>#end_visit</strong>(node : Crystal::Assign | Crystal::OpAssign)</a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#end_visit%28node%3ACrystal%3A%3AMultiAssign%29-instance-method" class="signature"><strong>#end_visit</strong>(node : Crystal::MultiAssign)</a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#end_visit%28node%3ACrystal%3A%3AUninitializedVar%29-instance-method" class="signature"><strong>#end_visit</strong>(node : Crystal::UninitializedVar)</a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#end_visit%28node%3ACrystal%3A%3ATypeDeclaration%29-instance-method" class="signature"><strong>#end_visit</strong>(node : Crystal::TypeDeclaration)</a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#end_visit%28node%3ACrystal%3A%3AASTNode%29-instance-method" class="signature"><strong>#end_visit</strong>(node : Crystal::ASTNode)</a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#scope_call_queue%3AHash%28Ameba%3A%3AAST%3A%3AScope%2CArray%28Crystal%3A%3ACall%29%29-instance-method" class="signature"><strong>#scope_call_queue</strong> : Hash(Ameba::AST::Scope, Array(Crystal::Call))</a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#visit%28node%3ACrystal%3A%3ADef%29-instance-method" class="signature"><strong>#visit</strong>(node : Crystal::Def)</a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#visit%28node%3ACrystal%3A%3ABlock%7CCrystal%3A%3AProcLiteral%29-instance-method" class="signature"><strong>#visit</strong>(node : Crystal::Block | Crystal::ProcLiteral)</a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#visit%28node%3ACrystal%3A%3AClassDef%7CCrystal%3A%3AModuleDef%29-instance-method" class="signature"><strong>#visit</strong>(node : Crystal::ClassDef | Crystal::ModuleDef)</a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#visit%28node%3ACrystal%3A%3AAssign%7CCrystal%3A%3AOpAssign%7CCrystal%3A%3AMultiAssign%7CCrystal%3A%3AUninitializedVar%29-instance-method" class="signature"><strong>#visit</strong>(node : Crystal::Assign | Crystal::OpAssign | Crystal::MultiAssign | Crystal::UninitializedVar)</a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#visit%28node%3ACrystal%3A%3ATypeDeclaration%29-instance-method" class="signature"><strong>#visit</strong>(node : Crystal::TypeDeclaration)</a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#visit%28node%3ACrystal%3A%3AArg%29-instance-method" class="signature"><strong>#visit</strong>(node : Crystal::Arg)</a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#visit%28node%3ACrystal%3A%3AInstanceVar%29-instance-method" class="signature"><strong>#visit</strong>(node : Crystal::InstanceVar)</a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#visit%28node%3ACrystal%3A%3AVar%29-instance-method" class="signature"><strong>#visit</strong>(node : Crystal::Var)</a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#visit%28node%3ACrystal%3A%3ACall%29-instance-method" class="signature"><strong>#visit</strong>(node : Crystal::Call)</a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#visit%28node%3ACrystal%3A%3AASTNode%29-instance-method" class="signature"><strong>#visit</strong>(node : Crystal::ASTNode)</a>
+        
+          <div class="summary"><p>A main visit method that accepts <code>Crystal::ASTNode</code>.</p></div>
+        
+      </li>
+    
+  </ul>
 
 
 
 <div class="methods-inherited">
   
+    
+
+
+    
+
+
+    
+
+
+    
+
+
+  
+    
+
+
+    
+
+
+    
+
+
+    
+
+
+  
+    
+
+
+    
+
+
+    
+
+
+    
+
+
+  
 </div>
 
 
+  <h2>
+    <a id="constructor-detail" class="anchor" href="#constructor-detail">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>
+    Constructor Detail
+  </h2>
+  
+    <div class="entry-detail" id="new(rule,source)-class-method">
+      <div class="signature">
+        
+        def self.<strong>new</strong>(rule, source)
+
+        <a class="method-permalink" href="#new%28rule%2Csource%29-class-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/crystal-ameba/ameba/blob/59c11ff/src/ameba/ast/visitors/scope_calls_with_self_receiver_visitor.cr#L8" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
 
 
 
 
 
+
+
+  <h2>
+    <a id="instance-method-detail" class="anchor" href="#instance-method-detail">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>
+    Instance Method Detail
+  </h2>
+  
+    <div class="entry-detail" id="end_visit(node:Crystal::Assign|Crystal::OpAssign)-instance-method">
+      <div class="signature">
+        
+        def <strong>end_visit</strong>(node : Crystal::Assign | Crystal::OpAssign)
+
+        <a class="method-permalink" href="#end_visit%28node%3ACrystal%3A%3AAssign%7CCrystal%3A%3AOpAssign%29-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/crystal-ameba/ameba/blob/59c11ff/src/ameba/ast/visitors/scope_calls_with_self_receiver_visitor.cr#L64" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="end_visit(node:Crystal::MultiAssign)-instance-method">
+      <div class="signature">
+        
+        def <strong>end_visit</strong>(node : Crystal::MultiAssign)
+
+        <a class="method-permalink" href="#end_visit%28node%3ACrystal%3A%3AMultiAssign%29-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/crystal-ameba/ameba/blob/59c11ff/src/ameba/ast/visitors/scope_calls_with_self_receiver_visitor.cr#L69" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="end_visit(node:Crystal::UninitializedVar)-instance-method">
+      <div class="signature">
+        
+        def <strong>end_visit</strong>(node : Crystal::UninitializedVar)
+
+        <a class="method-permalink" href="#end_visit%28node%3ACrystal%3A%3AUninitializedVar%29-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/crystal-ameba/ameba/blob/59c11ff/src/ameba/ast/visitors/scope_calls_with_self_receiver_visitor.cr#L74" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="end_visit(node:Crystal::TypeDeclaration)-instance-method">
+      <div class="signature">
+        
+        def <strong>end_visit</strong>(node : Crystal::TypeDeclaration)
+
+        <a class="method-permalink" href="#end_visit%28node%3ACrystal%3A%3ATypeDeclaration%29-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/crystal-ameba/ameba/blob/59c11ff/src/ameba/ast/visitors/scope_calls_with_self_receiver_visitor.cr#L88" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="end_visit(node:Crystal::ASTNode)-instance-method">
+      <div class="signature">
+        
+        def <strong>end_visit</strong>(node : Crystal::ASTNode)
+
+        <a class="method-permalink" href="#end_visit%28node%3ACrystal%3A%3AASTNode%29-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/crystal-ameba/ameba/blob/59c11ff/src/ameba/ast/visitors/scope_calls_with_self_receiver_visitor.cr#L44" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="scope_call_queue:Hash(Ameba::AST::Scope,Array(Crystal::Call))-instance-method">
+      <div class="signature">
+        
+        def <strong>scope_call_queue</strong> : Hash(<a href="../../Ameba/AST/Scope.html">Ameba::AST::Scope</a>, Array(Crystal::Call))
+
+        <a class="method-permalink" href="#scope_call_queue%3AHash%28Ameba%3A%3AAST%3A%3AScope%2CArray%28Crystal%3A%3ACall%29%29-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/crystal-ameba/ameba/blob/59c11ff/src/ameba/ast/visitors/scope_calls_with_self_receiver_visitor.cr#L6" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="visit(node:Crystal::Def)-instance-method">
+      <div class="signature">
+        
+        def <strong>visit</strong>(node : Crystal::Def)
+
+        <a class="method-permalink" href="#visit%28node%3ACrystal%3A%3ADef%29-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/crystal-ameba/ameba/blob/59c11ff/src/ameba/ast/visitors/scope_calls_with_self_receiver_visitor.cr#L48" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="visit(node:Crystal::Block|Crystal::ProcLiteral)-instance-method">
+      <div class="signature">
+        
+        def <strong>visit</strong>(node : Crystal::Block | Crystal::ProcLiteral)
+
+        <a class="method-permalink" href="#visit%28node%3ACrystal%3A%3ABlock%7CCrystal%3A%3AProcLiteral%29-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/crystal-ameba/ameba/blob/59c11ff/src/ameba/ast/visitors/scope_calls_with_self_receiver_visitor.cr#L52" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="visit(node:Crystal::ClassDef|Crystal::ModuleDef)-instance-method">
+      <div class="signature">
+        
+        def <strong>visit</strong>(node : Crystal::ClassDef | Crystal::ModuleDef)
+
+        <a class="method-permalink" href="#visit%28node%3ACrystal%3A%3AClassDef%7CCrystal%3A%3AModuleDef%29-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/crystal-ameba/ameba/blob/59c11ff/src/ameba/ast/visitors/scope_calls_with_self_receiver_visitor.cr#L56" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="visit(node:Crystal::Assign|Crystal::OpAssign|Crystal::MultiAssign|Crystal::UninitializedVar)-instance-method">
+      <div class="signature">
+        
+        def <strong>visit</strong>(node : Crystal::Assign | Crystal::OpAssign | Crystal::MultiAssign | Crystal::UninitializedVar)
+
+        <a class="method-permalink" href="#visit%28node%3ACrystal%3A%3AAssign%7CCrystal%3A%3AOpAssign%7CCrystal%3A%3AMultiAssign%7CCrystal%3A%3AUninitializedVar%29-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/crystal-ameba/ameba/blob/59c11ff/src/ameba/ast/visitors/scope_calls_with_self_receiver_visitor.cr#L60" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="visit(node:Crystal::TypeDeclaration)-instance-method">
+      <div class="signature">
+        
+        def <strong>visit</strong>(node : Crystal::TypeDeclaration)
+
+        <a class="method-permalink" href="#visit%28node%3ACrystal%3A%3ATypeDeclaration%29-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/crystal-ameba/ameba/blob/59c11ff/src/ameba/ast/visitors/scope_calls_with_self_receiver_visitor.cr#L79" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="visit(node:Crystal::Arg)-instance-method">
+      <div class="signature">
+        
+        def <strong>visit</strong>(node : Crystal::Arg)
+
+        <a class="method-permalink" href="#visit%28node%3ACrystal%3A%3AArg%29-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/crystal-ameba/ameba/blob/59c11ff/src/ameba/ast/visitors/scope_calls_with_self_receiver_visitor.cr#L95" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="visit(node:Crystal::InstanceVar)-instance-method">
+      <div class="signature">
+        
+        def <strong>visit</strong>(node : Crystal::InstanceVar)
+
+        <a class="method-permalink" href="#visit%28node%3ACrystal%3A%3AInstanceVar%29-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/crystal-ameba/ameba/blob/59c11ff/src/ameba/ast/visitors/scope_calls_with_self_receiver_visitor.cr#L99" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="visit(node:Crystal::Var)-instance-method">
+      <div class="signature">
+        
+        def <strong>visit</strong>(node : Crystal::Var)
+
+        <a class="method-permalink" href="#visit%28node%3ACrystal%3A%3AVar%29-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/crystal-ameba/ameba/blob/59c11ff/src/ameba/ast/visitors/scope_calls_with_self_receiver_visitor.cr#L103" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="visit(node:Crystal::Call)-instance-method">
+      <div class="signature">
+        
+        def <strong>visit</strong>(node : Crystal::Call)
+
+        <a class="method-permalink" href="#visit%28node%3ACrystal%3A%3ACall%29-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/crystal-ameba/ameba/blob/59c11ff/src/ameba/ast/visitors/scope_calls_with_self_receiver_visitor.cr#L120" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="visit(node:Crystal::ASTNode)-instance-method">
+      <div class="signature">
+        
+        def <strong>visit</strong>(node : Crystal::ASTNode)
+
+        <a class="method-permalink" href="#visit%28node%3ACrystal%3A%3AASTNode%29-instance-method">#</a>
+      </div>
+      
+        <div class="doc">
+          
+          <p>A main visit method that accepts <code>Crystal::ASTNode</code>.
+Returns <code>true</code>, meaning all child nodes will be traversed.</p>
+        </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/crystal-ameba/ameba/blob/59c11ff/src/ameba/ast/visitors/scope_calls_with_self_receiver_visitor.cr#L40" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
 
 
 </div>
