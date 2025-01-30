@@ -5,10 +5,10 @@ module Ameba::Rule::Lint
     subject = UnusedLiteral.new
 
     it "passes if literals are used to assign" do
-      expect_no_issues subject, <<-CRYSTAL
+      expect_no_issues subject, <<-'CRYSTAL'
         a = 1
         b = "string"
-        g = "interp \#{string}"
+        g = "interp #{string}"
         h = <<-HEREDOC
           this is a heredoc
           HEREDOC
@@ -293,22 +293,22 @@ module Ameba::Rule::Lint
     # Locations for Regex literals were added in Crystal v1.15.0
     {% if compare_versions(Crystal::VERSION, "1.15.0") >= 0 %}
       it "fails if a regex literal is unused" do
-        expect_issue subject, <<-CRYSTAL
+        expect_issue subject, <<-'CRYSTAL'
           a = /hello world/
           /goodnight moon/
           # ^^^^^^^^^^^^^^ error: Literal value is not used
-          b = /goodnight moon, \#{a}/
-          /goodnight moon, \#{a}/
+          b = /goodnight moon, #{a}/
+          /goodnight moon, #{a}/
           # ^^^^^^^^^^^^^^^^^^^^ error: Literal value is not used
           CRYSTAL
       end
     {% else %}
       it "passes if a regex literal is unused" do
-        expect_no_issues subject, <<-CRYSTAL
+        expect_no_issues subject, <<-'CRYSTAL'
           a = /hello world/
           /goodnight moon/
-          b = /goodnight moon, \#{a}/
-          /goodnight moon, \#{a}/
+          b = /goodnight moon, #{a}/
+          /goodnight moon, #{a}/
           CRYSTAL
       end
     {% end %}

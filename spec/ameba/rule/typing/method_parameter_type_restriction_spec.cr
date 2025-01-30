@@ -164,10 +164,10 @@ module Ameba::Rule::Typing
           rule = MethodParameterTypeRestriction.new
           rule.default_value = true
 
-          expect_issue rule, <<-CRYSTAL
+          expect_issue rule, <<-'CRYSTAL'
             def hello(a = "world")
                     # ^ error: Method parameter should have a type restriction
-              "hello \#{a}"
+              "hello #{a}"
             end
             CRYSTAL
         end
@@ -187,10 +187,10 @@ module Ameba::Rule::Typing
         end
 
         it "fails if a block parameter with a name doesn't have a type restriction" do
-          expect_issue rule, <<-CRYSTAL
+          expect_issue rule, <<-'CRYSTAL'
             def hello(&a)
                      # ^ error: Method parameter should have a type restriction
-              "hello, \#{a.call}"
+              "hello, #{a.call}"
             end
             CRYSTAL
         end
