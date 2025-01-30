@@ -32,6 +32,13 @@ module Ameba::Rule::Typing
         CRYSTAL
     end
 
+    it "passes if a method has a `:nodoc:` annotation" do
+      expect_no_issues subject, <<-CRYSTAL
+        # :nodoc:
+        def foo; end
+        CRYSTAL
+    end
+
     it "fails if a public method doesn't have a return type restriction" do
       expect_issue subject, <<-CRYSTAL
         def hello
@@ -115,6 +122,20 @@ module Ameba::Rule::Typing
             protected def hello
                     # ^^^^^^^^^ error: Method should have a return type restriction
               "hello world"
+            end
+            CRYSTAL
+        end
+      end
+
+      context "#nodoc_methods" do
+        rule = MethodReturnTypeRestriction.new
+        rule.nodoc_methods = true
+
+        it "fails if a public method doesn't have a return type restriction" do
+          expect_issue rule, <<-CRYSTAL
+            # :nodoc:
+            def foo
+            # ^^^^^ error: Method should have a return type restriction
             end
             CRYSTAL
         end

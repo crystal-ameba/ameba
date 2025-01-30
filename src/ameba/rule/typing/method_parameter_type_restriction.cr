@@ -20,6 +20,9 @@ module Ameba::Rule::Typing
   # When the config options `PrivateMethods` and `ProtectedMethods`
   # are true, this rule is also applied to private and protected methods, respectively.
   #
+  # The `NodocMethods` configuration option controls whether this rule applies to
+  # methods with a `:nodoc:` directive.
+  #
   # The `BlockParameters` configuration option will extend this to block parameters, where these are invalid:
   #
   # ```
@@ -49,8 +52,11 @@ module Ameba::Rule::Typing
   #   BlockParameters: false
   #   PrivateMethods: false
   #   ProtectedMethods: false
+  #   NodocMethods: false
   # ```
   class MethodParameterTypeRestriction < Base
+    include AST::Util
+
     properties do
       since_version "1.7.0"
       description "Recommends that method parameters have type restrictions"
@@ -59,6 +65,7 @@ module Ameba::Rule::Typing
       block_parameters false
       private_methods false
       protected_methods false
+      nodoc_methods false
     end
 
     MSG = "Method parameter should have a type restriction"
@@ -80,7 +87,8 @@ module Ameba::Rule::Typing
 
     private def valid_visibility?(node : Crystal::ASTNode) : Bool
       (!private_methods? && node.visibility.private?) ||
-        (!protected_methods? && node.visibility.protected?)
+        (!protected_methods? && node.visibility.protected?) ||
+        (!nodoc_methods? && nodoc?(node))
     end
   end
 end
