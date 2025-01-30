@@ -1,9 +1,9 @@
 require "../../../spec_helper"
 
 module Ameba::Rule::Performance
-  subject = FlattenAfterMap.new
-
   describe FlattenAfterMap do
+    subject = FlattenAfterMap.new
+
     it "passes if there is no potential performance improvements" do
       expect_no_issues subject, <<-CRYSTAL
         %w[Alice Bob].flat_map(&.chars)

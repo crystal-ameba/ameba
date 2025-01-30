@@ -1,9 +1,9 @@
 require "../../../spec_helper"
 
 module Ameba::Rule::Performance
-  subject = ChainedCallWithNoBang.new
-
   describe ChainedCallWithNoBang do
+    subject = ChainedCallWithNoBang.new
+
     it "passes if there is no potential performance improvements" do
       expect_no_issues subject, <<-CRYSTAL
         (1..3).select { |e| e > 1 }.sort!

@@ -1,10 +1,10 @@
 require "../../../spec_helper"
 
 module Ameba::Rule::Lint
-  subject = UnusedArgument.new
-  subject.ignore_defs = false
-
   describe UnusedArgument do
+    subject = UnusedArgument.new
+    subject.ignore_defs = false
+
     it "doesn't report if arguments are used" do
       expect_no_issues subject, <<-CRYSTAL
         def method(a, b, c)

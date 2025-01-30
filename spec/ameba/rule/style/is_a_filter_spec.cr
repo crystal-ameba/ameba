@@ -1,9 +1,9 @@
 require "../../../spec_helper"
 
 module Ameba::Rule::Style
-  subject = IsAFilter.new
-
   describe IsAFilter do
+    subject = IsAFilter.new
+
     it "passes if there is no potential performance improvements" do
       expect_no_issues subject, <<-CRYSTAL
         [1, 2, nil].select(Int32)

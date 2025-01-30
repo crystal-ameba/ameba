@@ -1,9 +1,9 @@
 require "../../../spec_helper"
 
 module Ameba::Rule::Layout
-  subject = TrailingWhitespace.new
-
   describe TrailingWhitespace do
+    subject = TrailingWhitespace.new
+
     it "passes if all lines do not have trailing whitespace" do
       expect_no_issues subject, "no-whitespace"
     end

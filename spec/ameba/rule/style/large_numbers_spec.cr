@@ -1,25 +1,25 @@
 require "../../../spec_helper"
 
-module Ameba
-  subject = Rule::Style::LargeNumbers.new
+private def it_transforms(number, expected, *, file = __FILE__, line = __LINE__)
+  it "transforms large number #{number}", file, line do
+    rule = Ameba::Rule::Style::LargeNumbers.new
+    rule.int_min_digits = 5
 
-  private def it_transforms(number, expected, *, file = __FILE__, line = __LINE__)
-    it "transforms large number #{number}", file, line do
-      rule = Rule::Style::LargeNumbers.new
-      rule.int_min_digits = 5
+    source = expect_issue rule, <<-CRYSTAL, number: number, file: file, line: line
+      number = %{number}
+             # ^{number} error: Large numbers should be written with underscores: `#{expected}`
+      CRYSTAL
 
-      source = expect_issue rule, <<-CRYSTAL, number: number, file: file, line: line
-        number = %{number}
-               # ^{number} error: Large numbers should be written with underscores: `#{expected}`
-        CRYSTAL
-
-      expect_correction source, <<-CRYSTAL
-        number = #{expected}
-        CRYSTAL
-    end
+    expect_correction source, <<-CRYSTAL
+      number = #{expected}
+      CRYSTAL
   end
+end
 
-  describe Rule::Style::LargeNumbers do
+module Ameba::Rule::Style
+  describe LargeNumbers do
+    subject = LargeNumbers.new
+
     it "passes if large number does not require underscore" do
       expect_no_issues subject, <<-CRYSTAL
         1 2 3 4 5 6 7 8 9 10 11 12 13 14 15

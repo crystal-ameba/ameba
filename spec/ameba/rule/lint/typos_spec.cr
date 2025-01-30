@@ -7,10 +7,10 @@ private def check_typos_bin!
 end
 
 module Ameba::Rule::Lint
-  subject = Typos.new
-    .tap(&.fail_on_error = true)
-
   describe Typos do
+    subject = Typos.new
+    subject.fail_on_error = true
+
     it "reports typos" do
       check_typos_bin!
 

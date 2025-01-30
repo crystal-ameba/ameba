@@ -1,9 +1,9 @@
 require "../../../spec_helper"
 
 module Ameba::Rule::Lint
-  subject = LiteralInCondition.new
-
   describe LiteralInCondition do
+    subject = LiteralInCondition.new
+
     it "passes if there is not literals in conditional" do
       s = Source.new %(
         if a == 2

@@ -1,17 +1,17 @@
 require "../../../spec_helper"
 
-module Ameba
-  subject = Rule::Lint::EmptyExpression.new
-
-  private def it_detects_empty_expression(code, *, file = __FILE__, line = __LINE__)
-    it "detects empty expression #{code.inspect}", file, line do
-      source = Source.new code
-      rule = Rule::Lint::EmptyExpression.new
-      rule.catch(source).should_not be_valid, file: file, line: line
-    end
+private def it_detects_empty_expression(code, *, file = __FILE__, line = __LINE__)
+  it "detects empty expression #{code.inspect}", file, line do
+    source = Ameba::Source.new code
+    rule = Ameba::Rule::Lint::EmptyExpression.new
+    rule.catch(source).should_not be_valid, file: file, line: line
   end
+end
 
-  describe Rule::Lint::EmptyExpression do
+module Ameba::Rule::Lint
+  describe EmptyExpression do
+    subject = EmptyExpression.new
+
     it "passes if there is no empty expression" do
       expect_no_issues subject, <<-CRYSTAL
         def method()

@@ -1,9 +1,9 @@
 require "../../../spec_helper"
 
 module Ameba::Rule::Lint
-  subject = DebuggerStatement.new
-
   describe DebuggerStatement do
+    subject = DebuggerStatement.new
+
     it "passes if there is no debugger statement" do
       expect_no_issues subject, <<-CRYSTAL
         "this is not a debugger statement"

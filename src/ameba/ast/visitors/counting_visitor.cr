@@ -3,22 +3,20 @@ module Ameba::AST
   class CountingVisitor < Crystal::Visitor
     DEFAULT_COMPLEXITY = 1
 
+    # Returns the number of keywords that were found in the node
+    getter count = DEFAULT_COMPLEXITY
+
+    # Returns `true` if the node is within a macro condition
     getter? macro_condition = false
 
     # Creates a new counting visitor
-    def initialize(@scope : Crystal::ASTNode)
-      @complexity = DEFAULT_COMPLEXITY
+    def initialize(node : Crystal::ASTNode)
+      node.accept self
     end
 
     # :nodoc:
     def visit(node : Crystal::ASTNode)
       true
-    end
-
-    # Returns the number of keywords that were found in the node
-    def count
-      @scope.accept(self)
-      @complexity
     end
 
     # Uses the same logic than rubocop. See
@@ -27,7 +25,7 @@ module Ameba::AST
     {% for node in %i[if while until rescue or and] %}
       # :nodoc:
       def visit(node : Crystal::{{ node.id.capitalize }})
-        @complexity += 1 unless macro_condition?
+        @count += 1 unless macro_condition?
       end
     {% end %}
 
@@ -37,14 +35,14 @@ module Ameba::AST
 
       # Count the complexity of an exhaustive `Case` as 1
       # Otherwise count the number of `When`s
-      @complexity += node.exhaustive? ? 1 : node.whens.size
+      @count += node.exhaustive? ? 1 : node.whens.size
 
       true
     end
 
     def visit(node : Crystal::MacroIf | Crystal::MacroFor)
       @macro_condition = true
-      @complexity = DEFAULT_COMPLEXITY
+      @count = DEFAULT_COMPLEXITY
 
       false
     end

@@ -1,9 +1,9 @@
 require "../../../spec_helper"
 
 module Ameba::Rule::Style
-  subject = WhileTrue.new
-
   describe WhileTrue do
+    subject = WhileTrue.new
+
     it "passes if there is no `while true`" do
       expect_no_issues subject, <<-CRYSTAL
         a = 1

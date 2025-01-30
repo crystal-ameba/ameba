@@ -1,9 +1,9 @@
 require "../../../spec_helper"
 
 module Ameba::Rule::Lint
-  subject = LiteralInInterpolation.new
-
   describe LiteralInInterpolation do
+    subject = LiteralInInterpolation.new
+
     it "passes with good interpolation examples" do
       expect_no_issues subject, <<-CRYSTAL
         name = "Ary"

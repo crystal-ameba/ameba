@@ -24,7 +24,7 @@ module Ameba::Rule::Typing
   #
   # ```
   # Typing/MethodReturnTypeRestriction:
-  #   Enabled: false
+  #   Enabled: true
   #   PrivateMethods: false
   #   ProtectedMethods: false
   # ```
@@ -43,7 +43,7 @@ module Ameba::Rule::Typing
       issue_for node, MSG unless valid_return_type?(node)
     end
 
-    def valid_return_type?(node : Crystal::ASTNode) : Bool
+    private def valid_return_type?(node : Crystal::ASTNode) : Bool
       !!node.return_type ||
         (node.visibility.private? && !private_methods?) ||
         (node.visibility.protected? && !protected_methods?)

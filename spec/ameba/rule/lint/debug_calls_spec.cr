@@ -1,9 +1,9 @@
 require "../../../spec_helper"
 
 module Ameba::Rule::Lint
-  subject = DebugCalls.new
-
   describe DebugCalls do
+    subject = DebugCalls.new
+
     it "fails if there is a debug call" do
       subject.method_names.each do |name|
         source = expect_issue subject, <<-CRYSTAL, name: name

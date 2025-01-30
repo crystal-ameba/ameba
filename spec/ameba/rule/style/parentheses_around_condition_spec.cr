@@ -1,9 +1,9 @@
 require "../../../spec_helper"
 
 module Ameba::Rule::Style
-  subject = ParenthesesAroundCondition.new
-
   describe ParenthesesAroundCondition do
+    subject = ParenthesesAroundCondition.new
+
     {% for keyword in %w[if unless while until] %}
       context "{{ keyword.id }}" do
         it "reports if redundant parentheses are found" do
@@ -101,9 +101,15 @@ module Ameba::Rule::Style
           rule = ParenthesesAroundCondition.new
           rule.allow_safe_assignment = true
 
-          expect_issue rule, <<-CRYSTAL
+          source = expect_issue rule, <<-CRYSTAL
             if foo = @foo
              # ^^^^^^^^^^ error: Missing parentheses
+              foo
+            end
+            CRYSTAL
+
+          expect_correction source, <<-CRYSTAL
+            if (foo = @foo)
               foo
             end
             CRYSTAL

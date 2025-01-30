@@ -9,7 +9,7 @@ module Ameba::Rule::Lint
   # end
   # ```
   #
-  # as the predicate name is correct and the comment directive does not
+  # As the predicate name is correct and the comment directive does not
   # have any effect, the snippet should be written as the following:
   #
   # ```

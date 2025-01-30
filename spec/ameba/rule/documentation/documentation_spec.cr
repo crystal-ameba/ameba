@@ -1,14 +1,14 @@
 require "../../../spec_helper"
 
 module Ameba::Rule::Documentation
-  subject = Documentation.new
-    .tap(&.ignore_classes = false)
-    .tap(&.ignore_modules = false)
-    .tap(&.ignore_enums = false)
-    .tap(&.ignore_defs = false)
-    .tap(&.ignore_macros = false)
-
   describe Documentation do
+    subject = Documentation.new
+    subject.ignore_classes = false
+    subject.ignore_modules = false
+    subject.ignore_enums = false
+    subject.ignore_defs = false
+    subject.ignore_macros = false
+
     it "passes for undocumented private types" do
       expect_no_issues subject, <<-CRYSTAL
         private class Foo

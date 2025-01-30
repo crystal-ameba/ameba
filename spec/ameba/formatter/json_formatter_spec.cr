@@ -1,18 +1,18 @@
 require "../../spec_helper"
 
-module Ameba
-  def get_result(sources = [Source.new ""])
-    file = IO::Memory.new
-    formatter = Formatter::JSONFormatter.new file
+private def get_result(sources = [Ameba::Source.new ""])
+  output = IO::Memory.new
+  formatter = Ameba::Formatter::JSONFormatter.new output
 
-    formatter.started sources
-    sources.each { |source| formatter.source_finished source }
-    formatter.finished sources
+  formatter.started sources
+  sources.each { |source| formatter.source_finished source }
+  formatter.finished sources
 
-    JSON.parse file.to_s
-  end
+  JSON.parse(output.to_s)
+end
 
-  describe Formatter::JSONFormatter do
+module Ameba::Formatter
+  describe JSONFormatter do
     context "metadata" do
       it "shows ameba version" do
         get_result["metadata"]["ameba_version"].should eq Ameba::VERSION

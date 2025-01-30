@@ -7,9 +7,9 @@ LITERAL_SAMPLES = {
 }
 
 module Ameba::Rule::Lint
-  subject = LiteralAssignmentsInExpressions.new
-
   describe LiteralAssignmentsInExpressions do
+    subject = LiteralAssignmentsInExpressions.new
+
     it "passes if the assignment value is not a literal" do
       expect_no_issues subject, <<-CRYSTAL
         if a = b

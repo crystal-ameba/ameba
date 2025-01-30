@@ -1,9 +1,9 @@
 require "../../../spec_helper"
 
 module Ameba::Rule::Naming
-  subject = AsciiIdentifiers.new
-
   describe AsciiIdentifiers do
+    subject = AsciiIdentifiers.new
+
     it "reports classes with names containing non-ascii characters" do
       expect_issue subject, <<-CRYSTAL
         class BigAwesome🐺

@@ -1,9 +1,9 @@
 require "../../../spec_helper"
 
 module Ameba::Rule::Style
-  subject = VerboseBlock.new
-
   describe VerboseBlock do
+    subject = VerboseBlock.new
+
     it "passes if there is no potential performance improvements" do
       expect_no_issues subject, <<-CRYSTAL
         (1..3).any?(&.odd?)

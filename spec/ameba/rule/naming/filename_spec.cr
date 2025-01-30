@@ -1,9 +1,9 @@
 require "../../../spec_helper"
 
 module Ameba::Rule::Naming
-  subject = Filename.new
-
   describe Filename do
+    subject = Filename.new
+
     it "passes if filename is correct" do
       expect_no_issues subject, code: "", path: "src/foo.cr"
       expect_no_issues subject, code: "", path: "src/foo_bar.cr"

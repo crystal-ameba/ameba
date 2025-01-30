@@ -24,7 +24,10 @@ module Ameba::Formatter
         source.add_issue DummyRule.new, location, location, "message\n2nd line"
 
         subject.source_finished(source)
-        output.to_s.should eq("::notice file=/path/to/file.cr,line=1,col=2,endLine=1,endColumn=2,title=Ameba/DummyRule::message%0A2nd line\n")
+        output.to_s.should eq(
+          "::notice file=/path/to/file.cr,line=1,col=2,endLine=1,endColumn=2," \
+          "title=Ameba/DummyRule::message%0A2nd line\n"
+        )
       end
     end
 
@@ -78,8 +81,14 @@ module Ameba::Formatter
             summary.should contain "### Issues found:"
             summary.should contain "#### `src/source.cr` (**2** issues)"
             if repo && sha
-              summary.should contain "| [1-2](https://github.com/#{repo}/blob/#{sha}/src/source.cr#L1-L2) | Convention | Ameba/DummyRule | DummyRuleError |"
-              summary.should contain "| [1](https://github.com/#{repo}/blob/#{sha}/src/source.cr#L1) | Convention | Ameba/DummyRule | DummyRuleError 2 |"
+              summary.should contain(
+                "| [1-2](https://github.com/#{repo}/blob/#{sha}/src/source.cr#L1-L2) " \
+                "| Convention | Ameba/DummyRule | DummyRuleError |"
+              )
+              summary.should contain(
+                "| [1](https://github.com/#{repo}/blob/#{sha}/src/source.cr#L1) " \
+                "| Convention | Ameba/DummyRule | DummyRuleError 2 |"
+              )
             else
               summary.should contain "| 1-2 | Convention | Ameba/DummyRule | DummyRuleError |"
               summary.should contain "| 1 | Convention | Ameba/DummyRule | DummyRuleError 2 |"

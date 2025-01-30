@@ -1,7 +1,7 @@
 require "../../spec_helper"
 require "file_utils"
 
-CONFIG_PATH = Path[Dir.tempdir] / Ameba::Config::FILENAME
+private CONFIG_PATH = Path[Dir.tempdir] / Ameba::Config::FILENAME
 
 module Ameba
   private def with_formatter(&)

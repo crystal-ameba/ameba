@@ -1,184 +1,184 @@
 require "../../../spec_helper"
 
-module Ameba
-  subject = Rule::Style::GuardClause.new
+private def it_reports_body(body, *, file = __FILE__, line = __LINE__)
+  rule = Ameba::Rule::Style::GuardClause.new
 
-  private def it_reports_body(body, *, file = __FILE__, line = __LINE__)
-    rule = Rule::Style::GuardClause.new
-
-    it "reports an issue if method body is if / unless without else", file, line do
-      source = expect_issue rule, <<-CRYSTAL, file: file, line: line
-        def func
-          if something
-        # ^^ error: Use a guard clause (`return unless something`) instead of wrapping the code inside a conditional expression.
-            #{body}
-          end
+  it "reports an issue if method body is if / unless without else", file, line do
+    source = expect_issue rule, <<-CRYSTAL, file: file, line: line
+      def func
+        if something
+      # ^^ error: Use a guard clause (`return unless something`) instead of wrapping the code inside a conditional expression.
+          #{body}
         end
+      end
 
-        def func
-          unless something
-        # ^^^^^^ error: Use a guard clause (`return if something`) instead of wrapping the code inside a conditional expression.
-            #{body}
-          end
+      def func
+        unless something
+      # ^^^^^^ error: Use a guard clause (`return if something`) instead of wrapping the code inside a conditional expression.
+          #{body}
         end
-        CRYSTAL
+      end
+      CRYSTAL
 
-      expect_correction source, <<-CRYSTAL, file: file, line: line
-        def func
-          return unless something
-            #{body}
-         #{trailing_whitespace}
-        end
+    expect_correction source, <<-CRYSTAL, file: file, line: line
+      def func
+        return unless something
+          #{body}
+       #{trailing_whitespace}
+      end
 
-        def func
-          return if something
-            #{body}
-         #{trailing_whitespace}
-        end
-        CRYSTAL
-    end
-
-    it "reports an issue if method body ends with if / unless without else", file, line do
-      source = expect_issue rule, <<-CRYSTAL, file: file, line: line
-        def func
-          test
-          if something
-        # ^^ error: Use a guard clause (`return unless something`) instead of wrapping the code inside a conditional expression.
-            #{body}
-          end
-        end
-
-        def func
-          test
-          unless something
-        # ^^^^^^ error: Use a guard clause (`return if something`) instead of wrapping the code inside a conditional expression.
-            #{body}
-          end
-        end
-        CRYSTAL
-
-      expect_correction source, <<-CRYSTAL, file: file, line: line
-        def func
-          test
-          return unless something
-            #{body}
-         #{trailing_whitespace}
-        end
-
-        def func
-          test
-          return if something
-            #{body}
-         #{trailing_whitespace}
-        end
-        CRYSTAL
-    end
+      def func
+        return if something
+          #{body}
+       #{trailing_whitespace}
+      end
+      CRYSTAL
   end
 
-  private def it_reports_control_expression(kw, *, file = __FILE__, line = __LINE__)
-    rule = Rule::Style::GuardClause.new
-
-    it "reports an issue with #{kw} in the if branch", file, line do
-      source = expect_issue rule, <<-CRYSTAL, file: file, line: line
-        def func
-          if something
-        # ^^ error: Use a guard clause (`#{kw} if something`) instead of wrapping the code inside a conditional expression.
-            #{kw}
-          else
-            puts "hello"
-          end
+  it "reports an issue if method body ends with if / unless without else", file, line do
+    source = expect_issue rule, <<-CRYSTAL, file: file, line: line
+      def func
+        test
+        if something
+      # ^^ error: Use a guard clause (`return unless something`) instead of wrapping the code inside a conditional expression.
+          #{body}
         end
-        CRYSTAL
+      end
 
-      expect_no_corrections source, file: file, line: line
-    end
+      def func
+        test
+        unless something
+      # ^^^^^^ error: Use a guard clause (`return if something`) instead of wrapping the code inside a conditional expression.
+          #{body}
+        end
+      end
+      CRYSTAL
 
-    it "reports an issue with #{kw} in the else branch", file, line do
-      source = expect_issue rule, <<-CRYSTAL, file: file, line: line
-        def func
-          if something
-        # ^^ error: Use a guard clause (`#{kw} unless something`) instead of wrapping the code inside a conditional expression.
+    expect_correction source, <<-CRYSTAL, file: file, line: line
+      def func
+        test
+        return unless something
+          #{body}
+       #{trailing_whitespace}
+      end
+
+      def func
+        test
+        return if something
+          #{body}
+       #{trailing_whitespace}
+      end
+      CRYSTAL
+  end
+end
+
+private def it_reports_control_expression(kw, *, file = __FILE__, line = __LINE__)
+  rule = Ameba::Rule::Style::GuardClause.new
+
+  it "reports an issue with #{kw} in the if branch", file, line do
+    source = expect_issue rule, <<-CRYSTAL, file: file, line: line
+      def func
+        if something
+      # ^^ error: Use a guard clause (`#{kw} if something`) instead of wrapping the code inside a conditional expression.
+          #{kw}
+        else
           puts "hello"
-          else
-            #{kw}
-          end
         end
-        CRYSTAL
+      end
+      CRYSTAL
 
-      expect_no_corrections source, file: file, line: line
-    end
-
-    it "doesn't report an issue if condition has multiple lines", file, line do
-      expect_no_issues rule, <<-CRYSTAL, file: file, line: line
-        def func
-          if something &&
-               something_else
-            #{kw}
-          else
-            puts "hello"
-          end
-        end
-        CRYSTAL
-    end
-
-    it "does not report an issue if #{kw} is inside elsif", file, line do
-      expect_no_issues rule, <<-CRYSTAL, file: file, line: line
-        def func
-          if something
-            a
-          elsif something_else
-            #{kw}
-          end
-        end
-        CRYSTAL
-    end
-
-    it "does not report an issue if #{kw} is inside if..elsif..else..end", file, line do
-      expect_no_issues rule, <<-CRYSTAL, file: file, line: line
-        def func
-          if something
-            a
-          elsif something_else
-            b
-          else
-            #{kw}
-          end
-        end
-        CRYSTAL
-    end
-
-    it "doesn't report an issue if control flow expr has multiple lines", file, line do
-      expect_no_issues rule, <<-CRYSTAL, file: file, line: line
-        def func
-          if something
-            #{kw} \\
-                  "blah blah blah" \\
-                  "blah blah blah"
-          else
-            puts "hello"
-          end
-        end
-        CRYSTAL
-    end
-
-    it "reports an issue if non-control-flow branch has multiple lines", file, line do
-      source = expect_issue rule, <<-CRYSTAL, file: file, line: line
-        def func
-          if something
-        # ^^ error: Use a guard clause (`#{kw} if something`) instead of wrapping the code inside a conditional expression.
-            #{kw}
-          else
-            puts "hello" \\
-                 "blah blah blah"
-          end
-        end
-        CRYSTAL
-
-      expect_no_corrections source, file: file, line: line
-    end
+    expect_no_corrections source, file: file, line: line
   end
 
-  describe Rule::Style::GuardClause do
+  it "reports an issue with #{kw} in the else branch", file, line do
+    source = expect_issue rule, <<-CRYSTAL, file: file, line: line
+      def func
+        if something
+      # ^^ error: Use a guard clause (`#{kw} unless something`) instead of wrapping the code inside a conditional expression.
+        puts "hello"
+        else
+          #{kw}
+        end
+      end
+      CRYSTAL
+
+    expect_no_corrections source, file: file, line: line
+  end
+
+  it "doesn't report an issue if condition has multiple lines", file, line do
+    expect_no_issues rule, <<-CRYSTAL, file: file, line: line
+      def func
+        if something &&
+             something_else
+          #{kw}
+        else
+          puts "hello"
+        end
+      end
+      CRYSTAL
+  end
+
+  it "does not report an issue if #{kw} is inside elsif", file, line do
+    expect_no_issues rule, <<-CRYSTAL, file: file, line: line
+      def func
+        if something
+          a
+        elsif something_else
+          #{kw}
+        end
+      end
+      CRYSTAL
+  end
+
+  it "does not report an issue if #{kw} is inside if..elsif..else..end", file, line do
+    expect_no_issues rule, <<-CRYSTAL, file: file, line: line
+      def func
+        if something
+          a
+        elsif something_else
+          b
+        else
+          #{kw}
+        end
+      end
+      CRYSTAL
+  end
+
+  it "doesn't report an issue if control flow expr has multiple lines", file, line do
+    expect_no_issues rule, <<-CRYSTAL, file: file, line: line
+      def func
+        if something
+          #{kw} \\
+                "blah blah blah" \\
+                "blah blah blah"
+        else
+          puts "hello"
+        end
+      end
+      CRYSTAL
+  end
+
+  it "reports an issue if non-control-flow branch has multiple lines", file, line do
+    source = expect_issue rule, <<-CRYSTAL, file: file, line: line
+      def func
+        if something
+      # ^^ error: Use a guard clause (`#{kw} if something`) instead of wrapping the code inside a conditional expression.
+          #{kw}
+        else
+          puts "hello" \\
+               "blah blah blah"
+        end
+      end
+      CRYSTAL
+
+    expect_no_corrections source, file: file, line: line
+  end
+end
+
+module Ameba::Rule::Style
+  describe GuardClause do
+    subject = GuardClause.new
+
     it_reports_body "work"
     it_reports_body "# TODO"
 

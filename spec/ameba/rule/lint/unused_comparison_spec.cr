@@ -1,9 +1,9 @@
 require "../../../spec_helper"
 
 module Ameba::Rule::Lint
-  subject = UnusedComparison.new
-
   describe UnusedComparison do
+    subject = UnusedComparison.new
+
     it "passes if comparisons are significant" do
       expect_no_issues subject, <<-CRYSTAL
         a = 1 == "1"

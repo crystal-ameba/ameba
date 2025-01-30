@@ -35,8 +35,6 @@ module Ameba::Rule::Lint
   #     true
   #   end
   # end
-  #
-  # my_proc = -> : Bool { true }
   # ```
   #
   # YAML configuration example:

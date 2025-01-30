@@ -47,7 +47,7 @@ module Ameba::Rule::Style
     MSG          = "Use short block notation instead: `%s`"
     CALL_PATTERN = "%s(%s&.%s)"
 
-    protected def same_location_lines?(a, b)
+    private def same_location_lines?(a, b)
       return unless a_location = name_location(a)
       return unless b_location = b.location
 
@@ -58,26 +58,26 @@ module Ameba::Rule::Style
     private OPERATOR_CHARS   =
       {'[', ']', '!', '=', '>', '<', '~', '+', '-', '*', '/', '%', '^', '|', '&'}
 
-    protected def prefix_operator?(node)
+    private def prefix_operator?(node)
       node.name.in?(PREFIX_OPERATORS) && node.args.empty?
     end
 
-    protected def operator?(name)
+    private def operator?(name)
       !name.empty? && name[0].in?(OPERATOR_CHARS)
     end
 
-    protected def setter?(name)
+    private def setter?(name)
       !name.empty? && name[0].letter? && name.ends_with?('=')
     end
 
-    protected def valid_length?(code)
+    private def valid_length?(code)
       if max_length = self.max_length
         return code.size <= max_length
       end
       true
     end
 
-    protected def valid_line_length?(node, code)
+    private def valid_line_length?(node, code)
       if max_line_length = self.max_line_length
         if location = name_location(node)
           final_line_length = location.column_number + code.size
@@ -87,7 +87,7 @@ module Ameba::Rule::Style
       true
     end
 
-    protected def reference_count(node, obj : Crystal::Var)
+    private def reference_count(node, obj : Crystal::Var)
       i = 0
       case node
       when Crystal::Call
@@ -111,7 +111,7 @@ module Ameba::Rule::Style
       i
     end
 
-    protected def args_to_s(io : IO, node : Crystal::Call, short_block = nil, skip_last_arg = false) : Nil
+    private def args_to_s(io : IO, node : Crystal::Call, short_block = nil, skip_last_arg = false) : Nil
       args = node.args.dup
       args.pop? if skip_last_arg
       args.join io, ", "
@@ -130,7 +130,7 @@ module Ameba::Rule::Style
       end
     end
 
-    protected def node_to_s(source, node : Crystal::Call)
+    private def node_to_s(source, node : Crystal::Call)
       String.build do |str|
         case name = node.name
         when "[]"
@@ -158,7 +158,7 @@ module Ameba::Rule::Style
       end
     end
 
-    protected def short_block_code(source, node : Crystal::Call)
+    private def short_block_code(source, node : Crystal::Call)
       return unless block = node.block
       return unless block_location = block.location
       return unless block_end_location = block.body.end_location
@@ -167,7 +167,7 @@ module Ameba::Rule::Style
       block_code if block_code.try(&.starts_with?("&."))
     end
 
-    protected def call_code(source, call, body)
+    private def call_code(source, call, body)
       args = String.build { |io| args_to_s(io, call) }.presence
       args += ", " if args
 
@@ -188,7 +188,7 @@ module Ameba::Rule::Style
     end
 
     # ameba:disable Metrics/CyclomaticComplexity
-    protected def issue_for_valid(source, call : Crystal::Call, block : Crystal::Block, body : Crystal::Call)
+    private def issue_for_valid(source, call : Crystal::Call, block : Crystal::Block, body : Crystal::Call)
       return if exclude_calls_with_block? && body.block
       return if exclude_multiple_line_blocks? && !same_location_lines?(call, body)
       return if exclude_prefix_operators? && prefix_operator?(body)
