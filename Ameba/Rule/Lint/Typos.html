@@ -992,7 +992,8 @@
 <pre><code class="language-crystal"><span class="t">Lint</span><span class="o">/</span><span class="t">Typos</span>:
   <span class="t">Enabled</span>: <span class="n">true</span>
   <span class="t">BinPath</span>: <span class="o">~</span>
-  <span class="t">FailOnError</span>: <span class="n">false</span></code></pre>
+  <span class="t">FailOnMissingBin</span>: <span class="n">false</span>
+  <span class="t">FailOnError</span>: <span class="n">true</span></code></pre>
 
 
 
@@ -1033,7 +1034,7 @@
   </h2>
   
     
-      <a href="https://github.com/crystal-ameba/ameba/blob/2ef4b6c/src/ameba/rule/lint/typos.cr#L15" target="_blank">
+      <a href="https://github.com/crystal-ameba/ameba/blob/de4c336/src/ameba/rule/lint/typos.cr#L16" target="_blank">
         ameba/rule/lint/typos.cr
       </a>
     
@@ -1064,7 +1065,7 @@
       
     
       <dt class="entry-const" id="MSG">
-        <strong>MSG</strong> = <code><span class="s">&quot;Typo found: `%s` -&gt; `%s`&quot;</span></code>
+        <strong>MSG</strong> = <code><span class="s">&quot;Typo found: `%s` -&gt; %s&quot;</span></code>
       </dt>
       
     
@@ -1178,6 +1179,16 @@
     
       <li class="entry-summary">
         <a href="#fail_on_error%3F%3ABool-instance-method" class="signature"><strong>#fail_on_error?</strong> : Bool</a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#fail_on_missing_bin%3D%28fail_on_missing_bin%3ABool%29-instance-method" class="signature"><strong>#fail_on_missing_bin=</strong>(fail_on_missing_bin : Bool)</a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#fail_on_missing_bin%3F%3ABool-instance-method" class="signature"><strong>#fail_on_missing_bin?</strong> : Bool</a>
         
       </li>
     
@@ -1406,13 +1417,14 @@
 <pre><code class="language-crystal"><span class="t">Lint</span><span class="o">/</span><span class="t">Typos</span>:
   <span class="t">Enabled</span>: <span class="n">true</span>
   <span class="t">BinPath</span>: <span class="o">~</span>
-  <span class="t">FailOnError</span>: <span class="n">false</span></code></pre>
+  <span class="t">FailOnMissingBin</span>: <span class="n">false</span>
+  <span class="t">FailOnError</span>: <span class="n">true</span></code></pre>
         </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/2ef4b6c/src/ameba/rule/lint/typos.cr#L15" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/de4c336/src/ameba/rule/lint/typos.cr#L16" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1483,7 +1495,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/2ef4b6c/src/ameba/rule/lint/typos.cr#L73" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/de4c336/src/ameba/rule/lint/typos.cr#L75" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1614,6 +1626,34 @@
       </div>
     </div>
   
+    <div class="entry-detail" id="fail_on_missing_bin=(fail_on_missing_bin:Bool)-instance-method">
+      <div class="signature">
+        
+        def <strong>fail_on_missing_bin=</strong>(fail_on_missing_bin : Bool)
+
+        <a class="method-permalink" href="#fail_on_missing_bin%3D%28fail_on_missing_bin%3ABool%29-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="fail_on_missing_bin?:Bool-instance-method">
+      <div class="signature">
+        
+        def <strong>fail_on_missing_bin?</strong> : Bool
+
+        <a class="method-permalink" href="#fail_on_missing_bin%3F%3ABool-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+      </div>
+    </div>
+  
     <div class="entry-detail" id="severity:Ameba::Severity-instance-method">
       <div class="signature">
         
@@ -1653,7 +1693,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/2ef4b6c/src/ameba/rule/lint/typos.cr#L16" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/de4c336/src/ameba/rule/lint/typos.cr#L17" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1695,7 +1735,7 @@ that are tested by this rule, it should add an issue.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/2ef4b6c/src/ameba/rule/lint/typos.cr#L77" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/de4c336/src/ameba/rule/lint/typos.cr#L79" target="_blank">View source</a>]
         
       </div>
     </div>

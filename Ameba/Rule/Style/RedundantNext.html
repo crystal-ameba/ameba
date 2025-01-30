@@ -985,7 +985,7 @@
     Overview
   </h2>
 
-  <p>A rule that disallows redundant next expressions. A <code>next</code> keyword allows
+  <p>A rule that disallows redundant <code>next</code> expressions. A <code>next</code> keyword allows
 a block to skip to the next iteration early, however, it is considered
 redundant in cases where it is the last expression in a block or combines
 into the node which is the last in a block.</p>
@@ -1025,7 +1025,7 @@ into the node which is the last in a block.</p>
 <ol>
 <li><em>allow_multi_next</em>, default: true</li>
 </ol>
-<p>Allows end-user to configure whether to report or not the next statements
+<p>Allows end-user to configure whether to report or not the <code>next</code> statements
 which yield tuple literals i.e.</p>
 <pre><code class="language-crystal">block <span class="k">do</span>
   <span class="k">next</span> a, b
@@ -1037,8 +1037,8 @@ which yield tuple literals i.e.</p>
 <ol start="2">
 <li><em>allow_empty_next</em>, default: true</li>
 </ol>
-<p>Allows end-user to configure whether to report or not the next statements
-without arguments. Sometimes such statements are used to yild the <code>nil</code> value explicitly.</p>
+<p>Allows end-user to configure whether to report or not the <code>next</code> statements
+without arguments. Sometimes such statements are used to yield the <code>nil</code> value explicitly.</p>
 <pre><code class="language-crystal">block <span class="k">do</span>
   @foo <span class="o">=</span> <span class="n">:empty</span>
   <span class="k">next</span>
@@ -1099,7 +1099,7 @@ without arguments. Sometimes such statements are used to yild the <code>nil</cod
   </h2>
   
     
-      <a href="https://github.com/crystal-ameba/ameba/blob/2ef4b6c/src/ameba/rule/style/redundant_next.cr#L99" target="_blank">
+      <a href="https://github.com/crystal-ameba/ameba/blob/de4c336/src/ameba/rule/style/redundant_next.cr#L99" target="_blank">
         ameba/rule/style/redundant_next.cr
       </a>
     
@@ -1147,7 +1147,7 @@ without arguments. Sometimes such statements are used to yild the <code>nil</cod
       <li class="entry-summary">
         <a href="#new%28config%3Dnil%29-class-method" class="signature"><strong>.new</strong>(config = <span class="n">nil</span>)</a>
         
-          <div class="summary"><p>A rule that disallows redundant next expressions.</p></div>
+          <div class="summary"><p>A rule that disallows redundant <code>next</code> expressions.</p></div>
         
       </li>
     
@@ -1556,7 +1556,7 @@ without arguments. Sometimes such statements are used to yild the <code>nil</cod
       
         <div class="doc">
           
-          <p>A rule that disallows redundant next expressions. A <code>next</code> keyword allows
+          <p>A rule that disallows redundant <code>next</code> expressions. A <code>next</code> keyword allows
 a block to skip to the next iteration early, however, it is considered
 redundant in cases where it is the last expression in a block or combines
 into the node which is the last in a block.</p>
@@ -1596,7 +1596,7 @@ into the node which is the last in a block.</p>
 <ol>
 <li><em>allow_multi_next</em>, default: true</li>
 </ol>
-<p>Allows end-user to configure whether to report or not the next statements
+<p>Allows end-user to configure whether to report or not the <code>next</code> statements
 which yield tuple literals i.e.</p>
 <pre><code class="language-crystal">block <span class="k">do</span>
   <span class="k">next</span> a, b
@@ -1608,8 +1608,8 @@ which yield tuple literals i.e.</p>
 <ol start="2">
 <li><em>allow_empty_next</em>, default: true</li>
 </ol>
-<p>Allows end-user to configure whether to report or not the next statements
-without arguments. Sometimes such statements are used to yild the <code>nil</code> value explicitly.</p>
+<p>Allows end-user to configure whether to report or not the <code>next</code> statements
+without arguments. Sometimes such statements are used to yield the <code>nil</code> value explicitly.</p>
 <pre><code class="language-crystal">block <span class="k">do</span>
   @foo <span class="o">=</span> <span class="n">:empty</span>
   <span class="k">next</span>
@@ -1633,7 +1633,7 @@ without arguments. Sometimes such statements are used to yild the <code>nil</cod
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/2ef4b6c/src/ameba/rule/style/redundant_next.cr#L99" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/de4c336/src/ameba/rule/style/redundant_next.cr#L99" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1872,7 +1872,7 @@ without arguments. Sometimes such statements are used to yild the <code>nil</cod
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/2ef4b6c/src/ameba/rule/style/redundant_next.cr#L102" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/de4c336/src/ameba/rule/style/redundant_next.cr#L102" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1902,7 +1902,7 @@ without arguments. Sometimes such statements are used to yild the <code>nil</cod
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/2ef4b6c/src/ameba/rule/style/redundant_next.cr#L116" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/de4c336/src/ameba/rule/style/redundant_next.cr#L116" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1918,7 +1918,7 @@ without arguments. Sometimes such statements are used to yild the <code>nil</cod
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/2ef4b6c/src/ameba/rule/style/redundant_next.cr#L112" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/de4c336/src/ameba/rule/style/redundant_next.cr#L112" target="_blank">View source</a>]
         
       </div>
     </div>

@@ -1010,7 +1010,7 @@
   </h2>
   
     
-      <a href="https://github.com/crystal-ameba/ameba/blob/2ef4b6c/src/ameba/ast/visitors/counting_visitor.cr#L3" target="_blank">
+      <a href="https://github.com/crystal-ameba/ameba/blob/de4c336/src/ameba/ast/visitors/counting_visitor.cr#L3" target="_blank">
         ameba/ast/visitors/counting_visitor.cr
       </a>
     
@@ -1051,7 +1051,7 @@
   <ul class="list-summary">
     
       <li class="entry-summary">
-        <a href="#new%28scope%3ACrystal%3A%3AASTNode%29-class-method" class="signature"><strong>.new</strong>(scope : Crystal::ASTNode)</a>
+        <a href="#new%28node%3ACrystal%3A%3AASTNode%29-class-method" class="signature"><strong>.new</strong>(node : Crystal::ASTNode)</a>
         
           <div class="summary"><p>Creates a new counting visitor</p></div>
         
@@ -1076,7 +1076,7 @@
   <ul class="list-summary">
     
       <li class="entry-summary">
-        <a href="#count-instance-method" class="signature"><strong>#count</strong></a>
+        <a href="#count%3AInt32-instance-method" class="signature"><strong>#count</strong> : Int32</a>
         
           <div class="summary"><p>Returns the number of keywords that were found in the node</p></div>
         
@@ -1084,6 +1084,8 @@
     
       <li class="entry-summary">
         <a href="#macro_condition%3F%3ABool-instance-method" class="signature"><strong>#macro_condition?</strong> : Bool</a>
+        
+          <div class="summary"><p>Returns <code>true</code> if the node is within a macro condition</p></div>
         
       </li>
     
@@ -1149,12 +1151,12 @@
     Constructor Detail
   </h2>
   
-    <div class="entry-detail" id="new(scope:Crystal::ASTNode)-class-method">
+    <div class="entry-detail" id="new(node:Crystal::ASTNode)-class-method">
       <div class="signature">
         
-        def self.<strong>new</strong>(scope : Crystal::ASTNode)
+        def self.<strong>new</strong>(node : Crystal::ASTNode)
 
-        <a class="method-permalink" href="#new%28scope%3ACrystal%3A%3AASTNode%29-class-method">#</a>
+        <a class="method-permalink" href="#new%28node%3ACrystal%3A%3AASTNode%29-class-method">#</a>
       </div>
       
         <div class="doc">
@@ -1165,7 +1167,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/2ef4b6c/src/ameba/ast/visitors/counting_visitor.cr#L9" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/de4c336/src/ameba/ast/visitors/counting_visitor.cr#L13" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1186,12 +1188,12 @@
     Instance Method Detail
   </h2>
   
-    <div class="entry-detail" id="count-instance-method">
+    <div class="entry-detail" id="count:Int32-instance-method">
       <div class="signature">
         
-        def <strong>count</strong>
+        def <strong>count</strong> : Int32
 
-        <a class="method-permalink" href="#count-instance-method">#</a>
+        <a class="method-permalink" href="#count%3AInt32-instance-method">#</a>
       </div>
       
         <div class="doc">
@@ -1202,7 +1204,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/2ef4b6c/src/ameba/ast/visitors/counting_visitor.cr#L19" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/de4c336/src/ameba/ast/visitors/counting_visitor.cr#L7" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1215,10 +1217,15 @@
         <a class="method-permalink" href="#macro_condition%3F%3ABool-instance-method">#</a>
       </div>
       
+        <div class="doc">
+          
+          <p>Returns <code>true</code> if the node is within a macro condition</p>
+        </div>
+      
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/2ef4b6c/src/ameba/ast/visitors/counting_visitor.cr#L6" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/de4c336/src/ameba/ast/visitors/counting_visitor.cr#L10" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1234,7 +1241,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/2ef4b6c/src/ameba/ast/visitors/counting_visitor.cr#L45" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/de4c336/src/ameba/ast/visitors/counting_visitor.cr#L43" target="_blank">View source</a>]
         
       </div>
     </div>

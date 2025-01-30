@@ -985,21 +985,21 @@
     Overview
   </h2>
 
-  <p>A rule that prohibits the common misconception about how trailing rescue statements work,
-preventing Paths (exception class names or otherwise) from being
-used as the trailing value. The value after the trailing rescue statement is the
-value to use if an exception occurs, not the exception for the rescue to capture.</p>
-<p>For example, this is considered invalid - if an exception occurs in <code>method.call</code>,
-<code>value</code> will be assigned the value of <code>MyException</code>:</p>
-<pre><code class="language-crystal">value <span class="o">=</span> method.call(<span class="s">&quot;param&quot;</span>) <span class="k">rescue</span> <span class="t">MyException</span></code></pre>
-<p>And should instead be written as this in order to capture only <code>MyException</code> exceptions:</p>
-<pre><code class="language-crystal">value <span class="o">=</span> <span class="k">begin</span>
-  method.call(<span class="s">&quot;param&quot;</span>)
-<span class="k">rescue</span> <span class="t">MyException</span>
+  <p>A rule that prohibits the misconception about how trailing <code>rescue</code> statements work,
+preventing Paths (exception class names or otherwise) from being used as the
+trailing value. The value after the trailing <code>rescue</code> statement is the value
+to use if an exception occurs, not the exception class to rescue from.</p>
+<p>For example, this is considered invalid - if an exception occurs,
+<code>response</code> will be assigned with the value of <code>IO::Error</code> instead of <code>nil</code>:</p>
+<pre><code class="language-crystal">response <span class="o">=</span> <span class="t">HTTP</span><span class="t">::</span><span class="t">Client</span>.get(<span class="s">&quot;http://www.example.com&quot;</span>) <span class="k">rescue</span> <span class="t">IO</span><span class="t">::</span><span class="t">Error</span></code></pre>
+<p>And should instead be written as this in order to capture only <code>IO::Error</code> exceptions:</p>
+<pre><code class="language-crystal">response <span class="o">=</span> <span class="k">begin</span>
+  <span class="t">HTTP</span><span class="t">::</span><span class="t">Client</span>.get(<span class="s">&quot;http://www.example.com&quot;</span>)
+<span class="k">rescue</span> <span class="t">IO</span><span class="t">::</span><span class="t">Error</span>
   <span class="s">&quot;default value&quot;</span>
 <span class="k">end</span></code></pre>
-<p>Or to rescue all exceptions (instead of just <code>MyException</code>):</p>
-<pre><code class="language-crystal">value <span class="o">=</span> method.call(<span class="s">&quot;param&quot;</span>) <span class="k">rescue</span> <span class="s">&quot;default value&quot;</span></code></pre>
+<p>Or to rescue all exceptions (instead of just <code>IO::Error</code>):</p>
+<pre><code class="language-crystal">response <span class="o">=</span> <span class="t">HTTP</span><span class="t">::</span><span class="t">Client</span>.get(<span class="s">&quot;http://www.example.com&quot;</span>) <span class="k">rescue</span> <span class="s">&quot;default value&quot;</span></code></pre>
 <p>YAML configuration example:</p>
 <pre><code class="language-crystal"><span class="t">Lint</span><span class="o">/</span><span class="t">TrailingRescueException</span>:
   <span class="t">Enabled</span>: <span class="n">true</span></code></pre>
@@ -1043,7 +1043,7 @@ value to use if an exception occurs, not the exception for the rescue to capture
   </h2>
   
     
-      <a href="https://github.com/crystal-ameba/ameba/blob/2ef4b6c/src/ameba/rule/lint/trailing_rescue_exception.cr#L36" target="_blank">
+      <a href="https://github.com/crystal-ameba/ameba/blob/de4c336/src/ameba/rule/lint/trailing_rescue_exception.cr#L36" target="_blank">
         ameba/rule/lint/trailing_rescue_exception.cr
       </a>
     
@@ -1065,7 +1065,7 @@ value to use if an exception occurs, not the exception for the rescue to capture
   <dl>
     
       <dt class="entry-const" id="MSG">
-        <strong>MSG</strong> = <code><span class="s">&quot;Trailing rescues with a path aren&#39;t allowed, use a block rescue instead to filter by exception type&quot;</span></code>
+        <strong>MSG</strong> = <code><span class="s">&quot;Use a block variant of `rescue` to filter by the exception type&quot;</span></code>
       </dt>
       
     
@@ -1091,7 +1091,7 @@ value to use if an exception occurs, not the exception for the rescue to capture
       <li class="entry-summary">
         <a href="#new%28config%3Dnil%29-class-method" class="signature"><strong>.new</strong>(config = <span class="n">nil</span>)</a>
         
-          <div class="summary"><p>A rule that prohibits the common misconception about how trailing rescue statements work, preventing Paths (exception class names or otherwise) from being used as the trailing value.</p></div>
+          <div class="summary"><p>A rule that prohibits the misconception about how trailing <code>rescue</code> statements work, preventing Paths (exception class names or otherwise) from being used as the trailing value.</p></div>
         
       </li>
     
@@ -1378,21 +1378,21 @@ value to use if an exception occurs, not the exception for the rescue to capture
       
         <div class="doc">
           
-          <p>A rule that prohibits the common misconception about how trailing rescue statements work,
-preventing Paths (exception class names or otherwise) from being
-used as the trailing value. The value after the trailing rescue statement is the
-value to use if an exception occurs, not the exception for the rescue to capture.</p>
-<p>For example, this is considered invalid - if an exception occurs in <code>method.call</code>,
-<code>value</code> will be assigned the value of <code>MyException</code>:</p>
-<pre><code class="language-crystal">value <span class="o">=</span> method.call(<span class="s">&quot;param&quot;</span>) <span class="k">rescue</span> <span class="t">MyException</span></code></pre>
-<p>And should instead be written as this in order to capture only <code>MyException</code> exceptions:</p>
-<pre><code class="language-crystal">value <span class="o">=</span> <span class="k">begin</span>
-  method.call(<span class="s">&quot;param&quot;</span>)
-<span class="k">rescue</span> <span class="t">MyException</span>
+          <p>A rule that prohibits the misconception about how trailing <code>rescue</code> statements work,
+preventing Paths (exception class names or otherwise) from being used as the
+trailing value. The value after the trailing <code>rescue</code> statement is the value
+to use if an exception occurs, not the exception class to rescue from.</p>
+<p>For example, this is considered invalid - if an exception occurs,
+<code>response</code> will be assigned with the value of <code>IO::Error</code> instead of <code>nil</code>:</p>
+<pre><code class="language-crystal">response <span class="o">=</span> <span class="t">HTTP</span><span class="t">::</span><span class="t">Client</span>.get(<span class="s">&quot;http://www.example.com&quot;</span>) <span class="k">rescue</span> <span class="t">IO</span><span class="t">::</span><span class="t">Error</span></code></pre>
+<p>And should instead be written as this in order to capture only <code>IO::Error</code> exceptions:</p>
+<pre><code class="language-crystal">response <span class="o">=</span> <span class="k">begin</span>
+  <span class="t">HTTP</span><span class="t">::</span><span class="t">Client</span>.get(<span class="s">&quot;http://www.example.com&quot;</span>)
+<span class="k">rescue</span> <span class="t">IO</span><span class="t">::</span><span class="t">Error</span>
   <span class="s">&quot;default value&quot;</span>
 <span class="k">end</span></code></pre>
-<p>Or to rescue all exceptions (instead of just <code>MyException</code>):</p>
-<pre><code class="language-crystal">value <span class="o">=</span> method.call(<span class="s">&quot;param&quot;</span>) <span class="k">rescue</span> <span class="s">&quot;default value&quot;</span></code></pre>
+<p>Or to rescue all exceptions (instead of just <code>IO::Error</code>):</p>
+<pre><code class="language-crystal">response <span class="o">=</span> <span class="t">HTTP</span><span class="t">::</span><span class="t">Client</span>.get(<span class="s">&quot;http://www.example.com&quot;</span>) <span class="k">rescue</span> <span class="s">&quot;default value&quot;</span></code></pre>
 <p>YAML configuration example:</p>
 <pre><code class="language-crystal"><span class="t">Lint</span><span class="o">/</span><span class="t">TrailingRescueException</span>:
   <span class="t">Enabled</span>: <span class="n">true</span></code></pre>
@@ -1401,7 +1401,7 @@ value to use if an exception occurs, not the exception for the rescue to capture
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/2ef4b6c/src/ameba/rule/lint/trailing_rescue_exception.cr#L36" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/de4c336/src/ameba/rule/lint/trailing_rescue_exception.cr#L36" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1584,7 +1584,7 @@ value to use if an exception occurs, not the exception for the rescue to capture
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/2ef4b6c/src/ameba/rule/lint/trailing_rescue_exception.cr#L37" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/de4c336/src/ameba/rule/lint/trailing_rescue_exception.cr#L37" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1614,7 +1614,7 @@ value to use if an exception occurs, not the exception for the rescue to capture
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/2ef4b6c/src/ameba/rule/lint/trailing_rescue_exception.cr#L44" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/de4c336/src/ameba/rule/lint/trailing_rescue_exception.cr#L44" target="_blank">View source</a>]
         
       </div>
     </div>
