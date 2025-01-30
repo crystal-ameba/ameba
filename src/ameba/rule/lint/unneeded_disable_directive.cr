@@ -47,7 +47,7 @@ module Ameba::Rule::Lint
       return unless directive[:action] == "disable"
 
       directive[:rules].reject do |rule_name|
-        next if rule_name == self.name
+        next if rule_name == name
         source.issues.any? do |issue|
           issue.rule.name == rule_name &&
             issue.disabled? &&
