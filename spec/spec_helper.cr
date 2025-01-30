@@ -320,12 +320,14 @@ def with_presenter(klass, *args, deansify = true, **kwargs, &)
   yield presenter, output
 end
 
-def as_node(source)
-  Crystal::Parser.new(source).parse
+def as_node(source, *, wants_doc = false)
+  Crystal::Parser.new(source)
+    .tap(&.wants_doc = wants_doc)
+    .parse
 end
 
-def as_nodes(source)
-  Ameba::TestNodeVisitor.new(as_node source)
+def as_nodes(source, *, wants_doc = false)
+  Ameba::TestNodeVisitor.new(as_node(source, wants_doc: wants_doc))
 end
 
 def trailing_whitespace
