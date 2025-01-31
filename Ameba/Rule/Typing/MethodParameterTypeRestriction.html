@@ -1006,6 +1006,8 @@
 <span class="k">end</span></code></pre>
 <p>When the config options <code>PrivateMethods</code> and <code>ProtectedMethods</code>
 are true, this rule is also applied to private and protected methods, respectively.</p>
+<p>The <code>NodocMethods</code> configuration option controls whether this rule applies to
+methods with a <code>:nodoc:</code> directive.</p>
 <p>The <code>BlockParameters</code> configuration option will extend this to block parameters, where these are invalid:</p>
 <pre><code class="language-crystal"><span class="k">def</span> <span class="m">exec</span>(<span class="o">&amp;</span>)
 <span class="k">end</span>
@@ -1023,7 +1025,8 @@ are true, this rule is also applied to private and protected methods, respective
   <span class="t">DefaultValue</span>: <span class="n">false</span>
   <span class="t">BlockParameters</span>: <span class="n">false</span>
   <span class="t">PrivateMethods</span>: <span class="n">false</span>
-  <span class="t">ProtectedMethods</span>: <span class="n">false</span></code></pre>
+  <span class="t">ProtectedMethods</span>: <span class="n">false</span>
+  <span class="t">NodocMethods</span>: <span class="n">false</span></code></pre>
 
 
 
@@ -1038,6 +1041,8 @@ are true, this rule is also applied to private and protected methods, respective
     Included Modules
   </h2>
   <ul class="other-types-list">
+    
+      <li class="other-type"><a href="../../../Ameba/AST/Util.html">Ameba::AST::Util</a></li>
     
       <li class="other-type">YAML::Serializable</li>
     
@@ -1064,7 +1069,7 @@ are true, this rule is also applied to private and protected methods, respective
   </h2>
   
     
-      <a href="https://github.com/crystal-ameba/ameba/blob/c973211/src/ameba/rule/typing/method_parameter_type_restriction.cr#L53" target="_blank">
+      <a href="https://github.com/crystal-ameba/ameba/blob/e8d0424/src/ameba/rule/typing/method_parameter_type_restriction.cr#L57" target="_blank">
         ameba/rule/typing/method_parameter_type_restriction.cr
       </a>
     
@@ -1204,6 +1209,16 @@ are true, this rule is also applied to private and protected methods, respective
       </li>
     
       <li class="entry-summary">
+        <a href="#nodoc_methods%3D%28nodoc_methods%3ABool%29-instance-method" class="signature"><strong>#nodoc_methods=</strong>(nodoc_methods : Bool)</a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#nodoc_methods%3F%3ABool-instance-method" class="signature"><strong>#nodoc_methods?</strong> : Bool</a>
+        
+      </li>
+    
+      <li class="entry-summary">
         <a href="#private_methods%3D%28private_methods%3ABool%29-instance-method" class="signature"><strong>#private_methods=</strong>(private_methods : Bool)</a>
         
       </li>
@@ -1253,6 +1268,108 @@ are true, this rule is also applied to private and protected methods, respective
 
 
 <div class="methods-inherited">
+  
+    
+
+  <h3>Instance methods inherited from module <code><a href="../../../Ameba/AST/Util.html">Ameba::AST::Util</a></code></h3>
+  
+  
+    <a href="../../../Ameba/AST/Util.html#abort%3F%28node%29-instance-method" class="tooltip">
+      <span>abort?(node)</span>
+    abort?</a>, 
+    
+  
+    <a href="../../../Ameba/AST/Util.html#control_exp_code%28node%3ACrystal%3A%3AControlExpression%2Ccode_lines%29-instance-method" class="tooltip">
+      <span>control_exp_code(node : Crystal::ControlExpression, code_lines)</span>
+    control_exp_code</a>, 
+    
+  
+    <a href="../../../Ameba/AST/Util.html#dynamic_literal%3F%28node%29%3ABool-instance-method" class="tooltip">
+      <span>dynamic_literal?(node) : Bool</span>
+    dynamic_literal?</a>, 
+    
+  
+    <a href="../../../Ameba/AST/Util.html#exit%3F%28node%29-instance-method" class="tooltip">
+      <span>exit?(node)</span>
+    exit?</a>, 
+    
+  
+    <a href="../../../Ameba/AST/Util.html#flow_command%3F%28node%2Cin_loop%29-instance-method" class="tooltip">
+      <span>flow_command?(node, in_loop)</span>
+    flow_command?</a>, 
+    
+  
+    <a href="../../../Ameba/AST/Util.html#flow_expression%3F%28node%2Cin_loop%3Dfalse%29-instance-method" class="tooltip">
+      <span>flow_expression?(node, in_loop = <span class="n">false</span>)</span>
+    flow_expression?</a>, 
+    
+  
+    <a href="../../../Ameba/AST/Util.html#literal%3F%28node%29%3ABool-instance-method" class="tooltip">
+      <span>literal?(node) : Bool</span>
+    literal?</a>, 
+    
+  
+    <a href="../../../Ameba/AST/Util.html#loop%3F%28node%29-instance-method" class="tooltip">
+      <span>loop?(node)</span>
+    loop?</a>, 
+    
+  
+    <a href="../../../Ameba/AST/Util.html#name_end_location%28node%29-instance-method" class="tooltip">
+      <span>name_end_location(node)</span>
+    name_end_location</a>, 
+    
+  
+    <a href="../../../Ameba/AST/Util.html#name_location%28node%29-instance-method" class="tooltip">
+      <span>name_location(node)</span>
+    name_location</a>, 
+    
+  
+    <a href="../../../Ameba/AST/Util.html#name_size%28node%29-instance-method" class="tooltip">
+      <span>name_size(node)</span>
+    name_size</a>, 
+    
+  
+    <a href="../../../Ameba/AST/Util.html#node_source%28node%2Ccode_lines%29-instance-method" class="tooltip">
+      <span>node_source(node, code_lines)</span>
+    node_source</a>, 
+    
+  
+    <a href="../../../Ameba/AST/Util.html#nodoc%3F%28node%29-instance-method" class="tooltip">
+      <span>nodoc?(node)</span>
+    nodoc?</a>, 
+    
+  
+    <a href="../../../Ameba/AST/Util.html#path_named%3F%28node%2Cname%29%3ABool-instance-method" class="tooltip">
+      <span>path_named?(node, name) : Bool</span>
+    path_named?</a>, 
+    
+  
+    <a href="../../../Ameba/AST/Util.html#raise%3F%28node%29-instance-method" class="tooltip">
+      <span>raise?(node)</span>
+    raise?</a>, 
+    
+  
+    <a href="../../../Ameba/AST/Util.html#source_between%28loc%2Cend_loc%2Ccode_lines%29%3AString%7CNil-instance-method" class="tooltip">
+      <span>source_between(loc, end_loc, code_lines) : String | Nil</span>
+    source_between</a>, 
+    
+  
+    <a href="../../../Ameba/AST/Util.html#static_literal%3F%28node%29%3ABool-instance-method" class="tooltip">
+      <span>static_literal?(node) : Bool</span>
+    static_literal?</a>
+    
+  
+
+
+    
+
+
+    
+
+
+    
+
+
   
     
 
@@ -1450,6 +1567,8 @@ are true, this rule is also applied to private and protected methods, respective
 <span class="k">end</span></code></pre>
 <p>When the config options <code>PrivateMethods</code> and <code>ProtectedMethods</code>
 are true, this rule is also applied to private and protected methods, respectively.</p>
+<p>The <code>NodocMethods</code> configuration option controls whether this rule applies to
+methods with a <code>:nodoc:</code> directive.</p>
 <p>The <code>BlockParameters</code> configuration option will extend this to block parameters, where these are invalid:</p>
 <pre><code class="language-crystal"><span class="k">def</span> <span class="m">exec</span>(<span class="o">&amp;</span>)
 <span class="k">end</span>
@@ -1467,13 +1586,14 @@ are true, this rule is also applied to private and protected methods, respective
   <span class="t">DefaultValue</span>: <span class="n">false</span>
   <span class="t">BlockParameters</span>: <span class="n">false</span>
   <span class="t">PrivateMethods</span>: <span class="n">false</span>
-  <span class="t">ProtectedMethods</span>: <span class="n">false</span></code></pre>
+  <span class="t">ProtectedMethods</span>: <span class="n">false</span>
+  <span class="t">NodocMethods</span>: <span class="n">false</span></code></pre>
         </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/c973211/src/ameba/rule/typing/method_parameter_type_restriction.cr#L53" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/e8d0424/src/ameba/rule/typing/method_parameter_type_restriction.cr#L57" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1673,6 +1793,34 @@ are true, this rule is also applied to private and protected methods, respective
       </div>
     </div>
   
+    <div class="entry-detail" id="nodoc_methods=(nodoc_methods:Bool)-instance-method">
+      <div class="signature">
+        
+        def <strong>nodoc_methods=</strong>(nodoc_methods : Bool)
+
+        <a class="method-permalink" href="#nodoc_methods%3D%28nodoc_methods%3ABool%29-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="nodoc_methods?:Bool-instance-method">
+      <div class="signature">
+        
+        def <strong>nodoc_methods?</strong> : Bool
+
+        <a class="method-permalink" href="#nodoc_methods%3F%3ABool-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+      </div>
+    </div>
+  
     <div class="entry-detail" id="private_methods=(private_methods:Bool)-instance-method">
       <div class="signature">
         
@@ -1768,7 +1916,7 @@ are true, this rule is also applied to private and protected methods, respective
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/c973211/src/ameba/rule/typing/method_parameter_type_restriction.cr#L54" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/e8d0424/src/ameba/rule/typing/method_parameter_type_restriction.cr#L60" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1798,7 +1946,7 @@ are true, this rule is also applied to private and protected methods, respective
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/c973211/src/ameba/rule/typing/method_parameter_type_restriction.cr#L66" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/e8d0424/src/ameba/rule/typing/method_parameter_type_restriction.cr#L73" target="_blank">View source</a>]
         
       </div>
     </div>
