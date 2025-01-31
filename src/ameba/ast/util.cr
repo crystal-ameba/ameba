@@ -194,6 +194,14 @@ module Ameba::AST::Util
     end
   end
 
+  # Returns `true` if node has a `:nodoc:` annotation as the first line.
+  def nodoc?(node)
+    return false unless node.responds_to?(:doc)
+    return false unless doc = node.doc.presence
+
+    doc.lines.first?.try(&.strip) == ":nodoc:"
+  end
+
   # Returns the exp code of a control expression.
   # Wraps implicit tuple literal with curly brackets (e.g. multi-return).
   def control_exp_code(node : Crystal::ControlExpression, code_lines)

@@ -354,6 +354,39 @@ module Ameba::AST
       end
     end
 
+    describe "#nodoc?" do
+      it "returns true if a node has a single `:nodoc:` annotation" do
+        node = as_node <<-CRYSTAL, wants_doc: true
+          # :nodoc:
+          def foo; end
+          CRYSTAL
+
+        subject.nodoc?(node).should be_true
+      end
+
+      it "returns true if a node has a `:nodoc:` annotation in the first line" do
+        node = as_node <<-CRYSTAL, wants_doc: true
+          # :nodoc:
+          #
+          # foo
+          def foo; end
+          CRYSTAL
+
+        subject.nodoc?(node).should be_true
+      end
+
+      it "returns false if a node has a `:nodoc:` annotation in the middle" do
+        node = as_node <<-CRYSTAL, wants_doc: true
+          # foo
+          # :nodoc:
+          # bar
+          def foo; end
+          CRYSTAL
+
+        subject.nodoc?(node).should be_false
+      end
+    end
+
     describe "#control_exp_code" do
       it "returns the exp code of a control expression" do
         s = "return 1"

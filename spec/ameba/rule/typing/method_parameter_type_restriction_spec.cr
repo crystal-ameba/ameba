@@ -57,6 +57,13 @@ module Ameba::Rule::Typing
         CRYSTAL
     end
 
+    it "passes if a method has a `:nodoc:` annotation" do
+      expect_no_issues subject, <<-CRYSTAL
+        # :nodoc:
+        def foo(bar); end
+        CRYSTAL
+    end
+
     it "fails if a public method parameter doesn't have a type restriction" do
       expect_issue subject, <<-CRYSTAL
         def hello(a)
@@ -191,6 +198,20 @@ module Ameba::Rule::Typing
             def hello(&a)
                      # ^ error: Method parameter should have a type restriction
               "hello, #{a.call}"
+            end
+            CRYSTAL
+        end
+      end
+
+      context "#nodoc_methods" do
+        rule = MethodParameterTypeRestriction.new
+        rule.nodoc_methods = true
+
+        it "fails if a public method parameter doesn't have a type restriction" do
+          expect_issue rule, <<-CRYSTAL
+            # :nodoc:
+            def foo(bar)
+                  # ^ error: Method parameter should have a type restriction
             end
             CRYSTAL
         end
