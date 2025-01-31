@@ -51,7 +51,7 @@ module Ameba::Rule::Style
       correct_indent = line_indent(source, start_location) + indent_by
 
       unless node.heredoc_indent == correct_indent
-        issue_for node, MSG % correct_indent
+        issue_for node, MSG % indent_by
       end
     end
 

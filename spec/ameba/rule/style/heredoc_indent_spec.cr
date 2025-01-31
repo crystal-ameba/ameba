@@ -24,17 +24,17 @@ module Ameba::Rule::Style
         ONE
 
           call <<-TWO
-             # ^^^^^^ error: Heredoc body should be indented by 4 spaces
+             # ^^^^^^ error: Heredoc body should be indented by 2 spaces
           hello world
           TWO
 
           call <<-THREE
-             # ^^^^^^^^ error: Heredoc body should be indented by 4 spaces
+             # ^^^^^^^^ error: Heredoc body should be indented by 2 spaces
              hello world
              THREE
 
           call <<-FOUR
-             # ^^^^^^^ error: Heredoc body should be indented by 4 spaces
+             # ^^^^^^^ error: Heredoc body should be indented by 2 spaces
         hello world
         FOUR
         CRYSTAL
@@ -65,12 +65,12 @@ module Ameba::Rule::Style
               ONE
 
               call <<-TWO
-                 # ^^^^^^ error: Heredoc body should be indented by 2 spaces
+                 # ^^^^^^ error: Heredoc body should be indented by 0 spaces
                 hello world
                 TWO
 
               call <<-FOUR
-                 # ^^^^^^^ error: Heredoc body should be indented by 2 spaces
+                 # ^^^^^^^ error: Heredoc body should be indented by 0 spaces
             hello world
             FOUR
             CRYSTAL
