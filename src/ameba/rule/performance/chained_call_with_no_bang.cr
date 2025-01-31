@@ -31,6 +31,7 @@ module Ameba::Rule::Performance
   #   Enabled: true
   #   CallNames:
   #     - uniq
+  #     - unstable_sort
   #     - sort
   #     - sort_by
   #     - shuffle
@@ -46,7 +47,7 @@ module Ameba::Rule::Performance
       # All of those have bang method variants returning `self`
       # and are not modifying the receiver type (like `compact` does),
       # thus are safe to switch to the bang variant.
-      call_names %w[uniq sort sort_by shuffle reverse]
+      call_names %w[uniq unstable_sort sort sort_by shuffle reverse]
     end
 
     MSG = "Use bang method variant `%s!` after chained `%s` call"
