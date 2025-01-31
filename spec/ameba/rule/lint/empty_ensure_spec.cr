@@ -23,7 +23,7 @@ module Ameba::Rule::Lint
         ensure
           nil
         end
-      CRYSTAL
+        CRYSTAL
     end
 
     it "fails if there is an empty ensure in method" do
@@ -31,9 +31,9 @@ module Ameba::Rule::Lint
         def method
           do_some_stuff
         ensure
-      # ^^^^^^ error: Empty `ensure` block detected
+        # ^^^^ error: Empty `ensure` block detected
         end
-      CRYSTAL
+        CRYSTAL
     end
 
     it "fails if there is an empty ensure in a block" do
@@ -43,10 +43,10 @@ module Ameba::Rule::Lint
         rescue
           do_some_other_stuff
         ensure
-      # ^^^^^^ error: Empty `ensure` block detected
+        # ^^^^ error: Empty `ensure` block detected
           # nothing here
         end
-      CRYSTAL
+        CRYSTAL
     end
   end
 end
