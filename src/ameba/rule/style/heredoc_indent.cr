@@ -55,10 +55,10 @@ module Ameba::Rule::Style
       end
     end
 
-    def line_indent(source, start_location) : Int32
-      line_location = Crystal::Location.new(filename: nil, line_number: start_location.line_number, column_number: 1)
-
-      line = source.code[source.pos(line_location)..(source.pos(line_location) + start_location.column_number)]
+    private def line_indent(source, start_location) : Int32
+      line_location = Crystal::Location.new(nil, start_location.line_number, 1)
+      line_location_pos = source.pos(line_location)
+      line = source.code[line_location_pos..(line_location_pos + start_location.column_number)]
 
       line.size - line.lstrip.size
     end
