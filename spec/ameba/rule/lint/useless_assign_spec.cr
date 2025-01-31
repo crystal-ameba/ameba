@@ -25,7 +25,7 @@ module Ameba::Rule::Lint
 
     it "reports a useless assignment in a proc" do
       expect_issue subject, <<-CRYSTAL
-        ->() {
+        -> () {
           a = 2
         # ^ error: Useless assignment to variable `a`
         }
@@ -46,7 +46,7 @@ module Ameba::Rule::Lint
     it "reports a useless assignment in a proc inside def" do
       expect_issue subject, <<-CRYSTAL
         def method
-          ->() {
+          -> () {
             a = 2
           # ^ error: Useless assignment to variable `a`
           }
@@ -65,7 +65,7 @@ module Ameba::Rule::Lint
       expect_issue subject, <<-CRYSTAL
         def method
           3.times do
-            ->() {
+            -> () {
               a = 2
             # ^ error: Useless assignment to variable `a`
             }
@@ -239,7 +239,7 @@ module Ameba::Rule::Lint
       expect_no_issues subject, <<-CRYSTAL
         def method
           called = false
-          ->() { called = true }
+          -> () { called = true }
           called
         end
         CRYSTAL

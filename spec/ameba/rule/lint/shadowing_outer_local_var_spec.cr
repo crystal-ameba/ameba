@@ -13,8 +13,8 @@ module Ameba::Rule::Lint
             bar
           end
 
-          -> (baz : Int32) {}
-          -> (bar : String) {}
+          -> (baz : Int32) { }
+          -> (bar : String) { }
         end
         CRYSTAL
     end
@@ -67,7 +67,7 @@ module Ameba::Rule::Lint
         def some_method
           foo = 1
 
-          -> (foo : Int32) {}
+          -> (foo : Int32) { }
             # ^^^^^^^^^^^ error: Shadowing outer local variable `foo`
         end
         CRYSTAL
