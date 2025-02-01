@@ -39,7 +39,9 @@ module Ameba::AST
     def visit(node : Crystal::BinaryOp) : Bool
       @rule.test(@source, node, @stack.positive?)
 
-      if node.right.is_a?(Crystal::Call)
+      if node.right.is_a?(Crystal::Call) ||
+         node.right.is_a?(Crystal::Expressions) ||
+         node.right.is_a?(Crystal::ControlExpression)
         incr_stack { node.left.accept(self) }
       else
         node.left.accept(self)
@@ -91,7 +93,6 @@ module Ameba::AST
     def visit(node : Crystal::MultiAssign) : Bool
       @rule.test(@source, node, @stack.positive?)
 
-      node.targets.each &.accept(self)
       incr_stack { node.values.each &.accept(self) }
 
       false
@@ -263,6 +264,14 @@ module Ameba::AST
 
       # Last line of ensure isn't implicitly returned
       swap_stack { node.ensure.try &.accept(self) }
+
+      false
+    end
+
+    def visit(node : Crystal::Block) : Bool
+      @rule.test(@source, node, @stack.positive?)
+
+      node.body.accept(self)
 
       false
     end
