@@ -290,6 +290,26 @@ module Ameba::Rule::Lint
         CRYSTAL
     end
 
+    it "fails if unused literals in macro expressions" do
+      expect_issue subject, <<-CRYSTAL
+        {{ "hello world" }}
+        {% "hello world" %}
+         # ^^^^^^^^^^^^^ error: Literal value is not used
+
+        {%
+          if var == 2
+            "2"
+          # ^^^ error: Literal value is not used
+          end
+        %}
+
+        macro name(foo)
+          {% "bar" %}
+           # ^^^^^ error: Literal value is not used
+        end
+        CRYSTAL
+    end
+
     # Locations for Regex literals were added in Crystal v1.15.0
     {% if compare_versions(Crystal::VERSION, "1.15.0") >= 0 %}
       it "fails if a regex literal is unused" do
