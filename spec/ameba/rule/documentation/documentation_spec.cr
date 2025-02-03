@@ -29,7 +29,7 @@ module Ameba::Rule::Documentation
 
         private macro bag
         end
-      CRYSTAL
+        CRYSTAL
     end
 
     it "passes for documented public types" do
@@ -59,31 +59,31 @@ module Ameba::Rule::Documentation
         # bag
         macro bag
         end
-      CRYSTAL
+        CRYSTAL
     end
 
     it "fails if there is an undocumented public type" do
       expect_issue subject, <<-CRYSTAL
         class Foo
-      # ^^^^^^^^^ error: Missing documentation
+        # ^^^^^^^ error: Missing documentation
         end
 
         module Bar
-      # ^^^^^^^^^^ error: Missing documentation
+        # ^^^^^^^^ error: Missing documentation
         end
 
         enum Baz
-      # ^^^^^^^^ error: Missing documentation
+        # ^^^^^^ error: Missing documentation
         end
 
         def bat
-      # ^^^^^^^ error: Missing documentation
+        # ^^^^^ error: Missing documentation
         end
 
         macro bag
-      # ^^^^^^^^^ error: Missing documentation
+        # ^^^^^^^ error: Missing documentation
         end
-      CRYSTAL
+        CRYSTAL
     end
 
     context "properties" do

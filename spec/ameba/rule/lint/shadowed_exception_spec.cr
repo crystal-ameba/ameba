@@ -25,7 +25,7 @@ module Ameba::Rule::Lint
         rescue e : Exception
           handle_exception
         end
-      CRYSTAL
+        CRYSTAL
     end
 
     it "fails if there is a shadowed exception" do
@@ -38,7 +38,7 @@ module Ameba::Rule::Lint
              # ^^^^^^^^^^^^^ error: Shadowed exception found: `ArgumentError`
           handle_argument_error_exception
         end
-      CRYSTAL
+        CRYSTAL
     end
 
     it "fails if there is a custom shadowed exceptions" do
@@ -51,7 +51,7 @@ module Ameba::Rule::Lint
              # ^^^^^^^^^^^^^^^^ error: Shadowed exception found: `MySuperException`
           3
         end
-      CRYSTAL
+        CRYSTAL
     end
 
     it "fails if there is a shadowed exception in a type list" do
@@ -60,7 +60,7 @@ module Ameba::Rule::Lint
         rescue Exception | IndexError
                          # ^^^^^^^^^^ error: Shadowed exception found: `IndexError`
         end
-      CRYSTAL
+        CRYSTAL
     end
 
     it "fails if there is a first shadowed exception in a type list" do
@@ -72,7 +72,7 @@ module Ameba::Rule::Lint
              # ^^^^^^^^^ error: Shadowed exception found: `Exception`
         rescue
         end
-      CRYSTAL
+        CRYSTAL
     end
 
     it "fails if there is a shadowed duplicated exception" do
@@ -83,7 +83,7 @@ module Ameba::Rule::Lint
         rescue IndexError
              # ^^^^^^^^^^ error: Shadowed exception found: `IndexError`
         end
-      CRYSTAL
+        CRYSTAL
     end
 
     it "fails if there is a shadowed duplicated exception in a type list" do
@@ -93,7 +93,7 @@ module Ameba::Rule::Lint
         rescue ArgumentError | IndexError
                              # ^^^^^^^^^^ error: Shadowed exception found: `IndexError`
         end
-      CRYSTAL
+        CRYSTAL
     end
 
     it "fails if there is only shadowed duplicated exceptions" do
@@ -104,7 +104,7 @@ module Ameba::Rule::Lint
              # ^^^^^^^^^^ error: Shadowed exception found: `IndexError`
         rescue Exception
         end
-      CRYSTAL
+        CRYSTAL
     end
 
     it "fails if there is only shadowed duplicated exceptions in a type list" do
@@ -113,7 +113,7 @@ module Ameba::Rule::Lint
         rescue IndexError | IndexError
                           # ^^^^^^^^^^ error: Shadowed exception found: `IndexError`
         end
-      CRYSTAL
+        CRYSTAL
     end
 
     it "fails if all rescues are shadowed and there is a catch-all rescue" do
@@ -129,7 +129,7 @@ module Ameba::Rule::Lint
              # ^^^^^^^^ error: Shadowed exception found: `KeyError`
         rescue
         end
-      CRYSTAL
+        CRYSTAL
     end
 
     it "fails if there are shadowed exception with args" do
@@ -140,7 +140,7 @@ module Ameba::Rule::Lint
                   # ^^^^^^^^^^ error: Shadowed exception found: `IndexError`
         rescue
         end
-      CRYSTAL
+        CRYSTAL
     end
 
     it "fails if there are multiple shadowed exceptions" do
@@ -152,7 +152,7 @@ module Ameba::Rule::Lint
         rescue IndexError
              # ^^^^^^^^^^ error: Shadowed exception found: `IndexError`
         end
-      CRYSTAL
+        CRYSTAL
     end
 
     it "fails if there are multiple shadowed exceptions in a type list" do
