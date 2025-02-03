@@ -23,6 +23,7 @@ module Ameba::Rule::Lint
         e = [10_f32, 20_f32, 30_f32]
 
         f = -> { puts }
+        g = nil
         CRYSTAL
     end
 
@@ -98,6 +99,8 @@ module Ameba::Rule::Lint
         # ^^^^^^^^^^ error: Literal value is not used
             this is a heredoc
             HEREDOC
+          nil
+        # ^^^ error: Literal value is not used
         CRYSTAL
     end
 
@@ -128,6 +131,8 @@ module Ameba::Rule::Lint
         # ^^^^^^^^^^ error: Literal value is not used
             this is a heredoc
             HEREDOC
+          nil
+        # ^^^ error: Literal value is not used
         end
         CRYSTAL
     end
@@ -160,6 +165,8 @@ module Ameba::Rule::Lint
         # ^^^^^^^^^^ error: Literal value is not used
             this is a heredoc
             HEREDOC
+          nil
+        # ^^^ error: Literal value is not used
         end
         CRYSTAL
     end
@@ -191,6 +198,8 @@ module Ameba::Rule::Lint
         # ^^^^^^^^^^ error: Literal value is not used
             this is a heredoc
             HEREDOC
+          nil
+        # ^^^ error: Literal value is not used
         end
         CRYSTAL
     end
@@ -271,6 +280,8 @@ module Ameba::Rule::Lint
             # ^^^^^^^^^^^^^^^^^ error: Literal value is not used
               {1, 2, 3}
             # ^^^^^^^^^ error: Literal value is not used
+              nil
+            # ^^^ error: Literal value is not used
             end
 
         b = begin

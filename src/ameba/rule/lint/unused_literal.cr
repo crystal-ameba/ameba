@@ -66,7 +66,7 @@ module Ameba::Rule::Lint
       source,
       node : Crystal::BoolLiteral | Crystal::CharLiteral | Crystal::HashLiteral |
              Crystal::ProcLiteral | Crystal::ArrayLiteral | Crystal::RangeLiteral |
-             Crystal::TupleLiteral | Crystal::NumberLiteral |
+             Crystal::TupleLiteral | Crystal::NumberLiteral | Crystal::NilLiteral |
              Crystal::StringLiteral | Crystal::SymbolLiteral |
              Crystal::NamedTupleLiteral | Crystal::StringInterpolation,
       node_is_used : Bool,
