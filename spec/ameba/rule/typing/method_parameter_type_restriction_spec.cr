@@ -6,53 +6,50 @@ module Ameba::Rule::Typing
 
     it "passes if a method parameter has a type restriction" do
       expect_no_issues subject, <<-CRYSTAL
-        def hello(a : String, b : _) : String
-          "hello world" + a + b
+        def foo(bar : String, baz : _) : String
         end
+        CRYSTAL
+    end
 
-        def hello(*a : String) : String
-          "hello world" + a.join(", ")
+    it "passes if a splat method parameter has a type restriction" do
+      expect_no_issues subject, <<-CRYSTAL
+        def foo(*bar : String) : String
         end
         CRYSTAL
     end
 
     it "fails if a splat method parameter with a name doesn't have a type restriction" do
       expect_issue subject, <<-CRYSTAL
-        def hello(*a) : String
-                 # ^ error: Method parameter should have a type restriction
-          "hello world" + a.join(", ")
+        def foo(*bar) : String
+               # ^ error: Method parameter should have a type restriction
         end
         CRYSTAL
     end
 
     it "passes if a splat parameter without a name doesn't have a type restriction" do
       expect_no_issues subject, <<-CRYSTAL
-        def hello(hello : String, *, world : String = "world") : String
-          hello + world
+        def foo(bar : String, *, baz : String = "bat") : String
         end
         CRYSTAL
     end
 
     it "passes if a double splat method parameter doesn't have a type restriction" do
       expect_no_issues subject, <<-CRYSTAL
-        def hello(a : String, **world) : String
-          "hello world" + a
+        def foo(bar : String, **opts) : String
         end
         CRYSTAL
     end
 
     it "passes if a private method parameter doesn't have a type restriction" do
       expect_no_issues subject, <<-CRYSTAL
-        private def hello(a)
-          "hello world" + a
+        private def foo(bar)
         end
         CRYSTAL
     end
 
     it "passes if a protected method parameter doesn't have a type restriction" do
       expect_no_issues subject, <<-CRYSTAL
-        protected def hello(a)
-          "hello world" + a
+        protected def foo(bar)
         end
         CRYSTAL
     end
@@ -66,31 +63,31 @@ module Ameba::Rule::Typing
 
     it "fails if a public method parameter doesn't have a type restriction" do
       expect_issue subject, <<-CRYSTAL
-        def hello(a)
-                # ^ error: Method parameter should have a type restriction
-          "hello world" + a
+        def foo(bar)
+              # ^ error: Method parameter should have a type restriction
         end
+        CRYSTAL
+    end
 
-        def hello(a, ext b)
-                # ^ error: Method parameter should have a type restriction
+    it "fails if a public method external parameter doesn't have a type restriction" do
+      expect_issue subject, <<-CRYSTAL
+        def foo(bar, ext baz)
+              # ^ error: Method parameter should have a type restriction
                    # ^ error: Method parameter should have a type restriction
-          "hello world" + a + b
         end
         CRYSTAL
     end
 
     it "passes if a method parameter with a default value doesn't have a type restriction" do
       expect_no_issues subject, <<-CRYSTAL
-        def hello(a = "jim")
-          "hello there, " + a
+        def foo(bar = "baz")
         end
         CRYSTAL
     end
 
     it "passes if a block parameter doesn't have a type restriction" do
       expect_no_issues subject, <<-CRYSTAL
-        def hello(&)
-          "hello there"
+        def foo(&)
         end
         CRYSTAL
     end
@@ -102,30 +99,30 @@ module Ameba::Rule::Typing
 
         it "passes if a method has a parameter type restriction" do
           expect_no_issues rule, <<-CRYSTAL
-            private def hello(a : String) : String
-              "hello world" + a
+            private def foo(bar : String) : String
             end
             CRYSTAL
         end
 
         it "passes if a protected method parameter doesn't have a type restriction" do
           expect_no_issues rule, <<-CRYSTAL
-            protected def hello(a)
-              "hello world"
+            protected def foo(bar)
             end
             CRYSTAL
         end
 
-        it "fails if a public or private method doesn't have a parameter type restriction" do
+        it "fails if a public method doesn't have a parameter type restriction" do
           expect_issue rule, <<-CRYSTAL
-            def hello(a)
-                    # ^ error: Method parameter should have a type restriction
-              "hello world"
+            def foo(bar)
+                  # ^ error: Method parameter should have a type restriction
             end
+            CRYSTAL
+        end
 
-            private def hello(a)
-                            # ^ error: Method parameter should have a type restriction
-              "hello world"
+        it "fails if a private method doesn't have a parameter type restriction" do
+          expect_issue rule, <<-CRYSTAL
+            private def foo(bar)
+                          # ^ error: Method parameter should have a type restriction
             end
             CRYSTAL
         end
@@ -137,30 +134,30 @@ module Ameba::Rule::Typing
 
         it "passes if a method has a parameter type restriction" do
           expect_no_issues rule, <<-CRYSTAL
-            protected def hello(a : String) : String
-              "hello world" + a
+            protected def foo(bar : String) : String
             end
             CRYSTAL
         end
 
         it "passes if a private method parameter doesn't have a type restriction" do
           expect_no_issues rule, <<-CRYSTAL
-            private def hello(a)
-              "hello world"
+            private def foo(bar)
             end
             CRYSTAL
         end
 
-        it "fails if a public or protected method doesn't have a parameter type restriction" do
+        it "fails if a public method doesn't have a parameter type restriction" do
           expect_issue rule, <<-CRYSTAL
-            def hello(a)
-                    # ^ error: Method parameter should have a type restriction
-              "hello world"
+            def foo(bar)
+                  # ^ error: Method parameter should have a type restriction
             end
+            CRYSTAL
+        end
 
-            protected def hello(a)
-                              # ^ error: Method parameter should have a type restriction
-              "hello world"
+        it "fails if a protected method doesn't have a parameter type restriction" do
+          expect_issue rule, <<-CRYSTAL
+            protected def foo(bar)
+                            # ^ error: Method parameter should have a type restriction
             end
             CRYSTAL
         end
@@ -171,10 +168,9 @@ module Ameba::Rule::Typing
           rule = MethodParameterTypeRestriction.new
           rule.default_value = true
 
-          expect_issue rule, <<-'CRYSTAL'
-            def hello(a = "world")
-                    # ^ error: Method parameter should have a type restriction
-              "hello #{a}"
+          expect_issue rule, <<-CRYSTAL
+            def foo(bar = "baz")
+                  # ^ error: Method parameter should have a type restriction
             end
             CRYSTAL
         end
@@ -186,18 +182,16 @@ module Ameba::Rule::Typing
 
         it "fails if a block parameter without a name doesn't have a type restriction" do
           expect_issue rule, <<-CRYSTAL
-            def hello(&)
-                     # ^ error: Method parameter should have a type restriction
-              "hello"
+            def foo(&)
+                   # ^ error: Method parameter should have a type restriction
             end
             CRYSTAL
         end
 
         it "fails if a block parameter with a name doesn't have a type restriction" do
-          expect_issue rule, <<-'CRYSTAL'
-            def hello(&a)
-                     # ^ error: Method parameter should have a type restriction
-              "hello, #{a.call}"
+          expect_issue rule, <<-CRYSTAL
+            def foo(&block)
+                   # ^ error: Method parameter should have a type restriction
             end
             CRYSTAL
         end

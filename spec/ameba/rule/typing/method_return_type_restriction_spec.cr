@@ -4,35 +4,42 @@ module Ameba::Rule::Typing
   describe MethodReturnTypeRestriction do
     subject = MethodReturnTypeRestriction.new
 
-    it "passes if a method has a return type restriction" do
+    it "passes if a public method has a return type restriction" do
       expect_no_issues subject, <<-CRYSTAL
-        def hello : String
-          "hello world"
-        end
-
-        private def hello : String
-          "hello world"
-        end
-
-        protected def hello : String
-          "hello world"
+        def foo : String
         end
         CRYSTAL
     end
 
-    it "passes if a private or protected method doesn't have a return type restriction" do
+    it "passes if a private method has a return type restriction" do
       expect_no_issues subject, <<-CRYSTAL
-        private def hello
-          "hello world"
-        end
-
-        protected def hello
-          "hello world"
+        private def foo : String
         end
         CRYSTAL
     end
 
-    it "passes if a method has a `:nodoc:` annotation" do
+    it "passes if a protected method has a return type restriction" do
+      expect_no_issues subject, <<-CRYSTAL
+        protected def foo : String
+        end
+        CRYSTAL
+    end
+
+    it "passes if a private method doesn't have a return type restriction" do
+      expect_no_issues subject, <<-CRYSTAL
+        private def foo
+        end
+        CRYSTAL
+    end
+
+    it "passes if a protected method doesn't have a return type restriction" do
+      expect_no_issues subject, <<-CRYSTAL
+        protected def foo
+        end
+        CRYSTAL
+    end
+
+    it "passes if a public method has a `:nodoc:` annotation" do
       expect_no_issues subject, <<-CRYSTAL
         # :nodoc:
         def foo; end
@@ -41,9 +48,8 @@ module Ameba::Rule::Typing
 
     it "fails if a public method doesn't have a return type restriction" do
       expect_issue subject, <<-CRYSTAL
-        def hello
-        # ^^^^^^^ error: Method should have a return type restriction
-          "hello world"
+        def foo
+        # ^^^^^ error: Method should have a return type restriction
         end
         CRYSTAL
     end
@@ -53,40 +59,46 @@ module Ameba::Rule::Typing
         rule = MethodReturnTypeRestriction.new
         rule.private_methods = true
 
-        it "passes if a method has a return type restriction" do
+        it "passes if a public method has a return type restriction" do
           expect_no_issues rule, <<-CRYSTAL
-            def hello : String
-              "hello world"
+            def foo : String
             end
+            CRYSTAL
+        end
 
-            private def hello : String
-              "hello world"
+        it "passes if a private method has a return type restriction" do
+          expect_no_issues rule, <<-CRYSTAL
+            private def foo : String
             end
+            CRYSTAL
+        end
 
-            protected def hello : String
-              "hello world"
+        it "passes if a protected method has a return type restriction" do
+          expect_no_issues rule, <<-CRYSTAL
+            protected def foo : String
             end
             CRYSTAL
         end
 
         it "passes if a protected method doesn't have a return type restriction" do
           expect_no_issues rule, <<-CRYSTAL
-            protected def hello
-              "hello world"
+            protected def foo
             end
             CRYSTAL
         end
 
-        it "fails if a public or private method doesn't have a return type restriction" do
+        it "fails if a public method doesn't have a return type restriction" do
           expect_issue rule, <<-CRYSTAL
-            def hello
-            # ^^^^^^^ error: Method should have a return type restriction
-              "hello world"
+            def foo
+            # ^^^^^ error: Method should have a return type restriction
             end
+            CRYSTAL
+        end
 
-            private def hello
-                  # ^^^^^^^^^ error: Method should have a return type restriction
-              "hello world"
+        it "fails if a private method doesn't have a return type restriction" do
+          expect_issue rule, <<-CRYSTAL
+            private def foo
+                  # ^^^^^^^ error: Method should have a return type restriction
             end
             CRYSTAL
         end
@@ -96,32 +108,39 @@ module Ameba::Rule::Typing
         rule = MethodReturnTypeRestriction.new
         rule.protected_methods = true
 
-        it "passes if a method has a return type restriction" do
+        it "passes if a public method has a return type restriction" do
           expect_no_issues rule, <<-CRYSTAL
-            protected def hello : String
-              "hello world"
+            def foo : String
             end
             CRYSTAL
         end
 
         it "passes if a private method doesn't have a return type restriction" do
           expect_no_issues rule, <<-CRYSTAL
-            private def hello
-              "hello world"
+            private def foo
             end
             CRYSTAL
         end
 
-        it "fails if a public or protected method doesn't have a return type restriction" do
-          expect_issue rule, <<-CRYSTAL
-            def hello
-            # ^^^^^^^ error: Method should have a return type restriction
-              "hello world"
+        it "passes if a protected method has a return type restriction" do
+          expect_no_issues rule, <<-CRYSTAL
+            protected def foo : String
             end
+            CRYSTAL
+        end
 
-            protected def hello
-                    # ^^^^^^^^^ error: Method should have a return type restriction
-              "hello world"
+        it "fails if a public method doesn't have a return type restriction" do
+          expect_issue rule, <<-CRYSTAL
+            def foo
+            # ^^^^^ error: Method should have a return type restriction
+            end
+            CRYSTAL
+        end
+
+        it "fails if a protected method doesn't have a return type restriction" do
+          expect_issue rule, <<-CRYSTAL
+            protected def foo
+                    # ^^^^^^^ error: Method should have a return type restriction
             end
             CRYSTAL
         end
