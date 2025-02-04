@@ -6,46 +6,45 @@ module Ameba::Rule::Lint
 
     it "passes if logical operator in call args has parentheses" do
       expect_no_issues subject, <<-CRYSTAL
-        if foo.includes?("bar") || foo.includes?("batz")
-          puts "this code is bug-free"
-        end
-
-        if foo.includes?("bar" || foo.includes? "batz")
-          puts "this code is bug-free"
-        end
-
-        form.add("query", "val_1" || "val_2")
-        form.add "query", "val_1" || "val_2"
-        form.add "query", ("val_1" || "val_2")
+        foo.includes?("bar") || foo.includes?("baz")
+        foo.includes?("bar" || foo.includes? "baz")
         CRYSTAL
     end
 
-    it "passes if logical operator in assignment call" do
+    it "passes if logical operator in call doesn't involve another method call" do
       expect_no_issues subject, <<-CRYSTAL
-        hello.there = "world" || method.call
-        hello.there ||= "world" || method.call
+        foo.includes? "bar" || "baz"
         CRYSTAL
     end
 
-    it "passes if logical operator in square bracket call" do
+    it "passes if logical operator in call involves another method call with no arguments" do
       expect_no_issues subject, <<-CRYSTAL
-        hello["world" || :thing]
-        hello["world" || :thing]?
-        this.is[1 || method.call]
+        foo.includes? "bar" || foo.not_nil!
+        CRYSTAL
+    end
+
+    it "passes if logical operator is used in an assignment call" do
+      expect_no_issues subject, <<-CRYSTAL
+        foo.bar = "baz" || bat.call :foo
+        foo.bar ||= "baz" || bat.call :foo
+        foo[bar] = "baz" || bat.call :foo
+        CRYSTAL
+    end
+
+    it "passes if logical operator is used in a square bracket call" do
+      expect_no_issues subject, <<-CRYSTAL
+        foo["bar" || baz.call :bat]
+        foo["bar" || baz.call :bat]?
         CRYSTAL
     end
 
     it "fails if logical operator in call args doesn't have parentheses" do
       expect_issue subject, <<-CRYSTAL
-        if foo.includes? "bar" || foo.includes? "batz"
-         # ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ error: Use parentheses in the method call to avoid confusion about precedence
-          puts "this code is not bug-free"
-        end
+        foo.includes? "bar" || foo.includes? "baz"
+        # ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ error: Use parentheses in the method call to avoid confusion about precedence
 
-        if foo.in? "bar", "baz" || foo.ends_with? "qux"
-         # ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ error: Use parentheses in the method call to avoid confusion about precedence
-          puts "this code is not bug-free"
-        end
+        foo.in? "bar", "baz" || foo.ends_with? "bat"
+        # ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ error: Use parentheses in the method call to avoid confusion about precedence
         CRYSTAL
     end
   end

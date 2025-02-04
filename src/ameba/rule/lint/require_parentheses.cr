@@ -6,14 +6,16 @@ module Ameba::Rule::Lint
   # For example, this is considered invalid:
   #
   # ```
-  # if foo.includes? "bar" || foo.includes? "batz"
+  # if foo.includes? "bar" || foo.includes? "baz"
+  #   # ...
   # end
   # ```
   #
   # And need to be written as:
   #
   # ```
-  # if foo.includes?("bar") || foo.includes?("batz")
+  # if foo.includes?("bar") || foo.includes?("baz")
+  #   # ...
   # end
   # ```
   #

@@ -42,7 +42,7 @@ module Ameba::Rule::Lint
 
     it "reports if there is a shadowed proc argument" do
       s = Source.new %(
-        ->(x : Int32) {
+        -> (x : Int32) {
           x = 20
           x
         }

@@ -6,14 +6,14 @@ module Ameba::Rule::Lint
 
     it "passes for trailing rescue with literal values" do
       expect_no_issues subject, <<-CRYSTAL
-        puts "hello" rescue "world"
-        puts :meow rescue 1234
+        puts "foo" rescue "bar"
+        puts :foo rescue 42
         CRYSTAL
     end
 
     it "passes for trailing rescue with class initialization" do
       expect_no_issues subject, <<-CRYSTAL
-        puts "hello" rescue MyClass.new
+        puts "foo" rescue MyClass.new
         CRYSTAL
     end
 

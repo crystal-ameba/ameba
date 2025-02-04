@@ -87,7 +87,7 @@ module Ameba::Rule::Style
           end
 
           def bar
-            ->(foo : Int32) { self.foo + foo }
+            -> (foo : Int32) { self.foo + foo }
           end
         end
         CRYSTAL

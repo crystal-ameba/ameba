@@ -140,7 +140,7 @@ module Ameba::Rule::Lint
       expect_no_issues subject, <<-CRYSTAL
         i = 0
         while i < 10
-          proc = ->(x : Int32) do
+          proc = -> (x : Int32) do
             spawn do
             puts(x)
             end
