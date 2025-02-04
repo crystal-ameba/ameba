@@ -14,7 +14,7 @@
 <script type="text/javascript" src="../../../js/doc.js"></script>
 
   <meta name="repository-name" content="ameba">
-  <title>Ameba::Rule::Lint::NotNilAfterNoBang - ameba master</title>
+  <title>Ameba::Rule::Style::HeredocIndent - ameba master</title>
   <script type="text/javascript">
     CrystalDocs.base_path = "../../../";
   </script>
@@ -382,7 +382,7 @@
       
     </li>
   
-  <li class="parent open current" data-id="ameba/Ameba/Rule/Lint" data-name="ameba::rule::lint">
+  <li class="parent " data-id="ameba/Ameba/Rule/Lint" data-name="ameba::rule::lint">
       <a href="../../../Ameba/Rule/Lint.html">Lint</a>
       
         <ul>
@@ -472,7 +472,7 @@
       
     </li>
   
-  <li class=" current" data-id="ameba/Ameba/Rule/Lint/NotNilAfterNoBang" data-name="ameba::rule::lint::notnilafternobang">
+  <li class=" " data-id="ameba/Ameba/Rule/Lint/NotNilAfterNoBang" data-name="ameba::rule::lint::notnilafternobang">
       <a href="../../../Ameba/Rule/Lint/NotNilAfterNoBang.html">NotNilAfterNoBang</a>
       
     </li>
@@ -762,7 +762,7 @@
       
     </li>
   
-  <li class="parent " data-id="ameba/Ameba/Rule/Style" data-name="ameba::rule::style">
+  <li class="parent open current" data-id="ameba/Ameba/Rule/Style" data-name="ameba::rule::style">
       <a href="../../../Ameba/Rule/Style.html">Style</a>
       
         <ul>
@@ -772,7 +772,7 @@
       
     </li>
   
-  <li class=" " data-id="ameba/Ameba/Rule/Style/HeredocIndent" data-name="ameba::rule::style::heredocindent">
+  <li class=" current" data-id="ameba/Ameba/Rule/Style/HeredocIndent" data-name="ameba::rule::style::heredocindent">
       <a href="../../../Ameba/Rule/Style/HeredocIndent.html">HeredocIndent</a>
       
     </li>
@@ -981,12 +981,12 @@
 <div class="main-content">
 <h1 class="type-name">
 
-  <span class="kind">class</span> Ameba::<wbr>Rule::<wbr>Lint::<wbr>NotNilAfterNoBang
+  <span class="kind">class</span> Ameba::<wbr>Rule::<wbr>Style::<wbr>HeredocIndent
 
 </h1>
 
 
-  <ul class="superclass-hierarchy"><li class="superclass"><a href="../../../Ameba/Rule/Lint/NotNilAfterNoBang.html">Ameba::Rule::Lint::NotNilAfterNoBang</a></li><li class="superclass"><a href="../../../Ameba/Rule/Base.html">Ameba::Rule::Base</a></li><li class="superclass">Reference</li><li class="superclass">Object</li></ul>
+  <ul class="superclass-hierarchy"><li class="superclass"><a href="../../../Ameba/Rule/Style/HeredocIndent.html">Ameba::Rule::Style::HeredocIndent</a></li><li class="superclass"><a href="../../../Ameba/Rule/Base.html">Ameba::Rule::Base</a></li><li class="superclass">Reference</li><li class="superclass">Object</li></ul>
 
 
 
@@ -1000,15 +1000,28 @@
     Overview
   </h2>
 
-  <p>This rule is used to identify usage of <code>index/rindex/find/match</code> calls
-followed by a call to <code>not_nil!</code>.</p>
-<p>For example, this is considered a code smell:</p>
-<pre><code class="language-crystal"><span class="s">%w[Alice Bob]</span>.find(<span class="o">&amp;</span>.chars.any?(<span class="o">&amp;</span>.in?(<span class="s">&#39;o&#39;</span>, <span class="s">&#39;b&#39;</span>))).not_nil!</code></pre>
-<p>And can be written as this:</p>
-<pre><code class="language-crystal"><span class="s">%w[Alice Bob]</span>.find!(<span class="o">&amp;</span>.chars.any?(<span class="o">&amp;</span>.in?(<span class="s">&#39;o&#39;</span>, <span class="s">&#39;b&#39;</span>)))</code></pre>
-<p>YAML configuration example:</p>
-<pre><code class="language-crystal"><span class="t">Lint</span><span class="o">/</span><span class="t">NotNilAfterNoBang</span>:
-  <span class="t">Enabled</span>: <span class="n">true</span></code></pre>
+  <p>A rule that enforces <em>Heredoc</em> bodies be indented one level above the indentation of the
+line they're used on.</p>
+<p>For example, this is considered invalid:</p>
+<pre><code class="language-crystal">&lt;&lt;-HERERDOC
+  hello world
+HEREDOC
+
+  &lt;&lt;-HERERDOC
+hello world
+HEREDOC</code></pre>
+<p>And should be written as:</p>
+<pre><code class="language-crystal">&lt;&lt;-HERERDOC
+    hello world
+  HEREDOC
+
+  &lt;&lt;-HERERDOC
+    hello world
+    HEREDOC</code></pre>
+<p>The <code>IndentBy</code> configuration option changes the enforced indentation level of the <em>heredoc</em>.</p>
+<pre><code class="language-crystal"><span class="t">Style</span><span class="o">/</span><span class="t">HeredocIndent</span>:
+  <span class="t">Enabled</span>: <span class="n">true</span>
+  <span class="t">IndentBy</span>: <span class="n">2</span></code></pre>
 
 
 
@@ -1023,8 +1036,6 @@ followed by a call to <code>not_nil!</code>.</p>
     Included Modules
   </h2>
   <ul class="other-types-list">
-    
-      <li class="other-type"><a href="../../../Ameba/AST/Util.html">Ameba::AST::Util</a></li>
     
       <li class="other-type">YAML::Serializable</li>
     
@@ -1051,8 +1062,8 @@ followed by a call to <code>not_nil!</code>.</p>
   </h2>
   
     
-      <a href="https://github.com/crystal-ameba/ameba/blob/bf25d80/src/ameba/rule/lint/not_nil_after_no_bang.cr#L23" target="_blank">
-        ameba/rule/lint/not_nil_after_no_bang.cr
+      <a href="https://github.com/crystal-ameba/ameba/blob/bf25d80/src/ameba/rule/style/heredoc_indent.cr#L36" target="_blank">
+        ameba/rule/style/heredoc_indent.cr
       </a>
     
     <br/>
@@ -1072,18 +1083,8 @@ followed by a call to <code>not_nil!</code>.</p>
   
   <dl>
     
-      <dt class="entry-const" id="BLOCK_CALL_NAMES">
-        <strong>BLOCK_CALL_NAMES</strong> = <code>[<span class="s">&quot;index&quot;</span>, <span class="s">&quot;rindex&quot;</span>, <span class="s">&quot;find&quot;</span>] <span class="k">of</span> <span class="t">::</span><span class="t">String</span></code>
-      </dt>
-      
-    
-      <dt class="entry-const" id="CALL_NAMES">
-        <strong>CALL_NAMES</strong> = <code>[<span class="s">&quot;index&quot;</span>, <span class="s">&quot;rindex&quot;</span>, <span class="s">&quot;match&quot;</span>] <span class="k">of</span> <span class="t">::</span><span class="t">String</span></code>
-      </dt>
-      
-    
       <dt class="entry-const" id="MSG">
-        <strong>MSG</strong> = <code><span class="s">&quot;Use `%s! {...}` instead of `%s {...}.not_nil!`&quot;</span></code>
+        <strong>MSG</strong> = <code><span class="s">&quot;Heredoc body should be indented by %s spaces&quot;</span></code>
       </dt>
       
     
@@ -1109,7 +1110,7 @@ followed by a call to <code>not_nil!</code>.</p>
       <li class="entry-summary">
         <a href="#new%28config%3Dnil%29-class-method" class="signature"><strong>.new</strong>(config = <span class="n">nil</span>)</a>
         
-          <div class="summary"><p>This rule is used to identify usage of <code>index/rindex/find/match</code> calls followed by a call to <code>not_nil!</code>.</p></div>
+          <div class="summary"><p>A rule that enforces <em>Heredoc</em> bodies be indented one level above the indentation of the line they're used on.</p></div>
         
       </li>
     
@@ -1181,6 +1182,16 @@ followed by a call to <code>not_nil!</code>.</p>
       </li>
     
       <li class="entry-summary">
+        <a href="#indent_by%3AInt32-instance-method" class="signature"><strong>#indent_by</strong> : Int32</a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#indent_by%3D%28indent_by%3AInt32%29-instance-method" class="signature"><strong>#indent_by=</strong>(indent_by : Int32)</a>
+        
+      </li>
+    
+      <li class="entry-summary">
         <a href="#severity%3AAmeba%3A%3ASeverity-instance-method" class="signature"><strong>#severity</strong> : Ameba::Severity</a>
         
       </li>
@@ -1201,12 +1212,7 @@ followed by a call to <code>not_nil!</code>.</p>
       </li>
     
       <li class="entry-summary">
-        <a href="#test%28source%2Cnode%3ACrystal%3A%3ACall%29-instance-method" class="signature"><strong>#test</strong>(source, node : Crystal::Call)</a>
-        
-      </li>
-    
-      <li class="entry-summary">
-        <a href="#test%28source%29-instance-method" class="signature"><strong>#test</strong>(source)</a>
+        <a href="#test%28source%2Cnode%3ACrystal%3A%3AStringInterpolation%29-instance-method" class="signature"><strong>#test</strong>(source, node : Crystal::StringInterpolation)</a>
         
       </li>
     
@@ -1215,108 +1221,6 @@ followed by a call to <code>not_nil!</code>.</p>
 
 
 <div class="methods-inherited">
-  
-    
-
-  <h3>Instance methods inherited from module <code><a href="../../../Ameba/AST/Util.html">Ameba::AST::Util</a></code></h3>
-  
-  
-    <a href="../../../Ameba/AST/Util.html#abort%3F%28node%29-instance-method" class="tooltip">
-      <span>abort?(node)</span>
-    abort?</a>, 
-    
-  
-    <a href="../../../Ameba/AST/Util.html#control_exp_code%28node%3ACrystal%3A%3AControlExpression%2Ccode_lines%29-instance-method" class="tooltip">
-      <span>control_exp_code(node : Crystal::ControlExpression, code_lines)</span>
-    control_exp_code</a>, 
-    
-  
-    <a href="../../../Ameba/AST/Util.html#dynamic_literal%3F%28node%29%3ABool-instance-method" class="tooltip">
-      <span>dynamic_literal?(node) : Bool</span>
-    dynamic_literal?</a>, 
-    
-  
-    <a href="../../../Ameba/AST/Util.html#exit%3F%28node%29-instance-method" class="tooltip">
-      <span>exit?(node)</span>
-    exit?</a>, 
-    
-  
-    <a href="../../../Ameba/AST/Util.html#flow_command%3F%28node%2Cin_loop%29-instance-method" class="tooltip">
-      <span>flow_command?(node, in_loop)</span>
-    flow_command?</a>, 
-    
-  
-    <a href="../../../Ameba/AST/Util.html#flow_expression%3F%28node%2Cin_loop%3Dfalse%29-instance-method" class="tooltip">
-      <span>flow_expression?(node, in_loop = <span class="n">false</span>)</span>
-    flow_expression?</a>, 
-    
-  
-    <a href="../../../Ameba/AST/Util.html#literal%3F%28node%29%3ABool-instance-method" class="tooltip">
-      <span>literal?(node) : Bool</span>
-    literal?</a>, 
-    
-  
-    <a href="../../../Ameba/AST/Util.html#loop%3F%28node%29-instance-method" class="tooltip">
-      <span>loop?(node)</span>
-    loop?</a>, 
-    
-  
-    <a href="../../../Ameba/AST/Util.html#name_end_location%28node%29-instance-method" class="tooltip">
-      <span>name_end_location(node)</span>
-    name_end_location</a>, 
-    
-  
-    <a href="../../../Ameba/AST/Util.html#name_location%28node%29-instance-method" class="tooltip">
-      <span>name_location(node)</span>
-    name_location</a>, 
-    
-  
-    <a href="../../../Ameba/AST/Util.html#name_size%28node%29-instance-method" class="tooltip">
-      <span>name_size(node)</span>
-    name_size</a>, 
-    
-  
-    <a href="../../../Ameba/AST/Util.html#node_source%28node%2Ccode_lines%29-instance-method" class="tooltip">
-      <span>node_source(node, code_lines)</span>
-    node_source</a>, 
-    
-  
-    <a href="../../../Ameba/AST/Util.html#nodoc%3F%28node%29-instance-method" class="tooltip">
-      <span>nodoc?(node)</span>
-    nodoc?</a>, 
-    
-  
-    <a href="../../../Ameba/AST/Util.html#path_named%3F%28node%2Cname%29%3ABool-instance-method" class="tooltip">
-      <span>path_named?(node, name) : Bool</span>
-    path_named?</a>, 
-    
-  
-    <a href="../../../Ameba/AST/Util.html#raise%3F%28node%29-instance-method" class="tooltip">
-      <span>raise?(node)</span>
-    raise?</a>, 
-    
-  
-    <a href="../../../Ameba/AST/Util.html#source_between%28loc%2Cend_loc%2Ccode_lines%29%3AString%7CNil-instance-method" class="tooltip">
-      <span>source_between(loc, end_loc, code_lines) : String | Nil</span>
-    source_between</a>, 
-    
-  
-    <a href="../../../Ameba/AST/Util.html#static_literal%3F%28node%29%3ABool-instance-method" class="tooltip">
-      <span>static_literal?(node) : Bool</span>
-    static_literal?</a>
-    
-  
-
-
-    
-
-
-    
-
-
-    
-
-
   
     
 
@@ -1503,21 +1407,34 @@ followed by a call to <code>not_nil!</code>.</p>
       
         <div class="doc">
           
-          <p>This rule is used to identify usage of <code>index/rindex/find/match</code> calls
-followed by a call to <code>not_nil!</code>.</p>
-<p>For example, this is considered a code smell:</p>
-<pre><code class="language-crystal"><span class="s">%w[Alice Bob]</span>.find(<span class="o">&amp;</span>.chars.any?(<span class="o">&amp;</span>.in?(<span class="s">&#39;o&#39;</span>, <span class="s">&#39;b&#39;</span>))).not_nil!</code></pre>
-<p>And can be written as this:</p>
-<pre><code class="language-crystal"><span class="s">%w[Alice Bob]</span>.find!(<span class="o">&amp;</span>.chars.any?(<span class="o">&amp;</span>.in?(<span class="s">&#39;o&#39;</span>, <span class="s">&#39;b&#39;</span>)))</code></pre>
-<p>YAML configuration example:</p>
-<pre><code class="language-crystal"><span class="t">Lint</span><span class="o">/</span><span class="t">NotNilAfterNoBang</span>:
-  <span class="t">Enabled</span>: <span class="n">true</span></code></pre>
+          <p>A rule that enforces <em>Heredoc</em> bodies be indented one level above the indentation of the
+line they're used on.</p>
+<p>For example, this is considered invalid:</p>
+<pre><code class="language-crystal">&lt;&lt;-HERERDOC
+  hello world
+HEREDOC
+
+  &lt;&lt;-HERERDOC
+hello world
+HEREDOC</code></pre>
+<p>And should be written as:</p>
+<pre><code class="language-crystal">&lt;&lt;-HERERDOC
+    hello world
+  HEREDOC
+
+  &lt;&lt;-HERERDOC
+    hello world
+    HEREDOC</code></pre>
+<p>The <code>IndentBy</code> configuration option changes the enforced indentation level of the <em>heredoc</em>.</p>
+<pre><code class="language-crystal"><span class="t">Style</span><span class="o">/</span><span class="t">HeredocIndent</span>:
+  <span class="t">Enabled</span>: <span class="n">true</span>
+  <span class="t">IndentBy</span>: <span class="n">2</span></code></pre>
         </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/bf25d80/src/ameba/rule/lint/not_nil_after_no_bang.cr#L23" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/bf25d80/src/ameba/rule/style/heredoc_indent.cr#L36" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1661,6 +1578,34 @@ followed by a call to <code>not_nil!</code>.</p>
       </div>
     </div>
   
+    <div class="entry-detail" id="indent_by:Int32-instance-method">
+      <div class="signature">
+        
+        def <strong>indent_by</strong> : Int32
+
+        <a class="method-permalink" href="#indent_by%3AInt32-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="indent_by=(indent_by:Int32)-instance-method">
+      <div class="signature">
+        
+        def <strong>indent_by=</strong>(indent_by : Int32)
+
+        <a class="method-permalink" href="#indent_by%3D%28indent_by%3AInt32%29-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+      </div>
+    </div>
+  
     <div class="entry-detail" id="severity:Ameba::Severity-instance-method">
       <div class="signature">
         
@@ -1700,7 +1645,7 @@ followed by a call to <code>not_nil!</code>.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/bf25d80/src/ameba/rule/lint/not_nil_after_no_bang.cr#L26" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/bf25d80/src/ameba/rule/style/heredoc_indent.cr#L37" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1719,34 +1664,18 @@ followed by a call to <code>not_nil!</code>.</p>
       </div>
     </div>
   
-    <div class="entry-detail" id="test(source,node:Crystal::Call)-instance-method">
+    <div class="entry-detail" id="test(source,node:Crystal::StringInterpolation)-instance-method">
       <div class="signature">
         
-        def <strong>test</strong>(source, node : Crystal::Call)
+        def <strong>test</strong>(source, node : Crystal::StringInterpolation)
 
-        <a class="method-permalink" href="#test%28source%2Cnode%3ACrystal%3A%3ACall%29-instance-method">#</a>
+        <a class="method-permalink" href="#test%28source%2Cnode%3ACrystal%3A%3AStringInterpolation%29-instance-method">#</a>
       </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/bf25d80/src/ameba/rule/lint/not_nil_after_no_bang.cr#L40" target="_blank">View source</a>]
-        
-      </div>
-    </div>
-  
-    <div class="entry-detail" id="test(source)-instance-method">
-      <div class="signature">
-        
-        def <strong>test</strong>(source)
-
-        <a class="method-permalink" href="#test%28source%29-instance-method">#</a>
-      </div>
-      
-      <br/>
-      <div>
-        
-          [<a href="https://github.com/crystal-ameba/ameba/blob/bf25d80/src/ameba/rule/lint/not_nil_after_no_bang.cr#L36" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/bf25d80/src/ameba/rule/style/heredoc_indent.cr#L45" target="_blank">View source</a>]
         
       </div>
     </div>
