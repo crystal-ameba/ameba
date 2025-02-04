@@ -72,6 +72,13 @@ module Ameba::Rule::Lint
         CRYSTAL
     end
 
+    it "passes if a literal value is the object of a cast" do
+      expect_no_issues subject, <<-CRYSTAL
+        1.as(Int64)
+        "2".as?(String)
+        CRYSTAL
+    end
+
     it "fails if literals are top-level" do
       expect_issue subject, <<-CRYSTAL
           1234
