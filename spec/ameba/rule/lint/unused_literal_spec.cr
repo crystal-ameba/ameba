@@ -4,55 +4,82 @@ module Ameba::Rule::Lint
   describe UnusedLiteral do
     subject = UnusedLiteral.new
 
-    it "passes if literals are used to assign" do
+    it "passes if a number literal is used to assign" do
       expect_no_issues subject, <<-'CRYSTAL'
         a = 1
-        b = "string"
-        g = "interp #{string}"
+        CRYSTAL
+    end
+
+    it "passes if a char literal is used to assign" do
+      expect_no_issues subject, <<-'CRYSTAL'
+        c = '\t'
+        CRYSTAL
+    end
+
+    it "passes if a string literal is used to assign" do
+      expect_no_issues subject, <<-'CRYSTAL'
+        b = "foo"
+        g = "bar \#{baz}"
+        CRYSTAL
+    end
+
+    it "passes if a heredoc is used to assign" do
+      expect_no_issues subject, <<-'CRYSTAL'
         h = <<-HEREDOC
-          this is a heredoc
+          foo
           HEREDOC
+        CRYSTAL
+    end
 
-        c = begin
-          :symbol
-        end
+    it "passes if a symbol literal is used to assign" do
+      expect_no_issues subject, <<-'CRYSTAL'
+        c = :foo
+        CRYSTAL
+    end
 
-        d = 1
-        d ||= {here: 1, there: 4}
+    it "passes if a named tuple literal is used to assign" do
+      expect_no_issues subject, <<-'CRYSTAL'
+        d = {foo: 1, bar: 2}
+        CRYSTAL
+    end
 
+    it "passes if an array literal is used to assign" do
+      expect_no_issues subject, <<-'CRYSTAL'
         e = [10_f32, 20_f32, 30_f32]
-
-        f = -> { puts }
         CRYSTAL
     end
 
-    it "passes if literals implicit return in method" do
+    it "passes if a proc literal is used to assign" do
+      expect_no_issues subject, <<-'CRYSTAL'
+        f = -> { }
+        CRYSTAL
+    end
+
+    it "passes if literals inside an if statement are implicitly returned from a method" do
       expect_no_issues subject, <<-CRYSTAL
-        def hello
+        def foo
           if true
-            :string
+            :bar
           else
-            "symbol"
+            "baz"
           end
         end
         CRYSTAL
     end
 
-    it "passes if unused literals are beyond return" do
+    it "passes if an unused literal is beyond a return statement in a method body" do
       expect_no_issues subject, <<-CRYSTAL
-        def hello : Nil
-          return :meow
+        def foo : Nil
+          return
 
-          if true
-            :string
-          else
-            "symbol"
-          end
+          :bar
+
+          nil
         end
         CRYSTAL
     end
 
-    it "passes if a literal is the object of a call with args" do
+    it "passes if a literal is the object of a call" do
       expect_no_issues subject, <<-CRYSTAL
         { foo: "bar" }.to_json(io)
         CRYSTAL
@@ -79,221 +106,296 @@ module Ameba::Rule::Lint
         CRYSTAL
     end
 
-    it "fails if literals are top-level" do
-      expect_issue subject, <<-CRYSTAL
-          1234
-        # ^^^^ error: Literal value is not used
-          1234_f32
-        # ^^^^^^^^ error: Literal value is not used
-          "hello world"
-        # ^^^^^^^^^^^^^ error: Literal value is not used
-          "interp \#{string}"
-        # ^^^^^^^^^^^^^^^^^^ error: Literal value is not used
-          [1, 2, 3, 4, 5]
-        # ^^^^^^^^^^^^^^^ error: Literal value is not used
-          {"hello" => "world"}
-        # ^^^^^^^^^^^^^^^^^^^^ error: Literal value is not used
-          '\t'
-        # ^^^ error: Literal value is not used
-          1..2
-        # ^^^^ error: Literal value is not used
-          {goodnight: moon}
-        # ^^^^^^^^^^^^^^^^^ error: Literal value is not used
-          {1, 2, 3}
-        # ^^^^^^^^^ error: Literal value is not used
-          <<-HEREDOC
-        # ^^^^^^^^^^ error: Literal value is not used
-            this is a heredoc
-            HEREDOC
+    it "passes if a literal value is the object of a cast" do
+      expect_no_issues subject, <<-CRYSTAL
+        1.as(Int64)
+        "2".as?(String)
         CRYSTAL
     end
 
-    it "fails if literals are in def body with Nil return" do
+    it "fails if a number literal is top-level" do
       expect_issue subject, <<-CRYSTAL
-        def hello : Nil
+        1234
+        # ^^ error: Literal value is not used
+        1234_f32
+        # ^^^^^^ error: Literal value is not used
+        CRYSTAL
+    end
+
+    it "fails if a string literal is top-level" do
+      expect_issue subject, <<-CRYSTAL
+        "hello world"
+        # ^^^^^^^^^^^ error: Literal value is not used
+        "interp \#{string}"
+        # ^^^^^^^^^^^^^^^^ error: Literal value is not used
+        CRYSTAL
+    end
+
+    it "fails if an array literal is top-level" do
+      expect_issue subject, <<-CRYSTAL
+        [1, 2, 3, 4, 5]
+        # ^^^^^^^^^^^^^ error: Literal value is not used
+        CRYSTAL
+    end
+
+    it "fails if a hash literal is top-level" do
+      expect_issue subject, <<-CRYSTAL
+        {"foo" => "bar"}
+        # ^^^^^^^^^^^^^^ error: Literal value is not used
+        CRYSTAL
+    end
+
+    it "fails if a char literal is top-level" do
+      expect_issue subject, <<-CRYSTAL
+        '\t'
+        # ^ error: Literal value is not used
+        CRYSTAL
+    end
+
+    it "fails if a range literal is top-level" do
+      expect_issue subject, <<-CRYSTAL
+        1..2
+        # ^^ error: Literal value is not used
+        CRYSTAL
+    end
+
+    it "fails if a tuple literal is top-level" do
+      expect_issue subject, <<-CRYSTAL
+        {1, 2, 3}
+        # ^^^^^^^ error: Literal value is not used
+        CRYSTAL
+    end
+
+    it "fails if a named tuple literal is top-level" do
+      expect_issue subject, <<-CRYSTAL
+        {foo: bar}
+        # ^^^^^^^^ error: Literal value is not used
+        CRYSTAL
+    end
+
+    it "fails if a heredoc is top-level" do
+      expect_issue subject, <<-CRYSTAL
+        <<-HEREDOC
+        # ^^^^^^^^ error: Literal value is not used
+          this is a heredoc
+          HEREDOC
+        CRYSTAL
+    end
+
+    it "fails if a number literal is in void of method body" do
+      expect_issue subject, <<-CRYSTAL
+        def foo
           1234
         # ^^^^ error: Literal value is not used
           1234_f32
         # ^^^^^^^^ error: Literal value is not used
-          "hello world"
-        # ^^^^^^^^^^^^^ error: Literal value is not used
-          "interp \#{string}"
-        # ^^^^^^^^^^^^^^^^^^ error: Literal value is not used
-          [1, 2, 3, 4, 5]
-        # ^^^^^^^^^^^^^^^ error: Literal value is not used
-          {"hello" => "world"}
-        # ^^^^^^^^^^^^^^^^^^^^ error: Literal value is not used
-          '\t'
-        # ^^^ error: Literal value is not used
-          1..2
-        # ^^^^ error: Literal value is not used
-          {goodnight: moon}
-        # ^^^^^^^^^^^^^^^^^ error: Literal value is not used
-          {1, 2, 3}
-        # ^^^^^^^^^ error: Literal value is not used
-          <<-HEREDOC
-        # ^^^^^^^^^^ error: Literal value is not used
-            this is a heredoc
-            HEREDOC
+          return
         end
         CRYSTAL
     end
 
-    it "fails if literals are in proc body with Nil return, alongside the proc itself" do
+    it "fails if a string literal is in void of method body" do
       expect_issue subject, <<-CRYSTAL
-        -> : Nil do
-        # ^^^^^^^^^ error: Literal value is not used
-          1234
-        # ^^^^ error: Literal value is not used
-          1234_f32
-        # ^^^^^^^^ error: Literal value is not used
+        def foo
           "hello world"
         # ^^^^^^^^^^^^^ error: Literal value is not used
           "interp \#{string}"
         # ^^^^^^^^^^^^^^^^^^ error: Literal value is not used
-          [1, 2, 3, 4, 5]
-        # ^^^^^^^^^^^^^^^ error: Literal value is not used
-          {"hello" => "world"}
-        # ^^^^^^^^^^^^^^^^^^^^ error: Literal value is not used
-          '\t'
-        # ^^^ error: Literal value is not used
-          1..2
-        # ^^^^ error: Literal value is not used
-          {goodnight: moon}
-        # ^^^^^^^^^^^^^^^^^ error: Literal value is not used
-          {1, 2, 3}
-        # ^^^^^^^^^ error: Literal value is not used
-          <<-HEREDOC
-        # ^^^^^^^^^^ error: Literal value is not used
-            this is a heredoc
-            HEREDOC
+          return
         end
         CRYSTAL
     end
 
-    it "fails if literals in unused if" do
+    it "fails if an array literal is in void of method body" do
+      expect_issue subject, <<-CRYSTAL
+        def foo
+          [1, 2, 3, 4, 5]
+        # ^^^^^^^^^^^^^^^ error: Literal value is not used
+          return
+        end
+        CRYSTAL
+    end
+
+    it "fails if a hash literal is in void of method body" do
+      expect_issue subject, <<-CRYSTAL
+        def foo
+          {"foo" => "bar"}
+        # ^^^^^^^^^^^^^^^^ error: Literal value is not used
+          return
+        end
+        CRYSTAL
+    end
+
+    it "fails if a char literal is in void of method body" do
+      expect_issue subject, <<-CRYSTAL
+        def foo
+          '\t'
+        # ^^^ error: Literal value is not used
+          return
+        end
+        CRYSTAL
+    end
+
+    it "fails if a range literal is in void of method body" do
+      expect_issue subject, <<-CRYSTAL
+        def foo
+          1..2
+        # ^^^^ error: Literal value is not used
+          return
+        end
+        CRYSTAL
+    end
+
+    it "fails if a tuple literal is in void of method body" do
+      expect_issue subject, <<-CRYSTAL
+        def foo
+          {1, 2, 3}
+        # ^^^^^^^^^ error: Literal value is not used
+          return
+        end
+        CRYSTAL
+    end
+
+    it "fails if a named tuple literal is in void of method body" do
+      expect_issue subject, <<-CRYSTAL
+        def foo
+          {foo: bar}
+        # ^^^^^^^^^^ error: Literal value is not used
+          return
+        end
+        CRYSTAL
+    end
+
+    it "fails if a heredoc is in void of method body" do
+      expect_issue subject, <<-CRYSTAL
+        def foo
+          <<-HEREDOC
+        # ^^^^^^^^^^ error: Literal value is not used
+            this is a heredoc
+            HEREDOC
+          return
+        end
+        CRYSTAL
+    end
+
+    it "fails if a number literal is in void of if statement body" do
       expect_issue subject, <<-CRYSTAL
         if true
           1234
         # ^^^^ error: Literal value is not used
           1234_f32
         # ^^^^^^^^ error: Literal value is not used
+          nil
+        end
+        CRYSTAL
+    end
+
+    it "fails if a string literal is in void of if statement body" do
+      expect_issue subject, <<-CRYSTAL
+        if true
           "hello world"
         # ^^^^^^^^^^^^^ error: Literal value is not used
           "interp \#{string}"
         # ^^^^^^^^^^^^^^^^^^ error: Literal value is not used
+          nil
+        end
+        CRYSTAL
+    end
+
+    it "fails if an array literal is in void of if statement body" do
+      expect_issue subject, <<-CRYSTAL
+        if true
           [1, 2, 3, 4, 5]
         # ^^^^^^^^^^^^^^^ error: Literal value is not used
-          {"hello" => "world"}
-        # ^^^^^^^^^^^^^^^^^^^^ error: Literal value is not used
+          nil
+        end
+        CRYSTAL
+    end
+
+    it "fails if a hash literal is in void of if statement body" do
+      expect_issue subject, <<-CRYSTAL
+        if true
+          {"foo" => "bar"}
+        # ^^^^^^^^^^^^^^^^ error: Literal value is not used
+          nil
+        end
+        CRYSTAL
+    end
+
+    it "fails if a char literal is in void of if statement body" do
+      expect_issue subject, <<-CRYSTAL
+        if true
           '\t'
         # ^^^ error: Literal value is not used
+          nil
+        end
+        CRYSTAL
+    end
+
+    it "fails if a range literal is in void of if statement body" do
+      expect_issue subject, <<-CRYSTAL
+        if true
           1..2
         # ^^^^ error: Literal value is not used
-          {goodnight: moon}
-        # ^^^^^^^^^^^^^^^^^ error: Literal value is not used
+          nil
+        end
+        CRYSTAL
+    end
+
+    it "fails if a tuple literal is in void of if statement body" do
+      expect_issue subject, <<-CRYSTAL
+        if true
           {1, 2, 3}
         # ^^^^^^^^^ error: Literal value is not used
+          nil
+        end
+        CRYSTAL
+    end
+
+    it "fails if a named tuple literal is in void of if statement body" do
+      expect_issue subject, <<-CRYSTAL
+        if true
+          {foo: bar}
+        # ^^^^^^^^^^ error: Literal value is not used
+          nil
+        end
+        CRYSTAL
+    end
+
+    it "fails if a heredoc is in void of if statement body" do
+      expect_issue subject, <<-CRYSTAL
+        if true
           <<-HEREDOC
         # ^^^^^^^^^^ error: Literal value is not used
             this is a heredoc
             HEREDOC
+          nil
         end
         CRYSTAL
     end
 
-    it "fails if literals are unused in case" do
-      expect_issue subject, <<-CRYSTAL
-        thing = case object
-                when Type1
-                  true
-                # ^^^^ error: Literal value is not used
-                  "meow"
-                else
-                  if begin
-                      "huh?"
-                    # ^^^^^^ error: Literal value is not used
-                      1 > 0
-                    end
-                    1234_f32
-                  # ^^^^^^^^ error: Literal value is not used
-                  end
-
-                  "woof"
-                end
-        CRYSTAL
-    end
-
-    it "fails if literals are unused in class bodies" do
-      expect_issue subject, <<-CRYSTAL
-        class MyClass
-          case object
-          when Type1
-            true
-          # ^^^^ error: Literal value is not used
-            "meow"
-          # ^^^^^^ error: Literal value is not used
-          else
-            if begin
-                "huh?"
-              # ^^^^^^ error: Literal value is not used
-                1 > 0
-              end
-              1234_f32
-            # ^^^^^^^^ error: Literal value is not used
-            end
-
-            "woof"
-          # ^^^^^^ error: Literal value is not used
-          end
-        end
-        CRYSTAL
-    end
-
-    it "fails if unused literals in rescue/ensure/else block" do
+    it "fails if an unused literal is in begin or ensure body" do
       expect_issue subject, <<-CRYSTAL
         a = begin
               1234
             # ^^^^ error: Literal value is not used
-              1234_f32
-            # ^^^^^^^^ error: Literal value is not used
-            rescue ASDF
-              "hello world"
-            # ^^^^^^^^^^^^^ error: Literal value is not used
-              "interp \#{string}"
-            rescue QWERTY
-              [1, 2, 3, 4, 5]
-            # ^^^^^^^^^^^^^^^ error: Literal value is not used
-              {"hello" => "world"}
+            rescue Foo
+              1234
             else
-              '\t'
-            # ^^^ error: Literal value is not used
-              <<-HEREDOC
-            # ^^^^^^^^^^ error: Literal value is not used
-                this is a heredoc
-                HEREDOC
-              1..2
+              1234
             ensure
-              {goodnight: moon}
-            # ^^^^^^^^^^^^^^^^^ error: Literal value is not used
-              {1, 2, 3}
-            # ^^^^^^^^^ error: Literal value is not used
-            end
-
-        b = begin
               1234
             # ^^^^ error: Literal value is not used
-              1234_f32
-            rescue ASDF
-              "hello world"
-            # ^^^^^^^^^^^^^ error: Literal value is not used
-              "interp \#{string}"
-            ensure
-              {goodnight: moon}
-            # ^^^^^^^^^^^^^^^^^ error: Literal value is not used
-              {1, 2, 3}
-            # ^^^^^^^^^ error: Literal value is not used
             end
+        CRYSTAL
+    end
+
+    it "fails if an unused literal is in void of class body" do
+      expect_issue subject, <<-CRYSTAL
+        class MyClass
+          1234
+        # ^^^^ error: Literal value is not used
+        end
         CRYSTAL
     end
 
