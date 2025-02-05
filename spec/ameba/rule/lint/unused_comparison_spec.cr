@@ -4,18 +4,26 @@ module Ameba::Rule::Lint
   describe UnusedComparison do
     subject = UnusedComparison.new
 
-    it "passes if comparisons are significant" do
+    it "passes if comparison used in assign" do
       expect_no_issues subject, <<-CRYSTAL
-        a = 1 == "1"
-        b = begin
-          2 == "3"
+        foo = 1 == "1"
+        bar = begin
+          2 == "2"
         end
+        CRYSTAL
+    end
 
-        if c == b
-          puts "meow"
+    it "passes if comparison used in if condition" do
+      expect_no_issues subject, <<-CRYSTAL
+        if foo == bar
+          puts "baz"
         end
+        CRYSTAL
+    end
 
-        def test
+    it "passes if comparison implicitly returns from method body" do
+      expect_no_issues subject, <<-CRYSTAL
+        def foo
           1 == 2
         end
         CRYSTAL
@@ -41,36 +49,56 @@ module Ameba::Rule::Lint
       expect_no_issues subject, <<-CRYSTAL
         /foo(bar)?/ =~ baz
         /foo(bar)?/ !~ baz
-        "hello" === world
+        "foo" === bar
         CRYSTAL
     end
 
-    it "fails for all comparison operators" do
+    it "fails for top-level `==` operator" do
       expect_issue subject, <<-CRYSTAL
-          x == 2
+        foo == 2
         # ^^^^^^ error: Comparison operation is unused
-          x != 2
+        CRYSTAL
+    end
+
+    it "fails for top-level `!=` operator" do
+      expect_issue subject, <<-CRYSTAL
+        foo != 2
         # ^^^^^^ error: Comparison operation is unused
-          x < 2
+        CRYSTAL
+    end
+
+    it "fails for top-level `<` operator" do
+      expect_issue subject, <<-CRYSTAL
+        foo < 2
         # ^^^^^ error: Comparison operation is unused
-          x <= 2
+        CRYSTAL
+    end
+
+    it "fails for top-level `<=` operator" do
+      expect_issue subject, <<-CRYSTAL
+        foo <= 2
         # ^^^^^^ error: Comparison operation is unused
-          x > 2
+        CRYSTAL
+    end
+
+    it "fails for top-level `>` operator" do
+      expect_issue subject, <<-CRYSTAL
+        foo > 2
         # ^^^^^ error: Comparison operation is unused
-          x >= 2
+        CRYSTAL
+    end
+
+    it "fails for top-level `>=` operator" do
+      expect_issue subject, <<-CRYSTAL
+        foo >= 2
         # ^^^^^^ error: Comparison operation is unused
-          x <=> 2
+        CRYSTAL
+    end
+
+    it "fails for top-level `<=>` operator" do
+      expect_issue subject, <<-CRYSTAL
+        foo <=> 2
         # ^^^^^^^ error: Comparison operation is unused
-        puts x
-        CRYSTAL
-    end
-
-    it "fails for an unused top-level comparison" do
-      expect_issue subject, <<-CRYSTAL
-        x = 1
-          x == 2
-        # ^^^^^^ error: Comparison operation is unused
-        puts x
         CRYSTAL
     end
 
@@ -98,8 +126,6 @@ module Ameba::Rule::Lint
             else
               x == 2
             # ^^^^^^ error: Comparison operation is unused
-              x == 1
-            # ^^^^^^ error: Comparison operation is unused
               x == 3
             end
         CRYSTAL
@@ -107,15 +133,15 @@ module Ameba::Rule::Lint
 
     it "fails for unused comparisons in a proc body" do
       expect_issue subject, <<-CRYSTAL
-        a = -> {
+        a = -> do
           x == 1
         # ^^^^^^ error: Comparison operation is unused
           "meow"
-        }
+        end
         CRYSTAL
     end
 
-    it "fails for unused comparison in if when not assigning" do
+    it "fails for unused comparison in top-level if statement body" do
       expect_issue subject, <<-CRYSTAL
         if true
           x == 1
@@ -127,17 +153,9 @@ module Ameba::Rule::Lint
         CRYSTAL
     end
 
-    it "fails on useless comparisons" do
+    it "fails for unused comparison in void of method body" do
       expect_issue subject, <<-CRYSTAL
-        def hello
-          if x == 3
-            x < 1
-          else
-            x > 1
-          end
-        end
-
-        def world
+        def foo
           if x == 3
             x < 1
           # ^^^^^ error: Comparison operation is unused
@@ -148,33 +166,6 @@ module Ameba::Rule::Lint
 
           return
         end
-
-        if x == 3
-          x < 1
-        # ^^^^^ error: Comparison operation is unused
-        else
-          x > 1
-        # ^^^^^ error: Comparison operation is unused
-        end
-
-        a = if x == 3
-              x > 1
-            # ^^^^^ error: Comparison operation is unused
-              x < 1
-            else
-              x > 1
-            end
-
-        a = if begin
-                x == 1
-              # ^^^^^^ error: Comparison operation is unused
-                x == 3
-              end
-              x == 4
-            end
-
-          x == 4
-        # ^^^^^^ error: Comparison operation is unused
         CRYSTAL
     end
   end
