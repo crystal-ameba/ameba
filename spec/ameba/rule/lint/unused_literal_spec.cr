@@ -5,13 +5,13 @@ module Ameba::Rule::Lint
     subject = UnusedLiteral.new
 
     it "passes if a number literal is used to assign" do
-      expect_no_issues subject, <<-'CRYSTAL'
+      expect_no_issues subject, <<-CRYSTAL
         a = 1
         CRYSTAL
     end
 
     it "passes if a char literal is used to assign" do
-      expect_no_issues subject, <<-'CRYSTAL'
+      expect_no_issues subject, <<-CRYSTAL
         c = '\t'
         CRYSTAL
     end
@@ -19,12 +19,12 @@ module Ameba::Rule::Lint
     it "passes if a string literal is used to assign" do
       expect_no_issues subject, <<-'CRYSTAL'
         b = "foo"
-        g = "bar \#{baz}"
+        g = "bar #{baz}"
         CRYSTAL
     end
 
     it "passes if a heredoc is used to assign" do
-      expect_no_issues subject, <<-'CRYSTAL'
+      expect_no_issues subject, <<-CRYSTAL
         h = <<-HEREDOC
           foo
           HEREDOC
@@ -32,25 +32,25 @@ module Ameba::Rule::Lint
     end
 
     it "passes if a symbol literal is used to assign" do
-      expect_no_issues subject, <<-'CRYSTAL'
+      expect_no_issues subject, <<-CRYSTAL
         c = :foo
         CRYSTAL
     end
 
     it "passes if a named tuple literal is used to assign" do
-      expect_no_issues subject, <<-'CRYSTAL'
+      expect_no_issues subject, <<-CRYSTAL
         d = {foo: 1, bar: 2}
         CRYSTAL
     end
 
     it "passes if an array literal is used to assign" do
-      expect_no_issues subject, <<-'CRYSTAL'
+      expect_no_issues subject, <<-CRYSTAL
         e = [10_f32, 20_f32, 30_f32]
         CRYSTAL
     end
 
     it "passes if a proc literal is used to assign" do
-      expect_no_issues subject, <<-'CRYSTAL'
+      expect_no_issues subject, <<-CRYSTAL
         f = -> { }
         CRYSTAL
     end
@@ -123,10 +123,10 @@ module Ameba::Rule::Lint
     end
 
     it "fails if a string literal is top-level" do
-      expect_issue subject, <<-CRYSTAL
+      expect_issue subject, <<-'CRYSTAL'
         "hello world"
         # ^^^^^^^^^^^ error: Literal value is not used
-        "interp \#{string}"
+        "interp #{string}"
         # ^^^^^^^^^^^^^^^^ error: Literal value is not used
         CRYSTAL
     end
@@ -195,11 +195,11 @@ module Ameba::Rule::Lint
     end
 
     it "fails if a string literal is in void of method body" do
-      expect_issue subject, <<-CRYSTAL
+      expect_issue subject, <<-'CRYSTAL'
         def foo
           "hello world"
         # ^^^^^^^^^^^^^ error: Literal value is not used
-          "interp \#{string}"
+          "interp #{string}"
         # ^^^^^^^^^^^^^^^^^^ error: Literal value is not used
           return
         end
@@ -291,11 +291,11 @@ module Ameba::Rule::Lint
     end
 
     it "fails if a string literal is in void of if statement body" do
-      expect_issue subject, <<-CRYSTAL
+      expect_issue subject, <<-'CRYSTAL'
         if true
           "hello world"
         # ^^^^^^^^^^^^^ error: Literal value is not used
-          "interp \#{string}"
+          "interp #{string}"
         # ^^^^^^^^^^^^^^^^^^ error: Literal value is not used
           nil
         end

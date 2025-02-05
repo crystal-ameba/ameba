@@ -53,49 +53,49 @@ module Ameba::Rule::Lint
         CRYSTAL
     end
 
-    it "fails for top-level `==` operator" do
+    it "fails if a comparison operation with `==` is unused" do
       expect_issue subject, <<-CRYSTAL
         foo == 2
         # ^^^^^^ error: Comparison operation is unused
         CRYSTAL
     end
 
-    it "fails for top-level `!=` operator" do
+    it "fails if a comparison operation with `!=` is unused" do
       expect_issue subject, <<-CRYSTAL
         foo != 2
         # ^^^^^^ error: Comparison operation is unused
         CRYSTAL
     end
 
-    it "fails for top-level `<` operator" do
+    it "fails if a comparison operation with `<` is unused" do
       expect_issue subject, <<-CRYSTAL
         foo < 2
         # ^^^^^ error: Comparison operation is unused
         CRYSTAL
     end
 
-    it "fails for top-level `<=` operator" do
+    it "fails if a comparison operation with `<=` is unused" do
       expect_issue subject, <<-CRYSTAL
         foo <= 2
         # ^^^^^^ error: Comparison operation is unused
         CRYSTAL
     end
 
-    it "fails for top-level `>` operator" do
+    it "fails if a comparison operation with `>` is unused" do
       expect_issue subject, <<-CRYSTAL
         foo > 2
         # ^^^^^ error: Comparison operation is unused
         CRYSTAL
     end
 
-    it "fails for top-level `>=` operator" do
+    it "fails if a comparison operation with `>=` is unused" do
       expect_issue subject, <<-CRYSTAL
         foo >= 2
         # ^^^^^^ error: Comparison operation is unused
         CRYSTAL
     end
 
-    it "fails for top-level `<=>` operator" do
+    it "fails if a comparison operation with `<=>` is unused" do
       expect_issue subject, <<-CRYSTAL
         foo <=> 2
         # ^^^^^^^ error: Comparison operation is unused

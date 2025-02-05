@@ -55,9 +55,7 @@ module Ameba::Rule::Lint
     end
 
     it "passes for an unused path" do
-      expect_no_issues subject, <<-CRYSTAL
-        Foo
-        CRYSTAL
+      expect_no_issues subject, "Foo"
     end
 
     it "passes if a generic is used for a parameter type restriction" do
