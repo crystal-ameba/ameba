@@ -399,6 +399,46 @@ module Ameba::Rule::Lint
         CRYSTAL
     end
 
+    it "passes if a literal is used in outputting macro expression" do
+      expect_no_issues subject, <<-CRYSTAL
+        {{ "foo" }}
+        CRYSTAL
+    end
+
+    it "fails if a literal is used in non-outputting macro expression" do
+      expect_issue subject, <<-CRYSTAL
+        {% "foo" %}
+         # ^^^^^ error: Literal value is not used
+        CRYSTAL
+    end
+
+    it "fails if a literal is unused in macro expressions inside of a macro if" do
+      expect_issue subject, <<-CRYSTAL
+        {% if true %}
+          {% "foo" %}
+           # ^^^^^ error: Literal value is not used
+        {% end %}
+        CRYSTAL
+    end
+
+    it "fails if a literal is unused in macro expressions inside of a macro for" do
+      expect_issue subject, <<-CRYSTAL
+        {% for i in [1, 2, 3] %}
+          {% "foo" %}
+           # ^^^^^ error: Literal value is not used
+        {% end %}
+        CRYSTAL
+    end
+
+    it "fails if a literal is unused in macro defs" do
+      expect_issue subject, <<-CRYSTAL
+        macro name(foo)
+          {% "bar" %}
+           # ^^^^^ error: Literal value is not used
+        end
+        CRYSTAL
+    end
+
     # Locations for Regex literals were added in Crystal v1.15.0
     {% if compare_versions(Crystal::VERSION, "1.15.0") >= 0 %}
       it "fails if a regex literal is unused" do
