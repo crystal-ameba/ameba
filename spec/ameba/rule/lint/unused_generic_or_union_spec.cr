@@ -4,96 +4,136 @@ module Ameba::Rule::Lint
   describe UnusedGenericOrUnion do
     subject = UnusedGenericOrUnion.new
 
-    it "passes if generics and unions are used for assign and method calls" do
+    it "passes if a generic is used in a top-level type declaration" do
       expect_no_issues subject, <<-CRYSTAL
-        my_var : String? = EMPTY_STRING
+        foo : Bar?
+        CRYSTAL
+    end
 
-        a : Int32? = 10
+    it "passes if a union is used in a top-level type declaration" do
+      expect_no_issues subject, <<-CRYSTAL
+        foo : Bar | Baz
+        CRYSTAL
+    end
 
-        klass = String?
+    it "passes if a generic is used in an assign" do
+      expect_no_issues subject, <<-CRYSTAL
+        foo = Bar?
+        CRYSTAL
+    end
 
-        my_var.as(Array(Char))
+    it "passes if a union is used in an assign" do
+      expect_no_issues subject, <<-CRYSTAL
+        foo = Bar | Baz
+        CRYSTAL
+    end
 
+    it "passes if a generic or union is used in a cast" do
+      expect_no_issues subject, <<-CRYSTAL
+        foo.as(Bar?)
+        bar.as?(Baz | Qux)
+        CRYSTAL
+    end
+
+    it "passes if a generic or union is used as a method argument" do
+      expect_no_issues subject, <<-CRYSTAL
         puts StaticArray(Int32, 10)
+        CRYSTAL
+    end
 
+    it "passes if a generic is used as a method call object" do
+      expect_no_issues subject, <<-CRYSTAL
+        MyClass(String).new
+        CRYSTAL
+    end
+
+    it "passes if something that looks like a union but isn't is top-level" do
+      expect_no_issues subject, <<-CRYSTAL
         # Not a union
-        Int32 | "Float64"
-
-        MyClass(String).new.run
+        Foo | "Bar"
         CRYSTAL
     end
 
-    it "passes for plain pseudo methods, self, and paths" do
-      expect_no_issues subject, <<-CRYSTAL
-        _
-        self
-        self?
-        typeof(1)
-        Int32
-        CRYSTAL
+    it "passes for an unused path" do
+      expect_no_issues subject, "Foo"
     end
 
-    it "passes if generics and unions are used for method arguments and return type" do
+    it "passes if a generic is used for a parameter type restriction" do
       expect_no_issues subject, <<-CRYSTAL
-        def size(a : Float64?) : Float64?
-          0.1.try(&.+(a))
-        end
-
-        def append(a : Array(String)) : Array(String)
-          a << "hello"
+        def foo(bar : Baz?)
         end
         CRYSTAL
     end
 
-    it "fails if generics or unions are unused at top-level" do
+    it "passes if a generic is used for a method return type restriction" do
+      expect_no_issues subject, <<-CRYSTAL
+        def foo : Baz?
+        end
+        CRYSTAL
+    end
+
+    it "passes if a union is used for a parameter type restriction" do
+      expect_no_issues subject, <<-CRYSTAL
+        def foo(bar : Baz | Qux)
+        end
+        CRYSTAL
+    end
+
+    it "passes if a union is used for a method return type restriction" do
+      expect_no_issues subject, <<-CRYSTAL
+        def foo : Baz | Qux
+        end
+        CRYSTAL
+    end
+
+    it "fails for an unused top-level generic" do
       expect_issue subject, <<-CRYSTAL
         String?
         # ^^^^^ error: Generic is not used
-        Int32 | Float64 | Nil
-        # ^^^^^^^^^^^^^^^^^^^ error: Union is not used
         StaticArray(Int32, 10)
         # ^^^^^^^^^^^^^^^^^^^^ error: Generic is not used
         CRYSTAL
     end
 
-    it "fails if generics or unions are unused inside methods" do
+    it "fails for an unused top-level union" do
       expect_issue subject, <<-CRYSTAL
-        def hello
+        Int32 | Float64 | Nil
+        # ^^^^^^^^^^^^^^^^^^^ error: Union is not used
+        CRYSTAL
+    end
+
+    it "fails for an unused top-level union of self, typeof, and underscore" do
+      expect_issue subject, <<-CRYSTAL
+        self | typeof(1) | _
+        # ^^^^^^^^^^^^^^^^^^ error: Union is not used
+        CRYSTAL
+    end
+
+    it "fails if a generic is in void of method body" do
+      expect_issue subject, <<-CRYSTAL
+        def foo
           Float64?
         # ^^^^^^^^ error: Generic is not used
-          0.1
-        end
-
-        fun fun_name : Int32
-          Array(String)
-        # ^^^^^^^^^^^^^ error: Generic is not used
-          1234
+          nil
         end
         CRYSTAL
     end
 
-    it "fails if generics or unions are unused inside classes and modules" do
+    it "fails if a union is in void of method body" do
+      expect_issue subject, <<-CRYSTAL
+        def foo
+          Bar | Baz
+        # ^^^^^^^^^ error: Union is not used
+          nil
+        end
+        CRYSTAL
+    end
+
+    it "fails if a generic is in void of class body" do
       expect_issue subject, <<-CRYSTAL
         class MyClass
           String?
         # ^^^^^^^ error: Generic is not used
-          Array(self)
-        # ^^^^^^^^^^^ error: Generic is not used
-          Array(typeof(1))
-        # ^^^^^^^^^^^^^^^^ error: Generic is not used
-
-          def hello
-            self | Nil
-          # ^^^^^^^^^^ error: Union is not used
-            typeof(1) | Nil | _
-          # ^^^^^^^^^^^^^^^^^^^ error: Union is not used
-            "Hello, Gordon!"
-          end
-        end
-
-        module MyModule
-          Array(Int32)
-        # ^^^^^^^^^^^^ error: Generic is not used
         end
         CRYSTAL
     end
