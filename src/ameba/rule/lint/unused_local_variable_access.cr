@@ -69,8 +69,8 @@ module Ameba::Rule::Lint
       AST::ImplicitReturnVisitor.new(self, source)
     end
 
-    def test(source, node : Crystal::Var, node_is_used : Bool, in_macro : Bool)
-      return if node_is_used || node.name.in?("self") || (in_macro && node.name.in?("skip_file", "debug"))
+    def test(source, node : Crystal::Var, scope : AST::ImplicitReturnScope)
+      return if scope.node_is_used? || node.name.in?("self") || (scope.in_macro? && node.name.in?("skip_file", "debug"))
 
       issue_for node, MSG
     end

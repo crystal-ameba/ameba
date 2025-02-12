@@ -51,8 +51,8 @@ module Ameba::Rule::Lint
       AST::ImplicitReturnVisitor.new(self, source)
     end
 
-    def test(source, node : Crystal::ClassVar, node_is_used : Bool, in_macro : Bool)
-      return if node_is_used
+    def test(source, node : Crystal::ClassVar, scope : AST::ImplicitReturnScope)
+      return if scope.node_is_used?
 
       issue_for node, MSG
     end
