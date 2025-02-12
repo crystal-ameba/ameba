@@ -47,13 +47,13 @@ module Ameba::Rule::Lint
       AST::ImplicitReturnVisitor.new(self, source)
     end
 
-    def test(source, node : Crystal::Call, node_is_used : Bool)
+    def test(source, node : Crystal::Call, node_is_used : Bool, in_macro : Bool)
       return if node_is_used || !path_or_generic_union?(node)
 
       issue_for node, MSG_UNION
     end
 
-    def test(source, node : Crystal::Generic, node_is_used : Bool)
+    def test(source, node : Crystal::Generic, node_is_used : Bool, in_macro : Bool)
       issue_for node, MSG_GENERIC unless node_is_used
     end
 

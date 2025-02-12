@@ -55,7 +55,7 @@ module Ameba::Rule::Lint
       AST::ImplicitReturnVisitor.new(self, source)
     end
 
-    def test(source, node : Crystal::RegexLiteral, node_is_used : Bool)
+    def test(source, node : Crystal::RegexLiteral, node_is_used : Bool, in_macro : Bool)
       # Locations for Regex literals were added in Crystal v1.15.0
       {% if compare_versions(Crystal::VERSION, "1.15.0") >= 0 %}
         issue_for node, MSG unless node_is_used
@@ -70,6 +70,7 @@ module Ameba::Rule::Lint
              Crystal::StringLiteral | Crystal::SymbolLiteral |
              Crystal::NamedTupleLiteral | Crystal::StringInterpolation,
       node_is_used : Bool,
+      in_macro : Bool,
     )
       issue_for node, MSG unless node_is_used
     end
