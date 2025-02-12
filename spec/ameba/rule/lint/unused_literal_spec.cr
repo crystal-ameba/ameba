@@ -11,7 +11,7 @@ module Ameba::Rule::Lint
     end
 
     it "passes if a char literal is used to assign" do
-      expect_no_issues subject, <<-CRYSTAL
+      expect_no_issues subject, <<-'CRYSTAL'
         c = '\t'
         CRYSTAL
     end
@@ -146,9 +146,9 @@ module Ameba::Rule::Lint
     end
 
     it "fails if a char literal is top-level" do
-      expect_issue subject, <<-CRYSTAL
+      expect_issue subject, <<-'CRYSTAL'
         '\t'
-        # ^ error: Literal value is not used
+        # ^^ error: Literal value is not used
         CRYSTAL
     end
 
@@ -227,10 +227,10 @@ module Ameba::Rule::Lint
     end
 
     it "fails if a char literal is in void of method body" do
-      expect_issue subject, <<-CRYSTAL
+      expect_issue subject, <<-'CRYSTAL'
         def foo
           '\t'
-        # ^^^ error: Literal value is not used
+        # ^^^^ error: Literal value is not used
           return
         end
         CRYSTAL
@@ -323,10 +323,10 @@ module Ameba::Rule::Lint
     end
 
     it "fails if a char literal is in void of if statement body" do
-      expect_issue subject, <<-CRYSTAL
+      expect_issue subject, <<-'CRYSTAL'
         if true
           '\t'
-        # ^^^ error: Literal value is not used
+        # ^^^^ error: Literal value is not used
           nil
         end
         CRYSTAL
