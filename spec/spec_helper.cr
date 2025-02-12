@@ -67,7 +67,7 @@ module Ameba
     getter call_queue = {} of AST::Scope => Array(Crystal::Call)
 
     properties do
-      description "Internal rule to self calls in test scopes"
+      description "Internal rule to test calls to `self` in scopes"
     end
 
     def test(source, node : Crystal::Call, scope : AST::Scope)
