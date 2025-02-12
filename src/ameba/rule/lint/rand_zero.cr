@@ -25,7 +25,7 @@ module Ameba::Rule::Lint
   class RandZero < Base
     properties do
       since_version "0.5.1"
-      description "Disallows rand zero calls"
+      description "Disallows `rand` zero calls"
     end
 
     MSG = "`%s` always returns `0`"
