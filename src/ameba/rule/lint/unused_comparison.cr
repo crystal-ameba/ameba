@@ -48,7 +48,7 @@ module Ameba::Rule::Lint
       AST::ImplicitReturnVisitor.new(self, source)
     end
 
-    def test(source, node : Crystal::Call)
+    def test(source, node : Crystal::Call, in_macro : Bool)
       if node.name.in?(COMPARISON_OPERATORS) && node.args.size == 1
         issue_for node, MSG
       end
