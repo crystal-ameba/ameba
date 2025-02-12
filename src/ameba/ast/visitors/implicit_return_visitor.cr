@@ -149,6 +149,9 @@ module Ameba::AST
         node.args.each &.accept(self)
         node.double_splat.try &.accept(self)
         node.block_arg.try &.accept(self)
+      end
+
+      swap_stack do
         node.body.accept(self)
       end
 
@@ -339,10 +342,12 @@ module Ameba::AST
     def visit(node : Crystal::MacroExpression) : Bool
       @rule.test(@source, node, @stack.positive?, @in_macro)
 
-      if node.output?
-        incr_stack { node.exp.accept(self) }
-      else
-        node.exp.accept(self)
+      in_macro do
+        if node.output?
+          incr_stack { node.exp.accept(self) }
+        else
+          swap_stack { node.exp.accept(self) }
+        end
       end
 
       false
@@ -351,9 +356,13 @@ module Ameba::AST
     def visit(node : Crystal::MacroIf) : Bool
       @rule.test(@source, node, @stack.positive?, @in_macro)
 
-      incr_stack { node.cond.accept(self) }
-      node.then.accept(self)
-      node.else.accept(self)
+      in_macro do
+        swap_stack do
+          incr_stack { node.cond.accept(self) }
+          node.then.accept(self)
+          node.else.accept(self)
+        end
+      end
 
       false
     end
@@ -361,7 +370,9 @@ module Ameba::AST
     def visit(node : Crystal::MacroFor) : Bool
       @rule.test(@source, node, @stack.positive?, @in_macro)
 
-      node.body.accept(self)
+      in_macro do
+        swap_stack { node.body.accept(self) }
+      end
 
       false
     end
