@@ -52,7 +52,7 @@ module Ameba::Rule::Lint
     end
 
     def test(source, node : Crystal::InstanceVar, node_is_used : Bool, in_macro : Bool)
-      return if node_is_used
+      return if node_is_used || (in_macro && node.name.in?("@type"))
 
       issue_for node, MSG
     end
