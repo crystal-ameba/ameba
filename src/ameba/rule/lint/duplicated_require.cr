@@ -1,5 +1,5 @@
 module Ameba::Rule::Lint
-  # A rule that reports duplicated require statements.
+  # A rule that reports duplicated `require` statements.
   #
   # ```
   # require "./thing"
@@ -16,7 +16,7 @@ module Ameba::Rule::Lint
   class DuplicatedRequire < Base
     properties do
       since_version "0.14.0"
-      description "Reports duplicated require statements"
+      description "Reports duplicated `require` statements"
     end
 
     MSG = "Duplicated require of `%s`"
