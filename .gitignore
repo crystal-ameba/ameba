@@ -8,3 +8,4 @@
 # Dependencies will be locked in application that uses them
 /shard.lock
 /.vscode/
+/.zed/
