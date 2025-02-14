@@ -52,7 +52,8 @@ module Ameba::Rule::Lint
     end
 
     def test(source, node : Crystal::InstanceVar, in_macro : Bool)
-      return if in_macro && node.name.in?("@type")
+      # Handle special case when using `@type` within a method body has side-effects
+      return if in_macro && node.name == "@type"
 
       issue_for node, MSG
     end
