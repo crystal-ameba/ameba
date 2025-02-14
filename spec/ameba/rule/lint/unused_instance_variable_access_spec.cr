@@ -12,15 +12,6 @@ module Ameba::Rule::Lint
         CRYSTAL
     end
 
-    it "passes if @type is unused within a macro expression" do
-      expect_no_issues subject, <<-CRYSTAL
-        def foo
-          {% @type %}
-          :bar
-        end
-        CRYSTAL
-    end
-
     it "passes if an instance variable is used as a target in multi-assignment" do
       expect_no_issues subject, <<-CRYSTAL
         class MyClass
@@ -47,6 +38,15 @@ module Ameba::Rule::Lint
         # ^^^^^ error: Value from instance variable access is unused
 
           "Hello, #{@name}!"
+        end
+        CRYSTAL
+    end
+
+    it "passes if @type is unused within a macro expression" do
+      expect_no_issues subject, <<-CRYSTAL
+        def foo
+          {% @type %}
+          :bar
         end
         CRYSTAL
     end
