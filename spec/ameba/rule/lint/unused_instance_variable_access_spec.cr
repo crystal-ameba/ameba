@@ -42,12 +42,12 @@ module Ameba::Rule::Lint
     end
 
     it "fails if instance variables are unused in void context of method" do
-      expect_issue subject, <<-CRYSTAL
+      expect_issue subject, <<-'CRYSTAL'
         def hello : String
           @name
         # ^^^^^ error: Value from instance variable access is unused
 
-          "Hello, \#{@name}!"
+          "Hello, #{@name}!"
         end
         CRYSTAL
     end
