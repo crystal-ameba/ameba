@@ -50,5 +50,15 @@ module Ameba::Rule::Lint
         end
         CRYSTAL
     end
+
+    it "fails if @def is unused within a macro expression" do
+      expect_issue subject, <<-CRYSTAL
+        def foo
+          {% @def %}
+           # ^^^^ error: Value from instance variable access is unused
+          :bar
+        end
+        CRYSTAL
+    end
   end
 end

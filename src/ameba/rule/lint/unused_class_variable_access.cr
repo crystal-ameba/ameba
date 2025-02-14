@@ -52,6 +52,9 @@ module Ameba::Rule::Lint
     end
 
     def test(source, node : Crystal::ClassVar, in_macro : Bool)
+      # Class variables aren't supported in macros
+      return if in_macro
+
       issue_for node, MSG
     end
   end
