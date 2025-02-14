@@ -6,25 +6,25 @@ module Ameba::Rule::Lint
 
     it "passes if local variables are used in assign" do
       expect_no_issues subject, <<-CRYSTAL
-        a = 1
-        a += 1
-        a, b = 2, 3
+        foo = 1
+        foo += 1
+        foo, bar = 2, 3
         CRYSTAL
     end
 
     it "passes if a local variable is a call argument" do
       expect_no_issues subject, <<-CRYSTAL
-        a = 1
-        puts a
+        foo = 1
+        puts foo
         CRYSTAL
     end
 
     it "passes if local variable on left side of a comparison" do
       expect_no_issues subject, <<-CRYSTAL
         def hello
-          a = 1
-          a || (puts "a is falsey")
-          a
+          foo = 1
+          foo || (puts "foo is falsey")
+          foo
         end
         CRYSTAL
     end
@@ -43,12 +43,12 @@ module Ameba::Rule::Lint
 
     it "fails if a local variable is in a void context" do
       expect_issue subject, <<-CRYSTAL
-        a = 1
+        foo = 1
 
         begin
-          a
+          foo
         # ^ error: Value from local variable access is unused
-          puts a
+          puts foo
         end
         CRYSTAL
     end

@@ -7,8 +7,8 @@ module Ameba::Rule::Lint
     it "passes if instance variables are used for assignment" do
       expect_no_issues subject, <<-CRYSTAL
         class MyClass
-          a = @ivar
-          B = @ivar
+          foo = @ivar
+          Bar = @ivar
         end
         CRYSTAL
     end
@@ -25,7 +25,7 @@ module Ameba::Rule::Lint
     it "passes if an instance variable is used as a target in multi-assignment" do
       expect_no_issues subject, <<-CRYSTAL
         class MyClass
-          @a, @b = 1, 2
+          @foo, @bar = 1, 2
         end
         CRYSTAL
     end
