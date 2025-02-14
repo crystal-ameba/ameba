@@ -47,7 +47,7 @@ module Ameba::Rule::Lint
 
         begin
           foo
-        # ^ error: Value from local variable access is unused
+        # ^^^ error: Value from local variable access is unused
           puts foo
         end
         CRYSTAL

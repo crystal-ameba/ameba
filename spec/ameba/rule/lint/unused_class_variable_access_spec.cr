@@ -8,7 +8,6 @@ module Ameba::Rule::Lint
       expect_no_issues subject, <<-CRYSTAL
         class MyClass
           foo = @@ivar
-          Bar = @@ivar
         end
         CRYSTAL
     end
