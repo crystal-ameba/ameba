@@ -70,7 +70,8 @@ module Ameba::Rule::Lint
     end
 
     def test(source, node : Crystal::Var, in_macro : Bool)
-      return if node.name.in?("self") || (in_macro && node.name.in?("skip_file", "debug"))
+      return if node.name == "self" # This case will be reported by `Lint/UnusedSelf` rule
+      return if in_macro && node.name.in?("debug", "skip_file")
 
       issue_for node, MSG
     end
