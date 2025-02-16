@@ -14,7 +14,7 @@
 <script type="text/javascript" src="../../../js/doc.js"></script>
 
   <meta name="repository-name" content="ameba">
-  <title>Ameba::Rule::Lint::DebuggerStatement - ameba master</title>
+  <title>Ameba::Rule::Lint::SpecEqWithBoolOrNilLiteral - ameba master</title>
   <script type="text/javascript">
     CrystalDocs.base_path = "../../../";
   </script>
@@ -407,7 +407,7 @@
       
     </li>
   
-  <li class=" current" data-id="ameba/Ameba/Rule/Lint/DebuggerStatement" data-name="ameba::rule::lint::debuggerstatement">
+  <li class=" " data-id="ameba/Ameba/Rule/Lint/DebuggerStatement" data-name="ameba::rule::lint::debuggerstatement">
       <a href="../../../Ameba/Rule/Lint/DebuggerStatement.html">DebuggerStatement</a>
       
     </li>
@@ -527,7 +527,7 @@
       
     </li>
   
-  <li class=" " data-id="ameba/Ameba/Rule/Lint/SpecEqWithBoolOrNilLiteral" data-name="ameba::rule::lint::speceqwithboolornilliteral">
+  <li class=" current" data-id="ameba/Ameba/Rule/Lint/SpecEqWithBoolOrNilLiteral" data-name="ameba::rule::lint::speceqwithboolornilliteral">
       <a href="../../../Ameba/Rule/Lint/SpecEqWithBoolOrNilLiteral.html">SpecEqWithBoolOrNilLiteral</a>
       
     </li>
@@ -986,12 +986,12 @@
 <div class="main-content">
 <h1 class="type-name">
 
-  <span class="kind">class</span> Ameba::<wbr>Rule::<wbr>Lint::<wbr>DebuggerStatement
+  <span class="kind">class</span> Ameba::<wbr>Rule::<wbr>Lint::<wbr>SpecEqWithBoolOrNilLiteral
 
 </h1>
 
 
-  <ul class="superclass-hierarchy"><li class="superclass"><a href="../../../Ameba/Rule/Lint/DebuggerStatement.html">Ameba::Rule::Lint::DebuggerStatement</a></li><li class="superclass"><a href="../../../Ameba/Rule/Base.html">Ameba::Rule::Base</a></li><li class="superclass">Reference</li><li class="superclass">Object</li></ul>
+  <ul class="superclass-hierarchy"><li class="superclass"><a href="../../../Ameba/Rule/Lint/SpecEqWithBoolOrNilLiteral.html">Ameba::Rule::Lint::SpecEqWithBoolOrNilLiteral</a></li><li class="superclass"><a href="../../../Ameba/Rule/Base.html">Ameba::Rule::Base</a></li><li class="superclass">Reference</li><li class="superclass">Object</li></ul>
 
 
 
@@ -1005,11 +1005,21 @@
     Overview
   </h2>
 
-  <p>A rule that disallows calls to debugger.</p>
-<p>This is because we don't want debugger breakpoints accidentally being
-committed into our codebase.</p>
+  <p>Reports <code>eq(true|false|nil)</code> expectations in specs.</p>
+<p>This is considered bad:</p>
+<pre><code class="language-crystal">it <span class="s">&quot;works&quot;</span> <span class="k">do</span>
+  foo.<span class="k">is_a?</span>(<span class="t">String</span>).should eq <span class="n">true</span>
+  foo.<span class="k">is_a?</span>(<span class="t">Int32</span>).should eq <span class="n">false</span>
+  foo.<span class="k">as?</span>(<span class="t">Symbol</span>).should eq <span class="n">nil</span>
+<span class="k">end</span></code></pre>
+<p>And it should be written as the following:</p>
+<pre><code class="language-crystal">it <span class="s">&quot;works&quot;</span> <span class="k">do</span>
+  foo.<span class="k">is_a?</span>(<span class="t">String</span>).should be_true
+  foo.<span class="k">is_a?</span>(<span class="t">Int32</span>).should be_false
+  foo.<span class="k">as?</span>(<span class="t">Symbol</span>).should be_nil
+<span class="k">end</span></code></pre>
 <p>YAML configuration example:</p>
-<pre><code class="language-crystal"><span class="t">Lint</span><span class="o">/</span><span class="t">DebuggerStatement</span>:
+<pre><code class="language-crystal"><span class="t">Lint</span><span class="o">/</span><span class="t">SpecEqWithBoolOrNilLiteral</span>:
   <span class="t">Enabled</span>: <span class="n">true</span></code></pre>
 
 
@@ -1051,8 +1061,8 @@ committed into our codebase.</p>
   </h2>
   
     
-      <a href="https://github.com/crystal-ameba/ameba/blob/d28076c/src/ameba/rule/lint/debugger_statement.cr#L13" target="_blank">
-        ameba/rule/lint/debugger_statement.cr
+      <a href="https://github.com/crystal-ameba/ameba/blob/d28076c/src/ameba/rule/lint/spec_eq_with_bool_or_nil_literal.cr#L30" target="_blank">
+        ameba/rule/lint/spec_eq_with_bool_or_nil_literal.cr
       </a>
     
     <br/>
@@ -1073,7 +1083,7 @@ committed into our codebase.</p>
   <dl>
     
       <dt class="entry-const" id="MSG">
-        <strong>MSG</strong> = <code><span class="s">&quot;Possible forgotten debugger statement detected&quot;</span></code>
+        <strong>MSG</strong> = <code><span class="s">&quot;Use `%s` instead of `%s` expectation&quot;</span></code>
       </dt>
       
     
@@ -1099,7 +1109,7 @@ committed into our codebase.</p>
       <li class="entry-summary">
         <a href="#new%28config%3Dnil%29-class-method" class="signature"><strong>.new</strong>(config = <span class="n">nil</span>)</a>
         
-          <div class="summary"><p>A rule that disallows calls to debugger.</p></div>
+          <div class="summary"><p>Reports <code>eq(true|false|nil)</code> expectations in specs.</p></div>
         
       </li>
     
@@ -1192,6 +1202,11 @@ committed into our codebase.</p>
     
       <li class="entry-summary">
         <a href="#test%28source%2Cnode%3ACrystal%3A%3ACall%29-instance-method" class="signature"><strong>#test</strong>(source, node : Crystal::Call)</a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#test%28source%29-instance-method" class="signature"><strong>#test</strong>(source)</a>
         
       </li>
     
@@ -1386,18 +1401,28 @@ committed into our codebase.</p>
       
         <div class="doc">
           
-          <p>A rule that disallows calls to debugger.</p>
-<p>This is because we don't want debugger breakpoints accidentally being
-committed into our codebase.</p>
+          <p>Reports <code>eq(true|false|nil)</code> expectations in specs.</p>
+<p>This is considered bad:</p>
+<pre><code class="language-crystal">it <span class="s">&quot;works&quot;</span> <span class="k">do</span>
+  foo.<span class="k">is_a?</span>(<span class="t">String</span>).should eq <span class="n">true</span>
+  foo.<span class="k">is_a?</span>(<span class="t">Int32</span>).should eq <span class="n">false</span>
+  foo.<span class="k">as?</span>(<span class="t">Symbol</span>).should eq <span class="n">nil</span>
+<span class="k">end</span></code></pre>
+<p>And it should be written as the following:</p>
+<pre><code class="language-crystal">it <span class="s">&quot;works&quot;</span> <span class="k">do</span>
+  foo.<span class="k">is_a?</span>(<span class="t">String</span>).should be_true
+  foo.<span class="k">is_a?</span>(<span class="t">Int32</span>).should be_false
+  foo.<span class="k">as?</span>(<span class="t">Symbol</span>).should be_nil
+<span class="k">end</span></code></pre>
 <p>YAML configuration example:</p>
-<pre><code class="language-crystal"><span class="t">Lint</span><span class="o">/</span><span class="t">DebuggerStatement</span>:
+<pre><code class="language-crystal"><span class="t">Lint</span><span class="o">/</span><span class="t">SpecEqWithBoolOrNilLiteral</span>:
   <span class="t">Enabled</span>: <span class="n">true</span></code></pre>
         </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/d28076c/src/ameba/rule/lint/debugger_statement.cr#L13" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/d28076c/src/ameba/rule/lint/spec_eq_with_bool_or_nil_literal.cr#L30" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1580,7 +1605,7 @@ committed into our codebase.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/d28076c/src/ameba/rule/lint/debugger_statement.cr#L14" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/d28076c/src/ameba/rule/lint/spec_eq_with_bool_or_nil_literal.cr#L31" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1610,7 +1635,23 @@ committed into our codebase.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/d28076c/src/ameba/rule/lint/debugger_statement.cr#L21" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/d28076c/src/ameba/rule/lint/spec_eq_with_bool_or_nil_literal.cr#L42" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="test(source)-instance-method">
+      <div class="signature">
+        
+        def <strong>test</strong>(source)
+
+        <a class="method-permalink" href="#test%28source%29-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/crystal-ameba/ameba/blob/d28076c/src/ameba/rule/lint/spec_eq_with_bool_or_nil_literal.cr#L38" target="_blank">View source</a>]
         
       </div>
     </div>
