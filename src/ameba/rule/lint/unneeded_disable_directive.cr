@@ -21,7 +21,7 @@ module Ameba::Rule::Lint
   # YAML configuration example:
   #
   # ```
-  # Lint/UnneededDisableDirective
+  # Lint/UnneededDisableDirective:
   #   Enabled: true
   # ```
   class UnneededDisableDirective < Base
