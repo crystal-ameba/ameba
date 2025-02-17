@@ -40,7 +40,13 @@ module Ameba::Rule::Lint
     private def check_action(source, token, action)
       return if InlineComments::Action.parse?(action)
 
-      issue_for token,
+      # See `InlineComments::COMMENT_DIRECTIVE_REGEX`
+      start_location = token.location.adjust(column_number: {{ "# ameba:".size }})
+      token_location = {
+        start_location,
+        start_location.adjust(column_number: action.size - 1),
+      }
+      issue_for *token_location,
         "Bad action in comment directive: '%s'. Possible values: %s" % {
           action, AVAILABLE_ACTIONS.join(", "),
         }
@@ -50,7 +56,11 @@ module Ameba::Rule::Lint
       bad_names = rules - ALL_RULE_NAMES - ALL_GROUP_NAMES
       return if bad_names.empty?
 
-      issue_for token, "Such rules do not exist: %s" % bad_names.join(", ")
+      token_location = {
+        token.location,
+        token.location.adjust(column_number: token.value.to_s.size - 1),
+      }
+      issue_for *token_location, "Such rules do not exist: %s" % bad_names.join(", ")
     end
   end
 end
