@@ -11,6 +11,7 @@ module Ameba::AST
   class ImplicitReturnVisitor < BaseVisitor
     # When greater than zero, indicates the current node's return value is used
     @stack : Int32 = 0
+    @in_macro : Bool = false
 
     # The stack is swapped out here as `Crystal::Expressions` are isolated from
     # their parents scope. Only the last line in an expressions node can be
@@ -39,7 +40,9 @@ module Ameba::AST
     def visit(node : Crystal::BinaryOp) : Bool
       report_implicit_return(node)
 
-      if node.right.is_a?(Crystal::Call)
+      if node.right.is_a?(Crystal::Call) ||
+         node.right.is_a?(Crystal::Expressions) ||
+         node.right.is_a?(Crystal::ControlExpression)
         incr_stack { node.left.accept(self) }
       else
         node.left.accept(self)
@@ -91,7 +94,6 @@ module Ameba::AST
     def visit(node : Crystal::MultiAssign) : Bool
       report_implicit_return(node)
 
-      node.targets.each &.accept(self)
       incr_stack { node.values.each &.accept(self) }
 
       false
@@ -147,6 +149,9 @@ module Ameba::AST
         node.args.each &.accept(self)
         node.double_splat.try &.accept(self)
         node.block_arg.try &.accept(self)
+      end
+
+      swap_stack do
         node.body.accept(self)
       end
 
@@ -280,6 +285,14 @@ module Ameba::AST
       false
     end
 
+    def visit(node : Crystal::Block) : Bool
+      report_implicit_return(node)
+
+      node.body.accept(self)
+
+      false
+    end
+
     def visit(node : Crystal::ControlExpression) : Bool
       report_implicit_return(node)
 
@@ -329,10 +342,12 @@ module Ameba::AST
     def visit(node : Crystal::MacroExpression) : Bool
       report_implicit_return(node)
 
-      if node.output?
-        incr_stack { node.exp.accept(self) }
-      else
-        node.exp.accept(self)
+      in_macro do
+        if node.output?
+          incr_stack { node.exp.accept(self) }
+        else
+          swap_stack { node.exp.accept(self) }
+        end
       end
 
       false
@@ -341,9 +356,13 @@ module Ameba::AST
     def visit(node : Crystal::MacroIf) : Bool
       report_implicit_return(node)
 
-      incr_stack { node.cond.accept(self) }
-      node.then.accept(self)
-      node.else.accept(self)
+      in_macro do
+        swap_stack do
+          incr_stack { node.cond.accept(self) }
+          node.then.accept(self)
+          node.else.accept(self)
+        end
+      end
 
       false
     end
@@ -351,7 +370,9 @@ module Ameba::AST
     def visit(node : Crystal::MacroFor) : Bool
       report_implicit_return(node)
 
-      node.body.accept(self)
+      in_macro do
+        swap_stack { node.body.accept(self) }
+      end
 
       false
     end
@@ -399,7 +420,7 @@ module Ameba::AST
     end
 
     private def report_implicit_return(node) : Nil
-      @rule.test(@source, node) unless @stack.positive?
+      @rule.test(@source, node, @in_macro) unless @stack.positive?
     end
 
     # Indicates that any nodes visited within the block are captured / used.
@@ -414,6 +435,13 @@ module Ameba::AST
       @stack = 0
       yield old_stack
       @stack = old_stack
+    end
+
+    private def in_macro(&) : Nil
+      old_value = @in_macro
+      @in_macro = true
+      yield
+      @in_macro = old_value
     end
   end
 end
