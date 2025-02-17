@@ -44,17 +44,8 @@ module Ameba::Rule::Style
 
     context "properties" do
       context "#exclude_ternary" do
-        it "skips ternary control expressions by default" do
-          expect_no_issues subject, <<-CRYSTAL
-            (foo > bar) ? true : false
-            CRYSTAL
-        end
-
-        it "allows to configure assignments" do
-          rule = ParenthesesAroundCondition.new
-          rule.exclude_ternary = false
-
-          expect_issue rule, <<-CRYSTAL
+        it "reports ternary control expressions by default" do
+          expect_issue subject, <<-CRYSTAL
             (foo.empty?) ? true : false
             # ^^^^^^^^^^ error: Redundant parentheses
             CRYSTAL
@@ -71,6 +62,15 @@ module Ameba::Rule::Style
             (3.in? 0..42) ? true : false
             (yield 42) ? true : false
             (foo rescue 42) ? true : false
+            CRYSTAL
+        end
+
+        it "allows to skips ternary control expressions" do
+          rule = ParenthesesAroundCondition.new
+          rule.exclude_ternary = true
+
+          expect_no_issues rule, <<-CRYSTAL
+            (foo.empty?) ? true : false
             CRYSTAL
         end
       end
