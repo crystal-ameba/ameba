@@ -587,6 +587,11 @@
       
     </li>
   
+  <li class=" " data-id="ameba/Ameba/Rule/Lint/UnusedClassVariableAccess" data-name="ameba::rule::lint::unusedclassvariableaccess">
+      <a href="../../../Ameba/Rule/Lint/UnusedClassVariableAccess.html">UnusedClassVariableAccess</a>
+      
+    </li>
+  
   <li class=" " data-id="ameba/Ameba/Rule/Lint/UnusedComparison" data-name="ameba::rule::lint::unusedcomparison">
       <a href="../../../Ameba/Rule/Lint/UnusedComparison.html">UnusedComparison</a>
       
@@ -597,8 +602,18 @@
       
     </li>
   
+  <li class=" " data-id="ameba/Ameba/Rule/Lint/UnusedInstanceVariableAccess" data-name="ameba::rule::lint::unusedinstancevariableaccess">
+      <a href="../../../Ameba/Rule/Lint/UnusedInstanceVariableAccess.html">UnusedInstanceVariableAccess</a>
+      
+    </li>
+  
   <li class=" " data-id="ameba/Ameba/Rule/Lint/UnusedLiteral" data-name="ameba::rule::lint::unusedliteral">
       <a href="../../../Ameba/Rule/Lint/UnusedLiteral.html">UnusedLiteral</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/Rule/Lint/UnusedLocalVariableAccess" data-name="ameba::rule::lint::unusedlocalvariableaccess">
+      <a href="../../../Ameba/Rule/Lint/UnusedLocalVariableAccess.html">UnusedLocalVariableAccess</a>
       
     </li>
   
@@ -1068,7 +1083,7 @@ klass <span class="o">=</span> <span class="t">String</span>?
   </h2>
   
     
-      <a href="https://github.com/crystal-ameba/ameba/blob/3332098/src/ameba/rule/lint/unused_generic_or_union.cr#L37" target="_blank">
+      <a href="https://github.com/crystal-ameba/ameba/blob/70dc11d/src/ameba/rule/lint/unused_generic_or_union.cr#L37" target="_blank">
         ameba/rule/lint/unused_generic_or_union.cr
       </a>
     
@@ -1213,12 +1228,12 @@ klass <span class="o">=</span> <span class="t">String</span>?
       </li>
     
       <li class="entry-summary">
-        <a href="#test%28source%2Cnode%3ACrystal%3A%3ACall%29-instance-method" class="signature"><strong>#test</strong>(source, node : Crystal::Call)</a>
+        <a href="#test%28source%2Cnode%3ACrystal%3A%3ACall%2Cin_macro%3ABool%29-instance-method" class="signature"><strong>#test</strong>(source, node : Crystal::Call, in_macro : Bool)</a>
         
       </li>
     
       <li class="entry-summary">
-        <a href="#test%28source%2Cnode%3ACrystal%3A%3AGeneric%29-instance-method" class="signature"><strong>#test</strong>(source, node : Crystal::Generic)</a>
+        <a href="#test%28source%2Cnode%3ACrystal%3A%3AGeneric%2Cin_macro%3ABool%29-instance-method" class="signature"><strong>#test</strong>(source, node : Crystal::Generic, in_macro : Bool)</a>
         
       </li>
     
@@ -1448,7 +1463,7 @@ klass <span class="o">=</span> <span class="t">String</span>?
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/3332098/src/ameba/rule/lint/unused_generic_or_union.cr#L37" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/70dc11d/src/ameba/rule/lint/unused_generic_or_union.cr#L37" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1631,7 +1646,7 @@ klass <span class="o">=</span> <span class="t">String</span>?
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/3332098/src/ameba/rule/lint/unused_generic_or_union.cr#L38" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/70dc11d/src/ameba/rule/lint/unused_generic_or_union.cr#L38" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1650,34 +1665,34 @@ klass <span class="o">=</span> <span class="t">String</span>?
       </div>
     </div>
   
-    <div class="entry-detail" id="test(source,node:Crystal::Call)-instance-method">
+    <div class="entry-detail" id="test(source,node:Crystal::Call,in_macro:Bool)-instance-method">
       <div class="signature">
         
-        def <strong>test</strong>(source, node : Crystal::Call)
+        def <strong>test</strong>(source, node : Crystal::Call, in_macro : Bool)
 
-        <a class="method-permalink" href="#test%28source%2Cnode%3ACrystal%3A%3ACall%29-instance-method">#</a>
+        <a class="method-permalink" href="#test%28source%2Cnode%3ACrystal%3A%3ACall%2Cin_macro%3ABool%29-instance-method">#</a>
       </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/3332098/src/ameba/rule/lint/unused_generic_or_union.cr#L50" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/70dc11d/src/ameba/rule/lint/unused_generic_or_union.cr#L50" target="_blank">View source</a>]
         
       </div>
     </div>
   
-    <div class="entry-detail" id="test(source,node:Crystal::Generic)-instance-method">
+    <div class="entry-detail" id="test(source,node:Crystal::Generic,in_macro:Bool)-instance-method">
       <div class="signature">
         
-        def <strong>test</strong>(source, node : Crystal::Generic)
+        def <strong>test</strong>(source, node : Crystal::Generic, in_macro : Bool)
 
-        <a class="method-permalink" href="#test%28source%2Cnode%3ACrystal%3A%3AGeneric%29-instance-method">#</a>
+        <a class="method-permalink" href="#test%28source%2Cnode%3ACrystal%3A%3AGeneric%2Cin_macro%3ABool%29-instance-method">#</a>
       </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/3332098/src/ameba/rule/lint/unused_generic_or_union.cr#L54" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/70dc11d/src/ameba/rule/lint/unused_generic_or_union.cr#L54" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1705,7 +1720,7 @@ that are tested by this rule, it should add an issue.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/3332098/src/ameba/rule/lint/unused_generic_or_union.cr#L46" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/70dc11d/src/ameba/rule/lint/unused_generic_or_union.cr#L46" target="_blank">View source</a>]
         
       </div>
     </div>

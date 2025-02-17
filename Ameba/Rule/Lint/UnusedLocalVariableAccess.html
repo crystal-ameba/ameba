@@ -14,7 +14,7 @@
 <script type="text/javascript" src="../../../js/doc.js"></script>
 
   <meta name="repository-name" content="ameba">
-  <title>Ameba::Rule::Lint::EmptyEnsure - ameba master</title>
+  <title>Ameba::Rule::Lint::UnusedLocalVariableAccess - ameba master</title>
   <script type="text/javascript">
     CrystalDocs.base_path = "../../../";
   </script>
@@ -417,7 +417,7 @@
       
     </li>
   
-  <li class=" current" data-id="ameba/Ameba/Rule/Lint/EmptyEnsure" data-name="ameba::rule::lint::emptyensure">
+  <li class=" " data-id="ameba/Ameba/Rule/Lint/EmptyEnsure" data-name="ameba::rule::lint::emptyensure">
       <a href="../../../Ameba/Rule/Lint/EmptyEnsure.html">EmptyEnsure</a>
       
     </li>
@@ -612,7 +612,7 @@
       
     </li>
   
-  <li class=" " data-id="ameba/Ameba/Rule/Lint/UnusedLocalVariableAccess" data-name="ameba::rule::lint::unusedlocalvariableaccess">
+  <li class=" current" data-id="ameba/Ameba/Rule/Lint/UnusedLocalVariableAccess" data-name="ameba::rule::lint::unusedlocalvariableaccess">
       <a href="../../../Ameba/Rule/Lint/UnusedLocalVariableAccess.html">UnusedLocalVariableAccess</a>
       
     </li>
@@ -1001,12 +1001,12 @@
 <div class="main-content">
 <h1 class="type-name">
 
-  <span class="kind">class</span> Ameba::<wbr>Rule::<wbr>Lint::<wbr>EmptyEnsure
+  <span class="kind">class</span> Ameba::<wbr>Rule::<wbr>Lint::<wbr>UnusedLocalVariableAccess
 
 </h1>
 
 
-  <ul class="superclass-hierarchy"><li class="superclass"><a href="../../../Ameba/Rule/Lint/EmptyEnsure.html">Ameba::Rule::Lint::EmptyEnsure</a></li><li class="superclass"><a href="../../../Ameba/Rule/Base.html">Ameba::Rule::Base</a></li><li class="superclass">Reference</li><li class="superclass">Object</li></ul>
+  <ul class="superclass-hierarchy"><li class="superclass"><a href="../../../Ameba/Rule/Lint/UnusedLocalVariableAccess.html">Ameba::Rule::Lint::UnusedLocalVariableAccess</a></li><li class="superclass"><a href="../../../Ameba/Rule/Base.html">Ameba::Rule::Base</a></li><li class="superclass">Reference</li><li class="superclass">Object</li></ul>
 
 
 
@@ -1020,31 +1020,51 @@
     Overview
   </h2>
 
-  <p>A rule that disallows empty ensure statement.</p>
+  <p>A rule that disallows unused local variable access.</p>
 <p>For example, this is considered invalid:</p>
-<pre><code class="language-crystal"><span class="k">def</span> <span class="m">some_method</span>
-  do_some_stuff
-<span class="k">ensure</span>
+<pre><code class="language-crystal">a <span class="o">=</span> <span class="n">1</span>
+b <span class="o">=</span> <span class="s">&quot;2&quot;</span>
+c <span class="o">=</span> :<span class="n">3</span>
+
+<span class="k">case</span> method_call
+<span class="k">when</span> <span class="t">Int32</span>
+  a
+<span class="k">when</span> <span class="t">String</span>
+  b
+<span class="k">else</span>
+  c
 <span class="k">end</span>
 
-<span class="k">begin</span>
-  do_some_stuff
-<span class="k">ensure</span>
+<span class="k">def</span> <span class="m">hello</span>(name)
+  <span class="k">if</span> name.size <span class="o">&lt;</span> <span class="n">10</span>
+    name
+  <span class="k">end</span>
+
+  name[...<span class="n">10</span>]
 <span class="k">end</span></code></pre>
-<p>And it should be written as this:</p>
-<pre><code class="language-crystal"><span class="k">def</span> <span class="m">some_method</span>
-  do_some_stuff
-<span class="k">ensure</span>
-  do_something_else
-<span class="k">end</span>
+<p>And these are considered valid:</p>
+<pre><code class="language-crystal">a <span class="o">=</span> <span class="n">1</span>
+b <span class="o">=</span> <span class="s">&quot;2&quot;</span>
+c <span class="o">=</span> :<span class="n">3</span>
 
-<span class="k">begin</span>
-  do_some_stuff
-<span class="k">ensure</span>
-  do_something_else
+d <span class="o">=</span> <span class="k">case</span> method_call
+    <span class="k">when</span> <span class="t">Int32</span>
+      a
+    <span class="k">when</span> <span class="t">String</span>
+      b
+    <span class="k">else</span>
+      c
+    <span class="k">end</span>
+
+<span class="k">def</span> <span class="m">hello</span>(name)
+  <span class="k">if</span> name.size <span class="o">&lt;</span> <span class="n">10</span>
+    <span class="k">return</span> name
+  <span class="k">end</span>
+
+  name[...<span class="n">10</span>]
 <span class="k">end</span></code></pre>
 <p>YAML configuration example:</p>
-<pre><code class="language-crystal"><span class="t">Lint</span><span class="o">/</span><span class="t">EmptyEnsure</span>
+<pre><code class="language-crystal"><span class="t">Lint</span><span class="o">/</span><span class="t">UnusedLocalVariableAccess</span>:
   <span class="t">Enabled</span>: <span class="n">true</span></code></pre>
 
 
@@ -1086,8 +1106,8 @@
   </h2>
   
     
-      <a href="https://github.com/crystal-ameba/ameba/blob/70dc11d/src/ameba/rule/lint/empty_ensure.cr#L40" target="_blank">
-        ameba/rule/lint/empty_ensure.cr
+      <a href="https://github.com/crystal-ameba/ameba/blob/70dc11d/src/ameba/rule/lint/unused_local_variable_access.cr#L60" target="_blank">
+        ameba/rule/lint/unused_local_variable_access.cr
       </a>
     
     <br/>
@@ -1108,7 +1128,7 @@
   <dl>
     
       <dt class="entry-const" id="MSG">
-        <strong>MSG</strong> = <code><span class="s">&quot;Empty `ensure` block detected&quot;</span></code>
+        <strong>MSG</strong> = <code><span class="s">&quot;Value from local variable access is unused&quot;</span></code>
       </dt>
       
     
@@ -1134,7 +1154,7 @@
       <li class="entry-summary">
         <a href="#new%28config%3Dnil%29-class-method" class="signature"><strong>.new</strong>(config = <span class="n">nil</span>)</a>
         
-          <div class="summary"><p>A rule that disallows empty ensure statement.</p></div>
+          <div class="summary"><p>A rule that disallows unused local variable access.</p></div>
         
       </li>
     
@@ -1226,7 +1246,14 @@
       </li>
     
       <li class="entry-summary">
-        <a href="#test%28source%2Cnode%3ACrystal%3A%3AExceptionHandler%29-instance-method" class="signature"><strong>#test</strong>(source, node : Crystal::ExceptionHandler)</a>
+        <a href="#test%28source%2Cnode%3ACrystal%3A%3AVar%2Cin_macro%3ABool%29-instance-method" class="signature"><strong>#test</strong>(source, node : Crystal::Var, in_macro : Bool)</a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#test%28source%3ASource%29-instance-method" class="signature"><strong>#test</strong>(source : Source)</a>
+        
+          <div class="summary"><p>This method is designed to test the source passed in.</p></div>
         
       </li>
     
@@ -1421,38 +1448,58 @@
       
         <div class="doc">
           
-          <p>A rule that disallows empty ensure statement.</p>
+          <p>A rule that disallows unused local variable access.</p>
 <p>For example, this is considered invalid:</p>
-<pre><code class="language-crystal"><span class="k">def</span> <span class="m">some_method</span>
-  do_some_stuff
-<span class="k">ensure</span>
+<pre><code class="language-crystal">a <span class="o">=</span> <span class="n">1</span>
+b <span class="o">=</span> <span class="s">&quot;2&quot;</span>
+c <span class="o">=</span> :<span class="n">3</span>
+
+<span class="k">case</span> method_call
+<span class="k">when</span> <span class="t">Int32</span>
+  a
+<span class="k">when</span> <span class="t">String</span>
+  b
+<span class="k">else</span>
+  c
 <span class="k">end</span>
 
-<span class="k">begin</span>
-  do_some_stuff
-<span class="k">ensure</span>
+<span class="k">def</span> <span class="m">hello</span>(name)
+  <span class="k">if</span> name.size <span class="o">&lt;</span> <span class="n">10</span>
+    name
+  <span class="k">end</span>
+
+  name[...<span class="n">10</span>]
 <span class="k">end</span></code></pre>
-<p>And it should be written as this:</p>
-<pre><code class="language-crystal"><span class="k">def</span> <span class="m">some_method</span>
-  do_some_stuff
-<span class="k">ensure</span>
-  do_something_else
-<span class="k">end</span>
+<p>And these are considered valid:</p>
+<pre><code class="language-crystal">a <span class="o">=</span> <span class="n">1</span>
+b <span class="o">=</span> <span class="s">&quot;2&quot;</span>
+c <span class="o">=</span> :<span class="n">3</span>
 
-<span class="k">begin</span>
-  do_some_stuff
-<span class="k">ensure</span>
-  do_something_else
+d <span class="o">=</span> <span class="k">case</span> method_call
+    <span class="k">when</span> <span class="t">Int32</span>
+      a
+    <span class="k">when</span> <span class="t">String</span>
+      b
+    <span class="k">else</span>
+      c
+    <span class="k">end</span>
+
+<span class="k">def</span> <span class="m">hello</span>(name)
+  <span class="k">if</span> name.size <span class="o">&lt;</span> <span class="n">10</span>
+    <span class="k">return</span> name
+  <span class="k">end</span>
+
+  name[...<span class="n">10</span>]
 <span class="k">end</span></code></pre>
 <p>YAML configuration example:</p>
-<pre><code class="language-crystal"><span class="t">Lint</span><span class="o">/</span><span class="t">EmptyEnsure</span>
+<pre><code class="language-crystal"><span class="t">Lint</span><span class="o">/</span><span class="t">UnusedLocalVariableAccess</span>:
   <span class="t">Enabled</span>: <span class="n">true</span></code></pre>
         </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/70dc11d/src/ameba/rule/lint/empty_ensure.cr#L40" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/70dc11d/src/ameba/rule/lint/unused_local_variable_access.cr#L60" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1635,7 +1682,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/70dc11d/src/ameba/rule/lint/empty_ensure.cr#L41" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/70dc11d/src/ameba/rule/lint/unused_local_variable_access.cr#L61" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1654,18 +1701,46 @@
       </div>
     </div>
   
-    <div class="entry-detail" id="test(source,node:Crystal::ExceptionHandler)-instance-method">
+    <div class="entry-detail" id="test(source,node:Crystal::Var,in_macro:Bool)-instance-method">
       <div class="signature">
         
-        def <strong>test</strong>(source, node : Crystal::ExceptionHandler)
+        def <strong>test</strong>(source, node : Crystal::Var, in_macro : Bool)
 
-        <a class="method-permalink" href="#test%28source%2Cnode%3ACrystal%3A%3AExceptionHandler%29-instance-method">#</a>
+        <a class="method-permalink" href="#test%28source%2Cnode%3ACrystal%3A%3AVar%2Cin_macro%3ABool%29-instance-method">#</a>
       </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/70dc11d/src/ameba/rule/lint/empty_ensure.cr#L48" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/70dc11d/src/ameba/rule/lint/unused_local_variable_access.cr#L72" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="test(source:Source)-instance-method">
+      <div class="signature">
+        
+        def <strong>test</strong>(source : <a href="../../../Ameba/Source.html">Source</a>)
+
+        <a class="method-permalink" href="#test%28source%3ASource%29-instance-method">#</a>
+      </div>
+      
+        <div class="doc">
+          
+            <div class="doc-inherited">
+              Description copied from class <a href="../../../Ameba/Rule/Base.html">Ameba::Rule::Base</a>
+            </div>
+          
+          <p>This method is designed to test the source passed in. If source has issues
+that are tested by this rule, it should add an issue.</p>
+<p>By default it uses a node visitor to traverse all the nodes in the source.</p>
+<p><span class="flag purple">NOTE</span>  Must be overridden for other type of rules.</p>
+        </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/crystal-ameba/ameba/blob/70dc11d/src/ameba/rule/lint/unused_local_variable_access.cr#L68" target="_blank">View source</a>]
         
       </div>
     </div>
