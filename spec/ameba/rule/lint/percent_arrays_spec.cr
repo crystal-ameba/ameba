@@ -6,14 +6,13 @@ module Ameba::Rule::Lint
 
     it "passes if percent arrays are written correctly" do
       expect_no_issues subject, <<-CRYSTAL
-        %i[one two three]
         %w[one two three]
-
-        %i[1 2 3]
         %w[1 2 3]
-
-        %i[]
         %w[]
+
+        %i[one two three]
+        %i[1 2 3]
+        %i[]
         CRYSTAL
     end
 
@@ -45,17 +44,12 @@ module Ameba::Rule::Lint
         CRYSTAL
     end
 
-    it "reports rule, location and message for %i" do
+    it "reports rule, location and message" do
       expect_issue subject, <<-CRYSTAL
-        %i[:one]
-        # ^{} error: Symbols `,:` may be unwanted in `%i` array literals
-        CRYSTAL
-    end
-
-    it "reports rule, location and message for %w" do
-      expect_issue subject, <<-CRYSTAL
-        %w["one"]
-        # ^{} error: Symbols `,"` may be unwanted in `%w` array literals
+        puts %w["one"]
+           # ^^ error: Symbols `,"` may be unwanted in `%w` array literals
+        puts %i[:one]
+           # ^^ error: Symbols `,:` may be unwanted in `%i` array literals
         CRYSTAL
     end
 
@@ -64,14 +58,14 @@ module Ameba::Rule::Lint
         rule = PercentArrays.new
         rule.string_array_unwanted_symbols = ","
 
-        expect_no_issues rule, %( %w[one] )
+        expect_no_issues rule, %(%w[one])
       end
 
       it "#symbol_array_unwanted_symbols" do
         rule = PercentArrays.new
         rule.symbol_array_unwanted_symbols = ","
 
-        expect_no_issues rule, %( %i[:one] )
+        expect_no_issues rule, %(%i[:one])
       end
     end
   end
