@@ -1005,13 +1005,13 @@
     Overview
   </h2>
 
-  <p>A rule that disallows some unwanted symbols in percent array literals.</p>
+  <p>A rule that disallows some unwanted symbols in percent string and symbol array literals.</p>
 <p>For example, this is usually written by mistake:</p>
-<pre><code class="language-crystal"><span class="s">%i[:one, :two]</span>
-<span class="s">%w[&quot;one&quot;, &quot;two&quot;]</span></code></pre>
+<pre><code class="language-crystal"><span class="s">%w[&quot;one&quot;, &quot;two&quot;]</span>
+<span class="s">%i[:one, :two]</span></code></pre>
 <p>And the expected example is:</p>
-<pre><code class="language-crystal"><span class="s">%i[one two]</span>
-<span class="s">%w[one two]</span></code></pre>
+<pre><code class="language-crystal"><span class="s">%w[one two]</span>
+<span class="s">%i[one two]</span></code></pre>
 <p>YAML configuration example:</p>
 <pre><code class="language-crystal">Lint/PercentArrays:
   Enabled: true
@@ -1057,7 +1057,7 @@
   </h2>
   
     
-      <a href="https://github.com/crystal-ameba/ameba/blob/5f8a9f6/src/ameba/rule/lint/percent_arrays.cr#L26" target="_blank">
+      <a href="https://github.com/crystal-ameba/ameba/blob/3332098/src/ameba/rule/lint/percent_arrays.cr#L26" target="_blank">
         ameba/rule/lint/percent_arrays.cr
       </a>
     
@@ -1105,7 +1105,7 @@
       <li class="entry-summary">
         <a href="#new%28config%3Dnil%29-class-method" class="signature"><strong>.new</strong>(config = <span class="n">nil</span>)</a>
         
-          <div class="summary"><p>A rule that disallows some unwanted symbols in percent array literals.</p></div>
+          <div class="summary"><p>A rule that disallows some unwanted symbols in percent string and symbol array literals.</p></div>
         
       </li>
     
@@ -1412,13 +1412,13 @@
       
         <div class="doc">
           
-          <p>A rule that disallows some unwanted symbols in percent array literals.</p>
+          <p>A rule that disallows some unwanted symbols in percent string and symbol array literals.</p>
 <p>For example, this is usually written by mistake:</p>
-<pre><code class="language-crystal"><span class="s">%i[:one, :two]</span>
-<span class="s">%w[&quot;one&quot;, &quot;two&quot;]</span></code></pre>
+<pre><code class="language-crystal"><span class="s">%w[&quot;one&quot;, &quot;two&quot;]</span>
+<span class="s">%i[:one, :two]</span></code></pre>
 <p>And the expected example is:</p>
-<pre><code class="language-crystal"><span class="s">%i[one two]</span>
-<span class="s">%w[one two]</span></code></pre>
+<pre><code class="language-crystal"><span class="s">%w[one two]</span>
+<span class="s">%i[one two]</span></code></pre>
 <p>YAML configuration example:</p>
 <pre><code class="language-crystal">Lint/PercentArrays:
   Enabled: true
@@ -1429,7 +1429,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/5f8a9f6/src/ameba/rule/lint/percent_arrays.cr#L26" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/3332098/src/ameba/rule/lint/percent_arrays.cr#L26" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1612,7 +1612,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/5f8a9f6/src/ameba/rule/lint/percent_arrays.cr#L27" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/3332098/src/ameba/rule/lint/percent_arrays.cr#L27" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1698,7 +1698,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/5f8a9f6/src/ameba/rule/lint/percent_arrays.cr#L37" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/3332098/src/ameba/rule/lint/percent_arrays.cr#L37" target="_blank">View source</a>]
         
       </div>
     </div>
