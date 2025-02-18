@@ -36,6 +36,7 @@ module Ameba::AST
       NilLiteral,
       ProcLiteral,
       StringInterpolation,
+      Select,
       Unless,
       Until,
       Var,
