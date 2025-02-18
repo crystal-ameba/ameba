@@ -171,7 +171,7 @@ module Ameba::Rule::Lint
       s.issues.size.should eq 1
       issue = s.issues.first
       issue.rule.should_not be_nil
-      issue.location.to_s.should eq "source.cr:1:1"
+      issue.location.to_s.should eq "source.cr:1:17"
       issue.end_location.to_s.should eq "source.cr:1:20"
       issue.message.should eq "Literal value found in conditional"
     end
