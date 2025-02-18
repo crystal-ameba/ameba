@@ -37,7 +37,7 @@ module Ameba::Rule::Lint
 
     MSG = "Duplicate `when` condition detected"
 
-    def test(source, node : Crystal::Case)
+    def test(source, node : Crystal::Case | Crystal::Select)
       node.whens.each_with_object(Set(String).new) do |when_node, processed_conditions|
         when_node.conds.each do |cond|
           cond_s = cond.to_s
