@@ -1,13 +1,10 @@
 module Ameba::Rule::Style
   # A rule that enforces the consistent usage of `%`-literal delimiters.
   #
-  # Specifying `DefaultDelimiters` option will set all preferred delimiters at once. You
-  # can continue to specify individual preferred delimiters via `PreferredDelimiters`
-  # setting to override the default. In both cases the delimiters should be specified
-  # as a string of two characters, or `nil` to ignore a particular `%`-literal / default.
-  #
-  # Setting `IgnoreLiteralsContainingDelimiters` to `true` will ignore `%`-literals that
-  # contain one or both delimiters.
+  # Configuration options:
+  # - `DefaultDelimiters`: Sets preferred delimiters for all literals (e.g. "()")
+  # - `PreferredDelimiters`: Override defaults for specific literals (e.g. "%w" => "[]")
+  # - `IgnoreLiteralsContainingDelimiters`: Skip check if literal contains delimiters
   #
   # YAML configuration example:
   #
@@ -35,47 +32,99 @@ module Ameba::Rule::Style
       ignore_literals_containing_delimiters false
     end
 
-    MSG = "`%s`-literals should be delimited by `%s` and `%s`"
+    LITERAL_PATTERN = /^(%\w?)\W/i
+    MSG             = "`%s`-literals should be delimited by `%s` and `%s`"
 
-    # ameba:disable Metrics/CyclomaticComplexity
     def test(source)
-      start_token = literal = delimiters = nil
+      token_processor = TokenProcessor.new(self, source)
+      Tokenizer.new(source).run { |token| token_processor.process(token) }
+    end
 
-      Tokenizer.new(source).run do |token|
+    private struct LiteralState
+      getter start_token : Crystal::Token
+      getter literal : String
+      getter delimiters : String
+
+      def initialize(@start_token, @literal, @delimiters)
+      end
+    end
+
+    private class TokenProcessor
+      @current_state : LiteralState?
+
+      def initialize(@rule : PercentLiteralDelimiters, @source : Source)
+      end
+
+      def process(token : Crystal::Token)
         case token.type
         when .string_array_start?, .symbol_array_start?, .delimiter_start?
-          if literal = token.raw.match(/^(%\w?)\W/i).try &.[1]
-            start_token = token.dup
-
-            delimiters =
-              preferred_delimiters.fetch(literal) { default_delimiters }
-
-            # `nil` means that the check should be skipped for this literal
-            unless delimiters
-              start_token = literal = delimiters = nil
-            end
-          end
+          process_literal_start(token)
         when .string?
-          if (_delimiters = delimiters) && ignore_literals_containing_delimiters?
-            # literal contains one or both delimiters
-            if token.raw[_delimiters[0]]? || token.raw[_delimiters[1]]?
-              start_token = literal = delimiters = nil
-            end
-          end
+          process_string_content(token)
         when .string_array_end?, .delimiter_end?
-          if (_start = start_token) && (_delimiters = delimiters) && (_literal = literal)
-            unless _start.delimiter_state.nest == _delimiters[0] &&
-                   _start.delimiter_state.end == _delimiters[1]
-              token_location = {
-                _start.location,
-                _start.location.adjust(column_number: _literal.size - 1),
-              }
-              issue_for *token_location,
-                MSG % {_literal, _delimiters[0], _delimiters[1]}
-            end
-            start_token = literal = delimiters = nil
-          end
+          process_literal_end(token)
         end
+      end
+
+      private def process_literal_start(token : Crystal::Token)
+        return unless literal = extract_literal(token)
+        return unless delimiters = get_delimiters(literal)
+
+        @current_state = LiteralState.new(token.dup, literal, delimiters)
+      end
+
+      private def process_string_content(token : Crystal::Token)
+        return unless state = @current_state
+        return unless @rule.ignore_literals_containing_delimiters?
+
+        if contains_delimiters?(token.raw, state.delimiters)
+          @current_state = nil
+        end
+      end
+
+      private def process_literal_end(token : Crystal::Token)
+        return unless state = @current_state
+        check_delimiters(token, state)
+        @current_state = nil
+      end
+
+      private def extract_literal(token : Crystal::Token)
+        token.raw.match(LITERAL_PATTERN).try &.[1]
+      end
+
+      private def get_delimiters(literal : String)
+        @rule.preferred_delimiters.fetch(literal) { @rule.default_delimiters }
+      end
+
+      private def contains_delimiters?(content : String, delimiters : String)
+        content.includes?(delimiters[0]) || content.includes?(delimiters[1])
+      end
+
+      private def check_delimiters(token : Crystal::Token, state : LiteralState)
+        start_state = state.start_token.delimiter_state
+        expected_delimiters = state.delimiters
+
+        unless correct_delimiters?(start_state, expected_delimiters)
+          report_issue(state)
+        end
+      end
+
+      private def correct_delimiters?(state, delimiters : String)
+        state.nest == delimiters[0] && state.end == delimiters[1]
+      end
+
+      private def report_issue(state : LiteralState)
+        start_location = state.start_token.location
+        end_location = state.start_token.location.adjust(
+          column_number: state.literal.size - 1
+        )
+
+        @source.add_issue(
+          @rule,
+          start_location,
+          end_location,
+          MSG % {state.literal, state.delimiters[0], state.delimiters[1]}
+        )
       end
     end
   end
