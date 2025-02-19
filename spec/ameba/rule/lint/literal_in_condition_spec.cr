@@ -60,6 +60,42 @@ module Ameba::Rule::Lint
       subject.catch(s).should_not be_valid
     end
 
+    it "fails if there is a predicate in `while` conditional" do
+      s = Source.new %(
+        while 1
+          :ok
+        end
+      )
+      subject.catch(s).should_not be_valid
+    end
+
+    it "fails if there is a `false` predicate in `while` conditional" do
+      s = Source.new %(
+        while false
+          :ok
+        end
+      )
+      subject.catch(s).should_not be_valid
+    end
+
+    it "passes if there is a `true` predicate in `while` conditional" do
+      s = Source.new %(
+        while true
+          :ok
+        end
+      )
+      subject.catch(s).should be_valid
+    end
+
+    it "fails if there is a predicate in `until` conditional" do
+      s = Source.new %(
+        until true
+          :foo
+        end
+      )
+      subject.catch(s).should_not be_valid
+    end
+
     describe "range" do
       it "reports range with literals" do
         s = Source.new %(
