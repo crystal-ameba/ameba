@@ -99,10 +99,10 @@ module Ameba::AST
       end
 
       it "does not report source of node which has incorrect location" do
-        s = <<-'CRYSTAL'
+        s = <<-CRYSTAL
           module MyModule
             macro conditional_error_for_inline_callbacks
-              \{%
+              {%
                 raise ""
               %}
             end
