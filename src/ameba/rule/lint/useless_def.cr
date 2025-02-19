@@ -40,7 +40,7 @@ module Ameba::Rule::Lint
     end
 
     def test(source, node : Crystal::Def)
-      return if node.name.chars.any?(&.alphanumeric?) || node.receiver
+      return if node.receiver || node.name.chars.any?(&.alphanumeric?)
 
       issue_for node, MSG
     end
