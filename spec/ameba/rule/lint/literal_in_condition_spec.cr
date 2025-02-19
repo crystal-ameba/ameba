@@ -26,7 +26,23 @@ module Ameba::Rule::Lint
       subject.catch(s).should be_valid
     end
 
-    it "fails if there is a predicate in if conditional" do
+    it "fails if there is a predicate with non-literals" do
+      s = Source.new %(
+        :ok if     [foo, bar]
+        :ok unless [foo, bar]
+
+        while [foo, bar]
+          :ok
+        end
+
+        until [foo, bar]
+          :ok
+        end
+      )
+      subject.catch(s).should_not be_valid
+    end
+
+    it "fails if there is a predicate in `if` conditional" do
       s = Source.new %(
         if "string"
           :ok
@@ -35,7 +51,7 @@ module Ameba::Rule::Lint
       subject.catch(s).should_not be_valid
     end
 
-    it "fails if there is a predicate in unless conditional" do
+    it "fails if there is a predicate in `unless` conditional" do
       s = Source.new %(
         unless true
           :ok
