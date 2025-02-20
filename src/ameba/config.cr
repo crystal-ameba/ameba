@@ -58,10 +58,10 @@ class Ameba::Config
     Path[XDG_CONFIG_HOME] / "ameba/config.yml",
   }
 
-  DEFAULT_GLOBS = %w(
+  DEFAULT_GLOBS = %w[
     **/*.cr
     !lib
-  )
+  ]
 
   Ameba.ecr_supported? do
     DEFAULT_GLOBS << "**/*.ecr"
