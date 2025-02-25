@@ -6,7 +6,7 @@ module Ameba
   # Dummy Rule which does nothing.
   class DummyRule < Rule::Base
     properties do
-      description "Dummy rule that does nothing."
+      description "Dummy rule that does nothing"
       dummy true
     end
 
@@ -16,7 +16,7 @@ module Ameba
 
   class NamedRule < Rule::Base
     properties do
-      description "A rule with a custom name."
+      description "A rule with a custom name"
     end
 
     def self.name
@@ -27,7 +27,7 @@ module Ameba
   class VersionedRule < Rule::Base
     properties do
       since_version "1.5.0"
-      description "Rule with a custom version."
+      description "Rule with a custom version"
     end
 
     def test(source)
