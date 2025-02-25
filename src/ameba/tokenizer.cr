@@ -73,11 +73,9 @@ module Ameba
         block.call token
 
         case token.type
-        when .delimiter_end?
-          break
         when .interpolation_start?
           run_normal_state lexer, break_on_rcurly: true, &block
-        when .eof?
+        when .delimiter_end?, .eof?
           break
         end
       end
@@ -89,9 +87,7 @@ module Ameba
         block.call token
 
         case token.type
-        when .string_array_end?
-          break
-        when .eof?
+        when .string_array_end?, .eof?
           break
         end
       end

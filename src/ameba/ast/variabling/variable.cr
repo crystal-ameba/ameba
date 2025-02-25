@@ -137,10 +137,10 @@ module Ameba::AST
     # `false` otherwise.
     def target_of?(assign)
       case assign
-      when Crystal::Assign           then eql?(assign.target)
-      when Crystal::OpAssign         then eql?(assign.target)
-      when Crystal::MultiAssign      then assign.targets.any? { |target| eql?(target) }
-      when Crystal::UninitializedVar then eql?(assign.var)
+      when Crystal::UninitializedVar          then eql?(assign.var)
+      when Crystal::Assign, Crystal::OpAssign then eql?(assign.target)
+      when Crystal::MultiAssign
+        assign.targets.any? { |target| eql?(target) }
       else
         false
       end

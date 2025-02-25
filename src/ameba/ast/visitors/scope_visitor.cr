@@ -167,7 +167,6 @@ module Ameba::AST
     # :nodoc:
     def visit(node : Crystal::Call)
       scope = @current_scope
-
       case
       when (scope.top_level? || scope.type_definition?) && record_macro?(node)
         return false
