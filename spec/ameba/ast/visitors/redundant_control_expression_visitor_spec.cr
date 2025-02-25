@@ -1,10 +1,10 @@
 require "../../../spec_helper"
 
 module Ameba::AST
-  source = Source.new ""
-  rule = RedundantControlExpressionRule.new
-
   describe RedundantControlExpressionVisitor do
+    source = Source.new ""
+    rule = RedundantControlExpressionRule.new
+
     node = as_node <<-CRYSTAL
       a = 1
       b = 2
