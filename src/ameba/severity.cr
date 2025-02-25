@@ -27,7 +27,7 @@ module Ameba
     def color : Colorize::Color
       case self
       in Error      then Colorize::ColorANSI::Red
-      in Warning    then Colorize::ColorANSI::Red
+      in Warning    then Colorize::ColorANSI::Red # ameba:disable Lint/DuplicateBranch
       in Convention then Colorize::ColorANSI::Blue
       end
     end
