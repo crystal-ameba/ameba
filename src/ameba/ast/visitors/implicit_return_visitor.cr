@@ -177,10 +177,18 @@ module Ameba::AST
       false
     end
 
-    def visit(node : Crystal::Cast | Crystal::NilableCast) : Bool
+    def visit(node : Crystal::Cast | Crystal::NilableCast | Crystal::IsA | Crystal::RespondsTo) : Bool
       report_implicit_return(node)
 
       incr_stack { node.obj.accept(self) }
+
+      false
+    end
+
+    def visit(node : Crystal::UnaryExpression) : Bool
+      report_implicit_return(node)
+
+      incr_stack { node.exp.accept(self) }
 
       false
     end
@@ -388,6 +396,12 @@ module Ameba::AST
     end
 
     def visit(node : Crystal::UninitializedVar) : Bool
+      report_implicit_return(node)
+
+      false
+    end
+
+    def visit(node : Crystal::OffsetOf) : Bool
       report_implicit_return(node)
 
       false
