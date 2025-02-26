@@ -1,5 +1,5 @@
 module Ameba::Rule::Lint
-  # A rule that disallows useless method definitions.
+  # A rule that disallows top level operator method definitions, since these cannot be called.
   #
   # For example, this is considered invalid:
   #
