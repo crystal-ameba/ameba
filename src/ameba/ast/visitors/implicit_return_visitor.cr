@@ -127,14 +127,14 @@ module Ameba::AST
         node.block_arg.try &.accept(self)
       end
 
-      if (return_type = node.return_type).is_a?(Crystal::Path)
+      if (return_type = node.return_type).is_a?(Crystal::Path) &&
+         return_type.names.join("::").in?("::Nil", "Nil")
         # Special case of the return type being nil, meaning the last
         # line of the method body is ignored
-        if return_type.names.join("::").in?("::Nil", "Nil")
-          node.body.accept(self)
-        else
-          incr_stack { node.body.accept(self) }
-        end
+        swap_stack { node.body.accept(self) }
+      elsif node.name == "initialize"
+        # Last line of initialize methods are also ignored
+        swap_stack { node.body.accept(self) }
       else
         incr_stack { node.body.accept(self) }
       end
