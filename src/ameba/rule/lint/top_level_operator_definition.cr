@@ -20,16 +20,16 @@ module Ameba::Rule::Lint
   # YAML configuration example:
   #
   # ```
-  # Lint/UselessDef:
+  # Lint/TopLevelOperatorDefinition:
   #   Enabled: true
   # ```
-  class UselessDef < Base
+  class TopLevelOperatorDefinition < Base
     properties do
       since_version "1.7.0"
-      description "Disallows useless method definitions"
+      description "Disallows top level operator method definitions"
     end
 
-    MSG = "Useless method definition"
+    MSG = "Top level operator method definitions cannot be called"
 
     def test(source)
       AST::NodeVisitor.new self, source, skip: [

@@ -1,8 +1,8 @@
 require "../../../spec_helper"
 
 module Ameba::Rule::Lint
-  describe UselessDef do
-    subject = UselessDef.new
+  describe TopLevelOperatorDefinition do
+    subject = TopLevelOperatorDefinition.new
 
     it "passes if an operator method is defined within a class" do
       expect_no_issues subject, <<-CRYSTAL
@@ -41,7 +41,7 @@ module Ameba::Rule::Lint
     it "fails if a + operator method is defined top-level" do
       expect_issue subject, <<-CRYSTAL
         def +(other)
-        # ^^^^^^^^^^ error: Useless method definition
+        # ^^^^^^^^^^ error: Top level operator method definitions cannot be called
         end
         CRYSTAL
     end
@@ -49,7 +49,7 @@ module Ameba::Rule::Lint
     it "fails if an index operator method is defined top-level" do
       expect_issue subject, <<-CRYSTAL
         def [](other)
-        # ^^^^^^^^^^^ error: Useless method definition
+        # ^^^^^^^^^^^ error: Top level operator method definitions cannot be called
         end
         CRYSTAL
     end
