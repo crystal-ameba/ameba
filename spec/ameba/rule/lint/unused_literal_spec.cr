@@ -399,6 +399,14 @@ module Ameba::Rule::Lint
         CRYSTAL
     end
 
+    it "passes if an unused method call is the last line of a method with a Nil return type restriction" do
+      expect_no_issues subject, <<-CRYSTAL
+        def foo : Nil
+          bar("baz")
+        end
+        CRYSTAL
+    end
+
     it "fails if an unused literal is the last line of a method with a Nil return type restriction" do
       expect_issue subject, <<-CRYSTAL
         def foo : Nil
