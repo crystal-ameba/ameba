@@ -167,19 +167,19 @@ module Ameba::AST
     # :nodoc:
     def visit(node : Crystal::Call)
       scope = @current_scope
-
       case
-      when (scope.top_level? || scope.type_definition?) && record_macro?(node)
-        return false
-      when scope.type_definition? && accessor_macro?(node)
-        return false
+      when (scope.top_level? || scope.type_definition?) && record_macro?(node),
+           scope.type_definition? && accessor_macro?(node)
+        false
       when scope.def? && special_node?(node)
         scope.arguments.each do |arg|
           ref = arg.variable.reference(scope)
           ref.explicit = false
         end
+        true
+      else
+        true
       end
-      true
     end
 
     private def special_node?(node)

@@ -61,9 +61,8 @@ module Ameba::AST
     # Returns the target node of the variable in this assignment.
     def target_node
       case assign = node
-      when Crystal::Assign           then assign.target
-      when Crystal::OpAssign         then assign.target
-      when Crystal::UninitializedVar then assign.var
+      when Crystal::UninitializedVar          then assign.var
+      when Crystal::Assign, Crystal::OpAssign then assign.target
       when Crystal::MultiAssign
         assign.targets.find(node) do |target|
           target.is_a?(Crystal::Var) && target.name == variable.name
