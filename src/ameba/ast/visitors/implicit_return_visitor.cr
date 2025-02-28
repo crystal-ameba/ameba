@@ -56,13 +56,7 @@ module Ameba::AST
     def visit(node : Crystal::Call) : Bool
       report_implicit_return(node)
 
-      incr_stack do
-        node.obj.try &.accept(self)
-        node.args.each &.accept(self)
-        node.named_args.try &.each &.accept(self)
-        node.block_arg.try &.accept(self)
-        node.block.try &.accept(self)
-      end
+      incr_stack { node.accept_children(self) }
 
       false
     end
@@ -168,10 +162,7 @@ module Ameba::AST
     def visit(node : Crystal::FunDef) : Bool
       report_implicit_return(node)
 
-      incr_stack do
-        node.args.each &.accept(self)
-        node.body.try &.accept(self)
-      end
+      incr_stack { node.accept_children(self) }
 
       false
     end
@@ -187,7 +178,7 @@ module Ameba::AST
     def visit(node : Crystal::UnaryExpression) : Bool
       report_implicit_return(node)
 
-      incr_stack { node.exp.accept(self) }
+      incr_stack { node.accept_children(self) }
 
       false
     end
@@ -195,10 +186,7 @@ module Ameba::AST
     def visit(node : Crystal::Annotation) : Bool
       report_implicit_return(node)
 
-      incr_stack do
-        node.args.each &.accept(self)
-        node.named_args.try &.each &.accept(self)
-      end
+      incr_stack { node.accept_children(self) }
 
       false
     end
@@ -222,9 +210,7 @@ module Ameba::AST
     def visit(node : Crystal::StringInterpolation) : Bool
       report_implicit_return(node)
 
-      node.expressions.each do |exp|
-        incr_stack { exp.accept(self) }
-      end
+      incr_stack { node.accept_children(self) }
 
       false
     end
@@ -250,8 +236,7 @@ module Ameba::AST
     def visit(node : Crystal::Select) : Bool
       report_implicit_return(node)
 
-      node.whens.each &.accept(self)
-      node.else.try &.accept(self)
+      node.accept_children(self)
 
       false
     end
@@ -303,7 +288,7 @@ module Ameba::AST
     def visit(node : Crystal::ControlExpression) : Bool
       report_implicit_return(node)
 
-      incr_stack { node.exp.try &.accept(self) }
+      incr_stack { node.accept_children(self) }
 
       false
     end
@@ -311,10 +296,7 @@ module Ameba::AST
     def visit(node : Crystal::RangeLiteral) : Bool
       report_implicit_return(node)
 
-      incr_stack do
-        node.from.accept(self)
-        node.to.accept(self)
-      end
+      incr_stack { node.accept_children(self) }
 
       false
     end
@@ -324,7 +306,7 @@ module Ameba::AST
 
       # Regex literals either contain string literals or string interpolations,
       # both of which are "captured" by the parent regex literal
-      incr_stack { node.value.accept(self) }
+      incr_stack { node.accept_children(self) }
 
       false
     end
