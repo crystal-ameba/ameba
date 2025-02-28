@@ -311,15 +311,6 @@ module Ameba::AST
       false
     end
 
-    def visit(
-      node : Crystal::BoolLiteral | Crystal::CharLiteral | Crystal::NumberLiteral |
-             Crystal::StringLiteral | Crystal::SymbolLiteral | Crystal::ProcLiteral,
-    ) : Bool
-      report_implicit_return(node)
-
-      true
-    end
-
     def visit(node : Crystal::Yield) : Bool
       report_implicit_return(node)
 
@@ -366,45 +357,13 @@ module Ameba::AST
       false
     end
 
-    def visit(node : Crystal::MacroVar)
+    def visit(node : Crystal::Alias | Crystal::TypeDef | Crystal::MacroVar)
       false
     end
 
-    def visit(node : Crystal::Generic | Crystal::Path | Crystal::Union) : Bool
+    def visit(node : Crystal::Generic | Crystal::Path | Crystal::Union | Crystal::UninitializedVar | Crystal::OffsetOf | Crystal::LibDef | Crystal::Include | Crystal::Extend) : Bool
       report_implicit_return(node)
 
-      false
-    end
-
-    def visit(node : Crystal::UninitializedVar) : Bool
-      report_implicit_return(node)
-
-      false
-    end
-
-    def visit(node : Crystal::OffsetOf) : Bool
-      report_implicit_return(node)
-
-      false
-    end
-
-    def visit(node : Crystal::LibDef) : Bool
-      report_implicit_return(node)
-
-      false
-    end
-
-    def visit(node : Crystal::Include | Crystal::Extend) : Bool
-      report_implicit_return(node)
-
-      false
-    end
-
-    def visit(node : Crystal::Alias)
-      false
-    end
-
-    def visit(node : Crystal::TypeDef)
       false
     end
 
