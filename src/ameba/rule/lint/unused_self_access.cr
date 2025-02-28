@@ -32,10 +32,6 @@ module Ameba::Rule::Lint
       AST::ImplicitReturnVisitor.new(self, source)
     end
 
-    def test(source, node : Crystal::Self, in_macro : Bool)
-      issue_for node, MSG
-    end
-
     def test(source, node : Crystal::Var, in_macro : Bool)
       issue_for node, MSG if node.name == "self"
     end
