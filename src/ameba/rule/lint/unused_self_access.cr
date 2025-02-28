@@ -23,7 +23,7 @@ module Ameba::Rule::Lint
   class UnusedSelfAccess < Base
     properties do
       since_version "1.7.0"
-      description "Disallows unused self"
+      description "Disallows unused `self`"
     end
 
     MSG = "`self` is not used"
