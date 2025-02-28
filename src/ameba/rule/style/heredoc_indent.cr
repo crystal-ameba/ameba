@@ -1,32 +1,31 @@
 module Ameba::Rule::Style
-  # A rule that enforces _Heredoc_ bodies be indented one level above the indentation of the
-  # line they're used on.
+  # A rule that enforces _heredoc_ bodies be indented one level above the
+  # indentation of the line they're used on.
   #
   # For example, this is considered invalid:
   #
-  # ```
-  # <<-HERERDOC
-  #   hello world
-  # HEREDOC
+  #     <<-HEREDOC
+  #       hello world
+  #     HEREDOC
   #
-  #   <<-HERERDOC
-  # hello world
-  # HEREDOC
-  # ```
+  #       <<-HEREDOC
+  #     hello world
+  #     HEREDOC
   #
   # And should be written as:
   #
-  # ```
-  # <<-HERERDOC
-  #     hello world
-  #   HEREDOC
+  #     <<-HEREDOC
+  #         hello world
+  #       HEREDOC
   #
-  #   <<-HERERDOC
-  #     hello world
-  #     HEREDOC
-  # ```
+  #     <<-HEREDOC
+  #       hello world
+  #       HEREDOC
   #
-  # The `IndentBy` configuration option changes the enforced indentation level of the _heredoc_.
+  # The `IndentBy` configuration option changes the enforced indentation level
+  # of the _heredoc_.
+  #
+  # YAML configuration example:
   #
   # ```
   # Style/HeredocIndent:
