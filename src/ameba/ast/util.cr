@@ -188,7 +188,7 @@ module Ameba::AST::Util
     when Crystal::While, Crystal::Until
       true
     when Crystal::Call
-      node.name == "loop" && node.args.size == 0 && node.obj.nil?
+      node.name == "loop" && node.args.empty? && node.obj.nil?
     else
       false
     end
