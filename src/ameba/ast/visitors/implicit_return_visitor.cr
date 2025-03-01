@@ -379,21 +379,28 @@ module Ameba::AST
     private def incr_stack(&) : Nil
       @stack += 1
       yield
+    ensure
       @stack -= 1
     end
 
     private def swap_stack(& : Int32 -> Nil) : Nil
       old_stack = @stack
       @stack = 0
-      yield old_stack
-      @stack = old_stack
+      begin
+        yield old_stack
+      ensure
+        @stack = old_stack
+      end
     end
 
     private def in_macro(&) : Nil
       old_value = @in_macro
       @in_macro = true
-      yield
-      @in_macro = old_value
+      begin
+        yield
+      ensure
+        @in_macro = old_value
+      end
     end
   end
 end
