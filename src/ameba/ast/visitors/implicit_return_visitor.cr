@@ -40,14 +40,12 @@ module Ameba::AST
     def visit(node : Crystal::BinaryOp) : Bool
       report_implicit_return(node)
 
-      if node.right.is_a?(Crystal::Call) ||
-         node.right.is_a?(Crystal::Expressions) ||
-         node.right.is_a?(Crystal::ControlExpression)
+      case node.right
+      when Crystal::Call, Crystal::Expressions, Crystal::ControlExpression
         incr_stack { node.left.accept(self) }
       else
         node.left.accept(self)
       end
-
       node.right.accept(self)
 
       false
