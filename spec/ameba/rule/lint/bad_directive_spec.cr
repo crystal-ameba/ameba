@@ -13,7 +13,7 @@ module Ameba::Rule::Lint
     it "reports if there is incorrect action" do
       expect_issue subject, <<-CRYSTAL
         # ameba:foo Lint/BadDirective
-              # ^^^ error: Bad action in comment directive: 'foo'. Possible values: disable, enable
+              # ^^^ error: Bad action in comment directive: `foo`. Possible values: `disable`, `enable`
         CRYSTAL
     end
 
