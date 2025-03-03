@@ -37,44 +37,80 @@ module Ameba::Rule::Style
 
     MSG = "`%s`-literals should be delimited by `%s` and `%s`"
 
-    # ameba:disable Metrics/CyclomaticComplexity
     def test(source)
-      start_token = literal = delimiters = nil
+      processor = TokenProcessor.new(source, self)
+      processor.run do |state|
+        issue_for state.location, state.end_location,
+          MSG % {state.literal, state.opening_delimiter, state.closing_delimiter}
+      end
+    end
 
-      Tokenizer.new(source).run do |token|
-        case token.type
-        when .string_array_start?, .symbol_array_start?, .delimiter_start?
-          if literal = token.raw.match(/^(%\w?)\W/i).try &.[1]
-            start_token = token.dup
+    private class TokenProcessor
+      def initialize(source, @rule : PercentLiteralDelimiters)
+        @tokenizer = Tokenizer.new(source)
+      end
 
-            delimiters =
-              preferred_delimiters.fetch(literal) { default_delimiters }
+      def run(&on_literal : LiteralState -> Nil) : Nil
+        current_state = nil
 
-            # `nil` means that the check should be skipped for this literal
-            unless delimiters
-              start_token = literal = delimiters = nil
+        @tokenizer.run do |token|
+          case token.type
+          when .string_array_start?, .symbol_array_start?, .delimiter_start?
+            if literal = extract_percent_literal(token.raw)
+              if delimiters = delimiters_for_literal(literal)
+                current_state = LiteralState.new(token.dup, literal, delimiters)
+              end
+            end
+          when .string?
+            if (state = current_state) && @rule.ignore_literals_containing_delimiters?
+              current_state = nil if state.includes_delimiters?(token.raw)
+            end
+          when .string_array_end?, .delimiter_end?
+            if state = current_state
+              unless state.correct_delimiters?
+                on_literal.call(state)
+              end
+              current_state = nil
             end
           end
-        when .string?
-          if (_delimiters = delimiters) && ignore_literals_containing_delimiters?
-            # literal contains one or both delimiters
-            if token.raw[_delimiters[0]]? || token.raw[_delimiters[1]]?
-              start_token = literal = delimiters = nil
-            end
-          end
-        when .string_array_end?, .delimiter_end?
-          if (_start = start_token) && (_delimiters = delimiters) && (_literal = literal)
-            unless _start.delimiter_state.nest == _delimiters[0] &&
-                   _start.delimiter_state.end == _delimiters[1]
-              token_location = {
-                _start.location,
-                _start.location.adjust(column_number: _literal.size - 1),
-              }
-              issue_for *token_location,
-                MSG % {_literal, _delimiters[0], _delimiters[1]}
-            end
-            start_token = literal = delimiters = nil
-          end
+        end
+      end
+
+      private def extract_percent_literal(string)
+        string.match(/^(%\w*)\W/).try &.[1]
+      end
+
+      private def delimiters_for_literal(literal)
+        @rule.preferred_delimiters.fetch(literal) { @rule.default_delimiters }
+      end
+
+      struct LiteralState
+        getter start_token : Crystal::Token
+        getter literal : String
+        getter opening_delimiter : Char
+        getter closing_delimiter : Char
+
+        def initialize(@start_token, @literal, delimiters)
+          @opening_delimiter = delimiters[0]
+          @closing_delimiter = delimiters[1]
+        end
+
+        def includes_delimiters?(string)
+          string.includes?(opening_delimiter) ||
+            string.includes?(closing_delimiter)
+        end
+
+        def correct_delimiters?
+          start_token.delimiter_state.nest == opening_delimiter &&
+            start_token.delimiter_state.end == closing_delimiter
+        end
+
+        def location
+          start_token.location
+        end
+
+        def end_location
+          location.adjust(column_number: literal.size - 1)
         end
       end
     end
