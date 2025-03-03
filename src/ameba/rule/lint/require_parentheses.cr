@@ -33,7 +33,7 @@ module Ameba::Rule::Lint
 
     MSG = "Use parentheses in the method call to avoid confusion about precedence"
 
-    ALLOWED_CALL_NAMES = %w{[]? []}
+    ALLOWED_CALL_NAMES = %w[[]? []]
 
     def test(source, node : Crystal::Call)
       return if node.args.empty? ||
