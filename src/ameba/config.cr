@@ -229,7 +229,7 @@ class Ameba::Config
 
     rule
       .tap(&.enabled = enabled)
-      .tap(&.excluded = excluded)
+      .tap(&.excluded = excluded.try &.to_set)
   end
 
   # Updates rules properties.
@@ -245,6 +245,8 @@ class Ameba::Config
   # config.update_rules %w[Group1 Group2], enabled: true
   # ```
   def update_rules(names : Enumerable(String), enabled = true, excluded = nil)
+    excluded = excluded.try &.to_set
+
     names.each do |name|
       if rules = @rule_groups[name]?
         rules.each do |rule|
@@ -350,7 +352,7 @@ class Ameba::Config
 
       {% unless properties["excluded".id] %}
         @[YAML::Field(key: "Excluded")]
-        property excluded : Array(String)?
+        property excluded : Set(String)?
       {% end %}
 
       {% unless properties["since_version".id] %}

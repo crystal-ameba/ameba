@@ -71,7 +71,7 @@ module Ameba
 
         all_rules = ([] of Rule::Base).tap do |rules|
           rule = ErrorRule.new
-          rule.excluded = [path]
+          rule.excluded = Set{path}
           rules << rule
         end
 
