@@ -9,11 +9,11 @@ module Ameba
     # ```
     # find_files_by_globs(["**/*.cr", "!lib"])
     # ```
-    def find_files_by_globs(globs)
-      rejected = rejected_globs(globs)
+    def find_files_by_globs(globs, root = Dir.current)
+      rejected = rejected_globs(globs, root)
       selected = globs - rejected
 
-      expand(selected) - expand(rejected.map!(&.[1..-1]))
+      expand(selected, root) - expand(rejected.map!(&.[1..-1]), root)
     end
 
     # Expands globs. Globs can point to files or even directories.
@@ -21,10 +21,10 @@ module Ameba
     # ```
     # expand(["spec/*.cr", "src"]) # => all files in src folder + first level specs
     # ```
-    def expand(globs)
+    def expand(globs, root = Dir.current)
       globs
         .flat_map do |glob|
-          glob = Path[glob]
+          glob = Path[glob].expand(root)
 
           if File.directory?(Path.posix(glob))
             glob = glob / "**" / "*.{cr,ecr}"
@@ -38,9 +38,9 @@ module Ameba
         .select! { |path| File.file?(path) }
     end
 
-    private def rejected_globs(globs)
+    private def rejected_globs(globs, root = Dir.current)
       globs.select do |glob|
-        glob.starts_with?('!') && !File.exists?(glob)
+        glob.starts_with?('!') && !File.exists?(Path[glob].expand(root))
       end
     end
   end

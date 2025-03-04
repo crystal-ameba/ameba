@@ -157,7 +157,12 @@ module Ameba::Cli
   end
 
   private def config_from_opts(opts)
-    config = Config.load opts.config, opts.colors?, opts.skip_reading_config?
+    config = Config.load(
+      root: root_path_from_opts(opts),
+      path: opts.config,
+      colors: opts.colors?,
+      skip_reading_config: opts.skip_reading_config?,
+    )
     config.autocorrect = opts.autocorrect?
     config.stdin_filename = opts.stdin_filename
 
@@ -175,6 +180,28 @@ module Ameba::Cli
     configure_rules(config, opts)
 
     config
+  end
+
+  private def root_path_from_opts(opts)
+    return unless globs = opts.globs
+    root =
+      case
+      when path = globs.find(&->File.file?(String))
+        Path[path].parents.reverse!.find(&->root_path?(Path))
+      when path = globs.find(&->File.directory?(String))
+        path = Path[path]
+        if root_path?(path)
+          path
+        else
+          path.parents.reverse!.find(&->root_path?(Path))
+        end
+      end
+    root.try &.expand(home: true)
+  end
+
+  private def root_path?(path)
+    File.exists?(path / Config::FILENAME) ||
+      File.exists?(path / "shard.yml")
   end
 
   private def configure_rules(config, opts) : Nil

@@ -1,6 +1,8 @@
 require "../spec_helper"
 
 module Ameba
+  root = Path[__DIR__, "..", ".."]
+
   describe Config do
     config_sample = Path[__DIR__, "..", "fixtures", "config.yml"].to_s
 
@@ -142,7 +144,7 @@ module Ameba
     end
 
     describe "#sources" do
-      config = Config.load config_sample
+      config = Config.load config_sample, root: root
 
       it "returns list of sources" do
         config.sources.size.should be > 0

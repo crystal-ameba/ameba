@@ -64,6 +64,9 @@ class Ameba::Config
   getter rules : Array(Rule::Base)
   property severity = Severity::Convention
 
+  # Returns a root directory to be used by `Ameba::Runner`.
+  property root : Path { Path[Dir.current] }
+
   # Returns an ameba version to be used by `Ameba::Runner`.
   property version : SemanticVersion?
 
@@ -98,7 +101,7 @@ class Ameba::Config
   # Creates a new instance of `Ameba::Config` based on YAML parameters.
   #
   # `Config.load` uses this constructor to instantiate new config by YAML file.
-  protected def initialize(config : YAML::Any)
+  protected def initialize(config : YAML::Any, @root = nil)
     if config.raw.nil?
       config = YAML.parse("{}")
     elsif !config.raw.is_a?(Hash)
@@ -122,38 +125,38 @@ class Ameba::Config
   # ```
   # config = Ameba::Config.load
   # ```
-  def self.load(path = nil, colors = true, skip_reading_config = false)
+  def self.load(path = nil, root = nil, colors = true, skip_reading_config = false)
     Colorize.enabled = colors
     content = if skip_reading_config
                 "{}"
               else
-                read_config(path) || "{}"
+                read_config(path, root) || "{}"
               end
-    Config.new YAML.parse(content)
+    Config.new YAML.parse(content), root
   rescue e
     raise "Unable to load config file: #{e.message}"
   end
 
-  protected def self.read_config(path = nil)
+  protected def self.read_config(path = nil, root = nil)
     if path
       return File.read(path) if File.exists?(path)
       raise "Config file does not exist"
     end
-    each_config_path do |config_path|
-      return File.read(config_path) if File.exists?(config_path)
+    path = root ? root / FILENAME : DEFAULT_PATH
+    if config_path = find_config_path(path)
+      return File.read(config_path)
     end
   end
 
-  protected def self.each_config_path(&)
-    path = Path[DEFAULT_PATH].expand(home: true)
-
-    search_paths = path.parents
-    search_paths.reverse_each do |search_path|
-      yield search_path / FILENAME
+  protected def self.find_config_path(path : Path)
+    path.parents.reverse_each do |search_path|
+      config_path =
+        search_path / FILENAME
+      return config_path if File.exists?(config_path)
     end
 
     DEFAULT_PATHS.each do |default_path|
-      yield default_path
+      return default_path if File.exists?(default_path)
     end
   end
 
@@ -174,8 +177,11 @@ class Ameba::Config
     if file = stdin_filename
       [Source.new(STDIN.gets_to_end, file)]
     else
-      (find_files_by_globs(globs) - find_files_by_globs(excluded))
-        .map { |path| Source.new File.read(path), path }
+      (find_files_by_globs(globs, root) - find_files_by_globs(excluded, root))
+        .map do |path|
+          relative_path = Path[path].relative_to(root).to_s
+          Source.new File.read(path), relative_path
+        end
     end
   end
 

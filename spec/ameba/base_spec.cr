@@ -1,6 +1,8 @@
 require "../spec_helper"
 
 module Ameba::Rule
+  root = Path[__DIR__, "..", ".."]
+
   describe Base do
     context ".rules" do
       it "returns a list of all rules" do
@@ -64,7 +66,7 @@ module Ameba::Rule
       it "returns true if source matches the wildcard" do
         rule = DummyRule.new
         rule.excluded = Set{"**/*.cr"}
-        rule.excluded?(Source.new(path: __FILE__)).should be_true
+        rule.excluded?(Source.new(path: __FILE__), root).should be_true
       end
 
       it "returns false if source does not match the wildcard" do
