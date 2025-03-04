@@ -36,7 +36,7 @@ module Ameba
           Globs: src/*.cr
           CONFIG
         config = Config.new(yml)
-        config.globs.should eq %w[src/*.cr]
+        config.globs.should eq Set{"src/*.cr"}
       end
 
       it "initializes globs as array" do
@@ -47,7 +47,7 @@ module Ameba
            - "!spec"
           CONFIG
         config = Config.new(yml)
-        config.globs.should eq %w[src/*.cr !spec]
+        config.globs.should eq Set{"src/*.cr", "!spec"}
       end
 
       it "raises if Globs has a wrong type" do
@@ -66,7 +66,7 @@ module Ameba
           Excluded: spec
           CONFIG
         config = Config.new(yml)
-        config.excluded.should eq %w[spec]
+        config.excluded.should eq Set{"spec"}
       end
 
       it "initializes excluded as array" do
@@ -77,7 +77,7 @@ module Ameba
            - lib/*.cr
           CONFIG
         config = Config.new(yml)
-        config.excluded.should eq %w[spec lib/*.cr]
+        config.excluded.should eq Set{"spec", "lib/*.cr"}
       end
 
       it "raises if Excluded has a wrong type" do
@@ -123,8 +123,8 @@ module Ameba
       end
 
       it "allows to set globs" do
-        config.globs = ["file.cr"]
-        config.globs.should eq ["file.cr"]
+        config.globs = Set{"file.cr"}
+        config.globs.should eq Set{"file.cr"}
       end
     end
 
@@ -136,8 +136,8 @@ module Ameba
       end
 
       it "allows to set excluded" do
-        config.excluded = ["spec"]
-        config.excluded.should eq ["spec"]
+        config.excluded = Set{"spec"}
+        config.excluded.should eq Set{"spec"}
       end
     end
 
@@ -151,12 +151,12 @@ module Ameba
       end
 
       it "returns a list of sources matching globs" do
-        config.globs = %w[**/config_spec.cr]
+        config.globs = Set{"**/config_spec.cr"}
         config.sources.size.should eq(1)
       end
 
       it "returns a list of sources excluding 'Excluded'" do
-        config.excluded = %w[**/config_spec.cr]
+        config.excluded = Set{"**/config_spec.cr"}
         config.sources.any?(&.fullpath.==(__FILE__)).should be_false
       end
     end
