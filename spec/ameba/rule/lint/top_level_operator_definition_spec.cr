@@ -4,6 +4,12 @@ module Ameba::Rule::Lint
   describe TopLevelOperatorDefinition do
     subject = TopLevelOperatorDefinition.new
 
+    it "passes for procs" do
+      expect_no_issues subject, <<-CRYSTAL
+        -> { nil }
+        CRYSTAL
+    end
+
     it "passes if an operator method is defined within a class" do
       expect_no_issues subject, <<-CRYSTAL
         class Foo
