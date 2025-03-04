@@ -223,7 +223,7 @@ module Ameba
 
       it "updates excluded property" do
         name = DummyRule.rule_name
-        excluded = %w[spec/source.cr]
+        excluded = Set{"spec/source.cr"}
         config.update_rule name, excluded: excluded
         rule = config.rules.find!(&.name.== name)
         rule.excluded.should eq excluded
@@ -242,7 +242,7 @@ module Ameba
 
       it "updates multiple rules by excluded property" do
         name = DummyRule.rule_name
-        excluded = %w[spec/source.cr]
+        excluded = Set{"spec/source.cr"}
         config.update_rules [name], excluded: excluded
         rule = config.rules.find!(&.name.== name)
         rule.excluded.should eq excluded
@@ -257,7 +257,7 @@ module Ameba
 
       it "updates a group by excluded property" do
         name = DummyRule.group_name
-        excluded = %w[spec/source.cr]
+        excluded = Set{"spec/source.cr"}
         config.update_rules [name], excluded: excluded
         rule = config.rules.find!(&.name.== DummyRule.rule_name)
         rule.excluded.should eq excluded
