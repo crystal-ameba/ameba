@@ -58,10 +58,8 @@ class Ameba::Config
     Path[XDG_CONFIG_HOME] / "ameba/config.yml",
   }
 
-  DEFAULT_GLOBS = Set{
-    "**/*.cr",
-    "!lib",
-  }
+  DEFAULT_EXCLUDED = Set{"lib"}
+  DEFAULT_GLOBS    = Set{"**/*.cr"}
 
   Ameba.ecr_supported? do
     DEFAULT_GLOBS << "**/*.ecr"
@@ -112,7 +110,7 @@ class Ameba::Config
     end
     @rules = Rule.rules.map &.new(config).as(Rule::Base)
     @rule_groups = @rules.group_by &.group
-    @excluded = load_array_section(config, "Excluded").to_set
+    @excluded = load_array_section(config, "Excluded", DEFAULT_EXCLUDED).to_set
     @globs = load_array_section(config, "Globs", DEFAULT_GLOBS).to_set
 
     if version = config["Version"]?.try(&.as_s).presence
