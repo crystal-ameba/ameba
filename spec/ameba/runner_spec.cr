@@ -4,7 +4,7 @@ module Ameba
   private def runner(files = [__FILE__], formatter = DummyFormatter.new)
     config = Config.load
     config.formatter = formatter
-    config.globs = files
+    config.globs = files.to_set
 
     config.update_rule VersionedRule.rule_name, enabled: false
     config.update_rule ErrorRule.rule_name, enabled: false

@@ -58,11 +58,11 @@ class Ameba::Config
     Path[XDG_CONFIG_HOME] / "ameba" / "config.yml",
   }
 
-  DEFAULT_GLOBS = %w[
-    **/*.cr
-    **/*.ecr
-    !lib
-  ]
+  DEFAULT_GLOBS = Set{
+    "**/*.cr",
+    "**/*.ecr",
+    "!lib",
+  }
 
   getter rules : Array(Rule::Base)
   property severity = Severity::Convention
@@ -76,19 +76,19 @@ class Ameba::Config
   #
   # ```
   # config = Ameba::Config.load
-  # config.globs = ["**/*.cr"]
+  # config.globs = Set{"**/*.cr"}
   # config.globs
   # ```
-  property globs : Array(String)
+  property globs : Set(String)
 
   # Represents a list of paths to exclude from globs.
   # Can have wildcards.
   #
   # ```
   # config = Ameba::Config.load
-  # config.excluded = ["spec", "src/server/*.cr"]
+  # config.excluded = Set{"spec", "src/server/*.cr"}
   # ```
-  property excluded : Array(String)
+  property excluded : Set(String)
 
   # Returns `true` if correctable issues should be autocorrected.
   property? autocorrect = false
@@ -109,8 +109,8 @@ class Ameba::Config
     end
     @rules = Rule.rules.map &.new(config).as(Rule::Base)
     @rule_groups = @rules.group_by &.group
-    @excluded = load_array_section(config, "Excluded")
-    @globs = load_array_section(config, "Globs", DEFAULT_GLOBS)
+    @excluded = load_array_section(config, "Excluded").to_set
+    @globs = load_array_section(config, "Globs", DEFAULT_GLOBS).to_set
 
     if version = config["Version"]?.try(&.as_s).presence
       self.version = version
@@ -169,8 +169,8 @@ class Ameba::Config
   # ```
   # config = Ameba::Config.load
   # config.sources # => list of default sources
-  # config.globs = ["**/*.cr", "**/*.ecr"]
-  # config.excluded = ["spec"]
+  # config.globs = Set{"**/*.cr", "**/*.ecr"}
+  # config.excluded = Set{"spec"}
   # config.sources # => list of sources pointing to files found by the wildcards
   # ```
   def sources

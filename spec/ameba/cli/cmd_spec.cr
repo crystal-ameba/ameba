@@ -46,12 +46,12 @@ module Ameba::Cli
 
       it "accepts --only flag" do
         c = Cli.parse_args ["--only", "RULE1,RULE2"]
-        c.only.should eq %w[RULE1 RULE2]
+        c.only.should eq Set{"RULE1", "RULE2"}
       end
 
       it "accepts --except flag" do
         c = Cli.parse_args ["--except", "RULE1,RULE2"]
-        c.except.should eq %w[RULE1 RULE2]
+        c.except.should eq Set{"RULE1", "RULE2"}
       end
 
       it "defaults rules? flag to false" do
@@ -165,7 +165,7 @@ module Ameba::Cli
 
       it "accepts unknown args as globs" do
         c = Cli.parse_args %w[source1.cr source2.cr]
-        c.globs.should eq %w[source1.cr source2.cr]
+        c.globs.should eq Set{"source1.cr", "source2.cr"}
       end
 
       it "accepts single '-' argument as STDIN" do
