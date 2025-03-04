@@ -58,11 +58,8 @@ class Ameba::Config
     Path[XDG_CONFIG_HOME] / "ameba" / "config.yml",
   }
 
-  DEFAULT_GLOBS = Set{
-    "**/*.cr",
-    "**/*.ecr",
-    "!lib",
-  }
+  DEFAULT_EXCLUDED = Set{"lib"}
+  DEFAULT_GLOBS    = Set{"**/*.{cr,ecr}"}
 
   getter rules : Array(Rule::Base)
   property severity = Severity::Convention
@@ -109,7 +106,7 @@ class Ameba::Config
     end
     @rules = Rule.rules.map &.new(config).as(Rule::Base)
     @rule_groups = @rules.group_by &.group
-    @excluded = load_array_section(config, "Excluded").to_set
+    @excluded = load_array_section(config, "Excluded", DEFAULT_EXCLUDED).to_set
     @globs = load_array_section(config, "Globs", DEFAULT_GLOBS).to_set
 
     if version = config["Version"]?.try(&.as_s).presence

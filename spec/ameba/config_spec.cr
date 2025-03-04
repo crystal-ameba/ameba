@@ -131,8 +131,8 @@ module Ameba
     describe "#excluded, #excluded=" do
       config = Config.load config_sample
 
-      it "defaults to empty array" do
-        config.excluded.should be_empty
+      it "defaults to `lib`" do
+        config.excluded.should eq Set{"lib"}
       end
 
       it "allows to set excluded" do
