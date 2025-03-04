@@ -2,7 +2,7 @@ require "../spec_helper"
 
 module Ameba
   describe Config do
-    config_sample = "spec/fixtures/config.yml"
+    config_sample = Path[__DIR__] / "../fixtures/config.yml"
 
     it "should have a list of available formatters" do
       Config::AVAILABLE_FORMATTERS.should_not be_nil
