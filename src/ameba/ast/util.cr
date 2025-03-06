@@ -58,9 +58,9 @@ module Ameba::AST::Util
 
   # Returns `true` if current `node` is a `Crystal::Path`
   # matching given *name*, `false` otherwise.
-  def path_named?(node, name) : Bool
+  def path_named?(node, *names : String) : Bool
     node.is_a?(Crystal::Path) &&
-      name == node.names.join("::")
+      node.names.join("::").in?(names)
   end
 
   # Returns a source code for the current node.
