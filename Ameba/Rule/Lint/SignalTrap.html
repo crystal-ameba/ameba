@@ -14,7 +14,7 @@
 <script type="text/javascript" src="../../../js/doc.js"></script>
 
   <meta name="repository-name" content="ameba">
-  <title>Ameba::Rule::Naming::TypeNames - ameba master</title>
+  <title>Ameba::Rule::Lint::SignalTrap - ameba master</title>
   <script type="text/javascript">
     CrystalDocs.base_path = "../../../";
   </script>
@@ -382,7 +382,7 @@
       
     </li>
   
-  <li class="parent " data-id="ameba/Ameba/Rule/Lint" data-name="ameba::rule::lint">
+  <li class="parent open current" data-id="ameba/Ameba/Rule/Lint" data-name="ameba::rule::lint">
       <a href="../../../Ameba/Rule/Lint.html">Lint</a>
       
         <ul>
@@ -532,7 +532,7 @@
       
     </li>
   
-  <li class=" " data-id="ameba/Ameba/Rule/Lint/SignalTrap" data-name="ameba::rule::lint::signaltrap">
+  <li class=" current" data-id="ameba/Ameba/Rule/Lint/SignalTrap" data-name="ameba::rule::lint::signaltrap">
       <a href="../../../Ameba/Rule/Lint/SignalTrap.html">SignalTrap</a>
       
     </li>
@@ -672,7 +672,7 @@
       
     </li>
   
-  <li class="parent open current" data-id="ameba/Ameba/Rule/Naming" data-name="ameba::rule::naming">
+  <li class="parent " data-id="ameba/Ameba/Rule/Naming" data-name="ameba::rule::naming">
       <a href="../../../Ameba/Rule/Naming.html">Naming</a>
       
         <ul>
@@ -727,7 +727,7 @@
       
     </li>
   
-  <li class=" current" data-id="ameba/Ameba/Rule/Naming/TypeNames" data-name="ameba::rule::naming::typenames">
+  <li class=" " data-id="ameba/Ameba/Rule/Naming/TypeNames" data-name="ameba::rule::naming::typenames">
       <a href="../../../Ameba/Rule/Naming/TypeNames.html">TypeNames</a>
       
     </li>
@@ -1031,12 +1031,12 @@
 <div class="main-content">
 <h1 class="type-name">
 
-  <span class="kind">class</span> Ameba::<wbr>Rule::<wbr>Naming::<wbr>TypeNames
+  <span class="kind">class</span> Ameba::<wbr>Rule::<wbr>Lint::<wbr>SignalTrap
 
 </h1>
 
 
-  <ul class="superclass-hierarchy"><li class="superclass"><a href="../../../Ameba/Rule/Naming/TypeNames.html">Ameba::Rule::Naming::TypeNames</a></li><li class="superclass"><a href="../../../Ameba/Rule/Base.html">Ameba::Rule::Base</a></li><li class="superclass">Reference</li><li class="superclass">Object</li></ul>
+  <ul class="superclass-hierarchy"><li class="superclass"><a href="../../../Ameba/Rule/Lint/SignalTrap.html">Ameba::Rule::Lint::SignalTrap</a></li><li class="superclass"><a href="../../../Ameba/Rule/Base.html">Ameba::Rule::Base</a></li><li class="superclass">Reference</li><li class="superclass">Object</li></ul>
 
 
 
@@ -1050,45 +1050,19 @@
     Overview
   </h2>
 
-  <p>A rule that enforces type names in camelcase manner.</p>
-<p>For example, these are considered valid:</p>
-<pre><code class="language-crystal"><span class="k">class</span> <span class="t">ParseError</span> <span class="o">&lt;</span> <span class="t">Exception</span>
-<span class="k">end</span>
-
-<span class="k">module</span> <span class="t">HTTP</span>
-  <span class="k">class</span> <span class="t">RequestHandler</span>
-  <span class="k">end</span>
-<span class="k">end</span>
-
-<span class="k">alias</span> <span class="t">NumericValue</span> <span class="o">=</span> <span class="t">Float32</span> <span class="o">|</span> <span class="t">Float64</span> <span class="o">|</span> <span class="t">Int32</span> <span class="o">|</span> <span class="t">Int64</span>
-
-<span class="k">lib</span> <span class="t">LibYAML</span>
-<span class="k">end</span>
-
-<span class="k">struct</span> <span class="t">TagDirective</span>
-<span class="k">end</span>
-
-<span class="k">enum</span> <span class="t">Time</span><span class="t">::</span><span class="t">DayOfWeek</span>
+  <p>A rule that reports when <code>Signal::INT/HUP/TERM.trap</code> is used,
+which should be replaced with <code>Process.on_terminate</code> instead -
+a more portable alternative.</p>
+<p>For example, this is considered invalid:</p>
+<pre><code class="language-crystal"><span class="t">Signal</span><span class="t">::</span><span class="t">INT</span>.trap <span class="k">do</span>
+  shutdown
 <span class="k">end</span></code></pre>
-<p>And these are invalid type names</p>
-<pre><code class="language-crystal"><span class="k">class</span> <span class="t">My_class</span>
-<span class="k">end</span>
-
-<span class="k">module</span> <span class="t">HTT_p</span>
-<span class="k">end</span>
-
-<span class="k">alias</span> <span class="t">Numeric_value</span> <span class="o">=</span> <span class="t">Int32</span>
-
-<span class="k">lib</span> <span class="t">Lib_YAML</span>
-<span class="k">end</span>
-
-<span class="k">struct</span> <span class="t">Tag_directive</span>
-<span class="k">end</span>
-
-<span class="k">enum</span> <span class="t">Time_enum</span><span class="t">::</span><span class="t">Day_of_week</span>
+<p>And it should be written as this:</p>
+<pre><code class="language-crystal"><span class="t">Process</span>.on_terminate <span class="k">do</span>
+  shutdown
 <span class="k">end</span></code></pre>
 <p>YAML configuration example:</p>
-<pre><code class="language-crystal"><span class="t">Naming</span><span class="o">/</span><span class="t">TypeNames</span>:
+<pre><code class="language-crystal"><span class="t">Lint</span><span class="o">/</span><span class="t">SignalTrap</span>:
   <span class="t">Enabled</span>: <span class="n">true</span></code></pre>
 
 
@@ -1104,6 +1078,8 @@
     Included Modules
   </h2>
   <ul class="other-types-list">
+    
+      <li class="other-type"><a href="../../../Ameba/AST/Util.html">Ameba::AST::Util</a></li>
     
       <li class="other-type">YAML::Serializable</li>
     
@@ -1130,8 +1106,8 @@
   </h2>
   
     
-      <a href="https://github.com/crystal-ameba/ameba/blob/d0ab225/src/ameba/rule/naming/type_names.cr#L54" target="_blank">
-        ameba/rule/naming/type_names.cr
+      <a href="https://github.com/crystal-ameba/ameba/blob/d0ab225/src/ameba/rule/lint/signal_trap.cr#L28" target="_blank">
+        ameba/rule/lint/signal_trap.cr
       </a>
     
     <br/>
@@ -1152,7 +1128,7 @@
   <dl>
     
       <dt class="entry-const" id="MSG">
-        <strong>MSG</strong> = <code><span class="s">&quot;Type name should be camelcased: `%s`, not `%s`&quot;</span></code>
+        <strong>MSG</strong> = <code><span class="s">&quot;Use `Process.on_terminate` instead of `%s.trap`&quot;</span></code>
       </dt>
       
     
@@ -1178,7 +1154,7 @@
       <li class="entry-summary">
         <a href="#new%28config%3Dnil%29-class-method" class="signature"><strong>.new</strong>(config = <span class="n">nil</span>)</a>
         
-          <div class="summary"><p>A rule that enforces type names in camelcase manner.</p></div>
+          <div class="summary"><p>A rule that reports when <code>Signal::INT/HUP/TERM.trap</code> is used, which should be replaced with <code>Process.on_terminate</code> instead - a more portable alternative.</p></div>
         
       </li>
     
@@ -1270,7 +1246,7 @@
       </li>
     
       <li class="entry-summary">
-        <a href="#test%28source%2Cnode%3ACrystal%3A%3AAlias%7CCrystal%3A%3AClassDef%7CCrystal%3A%3AModuleDef%7CCrystal%3A%3ALibDef%7CCrystal%3A%3AEnumDef%29-instance-method" class="signature"><strong>#test</strong>(source, node : Crystal::Alias | Crystal::ClassDef | Crystal::ModuleDef | Crystal::LibDef | Crystal::EnumDef)</a>
+        <a href="#test%28source%2Cnode%3ACrystal%3A%3ACall%29-instance-method" class="signature"><strong>#test</strong>(source, node : Crystal::Call)</a>
         
       </li>
     
@@ -1279,6 +1255,108 @@
 
 
 <div class="methods-inherited">
+  
+    
+
+  <h3>Instance methods inherited from module <code><a href="../../../Ameba/AST/Util.html">Ameba::AST::Util</a></code></h3>
+  
+  
+    <a href="../../../Ameba/AST/Util.html#abort%3F%28node%29-instance-method" class="tooltip">
+      <span>abort?(node)</span>
+    abort?</a>, 
+    
+  
+    <a href="../../../Ameba/AST/Util.html#control_exp_code%28node%3ACrystal%3A%3AControlExpression%2Ccode_lines%29-instance-method" class="tooltip">
+      <span>control_exp_code(node : Crystal::ControlExpression, code_lines)</span>
+    control_exp_code</a>, 
+    
+  
+    <a href="../../../Ameba/AST/Util.html#dynamic_literal%3F%28node%29%3ABool-instance-method" class="tooltip">
+      <span>dynamic_literal?(node) : Bool</span>
+    dynamic_literal?</a>, 
+    
+  
+    <a href="../../../Ameba/AST/Util.html#exit%3F%28node%29-instance-method" class="tooltip">
+      <span>exit?(node)</span>
+    exit?</a>, 
+    
+  
+    <a href="../../../Ameba/AST/Util.html#flow_command%3F%28node%2Cin_loop%29-instance-method" class="tooltip">
+      <span>flow_command?(node, in_loop)</span>
+    flow_command?</a>, 
+    
+  
+    <a href="../../../Ameba/AST/Util.html#flow_expression%3F%28node%2Cin_loop%3Dfalse%29-instance-method" class="tooltip">
+      <span>flow_expression?(node, in_loop = <span class="n">false</span>)</span>
+    flow_expression?</a>, 
+    
+  
+    <a href="../../../Ameba/AST/Util.html#literal%3F%28node%29%3ABool-instance-method" class="tooltip">
+      <span>literal?(node) : Bool</span>
+    literal?</a>, 
+    
+  
+    <a href="../../../Ameba/AST/Util.html#loop%3F%28node%29-instance-method" class="tooltip">
+      <span>loop?(node)</span>
+    loop?</a>, 
+    
+  
+    <a href="../../../Ameba/AST/Util.html#name_end_location%28node%29-instance-method" class="tooltip">
+      <span>name_end_location(node)</span>
+    name_end_location</a>, 
+    
+  
+    <a href="../../../Ameba/AST/Util.html#name_location%28node%29-instance-method" class="tooltip">
+      <span>name_location(node)</span>
+    name_location</a>, 
+    
+  
+    <a href="../../../Ameba/AST/Util.html#name_size%28node%29-instance-method" class="tooltip">
+      <span>name_size(node)</span>
+    name_size</a>, 
+    
+  
+    <a href="../../../Ameba/AST/Util.html#node_source%28node%2Ccode_lines%29-instance-method" class="tooltip">
+      <span>node_source(node, code_lines)</span>
+    node_source</a>, 
+    
+  
+    <a href="../../../Ameba/AST/Util.html#nodoc%3F%28node%29-instance-method" class="tooltip">
+      <span>nodoc?(node)</span>
+    nodoc?</a>, 
+    
+  
+    <a href="../../../Ameba/AST/Util.html#path_named%3F%28node%2C%2Anames%3AString%29%3ABool-instance-method" class="tooltip">
+      <span>path_named?(node, *names : String) : Bool</span>
+    path_named?</a>, 
+    
+  
+    <a href="../../../Ameba/AST/Util.html#raise%3F%28node%29-instance-method" class="tooltip">
+      <span>raise?(node)</span>
+    raise?</a>, 
+    
+  
+    <a href="../../../Ameba/AST/Util.html#source_between%28loc%2Cend_loc%2Ccode_lines%29%3AString%7CNil-instance-method" class="tooltip">
+      <span>source_between(loc, end_loc, code_lines) : String | Nil</span>
+    source_between</a>, 
+    
+  
+    <a href="../../../Ameba/AST/Util.html#static_literal%3F%28node%29%3ABool-instance-method" class="tooltip">
+      <span>static_literal?(node) : Bool</span>
+    static_literal?</a>
+    
+  
+
+
+    
+
+
+    
+
+
+    
+
+
   
     
 
@@ -1465,52 +1543,26 @@
       
         <div class="doc">
           
-          <p>A rule that enforces type names in camelcase manner.</p>
-<p>For example, these are considered valid:</p>
-<pre><code class="language-crystal"><span class="k">class</span> <span class="t">ParseError</span> <span class="o">&lt;</span> <span class="t">Exception</span>
-<span class="k">end</span>
-
-<span class="k">module</span> <span class="t">HTTP</span>
-  <span class="k">class</span> <span class="t">RequestHandler</span>
-  <span class="k">end</span>
-<span class="k">end</span>
-
-<span class="k">alias</span> <span class="t">NumericValue</span> <span class="o">=</span> <span class="t">Float32</span> <span class="o">|</span> <span class="t">Float64</span> <span class="o">|</span> <span class="t">Int32</span> <span class="o">|</span> <span class="t">Int64</span>
-
-<span class="k">lib</span> <span class="t">LibYAML</span>
-<span class="k">end</span>
-
-<span class="k">struct</span> <span class="t">TagDirective</span>
-<span class="k">end</span>
-
-<span class="k">enum</span> <span class="t">Time</span><span class="t">::</span><span class="t">DayOfWeek</span>
+          <p>A rule that reports when <code>Signal::INT/HUP/TERM.trap</code> is used,
+which should be replaced with <code>Process.on_terminate</code> instead -
+a more portable alternative.</p>
+<p>For example, this is considered invalid:</p>
+<pre><code class="language-crystal"><span class="t">Signal</span><span class="t">::</span><span class="t">INT</span>.trap <span class="k">do</span>
+  shutdown
 <span class="k">end</span></code></pre>
-<p>And these are invalid type names</p>
-<pre><code class="language-crystal"><span class="k">class</span> <span class="t">My_class</span>
-<span class="k">end</span>
-
-<span class="k">module</span> <span class="t">HTT_p</span>
-<span class="k">end</span>
-
-<span class="k">alias</span> <span class="t">Numeric_value</span> <span class="o">=</span> <span class="t">Int32</span>
-
-<span class="k">lib</span> <span class="t">Lib_YAML</span>
-<span class="k">end</span>
-
-<span class="k">struct</span> <span class="t">Tag_directive</span>
-<span class="k">end</span>
-
-<span class="k">enum</span> <span class="t">Time_enum</span><span class="t">::</span><span class="t">Day_of_week</span>
+<p>And it should be written as this:</p>
+<pre><code class="language-crystal"><span class="t">Process</span>.on_terminate <span class="k">do</span>
+  shutdown
 <span class="k">end</span></code></pre>
 <p>YAML configuration example:</p>
-<pre><code class="language-crystal"><span class="t">Naming</span><span class="o">/</span><span class="t">TypeNames</span>:
+<pre><code class="language-crystal"><span class="t">Lint</span><span class="o">/</span><span class="t">SignalTrap</span>:
   <span class="t">Enabled</span>: <span class="n">true</span></code></pre>
         </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/d0ab225/src/ameba/rule/naming/type_names.cr#L54" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/d0ab225/src/ameba/rule/lint/signal_trap.cr#L28" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1693,7 +1745,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/d0ab225/src/ameba/rule/naming/type_names.cr#L55" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/d0ab225/src/ameba/rule/lint/signal_trap.cr#L31" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1712,18 +1764,18 @@
       </div>
     </div>
   
-    <div class="entry-detail" id="test(source,node:Crystal::Alias|Crystal::ClassDef|Crystal::ModuleDef|Crystal::LibDef|Crystal::EnumDef)-instance-method">
+    <div class="entry-detail" id="test(source,node:Crystal::Call)-instance-method">
       <div class="signature">
         
-        def <strong>test</strong>(source, node : Crystal::Alias | Crystal::ClassDef | Crystal::ModuleDef | Crystal::LibDef | Crystal::EnumDef)
+        def <strong>test</strong>(source, node : Crystal::Call)
 
-        <a class="method-permalink" href="#test%28source%2Cnode%3ACrystal%3A%3AAlias%7CCrystal%3A%3AClassDef%7CCrystal%3A%3AModuleDef%7CCrystal%3A%3ALibDef%7CCrystal%3A%3AEnumDef%29-instance-method">#</a>
+        <a class="method-permalink" href="#test%28source%2Cnode%3ACrystal%3A%3ACall%29-instance-method">#</a>
       </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/d0ab225/src/ameba/rule/naming/type_names.cr#L62" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/d0ab225/src/ameba/rule/lint/signal_trap.cr#L38" target="_blank">View source</a>]
         
       </div>
     </div>
