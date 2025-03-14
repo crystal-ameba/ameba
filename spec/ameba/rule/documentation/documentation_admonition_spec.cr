@@ -18,21 +18,27 @@ module Ameba::Rule::Documentation
     it "fails for comments with admonition" do
       subject.admonitions.each do |admonition|
         expect_issue subject, <<-CRYSTAL, admonition: admonition
-          # %{admonition}: Single-line comment
-          # ^{admonition} error: Found a %{admonition} admonition in a comment
+          def foo
+            # %{admonition}: Single-line comment
+            # ^{admonition} error: Found a %{admonition} admonition in a comment
+          end
           CRYSTAL
 
         expect_issue subject, <<-CRYSTAL, admonition: admonition
-          # Text before ...
-          # %{admonition}(some context): Part of multi-line comment
-          # ^{admonition} error: Found a %{admonition} admonition in a comment
-          # Text after ...
+          def foo
+            # Text before ...
+            # %{admonition}(some context): Part of multi-line comment
+            # ^{admonition} error: Found a %{admonition} admonition in a comment
+            # Text after ...
+          end
           CRYSTAL
 
         expect_issue subject, <<-CRYSTAL, admonition: admonition
-          # %{admonition}
-          # ^{admonition} error: Found a %{admonition} admonition in a comment
-          if rand > 0.5
+          def foo
+            # %{admonition}
+            # ^{admonition} error: Found a %{admonition} admonition in a comment
+            if rand > 0.5
+            end
           end
           CRYSTAL
       end
