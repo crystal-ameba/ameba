@@ -34,7 +34,7 @@ module Ameba::Rule::Lint
   # YAML configuration example:
   #
   # ```
-  # Lint/EmptyEnsure
+  # Lint/EmptyEnsure:
   #   Enabled: true
   # ```
   class EmptyEnsure < Base
