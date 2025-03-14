@@ -5,12 +5,9 @@ module Ameba::Rule::Lint
     subject = LiteralInInterpolation.new
 
     it "passes with good interpolation examples" do
-      expect_no_issues subject, <<-CRYSTAL
-        name = "Ary"
+      expect_no_issues subject, <<-'CRYSTAL'
         "Hello, #{name}"
-
         "#{name}"
-
         "Name size: #{name.size}"
         CRYSTAL
     end
