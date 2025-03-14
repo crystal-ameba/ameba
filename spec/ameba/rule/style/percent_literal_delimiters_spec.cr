@@ -26,6 +26,38 @@ module Ameba::Rule::Style
         CRYSTAL
     end
 
+    it "corrects incorrect percent literal delimiters" do
+      source = expect_issue subject, <<-CRYSTAL
+        %[[] () {}]
+        # ^{} error: `%`-literals should be delimited by `(` and `)`
+        %w(
+        # ^{} error: `%w`-literals should be delimited by `[` and `]`
+          one two three
+        )
+        %i(
+        # ^{} error: `%i`-literals should be delimited by `[` and `]`
+          one
+          two
+          three
+        )
+        %r|one(two )?three[!]|
+        # ^{} error: `%r`-literals should be delimited by `{` and `}`
+        CRYSTAL
+
+      expect_correction source, <<-CRYSTAL
+        %([] () {})
+        %w[
+          one two three
+        ]
+        %i[
+          one
+          two
+          three
+        ]
+        %r{one(two )?three[!]}
+        CRYSTAL
+    end
+
     it "reports rule, location and message" do
       expect_issue subject, <<-CRYSTAL
         puts %[one two three]
