@@ -27,6 +27,12 @@ module Ameba::Rule::Lint
       end
     end
 
+    it "works with magic constants (#593)" do
+      expect_no_issues subject, <<-'CRYSTAL', "/home/foo/source.cr"
+        "Hello from #{__FILE__} at line #{__LINE__} in #{__DIR__}"
+        CRYSTAL
+    end
+
     it "reports rule, pos and message" do
       s = Source.new %q(
         "Hello, #{:world} from #{:ameba}"
