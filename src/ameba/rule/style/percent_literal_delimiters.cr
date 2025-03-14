@@ -40,8 +40,15 @@ module Ameba::Rule::Style
     def test(source)
       processor = TokenProcessor.new(source, self)
       processor.run do |state|
-        issue_for state.location, state.end_location,
-          MSG % {state.literal, state.opening_delimiter, state.closing_delimiter}
+        msg = MSG % {state.literal, state.opening_delimiter, state.closing_delimiter}
+
+        x = state.start_token.location.adjust(column_number: state.literal.size)
+        y = state.end_token.location
+
+        issue_for state.location, state.end_location, msg do |corrector|
+          corrector.replace(x, x, state.opening_delimiter)
+          corrector.replace(y, y, state.closing_delimiter)
+        end
       end
     end
 
@@ -68,6 +75,7 @@ module Ameba::Rule::Style
           when .string_array_end?, .delimiter_end?
             if state = current_state
               unless state.correct_delimiters?
+                state.end_token = token
                 on_literal.call(state)
               end
               current_state = nil
@@ -86,6 +94,7 @@ module Ameba::Rule::Style
 
       struct LiteralState
         getter start_token : Crystal::Token
+        property! end_token : Crystal::Token
         getter literal : String
         getter opening_delimiter : Char
         getter closing_delimiter : Char
