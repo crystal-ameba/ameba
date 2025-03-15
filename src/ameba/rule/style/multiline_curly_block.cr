@@ -40,10 +40,7 @@ module Ameba::Rule::Style
       return if start_location.line_number == end_location.line_number
       return unless source.code[source.pos(start_location)]? == '{'
 
-      issue_for node, MSG do |corrector|
-        corrector.replace(start_location, start_location, "do")
-        corrector.replace(end_location, end_location, "end")
-      end
+      issue_for node, MSG
     end
   end
 end

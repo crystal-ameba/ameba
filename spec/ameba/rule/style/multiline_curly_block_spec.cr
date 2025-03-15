@@ -25,17 +25,11 @@ module Ameba::Rule::Style
     end
 
     it "reports if there is a multi-line curly block" do
-      source = expect_issue subject, <<-CRYSTAL
+      expect_issue subject, <<-CRYSTAL
         foo {
           # ^ error: Use `do`...`end` instead of curly brackets for multi-line blocks
           :bar
         }
-        CRYSTAL
-
-      expect_correction source, <<-CRYSTAL
-        foo do
-          :bar
-        end
         CRYSTAL
     end
   end
