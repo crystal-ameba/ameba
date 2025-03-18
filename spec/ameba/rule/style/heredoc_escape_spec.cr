@@ -65,8 +65,7 @@ module Ameba::Rule::Style
     it "passes if a heredoc contains normal and escaped escape sequences" do
       expect_no_issues subject, <<-'CRYSTAL'
         <<-HEREDOC
-          \t \n
-          \\t \\n
+          foo \t \n | \\t \\n
           HEREDOC
         CRYSTAL
     end
