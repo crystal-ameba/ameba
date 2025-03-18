@@ -14,7 +14,7 @@
 <script type="text/javascript" src="../../../js/doc.js"></script>
 
   <meta name="repository-name" content="ameba">
-  <title>Ameba::Rule::Lint::DuplicateWhenCondition - ameba master</title>
+  <title>Ameba::Rule::Style::HeredocEscape - ameba master</title>
   <script type="text/javascript">
     CrystalDocs.base_path = "../../../";
   </script>
@@ -382,7 +382,7 @@
       
     </li>
   
-  <li class="parent open current" data-id="ameba/Ameba/Rule/Lint" data-name="ameba::rule::lint">
+  <li class="parent " data-id="ameba/Ameba/Rule/Lint" data-name="ameba::rule::lint">
       <a href="../../../Ameba/Rule/Lint.html">Lint</a>
       
         <ul>
@@ -417,7 +417,7 @@
       
     </li>
   
-  <li class=" current" data-id="ameba/Ameba/Rule/Lint/DuplicateWhenCondition" data-name="ameba::rule::lint::duplicatewhencondition">
+  <li class=" " data-id="ameba/Ameba/Rule/Lint/DuplicateWhenCondition" data-name="ameba::rule::lint::duplicatewhencondition">
       <a href="../../../Ameba/Rule/Lint/DuplicateWhenCondition.html">DuplicateWhenCondition</a>
       
     </li>
@@ -807,7 +807,7 @@
       
     </li>
   
-  <li class="parent " data-id="ameba/Ameba/Rule/Style" data-name="ameba::rule::style">
+  <li class="parent open current" data-id="ameba/Ameba/Rule/Style" data-name="ameba::rule::style">
       <a href="../../../Ameba/Rule/Style.html">Style</a>
       
         <ul>
@@ -817,7 +817,7 @@
       
     </li>
   
-  <li class=" " data-id="ameba/Ameba/Rule/Style/HeredocEscape" data-name="ameba::rule::style::heredocescape">
+  <li class=" current" data-id="ameba/Ameba/Rule/Style/HeredocEscape" data-name="ameba::rule::style::heredocescape">
       <a href="../../../Ameba/Rule/Style/HeredocEscape.html">HeredocEscape</a>
       
     </li>
@@ -1036,12 +1036,12 @@
 <div class="main-content">
 <h1 class="type-name">
 
-  <span class="kind">class</span> Ameba::<wbr>Rule::<wbr>Lint::<wbr>DuplicateWhenCondition
+  <span class="kind">class</span> Ameba::<wbr>Rule::<wbr>Style::<wbr>HeredocEscape
 
 </h1>
 
 
-  <ul class="superclass-hierarchy"><li class="superclass"><a href="../../../Ameba/Rule/Lint/DuplicateWhenCondition.html">Ameba::Rule::Lint::DuplicateWhenCondition</a></li><li class="superclass"><a href="../../../Ameba/Rule/Base.html">Ameba::Rule::Base</a></li><li class="superclass">Reference</li><li class="superclass">Object</li></ul>
+  <ul class="superclass-hierarchy"><li class="superclass"><a href="../../../Ameba/Rule/Style/HeredocEscape.html">Ameba::Rule::Style::HeredocEscape</a></li><li class="superclass"><a href="../../../Ameba/Rule/Base.html">Ameba::Rule::Base</a></li><li class="superclass">Reference</li><li class="superclass">Object</li></ul>
 
 
 
@@ -1055,23 +1055,20 @@
     Overview
   </h2>
 
-  <p>Reports repeated conditions used in case <code>when</code> expressions.</p>
-<p>This is considered invalid:</p>
-<pre><code class="language-crystal"><span class="k">case</span> x
-<span class="k">when</span> .<span class="k">nil?</span>
-  do_something
-<span class="k">when</span> .<span class="k">nil?</span>
-  do_something_else
-<span class="k">end</span></code></pre>
-<p>And this is valid:</p>
-<pre><code class="language-crystal"><span class="k">case</span> x
-<span class="k">when</span> .<span class="k">nil?</span>
-  do_something
-<span class="k">when</span> <span class="t">Symbol</span>
-  do_something_else
-<span class="k">end</span></code></pre>
+  <p>A rule that enforces heredoc variant that escapes interpolation or control
+chars in a heredoc body. The opposite is enforced too - i.e. regular heredoc
+variant that doesn't escape interpolation or control chars in a heredoc body,
+when there is no need to escape it.</p>
+<p>For example, this is considered invalid:</p>
+<pre><code class="language-crystal"><span class="s">&lt;&lt;-DOC</span>
+<span class="s">  This is an escaped \#{:interpolated} string \\n
+  DOC</span></code></pre>
+<p>And should be written as:</p>
+<pre><code class="language-crystal"><span class="s">&lt;&lt;-&#39;DOC&#39;</span>
+<span class="s">  This is an escaped #{:interpolated} string \n
+  DOC</span></code></pre>
 <p>YAML configuration example:</p>
-<pre><code class="language-crystal"><span class="t">Lint</span><span class="o">/</span><span class="t">DuplicateWhenCondition</span>:
+<pre><code class="language-crystal"><span class="t">Style</span><span class="o">/</span><span class="t">HeredocEscape</span>:
   <span class="t">Enabled</span>: <span class="n">true</span></code></pre>
 
 
@@ -1087,6 +1084,8 @@
     Included Modules
   </h2>
   <ul class="other-types-list">
+    
+      <li class="other-type"><a href="../../../Ameba/AST/Util.html">Ameba::AST::Util</a></li>
     
       <li class="other-type">YAML::Serializable</li>
     
@@ -1113,8 +1112,8 @@
   </h2>
   
     
-      <a href="https://github.com/crystal-ameba/ameba/blob/26db705/src/ameba/rule/lint/duplicate_when_condition.cr#L32" target="_blank">
-        ameba/rule/lint/duplicate_when_condition.cr
+      <a href="https://github.com/crystal-ameba/ameba/blob/26db705/src/ameba/rule/style/heredoc_escape.cr#L29" target="_blank">
+        ameba/rule/style/heredoc_escape.cr
       </a>
     
     <br/>
@@ -1134,8 +1133,18 @@
   
   <dl>
     
-      <dt class="entry-const" id="MSG">
-        <strong>MSG</strong> = <code><span class="s">&quot;Duplicate `when` condition detected&quot;</span></code>
+      <dt class="entry-const" id="ESCAPE_SEQUENCE_PATTERN">
+        <strong>ESCAPE_SEQUENCE_PATTERN</strong> = <code><span class="s">/\\(?:[abefnrtv]|[0-7]{1,3}|x[0-9a-fA-F]{2}|u[0-9a-fA-F]{4}|u\{[0-9a-fA-F]{1,6}\})/</span></code>
+      </dt>
+      
+    
+      <dt class="entry-const" id="MSG_ESCAPE_NEEDED">
+        <strong>MSG_ESCAPE_NEEDED</strong> = <code><span class="s">&quot;Use an escaped heredoc marker: `&lt;&lt;-&#39;%s&#39;`&quot;</span></code>
+      </dt>
+      
+    
+      <dt class="entry-const" id="MSG_ESCAPE_NOT_NEEDED">
+        <strong>MSG_ESCAPE_NOT_NEEDED</strong> = <code><span class="s">&quot;Use an unescaped heredoc marker: `&lt;&lt;-%s`&quot;</span></code>
       </dt>
       
     
@@ -1161,7 +1170,7 @@
       <li class="entry-summary">
         <a href="#new%28config%3Dnil%29-class-method" class="signature"><strong>.new</strong>(config = <span class="n">nil</span>)</a>
         
-          <div class="summary"><p>Reports repeated conditions used in case <code>when</code> expressions.</p></div>
+          <div class="summary"><p>A rule that enforces heredoc variant that escapes interpolation or control chars in a heredoc body.</p></div>
         
       </li>
     
@@ -1253,7 +1262,7 @@
       </li>
     
       <li class="entry-summary">
-        <a href="#test%28source%2Cnode%3ACrystal%3A%3ACase%7CCrystal%3A%3ASelect%29-instance-method" class="signature"><strong>#test</strong>(source, node : Crystal::Case | Crystal::Select)</a>
+        <a href="#test%28source%2Cnode%3ACrystal%3A%3AStringInterpolation%29-instance-method" class="signature"><strong>#test</strong>(source, node : Crystal::StringInterpolation)</a>
         
       </li>
     
@@ -1262,6 +1271,108 @@
 
 
 <div class="methods-inherited">
+  
+    
+
+  <h3>Instance methods inherited from module <code><a href="../../../Ameba/AST/Util.html">Ameba::AST::Util</a></code></h3>
+  
+  
+    <a href="../../../Ameba/AST/Util.html#abort%3F%28node%29-instance-method" class="tooltip">
+      <span>abort?(node)</span>
+    abort?</a>, 
+    
+  
+    <a href="../../../Ameba/AST/Util.html#control_exp_code%28node%3ACrystal%3A%3AControlExpression%2Ccode_lines%29-instance-method" class="tooltip">
+      <span>control_exp_code(node : Crystal::ControlExpression, code_lines)</span>
+    control_exp_code</a>, 
+    
+  
+    <a href="../../../Ameba/AST/Util.html#dynamic_literal%3F%28node%29%3ABool-instance-method" class="tooltip">
+      <span>dynamic_literal?(node) : Bool</span>
+    dynamic_literal?</a>, 
+    
+  
+    <a href="../../../Ameba/AST/Util.html#exit%3F%28node%29-instance-method" class="tooltip">
+      <span>exit?(node)</span>
+    exit?</a>, 
+    
+  
+    <a href="../../../Ameba/AST/Util.html#flow_command%3F%28node%2Cin_loop%29-instance-method" class="tooltip">
+      <span>flow_command?(node, in_loop)</span>
+    flow_command?</a>, 
+    
+  
+    <a href="../../../Ameba/AST/Util.html#flow_expression%3F%28node%2Cin_loop%3Dfalse%29-instance-method" class="tooltip">
+      <span>flow_expression?(node, in_loop = <span class="n">false</span>)</span>
+    flow_expression?</a>, 
+    
+  
+    <a href="../../../Ameba/AST/Util.html#literal%3F%28node%29%3ABool-instance-method" class="tooltip">
+      <span>literal?(node) : Bool</span>
+    literal?</a>, 
+    
+  
+    <a href="../../../Ameba/AST/Util.html#loop%3F%28node%29-instance-method" class="tooltip">
+      <span>loop?(node)</span>
+    loop?</a>, 
+    
+  
+    <a href="../../../Ameba/AST/Util.html#name_end_location%28node%29-instance-method" class="tooltip">
+      <span>name_end_location(node)</span>
+    name_end_location</a>, 
+    
+  
+    <a href="../../../Ameba/AST/Util.html#name_location%28node%29-instance-method" class="tooltip">
+      <span>name_location(node)</span>
+    name_location</a>, 
+    
+  
+    <a href="../../../Ameba/AST/Util.html#name_size%28node%29-instance-method" class="tooltip">
+      <span>name_size(node)</span>
+    name_size</a>, 
+    
+  
+    <a href="../../../Ameba/AST/Util.html#node_source%28node%2Ccode_lines%29-instance-method" class="tooltip">
+      <span>node_source(node, code_lines)</span>
+    node_source</a>, 
+    
+  
+    <a href="../../../Ameba/AST/Util.html#nodoc%3F%28node%29-instance-method" class="tooltip">
+      <span>nodoc?(node)</span>
+    nodoc?</a>, 
+    
+  
+    <a href="../../../Ameba/AST/Util.html#path_named%3F%28node%2C%2Anames%3AString%29%3ABool-instance-method" class="tooltip">
+      <span>path_named?(node, *names : String) : Bool</span>
+    path_named?</a>, 
+    
+  
+    <a href="../../../Ameba/AST/Util.html#raise%3F%28node%29-instance-method" class="tooltip">
+      <span>raise?(node)</span>
+    raise?</a>, 
+    
+  
+    <a href="../../../Ameba/AST/Util.html#source_between%28loc%2Cend_loc%2Ccode_lines%29%3AString%7CNil-instance-method" class="tooltip">
+      <span>source_between(loc, end_loc, code_lines) : String | Nil</span>
+    source_between</a>, 
+    
+  
+    <a href="../../../Ameba/AST/Util.html#static_literal%3F%28node%29%3ABool-instance-method" class="tooltip">
+      <span>static_literal?(node) : Bool</span>
+    static_literal?</a>
+    
+  
+
+
+    
+
+
+    
+
+
+    
+
+
   
     
 
@@ -1448,30 +1559,27 @@
       
         <div class="doc">
           
-          <p>Reports repeated conditions used in case <code>when</code> expressions.</p>
-<p>This is considered invalid:</p>
-<pre><code class="language-crystal"><span class="k">case</span> x
-<span class="k">when</span> .<span class="k">nil?</span>
-  do_something
-<span class="k">when</span> .<span class="k">nil?</span>
-  do_something_else
-<span class="k">end</span></code></pre>
-<p>And this is valid:</p>
-<pre><code class="language-crystal"><span class="k">case</span> x
-<span class="k">when</span> .<span class="k">nil?</span>
-  do_something
-<span class="k">when</span> <span class="t">Symbol</span>
-  do_something_else
-<span class="k">end</span></code></pre>
+          <p>A rule that enforces heredoc variant that escapes interpolation or control
+chars in a heredoc body. The opposite is enforced too - i.e. regular heredoc
+variant that doesn't escape interpolation or control chars in a heredoc body,
+when there is no need to escape it.</p>
+<p>For example, this is considered invalid:</p>
+<pre><code class="language-crystal"><span class="s">&lt;&lt;-DOC</span>
+<span class="s">  This is an escaped \#{:interpolated} string \\n
+  DOC</span></code></pre>
+<p>And should be written as:</p>
+<pre><code class="language-crystal"><span class="s">&lt;&lt;-&#39;DOC&#39;</span>
+<span class="s">  This is an escaped #{:interpolated} string \n
+  DOC</span></code></pre>
 <p>YAML configuration example:</p>
-<pre><code class="language-crystal"><span class="t">Lint</span><span class="o">/</span><span class="t">DuplicateWhenCondition</span>:
+<pre><code class="language-crystal"><span class="t">Style</span><span class="o">/</span><span class="t">HeredocEscape</span>:
   <span class="t">Enabled</span>: <span class="n">true</span></code></pre>
         </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/26db705/src/ameba/rule/lint/duplicate_when_condition.cr#L32" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/26db705/src/ameba/rule/style/heredoc_escape.cr#L29" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1654,7 +1762,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/26db705/src/ameba/rule/lint/duplicate_when_condition.cr#L33" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/26db705/src/ameba/rule/style/heredoc_escape.cr#L32" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1673,18 +1781,18 @@
       </div>
     </div>
   
-    <div class="entry-detail" id="test(source,node:Crystal::Case|Crystal::Select)-instance-method">
+    <div class="entry-detail" id="test(source,node:Crystal::StringInterpolation)-instance-method">
       <div class="signature">
         
-        def <strong>test</strong>(source, node : Crystal::Case | Crystal::Select)
+        def <strong>test</strong>(source, node : Crystal::StringInterpolation)
 
-        <a class="method-permalink" href="#test%28source%2Cnode%3ACrystal%3A%3ACase%7CCrystal%3A%3ASelect%29-instance-method">#</a>
+        <a class="method-permalink" href="#test%28source%2Cnode%3ACrystal%3A%3AStringInterpolation%29-instance-method">#</a>
       </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/26db705/src/ameba/rule/lint/duplicate_when_condition.cr#L40" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/26db705/src/ameba/rule/style/heredoc_escape.cr#L43" target="_blank">View source</a>]
         
       </div>
     </div>
