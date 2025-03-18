@@ -31,7 +31,7 @@ module Ameba::Rule::Style
     it "passes if a heredoc contains an escape sequence and escaped interpolation" do
       expect_no_issues subject, <<-'CRYSTAL'
         <<-HEREDOC
-          foo \t \#{:baz}
+          foo \377 \xFF \uFFFF \u{0} \t \n \#{:baz}
           HEREDOC
         CRYSTAL
     end
@@ -39,7 +39,7 @@ module Ameba::Rule::Style
     it "passes if a heredoc contains an escaped escape sequence and interpolation" do
       expect_no_issues subject, <<-'CRYSTAL'
         <<-HEREDOC
-          foo \\t #{:baz}
+          foo \\377 \\xFF \\uFFFF \\u{0} \\t \\n #{:baz}
           HEREDOC
         CRYSTAL
     end
@@ -87,10 +87,26 @@ module Ameba::Rule::Style
         CRYSTAL
     end
 
+    it "passes if an escaped heredoc contains escaped interpolation" do
+      expect_no_issues subject, <<-'CRYSTAL'
+        <<-'HEREDOC'
+          foo \#{:bar}
+          HEREDOC
+        CRYSTAL
+    end
+
     it "passes if an escaped heredoc contains escape sequences" do
       expect_no_issues subject, <<-'CRYSTAL'
         <<-'HEREDOC'
-          foo \t \n
+          foo \377 \xFF \uFFFF \u{0} \t \n
+          HEREDOC
+        CRYSTAL
+    end
+
+    it "passes if an escaped heredoc contains escaped escape sequences" do
+      expect_no_issues subject, <<-'CRYSTAL'
+        <<-'HEREDOC'
+          foo \\377 \\xFF \\uFFFF \\u{0} \\t \\n
           HEREDOC
         CRYSTAL
     end
