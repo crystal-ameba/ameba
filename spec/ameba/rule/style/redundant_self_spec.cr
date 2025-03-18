@@ -249,23 +249,23 @@ module Ameba::Rule::Style
     end
 
     it "reports if there is redundant `self` used in a string interpolation" do
-      source = expect_issue subject, <<-CRYSTAL
+      source = expect_issue subject, <<-'CRYSTAL'
         class Foo
           def foo; end
 
           def foo!
-            "\#{self.foo || 42}"
+            "#{self.foo || 42}"
              # ^^^^ error: Redundant `self` detected
           end
         end
         CRYSTAL
 
-      expect_correction source, <<-CRYSTAL
+      expect_correction source, <<-'CRYSTAL'
         class Foo
           def foo; end
 
           def foo!
-            "\#{foo || 42}"
+            "#{foo || 42}"
           end
         end
         CRYSTAL
