@@ -62,9 +62,11 @@ module Ameba::Rule::Documentation
         matches.each do |match|
           admonition = match["admonition"]
 
+          begin_location =
+            token.location.adjust(column_number: 2) # adjust for "# "
           end_location =
-            token.location.adjust(column_number: admonition.size + 1)
-          token_location = {token.location, end_location}
+            begin_location.adjust(column_number: admonition.size - 1)
+          token_location = {begin_location, end_location}
 
           begin
             case expr = match["context"]?.presence
