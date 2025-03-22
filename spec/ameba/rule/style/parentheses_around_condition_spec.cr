@@ -65,7 +65,7 @@ module Ameba::Rule::Style
             CRYSTAL
         end
 
-        it "allows to skips ternary control expressions" do
+        it "allows to skip ternary control expressions" do
           rule = ParenthesesAroundCondition.new
           rule.exclude_ternary = true
 
