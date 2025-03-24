@@ -14,7 +14,7 @@
 <script type="text/javascript" src="../../../js/doc.js"></script>
 
   <meta name="repository-name" content="ameba">
-  <title>Ameba::Rule::Lint::SharedVarInFiber - ameba master</title>
+  <title>Ameba::Rule::Lint::ElseNil - ameba master</title>
   <script type="text/javascript">
     CrystalDocs.base_path = "../../../";
   </script>
@@ -422,7 +422,7 @@
       
     </li>
   
-  <li class=" " data-id="ameba/Ameba/Rule/Lint/ElseNil" data-name="ameba::rule::lint::elsenil">
+  <li class=" current" data-id="ameba/Ameba/Rule/Lint/ElseNil" data-name="ameba::rule::lint::elsenil">
       <a href="../../../Ameba/Rule/Lint/ElseNil.html">ElseNil</a>
       
     </li>
@@ -532,7 +532,7 @@
       
     </li>
   
-  <li class=" current" data-id="ameba/Ameba/Rule/Lint/SharedVarInFiber" data-name="ameba::rule::lint::sharedvarinfiber">
+  <li class=" " data-id="ameba/Ameba/Rule/Lint/SharedVarInFiber" data-name="ameba::rule::lint::sharedvarinfiber">
       <a href="../../../Ameba/Rule/Lint/SharedVarInFiber.html">SharedVarInFiber</a>
       
     </li>
@@ -1041,12 +1041,12 @@
 <div class="main-content">
 <h1 class="type-name">
 
-  <span class="kind">class</span> Ameba::<wbr>Rule::<wbr>Lint::<wbr>SharedVarInFiber
+  <span class="kind">class</span> Ameba::<wbr>Rule::<wbr>Lint::<wbr>ElseNil
 
 </h1>
 
 
-  <ul class="superclass-hierarchy"><li class="superclass"><a href="../../../Ameba/Rule/Lint/SharedVarInFiber.html">Ameba::Rule::Lint::SharedVarInFiber</a></li><li class="superclass"><a href="../../../Ameba/Rule/Base.html">Ameba::Rule::Base</a></li><li class="superclass">Reference</li><li class="superclass">Object</li></ul>
+  <ul class="superclass-hierarchy"><li class="superclass"><a href="../../../Ameba/Rule/Lint/ElseNil.html">Ameba::Rule::Lint::ElseNil</a></li><li class="superclass"><a href="../../../Ameba/Rule/Base.html">Ameba::Rule::Base</a></li><li class="superclass">Reference</li><li class="superclass">Object</li></ul>
 
 
 
@@ -1060,39 +1060,20 @@
     Overview
   </h2>
 
-  <p>A rule that disallows using shared variables in fibers,
-which are mutated during iterations.</p>
-<p>In most cases it leads to unexpected behaviour and is undesired.</p>
-<p>For example, having this example:</p>
-<pre><code class="language-crystal">n <span class="o">=</span> <span class="n">0</span>
-channel <span class="o">=</span> <span class="t">Channel</span>(<span class="t">Int32</span>).new
-
-<span class="k">while</span> n <span class="o">&lt;</span> <span class="n">3</span>
-  n <span class="o">=</span> n <span class="o">+</span> <span class="n">1</span>
-  spawn { channel.send n }
-<span class="k">end</span>
-
-<span class="n">3</span>.times { puts channel.receive } <span class="c"># =&gt; # 3, 3, 3</span></code></pre>
-<p>The problem is there is only one shared between fibers variable <code>n</code>
-and when <code>channel.receive</code> is executed its value is <code>3</code>.</p>
-<p>To solve this, the code above needs to be rewritten to the following:</p>
-<pre><code class="language-crystal">n <span class="o">=</span> <span class="n">0</span>
-channel <span class="o">=</span> <span class="t">Channel</span>(<span class="t">Int32</span>).new
-
-<span class="k">while</span> n <span class="o">&lt;</span> <span class="n">3</span>
-  n <span class="o">=</span> n <span class="o">+</span> <span class="n">1</span>
-  m <span class="o">=</span> n
-  spawn <span class="k">do</span> { channel.send m }
-<span class="k">end</span>
-
-<span class="n">3</span>.times { puts channel.receive } <span class="c"># =&gt; # 1, 2, 3</span></code></pre>
-<p>This rule is able to find the shared variables between fibers, which are mutated
-during iterations. So it reports the issue on the first sample and passes on
-the second one.</p>
-<p>There are also other techniques to solve the problem above which are
-<a href="https://crystal-lang.org/reference/guides/concurrency.html">officially documented</a></p>
+  <p>A rule that disallows <code>else</code> blocks with <code>nil</code> as their body, as they
+have no effect and can be safely removed.</p>
+<p>This is considered invalid:</p>
+<pre><code class="language-crystal"><span class="k">if</span> foo
+  do_foo
+<span class="k">else</span>
+  <span class="n">nil</span>
+<span class="k">end</span></code></pre>
+<p>And this is valid:</p>
+<pre><code class="language-crystal"><span class="k">if</span> foo
+  do_foo
+<span class="k">end</span></code></pre>
 <p>YAML configuration example:</p>
-<pre><code class="language-crystal"><span class="t">Lint</span><span class="o">/</span><span class="t">SharedVarInFiber</span>:
+<pre><code class="language-crystal"><span class="t">Lint</span><span class="o">/</span><span class="t">ElseNil</span>:
   <span class="t">Enabled</span>: <span class="n">true</span></code></pre>
 
 
@@ -1134,8 +1115,8 @@ the second one.</p>
   </h2>
   
     
-      <a href="https://github.com/crystal-ameba/ameba/blob/d172478/src/ameba/rule/lint/shared_var_in_fiber.cr#L52" target="_blank">
-        ameba/rule/lint/shared_var_in_fiber.cr
+      <a href="https://github.com/crystal-ameba/ameba/blob/d172478/src/ameba/rule/lint/else_nil.cr#L29" target="_blank">
+        ameba/rule/lint/else_nil.cr
       </a>
     
     <br/>
@@ -1156,7 +1137,7 @@ the second one.</p>
   <dl>
     
       <dt class="entry-const" id="MSG">
-        <strong>MSG</strong> = <code><span class="s">&quot;Shared variable `%s` is used in fiber&quot;</span></code>
+        <strong>MSG</strong> = <code><span class="s">&quot;Avoid `else` blocks with `nil` as their body&quot;</span></code>
       </dt>
       
     
@@ -1182,7 +1163,7 @@ the second one.</p>
       <li class="entry-summary">
         <a href="#new%28config%3Dnil%29-class-method" class="signature"><strong>.new</strong>(config = <span class="n">nil</span>)</a>
         
-          <div class="summary"><p>A rule that disallows using shared variables in fibers, which are mutated during iterations.</p></div>
+          <div class="summary"><p>A rule that disallows <code>else</code> blocks with <code>nil</code> as their body, as they have no effect and can be safely removed.</p></div>
         
       </li>
     
@@ -1274,12 +1255,17 @@ the second one.</p>
       </li>
     
       <li class="entry-summary">
-        <a href="#test%28source%2Cnode%2Cscope%3AAST%3A%3AScope%29-instance-method" class="signature"><strong>#test</strong>(source, node, scope : AST::Scope)</a>
+        <a href="#test%28source%2Cnode%3ACrystal%3A%3ACase%29-instance-method" class="signature"><strong>#test</strong>(source, node : Crystal::Case)</a>
         
       </li>
     
       <li class="entry-summary">
-        <a href="#test%28source%29-instance-method" class="signature"><strong>#test</strong>(source)</a>
+        <a href="#test%28source%2Cnode%3ACrystal%3A%3AIf%29-instance-method" class="signature"><strong>#test</strong>(source, node : Crystal::If)</a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#test%28source%2Cnode%3ACrystal%3A%3AUnless%29-instance-method" class="signature"><strong>#test</strong>(source, node : Crystal::Unless)</a>
         
       </li>
     
@@ -1474,46 +1460,27 @@ the second one.</p>
       
         <div class="doc">
           
-          <p>A rule that disallows using shared variables in fibers,
-which are mutated during iterations.</p>
-<p>In most cases it leads to unexpected behaviour and is undesired.</p>
-<p>For example, having this example:</p>
-<pre><code class="language-crystal">n <span class="o">=</span> <span class="n">0</span>
-channel <span class="o">=</span> <span class="t">Channel</span>(<span class="t">Int32</span>).new
-
-<span class="k">while</span> n <span class="o">&lt;</span> <span class="n">3</span>
-  n <span class="o">=</span> n <span class="o">+</span> <span class="n">1</span>
-  spawn { channel.send n }
-<span class="k">end</span>
-
-<span class="n">3</span>.times { puts channel.receive } <span class="c"># =&gt; # 3, 3, 3</span></code></pre>
-<p>The problem is there is only one shared between fibers variable <code>n</code>
-and when <code>channel.receive</code> is executed its value is <code>3</code>.</p>
-<p>To solve this, the code above needs to be rewritten to the following:</p>
-<pre><code class="language-crystal">n <span class="o">=</span> <span class="n">0</span>
-channel <span class="o">=</span> <span class="t">Channel</span>(<span class="t">Int32</span>).new
-
-<span class="k">while</span> n <span class="o">&lt;</span> <span class="n">3</span>
-  n <span class="o">=</span> n <span class="o">+</span> <span class="n">1</span>
-  m <span class="o">=</span> n
-  spawn <span class="k">do</span> { channel.send m }
-<span class="k">end</span>
-
-<span class="n">3</span>.times { puts channel.receive } <span class="c"># =&gt; # 1, 2, 3</span></code></pre>
-<p>This rule is able to find the shared variables between fibers, which are mutated
-during iterations. So it reports the issue on the first sample and passes on
-the second one.</p>
-<p>There are also other techniques to solve the problem above which are
-<a href="https://crystal-lang.org/reference/guides/concurrency.html">officially documented</a></p>
+          <p>A rule that disallows <code>else</code> blocks with <code>nil</code> as their body, as they
+have no effect and can be safely removed.</p>
+<p>This is considered invalid:</p>
+<pre><code class="language-crystal"><span class="k">if</span> foo
+  do_foo
+<span class="k">else</span>
+  <span class="n">nil</span>
+<span class="k">end</span></code></pre>
+<p>And this is valid:</p>
+<pre><code class="language-crystal"><span class="k">if</span> foo
+  do_foo
+<span class="k">end</span></code></pre>
 <p>YAML configuration example:</p>
-<pre><code class="language-crystal"><span class="t">Lint</span><span class="o">/</span><span class="t">SharedVarInFiber</span>:
+<pre><code class="language-crystal"><span class="t">Lint</span><span class="o">/</span><span class="t">ElseNil</span>:
   <span class="t">Enabled</span>: <span class="n">true</span></code></pre>
         </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/d172478/src/ameba/rule/lint/shared_var_in_fiber.cr#L52" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/d172478/src/ameba/rule/lint/else_nil.cr#L29" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1696,7 +1663,7 @@ the second one.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/d172478/src/ameba/rule/lint/shared_var_in_fiber.cr#L53" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/d172478/src/ameba/rule/lint/else_nil.cr#L30" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1715,34 +1682,50 @@ the second one.</p>
       </div>
     </div>
   
-    <div class="entry-detail" id="test(source,node,scope:AST::Scope)-instance-method">
+    <div class="entry-detail" id="test(source,node:Crystal::Case)-instance-method">
       <div class="signature">
         
-        def <strong>test</strong>(source, node, scope : <a href="../../../Ameba/AST/Scope.html">AST::Scope</a>)
+        def <strong>test</strong>(source, node : Crystal::Case)
 
-        <a class="method-permalink" href="#test%28source%2Cnode%2Cscope%3AAST%3A%3AScope%29-instance-method">#</a>
+        <a class="method-permalink" href="#test%28source%2Cnode%3ACrystal%3A%3ACase%29-instance-method">#</a>
       </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/d172478/src/ameba/rule/lint/shared_var_in_fiber.cr#L64" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/d172478/src/ameba/rule/lint/else_nil.cr#L37" target="_blank">View source</a>]
         
       </div>
     </div>
   
-    <div class="entry-detail" id="test(source)-instance-method">
+    <div class="entry-detail" id="test(source,node:Crystal::If)-instance-method">
       <div class="signature">
         
-        def <strong>test</strong>(source)
+        def <strong>test</strong>(source, node : Crystal::If)
 
-        <a class="method-permalink" href="#test%28source%29-instance-method">#</a>
+        <a class="method-permalink" href="#test%28source%2Cnode%3ACrystal%3A%3AIf%29-instance-method">#</a>
       </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/d172478/src/ameba/rule/lint/shared_var_in_fiber.cr#L60" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/d172478/src/ameba/rule/lint/else_nil.cr#L41" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="test(source,node:Crystal::Unless)-instance-method">
+      <div class="signature">
+        
+        def <strong>test</strong>(source, node : Crystal::Unless)
+
+        <a class="method-permalink" href="#test%28source%2Cnode%3ACrystal%3A%3AUnless%29-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/crystal-ameba/ameba/blob/d172478/src/ameba/rule/lint/else_nil.cr#L45" target="_blank">View source</a>]
         
       </div>
     </div>
