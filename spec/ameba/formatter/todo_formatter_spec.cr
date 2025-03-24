@@ -106,7 +106,7 @@ module Ameba
               # Problems found: 3
               # Run `ameba --only Ameba/DummyRule` for details
               Ameba/DummyRule:
-                Description: Dummy rule that does nothing.
+                Description: Dummy rule that does nothing
                 Dummy: true
                 Excluded:
                 - source1.cr

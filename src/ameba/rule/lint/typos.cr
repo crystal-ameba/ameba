@@ -29,7 +29,7 @@ module Ameba::Rule::Lint
 
     @@mutex = Mutex.new
 
-    protected record Typo,
+    private record Typo,
       typo : String,
       corrections : Array(String),
       location : {Int32, Int32},
