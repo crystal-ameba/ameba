@@ -71,7 +71,7 @@ module Ameba::Formatter
       rule.dup.tap do |rule_todo|
         rule_todo.excluded = issues
           .compact_map(&.location.try &.filename.try &.to_s)
-          .uniq!
+          .to_set
       end
     end
   end
