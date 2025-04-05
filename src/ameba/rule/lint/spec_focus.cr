@@ -65,7 +65,9 @@ module Ameba::Rule::Lint
       return unless node.block
 
       arg = node.named_args.try &.find(&.name.== "focus")
-      return unless arg
+      return if arg.nil? ||
+                arg.value.is_a?(Crystal::Call) ||
+                arg.value.is_a?(Crystal::Var)
 
       issue_for arg, MSG
     end
