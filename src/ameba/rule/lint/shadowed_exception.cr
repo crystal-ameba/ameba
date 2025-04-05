@@ -42,8 +42,7 @@ module Ameba::Rule::Lint
     MSG = "Shadowed exception found: `%s`"
 
     def test(source, node : Crystal::ExceptionHandler)
-      rescues = node.rescues
-      return if rescues.nil?
+      return unless rescues = node.rescues
 
       shadowed(rescues).each do |path|
         issue_for path, MSG % path.names.join("::")

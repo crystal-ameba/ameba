@@ -28,10 +28,12 @@ module Ameba::Rule::Layout
       return if source_lines_size.zero? ||
                 (source_lines.last(2).join.presence && last_line_empty)
 
+      location = {source_lines_size, 1}
+
       if last_line_empty
-        issue_for({source_lines_size, 1}, MSG)
+        issue_for location, MSG
       else
-        issue_for({source_lines_size, 1}, MSG_FINAL_NEWLINE) do |corrector|
+        issue_for location, MSG_FINAL_NEWLINE do |corrector|
           corrector.insert_before({source_lines_size + 1, 1}, '\n')
         end
       end
