@@ -51,7 +51,7 @@ module Ameba
 
       it "checks accordingly to the rule #since_version" do
         rules = [VersionedRule.new] of Rule::Base
-        source = Source.new "", "source.cr"
+        source = Source.new path: "source.cr"
 
         v1_0_0 = SemanticVersion.parse("1.0.0")
         Runner.new(rules, [source], formatter, default_severity, false, v1_0_0).run.success?.should be_true
@@ -91,7 +91,7 @@ module Ameba
           rule = RaiseRule.new
           rule.should_raise = true
           rules = [rule] of Rule::Base
-          source = Source.new "", "source.cr"
+          source = Source.new path: "source.cr"
 
           expect_raises(Exception, "something went wrong") do
             Runner.new(rules, [source], formatter, default_severity).run
