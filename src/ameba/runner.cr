@@ -146,7 +146,7 @@ module Ameba
           rule.test(source)
         end
         check_unneeded_directives(source)
-        break unless autocorrect? && source.correct?
+        break unless autocorrect? && source.correct!
 
         # The issues that couldn't be corrected will be found again so we
         # only keep the corrected ones in order to avoid duplicate reporting.
