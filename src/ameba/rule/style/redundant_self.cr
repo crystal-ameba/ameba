@@ -73,6 +73,9 @@ module Ameba::Rule::Style
     end
 
     def test(source, node : Crystal::Call, scope : AST::Scope)
+      # Guard against auto-expanded `OpAssign` nodes, i.e.
+      # `self.a += b` is expanded to `self.a = self.a + b`.
+      return unless node.location && node.end_location
       return unless (obj = node.obj).is_a?(Crystal::Var)
 
       name = node.name
