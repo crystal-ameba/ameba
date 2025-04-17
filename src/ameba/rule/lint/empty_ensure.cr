@@ -1,5 +1,5 @@
 module Ameba::Rule::Lint
-  # A rule that disallows empty ensure statement.
+  # A rule that disallows empty `ensure` statement.
   #
   # For example, this is considered invalid:
   #
@@ -34,13 +34,13 @@ module Ameba::Rule::Lint
   # YAML configuration example:
   #
   # ```
-  # Lint/EmptyEnsure
+  # Lint/EmptyEnsure:
   #   Enabled: true
   # ```
   class EmptyEnsure < Base
     properties do
       since_version "0.3.0"
-      description "Disallows empty ensure statement"
+      description "Disallows empty `ensure` statement"
     end
 
     MSG = "Empty `ensure` block detected"

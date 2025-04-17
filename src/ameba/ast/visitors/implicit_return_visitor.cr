@@ -40,14 +40,12 @@ module Ameba::AST
     def visit(node : Crystal::BinaryOp) : Bool
       report_implicit_return(node)
 
-      if node.right.is_a?(Crystal::Call) ||
-         node.right.is_a?(Crystal::Expressions) ||
-         node.right.is_a?(Crystal::ControlExpression)
+      case node.right
+      when Crystal::Call, Crystal::Expressions, Crystal::ControlExpression
         incr_stack { node.left.accept(self) }
       else
         node.left.accept(self)
       end
-
       node.right.accept(self)
 
       false
@@ -56,13 +54,7 @@ module Ameba::AST
     def visit(node : Crystal::Call) : Bool
       report_implicit_return(node)
 
-      incr_stack do
-        node.obj.try &.accept(self)
-        node.args.each &.accept(self)
-        node.named_args.try &.each &.accept(self)
-        node.block_arg.try &.accept(self)
-        node.block.try &.accept(self)
-      end
+      incr_stack { node.accept_children(self) }
 
       false
     end
@@ -168,10 +160,7 @@ module Ameba::AST
     def visit(node : Crystal::FunDef) : Bool
       report_implicit_return(node)
 
-      incr_stack do
-        node.args.each &.accept(self)
-        node.body.try &.accept(self)
-      end
+      incr_stack { node.accept_children(self) }
 
       false
     end
@@ -187,7 +176,7 @@ module Ameba::AST
     def visit(node : Crystal::UnaryExpression) : Bool
       report_implicit_return(node)
 
-      incr_stack { node.exp.accept(self) }
+      incr_stack { node.accept_children(self) }
 
       false
     end
@@ -195,10 +184,7 @@ module Ameba::AST
     def visit(node : Crystal::Annotation) : Bool
       report_implicit_return(node)
 
-      incr_stack do
-        node.args.each &.accept(self)
-        node.named_args.try &.each &.accept(self)
-      end
+      incr_stack { node.accept_children(self) }
 
       false
     end
@@ -222,9 +208,7 @@ module Ameba::AST
     def visit(node : Crystal::StringInterpolation) : Bool
       report_implicit_return(node)
 
-      node.expressions.each do |exp|
-        incr_stack { exp.accept(self) }
-      end
+      incr_stack { node.accept_children(self) }
 
       false
     end
@@ -250,8 +234,7 @@ module Ameba::AST
     def visit(node : Crystal::Select) : Bool
       report_implicit_return(node)
 
-      node.whens.each &.accept(self)
-      node.else.try &.accept(self)
+      node.accept_children(self)
 
       false
     end
@@ -303,7 +286,7 @@ module Ameba::AST
     def visit(node : Crystal::ControlExpression) : Bool
       report_implicit_return(node)
 
-      incr_stack { node.exp.try &.accept(self) }
+      incr_stack { node.accept_children(self) }
 
       false
     end
@@ -311,10 +294,7 @@ module Ameba::AST
     def visit(node : Crystal::RangeLiteral) : Bool
       report_implicit_return(node)
 
-      incr_stack do
-        node.from.accept(self)
-        node.to.accept(self)
-      end
+      incr_stack { node.accept_children(self) }
 
       false
     end
@@ -324,18 +304,9 @@ module Ameba::AST
 
       # Regex literals either contain string literals or string interpolations,
       # both of which are "captured" by the parent regex literal
-      incr_stack { node.value.accept(self) }
+      incr_stack { node.accept_children(self) }
 
       false
-    end
-
-    def visit(
-      node : Crystal::BoolLiteral | Crystal::CharLiteral | Crystal::NumberLiteral |
-             Crystal::StringLiteral | Crystal::SymbolLiteral | Crystal::ProcLiteral,
-    ) : Bool
-      report_implicit_return(node)
-
-      true
     end
 
     def visit(node : Crystal::Yield) : Bool
@@ -384,45 +355,13 @@ module Ameba::AST
       false
     end
 
-    def visit(node : Crystal::MacroVar)
+    def visit(node : Crystal::Alias | Crystal::TypeDef | Crystal::MacroVar)
       false
     end
 
-    def visit(node : Crystal::Generic | Crystal::Path | Crystal::Union) : Bool
+    def visit(node : Crystal::Generic | Crystal::Path | Crystal::Union | Crystal::UninitializedVar | Crystal::OffsetOf | Crystal::LibDef | Crystal::Include | Crystal::Extend) : Bool
       report_implicit_return(node)
 
-      false
-    end
-
-    def visit(node : Crystal::UninitializedVar) : Bool
-      report_implicit_return(node)
-
-      false
-    end
-
-    def visit(node : Crystal::OffsetOf) : Bool
-      report_implicit_return(node)
-
-      false
-    end
-
-    def visit(node : Crystal::LibDef) : Bool
-      report_implicit_return(node)
-
-      false
-    end
-
-    def visit(node : Crystal::Include | Crystal::Extend) : Bool
-      report_implicit_return(node)
-
-      false
-    end
-
-    def visit(node : Crystal::Alias)
-      false
-    end
-
-    def visit(node : Crystal::TypeDef)
       false
     end
 
@@ -440,21 +379,28 @@ module Ameba::AST
     private def incr_stack(&) : Nil
       @stack += 1
       yield
+    ensure
       @stack -= 1
     end
 
     private def swap_stack(& : Int32 -> Nil) : Nil
       old_stack = @stack
       @stack = 0
-      yield old_stack
-      @stack = old_stack
+      begin
+        yield old_stack
+      ensure
+        @stack = old_stack
+      end
     end
 
     private def in_macro(&) : Nil
       old_value = @in_macro
       @in_macro = true
-      yield
-      @in_macro = old_value
+      begin
+        yield
+      ensure
+        @in_macro = old_value
+      end
     end
   end
 end

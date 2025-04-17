@@ -30,14 +30,14 @@ module Ameba
     context "problems not found" do
       it "does not create file" do
         with_formatter do |formatter|
-          file = formatter.finished [Source.new ""]
+          file = formatter.finished [Source.new]
           file.should be_nil
         end
       end
 
       it "reports a message saying file is not created" do
         with_formatter do |formatter, io|
-          formatter.finished [Source.new ""]
+          formatter.finished [Source.new]
           io.to_s.should contain "No issues found. File is not generated"
         end
       end
@@ -106,7 +106,7 @@ module Ameba
               # Problems found: 3
               # Run `ameba --only Ameba/DummyRule` for details
               Ameba/DummyRule:
-                Description: Dummy rule that does nothing.
+                Description: Dummy rule that does nothing
                 Dummy: true
                 Excluded:
                 - source1.cr

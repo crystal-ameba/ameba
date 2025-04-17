@@ -129,7 +129,7 @@ module Ameba::Spec::ExpectIssue
   end
 
   def expect_correction(source, correction, *, file = __FILE__, line = __LINE__)
-    raise "Use `expect_no_corrections` if the code will not change" unless source.correct?
+    raise "Use `expect_no_corrections` if the code will not change" unless source.correct!
     return if correction == source.code
 
     fail <<-MSG, file, line
@@ -144,7 +144,7 @@ module Ameba::Spec::ExpectIssue
   end
 
   def expect_no_corrections(source, *, file = __FILE__, line = __LINE__)
-    return unless source.correct?
+    return unless source.correct!
 
     fail <<-MSG, file, line
       Expected no corrections, but got:

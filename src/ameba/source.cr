@@ -19,12 +19,12 @@ module Ameba
     # path = "./src/source.cr"
     # Ameba::Source.new File.read(path), path
     # ```
-    def initialize(@code, @path = "")
+    def initialize(@code = "", @path = "")
     end
 
     # Corrects any correctable issues and updates `code`.
     # Returns `false` if no issues were corrected.
-    def correct?
+    def correct!
       corrector = Corrector.new(code)
       issues.each(&.correct(corrector))
 
