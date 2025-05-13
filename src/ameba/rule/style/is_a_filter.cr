@@ -72,11 +72,11 @@ module Ameba::Rule::Style
       msg = MSG % {new, old}
 
       if end_location = node.end_location
-        issue_for(location, end_location, msg) do |corrector|
+        issue_for location, end_location, msg do |corrector|
           corrector.replace(location, end_location, new)
         end
       else
-        issue_for(location, nil, msg)
+        issue_for location, nil, msg
       end
     end
   end

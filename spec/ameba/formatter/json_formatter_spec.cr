@@ -1,6 +1,6 @@
 require "../../spec_helper"
 
-private def get_result(sources = [Ameba::Source.new ""])
+private def get_result(sources = [Ameba::Source.new])
   output = IO::Memory.new
   formatter = Ameba::Formatter::JSONFormatter.new output
 
@@ -25,12 +25,12 @@ module Ameba::Formatter
 
     context "sources" do
       it "shows path to the source" do
-        result = get_result [Source.new "", "source.cr"]
+        result = get_result [Source.new path: "source.cr"]
         result["sources"][0]["path"].should eq "source.cr"
       end
 
       it "shows rule name" do
-        s = Source.new ""
+        s = Source.new
         s.add_issue DummyRule.new, {1, 2}, "message1"
 
         result = get_result [s]
@@ -38,7 +38,7 @@ module Ameba::Formatter
       end
 
       it "shows severity" do
-        s = Source.new ""
+        s = Source.new
         s.add_issue DummyRule.new, {1, 2}, "message"
 
         result = get_result [s]
@@ -46,7 +46,7 @@ module Ameba::Formatter
       end
 
       it "shows a message" do
-        s = Source.new ""
+        s = Source.new
         s.add_issue DummyRule.new, {1, 2}, "message"
 
         result = get_result [s]
@@ -54,7 +54,7 @@ module Ameba::Formatter
       end
 
       it "shows issue location" do
-        s = Source.new ""
+        s = Source.new
         s.add_issue DummyRule.new, {1, 2}, "message"
 
         result = get_result [s]
@@ -64,7 +64,7 @@ module Ameba::Formatter
       end
 
       it "shows issue end_location" do
-        s = Source.new ""
+        s = Source.new
         s.add_issue DummyRule.new,
           Crystal::Location.new("path", 3, 3),
           Crystal::Location.new("path", 5, 4),
@@ -79,16 +79,16 @@ module Ameba::Formatter
 
     context "summary" do
       it "shows a target sources count" do
-        result = get_result [Source.new(""), Source.new("")]
+        result = get_result [Source.new, Source.new]
         result["summary"]["target_sources_count"].should eq 2
       end
 
       it "shows issues count" do
-        s1 = Source.new ""
+        s1 = Source.new
         s1.add_issue DummyRule.new, {1, 2}, "message1"
         s1.add_issue DummyRule.new, {1, 2}, "message2"
 
-        s2 = Source.new ""
+        s2 = Source.new
         s2.add_issue DummyRule.new, {1, 2}, "message3"
 
         result = get_result [s1, s2]

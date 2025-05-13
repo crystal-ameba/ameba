@@ -4,7 +4,7 @@ module Ameba
   describe Rule::Base do
     describe "#catch" do
       it "accepts and returns source" do
-        s = Source.new "", ""
+        s = Source.new
         DummyRule.new.catch(s).should eq s
       end
     end
