@@ -77,10 +77,6 @@ module Ameba
         create_todo.should contain "Convention"
       end
 
-      it "creates a todo with run details" do
-        create_todo.should contain "Run `ameba --only #{DummyRule.rule_name}`"
-      end
-
       it "excludes source from this rule" do
         create_todo.should contain "Excluded:\n  - source.cr"
       end
@@ -99,7 +95,6 @@ module Ameba
 
             content = File.read(CONFIG_PATH)
             content.should contain <<-CONTENT
-              # Run `ameba --only Ameba/DummyRule` for details
               Ameba/DummyRule:
                 Description: Dummy rule that does nothing.
                 Dummy: true
@@ -128,10 +123,11 @@ module Ameba
             # on #{Time.utc} using Ameba version 1.7.0-dev.
             # The point is for the user to remove these configuration records
             # one by one as the reported problems are removed from the code base.
+            #
+            # For more details on any individual rule, run `ameba --only RuleName`.
 
             Version: "1.7.0-dev"
 
-            # Run `ameba --only Ameba/DummyRule` for details
             Ameba/DummyRule:
               Description: Dummy rule that does nothing.
               Dummy: true
@@ -140,7 +136,6 @@ module Ameba
               Enabled: true
               Severity: Convention
 
-            # Run `ameba --only BreakingRule` for details
             BreakingRule:
               Description: A rule with a custom name.
               Excluded:

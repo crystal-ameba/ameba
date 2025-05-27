@@ -38,7 +38,6 @@ module Ameba::Formatter
             {rule_todo.name => rule_todo}
               .to_yaml.gsub("---", "")
 
-          file << "\n# Run `ameba --only #{rule.name}` for details"
           file << rule_todo
         end
       end
@@ -61,6 +60,8 @@ module Ameba::Formatter
         # on #{Time.utc} using Ameba version #{VERSION}.
         # The point is for the user to remove these configuration records
         # one by one as the reported problems are removed from the code base.
+        #
+        # For more details on any individual rule, run `ameba --only RuleName`.
 
         Version: "#{VERSION}"
 
