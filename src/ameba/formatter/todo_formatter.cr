@@ -38,7 +38,6 @@ module Ameba::Formatter
             {rule_todo.name => rule_todo}
               .to_yaml.gsub("---", "")
 
-          file << "\n# Problems found: #{rule_issues.size}"
           file << "\n# Run `ameba --only #{rule.name}` for details"
           file << rule_todo
         end

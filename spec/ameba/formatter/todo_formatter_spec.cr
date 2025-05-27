@@ -77,10 +77,6 @@ module Ameba
         create_todo.should contain "Convention"
       end
 
-      it "creates a todo with problems count" do
-        create_todo.should contain "Problems found: 1"
-      end
-
       it "creates a todo with run details" do
         create_todo.should contain "Run `ameba --only #{DummyRule.rule_name}`"
       end
@@ -103,7 +99,6 @@ module Ameba
 
             content = File.read(CONFIG_PATH)
             content.should contain <<-CONTENT
-              # Problems found: 3
               # Run `ameba --only Ameba/DummyRule` for details
               Ameba/DummyRule:
                 Description: Dummy rule that does nothing.
@@ -136,7 +131,6 @@ module Ameba
 
             Version: "1.7.0-dev"
 
-            # Problems found: 1
             # Run `ameba --only Ameba/DummyRule` for details
             Ameba/DummyRule:
               Description: Dummy rule that does nothing.
@@ -146,7 +140,6 @@ module Ameba
               Enabled: true
               Severity: Convention
 
-            # Problems found: 1
             # Run `ameba --only BreakingRule` for details
             BreakingRule:
               Description: A rule with a custom name.
