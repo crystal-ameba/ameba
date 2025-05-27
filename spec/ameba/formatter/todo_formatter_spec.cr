@@ -73,10 +73,6 @@ module Ameba
         create_todo.should contain "DummyRule"
       end
 
-      it "creates a todo with severity" do
-        create_todo.should contain "Convention"
-      end
-
       it "excludes source from this rule" do
         create_todo.should contain "Excluded:\n  - source.cr"
       end
@@ -96,13 +92,9 @@ module Ameba
             content = File.read(CONFIG_PATH)
             content.should contain <<-CONTENT
               Ameba/DummyRule:
-                Description: Dummy rule that does nothing.
-                Dummy: true
                 Excluded:
                 - source1.cr
                 - source2.cr
-                Enabled: true
-                Severity: Convention
               CONTENT
           end
         end
@@ -129,19 +121,12 @@ module Ameba
             Version: "1.7.0-dev"
 
             Ameba/DummyRule:
-              Description: Dummy rule that does nothing.
-              Dummy: true
               Excluded:
               - source2.cr
-              Enabled: true
-              Severity: Convention
 
             BreakingRule:
-              Description: A rule with a custom name.
               Excluded:
               - source1.cr
-              Enabled: true
-              Severity: Convention
 
             YAML
         end
