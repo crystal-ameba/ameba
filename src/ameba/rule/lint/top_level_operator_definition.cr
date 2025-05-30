@@ -36,6 +36,7 @@ module Ameba::Rule::Lint
         Crystal::ClassDef,
         Crystal::EnumDef,
         Crystal::ModuleDef,
+        Crystal::Call,
       ]
     end
 
