@@ -22,6 +22,7 @@ module Ameba::Formatter
         return
       end
 
+      issues.sort_by!(&.rule.name)
       generate_todo_config(issues)
 
       @output.puts "Created #{@config_path}"

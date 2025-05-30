@@ -118,6 +118,41 @@ module Ameba
         end
       end
 
+      it "output format" do
+        with_formatter do |formatter|
+          s1 = Source.new "", "source1.cr"
+          s2 = Source.new "", "source2.cr"
+          s1.add_issue NamedRule.new, {1, 1}, ""
+          s2.add_issue DummyRule.new, {2, 2}, ""
+          s1.add_issue DummyRule.new, {3, 3}, ""
+
+          formatter.finished([s1, s2])
+
+          content = File.read(CONFIG_PATH)
+          content.should contain <<-YAML
+            # Problems found: 2
+            # Run `ameba --only Ameba/DummyRule` for details
+            Ameba/DummyRule:
+              Description: Dummy rule that does nothing.
+              Dummy: true
+              Excluded:
+              - source1.cr
+              - source2.cr
+              Enabled: true
+              Severity: Convention
+
+            # Problems found: 1
+            # Run `ameba --only BreakingRule` for details
+            BreakingRule:
+              Description: A rule with a custom name.
+              Excluded:
+              - source1.cr
+              Enabled: true
+              Severity: Convention
+            YAML
+        end
+      end
+
       context "when invalid syntax" do
         it "does generate todo file" do
           with_formatter do |formatter|
