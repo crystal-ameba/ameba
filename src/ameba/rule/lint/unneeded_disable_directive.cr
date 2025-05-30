@@ -39,11 +39,10 @@ module Ameba::Rule::Lint
         next unless names = unneeded_disables(source, directive, token.location)
         next if names.empty?
 
-        token_location = {
-          token.location,
-          token.location.adjust(column_number: token.value.to_s.size - 1),
-        }
-        issue_for *token_location, MSG % names.join(", ")
+        location = token.location
+        end_location = location.adjust(column_number: token.value.to_s.size - 1)
+
+        issue_for location, end_location, MSG % names.join(", ")
       end
     end
 

@@ -11,7 +11,7 @@ module Ameba::Formatter
 
     context "problems not found" do
       it "reports nothing" do
-        subject.source_finished Source.new ""
+        subject.source_finished Source.new
         subject.output.to_s.empty?.should be_true
       end
     end

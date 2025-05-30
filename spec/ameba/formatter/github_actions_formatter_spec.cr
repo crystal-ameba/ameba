@@ -11,14 +11,14 @@ module Ameba::Formatter
 
     describe "#source_finished" do
       it "writes valid source" do
-        source = Source.new "", "/path/to/file.cr"
+        source = Source.new path: "/path/to/file.cr"
 
         subject.source_finished(source)
         output.to_s.should be_empty
       end
 
       it "writes invalid source" do
-        source = Source.new "", "/path/to/file.cr"
+        source = Source.new path: "/path/to/file.cr"
         location = Crystal::Location.new("/path/to/file.cr", 1, 2)
 
         source.add_issue DummyRule.new, location, location, "message\n2nd line"
@@ -33,7 +33,7 @@ module Ameba::Formatter
 
     describe "#finished" do
       it "doesn't do anything if 'GITHUB_STEP_SUMMARY' ENV var is not set" do
-        subject.finished [Source.new ""]
+        subject.finished [Source.new]
         output.to_s.should be_empty
       end
 
@@ -41,7 +41,7 @@ module Ameba::Formatter
         prev_summary = ENV["GITHUB_STEP_SUMMARY"]?
         ENV["GITHUB_STEP_SUMMARY"] = summary_filename = File.tempname
         begin
-          sources = [Source.new ""]
+          sources = [Source.new]
 
           subject.started(sources)
           subject.finished(sources)
@@ -67,7 +67,7 @@ module Ameba::Formatter
           repo = ENV["GITHUB_REPOSITORY"]?
           sha = ENV["GITHUB_SHA"]?
           begin
-            source = Source.new("", "src/source.cr")
+            source = Source.new path: "src/source.cr"
             source.add_issue(DummyRule.new, {1, 1}, {2, 1}, "DummyRuleError")
             source.add_issue(DummyRule.new, {1, 1}, "DummyRuleError 2")
             source.add_issue(NamedRule.new, {1, 2}, "NamedRuleError", status: :disabled)

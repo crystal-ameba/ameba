@@ -75,7 +75,7 @@ module Ameba::Rule::Documentation
       # bail out if the node has the documentation present
       return if node.doc.presence
 
-      issue_for(node, MSG)
+      issue_for node, MSG
     end
   end
 end

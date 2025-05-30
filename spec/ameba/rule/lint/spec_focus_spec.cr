@@ -78,11 +78,10 @@ module Ameba::Rule::Lint
       subject.catch(s).should be_valid
     end
 
-    it "does not report if is a parameterized focused spec item" do
+    it "does not report if there is a parameterized focused spec item" do
       s = Source.new %(
         def assert_foo(focus = false)
-          it "foo", focus: focus do
-          end
+          it "foo", focus: focus { yield }
         end
       ), path: "source_spec.cr"
 
