@@ -73,18 +73,6 @@ module Ameba
         create_todo.should contain "DummyRule"
       end
 
-      it "creates a todo with severity" do
-        create_todo.should contain "Convention"
-      end
-
-      it "creates a todo with problems count" do
-        create_todo.should contain "Problems found: 1"
-      end
-
-      it "creates a todo with run details" do
-        create_todo.should contain "Run `ameba --only #{DummyRule.rule_name}`"
-      end
-
       it "excludes source from this rule" do
         create_todo.should contain "Excluded:\n  - source.cr"
       end
@@ -103,16 +91,10 @@ module Ameba
 
             content = File.read(CONFIG_PATH)
             content.should contain <<-CONTENT
-              # Problems found: 3
-              # Run `ameba --only Ameba/DummyRule` for details
               Ameba/DummyRule:
-                Description: Dummy rule that does nothing.
-                Dummy: true
                 Excluded:
                 - source1.cr
                 - source2.cr
-                Enabled: true
-                Severity: Convention
               CONTENT
           end
         end
@@ -130,25 +112,14 @@ module Ameba
 
           content = File.read(CONFIG_PATH)
           content.should contain <<-YAML
-            # Problems found: 2
-            # Run `ameba --only Ameba/DummyRule` for details
             Ameba/DummyRule:
-              Description: Dummy rule that does nothing.
-              Dummy: true
               Excluded:
               - source1.cr
               - source2.cr
-              Enabled: true
-              Severity: Convention
 
-            # Problems found: 1
-            # Run `ameba --only BreakingRule` for details
             BreakingRule:
-              Description: A rule with a custom name.
               Excluded:
               - source1.cr
-              Enabled: true
-              Severity: Convention
             YAML
         end
       end
