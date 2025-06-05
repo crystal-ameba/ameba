@@ -268,6 +268,46 @@ module Ameba::Rule::Lint
         CRYSTAL
     end
 
+    describe "is aware of separate variable scopes (#623)" do
+      it "def" do
+        expect_issue subject, <<-CRYSTAL
+          x = 1
+
+          def bar
+            x = 2
+          # ^ error: Useless assignment to variable `x`
+          end
+
+          puts x
+          CRYSTAL
+      end
+
+      it "fun" do
+        expect_issue subject, <<-CRYSTAL
+          x = 1
+
+          fun bar
+            x = 2
+          # ^ error: Useless assignment to variable `x`
+          end
+
+          puts x
+          CRYSTAL
+      end
+
+      it "macro" do
+        expect_no_issues subject, <<-CRYSTAL
+          x = 1
+
+          macro bar
+            x = 2
+          end
+
+          puts x
+          CRYSTAL
+      end
+    end
+
     context "op assigns" do
       it "does not report if variable is referenced below the op assign" do
         expect_no_issues subject, <<-CRYSTAL
