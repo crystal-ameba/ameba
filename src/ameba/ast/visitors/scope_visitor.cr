@@ -28,7 +28,7 @@ module Ameba::AST
     @current_visibility : Crystal::Visibility?
     @skip : Array(Crystal::ASTNode.class)?
 
-    def initialize(@rule, @source, skip = nil)
+    def initialize(@rule, @source, skip = nil, @skip_call_args = false)
       @current_scope = Scope.new(@source.ast) # top level scope
       @skip = skip.try &.map(&.as(Crystal::ASTNode.class))
 
@@ -179,6 +179,18 @@ module Ameba::AST
           ref.explicit = false
         end
       end
+
+      if @skip_call_args
+        node.obj.try &.accept self
+        scope.in_call_args(node) do
+          node.args.each &.accept self
+          node.named_args.try &.each &.accept self
+        end
+        node.block_arg.try &.accept self
+        node.block.try &.accept self
+        return false
+      end
+
       true
     end
 

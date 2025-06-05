@@ -36,7 +36,7 @@ module Ameba::Rule::Lint
     MSG = "Useless assignment to variable `%s`"
 
     def test(source)
-      AST::ScopeVisitor.new self, source
+      AST::ScopeVisitor.new self, source, skip_call_args: true
     end
 
     def test(source, node, scope : AST::Scope)
