@@ -18,6 +18,7 @@ module Ameba::Rule::Layout
     def test(source)
       source.lines.each_with_index do |line, index|
         next unless ws_index = line =~ /\s+$/
+        next if $0 == "\r"
 
         location = {index + 1, ws_index + 1}
         end_location = {index + 1, line.size}
