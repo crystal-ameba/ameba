@@ -78,11 +78,20 @@ module Ameba
             hello <%= "world" %>
             ECR
 
-          source.ast.to_s.should eq(<<-CRYSTAL)
+          {% if compare_versions(Crystal::VERSION, "1.17.0") >= 0 %}
+            source.ast.to_s.should eq(<<-CRYSTAL)
+            __str__ << "hello "
+            ("world")
+              .to_s(__str__)
+
+            CRYSTAL
+          {% else %}
+            source.ast.to_s.should eq(<<-CRYSTAL)
             __str__ << "hello "
             ("world").to_s(__str__)
 
             CRYSTAL
+          {% end %}
         end
 
         it "raises an exception when ECR parsing fails" do
