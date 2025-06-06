@@ -34,6 +34,8 @@ module Ameba::AST
     # The actual AST node that represents a current scope.
     getter node : Crystal::ASTNode
 
+    getter? in_call_args : Crystal::ASTNode? = nil
+
     delegate location, end_location, to_s,
       to: @node
 
@@ -86,6 +88,7 @@ module Ameba::AST
     # scope.add_type_dec_variable(node)
     # ```
     def add_type_dec_variable(node)
+      return if in_call_args?
       type_dec_variables << TypeDecVariable.new(node)
     end
 
@@ -107,6 +110,7 @@ module Ameba::AST
     # scope.assign_variable(var_name, assign_node)
     # ```
     def assign_variable(name, node)
+      return if in_call_args?
       find_variable(name).try &.assign(node, self)
     end
 
@@ -219,6 +223,16 @@ module Ameba::AST
       node == @node &&
         node.location &&
         node.location == @node.location
+    end
+
+    def in_call_args(node, &)
+      if @in_call_args
+        yield
+      else
+        @in_call_args = node
+        yield
+        @in_call_args = nil
+      end
     end
   end
 end

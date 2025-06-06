@@ -402,12 +402,13 @@ module Ameba::Rule::Lint
           CRYSTAL
       end
 
-      pending "doesn't report type declaration as a call argument" do
+      it "doesn't report type declaration as a call argument" do
         expect_no_issues subject, <<-CRYSTAL
-          foo Foo(T), foo : T
-          foo Foo, foo : Nil
-          foo foo : String
-          foo foo : String, bar : Int32?, baz : Bool
+          foo bar : String
+          foo bar : String = ""
+          foo bar : String = baz
+          foo bar = baz
+          foo bar = ""
           CRYSTAL
       end
 
