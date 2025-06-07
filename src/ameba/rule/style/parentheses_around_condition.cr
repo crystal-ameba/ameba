@@ -66,10 +66,12 @@ module Ameba::Rule::Style
 
     private def strip_parentheses?(node, in_ternary) : Bool
       case node
-      when Crystal::BinaryOp, Crystal::ExceptionHandler
+      when Crystal::BinaryOp
         !in_ternary
       when Crystal::Call
         !in_ternary || node.has_parentheses? || node.args.empty?
+      when Crystal::ExceptionHandler, Crystal::If, Crystal::Unless
+        false
       when Crystal::Yield
         !in_ternary || node.has_parentheses? || node.exps.empty?
       when Crystal::Assign, Crystal::OpAssign, Crystal::MultiAssign
