@@ -40,6 +40,15 @@ module Ameba::AST
       true
     end
 
+    # :nodoc:
+    def visit(node : Crystal::Select)
+      return true if macro_condition?
+
+      @count += node.whens.size
+
+      true
+    end
+
     def visit(node : Crystal::MacroIf | Crystal::MacroFor)
       @macro_condition = true
       @count = DEFAULT_COMPLEXITY
