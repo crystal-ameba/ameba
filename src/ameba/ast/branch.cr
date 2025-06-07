@@ -137,6 +137,14 @@ module Ameba::AST
         on_branchable_end node
       end
 
+      def visit(node : Crystal::Select)
+        on_branchable_start node, [node.whens, node.else].flatten
+      end
+
+      def end_visit(node : Crystal::Select)
+        on_branchable_end node
+      end
+
       def visit(node : Crystal::While | Crystal::Until)
         on_branchable_start node, node.cond, node.body
       end
