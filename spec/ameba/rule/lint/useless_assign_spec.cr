@@ -617,6 +617,33 @@ module Ameba::Rule::Lint
       end
 
       context "case" do
+        context "when" do
+          it "does not report if assignment is referenced" do
+            expect_no_issues subject, <<-CRYSTAL
+              def method(a)
+                case
+                when a = foo
+                when a = bar
+                end
+                puts a
+              end
+              CRYSTAL
+          end
+
+          it "reports if assignment is useless" do
+            expect_issue subject, <<-CRYSTAL
+              def method(a)
+                case
+                when a = foo
+                   # ^ error: Useless assignment to variable `a`
+                when a = bar
+                   # ^ error: Useless assignment to variable `a`
+                end
+              end
+              CRYSTAL
+          end
+        end
+
         it "does not report if assignment is referenced" do
           expect_no_issues subject, <<-CRYSTAL
             def method(a)
