@@ -156,6 +156,31 @@ module Ameba::AST
         end
       end
 
+      context "Crystal::Select" do
+        it "constructs a branch in when" do
+          branch = branch_of_assign_in_def <<-CRYSTAL
+            def method(a)
+              select
+              when a = foo then nil
+              end
+            end
+            CRYSTAL
+          branch.to_s.should eq "when a = foo\n  nil\n"
+        end
+
+        it "constructs a branch in else" do
+          branch = branch_of_assign_in_def <<-CRYSTAL
+            def method(a)
+              select
+              when foo.receive? then nil
+              else bar = 1
+              end
+            end
+            CRYSTAL
+          branch.to_s.should eq "bar = 1"
+        end
+      end
+
       context "Crystal::While" do
         it "constructs a branch in cond" do
           branch = branch_of_assign_in_def <<-CRYSTAL

@@ -22,12 +22,12 @@ module Ameba::AST
 
     private def traverse_node(node)
       case node
-      when Crystal::ControlExpression   then traverse_control_expression node
-      when Crystal::Expressions         then traverse_expressions node
-      when Crystal::If, Crystal::Unless then traverse_condition node
-      when Crystal::Case                then traverse_case node
-      when Crystal::BinaryOp            then traverse_binary_op node
-      when Crystal::ExceptionHandler    then traverse_exception_handler node
+      when Crystal::ControlExpression     then traverse_control_expression node
+      when Crystal::Expressions           then traverse_expressions node
+      when Crystal::If, Crystal::Unless   then traverse_condition node
+      when Crystal::Case, Crystal::Select then traverse_case node
+      when Crystal::BinaryOp              then traverse_binary_op node
+      when Crystal::ExceptionHandler      then traverse_exception_handler node
       end
     end
 

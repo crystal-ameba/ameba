@@ -71,6 +71,10 @@ module Ameba::AST
                          code:        "a : String | Int32 = 1; case a when true; end",
                          description: "inexhaustive when",
                        },
+                       {
+                         code:        "select; when a = foo; end",
+                         description: "select",
+                       },
                      ] %}
         it "increases count for every {{ pair[:description].id }}" do
           node = Crystal::Parser.new("def hello; {{ pair[:code].id }} end").parse
