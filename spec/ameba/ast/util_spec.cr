@@ -206,6 +206,20 @@ module Ameba::AST
         subject.flow_expression?(node).should be_true
       end
 
+      it "returns true if this is select consumed by flow expressions" do
+        node = as_node <<-CRYSTAL
+          select
+          when a = foo
+            return 1
+          when a = bar
+            return 2
+          else
+            return 3
+          end
+          CRYSTAL
+        subject.flow_expression?(node).should be_true
+      end
+
       it "returns true if this is exception handler consumed by flow expressions" do
         node = as_node <<-CRYSTAL
           begin

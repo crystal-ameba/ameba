@@ -145,7 +145,7 @@ module Ameba::AST::Util
       flow_expressions? [node.then, node.else], in_loop
     when Crystal::BinaryOp
       flow_expression? node.left, in_loop
-    when Crystal::Case
+    when Crystal::Case, Crystal::Select
       flow_expressions? [node.whens, node.else].flatten, in_loop
     when Crystal::ExceptionHandler
       flow_expressions? [node.else || node.body, node.rescues].flatten, in_loop
