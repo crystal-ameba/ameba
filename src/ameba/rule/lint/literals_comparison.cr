@@ -44,7 +44,7 @@ module Ameba::Rule::Lint
       what =
         case node.name
         when "==", "!="
-          is_equal.to_s
+          "`#{is_equal}`"
         else
           "the same"
         end

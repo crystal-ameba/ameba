@@ -39,14 +39,14 @@ module Ameba::Rule::Lint
     it "reports if there is a static comparison evaluating to true (2)" do
       expect_issue subject, <<-CRYSTAL
         "foo" == "foo"
-        # ^^^^^^^^^^^^ error: Comparison always evaluates to true
+        # ^^^^^^^^^^^^ error: Comparison always evaluates to `true`
         CRYSTAL
     end
 
     it "reports if there is a static comparison evaluating to false" do
       expect_issue subject, <<-CRYSTAL
         "foo" != "bar"
-        # ^^^^^^^^^^^^ error: Comparison always evaluates to false
+        # ^^^^^^^^^^^^ error: Comparison always evaluates to `false`
         CRYSTAL
     end
 
@@ -54,7 +54,7 @@ module Ameba::Rule::Lint
       it "reports in macro scope" do
         expect_issue subject, <<-CRYSTAL
           {{ "foo" == "bar" }}
-           # ^^^^^^^^^^^^^^ error: Comparison always evaluates to false
+           # ^^^^^^^^^^^^^^ error: Comparison always evaluates to `false`
           CRYSTAL
       end
 
