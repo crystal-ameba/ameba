@@ -22,6 +22,7 @@ module Ameba::Formatter
         return
       end
 
+      issues.sort_by!(&.rule.name)
       generate_todo_config(issues)
 
       @output.puts "Created #{@config_path}"
@@ -29,17 +30,36 @@ module Ameba::Formatter
 
     private def generate_todo_config(issues) : Nil
       File.open(@config_path, mode: "w") do |file|
-        file << header
+        file.puts header
 
+        {% if compare_versions(Crystal::VERSION, "1.17.0") > 0 %}
+          YAML::Builder.build(file) do |builder|
+            builder.stream do
+              builder.document(implicit_start_indicator: true) do
+                build_yaml(file, builder, issues)
+              end
+            end
+          end
+        {% else %}
+          # Before 1.17.0 we cannot prevent the document start indicator so
+          # we must remove it explicitly (https://github.com/crystal-lang/crystal/pull/15835)
+          yaml = String.build do |io|
+            YAML.build(io) do |builder|
+              build_yaml(io, builder, issues)
+            end
+          end
+          file << yaml.lchop("---\n")
+        {% end %}
+      end
+    end
+
+    private def build_yaml(io, builder, issues)
+      builder.mapping do
         rule_issues_map(issues).each do |rule, rule_issues|
-          rule_todo = rule_todo(rule, rule_issues)
-          rule_todo =
-            {rule_todo.name => rule_todo}
-              .to_yaml.gsub("---", "")
+          builder.flush
+          io.puts
 
-          file << "\n# Problems found: #{rule_issues.size}"
-          file << "\n# Run `ameba --only #{rule.name}` for details"
-          file << rule_todo
+          rule_to_yaml(builder, rule, rule_issues)
         end
       end
     end
@@ -61,17 +81,27 @@ module Ameba::Formatter
         # on #{Time.utc} using Ameba version #{VERSION}.
         # The point is for the user to remove these configuration records
         # one by one as the reported problems are removed from the code base.
+        #
+        # For more details on any individual rule, run `ameba --only RuleName`.
 
         Version: "#{VERSION}"
 
         HEADER
     end
 
-    private def rule_todo(rule, issues)
-      rule.dup.tap do |rule_todo|
-        rule_todo.excluded = issues
-          .compact_map(&.location.try &.filename.try &.to_s)
-          .uniq!
+    private def exclude_paths(issues)
+      issues.compact_map(&.location.try &.filename.try &.to_s).uniq!
+    end
+
+    private def rule_to_yaml(yaml, rule, issues)
+      yaml.scalar rule.name
+      yaml.mapping do
+        yaml.scalar "Excluded"
+        yaml.sequence do
+          exclude_paths(issues).each do |path|
+            yaml.scalar path
+          end
+        end
       end
     end
   end

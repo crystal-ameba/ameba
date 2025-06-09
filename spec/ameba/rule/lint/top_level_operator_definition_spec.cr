@@ -44,6 +44,15 @@ module Ameba::Rule::Lint
         CRYSTAL
     end
 
+    it "passes if a top-level operator method is defined in a record body" do
+      expect_no_issues subject, <<-CRYSTAL
+        record Foo do
+          def +(other)
+          end
+        end
+        CRYSTAL
+    end
+
     it "fails if a + operator method is defined top-level" do
       expect_issue subject, <<-CRYSTAL
         def +(other)

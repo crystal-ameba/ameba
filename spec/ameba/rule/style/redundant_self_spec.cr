@@ -160,6 +160,24 @@ module Ameba::Rule::Style
         CRYSTAL
     end
 
+    it "does not report if `self` is used with an operator assign" do
+      expect_no_issues subject, <<-CRYSTAL
+        class Foo
+          def foo=(value); end
+
+          def foo!
+            self.foo ||= 42
+            self.foo &&= 42
+            self.foo += 42
+            self.foo -= 42
+            self.foo *= 42
+            self.foo /= 42
+            self.foo %= 42
+          end
+        end
+        CRYSTAL
+    end
+
     it "does not report if `self` is used with an operator" do
       expect_no_issues subject, <<-CRYSTAL
         class Foo

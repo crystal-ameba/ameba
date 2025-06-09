@@ -23,6 +23,66 @@ module Ameba::Rule::Style
       end
     {% end %}
 
+    {% for keyword in %w[if unless].map(&.id) %}
+      context "{{ keyword }}" do
+        it "ignores expressions with `rescue`" do
+          expect_no_issues subject, <<-CRYSTAL
+            {{ keyword }} (foo rescue nil)
+              foo
+            end
+            CRYSTAL
+        end
+
+        it "ignores postfix expressions with `rescue`" do
+          expect_no_issues subject, <<-CRYSTAL
+            foo {{ keyword }} (foo rescue nil)
+            CRYSTAL
+        end
+
+        it "ignores expressions with `ensure`" do
+          expect_no_issues subject, <<-CRYSTAL
+            {{ keyword }} (foo ensure bar)
+              foo
+            end
+            CRYSTAL
+        end
+
+        it "ignores postfix expressions with `ensure`" do
+          expect_no_issues subject, <<-CRYSTAL
+            foo {{ keyword }} (foo ensure bar)
+            CRYSTAL
+        end
+
+        it "ignores expressions with `if`" do
+          expect_no_issues subject, <<-CRYSTAL
+            {{ keyword }} (foo if bar)
+              foo
+            end
+            CRYSTAL
+        end
+
+        it "ignores postfix expressions with `if`" do
+          expect_no_issues subject, <<-CRYSTAL
+            foo {{ keyword }} (foo if bar)
+            CRYSTAL
+        end
+
+        it "ignores expressions with `unless`" do
+          expect_no_issues subject, <<-CRYSTAL
+            {{ keyword }} (foo unless bar)
+              foo
+            end
+            CRYSTAL
+        end
+
+        it "ignores postfix expressions with `unless`" do
+          expect_no_issues subject, <<-CRYSTAL
+            foo {{ keyword }} (foo unless bar)
+            CRYSTAL
+        end
+      end
+    {% end %}
+
     context "case" do
       it "reports if redundant parentheses are found" do
         source = expect_issue subject, <<-CRYSTAL
