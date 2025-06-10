@@ -306,6 +306,85 @@ module Ameba::Rule::Lint
           puts x
           CRYSTAL
       end
+
+      pending "assigns" do
+        it "path" do
+          expect_issue subject, <<-CRYSTAL
+            x = 1
+
+            BAR = begin
+              x = 2
+            # ^ error: Useless assignment to variable `x`
+            end
+
+            puts x
+            CRYSTAL
+        end
+
+        it "ivar" do
+          expect_issue subject, <<-CRYSTAL
+            class Foo
+              x = 1
+
+              @bar = begin
+                x = 2
+              # ^ error: Useless assignment to variable `x`
+              end
+
+              puts x
+            end
+            CRYSTAL
+        end
+
+        it "ivar in def" do
+          expect_issue subject, <<-CRYSTAL
+            class Foo
+              def foo
+                x = 1
+                # ^ error: Useless assignment to variable `x`
+
+                @bar = begin
+                  x = 2
+                end
+
+                puts x
+              end
+            end
+            CRYSTAL
+        end
+
+        it "cvar" do
+          expect_issue subject, <<-CRYSTAL
+            class Foo
+              x = 1
+
+              @@bar = begin
+                x = 2
+              # ^ error: Useless assignment to variable `x`
+              end
+
+              puts x
+            end
+            CRYSTAL
+        end
+
+        it "cvar in def" do
+          expect_issue subject, <<-CRYSTAL
+            class Foo
+              def foo
+                x = 1
+                # ^ error: Useless assignment to variable `x`
+
+                @@bar = begin
+                  x = 2
+                end
+
+                puts x
+              end
+            end
+            CRYSTAL
+        end
+      end
     end
 
     context "op assigns" do
