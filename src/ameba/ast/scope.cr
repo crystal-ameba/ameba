@@ -200,9 +200,7 @@ module Ameba::AST
     end
 
     def inherited?(&)
-      if inherited?
-        yield
-      end
+      yield if inherited?
     end
 
     # Returns `true` if var is an argument in current scope, `false` otherwise.
