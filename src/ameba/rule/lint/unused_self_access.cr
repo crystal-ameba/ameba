@@ -23,17 +23,13 @@ module Ameba::Rule::Lint
   class UnusedSelfAccess < Base
     properties do
       since_version "1.7.0"
-      description "Disallows unused self"
+      description "Disallows unused `self`"
     end
 
     MSG = "`self` is not used"
 
     def test(source : Source)
       AST::ImplicitReturnVisitor.new(self, source)
-    end
-
-    def test(source, node : Crystal::Self, in_macro : Bool)
-      issue_for node, MSG
     end
 
     def test(source, node : Crystal::Var, in_macro : Bool)

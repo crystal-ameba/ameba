@@ -23,6 +23,9 @@ module Ameba::Rule::Lint
       description "Reports bad comment directives"
     end
 
+    MSG_INVALID_ACTION    = "Bad action in comment directive: `%s`. Possible values: %s"
+    MSG_NONEXISTENT_RULES = "Such rules do not exist: %s"
+
     AVAILABLE_ACTIONS = InlineComments::Action.names.map(&.downcase)
     ALL_RULE_NAMES    = Rule.rules.map(&.rule_name)
     ALL_GROUP_NAMES   = Rule.rules.map(&.group_name).uniq!
@@ -41,14 +44,12 @@ module Ameba::Rule::Lint
       return if InlineComments::Action.parse?(action)
 
       # See `InlineComments::COMMENT_DIRECTIVE_REGEX`
-      start_location = token.location.adjust(column_number: {{ "# ameba:".size }})
-      token_location = {
-        start_location,
-        start_location.adjust(column_number: action.size - 1),
-      }
-      issue_for *token_location,
-        "Bad action in comment directive: '%s'. Possible values: %s" % {
-          action, AVAILABLE_ACTIONS.join(", "),
+      location = token.location.adjust(column_number: {{ "# ameba:".size }})
+      end_location = location.adjust(column_number: action.size - 1)
+
+      issue_for location, end_location,
+        MSG_INVALID_ACTION % {
+          action, AVAILABLE_ACTIONS.map { |name| "`#{name}`" }.join(", "),
         }
     end
 
@@ -56,11 +57,11 @@ module Ameba::Rule::Lint
       bad_names = rules - ALL_RULE_NAMES - ALL_GROUP_NAMES
       return if bad_names.empty?
 
-      token_location = {
-        token.location,
-        token.location.adjust(column_number: token.value.to_s.size - 1),
-      }
-      issue_for *token_location, "Such rules do not exist: %s" % bad_names.join(", ")
+      location = token.location
+      end_location = location.adjust(column_number: token.value.to_s.size - 1)
+
+      issue_for location, end_location,
+        MSG_NONEXISTENT_RULES % bad_names.join(", ")
     end
   end
 end

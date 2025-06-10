@@ -11,7 +11,7 @@ module Ameba::Rule::Lint
     end
 
     it "passes if a char literal is used to assign" do
-      expect_no_issues subject, <<-CRYSTAL
+      expect_no_issues subject, <<-'CRYSTAL'
         c = '\t'
         CRYSTAL
     end
@@ -71,9 +71,7 @@ module Ameba::Rule::Lint
       expect_no_issues subject, <<-CRYSTAL
         def foo : Nil
           return
-
           :bar
-
           nil
         end
         CRYSTAL
@@ -126,8 +124,8 @@ module Ameba::Rule::Lint
       expect_issue subject, <<-'CRYSTAL'
         "hello world"
         # ^^^^^^^^^^^ error: Literal value is not used
-        "interp #{string}"
-        # ^^^^^^^^^^^^^^^^ error: Literal value is not used
+        "foo #{bar}"
+        # ^^^^^^^^^^ error: Literal value is not used
         CRYSTAL
     end
 
@@ -146,9 +144,9 @@ module Ameba::Rule::Lint
     end
 
     it "fails if a char literal is top-level" do
-      expect_issue subject, <<-CRYSTAL
+      expect_issue subject, <<-'CRYSTAL'
         '\t'
-        # ^ error: Literal value is not used
+        # ^^ error: Literal value is not used
         CRYSTAL
     end
 
@@ -199,8 +197,8 @@ module Ameba::Rule::Lint
         def foo
           "hello world"
         # ^^^^^^^^^^^^^ error: Literal value is not used
-          "interp #{string}"
-        # ^^^^^^^^^^^^^^^^^^ error: Literal value is not used
+          "foo #{bar}"
+        # ^^^^^^^^^^^^ error: Literal value is not used
           return
         end
         CRYSTAL
@@ -227,10 +225,10 @@ module Ameba::Rule::Lint
     end
 
     it "fails if a char literal is in void of method body" do
-      expect_issue subject, <<-CRYSTAL
+      expect_issue subject, <<-'CRYSTAL'
         def foo
           '\t'
-        # ^^^ error: Literal value is not used
+        # ^^^^ error: Literal value is not used
           return
         end
         CRYSTAL
@@ -295,8 +293,8 @@ module Ameba::Rule::Lint
         if true
           "hello world"
         # ^^^^^^^^^^^^^ error: Literal value is not used
-          "interp #{string}"
-        # ^^^^^^^^^^^^^^^^^^ error: Literal value is not used
+          "foo #{bar}"
+        # ^^^^^^^^^^^^ error: Literal value is not used
           nil
         end
         CRYSTAL
@@ -323,10 +321,10 @@ module Ameba::Rule::Lint
     end
 
     it "fails if a char literal is in void of if statement body" do
-      expect_issue subject, <<-CRYSTAL
+      expect_issue subject, <<-'CRYSTAL'
         if true
           '\t'
-        # ^^^ error: Literal value is not used
+        # ^^^^ error: Literal value is not used
           nil
         end
         CRYSTAL
@@ -469,21 +467,21 @@ module Ameba::Rule::Lint
     {% if compare_versions(Crystal::VERSION, "1.15.0") >= 0 %}
       it "fails if a regex literal is unused" do
         expect_issue subject, <<-'CRYSTAL'
-          a = /hello world/
+          foo = /hello world/
           /goodnight moon/
           # ^^^^^^^^^^^^^^ error: Literal value is not used
-          b = /goodnight moon, #{a}/
-          /goodnight moon, #{a}/
-          # ^^^^^^^^^^^^^^^^^^^^ error: Literal value is not used
+          bar = /goodnight moon, #{foo}/
+          /goodnight moon, #{foo}/
+          # ^^^^^^^^^^^^^^^^^^^^^^ error: Literal value is not used
           CRYSTAL
       end
     {% else %}
       it "passes if a regex literal is unused" do
         expect_no_issues subject, <<-'CRYSTAL'
-          a = /hello world/
+          foo = /hello world/
           /goodnight moon/
-          b = /goodnight moon, #{a}/
-          /goodnight moon, #{a}/
+          bar = /goodnight moon, #{foo}/
+          /goodnight moon, #{foo}/
           CRYSTAL
       end
     {% end %}

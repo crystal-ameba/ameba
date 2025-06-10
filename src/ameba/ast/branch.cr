@@ -76,7 +76,7 @@ module Ameba::AST
       property branch : Branch?
 
       def initialize(@node : Crystal::ASTNode, parent_node : Crystal::ASTNode)
-        accept parent_node
+        parent_node.accept self
       end
 
       private def on_branchable_start(node, *branches)

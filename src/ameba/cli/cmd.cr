@@ -185,7 +185,9 @@ module Ameba::Cli
     when opts.all?
       config.rules.each(&.enabled = true)
     end
-    config.update_rules(opts.except, enabled: false)
+    if except = opts.except
+      config.update_rules(except, enabled: false)
+    end
   end
 
   private def configure_formatter(config, opts) : Nil

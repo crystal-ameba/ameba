@@ -1,13 +1,13 @@
-# Extensions to Crystal::Location
+# Extensions to `Crystal::Location`
 module Ameba::Ext::Location
-  # Returns the same location as this location but with the line and/or column number(s) changed
-  # to the given value(s).
+  # Returns the same location as this location but with the line and/or
+  # column number(s) changed to the given value(s).
   def with(line_number = @line_number, column_number = @column_number) : self
     self.class.new(@filename, line_number, column_number)
   end
 
-  # Returns the same location as this location but with the line and/or column number(s) adjusted
-  # by the given amount(s).
+  # Returns the same location as this location but with the line and/or
+  # column number(s) adjusted by the given amount(s).
   def adjust(line_number = 0, column_number = 0) : self
     self.class.new(@filename, @line_number + line_number, @column_number + column_number)
   end

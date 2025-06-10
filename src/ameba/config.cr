@@ -247,8 +247,8 @@ class Ameba::Config
   # ```
   # config.update_rules %w[Group1 Group2], enabled: true
   # ```
-  def update_rules(names, enabled = true, excluded = nil)
-    names.try &.each do |name|
+  def update_rules(names : Enumerable(String), enabled = true, excluded = nil)
+    names.each do |name|
       if rules = @rule_groups[name]?
         rules.each do |rule|
           rule.enabled = enabled

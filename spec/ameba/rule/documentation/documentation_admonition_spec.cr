@@ -18,21 +18,27 @@ module Ameba::Rule::Documentation
     it "fails for comments with admonition" do
       subject.admonitions.each do |admonition|
         expect_issue subject, <<-CRYSTAL, admonition: admonition
-          # %{admonition}: Single-line comment
-          # ^{admonition} error: Found a #{admonition} admonition in a comment
+          def foo
+            # %{admonition}: Single-line comment
+            # ^{admonition} error: Found a %{admonition} admonition in a comment
+          end
           CRYSTAL
 
         expect_issue subject, <<-CRYSTAL, admonition: admonition
-          # Text before ...
-          # %{admonition}(some context): Part of multi-line comment
-          # ^{admonition} error: Found a #{admonition} admonition in a comment
-          # Text after ...
+          def foo
+            # Text before ...
+            # %{admonition}(some context): Part of multi-line comment
+            # ^{admonition} error: Found a %{admonition} admonition in a comment
+            # Text after ...
+          end
           CRYSTAL
 
         expect_issue subject, <<-CRYSTAL, admonition: admonition
-          # %{admonition}
-          # ^{admonition} error: Found a #{admonition} admonition in a comment
-          if rand > 0.5
+          def foo
+            # %{admonition}
+            # ^{admonition} error: Found a %{admonition} admonition in a comment
+            if rand > 0.5
+            end
           end
           CRYSTAL
       end
@@ -53,7 +59,7 @@ module Ameba::Rule::Documentation
           past_date = (Time.utc - 21.days).to_s(format: "%F")
           expect_issue subject, <<-CRYSTAL, admonition: admonition
             # %{admonition}(#{past_date}): sth in the past
-            # ^{admonition} error: Found a #{admonition} admonition in a comment (21 days past)
+            # ^{admonition} error: Found a %{admonition} admonition in a comment (21 days past)
             CRYSTAL
         end
       end
@@ -63,7 +69,7 @@ module Ameba::Rule::Documentation
           yesterday_date = (Time.utc - 1.day).to_s(format: "%F")
           expect_issue subject, <<-CRYSTAL, admonition: admonition
             # %{admonition}(#{yesterday_date}): sth in the past
-            # ^{admonition} error: Found a #{admonition} admonition in a comment (1 day past)
+            # ^{admonition} error: Found a %{admonition} admonition in a comment (1 day past)
             CRYSTAL
         end
       end
@@ -73,7 +79,7 @@ module Ameba::Rule::Documentation
           today_date = Time.utc.to_s(format: "%F")
           expect_issue subject, <<-CRYSTAL, admonition: admonition
             # %{admonition}(#{today_date}): sth in the past
-            # ^{admonition} error: Found a #{admonition} admonition in a comment (today is the day!)
+            # ^{admonition} error: Found a %{admonition} admonition in a comment (today is the day!)
             CRYSTAL
         end
       end
@@ -82,7 +88,7 @@ module Ameba::Rule::Documentation
         subject.admonitions.each do |admonition|
           expect_issue subject, <<-CRYSTAL, admonition: admonition
             # %{admonition}(0000-00-00): sth wrong
-            # ^{admonition} error: #{admonition} admonition error: Invalid time: "0000-00-00"
+            # ^{admonition} error: %{admonition} admonition error: Invalid time: "0000-00-00"
             CRYSTAL
         end
       end
@@ -97,7 +103,7 @@ module Ameba::Rule::Documentation
           rule.admonitions.each do |admonition|
             expect_issue rule, <<-CRYSTAL, admonition: admonition
               # %{admonition}
-              # ^{admonition} error: Found a #{admonition} admonition in a comment
+              # ^{admonition} error: Found a %{admonition} admonition in a comment
               CRYSTAL
           end
 

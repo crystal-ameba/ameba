@@ -20,7 +20,7 @@ module Ameba::Rule::Performance
   # YAML configuration example:
   #
   # ```
-  # Performance/FirstLastAfterFilter
+  # Performance/FirstLastAfterFilter:
   #   Enabled: true
   #   FilterNames:
   #     - select

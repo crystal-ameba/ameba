@@ -35,10 +35,10 @@ module Ameba::Rule::Style
     MSG = "Use `do`...`end` instead of curly brackets for multi-line blocks"
 
     def test(source, node : Crystal::Block)
-      return unless start_location = node.location
+      return unless location = node.location
       return unless end_location = node.end_location
-      return if start_location.line_number == end_location.line_number
-      return unless source.code[source.pos(start_location)]? == '{'
+      return if location.line_number == end_location.line_number
+      return unless source.code[source.pos(location)]? == '{'
 
       issue_for node, MSG
     end

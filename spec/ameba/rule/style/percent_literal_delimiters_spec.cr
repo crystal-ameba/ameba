@@ -60,10 +60,12 @@ module Ameba::Rule::Style
 
     it "reports rule, location and message" do
       expect_issue subject, <<-CRYSTAL
-        puts %[one two three]
-           # ^ error: `%`-literals should be delimited by `(` and `)`
-        puts %w(one two three)
-           # ^^ error: `%w`-literals should be delimited by `[` and `]`
+        def foo
+          %[one two three]
+        # ^ error: `%`-literals should be delimited by `(` and `)`
+          %w(one two three)
+        # ^^ error: `%w`-literals should be delimited by `[` and `]`
+        end
         CRYSTAL
     end
 

@@ -55,9 +55,7 @@ module Ameba::Rule::Lint
     SPEC_ITEM_NAMES = %w[describe context it pending]
 
     def test(source)
-      return unless source.spec?
-
-      AST::NodeVisitor.new self, source
+      return super if source.spec?
     end
 
     def test(source, node : Crystal::Call)

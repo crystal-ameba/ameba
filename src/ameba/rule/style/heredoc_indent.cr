@@ -1,32 +1,31 @@
 module Ameba::Rule::Style
-  # A rule that enforces _Heredoc_ bodies be indented one level above the indentation of the
-  # line they're used on.
+  # A rule that enforces _heredoc_ bodies be indented one level above the
+  # indentation of the line they're used on.
   #
   # For example, this is considered invalid:
   #
-  # ```
-  # <<-HERERDOC
-  #   hello world
-  # HEREDOC
+  #     <<-HEREDOC
+  #       hello world
+  #     HEREDOC
   #
-  #   <<-HERERDOC
-  # hello world
-  # HEREDOC
-  # ```
+  #       <<-HEREDOC
+  #     hello world
+  #     HEREDOC
   #
   # And should be written as:
   #
-  # ```
-  # <<-HERERDOC
-  #     hello world
-  #   HEREDOC
+  #     <<-HEREDOC
+  #         hello world
+  #       HEREDOC
   #
-  #   <<-HERERDOC
-  #     hello world
-  #     HEREDOC
-  # ```
+  #     <<-HEREDOC
+  #       hello world
+  #       HEREDOC
   #
-  # The `IndentBy` configuration option changes the enforced indentation level of the _heredoc_.
+  # The `IndentBy` configuration option changes the enforced indentation level
+  # of the _heredoc_.
+  #
+  # YAML configuration example:
   #
   # ```
   # Style/HeredocIndent:
@@ -40,25 +39,24 @@ module Ameba::Rule::Style
       indent_by 2
     end
 
-    MSG = "Heredoc body should be indented by %s spaces"
+    MSG = "Heredoc body should be indented by %d spaces"
 
     def test(source, node : Crystal::StringInterpolation)
-      return unless start_location = node.location
+      return unless location = node.location
 
-      start_location_pos = source.pos(start_location)
-      return unless source.code[start_location_pos..(start_location_pos + 2)]? == "<<-"
+      location_pos = source.pos(location)
+      return unless source.code[location_pos..(location_pos + 2)]? == "<<-"
 
-      correct_indent = line_indent(source, start_location) + indent_by
+      correct_indent = line_indent(source, location) + indent_by
+      return if node.heredoc_indent == correct_indent
 
-      unless node.heredoc_indent == correct_indent
-        issue_for node, MSG % indent_by
-      end
+      issue_for node, MSG % indent_by
     end
 
-    private def line_indent(source, start_location) : Int32
-      line_location = Crystal::Location.new(nil, start_location.line_number, 1)
+    private def line_indent(source, location) : Int32
+      line_location = location.with(column_number: 1)
       line_location_pos = source.pos(line_location)
-      line = source.code[line_location_pos..(line_location_pos + start_location.column_number)]
+      line = source.code[line_location_pos..(line_location_pos + location.column_number)]
 
       line.size - line.lstrip.size
     end

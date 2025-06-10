@@ -6,7 +6,7 @@ module Ameba
   # Dummy Rule which does nothing.
   class DummyRule < Rule::Base
     properties do
-      description "Dummy rule that does nothing."
+      description "Dummy rule that does nothing"
       dummy true
     end
 
@@ -16,7 +16,7 @@ module Ameba
 
   class NamedRule < Rule::Base
     properties do
-      description "A rule with a custom name."
+      description "A rule with a custom name"
     end
 
     def self.name
@@ -27,7 +27,7 @@ module Ameba
   class VersionedRule < Rule::Base
     properties do
       since_version "1.5.0"
-      description "Rule with a custom version."
+      description "Rule with a custom version"
     end
 
     def test(source)
@@ -67,7 +67,7 @@ module Ameba
     getter call_queue = {} of AST::Scope => Array(Crystal::Call)
 
     properties do
-      description "Internal rule to self calls in test scopes"
+      description "Internal rule to test calls to `self` in scopes"
     end
 
     def test(source, node : Crystal::Call, scope : AST::Scope)
@@ -136,7 +136,7 @@ module Ameba
       return unless name = node_source(node.name, source.lines)
       return unless name.includes?("A")
 
-      issue_for(node.name, message: "A to AA") do |corrector|
+      issue_for node.name, message: "A to AA" do |corrector|
         corrector.replace(node.name, name.sub("A", "AA"))
       end
     end
@@ -153,7 +153,7 @@ module Ameba
       return unless name = node_source(node.name, source.lines)
       return unless name.includes?("A")
 
-      issue_for(node.name, message: "A to B") do |corrector|
+      issue_for node.name, message: "A to B" do |corrector|
         corrector.replace(node.name, name.tr("A", "B"))
       end
     end
@@ -170,7 +170,7 @@ module Ameba
       return unless name = node_source(node.name, source.lines)
       return unless name.includes?("B")
 
-      issue_for(node.name, message: "B to A") do |corrector|
+      issue_for node.name, message: "B to A" do |corrector|
         corrector.replace(node.name, name.tr("B", "A"))
       end
     end
@@ -187,7 +187,7 @@ module Ameba
       return unless name = node_source(node.name, source.lines)
       return unless name.includes?("B")
 
-      issue_for(node.name, message: "B to C") do |corrector|
+      issue_for node.name, message: "B to C" do |corrector|
         corrector.replace(node.name, name.tr("B", "C"))
       end
     end
@@ -204,7 +204,7 @@ module Ameba
       return unless name = node_source(node.name, source.lines)
       return unless name.includes?("C")
 
-      issue_for(node.name, message: "C to A") do |corrector|
+      issue_for node.name, message: "C to A" do |corrector|
         corrector.replace(node.name, name.tr("C", "A"))
       end
     end
@@ -222,7 +222,7 @@ module Ameba
 
       end_location = location.adjust(column_number: {{ "class".size - 1 }})
 
-      issue_for(location, end_location, message: "class to module") do |corrector|
+      issue_for location, end_location, message: "class to module" do |corrector|
         corrector.replace(location, end_location, "module")
       end
     end
@@ -240,7 +240,7 @@ module Ameba
 
       end_location = location.adjust(column_number: {{ "module".size - 1 }})
 
-      issue_for(location, end_location, message: "module to class") do |corrector|
+      issue_for location, end_location, message: "module to class" do |corrector|
         corrector.replace(location, end_location, "class")
       end
     end
