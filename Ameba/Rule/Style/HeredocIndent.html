@@ -572,18 +572,8 @@
       
     </li>
   
-  <li class="parent " data-id="ameba/Ameba/Rule/Lint/Typos" data-name="ameba::rule::lint::typos">
+  <li class=" " data-id="ameba/Ameba/Rule/Lint/Typos" data-name="ameba::rule::lint::typos">
       <a href="../../../Ameba/Rule/Lint/Typos.html">Typos</a>
-      
-        <ul>
-  
-  <li class=" " data-id="ameba/Ameba/Rule/Lint/Typos/Typo" data-name="ameba::rule::lint::typos::typo">
-      <a href="../../../Ameba/Rule/Lint/Typos/Typo.html">Typo</a>
-      
-    </li>
-  
-</ul>
-
       
     </li>
   
@@ -1062,25 +1052,27 @@
     Overview
   </h2>
 
-  <p>A rule that enforces <em>Heredoc</em> bodies be indented one level above the indentation of the
-line they're used on.</p>
+  <p>A rule that enforces <em>heredoc</em> bodies be indented one level above the
+indentation of the line they're used on.</p>
 <p>For example, this is considered invalid:</p>
-<pre><code class="language-crystal">&lt;&lt;-HERERDOC
-  hello world
-HEREDOC
+<pre><code class="language-crystal"><span class="s">&lt;&lt;-HEREDOC</span>
+<span class="s">  hello world
+HEREDOC</span>
 
-  &lt;&lt;-HERERDOC
-hello world
-HEREDOC</code></pre>
+  <span class="s">&lt;&lt;-HEREDOC</span>
+<span class="s">hello world
+HEREDOC</span></code></pre>
 <p>And should be written as:</p>
-<pre><code class="language-crystal">&lt;&lt;-HERERDOC
-    hello world
-  HEREDOC
+<pre><code class="language-crystal"><span class="s">&lt;&lt;-HEREDOC</span>
+<span class="s">    hello world
+  HEREDOC</span>
 
-  &lt;&lt;-HERERDOC
-    hello world
-    HEREDOC</code></pre>
-<p>The <code>IndentBy</code> configuration option changes the enforced indentation level of the <em>heredoc</em>.</p>
+<span class="s">&lt;&lt;-HEREDOC</span>
+<span class="s">  hello world
+  HEREDOC</span></code></pre>
+<p>The <code>IndentBy</code> configuration option changes the enforced indentation level
+of the <em>heredoc</em>.</p>
+<p>YAML configuration example:</p>
 <pre><code class="language-crystal"><span class="t">Style</span><span class="o">/</span><span class="t">HeredocIndent</span>:
   <span class="t">Enabled</span>: <span class="n">true</span>
   <span class="t">IndentBy</span>: <span class="n">2</span></code></pre>
@@ -1126,7 +1118,7 @@ HEREDOC</code></pre>
   </h2>
   
     
-      <a href="https://github.com/crystal-ameba/ameba/blob/181318b/src/ameba/rule/style/heredoc_indent.cr#L36" target="_blank">
+      <a href="https://github.com/crystal-ameba/ameba/blob/229a363/src/ameba/rule/style/heredoc_indent.cr#L35" target="_blank">
         ameba/rule/style/heredoc_indent.cr
       </a>
     
@@ -1148,7 +1140,7 @@ HEREDOC</code></pre>
   <dl>
     
       <dt class="entry-const" id="MSG">
-        <strong>MSG</strong> = <code><span class="s">&quot;Heredoc body should be indented by %s spaces&quot;</span></code>
+        <strong>MSG</strong> = <code><span class="s">&quot;Heredoc body should be indented by %d spaces&quot;</span></code>
       </dt>
       
     
@@ -1175,7 +1167,7 @@ HEREDOC</code></pre>
       <li class="entry-summary">
         <a href="#new%28config%3Dnil%29-class-method" class="signature"><strong>.new</strong>(config = <span class="n">nil</span>)</a>
         
-          <div class="summary"><p>A rule that enforces <em>Heredoc</em> bodies be indented one level above the indentation of the line they're used on.</p></div>
+          <div class="summary"><p>A rule that enforces <em>heredoc</em> bodies be indented one level above the indentation of the line they're used on.</p></div>
         
       </li>
     
@@ -1472,25 +1464,27 @@ HEREDOC</code></pre>
       
         <div class="doc">
           
-          <p>A rule that enforces <em>Heredoc</em> bodies be indented one level above the indentation of the
-line they're used on.</p>
+          <p>A rule that enforces <em>heredoc</em> bodies be indented one level above the
+indentation of the line they're used on.</p>
 <p>For example, this is considered invalid:</p>
-<pre><code class="language-crystal">&lt;&lt;-HERERDOC
-  hello world
-HEREDOC
+<pre><code class="language-crystal"><span class="s">&lt;&lt;-HEREDOC</span>
+<span class="s">  hello world
+HEREDOC</span>
 
-  &lt;&lt;-HERERDOC
-hello world
-HEREDOC</code></pre>
+  <span class="s">&lt;&lt;-HEREDOC</span>
+<span class="s">hello world
+HEREDOC</span></code></pre>
 <p>And should be written as:</p>
-<pre><code class="language-crystal">&lt;&lt;-HERERDOC
-    hello world
-  HEREDOC
+<pre><code class="language-crystal"><span class="s">&lt;&lt;-HEREDOC</span>
+<span class="s">    hello world
+  HEREDOC</span>
 
-  &lt;&lt;-HERERDOC
-    hello world
-    HEREDOC</code></pre>
-<p>The <code>IndentBy</code> configuration option changes the enforced indentation level of the <em>heredoc</em>.</p>
+<span class="s">&lt;&lt;-HEREDOC</span>
+<span class="s">  hello world
+  HEREDOC</span></code></pre>
+<p>The <code>IndentBy</code> configuration option changes the enforced indentation level
+of the <em>heredoc</em>.</p>
+<p>YAML configuration example:</p>
 <pre><code class="language-crystal"><span class="t">Style</span><span class="o">/</span><span class="t">HeredocIndent</span>:
   <span class="t">Enabled</span>: <span class="n">true</span>
   <span class="t">IndentBy</span>: <span class="n">2</span></code></pre>
@@ -1499,7 +1493,7 @@ HEREDOC</code></pre>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/181318b/src/ameba/rule/style/heredoc_indent.cr#L36" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/229a363/src/ameba/rule/style/heredoc_indent.cr#L35" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1710,7 +1704,7 @@ HEREDOC</code></pre>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/181318b/src/ameba/rule/style/heredoc_indent.cr#L37" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/229a363/src/ameba/rule/style/heredoc_indent.cr#L36" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1740,7 +1734,7 @@ HEREDOC</code></pre>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/181318b/src/ameba/rule/style/heredoc_indent.cr#L45" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/229a363/src/ameba/rule/style/heredoc_indent.cr#L44" target="_blank">View source</a>]
         
       </div>
     </div>
