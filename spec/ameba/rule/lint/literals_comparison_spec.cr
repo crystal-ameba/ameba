@@ -12,20 +12,13 @@ module Ameba::Rule::Lint
         FOO == "foo"
         foo == "foo"
         foo != "foo"
-        CRYSTAL
-    end
 
-    it "reports if there is a dynamic comparison possibly evaluating to the same" do
-      expect_issue subject, <<-CRYSTAL
-        [foo] === [bar]
-        # ^^^^^^^^^^^^^ error: Comparison most likely evaluates to the same
-        CRYSTAL
-    end
-
-    it "reports if there is a partial dynamic comparison possibly evaluating to the same" do
-      expect_issue subject, <<-CRYSTAL
+        {start.year, start.month} == {stop.year, stop.month}
         ["foo"] === [bar]
-        # ^^^^^^^^^^^^^^^ error: Comparison most likely evaluates to the same
+        [foo] === ["bar"]
+        [foo] === [bar]
+        [foo] == [bar]
+        [foo] == [foo]
         CRYSTAL
     end
 
@@ -36,7 +29,7 @@ module Ameba::Rule::Lint
         CRYSTAL
     end
 
-    it "reports if there is a static comparison evaluating to true (2)" do
+    it "reports if there is a static comparison evaluating to true" do
       expect_issue subject, <<-CRYSTAL
         "foo" == "foo"
         # ^^^^^^^^^^^^ error: Comparison always evaluates to `true`
