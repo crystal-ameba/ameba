@@ -103,6 +103,17 @@ module Ameba::Rule::Style
         CRYSTAL
     end
 
+    it "passes if an escaped heredoc contains Regex escape sequences" do
+      expect_no_issues subject, <<-'CRYSTAL'
+        <<-'REGEX'
+          ^(?:(?<days>\d+)(?:d|\s*days?),?\s*)?
+          (?:(?<hours>\d+)(?:h|\s*hours?),?\s*)?
+          (?:(?<minutes>\d+)(?:m|\s*min(?:utes?)?),?\s*)?
+          (?:(?<seconds>\d+)(?:s|\s*sec(?:onds?)?))?$
+          REGEX
+        CRYSTAL
+    end
+
     it "passes if an escaped heredoc contains escaped escape sequences" do
       expect_no_issues subject, <<-'CRYSTAL'
         <<-'HEREDOC'
