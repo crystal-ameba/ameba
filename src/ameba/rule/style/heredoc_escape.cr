@@ -38,7 +38,7 @@ module Ameba::Rule::Style
     MSG_ESCAPE_NOT_NEEDED = "Use an unescaped heredoc marker: `<<-%s`"
 
     ESCAPE_SEQUENCE_PATTERN =
-      /\\(?:[abefnrtv]|[0-7]{1,3}|x[0-9a-fA-F]{2}|u[0-9a-fA-F]{4}|u\{[0-9a-fA-F]{1,6}\})/
+      /\\(?:[abefnrtv]|[CdDhHRsSvVwWX]|[0-7]{1,3}|x[0-9a-fA-F]{2}|u[0-9a-fA-F]{4}|u\{[0-9a-fA-F]{1,6}\})/
 
     def test(source, node : Crystal::StringInterpolation)
       # Heredocs without interpolations have always size of 1
