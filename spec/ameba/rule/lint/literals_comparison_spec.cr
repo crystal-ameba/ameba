@@ -5,7 +5,7 @@ module Ameba::Rule::Lint
     subject = LiteralsComparison.new
 
     it "passes for valid cases" do
-      expect_no_issues subject, <<-CRYSTAL
+      expect_no_issues subject, <<-'CRYSTAL'
         "foo" == foo
         "foo" != foo
         "foo" == FOO
@@ -14,6 +14,8 @@ module Ameba::Rule::Lint
         foo != "foo"
 
         {start.year, start.month} == {stop.year, stop.month}
+        /foo/ =~ "foo#{bar}"
+        /foo/ !~ "foo#{bar}"
         ["foo"] === [bar]
         [foo] === ["bar"]
         [foo] === [bar]
@@ -25,6 +27,10 @@ module Ameba::Rule::Lint
     it "reports if there is a static comparison evaluating to the same" do
       expect_issue subject, <<-CRYSTAL
         "foo" === "bar"
+        # ^^^^^^^^^^^^^ error: Comparison always evaluates to the same
+        /foo/ =~ "bar"
+        # ^^^^^^^^^^^^ error: Comparison always evaluates to the same
+        "foo" <=> "bar"
         # ^^^^^^^^^^^^^ error: Comparison always evaluates to the same
         CRYSTAL
     end
