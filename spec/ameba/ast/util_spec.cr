@@ -39,18 +39,28 @@ module Ameba::AST
     describe "#static/dynamic_literal?" do
       [
         Crystal::ArrayLiteral.new,
-        Crystal::ArrayLiteral.new([Crystal::StringLiteral.new("foo")] of Crystal::ASTNode),
+        Crystal::ArrayLiteral.new([
+          Crystal::StringLiteral.new("foo"),
+        ] of Crystal::ASTNode),
         Crystal::BoolLiteral.new(false),
         Crystal::CharLiteral.new('a'),
         Crystal::HashLiteral.new,
         Crystal::NamedTupleLiteral.new,
         Crystal::NilLiteral.new,
         Crystal::NumberLiteral.new(42),
-        Crystal::RegexLiteral.new(Crystal::StringLiteral.new("")),
+        Crystal::RegexLiteral.new(Crystal::StringLiteral.new("foo")),
+        Crystal::RegexLiteral.new(Crystal::StringInterpolation.new([
+          Crystal::StringLiteral.new("foo"),
+        ] of Crystal::ASTNode)),
         Crystal::StringLiteral.new("foo"),
+        Crystal::StringInterpolation.new([
+          Crystal::StringLiteral.new("foo"),
+        ] of Crystal::ASTNode),
         Crystal::SymbolLiteral.new("foo"),
         Crystal::TupleLiteral.new([] of Crystal::ASTNode),
-        Crystal::TupleLiteral.new([Crystal::StringLiteral.new("foo")] of Crystal::ASTNode),
+        Crystal::TupleLiteral.new([
+          Crystal::StringLiteral.new("foo"),
+        ] of Crystal::ASTNode),
         Crystal::RangeLiteral.new(
           Crystal::NumberLiteral.new(0),
           Crystal::NumberLiteral.new(10),
@@ -63,8 +73,21 @@ module Ameba::AST
       end
 
       [
-        Crystal::ArrayLiteral.new([Crystal::Path.new(%w[IO])] of Crystal::ASTNode),
-        Crystal::TupleLiteral.new([Crystal::Path.new(%w[IO])] of Crystal::ASTNode),
+        Crystal::StringInterpolation.new([Crystal::Path.new(%w[Foo])] of Crystal::ASTNode),
+        Crystal::ArrayLiteral.new([Crystal::Path.new(%w[Foo])] of Crystal::ASTNode),
+        Crystal::TupleLiteral.new([Crystal::Path.new(%w[Foo])] of Crystal::ASTNode),
+        Crystal::RegexLiteral.new(Crystal::StringInterpolation.new([
+          Crystal::StringLiteral.new("foo"),
+          Crystal::Path.new(%w[Foo]),
+        ] of Crystal::ASTNode)),
+        Crystal::RangeLiteral.new(
+          Crystal::Path.new(%w[Foo]),
+          Crystal::NumberLiteral.new(10),
+          true),
+        Crystal::RangeLiteral.new(
+          Crystal::NumberLiteral.new(10),
+          Crystal::Path.new(%w[Foo]),
+          true),
       ].each do |literal|
         it "properly identifies dynamic node #{literal}" do
           subject.dynamic_literal?(literal).should be_true
