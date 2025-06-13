@@ -33,6 +33,9 @@ module Ameba::Rule::Lint
       description "Disallows redundant `with_index` calls"
     end
 
+    MSG_WITH_INDEX      = "Remove redundant `with_index`"
+    MSG_EACH_WITH_INDEX = "Use `each` instead of `each_with_index`"
+
     def test(source, node : Crystal::Call)
       args, block = node.args, node.block
 
@@ -41,9 +44,9 @@ module Ameba::Rule::Lint
 
       case node.name
       when "with_index"
-        report source, node, "Remove redundant with_index"
+        report source, node, MSG_WITH_INDEX
       when "each_with_index"
-        report source, node, "Use each instead of each_with_index"
+        report source, node, MSG_EACH_WITH_INDEX
       end
     end
 
