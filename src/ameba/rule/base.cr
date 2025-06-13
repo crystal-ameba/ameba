@@ -39,6 +39,13 @@ module Ameba::Rule
       AST::NodeVisitor.new self, source
     end
 
+    # This method can be overridden by rules if they wish to add support for using
+    # semantic information when it is available. By default, the semantic information
+    # is ignored to preserve compatibility with parse-only rules.
+    def test(source : Source, context : SemanticContext?)
+      test(source)
+    end
+
     # NOTE: Can't be abstract
     def test(source : Source, node : Crystal::ASTNode, *opts)
     end
@@ -50,8 +57,8 @@ module Ameba::Rule
     # source = MyRule.new.catch(source)
     # source.valid?
     # ```
-    def catch(source : Source)
-      source.tap { test source }
+    def catch(source : Source, context : SemanticContext? = nil)
+      source.tap { test source, context }
     end
 
     # Returns a name of this rule, which is basically a class name.
