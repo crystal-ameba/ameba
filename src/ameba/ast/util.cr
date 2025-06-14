@@ -12,10 +12,15 @@ module Ameba::AST::Util
          Crystal::CharLiteral,
          Crystal::StringLiteral,
          Crystal::SymbolLiteral,
-         Crystal::RegexLiteral,
          Crystal::ProcLiteral,
          Crystal::MacroLiteral
       {true, true}
+    when Crystal::StringInterpolation
+      {true, node.expressions.all? do |exp|
+        static_literal?(exp)
+      end}
+    when Crystal::RegexLiteral
+      {true, static_literal?(node.value)}
     when Crystal::RangeLiteral
       {true, static_literal?(node.from) &&
         static_literal?(node.to)}
