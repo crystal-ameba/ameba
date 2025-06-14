@@ -39,12 +39,16 @@ module Ameba::Rule::Lint
       expect_issue subject, <<-CRYSTAL
         "foo" == "foo"
         # ^^^^^^^^^^^^ error: Comparison always evaluates to `true`
+        "foo" != "bar"
+        # ^^^^^^^^^^^^ error: Comparison always evaluates to `true`
         CRYSTAL
     end
 
     it "reports if there is a static comparison evaluating to false" do
       expect_issue subject, <<-CRYSTAL
-        "foo" != "bar"
+        "foo" == "bar"
+        # ^^^^^^^^^^^^ error: Comparison always evaluates to `false`
+        "foo" != "foo"
         # ^^^^^^^^^^^^ error: Comparison always evaluates to `false`
         CRYSTAL
     end

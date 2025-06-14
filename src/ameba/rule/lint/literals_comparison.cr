@@ -35,12 +35,12 @@ module Ameba::Rule::Lint
       return unless static_literal?(obj)
       return unless static_literal?(arg)
 
-      is_equal = obj.to_s == arg.to_s
-
       what =
         case node.name
-        when "==", "!="
-          "`#{is_equal}`"
+        when "=="
+          "`#{obj.to_s == arg.to_s}`"
+        when "!="
+          "`#{obj.to_s != arg.to_s}`"
         else
           "the same"
         end
