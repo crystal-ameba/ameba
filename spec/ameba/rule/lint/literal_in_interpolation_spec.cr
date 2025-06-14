@@ -9,6 +9,7 @@ module Ameba::Rule::Lint
         "Hello, #{name}"
         "#{name}"
         "Name size: #{name.size}"
+        "#{foo..}"
         CRYSTAL
     end
 

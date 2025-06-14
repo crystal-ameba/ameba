@@ -36,7 +36,7 @@ module Ameba::Rule::Lint
 
       node.expressions.each do |exp|
         next if exp.is_a?(Crystal::StringLiteral)
-        next unless literal?(exp)
+        next unless static_literal?(exp)
         next unless code = node_source(exp, source_lines)
         next if code.in?(MAGIC_CONSTANTS)
 
