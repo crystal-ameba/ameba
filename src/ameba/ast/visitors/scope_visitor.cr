@@ -28,7 +28,7 @@ module Ameba::AST
     @current_visibility : Crystal::Visibility?
     @skip : Array(Crystal::ASTNode.class)?
 
-    def initialize(@rule, @source, skip = nil)
+    def initialize(@rule, @source, skip = nil, @skip_call_args = false)
       @current_scope = Scope.new(@source.ast) # top level scope
       @skip = skip.try &.map(&.as(Crystal::ASTNode.class))
 
@@ -168,37 +168,29 @@ module Ameba::AST
     def visit(node : Crystal::Call)
       scope = @current_scope
 
-      case
-      when (scope.top_level? || scope.type_definition?) && record_macro?(node)
-        return false
-      when scope.type_definition? && accessor_macro?(node)
-        return false
-      when scope.def? && special_node?(node)
+      if scope.def? && special_node?(node)
         scope.arguments.each do |arg|
           ref = arg.variable.reference(scope)
           ref.explicit = false
         end
       end
+
+      if @skip_call_args
+        node.obj.try &.accept self
+        scope.in_call_args(node) do
+          node.args.each &.accept self
+          node.named_args.try &.each &.accept self
+        end
+        node.block_arg.try &.accept self
+        node.block.try &.accept self
+        return false
+      end
+
       true
     end
 
     private def special_node?(node)
       node.name.in?(SPECIAL_NODE_NAMES) && node.args.empty?
-    end
-
-    private def accessor_macro?(node)
-      node.name.matches? /^(class_)?(getter[?!]?|setter|property[?!]?)$/
-    end
-
-    private def record_macro?(node)
-      return false unless node.name == "record"
-
-      case node.args.first?
-      when Crystal::Path, Crystal::Generic
-        true
-      else
-        false
-      end
     end
 
     private def skip?(node)
