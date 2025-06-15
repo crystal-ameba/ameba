@@ -24,32 +24,28 @@ module Ameba::Rule::Lint
       description "Identifies comparisons between literals"
     end
 
-    OP_NAMES = %w[=== == !=]
+    OP_NAMES = %w[=== == != =~ !~ < <= > >= <=>]
 
-    MSG        = "Comparison always evaluates to %s"
-    MSG_LIKELY = "Comparison most likely evaluates to %s"
+    MSG = "Comparison always evaluates to %s"
 
     def test(source, node : Crystal::Call)
       return unless node.name.in?(OP_NAMES)
       return unless (obj = node.obj) && (arg = node.args.first?)
 
-      obj_is_literal, obj_is_static = literal_kind?(obj)
-      arg_is_literal, arg_is_static = literal_kind?(arg)
-
-      return unless obj_is_literal && arg_is_literal
-
-      is_dynamic = !obj_is_static || !arg_is_static
-      is_equal = obj.to_s == arg.to_s
+      return unless static_literal?(obj)
+      return unless static_literal?(arg)
 
       what =
         case node.name
-        when "==", "!="
-          "`#{is_equal}`"
+        when "=="
+          "`#{obj.to_s == arg.to_s}`"
+        when "!="
+          "`#{obj.to_s != arg.to_s}`"
         else
           "the same"
         end
 
-      issue_for node, (is_dynamic ? MSG_LIKELY : MSG) % what
+      issue_for node, MSG % what
     end
   end
 end
