@@ -23,6 +23,8 @@ module Ameba::Rule::Lint
   #   Enabled: true
   # ```
   class VoidOutsideLib < Base
+    include AST::Util
+
     properties do
       since_version "1.7.0"
       description "Disallows use of `Void` outside C lib bindings and `Pointer(Void)`"
@@ -35,21 +37,18 @@ module Ameba::Rule::Lint
     end
 
     def test(source, node : Crystal::Path)
-      return unless node.names.join("::") == "Void"
+      return unless path_named?(node, "Void")
 
       issue_for node, MSG
     end
 
     def test(source, node : Crystal::Generic)
       # Specifically only allow `Pointer(Void)`
-      return if (name = node.name).is_a?(Crystal::Path) &&
-                name.names.join("::") == "Pointer" &&
+      return if path_named?(node.name, "Pointer") &&
                 node.type_vars.size == 1 &&
-                (var = node.type_vars.first).is_a?(Crystal::Path) &&
-                var.names.join("::") == "Void"
+                path_named?(node.type_vars.first, "Void")
 
-      if (name = node.name).is_a?(Crystal::Path) &&
-         name.names.join("::") == "Void"
+      if path_named?(node.name, "Void")
         issue_for node, MSG, prefer_name_location: true
       end
 

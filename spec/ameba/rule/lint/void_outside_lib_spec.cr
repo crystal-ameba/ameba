@@ -7,7 +7,8 @@ module Ameba::Rule::Lint
     it "passes if Void is used in a fun def" do
       expect_no_issues subject, <<-CRYSTAL
         lib LibFoo
-          fun bar(baz : Void) : Void
+          fun foo(foo : Void) : Void
+          fun bar(bar : Void*) : Void
         end
         CRYSTAL
     end
