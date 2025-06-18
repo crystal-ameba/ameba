@@ -226,7 +226,11 @@ module Ameba::Cli
   end
 
   private def print_version
-    puts VERSION
+    if GIT_SHA
+      puts "%s [%s]" % {VERSION, GIT_SHA}
+    else
+      puts VERSION
+    end
     exit 0
   end
 
