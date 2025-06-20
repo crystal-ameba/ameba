@@ -822,8 +822,18 @@
       
         <ul>
   
+  <li class=" " data-id="ameba/Ameba/Rule/Style/ArrayLiteralSyntax" data-name="ameba::rule::style::arrayliteralsyntax">
+      <a href="../../Ameba/Rule/Style/ArrayLiteralSyntax.html">ArrayLiteralSyntax</a>
+      
+    </li>
+  
   <li class=" " data-id="ameba/Ameba/Rule/Style/GuardClause" data-name="ameba::rule::style::guardclause">
       <a href="../../Ameba/Rule/Style/GuardClause.html">GuardClause</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/Rule/Style/HashLiteralSyntax" data-name="ameba::rule::style::hashliteralsyntax">
+      <a href="../../Ameba/Rule/Style/HashLiteralSyntax.html">HashLiteralSyntax</a>
       
     </li>
   
@@ -1096,7 +1106,7 @@ to be inspected by rules.</p>
   </h2>
   
     
-      <a href="https://github.com/crystal-ameba/ameba/blob/bed02a9/src/ameba/ast/visitors/node_visitor.cr#L10" target="_blank">
+      <a href="https://github.com/crystal-ameba/ameba/blob/5c550cd/src/ameba/ast/visitors/node_visitor.cr#L10" target="_blank">
         ameba/ast/visitors/node_visitor.cr
       </a>
     
@@ -1118,7 +1128,7 @@ to be inspected by rules.</p>
   <dl>
     
       <dt class="entry-const" id="NODES">
-        <strong>NODES</strong> = <code>{<span class="t">Alias</span>, <span class="t">Assign</span>, <span class="t">Block</span>, <span class="t">Call</span>, <span class="t">Case</span>, <span class="t">ClassDef</span>, <span class="t">ClassVar</span>, <span class="t">Def</span>, <span class="t">EnumDef</span>, <span class="t">ExceptionHandler</span>, <span class="t">Expressions</span>, <span class="t">HashLiteral</span>, <span class="t">If</span>, <span class="t">InstanceVar</span>, <span class="t">IsA</span>, <span class="t">LibDef</span>, <span class="t">ModuleDef</span>, <span class="t">MultiAssign</span>, <span class="t">NilLiteral</span>, <span class="t">ProcLiteral</span>, <span class="t">StringInterpolation</span>, <span class="t">Select</span>, <span class="t">Unless</span>, <span class="t">Until</span>, <span class="t">Var</span>, <span class="t">When</span>, <span class="t">While</span>}</code>
+        <strong>NODES</strong> = <code>{<span class="t">Alias</span>, <span class="t">ArrayLiteral</span>, <span class="t">Assign</span>, <span class="t">Block</span>, <span class="t">Call</span>, <span class="t">Case</span>, <span class="t">ClassDef</span>, <span class="t">ClassVar</span>, <span class="t">Def</span>, <span class="t">EnumDef</span>, <span class="t">ExceptionHandler</span>, <span class="t">Expressions</span>, <span class="t">HashLiteral</span>, <span class="t">If</span>, <span class="t">InstanceVar</span>, <span class="t">IsA</span>, <span class="t">LibDef</span>, <span class="t">ModuleDef</span>, <span class="t">MultiAssign</span>, <span class="t">NilLiteral</span>, <span class="t">ProcLiteral</span>, <span class="t">Select</span>, <span class="t">StringInterpolation</span>, <span class="t">Unless</span>, <span class="t">Until</span>, <span class="t">Var</span>, <span class="t">When</span>, <span class="t">While</span>}</code>
       </dt>
       
       <dd class="entry-const-doc">
@@ -1195,6 +1205,13 @@ to be inspected by rules.</p>
         <a href="#visit%28node%3ACrystal%3A%3AAlias%29-instance-method" class="signature"><strong>#visit</strong>(node : Crystal::Alias)</a>
         
           <div class="summary"><p>A visit callback for <code>Crystal::Alias</code> node.</p></div>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#visit%28node%3ACrystal%3A%3AArrayLiteral%29-instance-method" class="signature"><strong>#visit</strong>(node : Crystal::ArrayLiteral)</a>
+        
+          <div class="summary"><p>A visit callback for <code>Crystal::ArrayLiteral</code> node.</p></div>
         
       </li>
     
@@ -1332,16 +1349,16 @@ to be inspected by rules.</p>
       </li>
     
       <li class="entry-summary">
-        <a href="#visit%28node%3ACrystal%3A%3AStringInterpolation%29-instance-method" class="signature"><strong>#visit</strong>(node : Crystal::StringInterpolation)</a>
+        <a href="#visit%28node%3ACrystal%3A%3ASelect%29-instance-method" class="signature"><strong>#visit</strong>(node : Crystal::Select)</a>
         
-          <div class="summary"><p>A visit callback for <code>Crystal::StringInterpolation</code> node.</p></div>
+          <div class="summary"><p>A visit callback for <code>Crystal::Select</code> node.</p></div>
         
       </li>
     
       <li class="entry-summary">
-        <a href="#visit%28node%3ACrystal%3A%3ASelect%29-instance-method" class="signature"><strong>#visit</strong>(node : Crystal::Select)</a>
+        <a href="#visit%28node%3ACrystal%3A%3AStringInterpolation%29-instance-method" class="signature"><strong>#visit</strong>(node : Crystal::StringInterpolation)</a>
         
-          <div class="summary"><p>A visit callback for <code>Crystal::Select</code> node.</p></div>
+          <div class="summary"><p>A visit callback for <code>Crystal::StringInterpolation</code> node.</p></div>
         
       </li>
     
@@ -1484,7 +1501,7 @@ to be inspected by rules.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/bed02a9/src/ameba/ast/visitors/node_visitor.cr#L60" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/5c550cd/src/ameba/ast/visitors/node_visitor.cr#L61" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1500,7 +1517,7 @@ to be inspected by rules.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/bed02a9/src/ameba/ast/visitors/node_visitor.cr#L65" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/5c550cd/src/ameba/ast/visitors/node_visitor.cr#L66" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1528,7 +1545,7 @@ to be inspected by rules.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/bed02a9/src/ameba/ast/visitors/node_visitor.cr#L49" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/5c550cd/src/ameba/ast/visitors/node_visitor.cr#L50" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1558,7 +1575,7 @@ to be inspected by rules.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/bed02a9/src/ameba/ast/visitors/node_visitor.cr#L70" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/5c550cd/src/ameba/ast/visitors/node_visitor.cr#L71" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1581,7 +1598,30 @@ to be inspected by rules.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/bed02a9/src/ameba/ast/visitors/node_visitor.cr#L75" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/5c550cd/src/ameba/ast/visitors/node_visitor.cr#L76" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="visit(node:Crystal::ArrayLiteral)-instance-method">
+      <div class="signature">
+        
+        def <strong>visit</strong>(node : Crystal::ArrayLiteral)
+
+        <a class="method-permalink" href="#visit%28node%3ACrystal%3A%3AArrayLiteral%29-instance-method">#</a>
+      </div>
+      
+        <div class="doc">
+          
+          <p>A visit callback for <code>Crystal::ArrayLiteral</code> node.</p>
+<p>Returns <code>true</code> if the child nodes should be traversed as well,
+<code>false</code> otherwise.</p>
+        </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/crystal-ameba/ameba/blob/5c550cd/src/ameba/ast/visitors/node_visitor.cr#L76" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1604,7 +1644,7 @@ to be inspected by rules.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/bed02a9/src/ameba/ast/visitors/node_visitor.cr#L75" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/5c550cd/src/ameba/ast/visitors/node_visitor.cr#L76" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1627,7 +1667,7 @@ to be inspected by rules.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/bed02a9/src/ameba/ast/visitors/node_visitor.cr#L75" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/5c550cd/src/ameba/ast/visitors/node_visitor.cr#L76" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1650,7 +1690,7 @@ to be inspected by rules.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/bed02a9/src/ameba/ast/visitors/node_visitor.cr#L75" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/5c550cd/src/ameba/ast/visitors/node_visitor.cr#L76" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1673,7 +1713,7 @@ to be inspected by rules.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/bed02a9/src/ameba/ast/visitors/node_visitor.cr#L75" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/5c550cd/src/ameba/ast/visitors/node_visitor.cr#L76" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1696,7 +1736,7 @@ to be inspected by rules.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/bed02a9/src/ameba/ast/visitors/node_visitor.cr#L75" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/5c550cd/src/ameba/ast/visitors/node_visitor.cr#L76" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1719,7 +1759,7 @@ to be inspected by rules.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/bed02a9/src/ameba/ast/visitors/node_visitor.cr#L75" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/5c550cd/src/ameba/ast/visitors/node_visitor.cr#L76" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1742,7 +1782,7 @@ to be inspected by rules.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/bed02a9/src/ameba/ast/visitors/node_visitor.cr#L75" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/5c550cd/src/ameba/ast/visitors/node_visitor.cr#L76" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1765,7 +1805,7 @@ to be inspected by rules.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/bed02a9/src/ameba/ast/visitors/node_visitor.cr#L75" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/5c550cd/src/ameba/ast/visitors/node_visitor.cr#L76" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1788,7 +1828,7 @@ to be inspected by rules.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/bed02a9/src/ameba/ast/visitors/node_visitor.cr#L75" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/5c550cd/src/ameba/ast/visitors/node_visitor.cr#L76" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1811,7 +1851,7 @@ to be inspected by rules.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/bed02a9/src/ameba/ast/visitors/node_visitor.cr#L75" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/5c550cd/src/ameba/ast/visitors/node_visitor.cr#L76" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1834,7 +1874,7 @@ to be inspected by rules.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/bed02a9/src/ameba/ast/visitors/node_visitor.cr#L75" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/5c550cd/src/ameba/ast/visitors/node_visitor.cr#L76" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1857,7 +1897,7 @@ to be inspected by rules.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/bed02a9/src/ameba/ast/visitors/node_visitor.cr#L75" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/5c550cd/src/ameba/ast/visitors/node_visitor.cr#L76" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1880,7 +1920,7 @@ to be inspected by rules.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/bed02a9/src/ameba/ast/visitors/node_visitor.cr#L75" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/5c550cd/src/ameba/ast/visitors/node_visitor.cr#L76" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1903,7 +1943,7 @@ to be inspected by rules.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/bed02a9/src/ameba/ast/visitors/node_visitor.cr#L75" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/5c550cd/src/ameba/ast/visitors/node_visitor.cr#L76" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1926,7 +1966,7 @@ to be inspected by rules.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/bed02a9/src/ameba/ast/visitors/node_visitor.cr#L75" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/5c550cd/src/ameba/ast/visitors/node_visitor.cr#L76" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1949,7 +1989,7 @@ to be inspected by rules.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/bed02a9/src/ameba/ast/visitors/node_visitor.cr#L75" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/5c550cd/src/ameba/ast/visitors/node_visitor.cr#L76" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1972,7 +2012,7 @@ to be inspected by rules.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/bed02a9/src/ameba/ast/visitors/node_visitor.cr#L75" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/5c550cd/src/ameba/ast/visitors/node_visitor.cr#L76" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1995,7 +2035,7 @@ to be inspected by rules.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/bed02a9/src/ameba/ast/visitors/node_visitor.cr#L75" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/5c550cd/src/ameba/ast/visitors/node_visitor.cr#L76" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2018,30 +2058,7 @@ to be inspected by rules.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/bed02a9/src/ameba/ast/visitors/node_visitor.cr#L75" target="_blank">View source</a>]
-        
-      </div>
-    </div>
-  
-    <div class="entry-detail" id="visit(node:Crystal::StringInterpolation)-instance-method">
-      <div class="signature">
-        
-        def <strong>visit</strong>(node : Crystal::StringInterpolation)
-
-        <a class="method-permalink" href="#visit%28node%3ACrystal%3A%3AStringInterpolation%29-instance-method">#</a>
-      </div>
-      
-        <div class="doc">
-          
-          <p>A visit callback for <code>Crystal::StringInterpolation</code> node.</p>
-<p>Returns <code>true</code> if the child nodes should be traversed as well,
-<code>false</code> otherwise.</p>
-        </div>
-      
-      <br/>
-      <div>
-        
-          [<a href="https://github.com/crystal-ameba/ameba/blob/bed02a9/src/ameba/ast/visitors/node_visitor.cr#L75" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/5c550cd/src/ameba/ast/visitors/node_visitor.cr#L76" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2064,7 +2081,30 @@ to be inspected by rules.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/bed02a9/src/ameba/ast/visitors/node_visitor.cr#L75" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/5c550cd/src/ameba/ast/visitors/node_visitor.cr#L76" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="visit(node:Crystal::StringInterpolation)-instance-method">
+      <div class="signature">
+        
+        def <strong>visit</strong>(node : Crystal::StringInterpolation)
+
+        <a class="method-permalink" href="#visit%28node%3ACrystal%3A%3AStringInterpolation%29-instance-method">#</a>
+      </div>
+      
+        <div class="doc">
+          
+          <p>A visit callback for <code>Crystal::StringInterpolation</code> node.</p>
+<p>Returns <code>true</code> if the child nodes should be traversed as well,
+<code>false</code> otherwise.</p>
+        </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/crystal-ameba/ameba/blob/5c550cd/src/ameba/ast/visitors/node_visitor.cr#L76" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2087,7 +2127,7 @@ to be inspected by rules.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/bed02a9/src/ameba/ast/visitors/node_visitor.cr#L75" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/5c550cd/src/ameba/ast/visitors/node_visitor.cr#L76" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2110,7 +2150,7 @@ to be inspected by rules.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/bed02a9/src/ameba/ast/visitors/node_visitor.cr#L75" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/5c550cd/src/ameba/ast/visitors/node_visitor.cr#L76" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2133,7 +2173,7 @@ to be inspected by rules.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/bed02a9/src/ameba/ast/visitors/node_visitor.cr#L75" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/5c550cd/src/ameba/ast/visitors/node_visitor.cr#L76" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2156,7 +2196,7 @@ to be inspected by rules.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/bed02a9/src/ameba/ast/visitors/node_visitor.cr#L75" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/5c550cd/src/ameba/ast/visitors/node_visitor.cr#L76" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2179,7 +2219,7 @@ to be inspected by rules.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/bed02a9/src/ameba/ast/visitors/node_visitor.cr#L75" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/5c550cd/src/ameba/ast/visitors/node_visitor.cr#L76" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2195,7 +2235,7 @@ to be inspected by rules.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/bed02a9/src/ameba/ast/visitors/node_visitor.cr#L88" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/5c550cd/src/ameba/ast/visitors/node_visitor.cr#L89" target="_blank">View source</a>]
         
       </div>
     </div>

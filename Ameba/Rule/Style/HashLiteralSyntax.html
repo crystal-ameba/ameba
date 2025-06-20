@@ -14,7 +14,7 @@
 <script type="text/javascript" src="../../../js/doc.js"></script>
 
   <meta name="repository-name" content="ameba">
-  <title>Ameba::Rule::Documentation::DocumentationAdmonition - ameba master</title>
+  <title>Ameba::Rule::Style::HashLiteralSyntax - ameba master</title>
   <script type="text/javascript">
     CrystalDocs.base_path = "../../../";
   </script>
@@ -337,7 +337,7 @@
       
     </li>
   
-  <li class="parent open current" data-id="ameba/Ameba/Rule/Documentation" data-name="ameba::rule::documentation">
+  <li class="parent " data-id="ameba/Ameba/Rule/Documentation" data-name="ameba::rule::documentation">
       <a href="../../../Ameba/Rule/Documentation.html">Documentation</a>
       
         <ul>
@@ -347,7 +347,7 @@
       
     </li>
   
-  <li class=" current" data-id="ameba/Ameba/Rule/Documentation/DocumentationAdmonition" data-name="ameba::rule::documentation::documentationadmonition">
+  <li class=" " data-id="ameba/Ameba/Rule/Documentation/DocumentationAdmonition" data-name="ameba::rule::documentation::documentationadmonition">
       <a href="../../../Ameba/Rule/Documentation/DocumentationAdmonition.html">DocumentationAdmonition</a>
       
     </li>
@@ -817,7 +817,7 @@
       
     </li>
   
-  <li class="parent " data-id="ameba/Ameba/Rule/Style" data-name="ameba::rule::style">
+  <li class="parent open current" data-id="ameba/Ameba/Rule/Style" data-name="ameba::rule::style">
       <a href="../../../Ameba/Rule/Style.html">Style</a>
       
         <ul>
@@ -832,7 +832,7 @@
       
     </li>
   
-  <li class=" " data-id="ameba/Ameba/Rule/Style/HashLiteralSyntax" data-name="ameba::rule::style::hashliteralsyntax">
+  <li class=" current" data-id="ameba/Ameba/Rule/Style/HashLiteralSyntax" data-name="ameba::rule::style::hashliteralsyntax">
       <a href="../../../Ameba/Rule/Style/HashLiteralSyntax.html">HashLiteralSyntax</a>
       
     </li>
@@ -1058,12 +1058,12 @@
 
   <span class="kind">
     class
-  </span> Ameba::<wbr>Rule::<wbr>Documentation::<wbr>DocumentationAdmonition
+  </span> Ameba::<wbr>Rule::<wbr>Style::<wbr>HashLiteralSyntax
 
 </h1>
 
 
-  <ul class="superclass-hierarchy"><li class="superclass"><a href="../../../Ameba/Rule/Documentation/DocumentationAdmonition.html">Ameba::Rule::Documentation::DocumentationAdmonition</a></li><li class="superclass"><a href="../../../Ameba/Rule/Base.html">Ameba::Rule::Base</a></li><li class="superclass">Reference</li><li class="superclass">Object</li></ul>
+  <ul class="superclass-hierarchy"><li class="superclass"><a href="../../../Ameba/Rule/Style/HashLiteralSyntax.html">Ameba::Rule::Style::HashLiteralSyntax</a></li><li class="superclass"><a href="../../../Ameba/Rule/Base.html">Ameba::Rule::Base</a></li><li class="superclass">Reference</li><li class="superclass">Object</li></ul>
 
 
 
@@ -1077,27 +1077,14 @@
     Overview
   </h2>
 
-  <p>A rule that reports documentation admonitions.</p>
-<p>Optionally, these can fail at an appropriate time.</p>
-<pre><code class="language-crystal"><span class="k">def</span> <span class="m">get_user</span>(id)
-  <span class="c"># TODO(2024-04-24) Fix this hack when the database migration is complete</span>
-  <span class="k">if</span> id <span class="o">&lt;</span> <span class="n">1_000_000</span>
-    v1_api_call(id)
-  <span class="k">else</span>
-    v2_api_call(id)
-  <span class="k">end</span>
-<span class="k">end</span></code></pre>
-<p><code>TODO</code> comments are used to remind yourself of source code related things.</p>
-<p>The premise here is that <code>TODO</code> should be dealt with in the near future
-and are therefore reported by Ameba.</p>
-<p><code>FIXME</code> comments are used to indicate places where source code needs fixing.</p>
-<p>The premise here is that <code>FIXME</code> should indeed be fixed as soon as possible
-and are therefore reported by Ameba.</p>
+  <p>Encourages the use of <code>Hash(K, V)<a href="../../../Ameba/Rule/Style/HashLiteralSyntax.html#new%28ctx%3AYAML%3A%3AParseContext%2Cnode%3AYAML%3A%3ANodes%3A%3ANode%29-class-method">.new</a></code> syntax for creating a hash over <code>{} of K =&gt; V</code>.</p>
+<p>Favour this:</p>
+<pre><code class="language-crystal"><span class="t">Hash</span>(<span class="t">Int32</span>, <span class="t">String</span>?).new</code></pre>
+<p>Over this:</p>
+<pre><code class="language-crystal">{} <span class="k">of</span> <span class="t">Int32</span> <span class="o">=&gt;</span> <span class="t">String</span>?</code></pre>
 <p>YAML configuration example:</p>
-<pre><code class="language-crystal"><span class="t">Documentation</span><span class="o">/</span><span class="t">DocumentationAdmonition</span>:
-  <span class="t">Enabled</span>: <span class="n">true</span>
-  <span class="t">Admonitions</span>: [<span class="t">TODO</span>, <span class="t">FIXME</span>, <span class="t">BUG</span>]
-  <span class="t">Timezone</span>: <span class="t">UTC</span></code></pre>
+<pre><code class="language-crystal"><span class="t">Style</span><span class="o">/</span><span class="t">HashLiteralSyntax</span>:
+  <span class="t">Enabled</span>: <span class="n">true</span></code></pre>
 
 
 
@@ -1140,8 +1127,8 @@ and are therefore reported by Ameba.</p>
   </h2>
   
     
-      <a href="https://github.com/crystal-ameba/ameba/blob/5c550cd/src/ameba/rule/documentation/documentation_admonition.cr#L35" target="_blank">
-        ameba/rule/documentation/documentation_admonition.cr
+      <a href="https://github.com/crystal-ameba/ameba/blob/5c550cd/src/ameba/rule/style/hash_literal_syntax.cr#L22" target="_blank">
+        ameba/rule/style/hash_literal_syntax.cr
       </a>
     
     <br/>
@@ -1162,17 +1149,7 @@ and are therefore reported by Ameba.</p>
   <dl>
     
       <dt class="entry-const" id="MSG">
-        <strong>MSG</strong> = <code><span class="s">&quot;Found a %s admonition in a comment&quot;</span></code>
-      </dt>
-      
-    
-      <dt class="entry-const" id="MSG_ERR">
-        <strong>MSG_ERR</strong> = <code><span class="s">&quot;%s admonition error: %s&quot;</span></code>
-      </dt>
-      
-    
-      <dt class="entry-const" id="MSG_LATE">
-        <strong>MSG_LATE</strong> = <code><span class="s">&quot;Found a %s admonition in a comment (%s)&quot;</span></code>
+        <strong>MSG</strong> = <code><span class="s">&quot;Use `Hash(%s, %s).new` for creating an empty hash&quot;</span></code>
       </dt>
       
     
@@ -1199,7 +1176,7 @@ and are therefore reported by Ameba.</p>
       <li class="entry-summary">
         <a href="#new%28config%3Dnil%29-class-method" class="signature"><strong>.new</strong>(config = <span class="n">nil</span>)</a>
         
-          <div class="summary"><p>A rule that reports documentation admonitions.</p></div>
+          <div class="summary"><p>Encourages the use of <code>Hash(K, V)<a href="../../../Ameba/Rule/Style/HashLiteralSyntax.html#new%28ctx%3AYAML%3A%3AParseContext%2Cnode%3AYAML%3A%3ANodes%3A%3ANode%29-class-method">.new</a></code> syntax for creating a hash over <code>{} of K =&gt; V</code>.</p></div>
         
       </li>
     
@@ -1239,16 +1216,6 @@ and are therefore reported by Ameba.</p>
     Instance Method Summary
   </h2>
   <ul class="list-summary">
-    
-      <li class="entry-summary">
-        <a href="#admonitions%3AArray%28String%29-instance-method" class="signature"><strong>#admonitions</strong> : Array(String)</a>
-        
-      </li>
-    
-      <li class="entry-summary">
-        <a href="#admonitions%3D%28admonitions%3AArray%28String%29%29-instance-method" class="signature"><strong>#admonitions=</strong>(admonitions : Array(String))</a>
-        
-      </li>
     
       <li class="entry-summary">
         <a href="#description%3AString-instance-method" class="signature"><strong>#description</strong> : String</a>
@@ -1301,17 +1268,12 @@ and are therefore reported by Ameba.</p>
       </li>
     
       <li class="entry-summary">
+        <a href="#test%28source%2Cnode%3ACrystal%3A%3AHashLiteral%29-instance-method" class="signature"><strong>#test</strong>(source, node : Crystal::HashLiteral)</a>
+        
+      </li>
+    
+      <li class="entry-summary">
         <a href="#test%28source%29-instance-method" class="signature"><strong>#test</strong>(source)</a>
-        
-      </li>
-    
-      <li class="entry-summary">
-        <a href="#timezone%3AString-instance-method" class="signature"><strong>#timezone</strong> : String</a>
-        
-      </li>
-    
-      <li class="entry-summary">
-        <a href="#timezone%3D%28timezone%3AString%29-instance-method" class="signature"><strong>#timezone=</strong>(timezone : String)</a>
         
       </li>
     
@@ -1506,33 +1468,20 @@ and are therefore reported by Ameba.</p>
       
         <div class="doc">
           
-          <p>A rule that reports documentation admonitions.</p>
-<p>Optionally, these can fail at an appropriate time.</p>
-<pre><code class="language-crystal"><span class="k">def</span> <span class="m">get_user</span>(id)
-  <span class="c"># TODO(2024-04-24) Fix this hack when the database migration is complete</span>
-  <span class="k">if</span> id <span class="o">&lt;</span> <span class="n">1_000_000</span>
-    v1_api_call(id)
-  <span class="k">else</span>
-    v2_api_call(id)
-  <span class="k">end</span>
-<span class="k">end</span></code></pre>
-<p><code>TODO</code> comments are used to remind yourself of source code related things.</p>
-<p>The premise here is that <code>TODO</code> should be dealt with in the near future
-and are therefore reported by Ameba.</p>
-<p><code>FIXME</code> comments are used to indicate places where source code needs fixing.</p>
-<p>The premise here is that <code>FIXME</code> should indeed be fixed as soon as possible
-and are therefore reported by Ameba.</p>
+          <p>Encourages the use of <code>Hash(K, V)<a href="../../../Ameba/Rule/Style/HashLiteralSyntax.html#new%28ctx%3AYAML%3A%3AParseContext%2Cnode%3AYAML%3A%3ANodes%3A%3ANode%29-class-method">.new</a></code> syntax for creating a hash over <code>{} of K =&gt; V</code>.</p>
+<p>Favour this:</p>
+<pre><code class="language-crystal"><span class="t">Hash</span>(<span class="t">Int32</span>, <span class="t">String</span>?).new</code></pre>
+<p>Over this:</p>
+<pre><code class="language-crystal">{} <span class="k">of</span> <span class="t">Int32</span> <span class="o">=&gt;</span> <span class="t">String</span>?</code></pre>
 <p>YAML configuration example:</p>
-<pre><code class="language-crystal"><span class="t">Documentation</span><span class="o">/</span><span class="t">DocumentationAdmonition</span>:
-  <span class="t">Enabled</span>: <span class="n">true</span>
-  <span class="t">Admonitions</span>: [<span class="t">TODO</span>, <span class="t">FIXME</span>, <span class="t">BUG</span>]
-  <span class="t">Timezone</span>: <span class="t">UTC</span></code></pre>
+<pre><code class="language-crystal"><span class="t">Style</span><span class="o">/</span><span class="t">HashLiteralSyntax</span>:
+  <span class="t">Enabled</span>: <span class="n">true</span></code></pre>
         </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/5c550cd/src/ameba/rule/documentation/documentation_admonition.cr#L35" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/5c550cd/src/ameba/rule/style/hash_literal_syntax.cr#L22" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1591,34 +1540,6 @@ and are therefore reported by Ameba.</p>
 </a>
     Instance Method Detail
   </h2>
-  
-    <div class="entry-detail" id="admonitions:Array(String)-instance-method">
-      <div class="signature">
-        
-        def <strong>admonitions</strong> : Array(String)
-
-        <a class="method-permalink" href="#admonitions%3AArray%28String%29-instance-method">#</a>
-      </div>
-      
-      <br/>
-      <div>
-        
-      </div>
-    </div>
-  
-    <div class="entry-detail" id="admonitions=(admonitions:Array(String))-instance-method">
-      <div class="signature">
-        
-        def <strong>admonitions=</strong>(admonitions : Array(String))
-
-        <a class="method-permalink" href="#admonitions%3D%28admonitions%3AArray%28String%29%29-instance-method">#</a>
-      </div>
-      
-      <br/>
-      <div>
-        
-      </div>
-    </div>
   
     <div class="entry-detail" id="description:String-instance-method">
       <div class="signature">
@@ -1743,7 +1664,7 @@ and are therefore reported by Ameba.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/5c550cd/src/ameba/rule/documentation/documentation_admonition.cr#L36" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/5c550cd/src/ameba/rule/style/hash_literal_syntax.cr#L23" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1762,6 +1683,22 @@ and are therefore reported by Ameba.</p>
       </div>
     </div>
   
+    <div class="entry-detail" id="test(source,node:Crystal::HashLiteral)-instance-method">
+      <div class="signature">
+        
+        def <strong>test</strong>(source, node : Crystal::HashLiteral)
+
+        <a class="method-permalink" href="#test%28source%2Cnode%3ACrystal%3A%3AHashLiteral%29-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/crystal-ameba/ameba/blob/5c550cd/src/ameba/rule/style/hash_literal_syntax.cr#L35" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
     <div class="entry-detail" id="test(source)-instance-method">
       <div class="signature">
         
@@ -1773,35 +1710,7 @@ and are therefore reported by Ameba.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/5c550cd/src/ameba/rule/documentation/documentation_admonition.cr#L53" target="_blank">View source</a>]
-        
-      </div>
-    </div>
-  
-    <div class="entry-detail" id="timezone:String-instance-method">
-      <div class="signature">
-        
-        def <strong>timezone</strong> : String
-
-        <a class="method-permalink" href="#timezone%3AString-instance-method">#</a>
-      </div>
-      
-      <br/>
-      <div>
-        
-      </div>
-    </div>
-  
-    <div class="entry-detail" id="timezone=(timezone:String)-instance-method">
-      <div class="signature">
-        
-        def <strong>timezone=</strong>(timezone : String)
-
-        <a class="method-permalink" href="#timezone%3D%28timezone%3AString%29-instance-method">#</a>
-      </div>
-      
-      <br/>
-      <div>
+          [<a href="https://github.com/crystal-ameba/ameba/blob/5c550cd/src/ameba/rule/style/hash_literal_syntax.cr#L31" target="_blank">View source</a>]
         
       </div>
     </div>
