@@ -2,7 +2,7 @@ module Ameba::Rule::Style
   # Encourages the use of `Array(T).new` syntax for creating an array over `[] of T`.
   #
   # Favour this:
-  #  
+  #
   # ```
   # Array(Int32 | String?).new
   # ```
