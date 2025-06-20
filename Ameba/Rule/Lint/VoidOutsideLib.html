@@ -14,7 +14,7 @@
 <script type="text/javascript" src="../../../js/doc.js"></script>
 
   <meta name="repository-name" content="ameba">
-  <title>Ameba::Rule::Style::RedundantNext - ameba master</title>
+  <title>Ameba::Rule::Lint::VoidOutsideLib - ameba master</title>
   <script type="text/javascript">
     CrystalDocs.base_path = "../../../";
   </script>
@@ -382,7 +382,7 @@
       
     </li>
   
-  <li class="parent " data-id="ameba/Ameba/Rule/Lint" data-name="ameba::rule::lint">
+  <li class="parent open current" data-id="ameba/Ameba/Rule/Lint" data-name="ameba::rule::lint">
       <a href="../../../Ameba/Rule/Lint.html">Lint</a>
       
         <ul>
@@ -657,7 +657,7 @@
       
     </li>
   
-  <li class=" " data-id="ameba/Ameba/Rule/Lint/VoidOutsideLib" data-name="ameba::rule::lint::voidoutsidelib">
+  <li class=" current" data-id="ameba/Ameba/Rule/Lint/VoidOutsideLib" data-name="ameba::rule::lint::voidoutsidelib">
       <a href="../../../Ameba/Rule/Lint/VoidOutsideLib.html">VoidOutsideLib</a>
       
     </li>
@@ -817,7 +817,7 @@
       
     </li>
   
-  <li class="parent open current" data-id="ameba/Ameba/Rule/Style" data-name="ameba::rule::style">
+  <li class="parent " data-id="ameba/Ameba/Rule/Style" data-name="ameba::rule::style">
       <a href="../../../Ameba/Rule/Style.html">Style</a>
       
         <ul>
@@ -877,7 +877,7 @@
       
     </li>
   
-  <li class=" current" data-id="ameba/Ameba/Rule/Style/RedundantNext" data-name="ameba::rule::style::redundantnext">
+  <li class=" " data-id="ameba/Ameba/Rule/Style/RedundantNext" data-name="ameba::rule::style::redundantnext">
       <a href="../../../Ameba/Rule/Style/RedundantNext.html">RedundantNext</a>
       
     </li>
@@ -1048,12 +1048,12 @@
 
   <span class="kind">
     class
-  </span> Ameba::<wbr>Rule::<wbr>Style::<wbr>RedundantNext
+  </span> Ameba::<wbr>Rule::<wbr>Lint::<wbr>VoidOutsideLib
 
 </h1>
 
 
-  <ul class="superclass-hierarchy"><li class="superclass"><a href="../../../Ameba/Rule/Style/RedundantNext.html">Ameba::Rule::Style::RedundantNext</a></li><li class="superclass"><a href="../../../Ameba/Rule/Base.html">Ameba::Rule::Base</a></li><li class="superclass">Reference</li><li class="superclass">Object</li></ul>
+  <ul class="superclass-hierarchy"><li class="superclass"><a href="../../../Ameba/Rule/Lint/VoidOutsideLib.html">Ameba::Rule::Lint::VoidOutsideLib</a></li><li class="superclass"><a href="../../../Ameba/Rule/Base.html">Ameba::Rule::Base</a></li><li class="superclass">Reference</li><li class="superclass">Object</li></ul>
 
 
 
@@ -1067,78 +1067,21 @@
     Overview
   </h2>
 
-  <p>A rule that disallows redundant <code>next</code> expressions. A <code>next</code> keyword allows
-a block to skip to the next iteration early, however, it is considered
-redundant in cases where it is the last expression in a block or combines
-into the node which is the last in a block.</p>
-<p>For example, this is considered invalid:</p>
-<pre><code class="language-crystal">block <span class="k">do</span> <span class="o">|</span>v<span class="o">|</span>
-  <span class="k">next</span> v <span class="o">+</span> <span class="n">1</span>
+  <p>A rule that disallows uses of <code>Void</code> outside C lib bindings.
+Usages of these outside of C lib bindings don't make sense,
+and can sometimes break the compiler. <code>Nil</code> should be used instead in these cases.
+<code>Pointer(Void)</code> is the only case that's allowed per this rule.</p>
+<p>These are considered invalid:</p>
+<pre><code class="language-crystal"><span class="k">def</span> <span class="m">foo</span>(bar : <span class="t">Void</span>) : <span class="t">Slice</span>(<span class="t">Void</span>)?
+<span class="k">end</span>
+
+<span class="k">alias</span> <span class="t">Baz</span> <span class="o">=</span> <span class="t">Void</span>
+
+<span class="k">struct</span> <span class="t">Qux</span> <span class="o">&lt;</span> <span class="t">Void</span>
 <span class="k">end</span></code></pre>
-<pre><code class="language-crystal">block <span class="k">do</span> <span class="o">|</span>v<span class="o">|</span>
-  <span class="k">case</span> v
-  <span class="k">when</span> .<span class="k">nil?</span>
-    <span class="k">next</span> <span class="s">&quot;nil&quot;</span>
-  <span class="k">when</span> .blank?
-    <span class="k">next</span> <span class="s">&quot;blank&quot;</span>
-  <span class="k">else</span>
-    <span class="k">next</span> <span class="s">&quot;empty&quot;</span>
-  <span class="k">end</span>
-<span class="k">end</span></code></pre>
-<p>And has to be written as the following:</p>
-<pre><code class="language-crystal">block <span class="k">do</span> <span class="o">|</span>v<span class="o">|</span>
-  v <span class="o">+</span> <span class="n">1</span>
-<span class="k">end</span></code></pre>
-<pre><code class="language-crystal">block <span class="k">do</span> <span class="o">|</span>v<span class="o">|</span>
-  <span class="k">case</span> arg
-  <span class="k">when</span> .<span class="k">nil?</span>
-    <span class="s">&quot;nil&quot;</span>
-  <span class="k">when</span> .blank?
-    <span class="s">&quot;blank&quot;</span>
-  <span class="k">else</span>
-    <span class="s">&quot;empty&quot;</span>
-  <span class="k">end</span>
-<span class="k">end</span></code></pre>
-<h3><a id="configuration-params" class="anchor" href="#configuration-params">
-  <svg class="octicon-link" aria-hidden="true">
-    <use href="#octicon-link"/>
-  </svg>
-</a>Configuration params</h3>
-<ol>
-<li><em>allow_multi_next</em>, default: true</li>
-</ol>
-<p>Allows end-user to configure whether to report or not the <code>next</code> statements
-which yield tuple literals i.e.</p>
-<pre><code class="language-crystal">block <span class="k">do</span>
-  <span class="k">next</span> a, b
-<span class="k">end</span></code></pre>
-<p>If this param equals to <code>false</code>, the block above will be forced to be written as:</p>
-<pre><code class="language-crystal">block <span class="k">do</span>
-  {a, b}
-<span class="k">end</span></code></pre>
-<ol start="2">
-<li><em>allow_empty_next</em>, default: true</li>
-</ol>
-<p>Allows end-user to configure whether to report or not the <code>next</code> statements
-without arguments. Sometimes such statements are used to yield the <code>nil</code> value explicitly.</p>
-<pre><code class="language-crystal">block <span class="k">do</span>
-  @foo <span class="o">=</span> <span class="n">:empty</span>
-  <span class="k">next</span>
-<span class="k">end</span></code></pre>
-<p>If this param equals to <code>false</code>, the block above will be forced to be written as:</p>
-<pre><code class="language-crystal">block <span class="k">do</span>
-  @foo <span class="o">=</span> <span class="n">:empty</span>
-  <span class="n">nil</span>
-<span class="k">end</span></code></pre>
-<h3><a id="yaml-config-example" class="anchor" href="#yaml-config-example">
-  <svg class="octicon-link" aria-hidden="true">
-    <use href="#octicon-link"/>
-  </svg>
-</a>YAML config example</h3>
-<pre><code class="language-crystal"><span class="t">Style</span><span class="o">/</span><span class="t">RedundantNext</span>:
-  <span class="t">Enabled</span>: <span class="n">true</span>
-  <span class="t">AllowMultiNext</span>: <span class="n">true</span>
-  <span class="t">AllowEmptyNext</span>: <span class="n">true</span></code></pre>
+<p>YAML configuration example:</p>
+<pre><code class="language-crystal"><span class="t">Lint</span><span class="o">/</span><span class="t">VoidOutsideLib</span>:
+  <span class="t">Enabled</span>: <span class="n">true</span></code></pre>
 
 
 
@@ -1183,8 +1126,8 @@ without arguments. Sometimes such statements are used to yield the <code>nil</co
   </h2>
   
     
-      <a href="https://github.com/crystal-ameba/ameba/blob/bed02a9/src/ameba/rule/style/redundant_next.cr#L99" target="_blank">
-        ameba/rule/style/redundant_next.cr
+      <a href="https://github.com/crystal-ameba/ameba/blob/bed02a9/src/ameba/rule/lint/void_outside_lib.cr#L25" target="_blank">
+        ameba/rule/lint/void_outside_lib.cr
       </a>
     
     <br/>
@@ -1205,7 +1148,7 @@ without arguments. Sometimes such statements are used to yield the <code>nil</co
   <dl>
     
       <dt class="entry-const" id="MSG">
-        <strong>MSG</strong> = <code><span class="s">&quot;Redundant `next` detected&quot;</span></code>
+        <strong>MSG</strong> = <code><span class="s">&quot;`Void` is not allowed in this context&quot;</span></code>
       </dt>
       
     
@@ -1232,7 +1175,7 @@ without arguments. Sometimes such statements are used to yield the <code>nil</co
       <li class="entry-summary">
         <a href="#new%28config%3Dnil%29-class-method" class="signature"><strong>.new</strong>(config = <span class="n">nil</span>)</a>
         
-          <div class="summary"><p>A rule that disallows redundant <code>next</code> expressions.</p></div>
+          <div class="summary"><p>A rule that disallows uses of <code>Void</code> outside C lib bindings.</p></div>
         
       </li>
     
@@ -1272,26 +1215,6 @@ without arguments. Sometimes such statements are used to yield the <code>nil</co
     Instance Method Summary
   </h2>
   <ul class="list-summary">
-    
-      <li class="entry-summary">
-        <a href="#allow_empty_next%3D%28allow_empty_next%3ABool%29-instance-method" class="signature"><strong>#allow_empty_next=</strong>(allow_empty_next : Bool)</a>
-        
-      </li>
-    
-      <li class="entry-summary">
-        <a href="#allow_empty_next%3F%3ABool-instance-method" class="signature"><strong>#allow_empty_next?</strong> : Bool</a>
-        
-      </li>
-    
-      <li class="entry-summary">
-        <a href="#allow_multi_next%3D%28allow_multi_next%3ABool%29-instance-method" class="signature"><strong>#allow_multi_next=</strong>(allow_multi_next : Bool)</a>
-        
-      </li>
-    
-      <li class="entry-summary">
-        <a href="#allow_multi_next%3F%3ABool-instance-method" class="signature"><strong>#allow_multi_next?</strong> : Bool</a>
-        
-      </li>
     
       <li class="entry-summary">
         <a href="#description%3AString-instance-method" class="signature"><strong>#description</strong> : String</a>
@@ -1344,12 +1267,22 @@ without arguments. Sometimes such statements are used to yield the <code>nil</co
       </li>
     
       <li class="entry-summary">
-        <a href="#test%28source%2Cnode%3ACrystal%3A%3ANext%2Cvisitor%3AAST%3A%3ARedundantControlExpressionVisitor%29-instance-method" class="signature"><strong>#test</strong>(source, node : Crystal::Next, visitor : AST::RedundantControlExpressionVisitor)</a>
+        <a href="#test%28source%2Cnode%3ACrystal%3A%3APath%29-instance-method" class="signature"><strong>#test</strong>(source, node : Crystal::Path)</a>
         
       </li>
     
       <li class="entry-summary">
-        <a href="#test%28source%2Cnode%3ACrystal%3A%3ABlock%29-instance-method" class="signature"><strong>#test</strong>(source, node : Crystal::Block)</a>
+        <a href="#test%28source%2Cnode%3ACrystal%3A%3AGeneric%29-instance-method" class="signature"><strong>#test</strong>(source, node : Crystal::Generic)</a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#test%28source%2Cnode%3ACrystal%3A%3AUnion%29-instance-method" class="signature"><strong>#test</strong>(source, node : Crystal::Union)</a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#test%28source%29-instance-method" class="signature"><strong>#test</strong>(source)</a>
         
       </li>
     
@@ -1646,84 +1579,27 @@ without arguments. Sometimes such statements are used to yield the <code>nil</co
       
         <div class="doc">
           
-          <p>A rule that disallows redundant <code>next</code> expressions. A <code>next</code> keyword allows
-a block to skip to the next iteration early, however, it is considered
-redundant in cases where it is the last expression in a block or combines
-into the node which is the last in a block.</p>
-<p>For example, this is considered invalid:</p>
-<pre><code class="language-crystal">block <span class="k">do</span> <span class="o">|</span>v<span class="o">|</span>
-  <span class="k">next</span> v <span class="o">+</span> <span class="n">1</span>
+          <p>A rule that disallows uses of <code>Void</code> outside C lib bindings.
+Usages of these outside of C lib bindings don't make sense,
+and can sometimes break the compiler. <code>Nil</code> should be used instead in these cases.
+<code>Pointer(Void)</code> is the only case that's allowed per this rule.</p>
+<p>These are considered invalid:</p>
+<pre><code class="language-crystal"><span class="k">def</span> <span class="m">foo</span>(bar : <span class="t">Void</span>) : <span class="t">Slice</span>(<span class="t">Void</span>)?
+<span class="k">end</span>
+
+<span class="k">alias</span> <span class="t">Baz</span> <span class="o">=</span> <span class="t">Void</span>
+
+<span class="k">struct</span> <span class="t">Qux</span> <span class="o">&lt;</span> <span class="t">Void</span>
 <span class="k">end</span></code></pre>
-<pre><code class="language-crystal">block <span class="k">do</span> <span class="o">|</span>v<span class="o">|</span>
-  <span class="k">case</span> v
-  <span class="k">when</span> .<span class="k">nil?</span>
-    <span class="k">next</span> <span class="s">&quot;nil&quot;</span>
-  <span class="k">when</span> .blank?
-    <span class="k">next</span> <span class="s">&quot;blank&quot;</span>
-  <span class="k">else</span>
-    <span class="k">next</span> <span class="s">&quot;empty&quot;</span>
-  <span class="k">end</span>
-<span class="k">end</span></code></pre>
-<p>And has to be written as the following:</p>
-<pre><code class="language-crystal">block <span class="k">do</span> <span class="o">|</span>v<span class="o">|</span>
-  v <span class="o">+</span> <span class="n">1</span>
-<span class="k">end</span></code></pre>
-<pre><code class="language-crystal">block <span class="k">do</span> <span class="o">|</span>v<span class="o">|</span>
-  <span class="k">case</span> arg
-  <span class="k">when</span> .<span class="k">nil?</span>
-    <span class="s">&quot;nil&quot;</span>
-  <span class="k">when</span> .blank?
-    <span class="s">&quot;blank&quot;</span>
-  <span class="k">else</span>
-    <span class="s">&quot;empty&quot;</span>
-  <span class="k">end</span>
-<span class="k">end</span></code></pre>
-<h3><a id="configuration-params" class="anchor" href="#configuration-params">
-  <svg class="octicon-link" aria-hidden="true">
-    <use href="#octicon-link"/>
-  </svg>
-</a>Configuration params</h3>
-<ol>
-<li><em>allow_multi_next</em>, default: true</li>
-</ol>
-<p>Allows end-user to configure whether to report or not the <code>next</code> statements
-which yield tuple literals i.e.</p>
-<pre><code class="language-crystal">block <span class="k">do</span>
-  <span class="k">next</span> a, b
-<span class="k">end</span></code></pre>
-<p>If this param equals to <code>false</code>, the block above will be forced to be written as:</p>
-<pre><code class="language-crystal">block <span class="k">do</span>
-  {a, b}
-<span class="k">end</span></code></pre>
-<ol start="2">
-<li><em>allow_empty_next</em>, default: true</li>
-</ol>
-<p>Allows end-user to configure whether to report or not the <code>next</code> statements
-without arguments. Sometimes such statements are used to yield the <code>nil</code> value explicitly.</p>
-<pre><code class="language-crystal">block <span class="k">do</span>
-  @foo <span class="o">=</span> <span class="n">:empty</span>
-  <span class="k">next</span>
-<span class="k">end</span></code></pre>
-<p>If this param equals to <code>false</code>, the block above will be forced to be written as:</p>
-<pre><code class="language-crystal">block <span class="k">do</span>
-  @foo <span class="o">=</span> <span class="n">:empty</span>
-  <span class="n">nil</span>
-<span class="k">end</span></code></pre>
-<h3><a id="yaml-config-example" class="anchor" href="#yaml-config-example">
-  <svg class="octicon-link" aria-hidden="true">
-    <use href="#octicon-link"/>
-  </svg>
-</a>YAML config example</h3>
-<pre><code class="language-crystal"><span class="t">Style</span><span class="o">/</span><span class="t">RedundantNext</span>:
-  <span class="t">Enabled</span>: <span class="n">true</span>
-  <span class="t">AllowMultiNext</span>: <span class="n">true</span>
-  <span class="t">AllowEmptyNext</span>: <span class="n">true</span></code></pre>
+<p>YAML configuration example:</p>
+<pre><code class="language-crystal"><span class="t">Lint</span><span class="o">/</span><span class="t">VoidOutsideLib</span>:
+  <span class="t">Enabled</span>: <span class="n">true</span></code></pre>
         </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/bed02a9/src/ameba/rule/style/redundant_next.cr#L99" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/bed02a9/src/ameba/rule/lint/void_outside_lib.cr#L25" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1782,62 +1658,6 @@ without arguments. Sometimes such statements are used to yield the <code>nil</co
 </a>
     Instance Method Detail
   </h2>
-  
-    <div class="entry-detail" id="allow_empty_next=(allow_empty_next:Bool)-instance-method">
-      <div class="signature">
-        
-        def <strong>allow_empty_next=</strong>(allow_empty_next : Bool)
-
-        <a class="method-permalink" href="#allow_empty_next%3D%28allow_empty_next%3ABool%29-instance-method">#</a>
-      </div>
-      
-      <br/>
-      <div>
-        
-      </div>
-    </div>
-  
-    <div class="entry-detail" id="allow_empty_next?:Bool-instance-method">
-      <div class="signature">
-        
-        def <strong>allow_empty_next?</strong> : Bool
-
-        <a class="method-permalink" href="#allow_empty_next%3F%3ABool-instance-method">#</a>
-      </div>
-      
-      <br/>
-      <div>
-        
-      </div>
-    </div>
-  
-    <div class="entry-detail" id="allow_multi_next=(allow_multi_next:Bool)-instance-method">
-      <div class="signature">
-        
-        def <strong>allow_multi_next=</strong>(allow_multi_next : Bool)
-
-        <a class="method-permalink" href="#allow_multi_next%3D%28allow_multi_next%3ABool%29-instance-method">#</a>
-      </div>
-      
-      <br/>
-      <div>
-        
-      </div>
-    </div>
-  
-    <div class="entry-detail" id="allow_multi_next?:Bool-instance-method">
-      <div class="signature">
-        
-        def <strong>allow_multi_next?</strong> : Bool
-
-        <a class="method-permalink" href="#allow_multi_next%3F%3ABool-instance-method">#</a>
-      </div>
-      
-      <br/>
-      <div>
-        
-      </div>
-    </div>
   
     <div class="entry-detail" id="description:String-instance-method">
       <div class="signature">
@@ -1962,7 +1782,7 @@ without arguments. Sometimes such statements are used to yield the <code>nil</co
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/bed02a9/src/ameba/rule/style/redundant_next.cr#L102" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/bed02a9/src/ameba/rule/lint/void_outside_lib.cr#L28" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1981,34 +1801,66 @@ without arguments. Sometimes such statements are used to yield the <code>nil</co
       </div>
     </div>
   
-    <div class="entry-detail" id="test(source,node:Crystal::Next,visitor:AST::RedundantControlExpressionVisitor)-instance-method">
+    <div class="entry-detail" id="test(source,node:Crystal::Path)-instance-method">
       <div class="signature">
         
-        def <strong>test</strong>(source, node : Crystal::Next, visitor : <a href="../../../Ameba/AST/RedundantControlExpressionVisitor.html">AST::RedundantControlExpressionVisitor</a>)
+        def <strong>test</strong>(source, node : Crystal::Path)
 
-        <a class="method-permalink" href="#test%28source%2Cnode%3ACrystal%3A%3ANext%2Cvisitor%3AAST%3A%3ARedundantControlExpressionVisitor%29-instance-method">#</a>
+        <a class="method-permalink" href="#test%28source%2Cnode%3ACrystal%3A%3APath%29-instance-method">#</a>
       </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/bed02a9/src/ameba/rule/style/redundant_next.cr#L116" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/bed02a9/src/ameba/rule/lint/void_outside_lib.cr#L39" target="_blank">View source</a>]
         
       </div>
     </div>
   
-    <div class="entry-detail" id="test(source,node:Crystal::Block)-instance-method">
+    <div class="entry-detail" id="test(source,node:Crystal::Generic)-instance-method">
       <div class="signature">
         
-        def <strong>test</strong>(source, node : Crystal::Block)
+        def <strong>test</strong>(source, node : Crystal::Generic)
 
-        <a class="method-permalink" href="#test%28source%2Cnode%3ACrystal%3A%3ABlock%29-instance-method">#</a>
+        <a class="method-permalink" href="#test%28source%2Cnode%3ACrystal%3A%3AGeneric%29-instance-method">#</a>
       </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/bed02a9/src/ameba/rule/style/redundant_next.cr#L112" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/bed02a9/src/ameba/rule/lint/void_outside_lib.cr#L45" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="test(source,node:Crystal::Union)-instance-method">
+      <div class="signature">
+        
+        def <strong>test</strong>(source, node : Crystal::Union)
+
+        <a class="method-permalink" href="#test%28source%2Cnode%3ACrystal%3A%3AUnion%29-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/crystal-ameba/ameba/blob/bed02a9/src/ameba/rule/lint/void_outside_lib.cr#L60" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="test(source)-instance-method">
+      <div class="signature">
+        
+        def <strong>test</strong>(source)
+
+        <a class="method-permalink" href="#test%28source%29-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/crystal-ameba/ameba/blob/bed02a9/src/ameba/rule/lint/void_outside_lib.cr#L35" target="_blank">View source</a>]
         
       </div>
     </div>
