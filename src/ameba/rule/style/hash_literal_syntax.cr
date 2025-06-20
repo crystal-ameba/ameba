@@ -1,19 +1,23 @@
 module Ameba::Rule::Style
-  # Encourages the use of `Hash(K, V).new` syntax for creating a hash over `{} of K => V`
+  # Encourages the use of `Hash(K, V).new` syntax for creating a hash over `{} of K => V`.
+  #
+  # Favour this:
   #
   # ```
-  # # bad
-  # {} of Int32 => String?
-  #
-  # # good
   # Hash(Int32, String?).new
+  # ```
+  #
+  # Over this:
+  #
+  # ```
+  # {} of Int32 => String?
   # ```
   #
   # YAML configuration example:
   #
   # ```
   # Style/HashLiteralSyntax:
-  #   Enabled: false
+  #   Enabled: true
   # ```
   class HashLiteralSyntax < Base
     properties do

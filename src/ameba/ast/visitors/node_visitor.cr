@@ -28,7 +28,6 @@ module Ameba::AST
       ExceptionHandler,
       Expressions,
       HashLiteral,
-      HashLiteral,
       If,
       InstanceVar,
       IsA,
