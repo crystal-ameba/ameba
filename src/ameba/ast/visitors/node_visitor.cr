@@ -16,6 +16,7 @@ module Ameba::AST
     # List of nodes to be visited by Ameba's rules.
     NODES = {
       Alias,
+      ArrayLiteral,
       Assign,
       Block,
       Call,
@@ -35,8 +36,8 @@ module Ameba::AST
       MultiAssign,
       NilLiteral,
       ProcLiteral,
-      StringInterpolation,
       Select,
+      StringInterpolation,
       Unless,
       Until,
       Var,
