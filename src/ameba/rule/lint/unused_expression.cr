@@ -26,6 +26,16 @@ module Ameba::Rule::Lint
   # bar = pointerof(foo)
   # ```
   #
+  # This rule currently supports checking for unused:
+  # - class variable access `@@cvar`
+  # - comparison `<`, `>=`, etc
+  # - generics and unions `String?`, `Int32 | Float64`, etc
+  # - instance variable access `@ivar`
+  # - literals (strings, bools, chars, hashes, arrays, range, etc)
+  # - local variable access `foo`
+  # - self
+  # - pseudo-method calls
+  #
   # YAML configuration example:
   #
   # ```
