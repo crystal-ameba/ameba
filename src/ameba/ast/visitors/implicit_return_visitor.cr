@@ -181,6 +181,14 @@ module Ameba::AST
       false
     end
 
+    def visit(node : Crystal::TypeOf) : Bool
+      report_implicit_return(node)
+
+      incr_stack { node.accept_children(self) }
+
+      false
+    end
+
     def visit(node : Crystal::Annotation) : Bool
       report_implicit_return(node)
 
