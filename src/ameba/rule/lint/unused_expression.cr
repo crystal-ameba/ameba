@@ -1,4 +1,37 @@
 module Ameba::Rule::Lint
+  # A rule that disallows unused expressions.
+  #
+  # For example, this is considered invalid:
+  #
+  # ```
+  # a = obj.method do |x|
+  #   x == 1 # => Comparison operation has no effect
+  #   puts x
+  # end
+  #
+  # Float64 | StaticArray(Float64, 10)
+  #
+  # pointerof(foo)
+  # ```
+  #
+  # And these are considered valid:
+  #
+  # ```
+  # a = obj.method do |x|
+  #   x == 1
+  # end
+  #
+  # foo : Float64 | StaticArray(Float64, 10) = 0.1
+  #
+  # bar = pointerof(foo)
+  # ```
+  #
+  # YAML configuration example:
+  #
+  # ```
+  # Lint/UnusedExpression:
+  #   Enabled: true
+  # ```
   class UnusedExpression < Base
     properties do
       since_version "1.7.0"
