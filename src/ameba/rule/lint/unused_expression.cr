@@ -31,7 +31,7 @@ module Ameba::Rule::Lint
   # - generics and unions: `String?`, `Int32 | Float64`, etc.
   # - literals: strings, bools, chars, hashes, arrays, range, etc.
   # - pseudo-method calls: `sizeof`, `is_a?` etc.
-  # - variable access: `local`, `@ivar`, `@@cvar`, `self`
+  # - variable access: local, `@ivar`, `@@cvar` and `self`
   #
   # YAML configuration example:
   #
