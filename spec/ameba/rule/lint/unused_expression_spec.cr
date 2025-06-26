@@ -27,7 +27,7 @@ module Ameba::Rule::Lint
             @@name : String = "George"
 
             @@name
-          # ^^^^^^ error: Value from class variable access is unused
+          # ^^^^^^ error: Class variable access is unused
           end
           CRYSTAL
       end
@@ -36,7 +36,7 @@ module Ameba::Rule::Lint
         expect_issue subject, <<-'CRYSTAL'
           def hello : String
             @@name
-          # ^^^^^^ error: Value from class variable access is unused
+          # ^^^^^^ error: Class variable access is unused
 
             "Hello, #{@@name}!"
           end
@@ -297,23 +297,23 @@ module Ameba::Rule::Lint
       it "fails for an unused top-level generic" do
         expect_issue subject, <<-CRYSTAL
           String?
-          # ^^^^^ error: Generic is not used
+          # ^^^^^ error: Generic type is unused
           StaticArray(Int32, 10)
-          # ^^^^^^^^^^^^^^^^^^^^ error: Generic is not used
+          # ^^^^^^^^^^^^^^^^^^^^ error: Generic type is unused
           CRYSTAL
       end
 
       it "fails for an unused top-level union" do
         expect_issue subject, <<-CRYSTAL
           Int32 | Float64 | Nil
-          # ^^^^^^^^^^^^^^^^^^^ error: Union is not used
+          # ^^^^^^^^^^^^^^^^^^^ error: Union type is unused
           CRYSTAL
       end
 
       it "fails for an unused top-level union of self, typeof, and underscore" do
         expect_issue subject, <<-CRYSTAL
           self | typeof(1) | _
-          # ^^^^^^^^^^^^^^^^^^ error: Union is not used
+          # ^^^^^^^^^^^^^^^^^^ error: Union type is unused
           CRYSTAL
       end
 
@@ -321,7 +321,7 @@ module Ameba::Rule::Lint
         expect_issue subject, <<-CRYSTAL
           def foo
             Float64?
-          # ^^^^^^^^ error: Generic is not used
+          # ^^^^^^^^ error: Generic type is unused
             nil
           end
           CRYSTAL
@@ -331,7 +331,7 @@ module Ameba::Rule::Lint
         expect_issue subject, <<-CRYSTAL
           def foo
             Bar | Baz
-          # ^^^^^^^^^ error: Union is not used
+          # ^^^^^^^^^ error: Union type is unused
             nil
           end
           CRYSTAL
@@ -341,7 +341,7 @@ module Ameba::Rule::Lint
         expect_issue subject, <<-CRYSTAL
           class MyClass
             String?
-          # ^^^^^^^ error: Generic is not used
+          # ^^^^^^^ error: Generic type is unused
           end
           CRYSTAL
       end
@@ -370,7 +370,7 @@ module Ameba::Rule::Lint
             @name : String = "George"
 
             @name
-          # ^^^^^ error: Value from instance variable access is unused
+          # ^^^^^ error: Instance variable access is unused
           end
           CRYSTAL
       end
@@ -379,7 +379,7 @@ module Ameba::Rule::Lint
         expect_issue subject, <<-'CRYSTAL'
           def hello : String
             @name
-          # ^^^^^ error: Value from instance variable access is unused
+          # ^^^^^ error: Instance variable access is unused
 
             "Hello, #{@name}!"
           end
@@ -399,7 +399,7 @@ module Ameba::Rule::Lint
         expect_issue subject, <<-CRYSTAL
           def foo
             {% @bar %}
-             # ^^^^ error: Value from instance variable access is unused
+             # ^^^^ error: Instance variable access is unused
             :baz
           end
           CRYSTAL
@@ -517,67 +517,67 @@ module Ameba::Rule::Lint
       it "fails if a number literal is top-level" do
         expect_issue subject, <<-CRYSTAL
           1234
-          # ^^ error: Literal value is not used
+          # ^^ error: Literal value is unused
           1234_f32
-          # ^^^^^^ error: Literal value is not used
+          # ^^^^^^ error: Literal value is unused
           CRYSTAL
       end
 
       it "fails if a string literal is top-level" do
         expect_issue subject, <<-'CRYSTAL'
           "hello world"
-          # ^^^^^^^^^^^ error: Literal value is not used
+          # ^^^^^^^^^^^ error: Literal value is unused
           "foo #{bar}"
-          # ^^^^^^^^^^ error: Literal value is not used
+          # ^^^^^^^^^^ error: Literal value is unused
           CRYSTAL
       end
 
       it "fails if an array literal is top-level" do
         expect_issue subject, <<-CRYSTAL
           [1, 2, 3, 4, 5]
-          # ^^^^^^^^^^^^^ error: Literal value is not used
+          # ^^^^^^^^^^^^^ error: Literal value is unused
           CRYSTAL
       end
 
       it "fails if a hash literal is top-level" do
         expect_issue subject, <<-CRYSTAL
           {"foo" => "bar"}
-          # ^^^^^^^^^^^^^^ error: Literal value is not used
+          # ^^^^^^^^^^^^^^ error: Literal value is unused
           CRYSTAL
       end
 
       it "fails if a char literal is top-level" do
         expect_issue subject, <<-'CRYSTAL'
           '\t'
-          # ^^ error: Literal value is not used
+          # ^^ error: Literal value is unused
           CRYSTAL
       end
 
       it "fails if a range literal is top-level" do
         expect_issue subject, <<-CRYSTAL
           1..2
-          # ^^ error: Literal value is not used
+          # ^^ error: Literal value is unused
           CRYSTAL
       end
 
       it "fails if a tuple literal is top-level" do
         expect_issue subject, <<-CRYSTAL
           {1, 2, 3}
-          # ^^^^^^^ error: Literal value is not used
+          # ^^^^^^^ error: Literal value is unused
           CRYSTAL
       end
 
       it "fails if a named tuple literal is top-level" do
         expect_issue subject, <<-CRYSTAL
           {foo: bar}
-          # ^^^^^^^^ error: Literal value is not used
+          # ^^^^^^^^ error: Literal value is unused
           CRYSTAL
       end
 
       it "fails if a heredoc is top-level" do
         expect_issue subject, <<-CRYSTAL
           <<-HEREDOC
-          # ^^^^^^^^ error: Literal value is not used
+          # ^^^^^^^^ error: Literal value is unused
             this is a heredoc
             HEREDOC
           CRYSTAL
@@ -587,9 +587,9 @@ module Ameba::Rule::Lint
         expect_issue subject, <<-CRYSTAL
           def foo
             1234
-          # ^^^^ error: Literal value is not used
+          # ^^^^ error: Literal value is unused
             1234_f32
-          # ^^^^^^^^ error: Literal value is not used
+          # ^^^^^^^^ error: Literal value is unused
             return
           end
           CRYSTAL
@@ -599,9 +599,9 @@ module Ameba::Rule::Lint
         expect_issue subject, <<-'CRYSTAL'
           def foo
             "hello world"
-          # ^^^^^^^^^^^^^ error: Literal value is not used
+          # ^^^^^^^^^^^^^ error: Literal value is unused
             "foo #{bar}"
-          # ^^^^^^^^^^^^ error: Literal value is not used
+          # ^^^^^^^^^^^^ error: Literal value is unused
             return
           end
           CRYSTAL
@@ -611,7 +611,7 @@ module Ameba::Rule::Lint
         expect_issue subject, <<-CRYSTAL
           def foo
             [1, 2, 3, 4, 5]
-          # ^^^^^^^^^^^^^^^ error: Literal value is not used
+          # ^^^^^^^^^^^^^^^ error: Literal value is unused
             return
           end
           CRYSTAL
@@ -621,7 +621,7 @@ module Ameba::Rule::Lint
         expect_issue subject, <<-CRYSTAL
           def foo
             {"foo" => "bar"}
-          # ^^^^^^^^^^^^^^^^ error: Literal value is not used
+          # ^^^^^^^^^^^^^^^^ error: Literal value is unused
             return
           end
           CRYSTAL
@@ -631,7 +631,7 @@ module Ameba::Rule::Lint
         expect_issue subject, <<-'CRYSTAL'
           def foo
             '\t'
-          # ^^^^ error: Literal value is not used
+          # ^^^^ error: Literal value is unused
             return
           end
           CRYSTAL
@@ -641,7 +641,7 @@ module Ameba::Rule::Lint
         expect_issue subject, <<-CRYSTAL
           def foo
             1..2
-          # ^^^^ error: Literal value is not used
+          # ^^^^ error: Literal value is unused
             return
           end
           CRYSTAL
@@ -651,7 +651,7 @@ module Ameba::Rule::Lint
         expect_issue subject, <<-CRYSTAL
           def foo
             {1, 2, 3}
-          # ^^^^^^^^^ error: Literal value is not used
+          # ^^^^^^^^^ error: Literal value is unused
             return
           end
           CRYSTAL
@@ -661,7 +661,7 @@ module Ameba::Rule::Lint
         expect_issue subject, <<-CRYSTAL
           def foo
             {foo: bar}
-          # ^^^^^^^^^^ error: Literal value is not used
+          # ^^^^^^^^^^ error: Literal value is unused
             return
           end
           CRYSTAL
@@ -671,7 +671,7 @@ module Ameba::Rule::Lint
         expect_issue subject, <<-CRYSTAL
           def foo
             <<-HEREDOC
-          # ^^^^^^^^^^ error: Literal value is not used
+          # ^^^^^^^^^^ error: Literal value is unused
               this is a heredoc
               HEREDOC
             return
@@ -683,9 +683,9 @@ module Ameba::Rule::Lint
         expect_issue subject, <<-CRYSTAL
           if true
             1234
-          # ^^^^ error: Literal value is not used
+          # ^^^^ error: Literal value is unused
             1234_f32
-          # ^^^^^^^^ error: Literal value is not used
+          # ^^^^^^^^ error: Literal value is unused
             nil
           end
           CRYSTAL
@@ -695,9 +695,9 @@ module Ameba::Rule::Lint
         expect_issue subject, <<-'CRYSTAL'
           if true
             "hello world"
-          # ^^^^^^^^^^^^^ error: Literal value is not used
+          # ^^^^^^^^^^^^^ error: Literal value is unused
             "foo #{bar}"
-          # ^^^^^^^^^^^^ error: Literal value is not used
+          # ^^^^^^^^^^^^ error: Literal value is unused
             nil
           end
           CRYSTAL
@@ -707,7 +707,7 @@ module Ameba::Rule::Lint
         expect_issue subject, <<-CRYSTAL
           if true
             [1, 2, 3, 4, 5]
-          # ^^^^^^^^^^^^^^^ error: Literal value is not used
+          # ^^^^^^^^^^^^^^^ error: Literal value is unused
             nil
           end
           CRYSTAL
@@ -717,7 +717,7 @@ module Ameba::Rule::Lint
         expect_issue subject, <<-CRYSTAL
           if true
             {"foo" => "bar"}
-          # ^^^^^^^^^^^^^^^^ error: Literal value is not used
+          # ^^^^^^^^^^^^^^^^ error: Literal value is unused
             nil
           end
           CRYSTAL
@@ -727,7 +727,7 @@ module Ameba::Rule::Lint
         expect_issue subject, <<-'CRYSTAL'
           if true
             '\t'
-          # ^^^^ error: Literal value is not used
+          # ^^^^ error: Literal value is unused
             nil
           end
           CRYSTAL
@@ -737,7 +737,7 @@ module Ameba::Rule::Lint
         expect_issue subject, <<-CRYSTAL
           if true
             1..2
-          # ^^^^ error: Literal value is not used
+          # ^^^^ error: Literal value is unused
             nil
           end
           CRYSTAL
@@ -747,7 +747,7 @@ module Ameba::Rule::Lint
         expect_issue subject, <<-CRYSTAL
           if true
             {1, 2, 3}
-          # ^^^^^^^^^ error: Literal value is not used
+          # ^^^^^^^^^ error: Literal value is unused
             nil
           end
           CRYSTAL
@@ -757,7 +757,7 @@ module Ameba::Rule::Lint
         expect_issue subject, <<-CRYSTAL
           if true
             {foo: bar}
-          # ^^^^^^^^^^ error: Literal value is not used
+          # ^^^^^^^^^^ error: Literal value is unused
             nil
           end
           CRYSTAL
@@ -767,7 +767,7 @@ module Ameba::Rule::Lint
         expect_issue subject, <<-CRYSTAL
           if true
             <<-HEREDOC
-          # ^^^^^^^^^^ error: Literal value is not used
+          # ^^^^^^^^^^ error: Literal value is unused
               this is a heredoc
               HEREDOC
             nil
@@ -779,14 +779,14 @@ module Ameba::Rule::Lint
         expect_issue subject, <<-CRYSTAL
           a = begin
                 1234
-              # ^^^^ error: Literal value is not used
+              # ^^^^ error: Literal value is unused
               rescue Foo
                 1234
               else
                 1234
               ensure
                 1234
-              # ^^^^ error: Literal value is not used
+              # ^^^^ error: Literal value is unused
               end
           CRYSTAL
       end
@@ -795,7 +795,7 @@ module Ameba::Rule::Lint
         expect_issue subject, <<-CRYSTAL
           class MyClass
             1234
-          # ^^^^ error: Literal value is not used
+          # ^^^^ error: Literal value is unused
           end
           CRYSTAL
       end
@@ -812,7 +812,7 @@ module Ameba::Rule::Lint
         expect_issue subject, <<-CRYSTAL
           def foo : Nil
             1234
-          # ^^^^ error: Literal value is not used
+          # ^^^^ error: Literal value is unused
           end
           CRYSTAL
       end
@@ -821,7 +821,7 @@ module Ameba::Rule::Lint
         expect_issue subject, <<-CRYSTAL
           def initialize
             1234
-          # ^^^^ error: Literal value is not used
+          # ^^^^ error: Literal value is unused
           end
           CRYSTAL
       end
@@ -835,7 +835,7 @@ module Ameba::Rule::Lint
       it "fails if a literal is used in non-outputting macro expression" do
         expect_issue subject, <<-CRYSTAL
           {% "foo" %}
-           # ^^^^^ error: Literal value is not used
+           # ^^^^^ error: Literal value is unused
           CRYSTAL
       end
 
@@ -843,7 +843,7 @@ module Ameba::Rule::Lint
         expect_issue subject, <<-CRYSTAL
           {% if true %}
             {% "foo" %}
-             # ^^^^^ error: Literal value is not used
+             # ^^^^^ error: Literal value is unused
           {% end %}
           CRYSTAL
       end
@@ -852,7 +852,7 @@ module Ameba::Rule::Lint
         expect_issue subject, <<-CRYSTAL
           {% for i in [1, 2, 3] %}
             {% "foo" %}
-             # ^^^^^ error: Literal value is not used
+             # ^^^^^ error: Literal value is unused
           {% end %}
           CRYSTAL
       end
@@ -861,7 +861,7 @@ module Ameba::Rule::Lint
         expect_issue subject, <<-CRYSTAL
           macro name(foo)
             {% "bar" %}
-             # ^^^^^ error: Literal value is not used
+             # ^^^^^ error: Literal value is unused
           end
           CRYSTAL
       end
@@ -872,10 +872,10 @@ module Ameba::Rule::Lint
           expect_issue subject, <<-'CRYSTAL'
             foo = /hello world/
             /goodnight moon/
-            # ^^^^^^^^^^^^^^ error: Literal value is not used
+            # ^^^^^^^^^^^^^^ error: Literal value is unused
             bar = /goodnight moon, #{foo}/
             /goodnight moon, #{foo}/
-            # ^^^^^^^^^^^^^^^^^^^^^^ error: Literal value is not used
+            # ^^^^^^^^^^^^^^^^^^^^^^ error: Literal value is unused
             CRYSTAL
         end
       {% else %}
@@ -934,7 +934,7 @@ module Ameba::Rule::Lint
 
           begin
             foo
-          # ^^^ error: Value from local variable access is unused
+          # ^^^ error: Local variable access is unused
             puts foo
           end
           CRYSTAL
@@ -945,7 +945,7 @@ module Ameba::Rule::Lint
           def foo(bar)
             if bar > 0
               bar
-            # ^^^ error: Value from local variable access is unused
+            # ^^^ error: Local variable access is unused
             end
 
             nil
@@ -970,42 +970,42 @@ module Ameba::Rule::Lint
       it "fails if pointerof is unused" do
         expect_issue subject, <<-CRYSTAL
           pointerof(Int32)
-          # ^^^^^^^^^^^^^^ error: Pseudo-method call is not used
+          # ^^^^^^^^^^^^^^ error: Pseudo-method call is unused
           CRYSTAL
       end
 
       it "fails if sizeof is unused" do
         expect_issue subject, <<-CRYSTAL
           sizeof(Int32)
-          # ^^^^^^^^^^^ error: Pseudo-method call is not used
+          # ^^^^^^^^^^^ error: Pseudo-method call is unused
           CRYSTAL
       end
 
       it "fails if instance_sizeof is unused" do
         expect_issue subject, <<-CRYSTAL
           instance_sizeof(Int32)
-          # ^^^^^^^^^^^^^^^^^^^^ error: Pseudo-method call is not used
+          # ^^^^^^^^^^^^^^^^^^^^ error: Pseudo-method call is unused
           CRYSTAL
       end
 
       it "fails if alignof is unused" do
         expect_issue subject, <<-CRYSTAL
           alignof(Int32)
-          # ^^^^^^^^^^^^ error: Pseudo-method call is not used
+          # ^^^^^^^^^^^^ error: Pseudo-method call is unused
           CRYSTAL
       end
 
       it "fails if instance_alignof is unused" do
         expect_issue subject, <<-CRYSTAL
           instance_alignof(Int32)
-          # ^^^^^^^^^^^^^^^^^^^^^ error: Pseudo-method call is not used
+          # ^^^^^^^^^^^^^^^^^^^^^ error: Pseudo-method call is unused
           CRYSTAL
       end
 
       it "fails if offsetof is unused" do
         expect_issue subject, <<-CRYSTAL
           offsetof(Int32, 1)
-          # ^^^^^^^^^^^^^^^^ error: Pseudo-method call is not used
+          # ^^^^^^^^^^^^^^^^ error: Pseudo-method call is unused
           CRYSTAL
       end
 
@@ -1013,7 +1013,7 @@ module Ameba::Rule::Lint
         expect_issue subject, <<-CRYSTAL
           foo = 1
           foo.is_a?(Int32)
-          # ^^^^^^^^^^^^^^ error: Pseudo-method call is not used
+          # ^^^^^^^^^^^^^^ error: Pseudo-method call is unused
           CRYSTAL
       end
 
@@ -1021,7 +1021,7 @@ module Ameba::Rule::Lint
         expect_issue subject, <<-CRYSTAL
           foo = 1
           foo.as?(Int32)
-          # ^^^^^^^^^^^^ error: Pseudo-method call is not used
+          # ^^^^^^^^^^^^ error: Pseudo-method call is unused
           CRYSTAL
       end
 
@@ -1029,7 +1029,7 @@ module Ameba::Rule::Lint
         expect_issue subject, <<-CRYSTAL
           foo = 1
           foo.responds_to?(:bar)
-          # ^^^^^^^^^^^^^^^^^^^^ error: Pseudo-method call is not used
+          # ^^^^^^^^^^^^^^^^^^^^ error: Pseudo-method call is unused
           CRYSTAL
       end
 
@@ -1037,7 +1037,7 @@ module Ameba::Rule::Lint
         expect_issue subject, <<-CRYSTAL
           foo = 1
           foo.nil?
-          # ^^^^^^ error: Pseudo-method call is not used
+          # ^^^^^^ error: Pseudo-method call is unused
           CRYSTAL
       end
 
@@ -1045,7 +1045,7 @@ module Ameba::Rule::Lint
         expect_issue subject, <<-CRYSTAL
           foo = 1
           !foo
-          # ^^ error: Pseudo-method call is not used
+          # ^^ error: Pseudo-method call is unused
           CRYSTAL
       end
 
@@ -1053,7 +1053,7 @@ module Ameba::Rule::Lint
         expect_issue subject, <<-CRYSTAL
           foo = 1
           foo.!
-          # ^^^ error: Pseudo-method call is not used
+          # ^^^ error: Pseudo-method call is unused
           CRYSTAL
       end
 
@@ -1154,7 +1154,7 @@ module Ameba::Rule::Lint
         expect_issue subject, <<-CRYSTAL
           class MyClass
             self
-          # ^^^^ error: `self` is not used
+          # ^^^^ error: `self` access is unused
           end
           CRYSTAL
       end
@@ -1163,7 +1163,7 @@ module Ameba::Rule::Lint
         expect_issue subject, <<-CRYSTAL
           begin
             self
-          # ^^^^ error: `self` is not used
+          # ^^^^ error: `self` access is unused
 
             break
           end
@@ -1174,7 +1174,7 @@ module Ameba::Rule::Lint
         expect_issue subject, <<-CRYSTAL
           def foo
             self
-          # ^^^^ error: `self` is not used
+          # ^^^^ error: `self` access is unused
             "bar"
           end
           CRYSTAL

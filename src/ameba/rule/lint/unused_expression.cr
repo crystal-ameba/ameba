@@ -47,15 +47,15 @@ module Ameba::Rule::Lint
 
     COMPARISON_OPERATORS = %w[== != < <= > >= <=>]
 
-    MSG_CLASS_VAR     = "Value from class variable access is unused"
+    MSG_CLASS_VAR     = "Class variable access is unused"
     MSG_COMPARISON    = "Comparison operation is unused"
-    MSG_GENERIC       = "Generic is not used"
-    MSG_UNION         = "Union is not used"
-    MSG_INSTANCE_VAR  = "Value from instance variable access is unused"
-    MSG_LITERAL       = "Literal value is not used"
-    MSG_LOCAL_VAR     = "Value from local variable access is unused"
-    MSG_SELF          = "`self` is not used"
-    MSG_PSEUDO_METHOD = "Pseudo-method call is not used"
+    MSG_GENERIC       = "Generic type is unused"
+    MSG_UNION         = "Union type is unused"
+    MSG_INSTANCE_VAR  = "Instance variable access is unused"
+    MSG_LITERAL       = "Literal value is unused"
+    MSG_LOCAL_VAR     = "Local variable access is unused"
+    MSG_SELF          = "`self` access is unused"
+    MSG_PSEUDO_METHOD = "Pseudo-method call is unused"
 
     def test(source : Source)
       AST::ImplicitReturnVisitor.new(self, source)
