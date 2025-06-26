@@ -14,7 +14,7 @@
 <script type="text/javascript" src="../../../js/doc.js"></script>
 
   <meta name="repository-name" content="ameba">
-  <title>Ameba::Rule::Lint::UnusedClassVariableAccess - ameba master</title>
+  <title>Ameba::Rule::Lint::UnusedExpression - ameba master</title>
   <script type="text/javascript">
     CrystalDocs.base_path = "../../../";
   </script>
@@ -602,43 +602,8 @@
       
     </li>
   
-  <li class=" current" data-id="ameba/Ameba/Rule/Lint/UnusedClassVariableAccess" data-name="ameba::rule::lint::unusedclassvariableaccess">
-      <a href="../../../Ameba/Rule/Lint/UnusedClassVariableAccess.html">UnusedClassVariableAccess</a>
-      
-    </li>
-  
-  <li class=" " data-id="ameba/Ameba/Rule/Lint/UnusedComparison" data-name="ameba::rule::lint::unusedcomparison">
-      <a href="../../../Ameba/Rule/Lint/UnusedComparison.html">UnusedComparison</a>
-      
-    </li>
-  
-  <li class=" " data-id="ameba/Ameba/Rule/Lint/UnusedGenericOrUnion" data-name="ameba::rule::lint::unusedgenericorunion">
-      <a href="../../../Ameba/Rule/Lint/UnusedGenericOrUnion.html">UnusedGenericOrUnion</a>
-      
-    </li>
-  
-  <li class=" " data-id="ameba/Ameba/Rule/Lint/UnusedInstanceVariableAccess" data-name="ameba::rule::lint::unusedinstancevariableaccess">
-      <a href="../../../Ameba/Rule/Lint/UnusedInstanceVariableAccess.html">UnusedInstanceVariableAccess</a>
-      
-    </li>
-  
-  <li class=" " data-id="ameba/Ameba/Rule/Lint/UnusedLiteral" data-name="ameba::rule::lint::unusedliteral">
-      <a href="../../../Ameba/Rule/Lint/UnusedLiteral.html">UnusedLiteral</a>
-      
-    </li>
-  
-  <li class=" " data-id="ameba/Ameba/Rule/Lint/UnusedLocalVariableAccess" data-name="ameba::rule::lint::unusedlocalvariableaccess">
-      <a href="../../../Ameba/Rule/Lint/UnusedLocalVariableAccess.html">UnusedLocalVariableAccess</a>
-      
-    </li>
-  
-  <li class=" " data-id="ameba/Ameba/Rule/Lint/UnusedPseudoMethodCall" data-name="ameba::rule::lint::unusedpseudomethodcall">
-      <a href="../../../Ameba/Rule/Lint/UnusedPseudoMethodCall.html">UnusedPseudoMethodCall</a>
-      
-    </li>
-  
-  <li class=" " data-id="ameba/Ameba/Rule/Lint/UnusedSelfAccess" data-name="ameba::rule::lint::unusedselfaccess">
-      <a href="../../../Ameba/Rule/Lint/UnusedSelfAccess.html">UnusedSelfAccess</a>
+  <li class=" current" data-id="ameba/Ameba/Rule/Lint/UnusedExpression" data-name="ameba::rule::lint::unusedexpression">
+      <a href="../../../Ameba/Rule/Lint/UnusedExpression.html">UnusedExpression</a>
       
     </li>
   
@@ -1058,12 +1023,12 @@
 
   <span class="kind">
     class
-  </span> Ameba::<wbr>Rule::<wbr>Lint::<wbr>UnusedClassVariableAccess
+  </span> Ameba::<wbr>Rule::<wbr>Lint::<wbr>UnusedExpression
 
 </h1>
 
 
-  <ul class="superclass-hierarchy"><li class="superclass"><a href="../../../Ameba/Rule/Lint/UnusedClassVariableAccess.html">Ameba::Rule::Lint::UnusedClassVariableAccess</a></li><li class="superclass"><a href="../../../Ameba/Rule/Base.html">Ameba::Rule::Base</a></li><li class="superclass">Reference</li><li class="superclass">Object</li></ul>
+  <ul class="superclass-hierarchy"><li class="superclass"><a href="../../../Ameba/Rule/Lint/UnusedExpression.html">Ameba::Rule::Lint::UnusedExpression</a></li><li class="superclass"><a href="../../../Ameba/Rule/Base.html">Ameba::Rule::Base</a></li><li class="superclass">Reference</li><li class="superclass">Object</li></ul>
 
 
 
@@ -1077,33 +1042,34 @@
     Overview
   </h2>
 
-  <p>A rule that disallows unused class variable access.</p>
+  <p>A rule that disallows unused expressions.</p>
 <p>For example, this is considered invalid:</p>
-<pre><code class="language-crystal"><span class="k">class</span> <span class="t">MyClass</span>
-  @@my_var : <span class="t">String</span> <span class="o">=</span> <span class="s">&quot;hello&quot;</span>
+<pre><code class="language-crystal">a <span class="o">=</span> obj.method <span class="k">do</span> <span class="o">|</span>x<span class="o">|</span>
+  x <span class="o">==</span> <span class="n">1</span> <span class="c"># =&gt; Comparison operation has no effect</span>
+  puts x
+<span class="k">end</span>
 
-  @@my_var
+<span class="t">Float64</span> <span class="o">|</span> <span class="t">StaticArray</span>(<span class="t">Float64</span>, <span class="n">10</span>)
 
-  <span class="k">def</span> <span class="m">hello</span> : <span class="t">String</span>
-    @@my_var
-
-    <span class="s">&quot;hello, world!&quot;</span>
-  <span class="k">end</span>
-<span class="k">end</span></code></pre>
+<span class="k">pointerof</span>(foo)</code></pre>
 <p>And these are considered valid:</p>
-<pre><code class="language-crystal"><span class="k">class</span> <span class="t">MyClass</span>
-  @@my_var : <span class="t">String</span> <span class="o">=</span> <span class="s">&quot;hello&quot;</span>
+<pre><code class="language-crystal">a <span class="o">=</span> obj.method <span class="k">do</span> <span class="o">|</span>x<span class="o">|</span>
+  x <span class="o">==</span> <span class="n">1</span>
+<span class="k">end</span>
 
-  @@my_other_var <span class="o">=</span> @@my_var
+foo : <span class="t">Float64</span> <span class="o">|</span> <span class="t">StaticArray</span>(<span class="t">Float64</span>, <span class="n">10</span>) <span class="o">=</span> <span class="n">0.1</span>
 
-  <span class="k">def</span> <span class="m">hello</span> : <span class="t">String</span>
-    <span class="k">return</span> @@my_var <span class="k">if</span> @@my_var <span class="o">==</span> <span class="s">&quot;hello&quot;</span>
-
-    <span class="s">&quot;hello, world!&quot;</span>
-  <span class="k">end</span>
-<span class="k">end</span></code></pre>
+bar <span class="o">=</span> <span class="k">pointerof</span>(foo)</code></pre>
+<p>This rule currently supports checking for unused:</p>
+<ul>
+<li>comparison operators: <code>&lt;</code>, <code>&gt;=</code>, etc.</li>
+<li>generics and unions: <code>String?</code>, <code>Int32 | Float64</code>, etc.</li>
+<li>literals: strings, bools, chars, hashes, arrays, range, etc.</li>
+<li>pseudo-method calls: <code>sizeof</code>, <code>is_a?</code> etc.</li>
+<li>variable access: local, <code>@ivar</code>, <code>@@cvar</code> and <code>self</code></li>
+</ul>
 <p>YAML configuration example:</p>
-<pre><code class="language-crystal"><span class="t">Lint</span><span class="o">/</span><span class="t">UnusedClassVariableAccess</span>:
+<pre><code class="language-crystal"><span class="t">Lint</span><span class="o">/</span><span class="t">UnusedExpression</span>:
   <span class="t">Enabled</span>: <span class="n">true</span></code></pre>
 
 
@@ -1147,8 +1113,8 @@
   </h2>
   
     
-      <a href="https://github.com/crystal-ameba/ameba/blob/5c550cd/src/ameba/rule/lint/unused_class_variable_access.cr#L42" target="_blank">
-        ameba/rule/lint/unused_class_variable_access.cr
+      <a href="https://github.com/crystal-ameba/ameba/blob/2affe55/src/ameba/rule/lint/unused_expression.cr#L42" target="_blank">
+        ameba/rule/lint/unused_expression.cr
       </a>
     
     <br/>
@@ -1168,8 +1134,53 @@
   
   <dl>
     
-      <dt class="entry-const" id="MSG">
-        <strong>MSG</strong> = <code><span class="s">&quot;Value from class variable access is unused&quot;</span></code>
+      <dt class="entry-const" id="COMPARISON_OPERATORS">
+        <strong>COMPARISON_OPERATORS</strong> = <code>[<span class="s">&quot;==&quot;</span>, <span class="s">&quot;!=&quot;</span>, <span class="s">&quot;&lt;&quot;</span>, <span class="s">&quot;&lt;=&quot;</span>, <span class="s">&quot;&gt;&quot;</span>, <span class="s">&quot;&gt;=&quot;</span>, <span class="s">&quot;&lt;=&gt;&quot;</span>] <span class="k">of</span> <span class="t">::</span><span class="t">String</span></code>
+      </dt>
+      
+    
+      <dt class="entry-const" id="MSG_CLASS_VAR">
+        <strong>MSG_CLASS_VAR</strong> = <code><span class="s">&quot;Class variable access is unused&quot;</span></code>
+      </dt>
+      
+    
+      <dt class="entry-const" id="MSG_COMPARISON">
+        <strong>MSG_COMPARISON</strong> = <code><span class="s">&quot;Comparison operation is unused&quot;</span></code>
+      </dt>
+      
+    
+      <dt class="entry-const" id="MSG_GENERIC">
+        <strong>MSG_GENERIC</strong> = <code><span class="s">&quot;Generic type is unused&quot;</span></code>
+      </dt>
+      
+    
+      <dt class="entry-const" id="MSG_INSTANCE_VAR">
+        <strong>MSG_INSTANCE_VAR</strong> = <code><span class="s">&quot;Instance variable access is unused&quot;</span></code>
+      </dt>
+      
+    
+      <dt class="entry-const" id="MSG_LITERAL">
+        <strong>MSG_LITERAL</strong> = <code><span class="s">&quot;Literal value is unused&quot;</span></code>
+      </dt>
+      
+    
+      <dt class="entry-const" id="MSG_LOCAL_VAR">
+        <strong>MSG_LOCAL_VAR</strong> = <code><span class="s">&quot;Local variable access is unused&quot;</span></code>
+      </dt>
+      
+    
+      <dt class="entry-const" id="MSG_PSEUDO_METHOD">
+        <strong>MSG_PSEUDO_METHOD</strong> = <code><span class="s">&quot;Pseudo-method call is unused&quot;</span></code>
+      </dt>
+      
+    
+      <dt class="entry-const" id="MSG_SELF">
+        <strong>MSG_SELF</strong> = <code><span class="s">&quot;`self` access is unused&quot;</span></code>
+      </dt>
+      
+    
+      <dt class="entry-const" id="MSG_UNION">
+        <strong>MSG_UNION</strong> = <code><span class="s">&quot;Union type is unused&quot;</span></code>
       </dt>
       
     
@@ -1196,7 +1207,7 @@
       <li class="entry-summary">
         <a href="#new%28config%3Dnil%29-class-method" class="signature"><strong>.new</strong>(config = <span class="n">nil</span>)</a>
         
-          <div class="summary"><p>A rule that disallows unused class variable access.</p></div>
+          <div class="summary"><p>A rule that disallows unused expressions.</p></div>
         
       </li>
     
@@ -1289,6 +1300,41 @@
     
       <li class="entry-summary">
         <a href="#test%28source%2Cnode%3ACrystal%3A%3AClassVar%2Cin_macro%3ABool%29-instance-method" class="signature"><strong>#test</strong>(source, node : Crystal::ClassVar, in_macro : Bool)</a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#test%28source%2Cnode%3ACrystal%3A%3ACall%2Cin_macro%3ABool%29-instance-method" class="signature"><strong>#test</strong>(source, node : Crystal::Call, in_macro : Bool)</a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#test%28source%2Cnode%3ACrystal%3A%3AGeneric%2Cin_macro%3ABool%29-instance-method" class="signature"><strong>#test</strong>(source, node : Crystal::Generic, in_macro : Bool)</a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#test%28source%2Cnode%3ACrystal%3A%3AInstanceVar%2Cin_macro%3ABool%29-instance-method" class="signature"><strong>#test</strong>(source, node : Crystal::InstanceVar, in_macro : Bool)</a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#test%28source%2Cnode%3ACrystal%3A%3ARegexLiteral%2Cin_macro%3ABool%29-instance-method" class="signature"><strong>#test</strong>(source, node : Crystal::RegexLiteral, in_macro : Bool)</a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#test%28source%2Cnode%3ACrystal%3A%3ABoolLiteral%7CCrystal%3A%3ACharLiteral%7CCrystal%3A%3AHashLiteral%7CCrystal%3A%3AProcLiteral%7CCrystal%3A%3AArrayLiteral%7CCrystal%3A%3ARangeLiteral%7CCrystal%3A%3ATupleLiteral%7CCrystal%3A%3ANumberLiteral%7CCrystal%3A%3AStringLiteral%7CCrystal%3A%3ASymbolLiteral%7CCrystal%3A%3ANamedTupleLiteral%7CCrystal%3A%3AStringInterpolation%2Cin_macro%3ABool%29-instance-method" class="signature"><strong>#test</strong>(source, node : Crystal::BoolLiteral | Crystal::CharLiteral | Crystal::HashLiteral | Crystal::ProcLiteral | Crystal::ArrayLiteral | Crystal::RangeLiteral | Crystal::TupleLiteral | Crystal::NumberLiteral | Crystal::StringLiteral | Crystal::SymbolLiteral | Crystal::NamedTupleLiteral | Crystal::StringInterpolation, in_macro : Bool)</a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#test%28source%2Cnode%3ACrystal%3A%3AVar%2Cin_macro%3ABool%29-instance-method" class="signature"><strong>#test</strong>(source, node : Crystal::Var, in_macro : Bool)</a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#test%28source%2Cnode%3ACrystal%3A%3APointerOf%7CCrystal%3A%3ASizeOf%7CCrystal%3A%3AInstanceSizeOf%7CCrystal%3A%3AAlignOf%7CCrystal%3A%3AInstanceAlignOf%7CCrystal%3A%3AOffsetOf%7CCrystal%3A%3AIsA%7CCrystal%3A%3ANilableCast%7CCrystal%3A%3ARespondsTo%7CCrystal%3A%3ANot%2Cin_macro%3ABool%29-instance-method" class="signature"><strong>#test</strong>(source, node : Crystal::PointerOf | Crystal::SizeOf | Crystal::InstanceSizeOf | Crystal::AlignOf | Crystal::InstanceAlignOf | Crystal::OffsetOf | Crystal::IsA | Crystal::NilableCast | Crystal::RespondsTo | Crystal::Not, in_macro : Bool)</a>
         
       </li>
     
@@ -1490,40 +1536,41 @@
       
         <div class="doc">
           
-          <p>A rule that disallows unused class variable access.</p>
+          <p>A rule that disallows unused expressions.</p>
 <p>For example, this is considered invalid:</p>
-<pre><code class="language-crystal"><span class="k">class</span> <span class="t">MyClass</span>
-  @@my_var : <span class="t">String</span> <span class="o">=</span> <span class="s">&quot;hello&quot;</span>
+<pre><code class="language-crystal">a <span class="o">=</span> obj.method <span class="k">do</span> <span class="o">|</span>x<span class="o">|</span>
+  x <span class="o">==</span> <span class="n">1</span> <span class="c"># =&gt; Comparison operation has no effect</span>
+  puts x
+<span class="k">end</span>
 
-  @@my_var
+<span class="t">Float64</span> <span class="o">|</span> <span class="t">StaticArray</span>(<span class="t">Float64</span>, <span class="n">10</span>)
 
-  <span class="k">def</span> <span class="m">hello</span> : <span class="t">String</span>
-    @@my_var
-
-    <span class="s">&quot;hello, world!&quot;</span>
-  <span class="k">end</span>
-<span class="k">end</span></code></pre>
+<span class="k">pointerof</span>(foo)</code></pre>
 <p>And these are considered valid:</p>
-<pre><code class="language-crystal"><span class="k">class</span> <span class="t">MyClass</span>
-  @@my_var : <span class="t">String</span> <span class="o">=</span> <span class="s">&quot;hello&quot;</span>
+<pre><code class="language-crystal">a <span class="o">=</span> obj.method <span class="k">do</span> <span class="o">|</span>x<span class="o">|</span>
+  x <span class="o">==</span> <span class="n">1</span>
+<span class="k">end</span>
 
-  @@my_other_var <span class="o">=</span> @@my_var
+foo : <span class="t">Float64</span> <span class="o">|</span> <span class="t">StaticArray</span>(<span class="t">Float64</span>, <span class="n">10</span>) <span class="o">=</span> <span class="n">0.1</span>
 
-  <span class="k">def</span> <span class="m">hello</span> : <span class="t">String</span>
-    <span class="k">return</span> @@my_var <span class="k">if</span> @@my_var <span class="o">==</span> <span class="s">&quot;hello&quot;</span>
-
-    <span class="s">&quot;hello, world!&quot;</span>
-  <span class="k">end</span>
-<span class="k">end</span></code></pre>
+bar <span class="o">=</span> <span class="k">pointerof</span>(foo)</code></pre>
+<p>This rule currently supports checking for unused:</p>
+<ul>
+<li>comparison operators: <code>&lt;</code>, <code>&gt;=</code>, etc.</li>
+<li>generics and unions: <code>String?</code>, <code>Int32 | Float64</code>, etc.</li>
+<li>literals: strings, bools, chars, hashes, arrays, range, etc.</li>
+<li>pseudo-method calls: <code>sizeof</code>, <code>is_a?</code> etc.</li>
+<li>variable access: local, <code>@ivar</code>, <code>@@cvar</code> and <code>self</code></li>
+</ul>
 <p>YAML configuration example:</p>
-<pre><code class="language-crystal"><span class="t">Lint</span><span class="o">/</span><span class="t">UnusedClassVariableAccess</span>:
+<pre><code class="language-crystal"><span class="t">Lint</span><span class="o">/</span><span class="t">UnusedExpression</span>:
   <span class="t">Enabled</span>: <span class="n">true</span></code></pre>
         </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/5c550cd/src/ameba/rule/lint/unused_class_variable_access.cr#L42" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/2affe55/src/ameba/rule/lint/unused_expression.cr#L42" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1706,7 +1753,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/5c550cd/src/ameba/rule/lint/unused_class_variable_access.cr#L43" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/2affe55/src/ameba/rule/lint/unused_expression.cr#L43" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1736,7 +1783,119 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/5c550cd/src/ameba/rule/lint/unused_class_variable_access.cr#L54" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/2affe55/src/ameba/rule/lint/unused_expression.cr#L64" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="test(source,node:Crystal::Call,in_macro:Bool)-instance-method">
+      <div class="signature">
+        
+        def <strong>test</strong>(source, node : Crystal::Call, in_macro : Bool)
+
+        <a class="method-permalink" href="#test%28source%2Cnode%3ACrystal%3A%3ACall%2Cin_macro%3ABool%29-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/crystal-ameba/ameba/blob/2affe55/src/ameba/rule/lint/unused_expression.cr#L71" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="test(source,node:Crystal::Generic,in_macro:Bool)-instance-method">
+      <div class="signature">
+        
+        def <strong>test</strong>(source, node : Crystal::Generic, in_macro : Bool)
+
+        <a class="method-permalink" href="#test%28source%2Cnode%3ACrystal%3A%3AGeneric%2Cin_macro%3ABool%29-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/crystal-ameba/ameba/blob/2affe55/src/ameba/rule/lint/unused_expression.cr#L81" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="test(source,node:Crystal::InstanceVar,in_macro:Bool)-instance-method">
+      <div class="signature">
+        
+        def <strong>test</strong>(source, node : Crystal::InstanceVar, in_macro : Bool)
+
+        <a class="method-permalink" href="#test%28source%2Cnode%3ACrystal%3A%3AInstanceVar%2Cin_macro%3ABool%29-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/crystal-ameba/ameba/blob/2affe55/src/ameba/rule/lint/unused_expression.cr#L85" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="test(source,node:Crystal::RegexLiteral,in_macro:Bool)-instance-method">
+      <div class="signature">
+        
+        def <strong>test</strong>(source, node : Crystal::RegexLiteral, in_macro : Bool)
+
+        <a class="method-permalink" href="#test%28source%2Cnode%3ACrystal%3A%3ARegexLiteral%2Cin_macro%3ABool%29-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/crystal-ameba/ameba/blob/2affe55/src/ameba/rule/lint/unused_expression.cr#L92" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="test(source,node:Crystal::BoolLiteral|Crystal::CharLiteral|Crystal::HashLiteral|Crystal::ProcLiteral|Crystal::ArrayLiteral|Crystal::RangeLiteral|Crystal::TupleLiteral|Crystal::NumberLiteral|Crystal::StringLiteral|Crystal::SymbolLiteral|Crystal::NamedTupleLiteral|Crystal::StringInterpolation,in_macro:Bool)-instance-method">
+      <div class="signature">
+        
+        def <strong>test</strong>(source, node : Crystal::BoolLiteral | Crystal::CharLiteral | Crystal::HashLiteral | Crystal::ProcLiteral | Crystal::ArrayLiteral | Crystal::RangeLiteral | Crystal::TupleLiteral | Crystal::NumberLiteral | Crystal::StringLiteral | Crystal::SymbolLiteral | Crystal::NamedTupleLiteral | Crystal::StringInterpolation, in_macro : Bool)
+
+        <a class="method-permalink" href="#test%28source%2Cnode%3ACrystal%3A%3ABoolLiteral%7CCrystal%3A%3ACharLiteral%7CCrystal%3A%3AHashLiteral%7CCrystal%3A%3AProcLiteral%7CCrystal%3A%3AArrayLiteral%7CCrystal%3A%3ARangeLiteral%7CCrystal%3A%3ATupleLiteral%7CCrystal%3A%3ANumberLiteral%7CCrystal%3A%3AStringLiteral%7CCrystal%3A%3ASymbolLiteral%7CCrystal%3A%3ANamedTupleLiteral%7CCrystal%3A%3AStringInterpolation%2Cin_macro%3ABool%29-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/crystal-ameba/ameba/blob/2affe55/src/ameba/rule/lint/unused_expression.cr#L99" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="test(source,node:Crystal::Var,in_macro:Bool)-instance-method">
+      <div class="signature">
+        
+        def <strong>test</strong>(source, node : Crystal::Var, in_macro : Bool)
+
+        <a class="method-permalink" href="#test%28source%2Cnode%3ACrystal%3A%3AVar%2Cin_macro%3ABool%29-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/crystal-ameba/ameba/blob/2affe55/src/ameba/rule/lint/unused_expression.cr#L111" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="test(source,node:Crystal::PointerOf|Crystal::SizeOf|Crystal::InstanceSizeOf|Crystal::AlignOf|Crystal::InstanceAlignOf|Crystal::OffsetOf|Crystal::IsA|Crystal::NilableCast|Crystal::RespondsTo|Crystal::Not,in_macro:Bool)-instance-method">
+      <div class="signature">
+        
+        def <strong>test</strong>(source, node : Crystal::PointerOf | Crystal::SizeOf | Crystal::InstanceSizeOf | Crystal::AlignOf | Crystal::InstanceAlignOf | Crystal::OffsetOf | Crystal::IsA | Crystal::NilableCast | Crystal::RespondsTo | Crystal::Not, in_macro : Bool)
+
+        <a class="method-permalink" href="#test%28source%2Cnode%3ACrystal%3A%3APointerOf%7CCrystal%3A%3ASizeOf%7CCrystal%3A%3AInstanceSizeOf%7CCrystal%3A%3AAlignOf%7CCrystal%3A%3AInstanceAlignOf%7CCrystal%3A%3AOffsetOf%7CCrystal%3A%3AIsA%7CCrystal%3A%3ANilableCast%7CCrystal%3A%3ARespondsTo%7CCrystal%3A%3ANot%2Cin_macro%3ABool%29-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/crystal-ameba/ameba/blob/2affe55/src/ameba/rule/lint/unused_expression.cr#L123" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1764,7 +1923,7 @@ that are tested by this rule, it should add an issue.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/5c550cd/src/ameba/rule/lint/unused_class_variable_access.cr#L50" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/2affe55/src/ameba/rule/lint/unused_expression.cr#L60" target="_blank">View source</a>]
         
       </div>
     </div>

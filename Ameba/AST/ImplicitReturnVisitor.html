@@ -602,43 +602,8 @@
       
     </li>
   
-  <li class=" " data-id="ameba/Ameba/Rule/Lint/UnusedClassVariableAccess" data-name="ameba::rule::lint::unusedclassvariableaccess">
-      <a href="../../Ameba/Rule/Lint/UnusedClassVariableAccess.html">UnusedClassVariableAccess</a>
-      
-    </li>
-  
-  <li class=" " data-id="ameba/Ameba/Rule/Lint/UnusedComparison" data-name="ameba::rule::lint::unusedcomparison">
-      <a href="../../Ameba/Rule/Lint/UnusedComparison.html">UnusedComparison</a>
-      
-    </li>
-  
-  <li class=" " data-id="ameba/Ameba/Rule/Lint/UnusedGenericOrUnion" data-name="ameba::rule::lint::unusedgenericorunion">
-      <a href="../../Ameba/Rule/Lint/UnusedGenericOrUnion.html">UnusedGenericOrUnion</a>
-      
-    </li>
-  
-  <li class=" " data-id="ameba/Ameba/Rule/Lint/UnusedInstanceVariableAccess" data-name="ameba::rule::lint::unusedinstancevariableaccess">
-      <a href="../../Ameba/Rule/Lint/UnusedInstanceVariableAccess.html">UnusedInstanceVariableAccess</a>
-      
-    </li>
-  
-  <li class=" " data-id="ameba/Ameba/Rule/Lint/UnusedLiteral" data-name="ameba::rule::lint::unusedliteral">
-      <a href="../../Ameba/Rule/Lint/UnusedLiteral.html">UnusedLiteral</a>
-      
-    </li>
-  
-  <li class=" " data-id="ameba/Ameba/Rule/Lint/UnusedLocalVariableAccess" data-name="ameba::rule::lint::unusedlocalvariableaccess">
-      <a href="../../Ameba/Rule/Lint/UnusedLocalVariableAccess.html">UnusedLocalVariableAccess</a>
-      
-    </li>
-  
-  <li class=" " data-id="ameba/Ameba/Rule/Lint/UnusedPseudoMethodCall" data-name="ameba::rule::lint::unusedpseudomethodcall">
-      <a href="../../Ameba/Rule/Lint/UnusedPseudoMethodCall.html">UnusedPseudoMethodCall</a>
-      
-    </li>
-  
-  <li class=" " data-id="ameba/Ameba/Rule/Lint/UnusedSelfAccess" data-name="ameba::rule::lint::unusedselfaccess">
-      <a href="../../Ameba/Rule/Lint/UnusedSelfAccess.html">UnusedSelfAccess</a>
+  <li class=" " data-id="ameba/Ameba/Rule/Lint/UnusedExpression" data-name="ameba::rule::lint::unusedexpression">
+      <a href="../../Ameba/Rule/Lint/UnusedExpression.html">UnusedExpression</a>
       
     </li>
   
@@ -1110,7 +1075,7 @@ as the body is not used by the <code>if</code> itself, but by its parent scope.<
   </h2>
   
     
-      <a href="https://github.com/crystal-ameba/ameba/blob/5c550cd/src/ameba/ast/visitors/implicit_return_visitor.cr#L11" target="_blank">
+      <a href="https://github.com/crystal-ameba/ameba/blob/2affe55/src/ameba/ast/visitors/implicit_return_visitor.cr#L11" target="_blank">
         ameba/ast/visitors/implicit_return_visitor.cr
       </a>
     
@@ -1212,6 +1177,11 @@ as the body is not used by the <code>if</code> itself, but by its parent scope.<
     
       <li class="entry-summary">
         <a href="#visit%28node%3ACrystal%3A%3AUnaryExpression%29%3ABool-instance-method" class="signature"><strong>#visit</strong>(node : Crystal::UnaryExpression) : Bool</a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#visit%28node%3ACrystal%3A%3ATypeOf%29%3ABool-instance-method" class="signature"><strong>#visit</strong>(node : Crystal::TypeOf) : Bool</a>
         
       </li>
     
@@ -1432,7 +1402,7 @@ captured by their parent node.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/5c550cd/src/ameba/ast/visitors/implicit_return_visitor.cr#L19" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/2affe55/src/ameba/ast/visitors/implicit_return_visitor.cr#L19" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1448,7 +1418,7 @@ captured by their parent node.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/5c550cd/src/ameba/ast/visitors/implicit_return_visitor.cr#L40" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/2affe55/src/ameba/ast/visitors/implicit_return_visitor.cr#L40" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1464,7 +1434,7 @@ captured by their parent node.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/5c550cd/src/ameba/ast/visitors/implicit_return_visitor.cr#L54" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/2affe55/src/ameba/ast/visitors/implicit_return_visitor.cr#L54" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1480,7 +1450,7 @@ captured by their parent node.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/5c550cd/src/ameba/ast/visitors/implicit_return_visitor.cr#L62" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/2affe55/src/ameba/ast/visitors/implicit_return_visitor.cr#L62" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1496,7 +1466,7 @@ captured by their parent node.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/5c550cd/src/ameba/ast/visitors/implicit_return_visitor.cr#L70" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/2affe55/src/ameba/ast/visitors/implicit_return_visitor.cr#L70" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1512,7 +1482,7 @@ captured by their parent node.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/5c550cd/src/ameba/ast/visitors/implicit_return_visitor.cr#L78" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/2affe55/src/ameba/ast/visitors/implicit_return_visitor.cr#L78" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1528,7 +1498,7 @@ captured by their parent node.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/5c550cd/src/ameba/ast/visitors/implicit_return_visitor.cr#L86" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/2affe55/src/ameba/ast/visitors/implicit_return_visitor.cr#L86" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1544,7 +1514,7 @@ captured by their parent node.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/5c550cd/src/ameba/ast/visitors/implicit_return_visitor.cr#L94" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/2affe55/src/ameba/ast/visitors/implicit_return_visitor.cr#L94" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1560,7 +1530,7 @@ captured by their parent node.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/5c550cd/src/ameba/ast/visitors/implicit_return_visitor.cr#L104" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/2affe55/src/ameba/ast/visitors/implicit_return_visitor.cr#L104" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1576,7 +1546,7 @@ captured by their parent node.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/5c550cd/src/ameba/ast/visitors/implicit_return_visitor.cr#L113" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/2affe55/src/ameba/ast/visitors/implicit_return_visitor.cr#L113" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1592,7 +1562,7 @@ captured by their parent node.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/5c550cd/src/ameba/ast/visitors/implicit_return_visitor.cr#L136" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/2affe55/src/ameba/ast/visitors/implicit_return_visitor.cr#L136" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1608,7 +1578,7 @@ captured by their parent node.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/5c550cd/src/ameba/ast/visitors/implicit_return_visitor.cr#L152" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/2affe55/src/ameba/ast/visitors/implicit_return_visitor.cr#L152" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1624,7 +1594,7 @@ captured by their parent node.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/5c550cd/src/ameba/ast/visitors/implicit_return_visitor.cr#L160" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/2affe55/src/ameba/ast/visitors/implicit_return_visitor.cr#L160" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1640,7 +1610,7 @@ captured by their parent node.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/5c550cd/src/ameba/ast/visitors/implicit_return_visitor.cr#L168" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/2affe55/src/ameba/ast/visitors/implicit_return_visitor.cr#L168" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1656,7 +1626,23 @@ captured by their parent node.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/5c550cd/src/ameba/ast/visitors/implicit_return_visitor.cr#L176" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/2affe55/src/ameba/ast/visitors/implicit_return_visitor.cr#L176" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="visit(node:Crystal::TypeOf):Bool-instance-method">
+      <div class="signature">
+        
+        def <strong>visit</strong>(node : Crystal::TypeOf) : Bool
+
+        <a class="method-permalink" href="#visit%28node%3ACrystal%3A%3ATypeOf%29%3ABool-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/crystal-ameba/ameba/blob/2affe55/src/ameba/ast/visitors/implicit_return_visitor.cr#L184" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1672,7 +1658,7 @@ captured by their parent node.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/5c550cd/src/ameba/ast/visitors/implicit_return_visitor.cr#L184" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/2affe55/src/ameba/ast/visitors/implicit_return_visitor.cr#L192" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1688,7 +1674,7 @@ captured by their parent node.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/5c550cd/src/ameba/ast/visitors/implicit_return_visitor.cr#L192" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/2affe55/src/ameba/ast/visitors/implicit_return_visitor.cr#L200" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1704,7 +1690,7 @@ captured by their parent node.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/5c550cd/src/ameba/ast/visitors/implicit_return_visitor.cr#L200" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/2affe55/src/ameba/ast/visitors/implicit_return_visitor.cr#L208" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1720,7 +1706,7 @@ captured by their parent node.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/5c550cd/src/ameba/ast/visitors/implicit_return_visitor.cr#L208" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/2affe55/src/ameba/ast/visitors/implicit_return_visitor.cr#L216" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1736,7 +1722,7 @@ captured by their parent node.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/5c550cd/src/ameba/ast/visitors/implicit_return_visitor.cr#L216" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/2affe55/src/ameba/ast/visitors/implicit_return_visitor.cr#L224" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1752,7 +1738,7 @@ captured by their parent node.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/5c550cd/src/ameba/ast/visitors/implicit_return_visitor.cr#L224" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/2affe55/src/ameba/ast/visitors/implicit_return_visitor.cr#L232" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1768,7 +1754,7 @@ captured by their parent node.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/5c550cd/src/ameba/ast/visitors/implicit_return_visitor.cr#L234" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/2affe55/src/ameba/ast/visitors/implicit_return_visitor.cr#L242" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1784,7 +1770,7 @@ captured by their parent node.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/5c550cd/src/ameba/ast/visitors/implicit_return_visitor.cr#L242" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/2affe55/src/ameba/ast/visitors/implicit_return_visitor.cr#L250" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1800,7 +1786,7 @@ captured by their parent node.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/5c550cd/src/ameba/ast/visitors/implicit_return_visitor.cr#L251" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/2affe55/src/ameba/ast/visitors/implicit_return_visitor.cr#L259" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1816,7 +1802,7 @@ captured by their parent node.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/5c550cd/src/ameba/ast/visitors/implicit_return_visitor.cr#L259" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/2affe55/src/ameba/ast/visitors/implicit_return_visitor.cr#L267" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1832,7 +1818,7 @@ captured by their parent node.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/5c550cd/src/ameba/ast/visitors/implicit_return_visitor.cr#L278" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/2affe55/src/ameba/ast/visitors/implicit_return_visitor.cr#L286" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1848,7 +1834,7 @@ captured by their parent node.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/5c550cd/src/ameba/ast/visitors/implicit_return_visitor.cr#L286" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/2affe55/src/ameba/ast/visitors/implicit_return_visitor.cr#L294" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1864,7 +1850,7 @@ captured by their parent node.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/5c550cd/src/ameba/ast/visitors/implicit_return_visitor.cr#L294" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/2affe55/src/ameba/ast/visitors/implicit_return_visitor.cr#L302" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1880,7 +1866,7 @@ captured by their parent node.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/5c550cd/src/ameba/ast/visitors/implicit_return_visitor.cr#L302" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/2affe55/src/ameba/ast/visitors/implicit_return_visitor.cr#L310" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1896,7 +1882,7 @@ captured by their parent node.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/5c550cd/src/ameba/ast/visitors/implicit_return_visitor.cr#L312" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/2affe55/src/ameba/ast/visitors/implicit_return_visitor.cr#L320" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1912,7 +1898,7 @@ captured by their parent node.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/5c550cd/src/ameba/ast/visitors/implicit_return_visitor.cr#L320" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/2affe55/src/ameba/ast/visitors/implicit_return_visitor.cr#L328" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1928,7 +1914,7 @@ captured by their parent node.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/5c550cd/src/ameba/ast/visitors/implicit_return_visitor.cr#L334" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/2affe55/src/ameba/ast/visitors/implicit_return_visitor.cr#L342" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1944,7 +1930,7 @@ captured by their parent node.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/5c550cd/src/ameba/ast/visitors/implicit_return_visitor.cr#L348" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/2affe55/src/ameba/ast/visitors/implicit_return_visitor.cr#L356" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1960,7 +1946,7 @@ captured by their parent node.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/5c550cd/src/ameba/ast/visitors/implicit_return_visitor.cr#L358" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/2affe55/src/ameba/ast/visitors/implicit_return_visitor.cr#L366" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1976,7 +1962,7 @@ captured by their parent node.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/5c550cd/src/ameba/ast/visitors/implicit_return_visitor.cr#L362" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/2affe55/src/ameba/ast/visitors/implicit_return_visitor.cr#L370" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1992,7 +1978,7 @@ captured by their parent node.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/5c550cd/src/ameba/ast/visitors/implicit_return_visitor.cr#L368" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/2affe55/src/ameba/ast/visitors/implicit_return_visitor.cr#L376" target="_blank">View source</a>]
         
       </div>
     </div>
