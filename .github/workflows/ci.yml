@@ -9,6 +9,28 @@ on:
     - cron: "0 3 * * 1" # Every monday at 3 AM
 
 jobs:
+  check_json_schema:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Set timezone to UTC
+        uses: szenius/set-timezone@v2.0
+
+      - name: Install Crystal
+        uses: crystal-lang/install-crystal@v1
+
+      - name: Download source
+        uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: shards install
+
+      - name: Run schema builder
+        run: shards run schema
+
+      - name: Check for changes
+        run: git diff --exit-code || exit 1
+
   test:
     strategy:
       fail-fast: false
