@@ -27,12 +27,12 @@ module Ameba::Rule::Documentation
   # YAML configuration example:
   #
   # ```
-  # Documentation/DocumentationAdmonition:
+  # Documentation/Admonition:
   #   Enabled: true
   #   Admonitions: [TODO, FIXME, BUG]
   #   Timezone: UTC
   # ```
-  class DocumentationAdmonition < Base
+  class Admonition < Base
     properties do
       since_version "1.6.0"
       description "Reports documentation admonitions"

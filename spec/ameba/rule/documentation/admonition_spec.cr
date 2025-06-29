@@ -1,8 +1,8 @@
 require "../../../spec_helper"
 
 module Ameba::Rule::Documentation
-  describe DocumentationAdmonition do
-    subject = DocumentationAdmonition.new
+  describe Admonition do
+    subject = Admonition.new
 
     it "passes for comments with admonition mid-word/sentence" do
       subject.admonitions.each do |admonition|
@@ -97,7 +97,7 @@ module Ameba::Rule::Documentation
     context "properties" do
       describe "#admonitions" do
         it "lets setting custom admonitions" do
-          rule = DocumentationAdmonition.new
+          rule = Admonition.new
           rule.admonitions = %w[FOO BAR]
 
           rule.admonitions.each do |admonition|
