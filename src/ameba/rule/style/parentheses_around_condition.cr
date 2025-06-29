@@ -24,6 +24,7 @@ module Ameba::Rule::Style
   # Style/ParenthesesAroundCondition:
   #   Enabled: true
   #   ExcludeTernary: false
+  #   ExcludeMultiline: false
   #   AllowSafeAssignment: false
   # ```
   class ParenthesesAroundCondition < Base
@@ -32,12 +33,14 @@ module Ameba::Rule::Style
       description "Disallows redundant parentheses around control expressions"
 
       exclude_ternary false
+      exclude_multiline false
       allow_safe_assignment false
     end
 
     MSG_REDUNDANT = "Redundant parentheses"
     MSG_MISSING   = "Missing parentheses"
 
+    # ameba:disable Metrics/CyclomaticComplexity
     def test(source, node : Crystal::If | Crystal::Unless | Crystal::Case | Crystal::While | Crystal::Until)
       cond = node.cond
 
@@ -57,6 +60,12 @@ module Ameba::Rule::Style
 
       return unless exp = cond.single_expression?
       return unless strip_parentheses?(exp, is_ternary)
+
+      if exclude_multiline?
+        if (location = node.location) && (end_location = node.end_location)
+          return if location.line_number != end_location.line_number
+        end
+      end
 
       issue_for cond, MSG_REDUNDANT do |corrector|
         corrector.remove_trailing(cond, 1)

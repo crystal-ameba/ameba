@@ -135,6 +135,34 @@ module Ameba::Rule::Style
         end
       end
 
+      context "#exclude_multiline" do
+        it "reports multiline expressions by default" do
+          expect_issue subject, <<-CRYSTAL
+            if (
+             # ^ error: Redundant parentheses
+                foo.empty? ||
+                bar.empty?
+              )
+              baz
+            end
+            CRYSTAL
+        end
+
+        it "allows to skip ternary control expressions" do
+          rule = ParenthesesAroundCondition.new
+          rule.exclude_multiline = true
+
+          expect_no_issues rule, <<-CRYSTAL
+            if (
+                foo.empty? ||
+                bar.empty?
+              )
+              baz
+            end
+            CRYSTAL
+        end
+      end
+
       context "#allow_safe_assignment" do
         it "reports assignments by default" do
           expect_issue subject, <<-CRYSTAL
