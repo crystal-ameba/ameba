@@ -35,6 +35,7 @@ module Ameba::Rule::Documentation
   class Admonition < Base
     properties do
       since_version "1.6.0"
+      enabled false
       description "Reports documentation admonitions"
       severity :warning
       admonitions %w[TODO FIXME BUG]
