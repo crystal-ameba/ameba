@@ -1,5 +1,11 @@
 # Extensions to `Crystal::Location`
 module Ameba::Ext::Location
+  # Returns `true` if the line numbers of `self` and *other* are the same.
+  def same_line?(other : self?) : Bool
+    !!other &&
+      @line_number == other.line_number
+  end
+
   # Returns the same location as this location but with the line and/or
   # column number(s) changed to the given value(s).
   def with(line_number = @line_number, column_number = @column_number) : self

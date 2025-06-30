@@ -36,8 +36,7 @@ module Ameba::Rule::Style
 
     def test(source, node : Crystal::Block)
       return unless location = node.location
-      return unless end_location = node.end_location
-      return if location.line_number == end_location.line_number
+      return if location.same_line?(node.end_location)
       return unless source.code[source.pos(location)]? == '{'
 
       issue_for node, MSG

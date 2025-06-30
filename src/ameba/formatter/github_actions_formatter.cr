@@ -129,7 +129,7 @@ module Ameba::Formatter
       return unless location
 
       line_selector =
-        if end_location && location.line_number != end_location.line_number
+        if end_location && !location.same_line?(end_location)
           "#{location.line_number}-#{end_location.line_number}"
         else
           "#{location.line_number}"
