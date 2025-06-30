@@ -109,9 +109,7 @@ module Ameba::Rule
       name == other.try(&.name)
     end
 
-    def hash
-      name.hash
-    end
+    def_hash group, name
 
     # Adds an issue to the *source*
     macro issue_for(*args, **kwargs, &block)
