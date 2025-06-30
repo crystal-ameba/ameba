@@ -1,10 +1,10 @@
 require "../../../spec_helper"
 
 module Ameba::Rule::Layout
-  subject = LineLength.new
-  long_line = "*" * (subject.max_length + 1)
-
   describe LineLength do
+    subject = LineLength.new
+    long_line = "*" * (subject.max_length + 1)
+
     it "passes if all lines are shorter than MaxLength symbols" do
       expect_no_issues subject, <<-CRYSTAL
         short line

@@ -60,9 +60,28 @@ module Ameba::Rule::Lint
       subject.catch(s).should_not be_valid
     end
 
+    it "reports if there is a spec item with `focus: !true`" do
+      s = Source.new %(
+        it "it", focus: !true do
+        end
+      ), path: "source_spec.cr"
+
+      subject.catch(s).should_not be_valid
+    end
+
     it "does not report if there is non spec block with :focus" do
       s = Source.new %(
         some_method "foo", focus: true do
+        end
+      ), path: "source_spec.cr"
+
+      subject.catch(s).should be_valid
+    end
+
+    it "does not report if there is a parameterized focused spec item" do
+      s = Source.new %(
+        def assert_foo(focus = false)
+          it "foo", focus: focus { yield }
         end
       ), path: "source_spec.cr"
 

@@ -27,15 +27,17 @@ module Ameba::Rule::Documentation
   # YAML configuration example:
   #
   # ```
-  # Documentation/DocumentationAdmonition:
+  # Documentation/Admonition:
   #   Enabled: true
   #   Admonitions: [TODO, FIXME, BUG]
   #   Timezone: UTC
   # ```
-  class DocumentationAdmonition < Base
+  class Admonition < Base
     properties do
       since_version "1.6.0"
+      enabled false
       description "Reports documentation admonitions"
+      severity :warning
       admonitions %w[TODO FIXME BUG]
       timezone "UTC"
     end
@@ -46,7 +48,7 @@ module Ameba::Rule::Documentation
 
     @[YAML::Field(ignore: true)]
     private getter location : Time::Location do
-      Time::Location.load(self.timezone)
+      Time::Location.load(timezone)
     end
 
     def test(source)
@@ -60,27 +62,32 @@ module Ameba::Rule::Documentation
         matches = doc.scan(pattern)
         matches.each do |match|
           admonition = match["admonition"]
+
+          begin_location =
+            token.location.adjust(column_number: 2) # adjust for "# "
+          end_location =
+            begin_location.adjust(column_number: admonition.size - 1)
+          token_location = {begin_location, end_location}
+
           begin
             case expr = match["context"]?.presence
             when /\A\d{4}-\d{2}-\d{2}\Z/ # date
-              # ameba:disable Lint/NotNil
-              date = Time.parse(expr.not_nil!, "%F", location)
-              issue_for_date source, token, admonition, date
+              date = Time.parse($0, "%F", location)
+              issue_for_date source, token_location, admonition, date
             when /\A\d{4}-\d{2}-\d{2} \d{2}:\d{2}(:\d{2})?\Z/ # date + time (no tz)
-              # ameba:disable Lint/NotNil
-              date = Time.parse(expr.not_nil!, "%F #{$1?.presence ? "%T" : "%R"}", location)
-              issue_for_date source, token, admonition, date
+              date = Time.parse($0, "%F #{$1?.presence ? "%T" : "%R"}", location)
+              issue_for_date source, token_location, admonition, date
             else
-              issue_for token, MSG % admonition
+              issue_for *token_location, MSG % admonition
             end
           rescue ex
-            issue_for token, MSG_ERR % {admonition, "#{ex}: #{expr.inspect}"}
+            issue_for *token_location, MSG_ERR % {admonition, "#{ex}: #{expr.inspect}"}
           end
         end
       end
     end
 
-    private def issue_for_date(source, node, admonition, date)
+    private def issue_for_date(source, token_location, admonition, date)
       diff = Time.utc - date.to_utc
 
       return if diff.negative?
@@ -91,7 +98,7 @@ module Ameba::Rule::Documentation
              else                       "#{diff.total_days.to_i} days past"
              end
 
-      issue_for node, MSG_LATE % {admonition, past}
+      issue_for *token_location, MSG_LATE % {admonition, past}
     end
   end
 end

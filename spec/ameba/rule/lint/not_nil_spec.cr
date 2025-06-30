@@ -1,9 +1,9 @@
 require "../../../spec_helper"
 
 module Ameba::Rule::Lint
-  subject = NotNil.new
-
   describe NotNil do
+    subject = NotNil.new
+
     it "passes for valid cases" do
       expect_no_issues subject, <<-CRYSTAL
         (1..3).first?.not_nil!(:foo)

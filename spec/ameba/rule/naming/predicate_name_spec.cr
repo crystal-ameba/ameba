@@ -1,9 +1,9 @@
 require "../../../spec_helper"
 
 module Ameba::Rule::Naming
-  subject = PredicateName.new
-
   describe PredicateName do
+    subject = PredicateName.new
+
     it "passes if predicate name is correct" do
       expect_no_issues subject, <<-CRYSTAL
         def valid?(x)

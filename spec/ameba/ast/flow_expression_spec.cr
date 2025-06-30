@@ -52,7 +52,7 @@ module Ameba::AST
             CRYSTAL
           node = nodes.expressions_nodes.first
           flow_expression = FlowExpression.new node, false
-          flow_expression.unreachable_nodes.empty?.should eq true
+          flow_expression.unreachable_nodes.empty?.should be_true
         end
 
         it "returns nil if there is no unreachable node" do
@@ -64,7 +64,7 @@ module Ameba::AST
             CRYSTAL
           node = nodes.expressions_nodes.first
           flow_expression = FlowExpression.new node, false
-          flow_expression.unreachable_nodes.empty?.should eq true
+          flow_expression.unreachable_nodes.empty?.should be_true
         end
       end
     end

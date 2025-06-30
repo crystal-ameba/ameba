@@ -7,3 +7,7 @@
 # Libraries don't need dependency lock
 # Dependencies will be locked in application that uses them
 /shard.lock
+
+# Workspace settings used by common text-editors
+/.vscode
+/.zed

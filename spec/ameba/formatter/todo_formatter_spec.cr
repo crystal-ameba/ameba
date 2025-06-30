@@ -1,7 +1,7 @@
 require "../../spec_helper"
 require "file_utils"
 
-CONFIG_PATH = Path[Dir.tempdir] / Ameba::Config::FILENAME
+private CONFIG_PATH = Path[Dir.tempdir] / Ameba::Config::FILENAME
 
 module Ameba
   private def with_formatter(&)
@@ -30,14 +30,14 @@ module Ameba
     context "problems not found" do
       it "does not create file" do
         with_formatter do |formatter|
-          file = formatter.finished [Source.new ""]
+          file = formatter.finished [Source.new]
           file.should be_nil
         end
       end
 
       it "reports a message saying file is not created" do
         with_formatter do |formatter, io|
-          formatter.finished [Source.new ""]
+          formatter.finished [Source.new]
           io.to_s.should contain "No issues found. File is not generated"
         end
       end
@@ -73,18 +73,6 @@ module Ameba
         create_todo.should contain "DummyRule"
       end
 
-      it "creates a todo with severity" do
-        create_todo.should contain "Convention"
-      end
-
-      it "creates a todo with problems count" do
-        create_todo.should contain "Problems found: 1"
-      end
-
-      it "creates a todo with run details" do
-        create_todo.should contain "Run `ameba --only #{DummyRule.rule_name}`"
-      end
-
       it "excludes source from this rule" do
         create_todo.should contain "Excluded:\n  - source.cr"
       end
@@ -103,18 +91,36 @@ module Ameba
 
             content = File.read(CONFIG_PATH)
             content.should contain <<-CONTENT
-              # Problems found: 3
-              # Run `ameba --only Ameba/DummyRule` for details
               Ameba/DummyRule:
-                Description: Dummy rule that does nothing.
-                Dummy: true
                 Excluded:
                 - source1.cr
                 - source2.cr
-                Enabled: true
-                Severity: Convention
               CONTENT
           end
+        end
+      end
+
+      it "output format" do
+        with_formatter do |formatter|
+          s1 = Source.new "", "source1.cr"
+          s2 = Source.new "", "source2.cr"
+          s1.add_issue NamedRule.new, {1, 1}, ""
+          s2.add_issue DummyRule.new, {2, 2}, ""
+          s1.add_issue DummyRule.new, {3, 3}, ""
+
+          formatter.finished([s1, s2])
+
+          content = File.read(CONFIG_PATH)
+          content.should contain <<-YAML
+            Ameba/DummyRule:
+              Excluded:
+              - source1.cr
+              - source2.cr
+
+            BreakingRule:
+              Excluded:
+              - source1.cr
+            YAML
         end
       end
 

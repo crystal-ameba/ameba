@@ -151,7 +151,7 @@ module Ameba
           rules_with_issues << rule if size_before != size_after
         end
         check_unneeded_directives(source)
-        break unless autocorrect? && source.correct?
+        break unless autocorrect? && source.correct!
 
         # The issues that couldn't be corrected will be found again so we
         # only keep the corrected ones in order to avoid duplicate reporting.
@@ -167,7 +167,12 @@ module Ameba
     ensure
       missing_location = Crystal::Location.new(nil, 0, 0)
       source.issues.sort_by! do |issue|
-        issue.location || missing_location
+        location = issue.location || missing_location
+        {
+          location.filename.to_s,
+          location.line_number,
+          location.column_number,
+        }
       end
       @formatter.source_finished source
     end

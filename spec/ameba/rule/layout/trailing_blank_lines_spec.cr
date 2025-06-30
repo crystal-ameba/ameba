@@ -1,9 +1,9 @@
 require "../../../spec_helper"
 
 module Ameba::Rule::Layout
-  subject = TrailingBlankLines.new
-
   describe TrailingBlankLines do
+    subject = TrailingBlankLines.new
+
     it "passes if there is a blank line at the end of a source" do
       expect_no_issues subject, "a = 1\n"
     end

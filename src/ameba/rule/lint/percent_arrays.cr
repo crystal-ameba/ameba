@@ -1,18 +1,18 @@
 module Ameba::Rule::Lint
-  # A rule that disallows some unwanted symbols in percent array literals.
+  # A rule that disallows some unwanted symbols in percent string and symbol array literals.
   #
   # For example, this is usually written by mistake:
   #
   # ```
-  # %i[:one, :two]
   # %w["one", "two"]
+  # %i[:one, :two]
   # ```
   #
   # And the expected example is:
   #
   # ```
-  # %i[one two]
   # %w[one two]
+  # %i[one two]
   # ```
   #
   # YAML configuration example:
@@ -47,7 +47,7 @@ module Ameba::Rule::Lint
           end
         when .string_array_end?
           if (_start = start_token) && (_issue = issue)
-            issue_for _start, _issue
+            issue_for _start.location, _start.location.adjust(column_number: 1), _issue
           end
           issue = start_token = nil
         end

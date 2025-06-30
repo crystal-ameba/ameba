@@ -19,12 +19,12 @@ module Ameba
     # path = "./src/source.cr"
     # Ameba::Source.new File.read(path), path
     # ```
-    def initialize(@code, @path = "")
+    def initialize(@code = "", @path = "")
     end
 
     # Corrects any correctable issues and updates `code`.
     # Returns `false` if no issues were corrected.
-    def correct?
+    def correct!
       corrector = Corrector.new(code)
       issues.each(&.correct(corrector))
 
@@ -48,7 +48,7 @@ module Ameba
     # source = Ameba::Source.new "a = 1\nb = 2", path
     # source.lines # => ["a = 1", "b = 2"]
     # ```
-    getter lines : Array(String) { code.split('\n') }
+    getter lines : Array(String) { code.split(/\r?\n/) }
 
     # Returns AST nodes constructed by `Crystal::Parser`.
     #
@@ -57,6 +57,24 @@ module Ameba
     # source.ast
     # ```
     getter ast : Crystal::ASTNode do
+      code = @code
+
+      Ameba.ecr_supported? do
+        if ecr?
+          begin
+            code = ECR.process_string(code, path)
+          rescue ex : ECR::Lexer::SyntaxException
+            # Need to rescue to add the filename
+            raise Crystal::SyntaxException.new(
+              ex.message,
+              ex.line_number,
+              ex.column_number,
+              path
+            )
+          end
+        end
+      end
+
       Crystal::Parser.new(code)
         .tap(&.wants_doc = true)
         .tap(&.filename = path)
@@ -70,6 +88,11 @@ module Ameba
     # Returns `true` if the source is a spec file, `false` otherwise.
     def spec?
       path.ends_with?("_spec.cr")
+    end
+
+    # Returns `true` if the source is an ECR template, `false` otherwise.
+    def ecr?
+      path.ends_with?(".ecr")
     end
 
     # Returns `true` if *filepath* matches the source's path, `false` otherwise.

@@ -9,7 +9,7 @@ module Ameba::Rule::Lint
   # end
   # ```
   #
-  # as the predicate name is correct and the comment directive does not
+  # As the predicate name is correct and the comment directive does not
   # have any effect, the snippet should be written as the following:
   #
   # ```
@@ -21,7 +21,7 @@ module Ameba::Rule::Lint
   # YAML configuration example:
   #
   # ```
-  # Lint/UnneededDisableDirective
+  # Lint/UnneededDisableDirective:
   #   Enabled: true
   # ```
   class UnneededDisableDirective < Base
@@ -39,7 +39,10 @@ module Ameba::Rule::Lint
         next unless names = unneeded_disables(source, directive, token.location)
         next if names.empty?
 
-        issue_for token, MSG % names.join(", ")
+        location = token.location
+        end_location = location.adjust(column_number: token.value.to_s.size - 1)
+
+        issue_for location, end_location, MSG % names.join(", ")
       end
     end
 
@@ -47,7 +50,7 @@ module Ameba::Rule::Lint
       return unless directive[:action] == "disable"
 
       directive[:rules].reject do |rule_name|
-        next if rule_name == self.name
+        next if rule_name == name
         source.issues.any? do |issue|
           issue.rule.name == rule_name &&
             issue.disabled? &&

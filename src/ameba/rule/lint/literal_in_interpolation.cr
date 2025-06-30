@@ -12,7 +12,7 @@ module Ameba::Rule::Lint
   # YAML configuration example:
   #
   # ```
-  # Lint/LiteralInInterpolation
+  # Lint/LiteralInInterpolation:
   #   Enabled: true
   # ```
   class LiteralInInterpolation < Base
@@ -25,13 +25,22 @@ module Ameba::Rule::Lint
 
     MSG = "Literal value found in interpolation"
 
+    MAGIC_CONSTANTS = %w[__LINE__ __FILE__ __DIR__]
+
     def test(source, node : Crystal::StringInterpolation)
-      each_literal_node(node) { |exp| issue_for exp, MSG }
+      each_literal_node(source, node) { |exp| issue_for exp, MSG }
     end
 
-    private def each_literal_node(node, &)
+    private def each_literal_node(source, node, &)
+      source_lines = source.lines
+
       node.expressions.each do |exp|
-        yield exp if !exp.is_a?(Crystal::StringLiteral) && literal?(exp)
+        next if exp.is_a?(Crystal::StringLiteral)
+        next unless static_literal?(exp)
+        next unless code = node_source(exp, source_lines)
+        next if code.in?(MAGIC_CONSTANTS)
+
+        yield exp
       end
     end
   end

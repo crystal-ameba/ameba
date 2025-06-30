@@ -3,7 +3,7 @@ module Ameba::Rule::Lint
   # in place of a variable or predicate function.
   #
   # This is because a conditional construct with a literal predicate will
-  # always result in the same behaviour at run time, meaning it can be
+  # always result in the same behavior at run time, meaning it can be
   # replaced with either the body of the construct, or deleted entirely.
   #
   # This is considered invalid:
@@ -31,8 +31,23 @@ module Ameba::Rule::Lint
 
     MSG = "Literal value found in conditional"
 
-    def test(source, node : Crystal::If | Crystal::Unless | Crystal::Case)
-      issue_for node, MSG if static_literal?(node.cond)
+    def test(source, node : Crystal::If | Crystal::Unless | Crystal::Until)
+      issue_for node.cond, MSG if literal?(node.cond)
+    end
+
+    def test(source, node : Crystal::Case)
+      return unless cond = node.cond
+      return unless static_literal?(cond)
+
+      issue_for cond, MSG
+    end
+
+    def test(source, node : Crystal::While)
+      return unless literal?(cond = node.cond)
+      # allow `while true`
+      return if cond.is_a?(Crystal::BoolLiteral) && cond.value
+
+      issue_for cond, MSG
     end
   end
 end

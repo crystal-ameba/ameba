@@ -185,7 +185,9 @@ module Ameba::Cli
     when opts.all?
       config.rules.each(&.enabled = true)
     end
-    config.update_rules(opts.except, enabled: false)
+    if except = opts.except
+      config.update_rules(except, enabled: false)
+    end
   end
 
   private def configure_formatter(config, opts) : Nil
@@ -224,7 +226,11 @@ module Ameba::Cli
   end
 
   private def print_version
-    puts VERSION
+    if GIT_SHA
+      puts "%s [%s]" % {VERSION, GIT_SHA}
+    else
+      puts VERSION
+    end
     exit 0
   end
 

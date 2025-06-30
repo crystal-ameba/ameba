@@ -6,14 +6,16 @@ module Ameba::Rule::Lint
   # For example, this is considered invalid:
   #
   # ```
-  # if foo.includes? "bar" || foo.includes? "batz"
+  # if foo.includes? "bar" || foo.includes? "baz"
+  #   # ...
   # end
   # ```
   #
   # And need to be written as:
   #
   # ```
-  # if foo.includes?("bar") || foo.includes?("batz")
+  # if foo.includes?("bar") || foo.includes?("baz")
+  #   # ...
   # end
   # ```
   #
@@ -31,7 +33,7 @@ module Ameba::Rule::Lint
 
     MSG = "Use parentheses in the method call to avoid confusion about precedence"
 
-    ALLOWED_CALL_NAMES = %w{[]? []}
+    ALLOWED_CALL_NAMES = %w[[]? []]
 
     def test(source, node : Crystal::Call)
       return if node.args.empty? ||
@@ -40,11 +42,11 @@ module Ameba::Rule::Lint
                 node.name.in?(ALLOWED_CALL_NAMES)
 
       node.args.each do |arg|
-        if arg.is_a?(Crystal::BinaryOp)
-          if (right = arg.right).is_a?(Crystal::Call)
-            issue_for node, MSG unless right.args.empty?
-          end
-        end
+        next unless arg.is_a?(Crystal::BinaryOp)
+        next unless (right = arg.right).is_a?(Crystal::Call)
+        next if right.args.empty?
+
+        issue_for node, MSG
       end
     end
   end

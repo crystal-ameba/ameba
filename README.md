@@ -174,6 +174,7 @@ In this example we define default globs and exclude `src/compiler` folder:
 ``` yaml
 Globs:
   - "**/*.cr"
+  - "**/*.ecr"
   - "!lib"
 
 Excluded:

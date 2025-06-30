@@ -1,5 +1,6 @@
 class Ameba::Source::Rewriter
   # :nodoc:
+  #
   # Actions are arranged in a tree and get combined so that:
   # - children are strictly contained by their parent
   # - siblings all disjoint from one another and ordered
@@ -42,6 +43,7 @@ class Ameba::Source::Rewriter
 
     def ordered_replacements
       replacement = @replacement
+
       reps = [] of {Int32, Int32, String}
       reps << {@begin_pos, @begin_pos, @insert_before} unless @insert_before.empty?
       reps << {@begin_pos, @end_pos, replacement} if replacement
@@ -125,14 +127,19 @@ class Ameba::Source::Rewriter
     #
     # In case a child has equal range to *action*, it is returned as `:parent`
     #
-    # Reminder: an empty range 1...1 is considered disjoint from 1...10
-    protected def analyze_hierarchy(action) # ameba:disable Metrics/CyclomaticComplexity
+    # NOTE: an empty range `1...1` is considered disjoint from `1...10`
+    protected def analyze_hierarchy(action)
       # left_index is the index of the first child that isn't completely to the left of action
-      left_index = bsearch_child_index { |child| child.end_pos > action.begin_pos }
+      left_index = bsearch_child_index do |child|
+        child.end_pos > action.begin_pos
+      end
       # right_index is the index of the first child that is completely on the right of action
       start = left_index == 0 ? 0 : left_index - 1 # See "corner case" below for reason of -1
-      right_index = bsearch_child_index(start) { |child| child.begin_pos >= action.end_pos }
+      right_index = bsearch_child_index(start) do |child|
+        child.begin_pos >= action.end_pos
+      end
       center = right_index - left_index
+
       case center
       when 0
         # All children are disjoint from action, nothing else to do
@@ -148,8 +155,8 @@ class Ameba::Source::Rewriter
         overlap_left = @children[left_index].begin_pos <=> action.begin_pos
         overlap_right = @children[right_index - 1].end_pos <=> action.end_pos
 
-        raise "Unable to compare begin pos" if overlap_left.nil?
-        raise "Unable to compare end pos" if overlap_right.nil?
+        raise "Unable to compare begin pos" unless overlap_left
+        raise "Unable to compare end pos" unless overlap_right
 
         # For one child to be the parent of action, we must have:
         if center == 1 && overlap_left <= 0 && overlap_right >= 0

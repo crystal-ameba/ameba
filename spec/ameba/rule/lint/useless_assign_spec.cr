@@ -3,7 +3,7 @@ require "../../../spec_helper"
 module Ameba::Rule::Lint
   describe UselessAssign do
     subject = UselessAssign.new
-      .tap(&.exclude_type_declarations = false)
+    subject.exclude_type_declarations = false
 
     it "does not report used assignments" do
       expect_no_issues subject, <<-CRYSTAL
@@ -25,7 +25,7 @@ module Ameba::Rule::Lint
 
     it "reports a useless assignment in a proc" do
       expect_issue subject, <<-CRYSTAL
-        ->() {
+        -> () {
           a = 2
         # ^ error: Useless assignment to variable `a`
         }
@@ -46,7 +46,7 @@ module Ameba::Rule::Lint
     it "reports a useless assignment in a proc inside def" do
       expect_issue subject, <<-CRYSTAL
         def method
-          ->() {
+          -> () {
             a = 2
           # ^ error: Useless assignment to variable `a`
           }
@@ -65,7 +65,7 @@ module Ameba::Rule::Lint
       expect_issue subject, <<-CRYSTAL
         def method
           3.times do
-            ->() {
+            -> () {
               a = 2
             # ^ error: Useless assignment to variable `a`
             }
@@ -239,7 +239,7 @@ module Ameba::Rule::Lint
       expect_no_issues subject, <<-CRYSTAL
         def method
           called = false
-          ->() { called = true }
+          -> () { called = true }
           called
         end
         CRYSTAL
@@ -266,6 +266,125 @@ module Ameba::Rule::Lint
           param
         end
         CRYSTAL
+    end
+
+    describe "is aware of separate variable scopes (#623)" do
+      it "def" do
+        expect_issue subject, <<-CRYSTAL
+          x = 1
+
+          def bar
+            x = 2
+          # ^ error: Useless assignment to variable `x`
+          end
+
+          puts x
+          CRYSTAL
+      end
+
+      it "fun" do
+        expect_issue subject, <<-CRYSTAL
+          x = 1
+
+          fun bar
+            x = 2
+          # ^ error: Useless assignment to variable `x`
+          end
+
+          puts x
+          CRYSTAL
+      end
+
+      it "macro" do
+        expect_no_issues subject, <<-CRYSTAL
+          x = 1
+
+          macro bar
+            x = 2
+          end
+
+          puts x
+          CRYSTAL
+      end
+
+      pending "assigns" do
+        it "path" do
+          expect_issue subject, <<-CRYSTAL
+            x = 1
+
+            BAR = begin
+              x = 2
+            # ^ error: Useless assignment to variable `x`
+            end
+
+            puts x
+            CRYSTAL
+        end
+
+        it "ivar" do
+          expect_issue subject, <<-CRYSTAL
+            class Foo
+              x = 1
+
+              @bar = begin
+                x = 2
+              # ^ error: Useless assignment to variable `x`
+              end
+
+              puts x
+            end
+            CRYSTAL
+        end
+
+        it "ivar in def" do
+          expect_issue subject, <<-CRYSTAL
+            class Foo
+              def foo
+                x = 1
+                # ^ error: Useless assignment to variable `x`
+
+                @bar = begin
+                  x = 2
+                end
+
+                puts x
+              end
+            end
+            CRYSTAL
+        end
+
+        it "cvar" do
+          expect_issue subject, <<-CRYSTAL
+            class Foo
+              x = 1
+
+              @@bar = begin
+                x = 2
+              # ^ error: Useless assignment to variable `x`
+              end
+
+              puts x
+            end
+            CRYSTAL
+        end
+
+        it "cvar in def" do
+          expect_issue subject, <<-CRYSTAL
+            class Foo
+              def foo
+                x = 1
+                # ^ error: Useless assignment to variable `x`
+
+                @@bar = begin
+                  x = 2
+                end
+
+                puts x
+              end
+            end
+            CRYSTAL
+        end
+      end
     end
 
     context "op assigns" do
@@ -617,6 +736,33 @@ module Ameba::Rule::Lint
       end
 
       context "case" do
+        context "when" do
+          it "does not report if assignment is referenced" do
+            expect_no_issues subject, <<-CRYSTAL
+              def method(a)
+                case
+                when a = foo
+                when a = bar
+                end
+                puts a
+              end
+              CRYSTAL
+          end
+
+          it "reports if assignment is useless" do
+            expect_issue subject, <<-CRYSTAL
+              def method(a)
+                case
+                when a = foo
+                   # ^ error: Useless assignment to variable `a`
+                when a = bar
+                   # ^ error: Useless assignment to variable `a`
+                end
+              end
+              CRYSTAL
+          end
+        end
+
         it "does not report if assignment is referenced" do
           expect_no_issues subject, <<-CRYSTAL
             def method(a)
@@ -655,6 +801,35 @@ module Ameba::Rule::Lint
               end
             end
             CRYSTAL
+        end
+      end
+
+      context "select" do
+        context "when" do
+          it "does not report if assignment is referenced" do
+            expect_no_issues subject, <<-CRYSTAL
+              def method(a)
+                select
+                when a = foo
+                when a = bar
+                end
+                puts a
+              end
+              CRYSTAL
+          end
+
+          it "reports if assignment is useless" do
+            expect_issue subject, <<-CRYSTAL
+              def method(a)
+                select
+                when a = foo
+                   # ^ error: Useless assignment to variable `a`
+                when a = bar
+                   # ^ error: Useless assignment to variable `a`
+                end
+              end
+              CRYSTAL
+          end
         end
       end
 
@@ -1011,6 +1186,18 @@ module Ameba::Rule::Lint
           CRYSTAL
       end
 
+      it "reports if it's not referenced at a top level + in a method" do
+        expect_issue subject, <<-CRYSTAL
+          a : String?
+          # ^{} error: Useless assignment to variable `a`
+
+          def foo
+            b : String?
+          # ^ error: Useless assignment to variable `b`
+          end
+          CRYSTAL
+      end
+
       it "reports if it's not referenced in a method" do
         expect_issue subject, <<-CRYSTAL
           def foo
@@ -1075,6 +1262,18 @@ module Ameba::Rule::Lint
         expect_issue subject, <<-CRYSTAL
           a = uninitialized U
           # ^{} error: Useless assignment to variable `a`
+          CRYSTAL
+      end
+
+      it "reports if uninitialized assignment is not referenced at a top level + in a method" do
+        expect_issue subject, <<-CRYSTAL
+          a = uninitialized U
+          # ^{} error: Useless assignment to variable `a`
+
+          def foo
+            b = uninitialized U
+          # ^ error: Useless assignment to variable `b`
+          end
           CRYSTAL
       end
 

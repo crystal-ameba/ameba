@@ -38,21 +38,6 @@ module Ameba::Rule::Style
     MSG_REDUNDANT = "Redundant parentheses"
     MSG_MISSING   = "Missing parentheses"
 
-    protected def strip_parentheses?(node, in_ternary) : Bool
-      case node
-      when Crystal::BinaryOp, Crystal::ExceptionHandler
-        !in_ternary
-      when Crystal::Call
-        !in_ternary || node.has_parentheses? || node.args.empty?
-      when Crystal::Yield
-        !in_ternary || node.has_parentheses? || node.exps.empty?
-      when Crystal::Assign, Crystal::OpAssign, Crystal::MultiAssign
-        !in_ternary && !allow_safe_assignment?
-      else
-        true
-      end
-    end
-
     def test(source, node : Crystal::If | Crystal::Unless | Crystal::Case | Crystal::While | Crystal::Until)
       cond = node.cond
 
@@ -76,6 +61,23 @@ module Ameba::Rule::Style
       issue_for cond, MSG_REDUNDANT do |corrector|
         corrector.remove_trailing(cond, 1)
         corrector.remove_leading(cond, 1)
+      end
+    end
+
+    private def strip_parentheses?(node, in_ternary) : Bool
+      case node
+      when Crystal::BinaryOp
+        !in_ternary
+      when Crystal::Call
+        !in_ternary || node.has_parentheses? || node.args.empty?
+      when Crystal::ExceptionHandler, Crystal::If, Crystal::Unless
+        false
+      when Crystal::Yield
+        !in_ternary || node.has_parentheses? || node.exps.empty?
+      when Crystal::Assign, Crystal::OpAssign, Crystal::MultiAssign
+        !in_ternary && !allow_safe_assignment?
+      else
+        true
       end
     end
   end

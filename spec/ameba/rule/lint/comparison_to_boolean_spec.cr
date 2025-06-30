@@ -1,9 +1,9 @@
 require "../../../spec_helper"
 
 module Ameba::Rule::Lint
-  subject = ComparisonToBoolean.new
-
   describe ComparisonToBoolean do
+    subject = ComparisonToBoolean.new
+
     it "passes if there is no comparison to boolean" do
       expect_no_issues subject, <<-CRYSTAL
         a = true

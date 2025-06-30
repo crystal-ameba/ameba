@@ -20,7 +20,7 @@ module Ameba::Rule::Naming
   #   Enabled: true
   #   MinNameLength: 3
   #   AllowNamesEndingInNumbers: true
-  #   AllowedNames: [e, i, j, k, v, x, y, ex, io, ws, op, tx, id, ip, k1, k2, v1, v2]
+  #   AllowedNames: [e, i, j, k, v, x, y, ex, io, ws, op, tx, id, ip, k1, k2, v1, v2, wg]
   #   ForbiddenNames: []
   # ```
   class BlockParameterName < Base
@@ -29,7 +29,7 @@ module Ameba::Rule::Naming
       description "Disallows non-descriptive block parameter names"
       min_name_length 3
       allow_names_ending_in_numbers true
-      allowed_names %w[e i j k v x y ex io ws op tx id ip k1 k2 v1 v2]
+      allowed_names %w[e i j k v x y ex io ws op tx id ip k1 k2 v1 v2 wg]
       forbidden_names %w[]
     end
 

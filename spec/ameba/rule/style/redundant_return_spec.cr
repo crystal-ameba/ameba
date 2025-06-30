@@ -1,9 +1,9 @@
 require "../../../spec_helper"
 
 module Ameba::Rule::Style
-  subject = RedundantReturn.new
-
   describe RedundantReturn do
+    subject = RedundantReturn.new
+
     it "does not report if there is no return" do
       expect_no_issues subject, <<-CRYSTAL
         def inc(a)

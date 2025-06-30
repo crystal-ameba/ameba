@@ -1,9 +1,9 @@
 require "../../../spec_helper"
 
 module Ameba::Rule::Performance
-  subject = AnyAfterFilter.new
-
   describe AnyAfterFilter do
+    subject = AnyAfterFilter.new
+
     it "passes if there is no potential performance improvements" do
       expect_no_issues subject, <<-CRYSTAL
         [1, 2, 3].select { |e| e > 1 }.any?(&.zero?)

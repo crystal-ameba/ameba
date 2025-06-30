@@ -178,7 +178,7 @@ module Ameba::Rule::Style
       end
     end
 
-    def guard_clause_source(source, guard_clause, parent)
+    private def guard_clause_source(source, guard_clause, parent)
       node = parent.is_a?(Crystal::BinaryOp) ? parent : guard_clause
 
       node_source(node, source.lines)

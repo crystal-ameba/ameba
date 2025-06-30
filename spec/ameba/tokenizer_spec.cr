@@ -13,14 +13,14 @@ module Ameba
 
   describe Tokenizer do
     describe "#run" do
-      it_tokenizes %("string"), %w(DELIMITER_START STRING DELIMITER_END EOF)
-      it_tokenizes %(100), %w(NUMBER EOF)
-      it_tokenizes %('a'), %w(CHAR EOF)
-      it_tokenizes %([]), %w([] EOF)
-      it_tokenizes %([] of String), %w([] SPACE IDENT SPACE CONST EOF)
-      it_tokenizes %q("str #{3}"), %w(
+      it_tokenizes %("string"), %w[DELIMITER_START STRING DELIMITER_END EOF]
+      it_tokenizes %(100), %w[NUMBER EOF]
+      it_tokenizes %('a'), %w[CHAR EOF]
+      it_tokenizes %([]), %w[[] EOF]
+      it_tokenizes %([] of String), %w[[] SPACE IDENT SPACE CONST EOF]
+      it_tokenizes %q("str #{3}"), %w[
         DELIMITER_START STRING INTERPOLATION_START NUMBER } DELIMITER_END EOF
-      )
+      ]
 
       it_tokenizes %(%w[1 2]),
         %w[STRING_ARRAY_START STRING STRING STRING_ARRAY_END EOF]

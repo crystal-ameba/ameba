@@ -1,9 +1,9 @@
 require "../../../spec_helper"
 
 module Ameba::Rule::Lint
-  subject = DuplicatedRequire.new
-
   describe DuplicatedRequire do
+    subject = DuplicatedRequire.new
+
     it "passes if there are no duplicated requires" do
       expect_no_issues subject, <<-CRYSTAL
         require "math"

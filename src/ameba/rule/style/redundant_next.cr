@@ -1,5 +1,5 @@
 module Ameba::Rule::Style
-  # A rule that disallows redundant next expressions. A `next` keyword allows
+  # A rule that disallows redundant `next` expressions. A `next` keyword allows
   # a block to skip to the next iteration early, however, it is considered
   # redundant in cases where it is the last expression in a block or combines
   # into the node which is the last in a block.
@@ -50,7 +50,7 @@ module Ameba::Rule::Style
   #
   # 1. *allow_multi_next*, default: true
   #
-  # Allows end-user to configure whether to report or not the next statements
+  # Allows end-user to configure whether to report or not the `next` statements
   # which yield tuple literals i.e.
   #
   # ```
@@ -69,8 +69,8 @@ module Ameba::Rule::Style
   #
   # 2. *allow_empty_next*, default: true
   #
-  # Allows end-user to configure whether to report or not the next statements
-  # without arguments. Sometimes such statements are used to yild the `nil` value explicitly.
+  # Allows end-user to configure whether to report or not the `next` statements
+  # without arguments. Sometimes such statements are used to yield the `nil` value explicitly.
   #
   # ```
   # block do
@@ -101,7 +101,7 @@ module Ameba::Rule::Style
 
     properties do
       since_version "0.12.0"
-      description "Reports redundant next expressions"
+      description "Reports redundant `next` expressions"
 
       allow_multi_next true
       allow_empty_next true

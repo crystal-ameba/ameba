@@ -66,7 +66,7 @@ module Ameba::Cli
 
       it "accepts --rules flag" do
         c = Cli.parse_args %w[--rules]
-        c.rules?.should eq true
+        c.rules?.should be_true
       end
 
       it "defaults all? flag to false" do
@@ -76,7 +76,7 @@ module Ameba::Cli
 
       it "accepts --all flag" do
         c = Cli.parse_args %w[--all]
-        c.all?.should eq true
+        c.all?.should be_true
       end
 
       it "accepts --gen-config flag" do

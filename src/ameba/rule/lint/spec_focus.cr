@@ -55,9 +55,7 @@ module Ameba::Rule::Lint
     SPEC_ITEM_NAMES = %w[describe context it pending]
 
     def test(source)
-      return unless source.spec?
-
-      AST::NodeVisitor.new self, source
+      return super if source.spec?
     end
 
     def test(source, node : Crystal::Call)
@@ -65,7 +63,9 @@ module Ameba::Rule::Lint
       return unless node.block
 
       arg = node.named_args.try &.find(&.name.== "focus")
-      return unless arg
+      return if arg.nil? ||
+                arg.value.is_a?(Crystal::Call) ||
+                arg.value.is_a?(Crystal::Var)
 
       issue_for arg, MSG
     end

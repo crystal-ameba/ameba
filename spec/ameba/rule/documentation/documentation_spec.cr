@@ -1,14 +1,14 @@
 require "../../../spec_helper"
 
 module Ameba::Rule::Documentation
-  subject = Documentation.new
-    .tap(&.ignore_classes = false)
-    .tap(&.ignore_modules = false)
-    .tap(&.ignore_enums = false)
-    .tap(&.ignore_defs = false)
-    .tap(&.ignore_macros = false)
-
   describe Documentation do
+    subject = Documentation.new
+    subject.ignore_classes = false
+    subject.ignore_modules = false
+    subject.ignore_enums = false
+    subject.ignore_defs = false
+    subject.ignore_macros = false
+
     it "passes for undocumented private types" do
       expect_no_issues subject, <<-CRYSTAL
         private class Foo
@@ -29,7 +29,7 @@ module Ameba::Rule::Documentation
 
         private macro bag
         end
-      CRYSTAL
+        CRYSTAL
     end
 
     it "passes for documented public types" do
@@ -59,31 +59,31 @@ module Ameba::Rule::Documentation
         # bag
         macro bag
         end
-      CRYSTAL
+        CRYSTAL
     end
 
     it "fails if there is an undocumented public type" do
       expect_issue subject, <<-CRYSTAL
         class Foo
-      # ^^^^^^^^^ error: Missing documentation
+        # ^^^^^^^ error: Missing documentation
         end
 
         module Bar
-      # ^^^^^^^^^^ error: Missing documentation
+        # ^^^^^^^^ error: Missing documentation
         end
 
         enum Baz
-      # ^^^^^^^^ error: Missing documentation
+        # ^^^^^^ error: Missing documentation
         end
 
         def bat
-      # ^^^^^^^ error: Missing documentation
+        # ^^^^^ error: Missing documentation
         end
 
         macro bag
-      # ^^^^^^^^^ error: Missing documentation
+        # ^^^^^^^ error: Missing documentation
         end
-      CRYSTAL
+        CRYSTAL
     end
 
     context "properties" do

@@ -1,17 +1,15 @@
 require "../../../spec_helper"
 
 module Ameba::Rule::Lint
-  subject = LiteralInInterpolation.new
-
   describe LiteralInInterpolation do
+    subject = LiteralInInterpolation.new
+
     it "passes with good interpolation examples" do
-      expect_no_issues subject, <<-CRYSTAL
-        name = "Ary"
+      expect_no_issues subject, <<-'CRYSTAL'
         "Hello, #{name}"
-
         "#{name}"
-
         "Name size: #{name.size}"
+        "#{foo..}"
         CRYSTAL
     end
 
@@ -25,6 +23,12 @@ module Ameba::Rule::Lint
       ].each do |str|
         subject.catch(Source.new str).should_not be_valid
       end
+    end
+
+    it "works with magic constants (#593)" do
+      expect_no_issues subject, <<-'CRYSTAL', "/home/foo/source.cr"
+        "Hello from #{__FILE__} at line #{__LINE__} in #{__DIR__}"
+        CRYSTAL
     end
 
     it "reports rule, pos and message" do

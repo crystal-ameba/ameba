@@ -1,9 +1,9 @@
 require "../../../spec_helper"
 
 module Ameba::Rule::Lint
-  subject = MissingBlockArgument.new
-
   describe MissingBlockArgument do
+    subject = MissingBlockArgument.new
+
     it "passes if the block argument is defined" do
       expect_no_issues subject, <<-CRYSTAL
         def foo(&)

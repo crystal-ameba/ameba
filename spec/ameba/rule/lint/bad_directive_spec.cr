@@ -13,14 +13,14 @@ module Ameba::Rule::Lint
     it "reports if there is incorrect action" do
       expect_issue subject, <<-CRYSTAL
         # ameba:foo Lint/BadDirective
-        # ^{} error: Bad action in comment directive: 'foo'. Possible values: disable, enable
+              # ^^^ error: Bad action in comment directive: `foo`. Possible values: `disable`, `enable`
         CRYSTAL
     end
 
     it "reports if there are incorrect rule names" do
       expect_issue subject, <<-CRYSTAL
         # ameba:enable BadRule1, BadRule2
-        # ^{} error: Such rules do not exist: BadRule1, BadRule2
+        # ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ error: Such rules do not exist: BadRule1, BadRule2
         CRYSTAL
     end
 

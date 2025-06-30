@@ -1,9 +1,9 @@
 require "../../../spec_helper"
 
 module Ameba::Rule::Performance
-  subject = MapInsteadOfBlock.new
-
   describe MapInsteadOfBlock do
+    subject = MapInsteadOfBlock.new
+
     it "passes if there is no potential performance improvements" do
       expect_no_issues subject, <<-CRYSTAL
         (1..3).sum(&.*(2))

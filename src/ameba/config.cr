@@ -1,5 +1,6 @@
 require "semantic_version"
 require "yaml"
+require "ecr/processor"
 require "./glob_utils"
 
 # A configuration entry for `Ameba::Runner`.
@@ -57,10 +58,14 @@ class Ameba::Config
     Path[XDG_CONFIG_HOME] / "ameba/config.yml",
   }
 
-  DEFAULT_GLOBS = %w(
+  DEFAULT_GLOBS = %w[
     **/*.cr
     !lib
-  )
+  ]
+
+  Ameba.ecr_supported? do
+    DEFAULT_GLOBS << "**/*.ecr"
+  end
 
   getter rules : Array(Rule::Base)
   property severity = Severity::Convention
@@ -167,7 +172,7 @@ class Ameba::Config
   # ```
   # config = Ameba::Config.load
   # config.sources # => list of default sources
-  # config.globs = ["**/*.cr"]
+  # config.globs = ["**/*.cr", "**/*.ecr"]
   # config.excluded = ["spec"]
   # config.sources # => list of sources pointing to files found by the wildcards
   # ```
@@ -242,8 +247,8 @@ class Ameba::Config
   # ```
   # config.update_rules %w[Group1 Group2], enabled: true
   # ```
-  def update_rules(names, enabled = true, excluded = nil)
-    names.try &.each do |name|
+  def update_rules(names : Enumerable(String), enabled = true, excluded = nil)
+    names.each do |name|
       if rules = @rule_groups[name]?
         rules.each do |rule|
           rule.enabled = enabled
@@ -365,10 +370,9 @@ class Ameba::Config
 
     macro included
       GROUP_SEVERITY = {
-        Documentation: Ameba::Severity::Warning,
-        Lint:          Ameba::Severity::Warning,
-        Metrics:       Ameba::Severity::Warning,
-        Performance:   Ameba::Severity::Warning,
+        Lint:        Ameba::Severity::Warning,
+        Metrics:     Ameba::Severity::Warning,
+        Performance: Ameba::Severity::Warning,
       }
 
       class_getter default_severity : Ameba::Severity do

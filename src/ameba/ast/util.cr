@@ -12,10 +12,15 @@ module Ameba::AST::Util
          Crystal::CharLiteral,
          Crystal::StringLiteral,
          Crystal::SymbolLiteral,
-         Crystal::RegexLiteral,
          Crystal::ProcLiteral,
          Crystal::MacroLiteral
       {true, true}
+    when Crystal::StringInterpolation
+      {true, node.expressions.all? do |exp|
+        static_literal?(exp)
+      end}
+    when Crystal::RegexLiteral
+      {true, static_literal?(node.value)}
     when Crystal::RangeLiteral
       {true, static_literal?(node.from) &&
         static_literal?(node.to)}
@@ -58,9 +63,9 @@ module Ameba::AST::Util
 
   # Returns `true` if current `node` is a `Crystal::Path`
   # matching given *name*, `false` otherwise.
-  def path_named?(node, name) : Bool
+  def path_named?(node, *names : String) : Bool
     node.is_a?(Crystal::Path) &&
-      name == node.names.join("::")
+      node.names.join("::").in?(names)
   end
 
   # Returns a source code for the current node.
@@ -145,7 +150,7 @@ module Ameba::AST::Util
       flow_expressions? [node.then, node.else], in_loop
     when Crystal::BinaryOp
       flow_expression? node.left, in_loop
-    when Crystal::Case
+    when Crystal::Case, Crystal::Select
       flow_expressions? [node.whens, node.else].flatten, in_loop
     when Crystal::ExceptionHandler
       flow_expressions? [node.else || node.body, node.rescues].flatten, in_loop
@@ -188,10 +193,18 @@ module Ameba::AST::Util
     when Crystal::While, Crystal::Until
       true
     when Crystal::Call
-      node.name == "loop" && node.args.size == 0 && node.obj.nil?
+      node.name == "loop" && node.args.empty? && node.obj.nil?
     else
       false
     end
+  end
+
+  # Returns `true` if node has a `:nodoc:` annotation as the first line.
+  def nodoc?(node)
+    return false unless node.responds_to?(:doc)
+    return false unless doc = node.doc.presence
+
+    doc.lines.first?.try(&.strip) == ":nodoc:"
   end
 
   # Returns the exp code of a control expression.

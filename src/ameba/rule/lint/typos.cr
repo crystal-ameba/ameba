@@ -10,7 +10,8 @@ module Ameba::Rule::Lint
   # Lint/Typos:
   #   Enabled: true
   #   BinPath: ~
-  #   FailOnError: false
+  #   FailOnMissingBin: false
+  #   FailOnError: true
   # ```
   class Typos < Base
     properties do
@@ -18,16 +19,17 @@ module Ameba::Rule::Lint
       description "Reports typos found in source files"
 
       bin_path nil, as: String?
-      fail_on_error false
+      fail_on_missing_bin false
+      fail_on_error true
     end
 
-    MSG = "Typo found: `%s` -> `%s`"
+    MSG = "Typo found: `%s` -> %s"
 
     BIN_PATH = Process.find_executable("typos") rescue nil
 
     @@mutex = Mutex.new
 
-    protected record Typo,
+    private record Typo,
       typo : String,
       corrections : Array(String),
       location : {Int32, Int32},
@@ -79,7 +81,7 @@ module Ameba::Rule::Lint
       typos.try &.each do |typo|
         corrections = typo.corrections
         message = MSG % {
-          typo.typo, corrections.join(" | "),
+          typo.typo, corrections.map { |correction| "`#{correction}`" }.join(" | "),
         }
         if corrections.size == 1
           issue_for typo.location, typo.end_location, message do |corrector|
@@ -97,7 +99,7 @@ module Ameba::Rule::Lint
       if bin_path = self.bin_path
         return Typos.typos_from(bin_path, source)
       end
-      if fail_on_error?
+      if fail_on_missing_bin?
         raise RuntimeError.new "Could not find `typos` executable"
       end
     end

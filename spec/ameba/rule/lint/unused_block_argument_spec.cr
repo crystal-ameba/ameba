@@ -1,9 +1,9 @@
 require "../../../spec_helper"
 
 module Ameba::Rule::Lint
-  subject = UnusedBlockArgument.new
-
   describe UnusedBlockArgument do
+    subject = UnusedBlockArgument.new
+
     it "doesn't report if it is an instance var argument" do
       expect_no_issues subject, <<-CRYSTAL
         class A

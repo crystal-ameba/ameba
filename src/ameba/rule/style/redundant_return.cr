@@ -1,5 +1,5 @@
 module Ameba::Rule::Style
-  # A rule that disallows redundant return expressions.
+  # A rule that disallows redundant `return` expressions.
   #
   # For example, this is considered invalid:
   #
@@ -47,7 +47,7 @@ module Ameba::Rule::Style
   #
   # 1. *allow_multi_return*, default: true
   #
-  # Allows end-user to configure whether to report or not the return statements
+  # Allows end-user to configure whether to report or not the `return` statements
   # which return tuple literals i.e.
   #
   # ```
@@ -66,7 +66,7 @@ module Ameba::Rule::Style
   #
   # 2. *allow_empty_return*, default: true
   #
-  # Allows end-user to configure whether to report or not the return statements
+  # Allows end-user to configure whether to report or not the `return` statements
   # without arguments. Sometimes such returns are used to return the `nil` value explicitly.
   #
   # ```
@@ -98,7 +98,7 @@ module Ameba::Rule::Style
 
     properties do
       since_version "0.9.0"
-      description "Reports redundant return expressions"
+      description "Reports redundant `return` expressions"
 
       allow_multi_return true
       allow_empty_return true

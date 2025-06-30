@@ -5,9 +5,9 @@ module Ameba::AST
     include Util
   end
 
-  subject = Test.new
-
   describe Util do
+    subject = Test.new
+
     describe "#literal?" do
       [
         Crystal::ArrayLiteral.new,
@@ -39,18 +39,28 @@ module Ameba::AST
     describe "#static/dynamic_literal?" do
       [
         Crystal::ArrayLiteral.new,
-        Crystal::ArrayLiteral.new([Crystal::StringLiteral.new("foo")] of Crystal::ASTNode),
+        Crystal::ArrayLiteral.new([
+          Crystal::StringLiteral.new("foo"),
+        ] of Crystal::ASTNode),
         Crystal::BoolLiteral.new(false),
         Crystal::CharLiteral.new('a'),
         Crystal::HashLiteral.new,
         Crystal::NamedTupleLiteral.new,
         Crystal::NilLiteral.new,
         Crystal::NumberLiteral.new(42),
-        Crystal::RegexLiteral.new(Crystal::StringLiteral.new("")),
+        Crystal::RegexLiteral.new(Crystal::StringLiteral.new("foo")),
+        Crystal::RegexLiteral.new(Crystal::StringInterpolation.new([
+          Crystal::StringLiteral.new("foo"),
+        ] of Crystal::ASTNode)),
         Crystal::StringLiteral.new("foo"),
+        Crystal::StringInterpolation.new([
+          Crystal::StringLiteral.new("foo"),
+        ] of Crystal::ASTNode),
         Crystal::SymbolLiteral.new("foo"),
         Crystal::TupleLiteral.new([] of Crystal::ASTNode),
-        Crystal::TupleLiteral.new([Crystal::StringLiteral.new("foo")] of Crystal::ASTNode),
+        Crystal::TupleLiteral.new([
+          Crystal::StringLiteral.new("foo"),
+        ] of Crystal::ASTNode),
         Crystal::RangeLiteral.new(
           Crystal::NumberLiteral.new(0),
           Crystal::NumberLiteral.new(10),
@@ -63,8 +73,21 @@ module Ameba::AST
       end
 
       [
-        Crystal::ArrayLiteral.new([Crystal::Path.new(%w[IO])] of Crystal::ASTNode),
-        Crystal::TupleLiteral.new([Crystal::Path.new(%w[IO])] of Crystal::ASTNode),
+        Crystal::StringInterpolation.new([Crystal::Path.new(%w[Foo])] of Crystal::ASTNode),
+        Crystal::ArrayLiteral.new([Crystal::Path.new(%w[Foo])] of Crystal::ASTNode),
+        Crystal::TupleLiteral.new([Crystal::Path.new(%w[Foo])] of Crystal::ASTNode),
+        Crystal::RegexLiteral.new(Crystal::StringInterpolation.new([
+          Crystal::StringLiteral.new("foo"),
+          Crystal::Path.new(%w[Foo]),
+        ] of Crystal::ASTNode)),
+        Crystal::RangeLiteral.new(
+          Crystal::Path.new(%w[Foo]),
+          Crystal::NumberLiteral.new(10),
+          true),
+        Crystal::RangeLiteral.new(
+          Crystal::NumberLiteral.new(10),
+          Crystal::Path.new(%w[Foo]),
+          true),
       ].each do |literal|
         it "properly identifies dynamic node #{literal}" do
           subject.dynamic_literal?(literal).should be_true
@@ -99,10 +122,10 @@ module Ameba::AST
       end
 
       it "does not report source of node which has incorrect location" do
-        s = <<-'CRYSTAL'
+        s = <<-CRYSTAL
           module MyModule
             macro conditional_error_for_inline_callbacks
-              \{%
+              {%
                 raise ""
               %}
             end
@@ -120,12 +143,12 @@ module Ameba::AST
     describe "#flow_command?" do
       it "returns true if this is return" do
         node = as_node("return 22")
-        subject.flow_command?(node, false).should eq true
+        subject.flow_command?(node, false).should be_true
       end
 
       it "returns true if this is a break in a loop" do
         node = as_node("break")
-        subject.flow_command?(node, true).should eq true
+        subject.flow_command?(node, true).should be_true
       end
 
       it "returns false if this is a break out of loop" do
@@ -135,7 +158,7 @@ module Ameba::AST
 
       it "returns true if this is a next in a loop" do
         node = as_node("next")
-        subject.flow_command?(node, true).should eq true
+        subject.flow_command?(node, true).should be_true
       end
 
       it "returns false if this is a next out of loop" do
@@ -145,17 +168,17 @@ module Ameba::AST
 
       it "returns true if this is raise" do
         node = as_node("raise e")
-        subject.flow_command?(node, false).should eq true
+        subject.flow_command?(node, false).should be_true
       end
 
       it "returns true if this is exit" do
         node = as_node("exit")
-        subject.flow_command?(node, false).should eq true
+        subject.flow_command?(node, false).should be_true
       end
 
       it "returns true if this is abort" do
         node = as_node("abort")
-        subject.flow_command?(node, false).should eq true
+        subject.flow_command?(node, false).should be_true
       end
 
       it "returns false otherwise" do
@@ -167,7 +190,7 @@ module Ameba::AST
     describe "#flow_expression?" do
       it "returns true if this is a flow command" do
         node = as_node("return")
-        subject.flow_expression?(node, true).should eq true
+        subject.flow_expression?(node, true).should be_true
       end
 
       it "returns true if this is if-else consumed by flow expressions" do
@@ -178,7 +201,7 @@ module Ameba::AST
             return :bar
           end
           CRYSTAL
-        subject.flow_expression?(node, false).should eq true
+        subject.flow_expression?(node, false).should be_true
       end
 
       it "returns true if this is unless-else consumed by flow expressions" do
@@ -189,7 +212,7 @@ module Ameba::AST
             return :bar
           end
           CRYSTAL
-        subject.flow_expression?(node).should eq true
+        subject.flow_expression?(node).should be_true
       end
 
       it "returns true if this is case consumed by flow expressions" do
@@ -203,7 +226,21 @@ module Ameba::AST
             return 3
           end
           CRYSTAL
-        subject.flow_expression?(node).should eq true
+        subject.flow_expression?(node).should be_true
+      end
+
+      it "returns true if this is select consumed by flow expressions" do
+        node = as_node <<-CRYSTAL
+          select
+          when a = foo
+            return 1
+          when a = bar
+            return 2
+          else
+            return 3
+          end
+          CRYSTAL
+        subject.flow_expression?(node).should be_true
       end
 
       it "returns true if this is exception handler consumed by flow expressions" do
@@ -214,7 +251,7 @@ module Ameba::AST
             return e
           end
           CRYSTAL
-        subject.flow_expression?(node).should eq true
+        subject.flow_expression?(node).should be_true
       end
 
       it "returns true if this while consumed by flow expressions" do
@@ -223,7 +260,7 @@ module Ameba::AST
             return
           end
           CRYSTAL
-        subject.flow_expression?(node).should eq true
+        subject.flow_expression?(node).should be_true
       end
 
       it "returns false if this while with break" do
@@ -241,7 +278,7 @@ module Ameba::AST
             return
           end
           CRYSTAL
-        subject.flow_expression?(node).should eq true
+        subject.flow_expression?(node).should be_true
       end
 
       it "returns false if this until with break" do
@@ -259,7 +296,7 @@ module Ameba::AST
           exp2
           return
           CRYSTAL
-        subject.flow_expression?(node).should eq true
+        subject.flow_expression?(node).should be_true
       end
 
       it "returns false otherwise" do
@@ -274,7 +311,7 @@ module Ameba::AST
     describe "#raise?" do
       it "returns true if this is a raise method call" do
         node = as_node "raise e"
-        subject.raise?(node).should eq true
+        subject.raise?(node).should be_true
       end
 
       it "returns false if it has a receiver" do
@@ -291,12 +328,12 @@ module Ameba::AST
     describe "#exit?" do
       it "returns true if this is a exit method call" do
         node = as_node "exit"
-        subject.exit?(node).should eq true
+        subject.exit?(node).should be_true
       end
 
       it "returns true if this is a exit method call with one argument" do
         node = as_node "exit 1"
-        subject.exit?(node).should eq true
+        subject.exit?(node).should be_true
       end
 
       it "returns false if it has a receiver" do
@@ -313,17 +350,17 @@ module Ameba::AST
     describe "#abort?" do
       it "returns true if this is an abort method call" do
         node = as_node "abort"
-        subject.abort?(node).should eq true
+        subject.abort?(node).should be_true
       end
 
       it "returns true if this is an abort method call with one argument" do
         node = as_node "abort \"message\""
-        subject.abort?(node).should eq true
+        subject.abort?(node).should be_true
       end
 
       it "returns true if this is an abort method call with two arguments" do
         node = as_node "abort \"message\", 1"
-        subject.abort?(node).should eq true
+        subject.abort?(node).should be_true
       end
 
       it "returns false if it has a receiver" do
@@ -340,7 +377,7 @@ module Ameba::AST
     describe "#loop?" do
       it "returns true if this is a loop method call" do
         node = as_node "loop"
-        subject.loop?(node).should eq true
+        subject.loop?(node).should be_true
       end
 
       it "returns false if it has a receiver" do
@@ -351,6 +388,39 @@ module Ameba::AST
       it "returns false if size of the arguments doesn't match" do
         node = as_node "loop 1"
         subject.loop?(node).should be_false
+      end
+    end
+
+    describe "#nodoc?" do
+      it "returns true if a node has a single `:nodoc:` annotation" do
+        node = as_node <<-CRYSTAL, wants_doc: true
+          # :nodoc:
+          def foo; end
+          CRYSTAL
+
+        subject.nodoc?(node).should be_true
+      end
+
+      it "returns true if a node has a `:nodoc:` annotation in the first line" do
+        node = as_node <<-CRYSTAL, wants_doc: true
+          # :nodoc:
+          #
+          # foo
+          def foo; end
+          CRYSTAL
+
+        subject.nodoc?(node).should be_true
+      end
+
+      it "returns false if a node has a `:nodoc:` annotation in the middle" do
+        node = as_node <<-CRYSTAL, wants_doc: true
+          # foo
+          # :nodoc:
+          # bar
+          def foo; end
+          CRYSTAL
+
+        subject.nodoc?(node).should be_false
       end
     end
 

@@ -1,19 +1,19 @@
 require "../../../spec_helper"
 
-module Ameba
-  subject = Rule::Naming::MethodNames.new
-
-  private def it_reports_method_name(name, expected, *, file = __FILE__, line = __LINE__)
-    it "reports method name #{expected}", file, line do
-      rule = Rule::Naming::MethodNames.new
-      expect_issue rule, <<-CRYSTAL, name: name, file: file, line: line
-        def %{name}; end
-          # ^{name} error: Method name should be underscore-cased: `#{expected}`, not `%{name}`
-        CRYSTAL
-    end
+private def it_reports_method_name(name, expected, *, file = __FILE__, line = __LINE__)
+  it "reports method name #{expected}", file, line do
+    rule = Ameba::Rule::Naming::MethodNames.new
+    expect_issue rule, <<-CRYSTAL, name: name, file: file, line: line
+      def %{name}; end
+        # ^{name} error: Method name should be underscore-cased: `#{expected}`, not `%{name}`
+      CRYSTAL
   end
+end
 
-  describe Rule::Naming::MethodNames do
+module Ameba::Rule::Naming
+  describe MethodNames do
+    subject = MethodNames.new
+
     it "passes if method names are underscore-cased" do
       expect_no_issues subject, <<-CRYSTAL
         class Person

@@ -1,9 +1,9 @@
 require "../../../spec_helper"
 
 module Ameba::Rule::Style
-  subject = ParenthesesAroundCondition.new
-
   describe ParenthesesAroundCondition do
+    subject = ParenthesesAroundCondition.new
+
     {% for keyword in %w[if unless while until] %}
       context "{{ keyword.id }}" do
         it "reports if redundant parentheses are found" do
@@ -18,6 +18,66 @@ module Ameba::Rule::Style
             {{ keyword.id }}   foo > 10
               foo
             end
+            CRYSTAL
+        end
+      end
+    {% end %}
+
+    {% for keyword in %w[if unless].map(&.id) %}
+      context "{{ keyword }}" do
+        it "ignores expressions with `rescue`" do
+          expect_no_issues subject, <<-CRYSTAL
+            {{ keyword }} (foo rescue nil)
+              foo
+            end
+            CRYSTAL
+        end
+
+        it "ignores postfix expressions with `rescue`" do
+          expect_no_issues subject, <<-CRYSTAL
+            foo {{ keyword }} (foo rescue nil)
+            CRYSTAL
+        end
+
+        it "ignores expressions with `ensure`" do
+          expect_no_issues subject, <<-CRYSTAL
+            {{ keyword }} (foo ensure bar)
+              foo
+            end
+            CRYSTAL
+        end
+
+        it "ignores postfix expressions with `ensure`" do
+          expect_no_issues subject, <<-CRYSTAL
+            foo {{ keyword }} (foo ensure bar)
+            CRYSTAL
+        end
+
+        it "ignores expressions with `if`" do
+          expect_no_issues subject, <<-CRYSTAL
+            {{ keyword }} (foo if bar)
+              foo
+            end
+            CRYSTAL
+        end
+
+        it "ignores postfix expressions with `if`" do
+          expect_no_issues subject, <<-CRYSTAL
+            foo {{ keyword }} (foo if bar)
+            CRYSTAL
+        end
+
+        it "ignores expressions with `unless`" do
+          expect_no_issues subject, <<-CRYSTAL
+            {{ keyword }} (foo unless bar)
+              foo
+            end
+            CRYSTAL
+        end
+
+        it "ignores postfix expressions with `unless`" do
+          expect_no_issues subject, <<-CRYSTAL
+            foo {{ keyword }} (foo unless bar)
             CRYSTAL
         end
       end
@@ -44,17 +104,8 @@ module Ameba::Rule::Style
 
     context "properties" do
       context "#exclude_ternary" do
-        it "skips ternary control expressions by default" do
-          expect_no_issues subject, <<-CRYSTAL
-            (foo > bar) ? true : false
-            CRYSTAL
-        end
-
-        it "allows to configure assignments" do
-          rule = ParenthesesAroundCondition.new
-          rule.exclude_ternary = false
-
-          expect_issue rule, <<-CRYSTAL
+        it "reports ternary control expressions by default" do
+          expect_issue subject, <<-CRYSTAL
             (foo.empty?) ? true : false
             # ^^^^^^^^^^ error: Redundant parentheses
             CRYSTAL
@@ -71,6 +122,15 @@ module Ameba::Rule::Style
             (3.in? 0..42) ? true : false
             (yield 42) ? true : false
             (foo rescue 42) ? true : false
+            CRYSTAL
+        end
+
+        it "allows to skip ternary control expressions" do
+          rule = ParenthesesAroundCondition.new
+          rule.exclude_ternary = true
+
+          expect_no_issues rule, <<-CRYSTAL
+            (foo.empty?) ? true : false
             CRYSTAL
         end
       end
@@ -101,9 +161,15 @@ module Ameba::Rule::Style
           rule = ParenthesesAroundCondition.new
           rule.allow_safe_assignment = true
 
-          expect_issue rule, <<-CRYSTAL
+          source = expect_issue rule, <<-CRYSTAL
             if foo = @foo
              # ^^^^^^^^^^ error: Missing parentheses
+              foo
+            end
+            CRYSTAL
+
+          expect_correction source, <<-CRYSTAL
+            if (foo = @foo)
               foo
             end
             CRYSTAL

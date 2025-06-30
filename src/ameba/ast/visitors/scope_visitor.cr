@@ -34,8 +34,12 @@ module Ameba::AST
 
       super @rule, @source
 
-      @scope_queue.each do |scope|
-        @rule.test @source, scope.node, scope
+      if @scope_queue.empty?
+        @rule.test @source, @current_scope.node, @current_scope
+      else
+        @scope_queue.each do |scope|
+          @rule.test @source, scope.node, scope
+        end
       end
     end
 
@@ -101,24 +105,18 @@ module Ameba::AST
     def end_visit(node : Crystal::Assign | Crystal::OpAssign)
       on_assign_end(node.target, node)
       @current_assign = nil
-
-      on_scope_end(node) if @current_scope.eql?(node)
     end
 
     # :nodoc:
     def end_visit(node : Crystal::MultiAssign)
       node.targets.each { |target| on_assign_end(target, node) }
       @current_assign = nil
-
-      on_scope_end(node) if @current_scope.eql?(node)
     end
 
     # :nodoc:
     def end_visit(node : Crystal::UninitializedVar)
       on_assign_end(node.var, node)
       @current_assign = nil
-
-      on_scope_end(node) if @current_scope.eql?(node)
     end
 
     # :nodoc:
@@ -137,8 +135,6 @@ module Ameba::AST
 
       on_assign_end(var, node)
       @current_assign = nil
-
-      on_scope_end(node) if @current_scope.eql?(node)
     end
 
     # :nodoc:

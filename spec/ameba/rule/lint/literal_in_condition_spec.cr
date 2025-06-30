@@ -1,9 +1,9 @@
 require "../../../spec_helper"
 
 module Ameba::Rule::Lint
-  subject = LiteralInCondition.new
-
   describe LiteralInCondition do
+    subject = LiteralInCondition.new
+
     it "passes if there is not literals in conditional" do
       s = Source.new %(
         if a == 2
@@ -26,7 +26,23 @@ module Ameba::Rule::Lint
       subject.catch(s).should be_valid
     end
 
-    it "fails if there is a predicate in if conditional" do
+    it "fails if there is a predicate with non-literals" do
+      s = Source.new %(
+        :ok if     [foo, bar]
+        :ok unless [foo, bar]
+
+        while [foo, bar]
+          :ok
+        end
+
+        until [foo, bar]
+          :ok
+        end
+      )
+      subject.catch(s).should_not be_valid
+    end
+
+    it "fails if there is a predicate in `if` conditional" do
       s = Source.new %(
         if "string"
           :ok
@@ -35,10 +51,46 @@ module Ameba::Rule::Lint
       subject.catch(s).should_not be_valid
     end
 
-    it "fails if there is a predicate in unless conditional" do
+    it "fails if there is a predicate in `unless` conditional" do
       s = Source.new %(
         unless true
           :ok
+        end
+      )
+      subject.catch(s).should_not be_valid
+    end
+
+    it "fails if there is a predicate in `while` conditional" do
+      s = Source.new %(
+        while 1
+          :ok
+        end
+      )
+      subject.catch(s).should_not be_valid
+    end
+
+    it "fails if there is a `false` predicate in `while` conditional" do
+      s = Source.new %(
+        while false
+          :ok
+        end
+      )
+      subject.catch(s).should_not be_valid
+    end
+
+    it "passes if there is a `true` predicate in `while` conditional" do
+      s = Source.new %(
+        while true
+          :ok
+        end
+      )
+      subject.catch(s).should be_valid
+    end
+
+    it "fails if there is a predicate in `until` conditional" do
+      s = Source.new %(
+        until true
+          :foo
         end
       )
       subject.catch(s).should_not be_valid
@@ -171,7 +223,7 @@ module Ameba::Rule::Lint
       s.issues.size.should eq 1
       issue = s.issues.first
       issue.rule.should_not be_nil
-      issue.location.to_s.should eq "source.cr:1:1"
+      issue.location.to_s.should eq "source.cr:1:17"
       issue.end_location.to_s.should eq "source.cr:1:20"
       issue.message.should eq "Literal value found in conditional"
     end

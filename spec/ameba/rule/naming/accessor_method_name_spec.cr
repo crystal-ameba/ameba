@@ -1,9 +1,9 @@
 require "../../../spec_helper"
 
 module Ameba::Rule::Naming
-  subject = AccessorMethodName.new
-
   describe AccessorMethodName do
+    subject = AccessorMethodName.new
+
     it "passes if accessor method name is correct" do
       expect_no_issues subject, <<-CRYSTAL
         class Foo

@@ -1,10 +1,10 @@
 require "../../../spec_helper"
 
 module Ameba::Rule::Lint
-  subject = UnusedArgument.new
-  subject.ignore_defs = false
-
   describe UnusedArgument do
+    subject = UnusedArgument.new
+    subject.ignore_defs = false
+
     it "doesn't report if arguments are used" do
       expect_no_issues subject, <<-CRYSTAL
         def method(a, b, c)
@@ -15,7 +15,7 @@ module Ameba::Rule::Lint
           i + 1
         end
 
-        ->(i : Int32) { i + 1 }
+        -> (i : Int32) { i + 1 }
         CRYSTAL
     end
 
@@ -296,7 +296,7 @@ module Ameba::Rule::Lint
           rule.ignore_procs = true
 
           expect_no_issues rule, <<-CRYSTAL
-            ->(a : Int32) {}
+            -> (a : Int32) { }
             CRYSTAL
         end
 
@@ -305,8 +305,8 @@ module Ameba::Rule::Lint
           rule.ignore_procs = false
 
           expect_issue rule, <<-CRYSTAL
-            ->(a : Int32) {}
-             # ^^^^^^^^^ error: Unused argument `a`. If it's necessary, use `_a` as an argument name to indicate that it won't be used.
+            -> (a : Int32) { }
+              # ^^^^^^^^^ error: Unused argument `a`. If it's necessary, use `_a` as an argument name to indicate that it won't be used.
             CRYSTAL
         end
       end

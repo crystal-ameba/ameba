@@ -1,9 +1,9 @@
 require "../../../spec_helper"
 
 module Ameba::Rule::Style
-  subject = RedundantNext.new
-
   describe RedundantNext do
+    subject = RedundantNext.new
+
     it "does not report if there is no redundant next" do
       expect_no_issues subject, <<-CRYSTAL
         array.map { |x| x + 1 }

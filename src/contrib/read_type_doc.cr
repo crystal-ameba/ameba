@@ -5,7 +5,7 @@ private class DocFinder < Crystal::Visitor
   getter doc : String?
 
   def initialize(nodes, @type_name)
-    self.accept(nodes)
+    nodes.accept self
   end
 
   def visit(node : Crystal::ASTNode)

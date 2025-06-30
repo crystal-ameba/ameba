@@ -11,19 +11,19 @@ module Ameba::Formatter
 
     describe "#started" do
       it "writes started message" do
-        subject.started [Source.new ""]
+        subject.started [Source.new]
         output.to_s.should eq "Inspecting 1 file\n\n"
       end
     end
 
     describe "#source_finished" do
       it "writes valid source" do
-        subject.source_finished Source.new ""
+        subject.source_finished Source.new
         output.to_s.should contain "."
       end
 
       it "writes invalid source" do
-        s = Source.new ""
+        s = Source.new
         s.add_issue DummyRule.new, Crystal::Nop.new, "message"
         subject.source_finished s
         output.to_s.should contain "F"
@@ -32,18 +32,18 @@ module Ameba::Formatter
 
     describe "#finished" do
       it "writes a final message" do
-        subject.finished [Source.new ""]
+        subject.finished [Source.new]
         output.to_s.should contain "1 inspected, 0 failures"
       end
 
       it "writes the elapsed time" do
-        subject.finished [Source.new ""]
+        subject.finished [Source.new]
         output.to_s.should contain "Finished in"
       end
 
       context "when issues found" do
         it "writes each issue" do
-          s = Source.new("").tap do |source|
+          s = Source.new.tap do |source|
             source.add_issue(DummyRule.new, {1, 1}, "DummyRuleError")
             source.add_issue(NamedRule.new, {1, 2}, "NamedRuleError")
           end
@@ -96,7 +96,7 @@ module Ameba::Formatter
         end
 
         it "does not write disabled issues" do
-          s = Source.new("").tap do |source|
+          s = Source.new.tap do |source|
             source.add_issue(DummyRule.new, {1, 1}, "DummyRuleError", status: :disabled)
             source.add_issue(NamedRule.new, {1, 2}, "NamedRuleError")
           end

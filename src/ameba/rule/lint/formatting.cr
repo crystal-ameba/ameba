@@ -39,11 +39,12 @@ module Ameba::Rule::Lint
 
     def test(source)
       source_code = source.code
-      result = Crystal.format(source_code, source.path)
-      return if result == source_code
 
       source_lines = source_code.lines
       return if source_lines.empty?
+
+      result = Crystal.format(source_code, source.path)
+      return if result == source_code
 
       end_location = {
         source_lines.size,

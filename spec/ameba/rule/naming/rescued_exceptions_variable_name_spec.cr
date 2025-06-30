@@ -1,9 +1,9 @@
 require "../../../spec_helper"
 
 module Ameba::Rule::Naming
-  subject = RescuedExceptionsVariableName.new
-
   describe RescuedExceptionsVariableName do
+    subject = RescuedExceptionsVariableName.new
+
     it "passes if exception handler variable name matches #allowed_names" do
       subject.allowed_names.each do |name|
         expect_no_issues subject, <<-CRYSTAL
