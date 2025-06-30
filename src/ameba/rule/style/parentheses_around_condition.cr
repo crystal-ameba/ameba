@@ -40,9 +40,8 @@ module Ameba::Rule::Style
     MSG_REDUNDANT = "Redundant parentheses"
     MSG_MISSING   = "Missing parentheses"
 
-    # ameba:disable Metrics/CyclomaticComplexity
     def test(source, node : Crystal::If | Crystal::Unless | Crystal::Case | Crystal::While | Crystal::Until)
-      cond = node.cond
+      return unless cond = node.cond
 
       if cond.is_a?(Crystal::Assign) && allow_safe_assignment?
         issue_for cond, MSG_MISSING do |corrector|
@@ -51,26 +50,32 @@ module Ameba::Rule::Style
         return
       end
 
-      is_ternary = node.is_a?(Crystal::If) && node.ternary?
-
-      return if is_ternary && exclude_ternary?
-
-      return unless cond.is_a?(Crystal::Expressions)
-      return unless cond.keyword.paren?
-
-      return unless exp = cond.single_expression?
-      return unless strip_parentheses?(exp, is_ternary)
-
-      if exclude_multiline?
-        if (location = node.location) && (end_location = node.end_location)
-          return if location.line_number != end_location.line_number
-        end
-      end
+      return unless redundant_parentheses?(node, cond)
 
       issue_for cond, MSG_REDUNDANT do |corrector|
         corrector.remove_trailing(cond, 1)
         corrector.remove_leading(cond, 1)
       end
+    end
+
+    private def redundant_parentheses?(node, cond) : Bool
+      is_ternary = node.is_a?(Crystal::If) && node.ternary?
+
+      return false if is_ternary && exclude_ternary?
+
+      return false unless cond.is_a?(Crystal::Expressions)
+      return false unless cond.keyword.paren?
+
+      return false unless exp = cond.single_expression?
+      return false unless strip_parentheses?(exp, is_ternary)
+
+      if exclude_multiline?
+        if (location = node.location) && (end_location = node.end_location)
+          return false if location.line_number != end_location.line_number
+        end
+      end
+
+      true
     end
 
     private def strip_parentheses?(node, in_ternary) : Bool
