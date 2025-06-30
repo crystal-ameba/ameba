@@ -186,10 +186,7 @@ module Ameba::Rule::Style
     end
 
     private def same_location_lines?(a, b)
-      return unless a_location = name_location(a)
-      return unless b_location = b.location
-
-      a_location.line_number == b_location.line_number
+      name_location(a).try &.same_line?(b.location)
     end
 
     private def prefix_operator?(node)

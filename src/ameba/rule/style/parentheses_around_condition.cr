@@ -71,7 +71,7 @@ module Ameba::Rule::Style
 
       if exclude_multiline?
         if (location = node.location) && (end_location = node.end_location)
-          return false if location.line_number != end_location.line_number
+          return false unless location.same_line?(end_location)
         end
       end
 
