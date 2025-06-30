@@ -1056,6 +1056,7 @@ around the condition of <code>if</code>, <code>unless</code>, <code>case</code>,
 <pre><code class="language-crystal"><span class="t">Style</span><span class="o">/</span><span class="t">ParenthesesAroundCondition</span>:
   <span class="t">Enabled</span>: <span class="n">true</span>
   <span class="t">ExcludeTernary</span>: <span class="n">false</span>
+  <span class="t">ExcludeMultiline</span>: <span class="n">false</span>
   <span class="t">AllowSafeAssignment</span>: <span class="n">false</span></code></pre>
 
 
@@ -1099,7 +1100,7 @@ around the condition of <code>if</code>, <code>unless</code>, <code>case</code>,
   </h2>
   
     
-      <a href="https://github.com/crystal-ameba/ameba/blob/9e23a91/src/ameba/rule/style/parentheses_around_condition.cr#L29" target="_blank">
+      <a href="https://github.com/crystal-ameba/ameba/blob/107e6a5/src/ameba/rule/style/parentheses_around_condition.cr#L30" target="_blank">
         ameba/rule/style/parentheses_around_condition.cr
       </a>
     
@@ -1221,6 +1222,16 @@ around the condition of <code>if</code>, <code>unless</code>, <code>case</code>,
     
       <li class="entry-summary">
         <a href="#enabled%3F%3ABool-instance-method" class="signature"><strong>#enabled?</strong> : Bool</a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#exclude_multiline%3D%28exclude_multiline%3ABool%29-instance-method" class="signature"><strong>#exclude_multiline=</strong>(exclude_multiline : Bool)</a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#exclude_multiline%3F%3ABool-instance-method" class="signature"><strong>#exclude_multiline?</strong> : Bool</a>
         
       </li>
     
@@ -1474,13 +1485,14 @@ around the condition of <code>if</code>, <code>unless</code>, <code>case</code>,
 <pre><code class="language-crystal"><span class="t">Style</span><span class="o">/</span><span class="t">ParenthesesAroundCondition</span>:
   <span class="t">Enabled</span>: <span class="n">true</span>
   <span class="t">ExcludeTernary</span>: <span class="n">false</span>
+  <span class="t">ExcludeMultiline</span>: <span class="n">false</span>
   <span class="t">AllowSafeAssignment</span>: <span class="n">false</span></code></pre>
         </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/9e23a91/src/ameba/rule/style/parentheses_around_condition.cr#L29" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/107e6a5/src/ameba/rule/style/parentheses_around_condition.cr#L30" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1624,6 +1636,34 @@ around the condition of <code>if</code>, <code>unless</code>, <code>case</code>,
       </div>
     </div>
   
+    <div class="entry-detail" id="exclude_multiline=(exclude_multiline:Bool)-instance-method">
+      <div class="signature">
+        
+        def <strong>exclude_multiline=</strong>(exclude_multiline : Bool)
+
+        <a class="method-permalink" href="#exclude_multiline%3D%28exclude_multiline%3ABool%29-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="exclude_multiline?:Bool-instance-method">
+      <div class="signature">
+        
+        def <strong>exclude_multiline?</strong> : Bool
+
+        <a class="method-permalink" href="#exclude_multiline%3F%3ABool-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+      </div>
+    </div>
+  
     <div class="entry-detail" id="exclude_ternary=(exclude_ternary:Bool)-instance-method">
       <div class="signature">
         
@@ -1719,7 +1759,7 @@ around the condition of <code>if</code>, <code>unless</code>, <code>case</code>,
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/9e23a91/src/ameba/rule/style/parentheses_around_condition.cr#L30" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/107e6a5/src/ameba/rule/style/parentheses_around_condition.cr#L31" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1749,7 +1789,7 @@ around the condition of <code>if</code>, <code>unless</code>, <code>case</code>,
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/9e23a91/src/ameba/rule/style/parentheses_around_condition.cr#L41" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/107e6a5/src/ameba/rule/style/parentheses_around_condition.cr#L43" target="_blank">View source</a>]
         
       </div>
     </div>
