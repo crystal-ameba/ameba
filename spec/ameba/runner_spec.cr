@@ -110,7 +110,7 @@ module Ameba
         end
 
         it "does not run other rules" do
-          rules = [Rule::Lint::Syntax.new, Rule::Naming::ConstantNames.new] of Rule::Base
+          rules = [Rule::Lint::Syntax.new, Rule::Naming::ConstantNames.new]
           source = Source.new <<-CRYSTAL
             MyBadConstant = 1
 
