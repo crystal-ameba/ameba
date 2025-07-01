@@ -1290,7 +1290,7 @@ that are tested by this rule, it should add an issue.</p>
   </h2>
   
     
-      <a href="https://github.com/crystal-ameba/ameba/blob/0aa6368/src/ameba/rule/base.cr#L29" target="_blank">
+      <a href="https://github.com/crystal-ameba/ameba/blob/4c099e3/src/ameba/rule/base.cr#L29" target="_blank">
         ameba/rule/base.cr
       </a>
     
@@ -1402,9 +1402,9 @@ that are tested by this rule, it should add an issue.</p>
       </li>
     
       <li class="entry-summary">
-        <a href="#hash-instance-method" class="signature"><strong>#hash</strong></a>
+        <a href="#hash%28hasher%29-instance-method" class="signature"><strong>#hash</strong>(hasher)</a>
         
-          <div class="summary"><p>Generates an <code>UInt64</code> hash value for this object.</p></div>
+          <div class="summary"><p>See <code>Object#hash(hasher)</code></p></div>
         
       </li>
     
@@ -1546,7 +1546,7 @@ that are tested by this rule, it should add an issue.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/0aa6368/src/ameba/rule/base.cr#L117" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/4c099e3/src/ameba/rule/base.cr#L115" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1583,7 +1583,7 @@ that are tested by this rule, it should add an issue.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/0aa6368/src/ameba/rule/base.cr#L108" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/4c099e3/src/ameba/rule/base.cr#L108" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1607,7 +1607,7 @@ source.valid?</code></pre>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/0aa6368/src/ameba/rule/base.cr#L53" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/4c099e3/src/ameba/rule/base.cr#L53" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1631,7 +1631,7 @@ the one of the given source.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/0aa6368/src/ameba/rule/base.cr#L91" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/4c099e3/src/ameba/rule/base.cr#L91" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1657,37 +1657,32 @@ the one of the given source.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/0aa6368/src/ameba/rule/base.cr#L80" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/4c099e3/src/ameba/rule/base.cr#L80" target="_blank">View source</a>]
         
       </div>
     </div>
   
-    <div class="entry-detail" id="hash-instance-method">
+    <div class="entry-detail" id="hash(hasher)-instance-method">
       <div class="signature">
         
-        def <strong>hash</strong>
+        def <strong>hash</strong>(hasher)
 
-        <a class="method-permalink" href="#hash-instance-method">#</a>
+        <a class="method-permalink" href="#hash%28hasher%29-instance-method">#</a>
       </div>
       
         <div class="doc">
           
             <div class="doc-inherited">
-              Description copied from class Object
+              Description copied from class Reference
             </div>
           
-          <p>Generates an <code>UInt64</code> hash value for this object.</p>
-<p>This method must have the property that <code>a == b</code> implies <code>a.hash == b.hash</code>.</p>
-<p>The hash value is used along with <code><a href="../../Ameba/Rule/Base.html#%3D%3D%28other%29-instance-method">#==</a></code> by the <code>Hash</code> class to determine if two objects
-reference the same hash key.</p>
-<p>Subclasses must not override this method. Instead, they must define <code>hash(hasher)</code>,
-though usually the macro <code>def_hash</code> can be used to generate this method.</p>
+          <p>See <code>Object#hash(hasher)</code></p>
         </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/0aa6368/src/ameba/rule/base.cr#L112" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/4c099e3/src/ameba/rule/base.cr#L112" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1714,7 +1709,7 @@ though usually the macro <code>def_hash</code> can be used to generate this meth
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/0aa6368/src/ameba/rule/base.cr#L67" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/4c099e3/src/ameba/rule/base.cr#L67" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1737,7 +1732,7 @@ usual rules.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/0aa6368/src/ameba/rule/base.cr#L104" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/4c099e3/src/ameba/rule/base.cr#L104" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1758,7 +1753,7 @@ usual rules.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/0aa6368/src/ameba/rule/base.cr#L43" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/4c099e3/src/ameba/rule/base.cr#L43" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1782,7 +1777,7 @@ that are tested by this rule, it should add an issue.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/0aa6368/src/ameba/rule/base.cr#L38" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/4c099e3/src/ameba/rule/base.cr#L38" target="_blank">View source</a>]
         
       </div>
     </div>
