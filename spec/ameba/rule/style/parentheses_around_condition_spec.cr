@@ -148,7 +148,7 @@ module Ameba::Rule::Style
             CRYSTAL
         end
 
-        it "allows to skip ternary control expressions" do
+        it "allows to skip multiline expressions" do
           rule = ParenthesesAroundCondition.new
           rule.exclude_multiline = true
 
