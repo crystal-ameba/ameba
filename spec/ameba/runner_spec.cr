@@ -110,7 +110,7 @@ module Ameba
         end
 
         it "does not run other rules" do
-          rules = [Rule::Lint::Syntax.new, Rule::Naming::ConstantNames.new] of Rule::Base
+          rules = [Rule::Lint::Syntax.new, Rule::Naming::ConstantNames.new]
           source = Source.new <<-CRYSTAL
             MyBadConstant = 1
 
@@ -138,7 +138,7 @@ module Ameba
 
       it "handles rules with incompatible autocorrect" do
         rules = [Rule::Performance::MinMaxAfterMap.new, Rule::Style::VerboseBlock.new]
-        source = Source.new "list.map { |i| i.size }.max", "source.cr"
+        source = Source.new "list.map { |i| i.size }.max", File.tempname("source", ".cr")
 
         Runner.new(rules, [source], formatter, default_severity, autocorrect: true).run
         source.code.should eq "list.max_of(&.size)"
@@ -146,33 +146,34 @@ module Ameba
     end
 
     describe "#explain" do
-      io = IO::Memory.new
+      output = IO::Memory.new
+
+      before_each do
+        output.clear
+      end
 
       it "writes nothing if sources are valid" do
-        io.clear
         runner = runner(formatter: formatter).run
-        runner.explain({file: "source.cr", line: 1, column: 2}, io)
-        io.to_s.should be_empty
+        runner.explain({file: "source.cr", line: 1, column: 2}, output)
+        output.to_s.should be_empty
       end
 
       it "writes the explanation if sources are not valid and location found" do
-        io.clear
         rules = [ErrorRule.new] of Rule::Base
         source = Source.new "a = 1", "source.cr"
 
         runner = Runner.new(rules, [source], formatter, default_severity).run
-        runner.explain({file: "source.cr", line: 1, column: 1}, io)
-        io.to_s.should_not be_empty
+        runner.explain({file: "source.cr", line: 1, column: 1}, output)
+        output.to_s.should_not be_empty
       end
 
       it "writes nothing if sources are not valid and location is not found" do
-        io.clear
         rules = [ErrorRule.new] of Rule::Base
         source = Source.new "a = 1", "source.cr"
 
         runner = Runner.new(rules, [source], formatter, default_severity).run
-        runner.explain({file: "source.cr", line: 1, column: 2}, io)
-        io.to_s.should be_empty
+        runner.explain({file: "source.cr", line: 1, column: 2}, output)
+        output.to_s.should be_empty
       end
     end
 

@@ -149,8 +149,7 @@ module Ameba::Rule::Style
     private def accepted_form?(source, node, ending)
       return true if node.is_a?(Crystal::If) && node.ternary?
       return true unless cond_loc = node.cond.location
-      return true unless cond_end_loc = node.cond.end_location
-      return true unless cond_loc.line_number == cond_end_loc.line_number
+      return true unless cond_loc.same_line?(node.cond.end_location)
       return true unless (then_loc = node.then.location).nil? || cond_loc < then_loc
 
       if ending
@@ -167,8 +166,7 @@ module Ameba::Rule::Style
       node = node.right if node.is_a?(Crystal::BinaryOp)
 
       return unless location = node.location
-      return unless end_location = node.end_location
-      return unless location.line_number == end_location.line_number
+      return unless location.same_line?(node.end_location)
 
       case node
       when Crystal::Call
