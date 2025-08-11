@@ -34,7 +34,7 @@ module Ameba::Rule::Naming
         CRYSTAL
     end
 
-    it "Doesn't report single-line constant assigns inside namespaces" do
+    it "doesn't report single-line constant assigns inside namespaces" do
       expect_no_issues subject, <<-CRYSTAL
         Example::FOO_BAR = "bar"
         CRYSTAL
