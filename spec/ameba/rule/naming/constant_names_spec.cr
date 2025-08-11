@@ -34,6 +34,12 @@ module Ameba::Rule::Naming
         CRYSTAL
     end
 
+    it "Doesn't report single-line constant assigns inside namespaces" do
+      expect_no_issues subject, <<-CRYSTAL
+        Example::FOO_BAR = "bar"
+        CRYSTAL
+    end
+
     # it_reports_constant "MyBadConstant", "1", "MYBADCONSTANT"
     it_reports_constant "Wrong_NAME", "2", "WRONG_NAME"
     it_reports_constant "Wrong_Name", "3", "WRONG_NAME"
