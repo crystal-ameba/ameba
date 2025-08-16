@@ -29,6 +29,11 @@ module Ameba::Rule
   abstract class Base
     include Config::RuleConfig
 
+    def self.autocorrect_incompatible_with
+      # TODO: can't use Class as generic type argument yet
+      [] of Base
+    end
+
     # This method is designed to test the source passed in. If source has issues
     # that are tested by this rule, it should add an issue.
     #
