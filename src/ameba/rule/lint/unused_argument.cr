@@ -69,15 +69,22 @@ module Ameba::Rule::Lint
         name_suggestion = scope.node.is_a?(Crystal::Block) ? '_' : "_#{argument.name}"
         message = MSG % {argument.name, name_suggestion}
 
-        location = argument.node.location
-        end_location = location.try &.adjust(column_number: argument.name.size - 1)
+        node = argument.node
 
-        if location && end_location
-          issue_for argument.node, message do |corrector|
-            corrector.replace(location, end_location, name_suggestion)
+        location = node.location
+        name_end_location = location.try &.adjust(column_number: argument.name.size - 1)
+
+        if node.responds_to?(:restriction)
+          end_location = node.restriction.try(&.end_location)
+        end
+        end_location ||= name_end_location
+
+        if location && name_end_location && end_location
+          issue_for location, end_location, message do |corrector|
+            corrector.replace(location, name_end_location, name_suggestion)
           end
         else
-          issue_for argument.node, message
+          issue_for node, message
         end
       end
     end
