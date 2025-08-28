@@ -21,61 +21,61 @@ module Ameba::Rule::Lint
 
     it "reports if method argument is unused" do
       source = expect_issue subject, <<-CRYSTAL
-        def method(a, b, c)
-                       # ^ error: Unused argument `c`. If it's necessary, use `_c` as an argument name to indicate that it won't be used.
-          a + b
+        def method(foo, bar, baz : Symbol)
+                           # ^^^^^^^^^^^^ error: Unused argument `baz`. [...]
+          foo + bar
         end
         CRYSTAL
 
       expect_correction source, <<-CRYSTAL
-        def method(a, b, _c)
-          a + b
+        def method(foo, bar, _baz : Symbol)
+          foo + bar
         end
         CRYSTAL
     end
 
     it "reports if block argument is unused" do
       source = expect_issue subject, <<-CRYSTAL
-        [1, 2].each_with_index do |a, i|
-                                    # ^ error: Unused argument `i`. [...]
-          a
+        [1, 2].each_with_index do |foo, bar|
+                                      # ^^^ error: Unused argument `bar`. [...]
+          foo
         end
         CRYSTAL
 
       expect_correction source, <<-CRYSTAL
-        [1, 2].each_with_index do |a, _|
-          a
+        [1, 2].each_with_index do |foo, _|
+          foo
         end
         CRYSTAL
     end
 
     it "reports if proc argument is unused" do
       source = expect_issue subject, <<-CRYSTAL
-        -> (a : Int32, b : String) do
-                     # ^^^^^^^^^^ error: Unused argument `b`. If it's necessary, use `_b` as an argument name to indicate that it won't be used.
-          a = a + 1
+        -> (foo : Int32, bar : String) do
+                       # ^^^^^^^^^^^^ error: Unused argument `bar`. [...]
+          foo += 1
         end
         CRYSTAL
 
       expect_correction source, <<-CRYSTAL
-        -> (a : Int32, _b : String) do
-          a = a + 1
+        -> (foo : Int32, _bar : String) do
+          foo += 1
         end
         CRYSTAL
     end
 
     it "reports multiple unused args" do
       source = expect_issue subject, <<-CRYSTAL
-        def method(a, b, c)
-                 # ^ error: Unused argument `a`. If it's necessary, use `_a` as an argument name to indicate that it won't be used.
-                    # ^ error: Unused argument `b`. If it's necessary, use `_b` as an argument name to indicate that it won't be used.
-                       # ^ error: Unused argument `c`. If it's necessary, use `_c` as an argument name to indicate that it won't be used.
+        def method(foo, bar, baz)
+                 # ^^^ error: Unused argument `foo`. If it's necessary, use `_foo` as an argument name to indicate that it won't be used.
+                      # ^^^ error: Unused argument `bar`. If it's necessary, use `_bar` as an argument name to indicate that it won't be used.
+                           # ^^^ error: Unused argument `baz`. If it's necessary, use `_baz` as an argument name to indicate that it won't be used.
           nil
         end
         CRYSTAL
 
       expect_correction source, <<-CRYSTAL
-        def method(_a, _b, _c)
+        def method(_foo, _bar, _baz)
           nil
         end
         CRYSTAL
@@ -182,17 +182,17 @@ module Ameba::Rule::Lint
       it "reports if variable is not referenced implicitly by super" do
         source = expect_issue subject, <<-CRYSTAL
           class Bar < Foo
-            def method(a, b)
-                        # ^ error: Unused argument `b`. If it's necessary, use `_b` as an argument name to indicate that it won't be used.
-              super a
+            def method(foo, bar)
+                          # ^^^ error: Unused argument `bar`. [...]
+              super foo
             end
           end
           CRYSTAL
 
         expect_correction source, <<-CRYSTAL
           class Bar < Foo
-            def method(a, _b)
-              super a
+            def method(foo, _bar)
+              super foo
             end
           end
           CRYSTAL
@@ -252,7 +252,7 @@ module Ameba::Rule::Lint
           rule.ignore_defs = true
 
           expect_no_issues rule, <<-CRYSTAL
-            def method(a)
+            def method(foo)
             end
             CRYSTAL
         end
@@ -262,8 +262,8 @@ module Ameba::Rule::Lint
           rule.ignore_defs = false
 
           expect_issue rule, <<-CRYSTAL
-            def method(a)
-                     # ^ error: Unused argument `a`. If it's necessary, use `_a` as an argument name to indicate that it won't be used.
+            def method(foo)
+                     # ^^^ error: Unused argument `foo`. [...]
             end
             CRYSTAL
         end
@@ -275,7 +275,7 @@ module Ameba::Rule::Lint
           rule.ignore_blocks = true
 
           expect_no_issues rule, <<-CRYSTAL
-            3.times { |i| puts "yo!" }
+            3.times { |idx| puts "yo!" }
             CRYSTAL
         end
 
@@ -284,8 +284,8 @@ module Ameba::Rule::Lint
           rule.ignore_blocks = false
 
           expect_issue rule, <<-CRYSTAL
-            3.times { |i| puts "yo!" }
-                     # ^ error: Unused argument `i`. If it's necessary, use `_` as an argument name to indicate that it won't be used.
+            3.times { |idx| puts "yo!" }
+                     # ^^^ error: Unused argument `idx`. [...]
             CRYSTAL
         end
       end
@@ -296,7 +296,7 @@ module Ameba::Rule::Lint
           rule.ignore_procs = true
 
           expect_no_issues rule, <<-CRYSTAL
-            -> (a : Int32) { }
+            -> (foo : Int32) { }
             CRYSTAL
         end
 
@@ -305,8 +305,8 @@ module Ameba::Rule::Lint
           rule.ignore_procs = false
 
           expect_issue rule, <<-CRYSTAL
-            -> (a : Int32) { }
-              # ^^^^^^^^^ error: Unused argument `a`. If it's necessary, use `_a` as an argument name to indicate that it won't be used.
+            -> (foo : Int32) { }
+              # ^^^^^^^^^^^ error: Unused argument `foo`. [...]
             CRYSTAL
         end
       end
