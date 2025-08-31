@@ -9,9 +9,9 @@ module Ameba::Cli
     property config : Path?
     property version : String?
     property formatter : Symbol | String | Nil
-    property globs : Array(String)?
-    property only : Array(String)?
-    property except : Array(String)?
+    property globs : Set(String)?
+    property only : Set(String)?
+    property except : Set(String)?
     property describe_rule : String?
     property location_to_explain : NamedTuple(file: String, line: Int32, column: Int32)?
     property fail_level : Severity?
@@ -81,7 +81,7 @@ module Ameba::Cli
         when arr.size == 1 && arr.first.matches?(/.+:\d+:\d+/)
           configure_explain_opts(arr.first, opts)
         else
-          opts.globs = arr unless arr.empty?
+          opts.globs = arr.to_set unless arr.empty?
         end
       end
 
@@ -102,12 +102,12 @@ module Ameba::Cli
 
       parser.on("--only RULE1,RULE2,...",
         "Run only given rules (or groups)") do |rules|
-        opts.only = rules.split(',')
+        opts.only = rules.split(',').to_set
       end
 
       parser.on("--except RULE1,RULE2,...",
         "Disable the given rules (or groups)") do |rules|
-        opts.except = rules.split(',')
+        opts.except = rules.split(',').to_set
       end
 
       parser.on("--all", "Enable all available rules") do
@@ -157,7 +157,12 @@ module Ameba::Cli
   end
 
   private def config_from_opts(opts)
-    config = Config.load opts.config, opts.colors?, opts.skip_reading_config?
+    config = Config.load(
+      root: root_path_from_opts(opts),
+      path: opts.config,
+      colors: opts.colors?,
+      skip_reading_config: opts.skip_reading_config?,
+    )
     config.autocorrect = opts.autocorrect?
     config.stdin_filename = opts.stdin_filename
 
@@ -175,6 +180,30 @@ module Ameba::Cli
     configure_rules(config, opts)
 
     config
+  end
+
+  private def root_path_from_opts(opts)
+    return unless globs = opts.globs
+    root =
+      case
+      when path = opts.config
+        path.parent
+      when path = globs.find(&->File.file?(String))
+        Path[path].parents.reverse!.find(&->root_path?(Path))
+      when path = globs.find(&->File.directory?(String))
+        path = Path[path]
+        if root_path?(path)
+          path
+        else
+          path.parents.reverse!.find(&->root_path?(Path))
+        end
+      end
+    root.try &.expand(home: true)
+  end
+
+  private def root_path?(path)
+    File.exists?(path / Config::FILENAME) ||
+      File.exists?(path / "shard.yml")
   end
 
   private def configure_rules(config, opts) : Nil
@@ -207,7 +236,7 @@ module Ameba::Cli
   private def configure_explain_opts(loc, opts) : Nil
     location_to_explain = parse_explain_location(loc)
     opts.location_to_explain = location_to_explain
-    opts.globs = [location_to_explain[:file]]
+    opts.globs = Set{location_to_explain[:file]}
     opts.formatter = :silent
   end
 
