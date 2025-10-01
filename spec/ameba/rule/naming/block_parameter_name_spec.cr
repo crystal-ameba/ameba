@@ -55,7 +55,7 @@ module Ameba::Rule::Naming
           rule.allow_names_ending_in_numbers = false
           expect_issue rule, <<-CRYSTAL
             %w[].each { |x1| }
-                       # ^ error: Disallowed block parameter name found
+                       # ^^ error: Disallowed block parameter name found
             CRYSTAL
 
           rule.allow_names_ending_in_numbers = true

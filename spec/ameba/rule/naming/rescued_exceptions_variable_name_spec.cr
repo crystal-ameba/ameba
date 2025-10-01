@@ -20,8 +20,8 @@ module Ameba::Rule::Naming
       expect_issue subject, <<-CRYSTAL
         def foo
           raise "foo"
-        rescue wtf
-        # ^^^^^^^^ error: Disallowed variable name, use one of these instead: 'e', 'ex', 'exception', 'error'
+        rescue wtf : ArgumentError
+             # ^^^ error: Disallowed variable name, use one of these instead: `e`, `ex`, `exception`, `error`
           nil
         end
         CRYSTAL
@@ -42,7 +42,7 @@ module Ameba::Rule::Naming
             def foo
               raise "foo"
             rescue e
-            # ^^^^^^ error: Disallowed variable name, use 'foo' instead
+                 # ^ error: Disallowed variable name, use `foo` instead
               nil
             end
             CRYSTAL

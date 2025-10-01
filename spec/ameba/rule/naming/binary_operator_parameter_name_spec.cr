@@ -31,11 +31,11 @@ module Ameba::Rule::Naming
     it "reports binary methods definitions with incorrectly named parameter" do
       expect_issue subject, <<-CRYSTAL
         def +(foo); end
-            # ^ error: When defining the `+` operator, name its argument `other`
+            # ^^^ error: When defining the `+` operator, name its argument `other`
         def -(foo); end
-            # ^ error: When defining the `-` operator, name its argument `other`
+            # ^^^ error: When defining the `-` operator, name its argument `other`
         def *(foo); end
-            # ^ error: When defining the `*` operator, name its argument `other`
+            # ^^^ error: When defining the `*` operator, name its argument `other`
         CRYSTAL
     end
 
