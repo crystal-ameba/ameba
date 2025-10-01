@@ -79,18 +79,18 @@ module Ameba
             ECR
 
           {% if compare_versions(Crystal::VERSION, "1.17.0") >= 0 %}
-            source.ast.to_s.should eq(<<-CRYSTAL)
-            __str__ << "hello "
-            ("world")
-              .to_s(__str__)
+            source.ast.to_s.should eq <<-CRYSTAL
+              __str__ << "hello "
+              ("world")
+                .to_s(__str__)
 
-            CRYSTAL
+              CRYSTAL
           {% else %}
-            source.ast.to_s.should eq(<<-CRYSTAL)
-            __str__ << "hello "
-            ("world").to_s(__str__)
+            source.ast.to_s.should eq <<-CRYSTAL
+              __str__ << "hello "
+              ("world").to_s(__str__)
 
-            CRYSTAL
+              CRYSTAL
           {% end %}
         end
 
