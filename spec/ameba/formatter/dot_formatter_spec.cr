@@ -63,8 +63,9 @@ module Ameba::Formatter
           end
           subject.finished [s]
           log = output.to_s
-          log.should contain "> \e[97ma = 22"
-          log.should contain "      \e[33m^\e[0m"
+          log = subject.deansify(log).should_not be_nil
+          log.should contain "> a = 22"
+          log.should contain "      ^"
         end
 
         it "writes severity" do
@@ -91,8 +92,9 @@ module Ameba::Formatter
           formatter.config[:without_affected_code] = true
           formatter.finished [s]
           log = output.to_s
+          log = formatter.deansify(log).should_not be_nil
           log.should_not contain "> a = 22"
-          log.should_not contain "      \e[33m^\e[0m"
+          log.should_not contain "      ^"
         end
 
         it "does not write disabled issues" do
