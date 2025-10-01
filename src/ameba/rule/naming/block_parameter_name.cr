@@ -37,7 +37,13 @@ module Ameba::Rule::Naming
 
     def test(source, node : Crystal::Call)
       node.try(&.block).try(&.args).try &.each do |arg|
-        issue_for arg, MSG unless valid_name?(arg.name)
+        next if valid_name?(arg.name)
+
+        next unless location = arg.location
+        end_location =
+          location.adjust(column_number: arg.name.size - 1)
+
+        issue_for location, end_location, MSG
       end
     end
 
