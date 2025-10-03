@@ -21,7 +21,7 @@ module Ameba::Rule::Typing
     it "fails if a splat method parameter with a name doesn't have a type restriction" do
       expect_issue subject, <<-CRYSTAL
         def foo(*bar) : String
-               # ^ error: Method parameter should have a type restriction
+               # ^^^ error: Method parameter should have a type restriction
         end
         CRYSTAL
     end
@@ -64,7 +64,7 @@ module Ameba::Rule::Typing
     it "fails if a public method parameter doesn't have a type restriction" do
       expect_issue subject, <<-CRYSTAL
         def foo(bar)
-              # ^ error: Method parameter should have a type restriction
+              # ^^^ error: Method parameter should have a type restriction
         end
         CRYSTAL
     end
@@ -72,8 +72,8 @@ module Ameba::Rule::Typing
     it "fails if a public method external parameter doesn't have a type restriction" do
       expect_issue subject, <<-CRYSTAL
         def foo(bar, ext baz)
-              # ^ error: Method parameter should have a type restriction
-                   # ^ error: Method parameter should have a type restriction
+              # ^^^ error: Method parameter should have a type restriction
+                   # ^^^ error: Method parameter should have a type restriction
         end
         CRYSTAL
     end
@@ -114,7 +114,7 @@ module Ameba::Rule::Typing
         it "fails if a public method doesn't have a parameter type restriction" do
           expect_issue rule, <<-CRYSTAL
             def foo(bar)
-                  # ^ error: Method parameter should have a type restriction
+                  # ^^^ error: Method parameter should have a type restriction
             end
             CRYSTAL
         end
@@ -122,7 +122,7 @@ module Ameba::Rule::Typing
         it "fails if a private method doesn't have a parameter type restriction" do
           expect_issue rule, <<-CRYSTAL
             private def foo(bar)
-                          # ^ error: Method parameter should have a type restriction
+                          # ^^^ error: Method parameter should have a type restriction
             end
             CRYSTAL
         end
@@ -149,7 +149,7 @@ module Ameba::Rule::Typing
         it "fails if a public method doesn't have a parameter type restriction" do
           expect_issue rule, <<-CRYSTAL
             def foo(bar)
-                  # ^ error: Method parameter should have a type restriction
+                  # ^^^ error: Method parameter should have a type restriction
             end
             CRYSTAL
         end
@@ -157,7 +157,7 @@ module Ameba::Rule::Typing
         it "fails if a protected method doesn't have a parameter type restriction" do
           expect_issue rule, <<-CRYSTAL
             protected def foo(bar)
-                            # ^ error: Method parameter should have a type restriction
+                            # ^^^ error: Method parameter should have a type restriction
             end
             CRYSTAL
         end
@@ -170,7 +170,7 @@ module Ameba::Rule::Typing
 
           expect_issue rule, <<-CRYSTAL
             def foo(bar = "baz")
-                  # ^ error: Method parameter should have a type restriction
+                  # ^^^ error: Method parameter should have a type restriction
             end
             CRYSTAL
         end
@@ -191,7 +191,7 @@ module Ameba::Rule::Typing
         it "fails if a block parameter with a name doesn't have a type restriction" do
           expect_issue rule, <<-CRYSTAL
             def foo(&block)
-                   # ^ error: Method parameter should have a type restriction
+                   # ^^^^^ error: Method parameter should have a type restriction
             end
             CRYSTAL
         end
@@ -205,7 +205,7 @@ module Ameba::Rule::Typing
           expect_issue rule, <<-CRYSTAL
             # :nodoc:
             def foo(bar)
-                  # ^ error: Method parameter should have a type restriction
+                  # ^^^ error: Method parameter should have a type restriction
             end
             CRYSTAL
         end
