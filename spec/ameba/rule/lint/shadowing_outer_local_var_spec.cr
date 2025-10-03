@@ -25,7 +25,7 @@ module Ameba::Rule::Lint
           foo = 1
 
           3.times do |foo|
-                    # ^ error: Shadowing outer local variable `foo`
+                    # ^^^ error: Shadowing outer local variable `foo`
           end
         end
         CRYSTAL
@@ -37,7 +37,7 @@ module Ameba::Rule::Lint
           foo = 1
 
           [{3}].each do |(foo)|
-                        # ^ error: Shadowing outer local variable `foo`
+                        # ^^^ error: Shadowing outer local variable `foo`
           end
         end
         CRYSTAL
@@ -49,7 +49,7 @@ module Ameba::Rule::Lint
           foo = 1
 
           [{[3]}].each do |((foo))|
-                           # ^ error: Shadowing outer local variable `foo`
+                           # ^^^ error: Shadowing outer local variable `foo`
           end
         end
         CRYSTAL
@@ -68,7 +68,7 @@ module Ameba::Rule::Lint
           foo = 1
 
           -> (foo : Int32) { }
-            # ^^^^^^^^^^^ error: Shadowing outer local variable `foo`
+            # ^^^ error: Shadowing outer local variable `foo`
         end
         CRYSTAL
     end
@@ -80,7 +80,7 @@ module Ameba::Rule::Lint
 
           3.times do |i|
             3.times { |foo| foo }
-                     # ^ error: Shadowing outer local variable `foo`
+                     # ^^^ error: Shadowing outer local variable `foo`
           end
         end
         CRYSTAL
@@ -91,9 +91,9 @@ module Ameba::Rule::Lint
         foo = 1
 
         3.times do |foo|
-                  # ^ error: Shadowing outer local variable `foo`
+                  # ^^^ error: Shadowing outer local variable `foo`
           -> (foo : Int32) { foo + 1 }
-            # ^^^^^^^^^^^ error: Shadowing outer local variable `foo`
+            # ^^^ error: Shadowing outer local variable `foo`
         end
         CRYSTAL
     end
@@ -103,7 +103,7 @@ module Ameba::Rule::Lint
         foo = 1
 
         3.times do |*foo|
-                   # ^ error: Shadowing outer local variable `foo`
+                   # ^^^ error: Shadowing outer local variable `foo`
         end
         CRYSTAL
     end
@@ -112,7 +112,7 @@ module Ameba::Rule::Lint
       expect_issue subject, <<-CRYSTAL
         def method_with_block(a, &block)
           3.times do |block|
-                    # ^ error: Shadowing outer local variable `block`
+                    # ^^^^^ error: Shadowing outer local variable `block`
           end
         end
         CRYSTAL
@@ -122,7 +122,7 @@ module Ameba::Rule::Lint
       expect_issue subject, <<-CRYSTAL
         foo = 1
         [1, 2, 3].each_with_index do |i, foo|
-                                       # ^ error: Shadowing outer local variable `foo`
+                                       # ^^^ error: Shadowing outer local variable `foo`
           i + foo
         end
         CRYSTAL

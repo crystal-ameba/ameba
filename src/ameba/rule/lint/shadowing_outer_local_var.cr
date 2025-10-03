@@ -63,7 +63,11 @@ module Ameba::Rule::Lint
         next if outer_scope.assigns_ivar?(name)
         next if outer_scope.assigns_type_dec?(name)
 
-        issue_for arg.node, MSG % name
+        next unless location = arg.location
+        end_location =
+          location.adjust(column_number: arg.name.size - 1)
+
+        issue_for location, end_location, MSG % name
       end
     end
 
