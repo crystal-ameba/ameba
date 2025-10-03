@@ -39,7 +39,11 @@ module Ameba::Rule::Naming
 
       return if (expected = name.underscore) == name
 
-      issue_for node, MSG % {expected, name}
+      return unless location = node.location
+      end_location =
+        location.adjust(column_number: name.size - 1)
+
+      issue_for location, end_location, MSG % {expected, name}
     end
 
     private class VarVisitor < AST::NodeVisitor
