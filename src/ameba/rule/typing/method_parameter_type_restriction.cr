@@ -77,11 +77,11 @@ module Ameba::Rule::Typing
         next if arg.restriction || arg.name.empty?
         next if !default_value? && arg.default_value
 
-        issue_for arg, MSG
+        add_issue(source, arg)
       end
 
       if block_parameters? && (block_arg = node.block_arg) && !block_arg.restriction
-        issue_for block_arg, MSG
+        add_issue(source, block_arg)
       end
     end
 
@@ -89,6 +89,22 @@ module Ameba::Rule::Typing
       (!private_methods? && node.visibility.private?) ||
         (!protected_methods? && node.visibility.protected?) ||
         (!nodoc_methods? && nodoc?(node))
+    end
+
+    private def add_issue(source, node, name = node.name) : Nil
+      location = node.location
+      end_location =
+        if name.empty?
+          location
+        else
+          location.try &.adjust(column_number: name.size - 1)
+        end
+
+      if location && end_location
+        issue_for location, end_location, MSG
+      else
+        issue_for node, MSG
+      end
     end
   end
 end
