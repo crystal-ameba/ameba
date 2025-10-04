@@ -37,7 +37,7 @@ module Ameba::Rule::Naming
       expect_issue subject, <<-CRYSTAL
         class Greeting
           def initialize(@badNamed = nil)
-                       # ^ error: Variable name should be underscore-cased: `@bad_named`, not `@badNamed`
+                       # ^^^^^^^^^ error: Variable name should be underscore-cased: `@bad_named`, not `@badNamed`
           end
         end
         CRYSTAL
@@ -47,8 +47,8 @@ module Ameba::Rule::Naming
       expect_issue subject, <<-CRYSTAL
         class Location
           def at(@startLocation = nil, @endLocation = nil)
-               # ^ error: Variable name should be underscore-cased: `@start_location`, not `@startLocation`
-                                     # ^ error: Variable name should be underscore-cased: `@end_location`, not `@endLocation`
+               # ^^^^^^^^^^^^^^ error: Variable name should be underscore-cased: `@start_location`, not `@startLocation`
+                                     # ^^^^^^^^^^^^ error: Variable name should be underscore-cased: `@end_location`, not `@endLocation`
           end
         end
         CRYSTAL

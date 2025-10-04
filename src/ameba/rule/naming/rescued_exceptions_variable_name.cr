@@ -31,8 +31,8 @@ module Ameba::Rule::Naming
       allowed_names %w[e ex exception error]
     end
 
-    MSG          = "Disallowed variable name, use one of these instead: `%s`"
-    MSG_SINGULAR = "Disallowed variable name, use `%s` instead"
+    MSG          = "Disallowed variable name, use one of these instead: %s"
+    MSG_SINGULAR = "Disallowed variable name, use %s instead"
 
     def test(source, node : Crystal::ExceptionHandler)
       node.rescues.try &.each do |rescue_node|
@@ -49,7 +49,8 @@ module Ameba::Rule::Naming
         end_location =
           location.adjust(column_number: name.size - 1)
 
-        issue_for location, end_location, message % allowed_names.join("`, `")
+        issue_for location, end_location,
+          message % allowed_names.map { |val| "`#{val}`" }.join(", ")
       end
     end
   end
