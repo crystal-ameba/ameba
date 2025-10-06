@@ -33,12 +33,24 @@ module Ameba
       add_issue rule, location, end_location, message, status, block
     end
 
+    # Adds a new issue for *location* defined by line and column numbers.
+    def add_issue(rule, location : {Crystal::Location, Crystal::Location}, message, status : Issue::Status? = nil, block : (Source::Corrector ->)? = nil) : Issue
+      add_issue rule, *location, message, status, block
+    end
+
     # Adds a new issue for Crystal AST *node*.
     def add_issue(rule, node : Crystal::ASTNode, message, status : Issue::Status? = nil, block : (Source::Corrector ->)? = nil, *, prefer_name_location = false) : Issue
-      location = name_location(node) if prefer_name_location
-      location ||= node.location
+      if prefer_name_location
+        case node_location = name_location_or(node)
+        when Tuple(Crystal::Location, Crystal::Location)
+          location, end_location = node_location
+        else
+          location, end_location =
+            name_location(node), name_end_location(node)
+        end
+      end
 
-      end_location = name_end_location(node) if prefer_name_location
+      location ||= node.location
       end_location ||= node.end_location
 
       add_issue rule, location, end_location, message, status, block

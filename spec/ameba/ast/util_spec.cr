@@ -447,6 +447,29 @@ module Ameba::AST
       end
     end
 
+    describe "#name_location_or" do
+      it "adjusts location column number by a given value" do
+        node = as_node("def foo; end").as Crystal::Def
+        subject.name_location_or(node, adjust_location_column_number: 10).to_s
+          .should eq "{:1:15, :1:17}"
+      end
+
+      it "works on method call" do
+        node = as_node("def foo; end").as Crystal::Def
+        subject.name_location_or(node).to_s.should eq "{:1:5, :1:7}"
+      end
+
+      it "works on class definition" do
+        node = as_node("class Foo; end").as Crystal::ClassDef
+        subject.name_location_or(node).to_s.should eq "{:1:7, :1:9}"
+      end
+
+      it "works on module definition" do
+        node = as_node("module Foo; end").as Crystal::ModuleDef
+        subject.name_location_or(node).to_s.should eq "{:1:8, :1:10}"
+      end
+    end
+
     describe "#name_end_location" do
       it "works on method call" do
         node = as_node("name(foo)").as Crystal::Call

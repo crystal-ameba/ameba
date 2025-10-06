@@ -39,11 +39,7 @@ module Ameba::Rule::Naming
       node.try(&.block).try(&.args).try &.each do |arg|
         next if valid_name?(arg.name)
 
-        next unless location = arg.location
-        end_location =
-          location.adjust(column_number: arg.name.size - 1)
-
-        issue_for location, end_location, MSG
+        issue_for arg, MSG, prefer_name_location: true
       end
     end
 
