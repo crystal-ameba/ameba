@@ -33,6 +33,8 @@ module Ameba::Rule::Documentation
   #   Timezone: UTC
   # ```
   class Admonition < Base
+    include AST::Util
+
     properties do
       since_version "1.6.0"
       enabled false
@@ -63,11 +65,8 @@ module Ameba::Rule::Documentation
         matches.each do |match|
           admonition = match["admonition"]
 
-          begin_location =
-            token.location.adjust(column_number: {{ "# ".size }})
-          end_location =
-            begin_location.adjust(column_number: admonition.size - 1)
-          token_location = {begin_location, end_location}
+          token_location = name_location_or token, admonition,
+            adjust_location_column_number: {{ "# ".size }}
 
           begin
             case expr = match["context"]?.presence

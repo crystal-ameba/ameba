@@ -25,6 +25,8 @@ module Ameba::Rule::Lint
   #   Enabled: true
   # ```
   class UnneededDisableDirective < Base
+    include AST::Util
+
     properties do
       since_version "0.5.0"
       description "Reports unneeded disable directives in comments"
@@ -39,10 +41,7 @@ module Ameba::Rule::Lint
         next unless names = unneeded_disables(source, directive, token.location)
         next if names.empty?
 
-        location = token.location
-        end_location = location.adjust(column_number: token.value.to_s.size - 1)
-
-        issue_for location, end_location, MSG % names.join(", ")
+        issue_for name_location_or(token, token.value), MSG % names.join(", ")
       end
     end
 

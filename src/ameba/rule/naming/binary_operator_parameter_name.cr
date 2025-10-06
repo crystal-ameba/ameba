@@ -45,11 +45,7 @@ module Ameba::Rule::Naming
       return unless node.args.size == 1
       return if (arg = node.args.first).name == "other"
 
-      return unless location = arg.location
-      end_location =
-        location.adjust(column_number: arg.name.size - 1)
-
-      issue_for location, end_location, MSG % name
+      issue_for arg, MSG % name, prefer_name_location: true
     end
   end
 end

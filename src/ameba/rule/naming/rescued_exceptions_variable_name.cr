@@ -25,6 +25,8 @@ module Ameba::Rule::Naming
   #   AllowedNames: [e, ex, exception, error]
   # ```
   class RescuedExceptionsVariableName < Base
+    include AST::Util
+
     properties do
       since_version "1.6.0"
       description "Makes sure that rescued exceptions variables are named as expected"
@@ -42,14 +44,7 @@ module Ameba::Rule::Naming
         message =
           allowed_names.size == 1 ? MSG_SINGULAR : MSG
 
-        next unless location = rescue_node.location
-        location =
-          location.adjust(column_number: {{ "rescue ".size }})
-
-        end_location =
-          location.adjust(column_number: name.size - 1)
-
-        issue_for location, end_location,
+        issue_for name_location_or(rescue_node, adjust_location_column_number: {{ "rescue ".size }}),
           message % allowed_names.map { |val| "`#{val}`" }.join(", ")
       end
     end

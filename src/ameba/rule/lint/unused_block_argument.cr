@@ -31,6 +31,8 @@ module Ameba::Rule::Lint
   #   Enabled: true
   # ```
   class UnusedBlockArgument < Base
+    include AST::Util
+
     properties do
       since_version "1.4.0"
       description "Disallows unused block arguments"
@@ -54,25 +56,26 @@ module Ameba::Rule::Lint
       return if block_arg.anonymous?
       return if scope.references?(block_arg.variable)
 
-      location = block_arg.node.location
-      end_location = location.try &.adjust(column_number: block_arg.name.size - 1)
+      location = name_location_or(block_arg.node)
 
       case
       when scope.yields?
-        if location && end_location
-          issue_for location, end_location, MSG_YIELDED do |corrector|
-            corrector.remove(location, end_location)
+        case location
+        when Tuple
+          issue_for *location, MSG_YIELDED do |corrector|
+            corrector.remove(*location)
           end
         else
-          issue_for block_arg.node, MSG_YIELDED
+          issue_for location, MSG_YIELDED
         end
       when !block_arg.ignored?
-        if location && end_location
-          issue_for location, end_location, MSG_UNUSED % block_arg.name do |corrector|
-            corrector.insert_before(location, '_')
+        case location
+        when Tuple
+          issue_for *location, MSG_UNUSED % block_arg.name do |corrector|
+            corrector.insert_before(location[0], '_')
           end
         else
-          issue_for block_arg.node, MSG_UNUSED % block_arg.name
+          issue_for location, MSG_UNUSED % block_arg.name
         end
       end
     end

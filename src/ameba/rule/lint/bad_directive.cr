@@ -18,6 +18,8 @@ module Ameba::Rule::Lint
   #   Enabled: true
   # ```
   class BadDirective < Base
+    include AST::Util
+
     properties do
       since_version "0.13.0"
       description "Reports bad comment directives"
@@ -44,10 +46,8 @@ module Ameba::Rule::Lint
       return if InlineComments::Action.parse?(action)
 
       # See `InlineComments::COMMENT_DIRECTIVE_REGEX`
-      location = token.location.adjust(column_number: {{ "# ameba:".size }})
-      end_location = location.adjust(column_number: action.size - 1)
 
-      issue_for location, end_location,
+      issue_for name_location_or(token, action, adjust_location_column_number: {{ "# ameba:".size }}),
         MSG_INVALID_ACTION % {
           action, AVAILABLE_ACTIONS.map { |name| "`#{name}`" }.join(", "),
         }
@@ -57,10 +57,7 @@ module Ameba::Rule::Lint
       bad_names = rules - ALL_RULE_NAMES - ALL_GROUP_NAMES
       return if bad_names.empty?
 
-      location = token.location
-      end_location = location.adjust(column_number: token.value.to_s.size - 1)
-
-      issue_for location, end_location,
+      issue_for name_location_or(token, token.value),
         MSG_NONEXISTENT_RULES % bad_names.join(", ")
     end
   end

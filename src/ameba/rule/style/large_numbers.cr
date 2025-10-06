@@ -27,6 +27,8 @@ module Ameba::Rule::Style
   #   IntMinDigits: 6 # i.e. integers higher than 99999
   # ```
   class LargeNumbers < Base
+    include AST::Util
+
     properties do
       since_version "0.2.0"
       enabled false
@@ -43,11 +45,10 @@ module Ameba::Rule::Style
         parsed = parse_number(token.raw)
 
         if allowed?(*parsed) && (expected = underscored *parsed) != token.raw
-          location = token.location
-          end_location = location.adjust(column_number: token.raw.size - 1)
+          location = name_location_or(token, token.raw)
 
-          issue_for location, end_location, MSG % expected do |corrector|
-            corrector.replace(location, end_location, expected)
+          issue_for *location, MSG % expected do |corrector|
+            corrector.replace(*location, expected)
           end
         end
       end
