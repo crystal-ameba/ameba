@@ -219,6 +219,33 @@ module Ameba::AST::Util
     "{#{source_between(exp_start, exp_end, code_lines)}}"
   end
 
+  def name_location_or(node : Crystal::ASTNode, *, adjust_location_column_number = nil)
+    name = node.name if node.responds_to?(:name)
+
+    return node unless name = name.try(&.to_s.presence)
+    return node unless location = name_location(node) || node.location
+
+    location =
+      location.adjust(column_number: adjust_location_column_number || 0)
+
+    end_location =
+      location.adjust(column_number: name.size - 1)
+
+    {location, end_location}
+  end
+
+  def name_location_or(token : Crystal::Token, name, *, adjust_location_column_number = nil)
+    name = name.to_s.presence
+
+    location =
+      token.location.adjust(column_number: adjust_location_column_number || 0)
+
+    end_location =
+      location.adjust(column_number: name ? name.size - 1 : 0)
+
+    {location, end_location}
+  end
+
   # Returns `nil` if *node* does not contain a name.
   def name_location(node)
     if loc = node.name_location
