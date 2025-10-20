@@ -308,6 +308,33 @@ module Ameba::AST
       end
     end
 
+    describe "#has_block?" do
+      it "returns true if the node has a block" do
+        node = as_node("%w[foo bar].first { :baz }")
+        subject.has_block?(node).should be_true
+      end
+
+      it "returns true if the node has a block (shorthand)" do
+        node = as_node("%w[foo bar].find(&.empty?)")
+        subject.has_block?(node).should be_true
+      end
+
+      it "returns true if the node has a block (block argument)" do
+        node = as_node("%w[foo bar].find(&block)")
+        subject.has_block?(node).should be_true
+      end
+
+      it "returns true if the node has a block (forwarded block argument)" do
+        node = as_node("%w[foo bar].find(&->foo)")
+        subject.has_block?(node).should be_true
+      end
+
+      it "returns false if the node does not have a block" do
+        node = as_node("%w[foo bar].first")
+        subject.has_block?(node).should be_false
+      end
+    end
+
     describe "#raise?" do
       it "returns true if this is a raise method call" do
         node = as_node "raise e"
