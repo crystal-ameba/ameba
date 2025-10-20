@@ -41,7 +41,7 @@ module Ameba::Rule::Performance
       filter_names %w[select reject]
     end
 
-    MSG = "Use `count {...}` instead of `%s {...}.size`."
+    MSG = "Use `count {...}` instead of `%s {...}.size`"
 
     def test(source)
       AST::NodeVisitor.new self, source, skip: :macro

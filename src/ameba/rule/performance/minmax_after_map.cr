@@ -33,7 +33,7 @@ module Ameba::Rule::Performance
       description "Identifies usage of `min/max/minmax` calls that follow `map`"
     end
 
-    MSG        = "Use `%s {...}` instead of `map {...}.%s`."
+    MSG        = "Use `%s {...}` instead of `map {...}.%s`"
     CALL_NAMES = %w[min min? max max? minmax minmax?]
 
     def test(source)

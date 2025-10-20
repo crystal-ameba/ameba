@@ -51,7 +51,7 @@ module Ameba::Rule::Lint
     it "reports if unused and there is yield" do
       source = expect_issue subject, <<-CRYSTAL
         def method(a, b, c, &block)
-                           # ^^^^^ error: Use `&` as an argument name to indicate that it won't be referenced.
+                           # ^^^^^ error: Use `&` as an argument name to indicate that it won't be referenced
           3.times do |i|
             i.try do
               yield i

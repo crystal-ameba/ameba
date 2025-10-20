@@ -7,14 +7,14 @@ private def it_reports_body(body, *, file = __FILE__, line = __LINE__)
     source = expect_issue rule, <<-CRYSTAL, file: file, line: line
       def func
         if something
-      # ^^ error: Use a guard clause (`return unless something`) instead of wrapping the code inside a conditional expression.
+      # ^^ error: Use a guard clause (`return unless something`) instead of wrapping the code inside a conditional expression
           #{body}
         end
       end
 
       def func
         unless something
-      # ^^^^^^ error: Use a guard clause (`return if something`) instead of wrapping the code inside a conditional expression.
+      # ^^^^^^ error: Use a guard clause (`return if something`) instead of wrapping the code inside a conditional expression
           #{body}
         end
       end
@@ -40,7 +40,7 @@ private def it_reports_body(body, *, file = __FILE__, line = __LINE__)
       def func
         test
         if something
-      # ^^ error: Use a guard clause (`return unless something`) instead of wrapping the code inside a conditional expression.
+      # ^^ error: Use a guard clause (`return unless something`) instead of wrapping the code inside a conditional expression
           #{body}
         end
       end
@@ -48,7 +48,7 @@ private def it_reports_body(body, *, file = __FILE__, line = __LINE__)
       def func
         test
         unless something
-      # ^^^^^^ error: Use a guard clause (`return if something`) instead of wrapping the code inside a conditional expression.
+      # ^^^^^^ error: Use a guard clause (`return if something`) instead of wrapping the code inside a conditional expression
           #{body}
         end
       end
@@ -79,7 +79,7 @@ private def it_reports_control_expression(kw, *, file = __FILE__, line = __LINE_
     source = expect_issue rule, <<-CRYSTAL, file: file, line: line
       def func
         if something
-      # ^^ error: Use a guard clause (`#{kw} if something`) instead of wrapping the code inside a conditional expression.
+      # ^^ error: Use a guard clause (`#{kw} if something`) instead of wrapping the code inside a conditional expression
           #{kw}
         else
           puts "hello"
@@ -94,7 +94,7 @@ private def it_reports_control_expression(kw, *, file = __FILE__, line = __LINE_
     source = expect_issue rule, <<-CRYSTAL, file: file, line: line
       def func
         if something
-      # ^^ error: Use a guard clause (`#{kw} unless something`) instead of wrapping the code inside a conditional expression.
+      # ^^ error: Use a guard clause (`#{kw} unless something`) instead of wrapping the code inside a conditional expression
         puts "hello"
         else
           #{kw}
@@ -162,7 +162,7 @@ private def it_reports_control_expression(kw, *, file = __FILE__, line = __LINE_
     source = expect_issue rule, <<-CRYSTAL, file: file, line: line
       def func
         if something
-      # ^^ error: Use a guard clause (`#{kw} if something`) instead of wrapping the code inside a conditional expression.
+      # ^^ error: Use a guard clause (`#{kw} if something`) instead of wrapping the code inside a conditional expression
           #{kw}
         else
           puts "hello" \\
@@ -278,7 +278,7 @@ module Ameba::Rule::Style
       source = expect_issue subject, <<-CRYSTAL
         def func
           if something
-        # ^^ error: Use a guard clause (`work && return if something`) instead of wrapping the code inside a conditional expression.
+        # ^^ error: Use a guard clause (`work && return if something`) instead of [...]
             work && return
           else
             test
@@ -293,7 +293,7 @@ module Ameba::Rule::Style
       source = expect_issue subject, <<-CRYSTAL
         def func
           if something
-        # ^^ error: Use a guard clause (`test && return unless something`) instead of wrapping the code inside a conditional expression.
+        # ^^ error: Use a guard clause (`test && return unless something`) instead of [...]
             work
           else
             test && return
@@ -366,7 +366,7 @@ module Ameba::Rule::Style
           module CopTest
             def test
               if something
-            # ^^ error: Use a guard clause (`return unless something`) instead of wrapping the code inside a conditional expression.
+            # ^^ error: Use a guard clause (`return unless something`) instead of [...]
                 work
               end
             end

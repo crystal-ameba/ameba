@@ -41,7 +41,7 @@ module Ameba::Rule::Lint
     MSG_UNUSED = "Unused block argument `%1$s`. If it's necessary, use `_%1$s` " \
                  "as an argument name to indicate that it won't be used."
 
-    MSG_YIELDED = "Use `&` as an argument name to indicate that it won't be referenced."
+    MSG_YIELDED = "Use `&` as an argument name to indicate that it won't be referenced"
 
     def test(source)
       AST::ScopeVisitor.new self, source
