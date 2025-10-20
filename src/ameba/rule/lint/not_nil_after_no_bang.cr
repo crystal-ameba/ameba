@@ -40,7 +40,7 @@ module Ameba::Rule::Lint
     def test(source, node : Crystal::Call)
       return unless node.name == "not_nil!" && node.args.empty?
       return unless (obj = node.obj).is_a?(Crystal::Call)
-      return unless obj.name.in?(obj.block ? BLOCK_CALL_NAMES : CALL_NAMES)
+      return unless obj.name.in?(has_block?(obj) ? BLOCK_CALL_NAMES : CALL_NAMES)
 
       return unless name_location = name_location(obj)
       return unless name_location_end = name_end_location(obj)

@@ -15,6 +15,8 @@ module Ameba::Rule::Performance
       expect_issue subject, <<-CRYSTAL
         (1..3).map(&.to_u64).sum
              # ^^^^^^^^^^^^^^^^^ error: Use `sum {...}` instead of `map {...}.sum`
+        (1..3).map(&block).sum
+            #  ^^^^^^^^^^^^^^^ error: Use `sum {...}` instead of `map {...}.sum`
         CRYSTAL
     end
 

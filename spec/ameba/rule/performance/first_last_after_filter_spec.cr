@@ -18,6 +18,8 @@ module Ameba::Rule::Performance
       expect_issue subject, <<-CRYSTAL
         [1, 2, 3].select { |e| e > 2 }.last
                 # ^^^^^^^^^^^^^^^^^^^^^^^^^ error: Use `reverse_each.find {...}` instead of `select {...}.last`
+        [1, 2, 3].select(&block).last
+                # ^^^^^^^^^^^^^^^^^^^ error: Use `reverse_each.find {...}` instead of `select {...}.last`
         CRYSTAL
     end
 

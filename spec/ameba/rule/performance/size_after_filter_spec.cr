@@ -20,6 +20,8 @@ module Ameba::Rule::Performance
       expect_issue subject, <<-CRYSTAL
         [1, 2, 3].select { |e| e > 2 }.size
                 # ^^^^^^^^^^^^^^^^^^^^^^^^^ error: Use `count {...}` instead of `select {...}.size`
+        [1, 2, 3].select(&block).size
+                # ^^^^^^^^^^^^^^^^^^^ error: Use `count {...}` instead of `select {...}.size`
         CRYSTAL
     end
 

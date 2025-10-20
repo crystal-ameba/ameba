@@ -7,6 +7,7 @@ module Ameba::Rule::Performance
     it "passes if there is no potential performance improvements" do
       expect_no_issues subject, <<-CRYSTAL
         (1..3).compact_map(&.itself)
+        (1..3).compact_map(&block)
         CRYSTAL
     end
 
@@ -20,6 +21,8 @@ module Ameba::Rule::Performance
       expect_issue subject, <<-CRYSTAL
         (1..3).map(&.itself).compact
              # ^^^^^^^^^^^^^^^^^^^^^ error: Use `compact_map {...}` instead of `map {...}.compact`
+        (1..3).map(&block).compact
+             # ^^^^^^^^^^^^^^^^^^^ error: Use `compact_map {...}` instead of `map {...}.compact`
         CRYSTAL
     end
 

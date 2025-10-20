@@ -33,6 +33,14 @@ module Ameba::Rule::Lint
       subject.catch(s).should_not be_valid
     end
 
+    it "reports if there is a focused describe block (with block argument)" do
+      s = Source.new %(
+        describe "describe", focus: true, &block
+      ), path: "source_spec.cr"
+
+      subject.catch(s).should_not be_valid
+    end
+
     it "reports if there is a focused it block" do
       s = Source.new %(
         it "it", focus: true do

@@ -19,12 +19,15 @@ module Ameba::Rule::Performance
                     # ^^^^^^^^^^^^^^^ error: Use `max_of {...}` instead of `map {...}.max`
         %w[Alice Bob].map(&.size).minmax?
                     # ^^^^^^^^^^^^^^^^^^^ error: Use `minmax_of? {...}` instead of `map {...}.minmax?`
+        %w[Alice Bob].map(&block).minmax?
+                    # ^^^^^^^^^^^^^^^^^^^ error: Use `minmax_of? {...}` instead of `map {...}.minmax?`
         CRYSTAL
 
       expect_correction source, <<-CRYSTAL
         %w[Alice Bob].min_of { |name| name.size }
         %w[Alice Bob].max_of(&.size).zero?
         %w[Alice Bob].minmax_of?(&.size)
+        %w[Alice Bob].minmax_of?(&block)
         CRYSTAL
     end
 

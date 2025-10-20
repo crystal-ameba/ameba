@@ -12,6 +12,7 @@ module Ameba::Rule::Lint
         (1..3).rindex { |i| i > 2 }.not_nil!(:foo)
         (1..3).find { |i| i > 2 }.not_nil!(:foo)
         /(.)(.)(.)/.match("abc", &.itself).not_nil!
+        /(.)(.)(.)/.match("abc", &foo).not_nil!
         CRYSTAL
     end
 

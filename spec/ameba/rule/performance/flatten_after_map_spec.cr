@@ -14,6 +14,8 @@ module Ameba::Rule::Performance
       expect_issue subject, <<-CRYSTAL
         %w[Alice Bob].map(&.chars).flatten
                     # ^^^^^^^^^^^^^^^^^^^^ error: Use `flat_map {...}` instead of `map {...}.flatten`
+        %w[Alice Bob].map(&block).flatten
+                    # ^^^^^^^^^^^^^^^^^^^ error: Use `flat_map {...}` instead of `map {...}.flatten`
         CRYSTAL
     end
 
