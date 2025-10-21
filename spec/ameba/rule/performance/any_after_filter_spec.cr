@@ -8,6 +8,7 @@ module Ameba::Rule::Performance
       expect_no_issues subject, <<-CRYSTAL
         [1, 2, 3].select { |e| e > 1 }.any?(&.zero?)
         [1, 2, 3].reject { |e| e > 1 }.any?(&.zero?)
+        [1, 2, 3].select { |e| e > 1 }.any?(&block)
         [1, 2, 3].select { |e| e > 1 }
         [1, 2, 3].reject { |e| e > 1 }
         [1, 2, 3].any? { |e| e > 1 }

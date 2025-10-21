@@ -45,6 +45,8 @@ module Ameba::Rule::Lint
   #   Enabled: true
   # ```
   class SpecFocus < Base
+    include AST::Util
+
     properties do
       since_version "0.14.0"
       description "Reports focused spec items"
@@ -60,7 +62,7 @@ module Ameba::Rule::Lint
 
     def test(source, node : Crystal::Call)
       return unless node.name.in?(SPEC_ITEM_NAMES)
-      return unless node.block
+      return unless has_block?(node)
 
       arg = node.named_args.try &.find(&.name.== "focus")
       return if arg.nil? ||

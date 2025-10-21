@@ -37,7 +37,7 @@ module Ameba::Rule::Performance
 
     def test(source, node : Crystal::Call)
       return unless node.name == "flatten" && (obj = node.obj)
-      return unless obj.is_a?(Crystal::Call) && obj.block
+      return unless obj.is_a?(Crystal::Call) && has_block?(obj)
       return unless obj.name == "map"
 
       issue_for name_location(obj), name_end_location(node), MSG

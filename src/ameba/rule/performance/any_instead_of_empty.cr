@@ -28,6 +28,8 @@ module Ameba::Rule::Performance
   #   Enabled: true
   # ```
   class AnyInsteadOfEmpty < Base
+    include AST::Util
+
     properties do
       since_version "0.14.0"
       description "Identifies usage of arg-less `any?` calls"
@@ -36,9 +38,8 @@ module Ameba::Rule::Performance
     MSG = "Use `!{...}.empty?` instead of `{...}.any?`"
 
     def test(source, node : Crystal::Call)
-      return unless node.name == "any?"
-      return unless node.block.nil? && node.args.empty?
-      return unless node.obj
+      return unless node.name == "any?" && node.args.empty? && node.obj
+      return if has_block?(node)
 
       issue_for node, MSG, prefer_name_location: true
     end

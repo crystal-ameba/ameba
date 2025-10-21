@@ -17,12 +17,15 @@ module Ameba::Rule::Performance
       source = expect_issue subject, <<-CRYSTAL
         "Alice".chars.each { |c| puts c }
               # ^^^^^^^^^^ error: Use `each_char {...}` instead of `chars.each {...}` to avoid excessive allocation
+        "Alice".chars.each(&block)
+              # ^^^^^^^^^^ error: Use `each_char {...}` instead of `chars.each {...}` to avoid excessive allocation
         "Alice\nBob".lines.each { |l| puts l }
            # ^^^^^^^^^^ error: Use `each_line {...}` instead of `lines.each {...}` to avoid excessive allocation
         CRYSTAL
 
       expect_correction source, <<-CRYSTAL
         "Alice".each_char { |c| puts c }
+        "Alice".each_char(&block)
         "Alice\nBob".each_line { |l| puts l }
         CRYSTAL
     end

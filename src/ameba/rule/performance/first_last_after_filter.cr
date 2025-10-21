@@ -44,10 +44,11 @@ module Ameba::Rule::Performance
     end
 
     def test(source, node : Crystal::Call)
-      return unless node.name.in?(CALL_NAMES) && (obj = node.obj)
-      return unless obj.is_a?(Crystal::Call) && obj.block
-      return unless node.block.nil? && node.args.empty?
-      return unless obj.name.in?(filter_names)
+      return unless node.name.in?(CALL_NAMES) && node.args.empty?
+      return if has_block?(node)
+
+      return unless (obj = node.obj).is_a?(Crystal::Call)
+      return unless obj.name.in?(filter_names) && has_block?(obj)
 
       message = node.name.includes?(CALL_NAMES.first) ? MSG : MSG_REVERSE
 

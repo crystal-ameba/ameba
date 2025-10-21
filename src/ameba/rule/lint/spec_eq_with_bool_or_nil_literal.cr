@@ -28,6 +28,8 @@ module Ameba::Rule::Lint
   #   Enabled: true
   # ```
   class SpecEqWithBoolOrNilLiteral < Base
+    include AST::Util
+
     properties do
       since_version "1.7.0"
       description "Reports `eq(true|false|nil)` expectations in specs"
@@ -40,12 +42,12 @@ module Ameba::Rule::Lint
     end
 
     def test(source, node : Crystal::Call)
-      return unless node.name.in?("should", "should_not")
-      return unless node.block.nil? && node.args.size == 1
+      return unless node.name.in?("should", "should_not") && node.args.size == 1
+      return if has_block?(node)
 
       return unless (matcher = node.args.first).is_a?(Crystal::Call)
-      return unless matcher.name == "eq"
-      return unless matcher.block.nil? && matcher.args.size == 1
+      return unless matcher.name == "eq" && matcher.args.size == 1
+      return if has_block?(matcher)
 
       replacement =
         case arg = matcher.args.first

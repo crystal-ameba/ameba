@@ -41,9 +41,11 @@ module Ameba::Rule::Performance
     end
 
     def test(source, node : Crystal::Call)
-      return unless node.name.in?(CALL_NAMES) && node.block.nil? && node.args.empty?
+      return unless node.name.in?(CALL_NAMES) && node.args.empty?
+      return if has_block?(node)
+
       return unless (obj = node.obj).is_a?(Crystal::Call)
-      return unless obj.name == "map" && obj.block && obj.args.empty?
+      return unless obj.name == "map" && has_block?(obj) && obj.args.empty?
 
       return unless name_location = name_location(obj)
       return unless end_location = name_end_location(node)

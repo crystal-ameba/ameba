@@ -54,8 +54,8 @@ module Ameba::Rule::Performance
 
     def test(source, node : Crystal::Call)
       return unless node.name == "each" && node.args.empty?
-      return unless (obj = node.obj).is_a?(Crystal::Call)
-      return unless obj.args.empty? && obj.block.nil?
+      return unless (obj = node.obj).is_a?(Crystal::Call) && obj.args.empty?
+      return if has_block?(obj)
       return unless method = call_names[obj.name]?
 
       return unless name_location = name_location(obj)

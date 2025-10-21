@@ -68,6 +68,13 @@ module Ameba::AST::Util
       node.names.join("::").in?(names)
   end
 
+  # Returns `true` if the *node* is a `Crystal::Call`
+  # with either `node.block` or `node.block_arg` set, `false` otherwise.
+  def has_block?(node) : Bool
+    node.is_a?(Crystal::Call) &&
+      !!(node.block || node.block_arg)
+  end
+
   # Returns a source code for the current node.
   # This method uses `node.location` and `node.end_location`
   # to determine and cut a piece of source of the node.
