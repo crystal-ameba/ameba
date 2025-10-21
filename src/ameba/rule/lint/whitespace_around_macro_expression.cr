@@ -30,6 +30,11 @@ module Ameba::Rule::Lint
     MSG = "Missing spaces around macro expression"
 
     def test(source, node : Crystal::MacroExpression)
+      # https://github.com/crystal-lang/crystal/pull/15524
+      {% if compare_versions(Crystal::VERSION, "1.16.0") < 0 %}
+        return
+      {% end %}
+
       return unless node.output?
       return unless code = node_source(node, source.lines)
       return if code.starts_with?("{{ ") && code.ends_with?(" }}")
