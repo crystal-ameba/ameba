@@ -13,7 +13,7 @@ module Ameba::Rule
   # class MyRule < Ameba::Rule::Base
   #   def test(source)
   #     if invalid?(source)
-  #       issue_for line, column, "Something wrong."
+  #       issue_for line, column, "Something wrong"
   #     end
   #   end
   #

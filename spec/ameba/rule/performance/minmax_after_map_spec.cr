@@ -14,11 +14,11 @@ module Ameba::Rule::Performance
     it "reports if there is a `min/max/minmax` call followed by `map`" do
       source = expect_issue subject, <<-CRYSTAL
         %w[Alice Bob].map { |name| name.size }.min
-                    # ^^^^^^^^^^^^^^^^^^^^^^^^^^^^ error: Use `min_of {...}` instead of `map {...}.min`.
+                    # ^^^^^^^^^^^^^^^^^^^^^^^^^^^^ error: Use `min_of {...}` instead of `map {...}.min`
         %w[Alice Bob].map(&.size).max.zero?
-                    # ^^^^^^^^^^^^^^^ error: Use `max_of {...}` instead of `map {...}.max`.
+                    # ^^^^^^^^^^^^^^^ error: Use `max_of {...}` instead of `map {...}.max`
         %w[Alice Bob].map(&.size).minmax?
-                    # ^^^^^^^^^^^^^^^^^^^ error: Use `minmax_of? {...}` instead of `map {...}.minmax?`.
+                    # ^^^^^^^^^^^^^^^^^^^ error: Use `minmax_of? {...}` instead of `map {...}.minmax?`
         CRYSTAL
 
       expect_correction source, <<-CRYSTAL

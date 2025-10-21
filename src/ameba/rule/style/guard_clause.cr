@@ -61,7 +61,7 @@ module Ameba::Rule::Style
     end
 
     MSG = "Use a guard clause (`%s`) instead of wrapping the " \
-          "code inside a conditional expression."
+          "code inside a conditional expression"
 
     def test(source)
       AST::NodeVisitor.new self, source, skip: [
