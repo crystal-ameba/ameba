@@ -10,6 +10,18 @@ module Ameba::Rule::Lint
         CRYSTAL
     end
 
+    it "passes if macro expression is multiline" do
+      expect_no_issues subject, <<-CRYSTAL
+        {{
+          if foo > 1
+            foo
+          else
+            "default"
+          end
+        }}
+        CRYSTAL
+    end
+
     it "reports macro expression without whitespace around" do
       source = expect_issue subject, <<-CRYSTAL
         {{foo}}

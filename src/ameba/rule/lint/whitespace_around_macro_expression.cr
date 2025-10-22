@@ -36,6 +36,7 @@ module Ameba::Rule::Lint
       {% end %}
 
       return unless node.output?
+      return unless (location = node.location) && location.same_line?(node.end_location)
       return unless code = node_source(node, source.lines)
       return if code.starts_with?("{{ ") && code.ends_with?(" }}")
 
