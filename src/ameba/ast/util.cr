@@ -161,9 +161,7 @@ module Ameba::AST::Util
       flow_expressions? [node.whens, node.else].flatten, in_loop
     when Crystal::ExceptionHandler
       flow_expressions? [node.else || node.body, node.rescues].flatten, in_loop
-    when Crystal::While, Crystal::Until
-      flow_expression? node.body, in_loop
-    when Crystal::Rescue, Crystal::When
+    when Crystal::While, Crystal::Until, Crystal::Rescue, Crystal::When
       flow_expression? node.body, in_loop
     when Crystal::Expressions
       node.expressions.any? { |exp| flow_expression? exp, in_loop }
