@@ -7,6 +7,16 @@ module Ameba
 
   describe GlobUtils do
     describe "#find_files_by_globs" do
+      it "returns files by directory" do
+        subject.find_files_by_globs([__DIR__])
+          .should contain File.expand_path(current_file_path)
+      end
+
+      it "returns a file by filepath" do
+        subject.find_files_by_globs([__FILE__])
+          .should eq [File.expand_path(current_file_path)]
+      end
+
       it "returns a file by globs" do
         subject.find_files_by_globs(["**/#{current_file_basename}"])
           .should eq [current_file_path]

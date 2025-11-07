@@ -24,15 +24,19 @@ module Ameba
     def expand(globs)
       globs
         .flat_map do |glob|
-          if File.directory?(glob)
+          glob = Path[glob]
+
+          if File.directory?(Path.posix(glob))
             ext = ".cr"
 
             Ameba.ecr_supported? do
               ext = ".{cr,ecr}"
             end
 
-            glob += "/**/*#{ext}"
+            glob = glob / "**" / "*#{ext}"
           end
+
+          glob = glob.to_posix.to_s
 
           Dir[glob]
         end
