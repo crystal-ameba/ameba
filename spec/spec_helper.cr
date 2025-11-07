@@ -256,11 +256,11 @@ module Ameba
       @started_sources = sources
     end
 
-    def source_finished(source : Source)
+    def source_started(source : Source)
       @started_source = source
     end
 
-    def source_started(source : Source)
+    def source_finished(source : Source)
       @finished_source = source
     end
 
