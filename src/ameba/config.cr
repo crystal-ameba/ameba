@@ -55,7 +55,7 @@ class Ameba::Config
   DEFAULT_PATH  = Path[Dir.current] / FILENAME
   DEFAULT_PATHS = {
     Path["~"] / FILENAME,
-    Path[XDG_CONFIG_HOME] / "ameba/config.yml",
+    Path[XDG_CONFIG_HOME] / "ameba" / "config.yml",
   }
 
   DEFAULT_GLOBS = %w[
