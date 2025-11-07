@@ -866,28 +866,16 @@ module Ameba::Rule::Lint
           CRYSTAL
       end
 
-      # Locations for Regex literals were added in Crystal v1.15.0
-      {% if compare_versions(Crystal::VERSION, "1.15.0") >= 0 %}
-        it "fails if a regex literal is unused" do
-          expect_issue subject, <<-'CRYSTAL'
-            foo = /hello world/
-            /goodnight moon/
-            # ^^^^^^^^^^^^^^ error: Literal value is unused
-            bar = /goodnight moon, #{foo}/
-            /goodnight moon, #{foo}/
-            # ^^^^^^^^^^^^^^^^^^^^^^ error: Literal value is unused
-            CRYSTAL
-        end
-      {% else %}
-        it "passes if a regex literal is unused" do
-          expect_no_issues subject, <<-'CRYSTAL'
-            foo = /hello world/
-            /goodnight moon/
-            bar = /goodnight moon, #{foo}/
-            /goodnight moon, #{foo}/
-            CRYSTAL
-        end
-      {% end %}
+      it "fails if a regex literal is unused" do
+        expect_issue subject, <<-'CRYSTAL'
+          foo = /hello world/
+          /goodnight moon/
+          # ^^^^^^^^^^^^^^ error: Literal value is unused
+          bar = /goodnight moon, #{foo}/
+          /goodnight moon, #{foo}/
+          # ^^^^^^^^^^^^^^^^^^^^^^ error: Literal value is unused
+          CRYSTAL
+      end
     end
 
     context "local variable access" do
