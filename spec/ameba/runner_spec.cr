@@ -26,27 +26,29 @@ module Ameba
 
     describe "#run" do
       it "returns self" do
-        runner.run.should_not be_nil
+        runner.run.should be_a(Runner)
       end
 
-      it "calls started callback" do
-        runner(formatter: formatter).run
-        formatter.started_sources.should_not be_nil
-      end
+      context "invokes hooks" do
+        before_each do
+          runner(formatter: formatter).run
+        end
 
-      it "calls finished callback" do
-        runner(formatter: formatter).run
-        formatter.finished_sources.should_not be_nil
-      end
+        it "calls started callback" do
+          formatter.started_sources.should_not be_nil
+        end
 
-      it "calls source_started callback" do
-        runner(formatter: formatter).run
-        formatter.started_source.should_not be_nil
-      end
+        it "calls finished callback" do
+          formatter.finished_sources.should_not be_nil
+        end
 
-      it "calls source_finished callback" do
-        runner(formatter: formatter).run
-        formatter.finished_source.should_not be_nil
+        it "calls source_started callback" do
+          formatter.started_source.should_not be_nil
+        end
+
+        it "calls source_finished callback" do
+          formatter.finished_source.should_not be_nil
+        end
       end
 
       it "checks accordingly to the rule #since_version" do
