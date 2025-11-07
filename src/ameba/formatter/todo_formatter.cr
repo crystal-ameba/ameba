@@ -90,7 +90,10 @@ module Ameba::Formatter
     end
 
     private def exclude_paths(issues)
-      issues.compact_map(&.location.try &.filename.try &.to_s).uniq!
+      issues
+        .compact_map(&.location.try &.filename.try &.to_s)
+        .uniq!
+        .map { |path| Path[path].to_posix.to_s }
     end
 
     private def rule_to_yaml(yaml, rule, issues)
