@@ -60,12 +60,9 @@ class Ameba::Config
 
   DEFAULT_GLOBS = %w[
     **/*.cr
+    **/*.ecr
     !lib
   ]
-
-  Ameba.ecr_supported? do
-    DEFAULT_GLOBS << "**/*.ecr"
-  end
 
   getter rules : Array(Rule::Base)
   property severity = Severity::Convention
