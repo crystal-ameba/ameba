@@ -3,7 +3,7 @@ require "../spec_helper"
 module Ameba
   subject = GlobUtils
   current_file_basename = File.basename(__FILE__)
-  current_file_path = "spec/ameba/#{current_file_basename}"
+  current_file_path = Path["spec", "ameba", current_file_basename].to_s
 
   describe GlobUtils do
     describe "#find_files_by_globs" do
