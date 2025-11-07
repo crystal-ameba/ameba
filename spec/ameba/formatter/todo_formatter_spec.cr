@@ -102,8 +102,8 @@ module Ameba
 
       it "output format" do
         with_formatter do |formatter|
-          s1 = Source.new "", "source1.cr"
-          s2 = Source.new "", "source2.cr"
+          s1 = Source.new(path: "source1.cr")
+          s2 = Source.new(path: "source2.cr")
           s1.add_issue NamedRule.new, {1, 1}, ""
           s2.add_issue DummyRule.new, {2, 2}, ""
           s1.add_issue DummyRule.new, {3, 3}, ""
@@ -120,6 +120,30 @@ module Ameba
             BreakingRule:
               Excluded:
               - source1.cr
+            YAML
+        end
+      end
+
+      it "converts paths to posix variant" do
+        with_formatter do |formatter|
+          s1 = Source.new(path: Path["foo", "bar", "source1.cr"].to_s)
+          s2 = Source.new(path: Path["foo", "bar", "source2.cr"].to_s)
+          s1.add_issue NamedRule.new, {1, 1}, ""
+          s2.add_issue DummyRule.new, {2, 2}, ""
+          s1.add_issue DummyRule.new, {3, 3}, ""
+
+          formatter.finished([s1, s2])
+
+          content = File.read(CONFIG_PATH)
+          content.should contain <<-YAML
+            Ameba/DummyRule:
+              Excluded:
+              - foo/bar/source1.cr
+              - foo/bar/source2.cr
+
+            BreakingRule:
+              Excluded:
+              - foo/bar/source1.cr
             YAML
         end
       end

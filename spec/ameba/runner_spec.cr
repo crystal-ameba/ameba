@@ -67,7 +67,7 @@ module Ameba
 
       it "skips rule check if source is excluded" do
         path = "source.cr"
-        source = Source.new "", path
+        source = Source.new(path: path)
 
         all_rules = ([] of Rule::Base).tap do |rules|
           rule = ErrorRule.new
