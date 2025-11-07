@@ -102,8 +102,8 @@ module Ameba
 
       it "output format" do
         with_formatter do |formatter|
-          s1 = Source.new "", "source1.cr"
-          s2 = Source.new "", "source2.cr"
+          s1 = Source.new(path: "source1.cr")
+          s2 = Source.new(path: "source2.cr")
           s1.add_issue NamedRule.new, {1, 1}, ""
           s2.add_issue DummyRule.new, {2, 2}, ""
           s1.add_issue DummyRule.new, {3, 3}, ""
