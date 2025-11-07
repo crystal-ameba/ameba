@@ -21,6 +21,9 @@ jobs:
       - name: Set timezone to UTC
         uses: szenius/set-timezone@v2.0
 
+      - name: Disable CRLF line ending substitution
+        run: git config --global core.autocrlf false
+
       - name: Install Crystal
         uses: crystal-lang/install-crystal@v1
         with:
