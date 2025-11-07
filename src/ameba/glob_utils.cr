@@ -27,13 +27,7 @@ module Ameba
           glob = Path[glob]
 
           if File.directory?(Path.posix(glob))
-            ext = ".cr"
-
-            Ameba.ecr_supported? do
-              ext = ".{cr,ecr}"
-            end
-
-            glob = glob / "**" / "*#{ext}"
+            glob = glob / "**" / "*.{cr,ecr}"
           end
 
           glob = glob.to_posix.to_s

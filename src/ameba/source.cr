@@ -59,19 +59,17 @@ module Ameba
     getter ast : Crystal::ASTNode do
       code = @code
 
-      Ameba.ecr_supported? do
-        if ecr?
-          begin
-            code = ECR.process_string(code, path)
-          rescue ex : ECR::Lexer::SyntaxException
-            # Need to rescue to add the filename
-            raise Crystal::SyntaxException.new(
-              ex.message,
-              ex.line_number,
-              ex.column_number,
-              path
-            )
-          end
+      if ecr?
+        begin
+          code = ECR.process_string(code, path)
+        rescue ex : ECR::Lexer::SyntaxException
+          # Need to rescue to add the filename
+          raise Crystal::SyntaxException.new(
+            ex.message,
+            ex.line_number,
+            ex.column_number,
+            path
+          )
         end
       end
 

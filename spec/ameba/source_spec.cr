@@ -72,36 +72,26 @@ module Ameba
     end
 
     describe "#ast" do
-      Ameba.ecr_supported? do
-        it "parses an ECR file" do
-          source = Source.new <<-ECR, "filename.ecr"
-            hello <%= "world" %>
-            ECR
+      it "parses an ECR file" do
+        source = Source.new <<-ECR, "filename.ecr"
+          hello <%= "world" %>
+          ECR
 
-          {% if compare_versions(Crystal::VERSION, "1.17.0") >= 0 %}
-            source.ast.to_s.should eq <<-CRYSTAL
-              __str__ << "hello "
-              ("world")
-                .to_s(__str__)
+        source.ast.to_s.should eq <<-CRYSTAL
+          __str__ << "hello "
+          ("world")
+            .to_s(__str__)
 
-              CRYSTAL
-          {% else %}
-            source.ast.to_s.should eq <<-CRYSTAL
-              __str__ << "hello "
-              ("world").to_s(__str__)
+          CRYSTAL
+      end
 
-              CRYSTAL
-          {% end %}
-        end
+      it "raises an exception when ECR parsing fails" do
+        source = Source.new <<-ECR, "filename.ecr"
+          hello <%= "world" >
+          ECR
 
-        it "raises an exception when ECR parsing fails" do
-          source = Source.new <<-ECR, "filename.ecr"
-            hello <%= "world" >
-            ECR
-
-          expect_raises(Crystal::SyntaxException) do
-            source.ast
-          end
+        expect_raises(Crystal::SyntaxException) do
+          source.ast
         end
       end
     end

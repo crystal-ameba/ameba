@@ -32,24 +32,13 @@ module Ameba::Formatter
       File.open(@config_path, mode: "w") do |file|
         file.puts header
 
-        {% if compare_versions(Crystal::VERSION, "1.17.0") > 0 %}
-          YAML::Builder.build(file) do |builder|
-            builder.stream do
-              builder.document(implicit_start_indicator: true) do
-                build_yaml(file, builder, issues)
-              end
+        YAML::Builder.build(file) do |builder|
+          builder.stream do
+            builder.document(implicit_start_indicator: true) do
+              build_yaml(file, builder, issues)
             end
           end
-        {% else %}
-          # Before 1.17.0 we cannot prevent the document start indicator so
-          # we must remove it explicitly (https://github.com/crystal-lang/crystal/pull/15835)
-          yaml = String.build do |io|
-            YAML.build(io) do |builder|
-              build_yaml(io, builder, issues)
-            end
-          end
-          file << yaml.lchop("---\n")
-        {% end %}
+        end
       end
     end
 

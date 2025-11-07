@@ -90,10 +90,7 @@ module Ameba::Rule::Lint
     end
 
     def test(source, node : Crystal::RegexLiteral, in_macro : Bool)
-      # Locations for Regex literals were added in Crystal v1.15.0
-      {% if compare_versions(Crystal::VERSION, "1.15.0") >= 0 %}
-        issue_for node, MSG_LITERAL
-      {% end %}
+      issue_for node, MSG_LITERAL
     end
 
     def test(
