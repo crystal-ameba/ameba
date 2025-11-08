@@ -14,4 +14,3 @@ Style/MultilineStringLiteral:
     - spec/ameba/rule/lint/spec_focus_spec.cr
     - spec/ameba/rule/lint/unneeded_disable_directive_spec.cr
     - spec/ameba/rule/lint/unreachable_code_spec.cr
-    - spec/ameba/rule/style/redundant_next_spec.cr
