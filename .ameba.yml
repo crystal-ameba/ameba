@@ -4,7 +4,6 @@ Lint/Typos:
 
 Style/MultilineStringLiteral:
   Excluded:
-    - spec/ameba/formatter/dot_formatter_spec.cr
     - spec/ameba/rule/lint/empty_expression_spec.cr
     - spec/ameba/rule/lint/literal_in_condition_spec.cr
     - spec/ameba/rule/lint/literal_in_interpolation_spec.cr
