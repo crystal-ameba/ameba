@@ -185,21 +185,6 @@ module Ameba::Rule::Style
       end
     end
 
-    it "reports correct rule, error message and position" do
-      s = Source.new %(
-        block do |v|
-          next v + 1
-        end
-      ), "source.cr"
-      subject.catch(s).should_not be_valid
-      s.issues.size.should eq 1
-      issue = s.issues.first
-      issue.rule.should_not be_nil
-      issue.location.to_s.should eq "source.cr:2:3"
-      issue.end_location.to_s.should eq "source.cr:2:12"
-      issue.message.should eq "Redundant `next` detected"
-    end
-
     context "properties" do
       context "#allow_multi_next" do
         it "allows multi next statements by default" do

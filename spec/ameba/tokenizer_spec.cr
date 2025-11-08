@@ -28,6 +28,7 @@ module Ameba
       it_tokenizes %(%i[one two]),
         %w[SYMBOL_ARRAY_START STRING STRING STRING_ARRAY_END EOF]
 
+      # ameba:disable Style/MultilineStringLiteral
       it_tokenizes %(
         class A
           def method

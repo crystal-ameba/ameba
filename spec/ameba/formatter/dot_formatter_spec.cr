@@ -23,9 +23,10 @@ module Ameba::Formatter
       end
 
       it "writes invalid source" do
-        s = Source.new
-        s.add_issue DummyRule.new, Crystal::Nop.new, "message"
-        subject.source_finished s
+        source = Source.new
+        source.add_issue DummyRule.new, Crystal::Nop.new, "message"
+
+        subject.source_finished source
         output.to_s.should contain "F"
       end
     end
@@ -43,11 +44,11 @@ module Ameba::Formatter
 
       context "when issues found" do
         it "writes each issue" do
-          s = Source.new.tap do |source|
-            source.add_issue(DummyRule.new, {1, 1}, "DummyRuleError")
-            source.add_issue(NamedRule.new, {1, 2}, "NamedRuleError")
-          end
-          subject.finished [s]
+          source = Source.new
+          source.add_issue(DummyRule.new, {1, 1}, "DummyRuleError")
+          source.add_issue(NamedRule.new, {1, 2}, "NamedRuleError")
+
+          subject.finished [source]
           log = output.to_s
           log.should contain "1 inspected, 2 failures"
           log.should contain "DummyRuleError"
@@ -55,13 +56,13 @@ module Ameba::Formatter
         end
 
         it "writes affected code by default" do
-          s = Source.new(%(
+          source = Source.new <<-CRYSTAL
             a = 22
             puts a
-          )).tap do |source|
-            source.add_issue(DummyRule.new, {1, 5}, "DummyRuleError")
-          end
-          subject.finished [s]
+            CRYSTAL
+          source.add_issue(DummyRule.new, {1, 5}, "DummyRuleError")
+
+          subject.finished [source]
           log = output.to_s
           log = subject.deansify(log).should_not be_nil
           log.should contain "> a = 22"
@@ -69,28 +70,28 @@ module Ameba::Formatter
         end
 
         it "writes severity" do
-          s = Source.new(%(
+          source = Source.new <<-CRYSTAL
             a = 22
             puts a
-          )).tap do |source|
-            source.add_issue(DummyRule.new, {1, 5}, "DummyRuleError")
-          end
-          subject.finished [s]
+            CRYSTAL
+          source.add_issue(DummyRule.new, {1, 5}, "DummyRuleError")
+
+          subject.finished [source]
           log = output.to_s
           log.should contain "[C]"
         end
 
         it "doesn't write affected code if it is disabled" do
-          s = Source.new(%(
+          source = Source.new <<-CRYSTAL
             a = 22
             puts a
-          )).tap do |source|
-            source.add_issue(DummyRule.new, {1, 5}, "DummyRuleError")
-          end
+            CRYSTAL
+          source.add_issue(DummyRule.new, {1, 5}, "DummyRuleError")
 
           formatter = DotFormatter.new output
           formatter.config[:without_affected_code] = true
-          formatter.finished [s]
+          formatter.finished [source]
+
           log = output.to_s
           log = formatter.deansify(log).should_not be_nil
           log.should_not contain "> a = 22"
@@ -98,11 +99,11 @@ module Ameba::Formatter
         end
 
         it "does not write disabled issues" do
-          s = Source.new.tap do |source|
-            source.add_issue(DummyRule.new, {1, 1}, "DummyRuleError", status: :disabled)
-            source.add_issue(NamedRule.new, {1, 2}, "NamedRuleError")
-          end
-          subject.finished [s]
+          source = Source.new
+          source.add_issue(DummyRule.new, {1, 1}, "DummyRuleError", status: :disabled)
+          source.add_issue(NamedRule.new, {1, 2}, "NamedRuleError")
+
+          subject.finished [source]
           log = output.to_s
           log.should_not contain "DummyRuleError"
           log.should contain "1 inspected, 1 failure"
