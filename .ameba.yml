@@ -1,3 +1,18 @@
 Lint/Typos:
   Excluded:
     - spec/ameba/rule/lint/typos_spec.cr
+
+Style/MultilineStringLiteral:
+  Excluded:
+    - spec/ameba/formatter/dot_formatter_spec.cr
+    - spec/ameba/rule/lint/empty_expression_spec.cr
+    - spec/ameba/rule/lint/literal_in_condition_spec.cr
+    - spec/ameba/rule/lint/literal_in_interpolation_spec.cr
+    - spec/ameba/rule/lint/redundant_string_cercion_spec.cr
+    - spec/ameba/rule/lint/redundant_with_index_spec.cr
+    - spec/ameba/rule/lint/redundant_with_object_spec.cr
+    - spec/ameba/rule/lint/shadowed_argument_spec.cr
+    - spec/ameba/rule/lint/spec_focus_spec.cr
+    - spec/ameba/rule/lint/unneeded_disable_directive_spec.cr
+    - spec/ameba/rule/lint/unreachable_code_spec.cr
+    - spec/ameba/rule/style/redundant_next_spec.cr
