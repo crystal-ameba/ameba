@@ -14,7 +14,7 @@
 <script type="text/javascript" src="../../../js/doc.js"></script>
 
   <meta name="repository-name" content="ameba">
-  <title>Ameba::Rule::Lint::NotNil - ameba master</title>
+  <title>Ameba::Rule::Style::MultilineStringLiteral - ameba master</title>
   <script type="text/javascript">
     CrystalDocs.base_path = "../../../";
   </script>
@@ -382,7 +382,7 @@
       
     </li>
   
-  <li class="parent open current" data-id="ameba/Ameba/Rule/Lint" data-name="ameba::rule::lint">
+  <li class="parent " data-id="ameba/Ameba/Rule/Lint" data-name="ameba::rule::lint">
       <a href="../../../Ameba/Rule/Lint.html">Lint</a>
       
         <ul>
@@ -477,7 +477,7 @@
       
     </li>
   
-  <li class=" current" data-id="ameba/Ameba/Rule/Lint/NotNil" data-name="ameba::rule::lint::notnil">
+  <li class=" " data-id="ameba/Ameba/Rule/Lint/NotNil" data-name="ameba::rule::lint::notnil">
       <a href="../../../Ameba/Rule/Lint/NotNil.html">NotNil</a>
       
     </li>
@@ -792,7 +792,7 @@
       
     </li>
   
-  <li class="parent " data-id="ameba/Ameba/Rule/Style" data-name="ameba::rule::style">
+  <li class="parent open current" data-id="ameba/Ameba/Rule/Style" data-name="ameba::rule::style">
       <a href="../../../Ameba/Rule/Style.html">Style</a>
       
         <ul>
@@ -842,7 +842,7 @@
       
     </li>
   
-  <li class=" " data-id="ameba/Ameba/Rule/Style/MultilineStringLiteral" data-name="ameba::rule::style::multilinestringliteral">
+  <li class=" current" data-id="ameba/Ameba/Rule/Style/MultilineStringLiteral" data-name="ameba::rule::style::multilinestringliteral">
       <a href="../../../Ameba/Rule/Style/MultilineStringLiteral.html">MultilineStringLiteral</a>
       
     </li>
@@ -1038,12 +1038,12 @@
 
   <span class="kind">
     class
-  </span> Ameba::<wbr>Rule::<wbr>Lint::<wbr>NotNil
+  </span> Ameba::<wbr>Rule::<wbr>Style::<wbr>MultilineStringLiteral
 
 </h1>
 
 
-  <ul class="superclass-hierarchy"><li class="superclass"><a href="../../../Ameba/Rule/Lint/NotNil.html">Ameba::Rule::Lint::NotNil</a></li><li class="superclass"><a href="../../../Ameba/Rule/Base.html">Ameba::Rule::Base</a></li><li class="superclass">Reference</li><li class="superclass">Object</li></ul>
+  <ul class="superclass-hierarchy"><li class="superclass"><a href="../../../Ameba/Rule/Style/MultilineStringLiteral.html">Ameba::Rule::Style::MultilineStringLiteral</a></li><li class="superclass"><a href="../../../Ameba/Rule/Base.html">Ameba::Rule::Base</a></li><li class="superclass">Reference</li><li class="superclass">Object</li></ul>
 
 
 
@@ -1057,20 +1057,22 @@
     Overview
   </h2>
 
-  <p>This rule is used to identify usages of <code>not_nil!</code> calls.</p>
-<p>For example, this is considered a code smell:</p>
-<pre><code class="language-crystal">names <span class="o">=</span> <span class="s">%w[Alice Bob]</span>
-alice <span class="o">=</span> names.find { <span class="o">|</span>name<span class="o">|</span> name <span class="o">==</span> <span class="s">&quot;Alice&quot;</span> }.not_nil!</code></pre>
-<p>And can be written as this:</p>
-<pre><code class="language-crystal">names <span class="o">=</span> <span class="s">%w[Alice Bob]</span>
-alice <span class="o">=</span> names.find { <span class="o">|</span>name<span class="o">|</span> name <span class="o">==</span> <span class="s">&quot;Alice&quot;</span> }
-
-<span class="k">if</span> alice
-  <span class="c"># ...</span>
-<span class="k">end</span></code></pre>
+  <p>A rule that disallows multiline string literals not using
+<code>&lt;&lt;-HEREDOC</code> markers.</p>
+<p>For example, this is considered invalid:</p>
+<pre><code class="language-crystal"><span class="s">%(
+  foo
+  bar
+)</span></code></pre>
+<p>And should be rewritten to the following:</p>
+<pre><code class="language-crystal"><span class="s">&lt;&lt;-HEREDOC</span>
+<span class="s">  foo
+  bar
+HEREDOC</span></code></pre>
 <p>YAML configuration example:</p>
-<pre><code class="language-crystal"><span class="t">Lint</span><span class="o">/</span><span class="t">NotNil</span>:
-  <span class="t">Enabled</span>: <span class="n">true</span></code></pre>
+<pre><code class="language-crystal"><span class="t">Style</span><span class="o">/</span><span class="t">MultilineStringLiteral</span>:
+  <span class="t">Enabled</span>: <span class="n">true</span>
+  <span class="t">AllowBackslashSplitStrings</span>: <span class="n">true</span></code></pre>
 
 
 
@@ -1113,8 +1115,8 @@ alice <span class="o">=</span> names.find { <span class="o">|</span>name<span cl
   </h2>
   
     
-      <a href="https://github.com/crystal-ameba/ameba/blob/31937e6/src/ameba/rule/lint/not_nil.cr#L28" target="_blank">
-        ameba/rule/lint/not_nil.cr
+      <a href="https://github.com/crystal-ameba/ameba/blob/31937e6/src/ameba/rule/style/multiline_string_literal.cr#L30" target="_blank">
+        ameba/rule/style/multiline_string_literal.cr
       </a>
     
     <br/>
@@ -1135,7 +1137,7 @@ alice <span class="o">=</span> names.find { <span class="o">|</span>name<span cl
   <dl>
     
       <dt class="entry-const" id="MSG">
-        <strong>MSG</strong> = <code><span class="s">&quot;Avoid using `not_nil!`&quot;</span></code>
+        <strong>MSG</strong> = <code><span class="s">&quot;Use `&lt;&lt;-HEREDOC` markers for multiline strings&quot;</span></code>
       </dt>
       
     
@@ -1162,7 +1164,7 @@ alice <span class="o">=</span> names.find { <span class="o">|</span>name<span cl
       <li class="entry-summary">
         <a href="#new%28config%3Dnil%29-class-method" class="signature"><strong>.new</strong>(config = <span class="n">nil</span>)</a>
         
-          <div class="summary"><p>This rule is used to identify usages of <code>not_nil!</code> calls.</p></div>
+          <div class="summary"><p>A rule that disallows multiline string literals not using <code>&lt;&lt;-HEREDOC</code> markers.</p></div>
         
       </li>
     
@@ -1207,6 +1209,16 @@ alice <span class="o">=</span> names.find { <span class="o">|</span>name<span cl
     Instance Method Summary
   </h2>
   <ul class="list-summary">
+    
+      <li class="entry-summary">
+        <a href="#allow_backslash_split_strings%3D%28allow_backslash_split_strings%3ABool%29-instance-method" class="signature"><strong>#allow_backslash_split_strings=</strong>(allow_backslash_split_strings : Bool)</a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#allow_backslash_split_strings%3F%3ABool-instance-method" class="signature"><strong>#allow_backslash_split_strings?</strong> : Bool</a>
+        
+      </li>
     
       <li class="entry-summary">
         <a href="#description%3AString-instance-method" class="signature"><strong>#description</strong> : String</a>
@@ -1259,12 +1271,7 @@ alice <span class="o">=</span> names.find { <span class="o">|</span>name<span cl
       </li>
     
       <li class="entry-summary">
-        <a href="#test%28source%2Cnode%3ACrystal%3A%3ACall%29-instance-method" class="signature"><strong>#test</strong>(source, node : Crystal::Call)</a>
-        
-      </li>
-    
-      <li class="entry-summary">
-        <a href="#test%28source%29-instance-method" class="signature"><strong>#test</strong>(source)</a>
+        <a href="#test%28source%2Cnode%3ACrystal%3A%3AStringLiteral%7CCrystal%3A%3AStringInterpolation%29-instance-method" class="signature"><strong>#test</strong>(source, node : Crystal::StringLiteral | Crystal::StringInterpolation)</a>
         
       </li>
     
@@ -1459,26 +1466,28 @@ alice <span class="o">=</span> names.find { <span class="o">|</span>name<span cl
       
         <div class="doc">
           
-          <p>This rule is used to identify usages of <code>not_nil!</code> calls.</p>
-<p>For example, this is considered a code smell:</p>
-<pre><code class="language-crystal">names <span class="o">=</span> <span class="s">%w[Alice Bob]</span>
-alice <span class="o">=</span> names.find { <span class="o">|</span>name<span class="o">|</span> name <span class="o">==</span> <span class="s">&quot;Alice&quot;</span> }.not_nil!</code></pre>
-<p>And can be written as this:</p>
-<pre><code class="language-crystal">names <span class="o">=</span> <span class="s">%w[Alice Bob]</span>
-alice <span class="o">=</span> names.find { <span class="o">|</span>name<span class="o">|</span> name <span class="o">==</span> <span class="s">&quot;Alice&quot;</span> }
-
-<span class="k">if</span> alice
-  <span class="c"># ...</span>
-<span class="k">end</span></code></pre>
+          <p>A rule that disallows multiline string literals not using
+<code>&lt;&lt;-HEREDOC</code> markers.</p>
+<p>For example, this is considered invalid:</p>
+<pre><code class="language-crystal"><span class="s">%(
+  foo
+  bar
+)</span></code></pre>
+<p>And should be rewritten to the following:</p>
+<pre><code class="language-crystal"><span class="s">&lt;&lt;-HEREDOC</span>
+<span class="s">  foo
+  bar
+HEREDOC</span></code></pre>
 <p>YAML configuration example:</p>
-<pre><code class="language-crystal"><span class="t">Lint</span><span class="o">/</span><span class="t">NotNil</span>:
-  <span class="t">Enabled</span>: <span class="n">true</span></code></pre>
+<pre><code class="language-crystal"><span class="t">Style</span><span class="o">/</span><span class="t">MultilineStringLiteral</span>:
+  <span class="t">Enabled</span>: <span class="n">true</span>
+  <span class="t">AllowBackslashSplitStrings</span>: <span class="n">true</span></code></pre>
         </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/31937e6/src/ameba/rule/lint/not_nil.cr#L28" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/31937e6/src/ameba/rule/style/multiline_string_literal.cr#L30" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1551,6 +1560,34 @@ alice <span class="o">=</span> names.find { <span class="o">|</span>name<span cl
 </a>
     Instance Method Detail
   </h2>
+  
+    <div class="entry-detail" id="allow_backslash_split_strings=(allow_backslash_split_strings:Bool)-instance-method">
+      <div class="signature">
+        
+        def <strong>allow_backslash_split_strings=</strong>(allow_backslash_split_strings : Bool)
+
+        <a class="method-permalink" href="#allow_backslash_split_strings%3D%28allow_backslash_split_strings%3ABool%29-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="allow_backslash_split_strings?:Bool-instance-method">
+      <div class="signature">
+        
+        def <strong>allow_backslash_split_strings?</strong> : Bool
+
+        <a class="method-permalink" href="#allow_backslash_split_strings%3F%3ABool-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+      </div>
+    </div>
   
     <div class="entry-detail" id="description:String-instance-method">
       <div class="signature">
@@ -1675,7 +1712,7 @@ alice <span class="o">=</span> names.find { <span class="o">|</span>name<span cl
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/31937e6/src/ameba/rule/lint/not_nil.cr#L29" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/31937e6/src/ameba/rule/style/multiline_string_literal.cr#L31" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1694,34 +1731,18 @@ alice <span class="o">=</span> names.find { <span class="o">|</span>name<span cl
       </div>
     </div>
   
-    <div class="entry-detail" id="test(source,node:Crystal::Call)-instance-method">
+    <div class="entry-detail" id="test(source,node:Crystal::StringLiteral|Crystal::StringInterpolation)-instance-method">
       <div class="signature">
         
-        def <strong>test</strong>(source, node : Crystal::Call)
+        def <strong>test</strong>(source, node : Crystal::StringLiteral | Crystal::StringInterpolation)
 
-        <a class="method-permalink" href="#test%28source%2Cnode%3ACrystal%3A%3ACall%29-instance-method">#</a>
+        <a class="method-permalink" href="#test%28source%2Cnode%3ACrystal%3A%3AStringLiteral%7CCrystal%3A%3AStringInterpolation%29-instance-method">#</a>
       </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/31937e6/src/ameba/rule/lint/not_nil.cr#L40" target="_blank">View source</a>]
-        
-      </div>
-    </div>
-  
-    <div class="entry-detail" id="test(source)-instance-method">
-      <div class="signature">
-        
-        def <strong>test</strong>(source)
-
-        <a class="method-permalink" href="#test%28source%29-instance-method">#</a>
-      </div>
-      
-      <br/>
-      <div>
-        
-          [<a href="https://github.com/crystal-ameba/ameba/blob/31937e6/src/ameba/rule/lint/not_nil.cr#L36" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/31937e6/src/ameba/rule/style/multiline_string_literal.cr#L39" target="_blank">View source</a>]
         
       </div>
     </div>
