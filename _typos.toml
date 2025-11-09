@@ -1,0 +1,18 @@
+[default]
+extend-ignore-re = [
+  # numeric literals
+  '0x[0-9a-fA-F_\.\+]+([fiu](8|16|32|64|128))?',
+  '\\u\{[0-9a-fA-F]+\}',
+  # fixed test values
+  'F[Oo][Oo]+',
+  "[A-z]+[0-9]+", # words including a number are likely some kind of identifier
+]
+
+[files]
+extend-exclude = [
+  # git and dependencies
+  ".git/**",
+  "lib/**",
+  # individual files to exclude
+  "spec/ameba/rule/lint/typos_spec.cr",
+]
