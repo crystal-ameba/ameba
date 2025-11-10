@@ -41,13 +41,13 @@ module Ameba::Rule::Lint
 
     it "reports if there is a shared var in spawn (while)" do
       source = expect_issue subject, <<-CRYSTAL
-        i = 0
-        while i < 10
+        idx = 0
+        while idx < 10
           spawn do
-            puts(i)
-               # ^ error: Shared variable `i` is used in fiber
+            puts(idx)
+               # ^^^ error: Shared variable `idx` is used in fiber
           end
-          i += 1
+          idx += 1
         end
 
         Fiber.yield
@@ -77,13 +77,13 @@ module Ameba::Rule::Lint
     it "reports reassigned reference to shared var in spawn" do
       source = expect_issue subject, <<-CRYSTAL
         channel = Channel(String).new
-        n = 0
+        num = 0
 
-        while n < 10
-          n = n + 1
+        while num < 10
+          num = num + 1
           spawn do
-            m = n
-              # ^ error: Shared variable `n` is used in fiber
+            m = num
+              # ^^^ error: Shared variable `num` is used in fiber
             channel.send m
           end
         end
