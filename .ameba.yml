@@ -1,3 +1,0 @@
-Lint/Typos:
-  Excluded:
-    - spec/ameba/rule/lint/typos_spec.cr
