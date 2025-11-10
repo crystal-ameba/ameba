@@ -30,47 +30,47 @@ module Ameba::Formatter
       end
 
       it "shows rule name" do
-        s = Source.new
-        s.add_issue DummyRule.new, {1, 2}, "message1"
+        source = Source.new
+        source.add_issue DummyRule.new, {1, 2}, "message1"
 
-        result = get_result [s]
+        result = get_result [source]
         result["sources"][0]["issues"][0]["rule_name"].should eq DummyRule.rule_name
       end
 
       it "shows severity" do
-        s = Source.new
-        s.add_issue DummyRule.new, {1, 2}, "message"
+        source = Source.new
+        source.add_issue DummyRule.new, {1, 2}, "message"
 
-        result = get_result [s]
+        result = get_result [source]
         result["sources"][0]["issues"][0]["severity"].should eq "Convention"
       end
 
       it "shows a message" do
-        s = Source.new
-        s.add_issue DummyRule.new, {1, 2}, "message"
+        source = Source.new
+        source.add_issue DummyRule.new, {1, 2}, "message"
 
-        result = get_result [s]
+        result = get_result [source]
         result["sources"][0]["issues"][0]["message"].should eq "message"
       end
 
       it "shows issue location" do
-        s = Source.new
-        s.add_issue DummyRule.new, {1, 2}, "message"
+        source = Source.new
+        source.add_issue DummyRule.new, {1, 2}, "message"
 
-        result = get_result [s]
+        result = get_result [source]
         location = result["sources"][0]["issues"][0]["location"]
         location["line"].should eq 1
         location["column"].should eq 2
       end
 
       it "shows issue end_location" do
-        s = Source.new
-        s.add_issue DummyRule.new,
+        source = Source.new
+        source.add_issue DummyRule.new,
           Crystal::Location.new("path", 3, 3),
           Crystal::Location.new("path", 5, 4),
           "message"
 
-        result = get_result [s]
+        result = get_result [source]
         end_location = result["sources"][0]["issues"][0]["end_location"]
         end_location["line"].should eq 5
         end_location["column"].should eq 4
