@@ -5,93 +5,49 @@ module Ameba::Rule::Lint
     subject = RedundantStringCoercion.new
 
     it "does not report if there is no redundant string coercion" do
-      s = Source.new %(
+      expect_no_issues subject, <<-'CRYSTAL'
         "Hello, #{name}"
-      )
-      subject.catch(s).should be_valid
-    end
-
-    it "reports if there is a redundant string coercion" do
-      s = Source.new %q(
-        "Hello, #{name.to_s}"
-      )
-      subject.catch(s).should_not be_valid
+        CRYSTAL
     end
 
     it "does not report if coercion is used in binary op" do
-      s = Source.new %q(
+      expect_no_issues subject, <<-'CRYSTAL'
         "Hello, #{3.to_s + 's'}"
-      )
-      subject.catch(s).should be_valid
+        CRYSTAL
     end
 
-    it "reports if coercion is used with symbol literals" do
-      s = Source.new %q("Hello, #{:symbol.to_s}")
-      subject.catch(s).should_not be_valid
-    end
-
-    it "reports if coercion is used with number literals" do
-      s = Source.new %q("Hello, #{42.to_s}")
-      subject.catch(s).should_not be_valid
-    end
-
-    it "reports if coercion is used with boolean literals" do
-      s = Source.new %q("Hello, #{false.to_s}")
-      subject.catch(s).should_not be_valid
-    end
-
-    it "reports if coercion is used with char literals" do
-      s = Source.new %q("Hello, #{'t'.to_s}")
-      subject.catch(s).should_not be_valid
-    end
+    {% for v in %w[name :symbol 42 false 't'] %}
+      it "reports if there is a redundant string coercion ({{ v.id }})" do
+        expect_issue subject, <<-'CRYSTAL', v: {{ v }}
+          "Hello, #{%{v}.to_s}"
+                  _{v} # ^^^^ error: Redundant use of `Object#to_s` in interpolation
+          CRYSTAL
+      end
+    {% end %}
 
     it "reports redundant coercion in regex" do
-      s = Source.new %q(
+      expect_issue subject, <<-'CRYSTAL'
         /\w #{name.to_s}/
-      )
-      subject.catch(s).should_not be_valid
+                 # ^^^^ error: Redundant use of `Object#to_s` in interpolation
+        CRYSTAL
     end
 
     it "doesn't report if Object#to_s is called with arguments" do
-      s = Source.new %q(
+      expect_no_issues subject, <<-'CRYSTAL'
         /\w #{name.to_s(io)}/
-      )
-      subject.catch(s).should be_valid
+        CRYSTAL
     end
 
     it "doesn't report if Object#to_s is called without receiver" do
-      s = Source.new %q(
+      expect_no_issues subject, <<-'CRYSTAL'
         /\w #{to_s}/
-      )
-      subject.catch(s).should be_valid
+        CRYSTAL
     end
 
     it "doesn't report if Object#to_s is called with named args" do
-      s = Source.new %q(
-        "0x#{250.to_s base: 16}"
-      )
-      subject.catch(s).should be_valid
-    end
-
-    it "reports rule, location and message" do
-      s = Source.new %q(
-        "Hello, #{name1.to_s}"
-        "Hello, #{name2.to_s}"
-      ), "source.cr"
-      subject.catch(s).should_not be_valid
-      s.issues.size.should eq 2
-
-      issue = s.issues[0]
-      issue.rule.should_not be_nil
-      issue.location.to_s.should eq "source.cr:1:17"
-      issue.end_location.to_s.should eq "source.cr:1:20"
-      issue.message.should eq RedundantStringCoercion::MSG
-
-      issue = s.issues[1]
-      issue.rule.should_not be_nil
-      issue.location.to_s.should eq "source.cr:2:17"
-      issue.end_location.to_s.should eq "source.cr:2:20"
-      issue.message.should eq RedundantStringCoercion::MSG
+      expect_no_issues subject, <<-'CRYSTAL'
+        "0x#{250.to_s(base: 16)}"
+        CRYSTAL
     end
   end
 end

@@ -38,64 +38,71 @@ module Ameba::Rule::Lint
     it_detects_empty_expression %(a = ())
     it_detects_empty_expression %((();()))
     it_detects_empty_expression %(if (); end)
-    it_detects_empty_expression %(
+
+    it_detects_empty_expression <<-CRYSTAL
       if foo
         1
       elsif ()
         2
       end
-    )
-    it_detects_empty_expression %(
+      CRYSTAL
+
+    it_detects_empty_expression <<-CRYSTAL
       case foo
       when :foo then ()
       end
-    )
-    it_detects_empty_expression %(
+      CRYSTAL
+
+    it_detects_empty_expression <<-CRYSTAL
       case foo
       when :foo then 1
       else
         ()
       end
-    )
-    it_detects_empty_expression %(
+      CRYSTAL
+
+    it_detects_empty_expression <<-CRYSTAL
       case foo
       when () then 1
       end
-    )
-    it_detects_empty_expression %(
+      CRYSTAL
+
+    it_detects_empty_expression <<-CRYSTAL
       def method
         a = 1
         ()
       end
-    )
-    it_detects_empty_expression %(
+      CRYSTAL
+
+    it_detects_empty_expression <<-CRYSTAL
       def method
       rescue
         ()
       end
-    )
-    it_detects_empty_expression %(
+      CRYSTAL
+
+    it_detects_empty_expression <<-CRYSTAL
       def method
         begin
         end
       end
-    )
-    it_detects_empty_expression %(
+      CRYSTAL
+
+    it_detects_empty_expression <<-CRYSTAL
       begin; end
-    )
-    it_detects_empty_expression %(
+      CRYSTAL
+
+    it_detects_empty_expression <<-CRYSTAL
       begin
         ()
       end
-    )
+      CRYSTAL
 
     it "does not report empty expression in macro" do
       expect_no_issues subject, <<-CRYSTAL
         module MyModule
           macro conditional_error_for_inline_callbacks
-            \\{%
-              raise ""
-            %}
+            \\{% raise "" %}
           end
 
           macro before_save(x = nil)
