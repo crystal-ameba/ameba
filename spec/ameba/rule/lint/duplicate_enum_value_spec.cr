@@ -4,7 +4,7 @@ module Ameba::Rule::Lint
   describe DuplicateEnumValue do
     subject = DuplicateEnumValue.new
 
-    it "passes if there are no enum members with values" do
+    it "passes if there are no enum members with duplicate values" do
       expect_no_issues subject, <<-CRYSTAL
         enum Foo
           Foo
@@ -14,7 +14,7 @@ module Ameba::Rule::Lint
         CRYSTAL
     end
 
-    it "passes if there are no duplicated enum member values" do
+    it "passes if there are no duplicate enum member values" do
       expect_no_issues subject, <<-CRYSTAL
         enum Foo
           Foo = 1
@@ -34,7 +34,7 @@ module Ameba::Rule::Lint
         CRYSTAL
     end
 
-    it "reports if there are a duplicated enum member values" do
+    it "reports if there are a duplicate enum member values" do
       expect_issue subject, <<-CRYSTAL
         enum Foo
           Foo = 111

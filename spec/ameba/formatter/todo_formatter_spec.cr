@@ -46,9 +46,9 @@ module Ameba
     context "problems found" do
       it "prints a message saying file is created" do
         with_formatter do |formatter, io|
-          s = Source.new "a = 1", "source.cr"
-          s.add_issue DummyRule.new, {1, 2}, "message"
-          formatter.finished([s])
+          source = Source.new "a = 1", "source.cr"
+          source.add_issue DummyRule.new, {1, 2}, "message"
+          formatter.finished([source])
           io.to_s.should contain "Created #{CONFIG_PATH}"
         end
       end
@@ -151,20 +151,20 @@ module Ameba
       context "when invalid syntax" do
         it "does generate todo file" do
           with_formatter do |formatter|
-            s = Source.new "def invalid_syntax"
-            s.add_issue Rule::Lint::Syntax.new, {1, 2}, "message"
+            source = Source.new "def invalid_syntax"
+            source.add_issue Rule::Lint::Syntax.new, {1, 2}, "message"
 
-            file = formatter.finished [s]
+            file = formatter.finished [source]
             file.should be_nil
           end
         end
 
         it "prints an error message" do
           with_formatter do |formatter, io|
-            s = Source.new "def invalid_syntax"
-            s.add_issue Rule::Lint::Syntax.new, {1, 2}, "message"
+            source = Source.new "def invalid_syntax"
+            source.add_issue Rule::Lint::Syntax.new, {1, 2}, "message"
 
-            formatter.finished [s]
+            formatter.finished [source]
             io.to_s.should contain "Unable to generate TODO file"
             io.to_s.should contain "Please fix syntax issues"
           end

@@ -19,11 +19,12 @@ module Ameba::Formatter
         Colorize.enabled = false
 
         path = "source.cr"
-        s = Source.new(path: path).tap do |source|
-          source.add_issue(ErrorRule.new, {1, 2}, message: "ErrorRule", status: :disabled)
-          source.add_issue(NamedRule.new, location: {2, 2}, message: "NamedRule", status: :disabled)
-        end
-        subject.finished [s]
+
+        source = Source.new(path: path)
+        source.add_issue(ErrorRule.new, {1, 2}, message: "ErrorRule", status: :disabled)
+        source.add_issue(NamedRule.new, location: {2, 2}, message: "NamedRule", status: :disabled)
+
+        subject.finished [source]
         log = output.to_s
         log.should contain "#{path}:1 #{ErrorRule.rule_name}"
         log.should contain "#{path}:2 #{NamedRule.rule_name}"
@@ -32,12 +33,12 @@ module Ameba::Formatter
       end
 
       it "does not write not-disabled rules" do
-        s = Source.new(path: "source.cr").tap do |source|
-          source.add_issue(ErrorRule.new, {1, 2}, "ErrorRule")
-          source.add_issue(NamedRule.new, location: {2, 2},
-            message: "NamedRule", status: :disabled)
-        end
-        subject.finished [s]
+        source = Source.new(path: "source.cr")
+        source.add_issue(ErrorRule.new, {1, 2}, "ErrorRule")
+        source.add_issue(NamedRule.new, location: {2, 2},
+          message: "NamedRule", status: :disabled)
+
+        subject.finished [source]
         output.to_s.should_not contain ErrorRule.rule_name
       end
     end

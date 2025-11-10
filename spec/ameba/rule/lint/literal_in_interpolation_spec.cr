@@ -31,24 +31,12 @@ module Ameba::Rule::Lint
         CRYSTAL
     end
 
-    it "reports rule, pos and message" do
-      s = Source.new %q(
+    it "reports if there is a literal in interpolation" do
+      expect_issue subject, <<-'CRYSTAL'
         "Hello, #{:world} from #{:ameba}"
-      ), "source.cr"
-      subject.catch(s).should_not be_valid
-      s.issues.size.should eq 2
-
-      issue = s.issues.first
-      issue.rule.should_not be_nil
-      issue.location.to_s.should eq "source.cr:1:11"
-      issue.end_location.to_s.should eq "source.cr:1:16"
-      issue.message.should eq "Literal value found in interpolation"
-
-      issue = s.issues.last
-      issue.rule.should_not be_nil
-      issue.location.to_s.should eq "source.cr:1:26"
-      issue.end_location.to_s.should eq "source.cr:1:31"
-      issue.message.should eq "Literal value found in interpolation"
+                # ^^^^^^ error: Literal value found in interpolation
+                               # ^^^^^^ error: Literal value found in interpolation
+        CRYSTAL
     end
   end
 end

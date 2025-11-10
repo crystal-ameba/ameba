@@ -5,150 +5,107 @@ module Ameba::Rule::Lint
     subject = SpecFocus.new
 
     it "does not report if spec is not focused" do
-      s = Source.new %(
+      expect_no_issues subject, <<-CRYSTAL, path: "source_spec.cr"
         context "context" {}
         describe "describe" {}
         it "it" {}
         pending "pending" {}
-      ), path: "source_spec.cr"
-
-      subject.catch(s).should be_valid
+        CRYSTAL
     end
 
     it "reports if there is a focused context" do
-      s = Source.new %(
+      expect_issue subject, <<-CRYSTAL, path: "source_spec.cr"
         context "context", focus: true do
+                         # ^^^^^^^^^^^ error: Focused spec item detected
         end
-      ), path: "source_spec.cr"
-
-      subject.catch(s).should_not be_valid
+        CRYSTAL
     end
 
     it "reports if there is a focused describe block" do
-      s = Source.new %(
+      expect_issue subject, <<-CRYSTAL, path: "source_spec.cr"
         describe "describe", focus: true do
+                           # ^^^^^^^^^^^ error: Focused spec item detected
         end
-      ), path: "source_spec.cr"
-
-      subject.catch(s).should_not be_valid
+        CRYSTAL
     end
 
     it "reports if there is a focused describe block (with block argument)" do
-      s = Source.new %(
+      expect_issue subject, <<-CRYSTAL, path: "source_spec.cr"
         describe "describe", focus: true, &block
-      ), path: "source_spec.cr"
-
-      subject.catch(s).should_not be_valid
+                           # ^^^^^^^^^^^ error: Focused spec item detected
+        CRYSTAL
     end
 
     it "reports if there is a focused it block" do
-      s = Source.new %(
+      expect_issue subject, <<-CRYSTAL, path: "source_spec.cr"
         it "it", focus: true do
+               # ^^^^^^^^^^^ error: Focused spec item detected
         end
-      ), path: "source_spec.cr"
-
-      subject.catch(s).should_not be_valid
+        CRYSTAL
     end
 
     it "reports if there is a focused pending block" do
-      s = Source.new %(
+      expect_issue subject, <<-CRYSTAL, path: "source_spec.cr"
         pending "pending", focus: true do
+                         # ^^^^^^^^^^^ error: Focused spec item detected
         end
-      ), path: "source_spec.cr"
-
-      subject.catch(s).should_not be_valid
+        CRYSTAL
     end
 
     it "reports if there is a spec item with `focus: false`" do
-      s = Source.new %(
+      expect_issue subject, <<-CRYSTAL, path: "source_spec.cr"
         it "it", focus: false do
+               # ^^^^^^^^^^^^ error: Focused spec item detected
         end
-      ), path: "source_spec.cr"
-
-      subject.catch(s).should_not be_valid
+        CRYSTAL
     end
 
     it "reports if there is a spec item with `focus: !true`" do
-      s = Source.new %(
+      expect_issue subject, <<-CRYSTAL, path: "source_spec.cr"
         it "it", focus: !true do
+               # ^^^^^^^^^^^^ error: Focused spec item detected
         end
-      ), path: "source_spec.cr"
-
-      subject.catch(s).should_not be_valid
+        CRYSTAL
     end
 
     it "does not report if there is non spec block with :focus" do
-      s = Source.new %(
+      expect_no_issues subject, <<-CRYSTAL, path: "source_spec.cr"
         some_method "foo", focus: true do
         end
-      ), path: "source_spec.cr"
-
-      subject.catch(s).should be_valid
+        CRYSTAL
     end
 
     it "does not report if there is a parameterized focused spec item" do
-      s = Source.new %(
+      expect_no_issues subject, <<-CRYSTAL, path: "source_spec.cr"
         def assert_foo(focus = false)
           it "foo", focus: focus { yield }
         end
-      ), path: "source_spec.cr"
-
-      subject.catch(s).should be_valid
+        CRYSTAL
     end
 
     it "does not report if there is a tagged item with :focus" do
-      s = Source.new %(
+      expect_no_issues subject, <<-CRYSTAL, path: "source_spec.cr"
         it "foo", tags: "focus" do
         end
-      ), path: "source_spec.cr"
-
-      subject.catch(s).should be_valid
+        CRYSTAL
     end
 
     it "does not report if there are focused spec items without blocks" do
-      s = Source.new %(
+      expect_no_issues subject, <<-CRYSTAL, path: "source_spec.cr"
         describe "foo", focus: true
         context "foo", focus: true
         it "foo", focus: true
         pending "foo", focus: true
-      ), path: "source_spec.cr"
-
-      subject.catch(s).should be_valid
+        CRYSTAL
     end
 
     it "does not report if there are focused items out of spec file" do
-      s = Source.new %(
+      expect_no_issues subject, <<-CRYSTAL
         describe "foo", focus: true {}
         context "foo", focus: true {}
         it "foo", focus: true {}
         pending "foo", focus: true {}
-      )
-
-      subject.catch(s).should be_valid
-    end
-
-    it "reports rule, pos and message" do
-      s = Source.new %(
-        it "foo", focus: true do
-          it "bar", focus: true {}
-        end
-      ), path: "source_spec.cr"
-
-      subject.catch(s).should_not be_valid
-
-      s.issues.size.should eq(2)
-
-      first, second = s.issues
-
-      first.rule.should_not be_nil
-      first.location.to_s.should eq "source_spec.cr:1:11"
-      first.end_location.to_s.should eq "source_spec.cr:1:21"
-      first.message.should eq "Focused spec item detected"
-
-      second.rule.should_not be_nil
-      second.location.to_s.should eq "source_spec.cr:2:13"
-      second.end_location.to_s.should eq "source_spec.cr:2:23"
-      second.message.should eq "Focused spec item detected"
+        CRYSTAL
     end
   end
 end

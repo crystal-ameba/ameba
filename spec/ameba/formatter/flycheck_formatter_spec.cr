@@ -18,31 +18,31 @@ module Ameba::Formatter
 
     context "when problems found" do
       it "reports an issue" do
-        s = Source.new "a = 1", "source.cr"
-        s.add_issue DummyRule.new, {1, 2}, "message"
+        source = Source.new "a = 1", "source.cr"
+        source.add_issue DummyRule.new, {1, 2}, "message"
 
-        subject.source_finished s
+        subject.source_finished(source)
         subject.output.to_s.should eq(
           "source.cr:1:2: C: [#{DummyRule.rule_name}] message\n"
         )
       end
 
       it "properly reports multi-line message" do
-        s = Source.new "a = 1", "source.cr"
-        s.add_issue DummyRule.new, {1, 2}, "multi\nline"
+        source = Source.new "a = 1", "source.cr"
+        source.add_issue DummyRule.new, {1, 2}, "multi\nline"
 
-        subject.source_finished s
+        subject.source_finished(source)
         subject.output.to_s.should eq(
           "source.cr:1:2: C: [#{DummyRule.rule_name}] multi line\n"
         )
       end
 
       it "reports nothing if location was not set" do
-        s = Source.new "a = 1", "source.cr"
-        s.add_issue DummyRule.new, Crystal::Nop.new, "message"
+        source = Source.new "a = 1", "source.cr"
+        source.add_issue DummyRule.new, Crystal::Nop.new, "message"
 
-        subject.source_finished s
-        subject.output.to_s.should eq ""
+        subject.source_finished(source)
+        subject.output.to_s.should be_empty
       end
     end
   end

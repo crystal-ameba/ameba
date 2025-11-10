@@ -265,7 +265,7 @@ class Ameba::Config
   private def load_array_section(config, section_name, default = [] of String)
     case value = config[section_name]?
     when .nil?  then default
-    when .as_s? then [value.to_s]
+    when .as_s? then [value.as_s]
     when .as_a? then value.as_a.map(&.as_s)
     else
       raise "Incorrect '#{section_name}' section in a config files"

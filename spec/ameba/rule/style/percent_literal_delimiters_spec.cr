@@ -15,57 +15,46 @@ module Ameba::Rule::Style
 
     it "fails if percent literal delimiters are written incorrectly" do
       expect_issue subject, <<-CRYSTAL
-        %[one two three]
-        # ^{} error: `%`-literals should be delimited by `(` and `)`
-        %w(one two three)
-        # ^{} error: `%w`-literals should be delimited by `[` and `]`
-        %i(one two three)
-        # ^{} error: `%i`-literals should be delimited by `[` and `]`
-        %r|one two three|
-        # ^{} error: `%r`-literals should be delimited by `{` and `}`
+        puts %[one two three]
+           # ^ error: `%`-literals should be delimited by `(` and `)`
+        puts %w(one two three)
+           # ^^ error: `%w`-literals should be delimited by `[` and `]`
+        puts %i(one two three)
+           # ^^ error: `%i`-literals should be delimited by `[` and `]`
+        puts %r|one two three|
+           # ^^ error: `%r`-literals should be delimited by `{` and `}`
         CRYSTAL
     end
 
     it "corrects incorrect percent literal delimiters" do
       source = expect_issue subject, <<-CRYSTAL
-        %[[] () {}]
-        # ^{} error: `%`-literals should be delimited by `(` and `)`
-        %w(
-        # ^{} error: `%w`-literals should be delimited by `[` and `]`
+        puts %[[] () {}]
+           # ^ error: `%`-literals should be delimited by `(` and `)`
+        puts %w(
+           # ^^ error: `%w`-literals should be delimited by `[` and `]`
           one two three
         )
-        %i(
-        # ^{} error: `%i`-literals should be delimited by `[` and `]`
+        puts %i(
+           # ^^ error: `%i`-literals should be delimited by `[` and `]`
           one
           two
           three
         )
-        %r|one(two )?three[!]|
-        # ^{} error: `%r`-literals should be delimited by `{` and `}`
+        puts %r|one(two )?three[!]|
+           # ^^ error: `%r`-literals should be delimited by `{` and `}`
         CRYSTAL
 
       expect_correction source, <<-CRYSTAL
-        %([] () {})
-        %w[
+        puts %([] () {})
+        puts %w[
           one two three
         ]
-        %i[
+        puts %i[
           one
           two
           three
         ]
-        %r{one(two )?three[!]}
-        CRYSTAL
-    end
-
-    it "reports rule, location and message" do
-      expect_issue subject, <<-CRYSTAL
-        def foo
-          %[one two three]
-        # ^ error: `%`-literals should be delimited by `(` and `)`
-          %w(one two three)
-        # ^^ error: `%w`-literals should be delimited by `[` and `]`
-        end
+        puts %r{one(two )?three[!]}
         CRYSTAL
     end
 

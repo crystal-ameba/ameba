@@ -18,37 +18,28 @@ module Ameba::Rule::Lint
 
     it "fails if string percent array has commas" do
       expect_issue subject, <<-CRYSTAL
-        %w[one, two]
-        # ^{} error: Symbols `,"` may be unwanted in `%w` array literals
+        puts %w[one, two]
+           # ^^ error: Symbols `,"` may be unwanted in `%w` array literals
         CRYSTAL
     end
 
     it "fails if string percent array has quotes" do
       expect_issue subject, <<-CRYSTAL
-        %w["one" "two"]
-        # ^{} error: Symbols `,"` may be unwanted in `%w` array literals
+        puts %w["one" "two"]
+           # ^^ error: Symbols `,"` may be unwanted in `%w` array literals
         CRYSTAL
     end
 
     it "fails if symbols percent array has commas" do
       expect_issue subject, <<-CRYSTAL
-        %i[one, two]
-        # ^{} error: Symbols `,:` may be unwanted in `%i` array literals
+        puts %i[one, two]
+           # ^^ error: Symbols `,:` may be unwanted in `%i` array literals
         CRYSTAL
     end
 
     it "fails if symbols percent array has a colon" do
       expect_issue subject, <<-CRYSTAL
-        %i[:one :two]
-        # ^{} error: Symbols `,:` may be unwanted in `%i` array literals
-        CRYSTAL
-    end
-
-    it "reports rule, location and message" do
-      expect_issue subject, <<-CRYSTAL
-        puts %w["one"]
-           # ^^ error: Symbols `,"` may be unwanted in `%w` array literals
-        puts %i[:one]
+        puts %i[:one :two]
            # ^^ error: Symbols `,:` may be unwanted in `%i` array literals
         CRYSTAL
     end

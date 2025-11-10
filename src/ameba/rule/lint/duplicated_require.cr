@@ -22,14 +22,13 @@ module Ameba::Rule::Lint
     MSG = "Duplicated require of `%s`"
 
     def test(source)
+      found_requires = Set(String).new
+
       nodes = AST::TopLevelNodesVisitor.new(source.ast).require_nodes
-      nodes.each_with_object(Set(String).new) do |node, processed_require_strings|
-        node_s = node.string
-        if processed_require_strings.includes?(node_s)
-          issue_for node, MSG % node_s
-        else
-          processed_require_strings << node_s
-        end
+      nodes.each do |node|
+        next if found_requires.add?(node.string)
+
+        issue_for node, MSG % node.string
       end
     end
   end
