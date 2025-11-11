@@ -1,4 +1,4 @@
-require "./cmd"
+require "../../ameba"
 
 schema = JSON.build(2) do |builder|
   builder.object do
