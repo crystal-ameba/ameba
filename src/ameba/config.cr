@@ -389,8 +389,6 @@ class Ameba::Config
                   builder.field("type", "number")
                 {% elsif prop[:type] == Bool %}
                   builder.field("type", "boolean")
-                {% elsif prop[:type] == Nil %}
-                  builder.field("type", "null")
                 {% elsif prop[:type].stringify == "::Union(String, ::Nil)" %}
                   builder.string("type")
                   builder.array do
