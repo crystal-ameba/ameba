@@ -402,7 +402,7 @@ class Ameba::Config
                     builder.string("null")
                   end
 
-                {% elsif prop[:type].stringify == "::Union(Int32, ::Nil)" %}
+                {% elsif prop[:type].stringify =~ /^::Union\((Int|Float)\d+, ::Nil\)$/ %}
                   builder.string("type")
                   builder.array do
                     builder.string("number")
