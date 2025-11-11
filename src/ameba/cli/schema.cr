@@ -62,14 +62,16 @@ schema = JSON.build(2) do |builder|
       builder.string("Version")
       builder.object do
         builder.field("type", "string")
-        builder.field("description", "The version of Ameba to limit rules to")
+        builder.field("description",
+          "The version of Ameba to limit rules to")
       end
 
       builder.string("Excluded")
       builder.object do
         builder.field("type", "array")
         builder.field("title", "Excluded files and paths")
-        builder.field("description", "An array of wildcards (or paths) to exclude from the source list")
+        builder.field("description",
+          "An array of wildcards (or paths) to exclude from the source list")
 
         builder.string("items")
         builder.object do
@@ -81,7 +83,8 @@ schema = JSON.build(2) do |builder|
       builder.object do
         builder.field("type", "array")
         builder.field("title", "Globbed files and paths")
-        builder.field("description", "An array of wildcards (or paths) to include to the inspection")
+        builder.field("description",
+          "An array of wildcards (or paths) to include to the inspection")
 
         builder.string("items")
         builder.object do
