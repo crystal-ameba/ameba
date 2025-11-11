@@ -41,6 +41,7 @@ schema = JSON.build(2) do |builder|
           builder.string("Severity")
           builder.object do
             builder.field("$ref", "#/definitions/Severity")
+            builder.field("default", Ameba::Severity.default_severity.to_s)
           end
 
           builder.string("Excluded")
@@ -58,6 +59,12 @@ schema = JSON.build(2) do |builder|
 
     builder.string("properties")
     builder.object do
+      builder.string("Version")
+      builder.object do
+        builder.field("type", "string")
+        builder.field("description", "The version of Ameba to limit rules to")
+      end
+
       builder.string("Excluded")
       builder.object do
         builder.field("type", "array")
@@ -68,12 +75,6 @@ schema = JSON.build(2) do |builder|
         builder.object do
           builder.field("type", "string")
         end
-      end
-
-      builder.string("Version")
-      builder.object do
-        builder.field("type", "string")
-        builder.field("description", "The version of Ameba to limit rules to")
       end
 
       builder.string("Globs")
