@@ -1,0 +1,2359 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": ".ameba.yml",
+  "description": "Configuration rules for the Crystal language Ameba linter",
+  "type": "object",
+  "additionalProperties": false,
+  "definitions": {
+    "Severity": {
+      "type": "string",
+      "enum": [
+        "Error",
+        "Warning",
+        "Convention"
+      ]
+    },
+    "BaseRule": {
+      "type": "object",
+      "properties": {
+        "SinceVersion": {
+          "type": "string"
+        },
+        "Enabled": {
+          "type": "boolean",
+          "default": true
+        },
+        "Severity": {
+          "$ref": "#/definitions/Severity",
+          "default": "Convention"
+        },
+        "Excluded": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  },
+  "properties": {
+    "Version": {
+      "type": "string",
+      "description": "The version of Ameba to limit rules to"
+    },
+    "Excluded": {
+      "type": "array",
+      "title": "Excluded files and paths",
+      "description": "An array of wildcards (or paths) to exclude from the source list",
+      "items": {
+        "type": "string"
+      }
+    },
+    "Globs": {
+      "type": "array",
+      "title": "Globbed files and paths",
+      "description": "An array of wildcards (or paths) to include to the inspection",
+      "items": {
+        "type": "string"
+      }
+    },
+    "Documentation/Admonition": {
+      "$ref": "#/definitions/BaseRule",
+      "title": "Documentation/Admonition",
+      "description": "Reports documentation admonitions\nhttps://crystal-ameba.github.io/ameba/Ameba/Rule/Documentation/Admonition.html",
+      "properties": {
+        "SinceVersion": {
+          "type": "string",
+          "default": "1.6.0"
+        },
+        "Enabled": {
+          "type": "boolean",
+          "default": false
+        },
+        "Description": {
+          "type": "string",
+          "default": "Reports documentation admonitions"
+        },
+        "Severity": {
+          "$ref": "#/definitions/Severity",
+          "default": "Warning"
+        },
+        "Admonitions": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": [
+            "TODO",
+            "FIXME",
+            "BUG"
+          ]
+        },
+        "Timezone": {
+          "type": "string",
+          "default": "UTC"
+        }
+      }
+    },
+    "Documentation/Documentation": {
+      "$ref": "#/definitions/BaseRule",
+      "title": "Documentation/Documentation",
+      "description": "Enforces public types to be documented\nhttps://crystal-ameba.github.io/ameba/Ameba/Rule/Documentation/Documentation.html",
+      "properties": {
+        "SinceVersion": {
+          "type": "string",
+          "default": "1.5.0"
+        },
+        "Enabled": {
+          "type": "boolean",
+          "default": false
+        },
+        "Description": {
+          "type": "string",
+          "default": "Enforces public types to be documented"
+        },
+        "IgnoreClasses": {
+          "type": "boolean",
+          "default": false
+        },
+        "IgnoreModules": {
+          "type": "boolean",
+          "default": true
+        },
+        "IgnoreEnums": {
+          "type": "boolean",
+          "default": false
+        },
+        "IgnoreDefs": {
+          "type": "boolean",
+          "default": true
+        },
+        "IgnoreMacros": {
+          "type": "boolean",
+          "default": false
+        },
+        "IgnoreMacroHooks": {
+          "type": "boolean",
+          "default": true
+        }
+      }
+    },
+    "Layout/LineLength": {
+      "$ref": "#/definitions/BaseRule",
+      "title": "Layout/LineLength",
+      "description": "Disallows lines longer than `MaxLength` number of symbols\nhttps://crystal-ameba.github.io/ameba/Ameba/Rule/Layout/LineLength.html",
+      "properties": {
+        "SinceVersion": {
+          "type": "string",
+          "default": "0.1.0"
+        },
+        "Enabled": {
+          "type": "boolean",
+          "default": false
+        },
+        "Description": {
+          "type": "string",
+          "default": "Disallows lines longer than `MaxLength` number of symbols"
+        },
+        "MaxLength": {
+          "type": "number",
+          "default": 140
+        }
+      }
+    },
+    "Layout/TrailingBlankLines": {
+      "$ref": "#/definitions/BaseRule",
+      "title": "Layout/TrailingBlankLines",
+      "description": "Disallows trailing blank lines\nhttps://crystal-ameba.github.io/ameba/Ameba/Rule/Layout/TrailingBlankLines.html",
+      "properties": {
+        "SinceVersion": {
+          "type": "string",
+          "default": "0.1.0"
+        },
+        "Description": {
+          "type": "string",
+          "default": "Disallows trailing blank lines"
+        }
+      }
+    },
+    "Layout/TrailingWhitespace": {
+      "$ref": "#/definitions/BaseRule",
+      "title": "Layout/TrailingWhitespace",
+      "description": "Disallows trailing whitespace\nhttps://crystal-ameba.github.io/ameba/Ameba/Rule/Layout/TrailingWhitespace.html",
+      "properties": {
+        "SinceVersion": {
+          "type": "string",
+          "default": "0.1.0"
+        },
+        "Description": {
+          "type": "string",
+          "default": "Disallows trailing whitespace"
+        }
+      }
+    },
+    "Lint/AmbiguousAssignment": {
+      "$ref": "#/definitions/BaseRule",
+      "title": "Lint/AmbiguousAssignment",
+      "description": "Disallows ambiguous `=-/=+/=!`\nhttps://crystal-ameba.github.io/ameba/Ameba/Rule/Lint/AmbiguousAssignment.html",
+      "properties": {
+        "SinceVersion": {
+          "type": "string",
+          "default": "1.0.0"
+        },
+        "Description": {
+          "type": "string",
+          "default": "Disallows ambiguous `=-/=+/=!`"
+        },
+        "Severity": {
+          "$ref": "#/definitions/Severity",
+          "default": "Warning"
+        }
+      }
+    },
+    "Lint/BadDirective": {
+      "$ref": "#/definitions/BaseRule",
+      "title": "Lint/BadDirective",
+      "description": "Reports bad comment directives\nhttps://crystal-ameba.github.io/ameba/Ameba/Rule/Lint/BadDirective.html",
+      "properties": {
+        "SinceVersion": {
+          "type": "string",
+          "default": "0.13.0"
+        },
+        "Description": {
+          "type": "string",
+          "default": "Reports bad comment directives"
+        },
+        "Severity": {
+          "$ref": "#/definitions/Severity",
+          "default": "Warning"
+        }
+      }
+    },
+    "Lint/ComparisonToBoolean": {
+      "$ref": "#/definitions/BaseRule",
+      "title": "Lint/ComparisonToBoolean",
+      "description": "Disallows comparison to booleans\nhttps://crystal-ameba.github.io/ameba/Ameba/Rule/Lint/ComparisonToBoolean.html",
+      "properties": {
+        "SinceVersion": {
+          "type": "string",
+          "default": "0.1.0"
+        },
+        "Enabled": {
+          "type": "boolean",
+          "default": false
+        },
+        "Description": {
+          "type": "string",
+          "default": "Disallows comparison to booleans"
+        },
+        "Severity": {
+          "$ref": "#/definitions/Severity",
+          "default": "Warning"
+        }
+      }
+    },
+    "Lint/DebugCalls": {
+      "$ref": "#/definitions/BaseRule",
+      "title": "Lint/DebugCalls",
+      "description": "Disallows debug-related calls\nhttps://crystal-ameba.github.io/ameba/Ameba/Rule/Lint/DebugCalls.html",
+      "properties": {
+        "SinceVersion": {
+          "type": "string",
+          "default": "1.0.0"
+        },
+        "Description": {
+          "type": "string",
+          "default": "Disallows debug-related calls"
+        },
+        "MethodNames": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": [
+            "p",
+            "p!",
+            "pp",
+            "pp!"
+          ]
+        },
+        "Severity": {
+          "$ref": "#/definitions/Severity",
+          "default": "Warning"
+        }
+      }
+    },
+    "Lint/DebuggerStatement": {
+      "$ref": "#/definitions/BaseRule",
+      "title": "Lint/DebuggerStatement",
+      "description": "Disallows calls to debugger\nhttps://crystal-ameba.github.io/ameba/Ameba/Rule/Lint/DebuggerStatement.html",
+      "properties": {
+        "SinceVersion": {
+          "type": "string",
+          "default": "0.1.0"
+        },
+        "Description": {
+          "type": "string",
+          "default": "Disallows calls to debugger"
+        },
+        "Severity": {
+          "$ref": "#/definitions/Severity",
+          "default": "Warning"
+        }
+      }
+    },
+    "Lint/DuplicateEnumValue": {
+      "$ref": "#/definitions/BaseRule",
+      "title": "Lint/DuplicateEnumValue",
+      "description": "Reports duplicated `enum` member values\nhttps://crystal-ameba.github.io/ameba/Ameba/Rule/Lint/DuplicateEnumValue.html",
+      "properties": {
+        "SinceVersion": {
+          "type": "string",
+          "default": "1.7.0"
+        },
+        "Description": {
+          "type": "string",
+          "default": "Reports duplicated `enum` member values"
+        },
+        "Severity": {
+          "$ref": "#/definitions/Severity",
+          "default": "Warning"
+        }
+      }
+    },
+    "Lint/DuplicateWhenCondition": {
+      "$ref": "#/definitions/BaseRule",
+      "title": "Lint/DuplicateWhenCondition",
+      "description": "Reports repeated conditions used in case `when` expressions\nhttps://crystal-ameba.github.io/ameba/Ameba/Rule/Lint/DuplicateWhenCondition.html",
+      "properties": {
+        "SinceVersion": {
+          "type": "string",
+          "default": "1.7.0"
+        },
+        "Description": {
+          "type": "string",
+          "default": "Reports repeated conditions used in case `when` expressions"
+        },
+        "Severity": {
+          "$ref": "#/definitions/Severity",
+          "default": "Warning"
+        }
+      }
+    },
+    "Lint/DuplicatedRequire": {
+      "$ref": "#/definitions/BaseRule",
+      "title": "Lint/DuplicatedRequire",
+      "description": "Reports duplicated `require` statements\nhttps://crystal-ameba.github.io/ameba/Ameba/Rule/Lint/DuplicatedRequire.html",
+      "properties": {
+        "SinceVersion": {
+          "type": "string",
+          "default": "0.14.0"
+        },
+        "Description": {
+          "type": "string",
+          "default": "Reports duplicated `require` statements"
+        },
+        "Severity": {
+          "$ref": "#/definitions/Severity",
+          "default": "Warning"
+        }
+      }
+    },
+    "Lint/ElseNil": {
+      "$ref": "#/definitions/BaseRule",
+      "title": "Lint/ElseNil",
+      "description": "Disallows `else` blocks with `nil` as their body\nhttps://crystal-ameba.github.io/ameba/Ameba/Rule/Lint/ElseNil.html",
+      "properties": {
+        "SinceVersion": {
+          "type": "string",
+          "default": "1.7.0"
+        },
+        "Description": {
+          "type": "string",
+          "default": "Disallows `else` blocks with `nil` as their body"
+        },
+        "Severity": {
+          "$ref": "#/definitions/Severity",
+          "default": "Warning"
+        }
+      }
+    },
+    "Lint/EmptyEnsure": {
+      "$ref": "#/definitions/BaseRule",
+      "title": "Lint/EmptyEnsure",
+      "description": "Disallows empty `ensure` statement\nhttps://crystal-ameba.github.io/ameba/Ameba/Rule/Lint/EmptyEnsure.html",
+      "properties": {
+        "SinceVersion": {
+          "type": "string",
+          "default": "0.3.0"
+        },
+        "Description": {
+          "type": "string",
+          "default": "Disallows empty `ensure` statement"
+        },
+        "Severity": {
+          "$ref": "#/definitions/Severity",
+          "default": "Warning"
+        }
+      }
+    },
+    "Lint/EmptyExpression": {
+      "$ref": "#/definitions/BaseRule",
+      "title": "Lint/EmptyExpression",
+      "description": "Disallows empty expressions\nhttps://crystal-ameba.github.io/ameba/Ameba/Rule/Lint/EmptyExpression.html",
+      "properties": {
+        "SinceVersion": {
+          "type": "string",
+          "default": "0.2.0"
+        },
+        "Description": {
+          "type": "string",
+          "default": "Disallows empty expressions"
+        },
+        "Severity": {
+          "$ref": "#/definitions/Severity",
+          "default": "Warning"
+        }
+      }
+    },
+    "Lint/EmptyLoop": {
+      "$ref": "#/definitions/BaseRule",
+      "title": "Lint/EmptyLoop",
+      "description": "Disallows empty loops\nhttps://crystal-ameba.github.io/ameba/Ameba/Rule/Lint/EmptyLoop.html",
+      "properties": {
+        "SinceVersion": {
+          "type": "string",
+          "default": "0.12.0"
+        },
+        "Description": {
+          "type": "string",
+          "default": "Disallows empty loops"
+        },
+        "Severity": {
+          "$ref": "#/definitions/Severity",
+          "default": "Warning"
+        }
+      }
+    },
+    "Lint/Formatting": {
+      "$ref": "#/definitions/BaseRule",
+      "title": "Lint/Formatting",
+      "description": "Reports not formatted sources\nhttps://crystal-ameba.github.io/ameba/Ameba/Rule/Lint/Formatting.html",
+      "properties": {
+        "SinceVersion": {
+          "type": "string",
+          "default": "1.4.0"
+        },
+        "Description": {
+          "type": "string",
+          "default": "Reports not formatted sources"
+        },
+        "FailOnError": {
+          "type": "boolean",
+          "default": false
+        },
+        "Severity": {
+          "$ref": "#/definitions/Severity",
+          "default": "Warning"
+        }
+      }
+    },
+    "Lint/HashDuplicatedKey": {
+      "$ref": "#/definitions/BaseRule",
+      "title": "Lint/HashDuplicatedKey",
+      "description": "Disallows duplicated keys in hash literals\nhttps://crystal-ameba.github.io/ameba/Ameba/Rule/Lint/HashDuplicatedKey.html",
+      "properties": {
+        "SinceVersion": {
+          "type": "string",
+          "default": "0.3.0"
+        },
+        "Description": {
+          "type": "string",
+          "default": "Disallows duplicated keys in hash literals"
+        },
+        "Severity": {
+          "$ref": "#/definitions/Severity",
+          "default": "Warning"
+        }
+      }
+    },
+    "Lint/LiteralAssignmentsInExpressions": {
+      "$ref": "#/definitions/BaseRule",
+      "title": "Lint/LiteralAssignmentsInExpressions",
+      "description": "Disallows assignments with literal values in control expressions\nhttps://crystal-ameba.github.io/ameba/Ameba/Rule/Lint/LiteralAssignmentsInExpressions.html",
+      "properties": {
+        "SinceVersion": {
+          "type": "string",
+          "default": "1.4.0"
+        },
+        "Description": {
+          "type": "string",
+          "default": "Disallows assignments with literal values in control expressions"
+        },
+        "Severity": {
+          "$ref": "#/definitions/Severity",
+          "default": "Warning"
+        }
+      }
+    },
+    "Lint/LiteralInCondition": {
+      "$ref": "#/definitions/BaseRule",
+      "title": "Lint/LiteralInCondition",
+      "description": "Disallows useless conditional statements that contain a literal in place of a variable or predicate function\nhttps://crystal-ameba.github.io/ameba/Ameba/Rule/Lint/LiteralInCondition.html",
+      "properties": {
+        "SinceVersion": {
+          "type": "string",
+          "default": "0.1.0"
+        },
+        "Description": {
+          "type": "string",
+          "default": "Disallows useless conditional statements that contain a literal in place of a variable or predicate function"
+        },
+        "Severity": {
+          "$ref": "#/definitions/Severity",
+          "default": "Warning"
+        }
+      }
+    },
+    "Lint/LiteralInInterpolation": {
+      "$ref": "#/definitions/BaseRule",
+      "title": "Lint/LiteralInInterpolation",
+      "description": "Disallows useless string interpolations\nhttps://crystal-ameba.github.io/ameba/Ameba/Rule/Lint/LiteralInInterpolation.html",
+      "properties": {
+        "SinceVersion": {
+          "type": "string",
+          "default": "0.1.0"
+        },
+        "Description": {
+          "type": "string",
+          "default": "Disallows useless string interpolations"
+        },
+        "Severity": {
+          "$ref": "#/definitions/Severity",
+          "default": "Warning"
+        }
+      }
+    },
+    "Lint/LiteralsComparison": {
+      "$ref": "#/definitions/BaseRule",
+      "title": "Lint/LiteralsComparison",
+      "description": "Identifies comparisons between literals\nhttps://crystal-ameba.github.io/ameba/Ameba/Rule/Lint/LiteralsComparison.html",
+      "properties": {
+        "SinceVersion": {
+          "type": "string",
+          "default": "1.3.0"
+        },
+        "Description": {
+          "type": "string",
+          "default": "Identifies comparisons between literals"
+        },
+        "Severity": {
+          "$ref": "#/definitions/Severity",
+          "default": "Warning"
+        }
+      }
+    },
+    "Lint/MissingBlockArgument": {
+      "$ref": "#/definitions/BaseRule",
+      "title": "Lint/MissingBlockArgument",
+      "description": "Disallows yielding method definitions without block argument\nhttps://crystal-ameba.github.io/ameba/Ameba/Rule/Lint/MissingBlockArgument.html",
+      "properties": {
+        "SinceVersion": {
+          "type": "string",
+          "default": "1.4.0"
+        },
+        "Description": {
+          "type": "string",
+          "default": "Disallows yielding method definitions without block argument"
+        },
+        "Severity": {
+          "$ref": "#/definitions/Severity",
+          "default": "Warning"
+        }
+      }
+    },
+    "Lint/NotNil": {
+      "$ref": "#/definitions/BaseRule",
+      "title": "Lint/NotNil",
+      "description": "Identifies usage of `not_nil!` calls\nhttps://crystal-ameba.github.io/ameba/Ameba/Rule/Lint/NotNil.html",
+      "properties": {
+        "SinceVersion": {
+          "type": "string",
+          "default": "1.3.0"
+        },
+        "Description": {
+          "type": "string",
+          "default": "Identifies usage of `not_nil!` calls"
+        },
+        "Severity": {
+          "$ref": "#/definitions/Severity",
+          "default": "Warning"
+        }
+      }
+    },
+    "Lint/NotNilAfterNoBang": {
+      "$ref": "#/definitions/BaseRule",
+      "title": "Lint/NotNilAfterNoBang",
+      "description": "Identifies usage of `index/rindex/find/match` calls followed by `not_nil!`\nhttps://crystal-ameba.github.io/ameba/Ameba/Rule/Lint/NotNilAfterNoBang.html",
+      "properties": {
+        "SinceVersion": {
+          "type": "string",
+          "default": "1.3.0"
+        },
+        "Description": {
+          "type": "string",
+          "default": "Identifies usage of `index/rindex/find/match` calls followed by `not_nil!`"
+        },
+        "Severity": {
+          "$ref": "#/definitions/Severity",
+          "default": "Warning"
+        }
+      }
+    },
+    "Lint/PercentArrays": {
+      "$ref": "#/definitions/BaseRule",
+      "title": "Lint/PercentArrays",
+      "description": "Disallows some unwanted symbols in percent array literals\nhttps://crystal-ameba.github.io/ameba/Ameba/Rule/Lint/PercentArrays.html",
+      "properties": {
+        "SinceVersion": {
+          "type": "string",
+          "default": "0.3.0"
+        },
+        "Description": {
+          "type": "string",
+          "default": "Disallows some unwanted symbols in percent array literals"
+        },
+        "StringArrayUnwantedSymbols": {
+          "type": "string",
+          "default": ",\""
+        },
+        "SymbolArrayUnwantedSymbols": {
+          "type": "string",
+          "default": ",:"
+        },
+        "Severity": {
+          "$ref": "#/definitions/Severity",
+          "default": "Warning"
+        }
+      }
+    },
+    "Lint/RandZero": {
+      "$ref": "#/definitions/BaseRule",
+      "title": "Lint/RandZero",
+      "description": "Disallows `rand` zero calls\nhttps://crystal-ameba.github.io/ameba/Ameba/Rule/Lint/RandZero.html",
+      "properties": {
+        "SinceVersion": {
+          "type": "string",
+          "default": "0.5.1"
+        },
+        "Description": {
+          "type": "string",
+          "default": "Disallows `rand` zero calls"
+        },
+        "Severity": {
+          "$ref": "#/definitions/Severity",
+          "default": "Warning"
+        }
+      }
+    },
+    "Lint/RedundantStringCoercion": {
+      "$ref": "#/definitions/BaseRule",
+      "title": "Lint/RedundantStringCoercion",
+      "description": "Disallows redundant string conversions in interpolation\nhttps://crystal-ameba.github.io/ameba/Ameba/Rule/Lint/RedundantStringCoercion.html",
+      "properties": {
+        "SinceVersion": {
+          "type": "string",
+          "default": "0.12.0"
+        },
+        "Description": {
+          "type": "string",
+          "default": "Disallows redundant string conversions in interpolation"
+        },
+        "Severity": {
+          "$ref": "#/definitions/Severity",
+          "default": "Warning"
+        }
+      }
+    },
+    "Lint/RedundantWithIndex": {
+      "$ref": "#/definitions/BaseRule",
+      "title": "Lint/RedundantWithIndex",
+      "description": "Disallows redundant `with_index` calls\nhttps://crystal-ameba.github.io/ameba/Ameba/Rule/Lint/RedundantWithIndex.html",
+      "properties": {
+        "SinceVersion": {
+          "type": "string",
+          "default": "0.11.0"
+        },
+        "Description": {
+          "type": "string",
+          "default": "Disallows redundant `with_index` calls"
+        },
+        "Severity": {
+          "$ref": "#/definitions/Severity",
+          "default": "Warning"
+        }
+      }
+    },
+    "Lint/RedundantWithObject": {
+      "$ref": "#/definitions/BaseRule",
+      "title": "Lint/RedundantWithObject",
+      "description": "Disallows redundant `with_object` calls\nhttps://crystal-ameba.github.io/ameba/Ameba/Rule/Lint/RedundantWithObject.html",
+      "properties": {
+        "SinceVersion": {
+          "type": "string",
+          "default": "0.11.0"
+        },
+        "Description": {
+          "type": "string",
+          "default": "Disallows redundant `with_object` calls"
+        },
+        "Severity": {
+          "$ref": "#/definitions/Severity",
+          "default": "Warning"
+        }
+      }
+    },
+    "Lint/RequireParentheses": {
+      "$ref": "#/definitions/BaseRule",
+      "title": "Lint/RequireParentheses",
+      "description": "Disallows method calls with no parentheses and a logical operator in the argument list\nhttps://crystal-ameba.github.io/ameba/Ameba/Rule/Lint/RequireParentheses.html",
+      "properties": {
+        "SinceVersion": {
+          "type": "string",
+          "default": "1.7.0"
+        },
+        "Description": {
+          "type": "string",
+          "default": "Disallows method calls with no parentheses and a logical operator in the argument list"
+        },
+        "Severity": {
+          "$ref": "#/definitions/Severity",
+          "default": "Warning"
+        }
+      }
+    },
+    "Lint/SelfInitializeDefinition": {
+      "$ref": "#/definitions/BaseRule",
+      "title": "Lint/SelfInitializeDefinition",
+      "description": "Reports `initialize` method definitions with a `self` receiver\nhttps://crystal-ameba.github.io/ameba/Ameba/Rule/Lint/SelfInitializeDefinition.html",
+      "properties": {
+        "SinceVersion": {
+          "type": "string",
+          "default": "1.7.0"
+        },
+        "Description": {
+          "type": "string",
+          "default": "Reports `initialize` method definitions with a `self` receiver"
+        },
+        "Severity": {
+          "$ref": "#/definitions/Severity",
+          "default": "Warning"
+        }
+      }
+    },
+    "Lint/ShadowedArgument": {
+      "$ref": "#/definitions/BaseRule",
+      "title": "Lint/ShadowedArgument",
+      "description": "Disallows shadowed arguments\nhttps://crystal-ameba.github.io/ameba/Ameba/Rule/Lint/ShadowedArgument.html",
+      "properties": {
+        "SinceVersion": {
+          "type": "string",
+          "default": "0.7.0"
+        },
+        "Description": {
+          "type": "string",
+          "default": "Disallows shadowed arguments"
+        },
+        "Severity": {
+          "$ref": "#/definitions/Severity",
+          "default": "Warning"
+        }
+      }
+    },
+    "Lint/ShadowedException": {
+      "$ref": "#/definitions/BaseRule",
+      "title": "Lint/ShadowedException",
+      "description": "Disallows rescued exception that get shadowed\nhttps://crystal-ameba.github.io/ameba/Ameba/Rule/Lint/ShadowedException.html",
+      "properties": {
+        "SinceVersion": {
+          "type": "string",
+          "default": "0.3.0"
+        },
+        "Description": {
+          "type": "string",
+          "default": "Disallows rescued exception that get shadowed"
+        },
+        "Severity": {
+          "$ref": "#/definitions/Severity",
+          "default": "Warning"
+        }
+      }
+    },
+    "Lint/ShadowingOuterLocalVar": {
+      "$ref": "#/definitions/BaseRule",
+      "title": "Lint/ShadowingOuterLocalVar",
+      "description": "Disallows the usage of the same name as outer local variables for block or proc arguments\nhttps://crystal-ameba.github.io/ameba/Ameba/Rule/Lint/ShadowingOuterLocalVar.html",
+      "properties": {
+        "SinceVersion": {
+          "type": "string",
+          "default": "0.7.0"
+        },
+        "Description": {
+          "type": "string",
+          "default": "Disallows the usage of the same name as outer local variables for block or proc arguments"
+        },
+        "Severity": {
+          "$ref": "#/definitions/Severity",
+          "default": "Warning"
+        }
+      }
+    },
+    "Lint/SharedVarInFiber": {
+      "$ref": "#/definitions/BaseRule",
+      "title": "Lint/SharedVarInFiber",
+      "description": "Disallows shared variables in fibers\nhttps://crystal-ameba.github.io/ameba/Ameba/Rule/Lint/SharedVarInFiber.html",
+      "properties": {
+        "SinceVersion": {
+          "type": "string",
+          "default": "0.12.0"
+        },
+        "Description": {
+          "type": "string",
+          "default": "Disallows shared variables in fibers"
+        },
+        "Severity": {
+          "$ref": "#/definitions/Severity",
+          "default": "Warning"
+        }
+      }
+    },
+    "Lint/SignalTrap": {
+      "$ref": "#/definitions/BaseRule",
+      "title": "Lint/SignalTrap",
+      "description": "Disallows `Signal::INT/HUP/TERM.trap` in favor of `Process.on_terminate`\nhttps://crystal-ameba.github.io/ameba/Ameba/Rule/Lint/SignalTrap.html",
+      "properties": {
+        "SinceVersion": {
+          "type": "string",
+          "default": "1.7.0"
+        },
+        "Description": {
+          "type": "string",
+          "default": "Disallows `Signal::INT/HUP/TERM.trap` in favor of `Process.on_terminate`"
+        },
+        "Severity": {
+          "$ref": "#/definitions/Severity",
+          "default": "Warning"
+        }
+      }
+    },
+    "Lint/SpecEqWithBoolOrNilLiteral": {
+      "$ref": "#/definitions/BaseRule",
+      "title": "Lint/SpecEqWithBoolOrNilLiteral",
+      "description": "Reports `eq(true|false|nil)` expectations in specs\nhttps://crystal-ameba.github.io/ameba/Ameba/Rule/Lint/SpecEqWithBoolOrNilLiteral.html",
+      "properties": {
+        "SinceVersion": {
+          "type": "string",
+          "default": "1.7.0"
+        },
+        "Description": {
+          "type": "string",
+          "default": "Reports `eq(true|false|nil)` expectations in specs"
+        },
+        "Severity": {
+          "$ref": "#/definitions/Severity",
+          "default": "Warning"
+        }
+      }
+    },
+    "Lint/SpecFilename": {
+      "$ref": "#/definitions/BaseRule",
+      "title": "Lint/SpecFilename",
+      "description": "Enforces spec filenames to have `_spec` suffix\nhttps://crystal-ameba.github.io/ameba/Ameba/Rule/Lint/SpecFilename.html",
+      "properties": {
+        "SinceVersion": {
+          "type": "string",
+          "default": "1.6.0"
+        },
+        "Description": {
+          "type": "string",
+          "default": "Enforces spec filenames to have `_spec` suffix"
+        },
+        "IgnoredDirs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": [
+            "spec/support",
+            "spec/fixtures",
+            "spec/data"
+          ]
+        },
+        "IgnoredFilenames": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": [
+            "spec_helper"
+          ]
+        },
+        "Severity": {
+          "$ref": "#/definitions/Severity",
+          "default": "Warning"
+        }
+      }
+    },
+    "Lint/SpecFocus": {
+      "$ref": "#/definitions/BaseRule",
+      "title": "Lint/SpecFocus",
+      "description": "Reports focused spec items\nhttps://crystal-ameba.github.io/ameba/Ameba/Rule/Lint/SpecFocus.html",
+      "properties": {
+        "SinceVersion": {
+          "type": "string",
+          "default": "0.14.0"
+        },
+        "Description": {
+          "type": "string",
+          "default": "Reports focused spec items"
+        },
+        "Severity": {
+          "$ref": "#/definitions/Severity",
+          "default": "Warning"
+        }
+      }
+    },
+    "Lint/Syntax": {
+      "$ref": "#/definitions/BaseRule",
+      "title": "Lint/Syntax",
+      "description": "Reports invalid Crystal syntax\nhttps://crystal-ameba.github.io/ameba/Ameba/Rule/Lint/Syntax.html",
+      "properties": {
+        "SinceVersion": {
+          "type": "string",
+          "default": "0.4.2"
+        },
+        "Description": {
+          "type": "string",
+          "default": "Reports invalid Crystal syntax"
+        },
+        "Severity": {
+          "$ref": "#/definitions/Severity",
+          "default": "Error"
+        }
+      }
+    },
+    "Lint/TopLevelOperatorDefinition": {
+      "$ref": "#/definitions/BaseRule",
+      "title": "Lint/TopLevelOperatorDefinition",
+      "description": "Disallows top level operator method definitions\nhttps://crystal-ameba.github.io/ameba/Ameba/Rule/Lint/TopLevelOperatorDefinition.html",
+      "properties": {
+        "SinceVersion": {
+          "type": "string",
+          "default": "1.7.0"
+        },
+        "Description": {
+          "type": "string",
+          "default": "Disallows top level operator method definitions"
+        },
+        "Severity": {
+          "$ref": "#/definitions/Severity",
+          "default": "Warning"
+        }
+      }
+    },
+    "Lint/TrailingRescueException": {
+      "$ref": "#/definitions/BaseRule",
+      "title": "Lint/TrailingRescueException",
+      "description": "Disallows trailing `rescue` with a path\nhttps://crystal-ameba.github.io/ameba/Ameba/Rule/Lint/TrailingRescueException.html",
+      "properties": {
+        "SinceVersion": {
+          "type": "string",
+          "default": "1.7.0"
+        },
+        "Description": {
+          "type": "string",
+          "default": "Disallows trailing `rescue` with a path"
+        },
+        "Severity": {
+          "$ref": "#/definitions/Severity",
+          "default": "Warning"
+        }
+      }
+    },
+    "Lint/Typos": {
+      "$ref": "#/definitions/BaseRule",
+      "title": "Lint/Typos",
+      "description": "Reports typos found in source files\nhttps://crystal-ameba.github.io/ameba/Ameba/Rule/Lint/Typos.html",
+      "properties": {
+        "SinceVersion": {
+          "type": "string",
+          "default": "1.6.0"
+        },
+        "Description": {
+          "type": "string",
+          "default": "Reports typos found in source files"
+        },
+        "BinPath": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "default": null
+        },
+        "FailOnMissingBin": {
+          "type": "boolean",
+          "default": false
+        },
+        "FailOnError": {
+          "type": "boolean",
+          "default": true
+        },
+        "Severity": {
+          "$ref": "#/definitions/Severity",
+          "default": "Warning"
+        }
+      }
+    },
+    "Lint/UnneededDisableDirective": {
+      "$ref": "#/definitions/BaseRule",
+      "title": "Lint/UnneededDisableDirective",
+      "description": "Reports unneeded disable directives in comments\nhttps://crystal-ameba.github.io/ameba/Ameba/Rule/Lint/UnneededDisableDirective.html",
+      "properties": {
+        "SinceVersion": {
+          "type": "string",
+          "default": "0.5.0"
+        },
+        "Description": {
+          "type": "string",
+          "default": "Reports unneeded disable directives in comments"
+        },
+        "Severity": {
+          "$ref": "#/definitions/Severity",
+          "default": "Warning"
+        }
+      }
+    },
+    "Lint/UnreachableCode": {
+      "$ref": "#/definitions/BaseRule",
+      "title": "Lint/UnreachableCode",
+      "description": "Reports unreachable code\nhttps://crystal-ameba.github.io/ameba/Ameba/Rule/Lint/UnreachableCode.html",
+      "properties": {
+        "SinceVersion": {
+          "type": "string",
+          "default": "0.9.0"
+        },
+        "Description": {
+          "type": "string",
+          "default": "Reports unreachable code"
+        },
+        "Severity": {
+          "$ref": "#/definitions/Severity",
+          "default": "Warning"
+        }
+      }
+    },
+    "Lint/UnusedArgument": {
+      "$ref": "#/definitions/BaseRule",
+      "title": "Lint/UnusedArgument",
+      "description": "Disallows unused arguments\nhttps://crystal-ameba.github.io/ameba/Ameba/Rule/Lint/UnusedArgument.html",
+      "properties": {
+        "SinceVersion": {
+          "type": "string",
+          "default": "0.6.0"
+        },
+        "Description": {
+          "type": "string",
+          "default": "Disallows unused arguments"
+        },
+        "IgnoreDefs": {
+          "type": "boolean",
+          "default": true
+        },
+        "IgnoreBlocks": {
+          "type": "boolean",
+          "default": false
+        },
+        "IgnoreProcs": {
+          "type": "boolean",
+          "default": false
+        },
+        "Severity": {
+          "$ref": "#/definitions/Severity",
+          "default": "Warning"
+        }
+      }
+    },
+    "Lint/UnusedBlockArgument": {
+      "$ref": "#/definitions/BaseRule",
+      "title": "Lint/UnusedBlockArgument",
+      "description": "Disallows unused block arguments\nhttps://crystal-ameba.github.io/ameba/Ameba/Rule/Lint/UnusedBlockArgument.html",
+      "properties": {
+        "SinceVersion": {
+          "type": "string",
+          "default": "1.4.0"
+        },
+        "Description": {
+          "type": "string",
+          "default": "Disallows unused block arguments"
+        },
+        "Severity": {
+          "$ref": "#/definitions/Severity",
+          "default": "Warning"
+        }
+      }
+    },
+    "Lint/UnusedExpression": {
+      "$ref": "#/definitions/BaseRule",
+      "title": "Lint/UnusedExpression",
+      "description": "Disallows unused expressions\nhttps://crystal-ameba.github.io/ameba/Ameba/Rule/Lint/UnusedExpression.html",
+      "properties": {
+        "SinceVersion": {
+          "type": "string",
+          "default": "1.7.0"
+        },
+        "Description": {
+          "type": "string",
+          "default": "Disallows unused expressions"
+        },
+        "Severity": {
+          "$ref": "#/definitions/Severity",
+          "default": "Warning"
+        }
+      }
+    },
+    "Lint/UselessAssign": {
+      "$ref": "#/definitions/BaseRule",
+      "title": "Lint/UselessAssign",
+      "description": "Disallows useless variable assignments\nhttps://crystal-ameba.github.io/ameba/Ameba/Rule/Lint/UselessAssign.html",
+      "properties": {
+        "SinceVersion": {
+          "type": "string",
+          "default": "0.6.0"
+        },
+        "Description": {
+          "type": "string",
+          "default": "Disallows useless variable assignments"
+        },
+        "ExcludeTypeDeclarations": {
+          "type": "boolean",
+          "default": false
+        },
+        "Severity": {
+          "$ref": "#/definitions/Severity",
+          "default": "Warning"
+        }
+      }
+    },
+    "Lint/UselessConditionInWhen": {
+      "$ref": "#/definitions/BaseRule",
+      "title": "Lint/UselessConditionInWhen",
+      "description": "Disallows useless conditions in `when`\nhttps://crystal-ameba.github.io/ameba/Ameba/Rule/Lint/UselessConditionInWhen.html",
+      "properties": {
+        "SinceVersion": {
+          "type": "string",
+          "default": "0.3.0"
+        },
+        "Description": {
+          "type": "string",
+          "default": "Disallows useless conditions in `when`"
+        },
+        "Severity": {
+          "$ref": "#/definitions/Severity",
+          "default": "Warning"
+        }
+      }
+    },
+    "Lint/UselessVisibilityModifier": {
+      "$ref": "#/definitions/BaseRule",
+      "title": "Lint/UselessVisibilityModifier",
+      "description": "Disallows top level `protected` method visibility modifier\nhttps://crystal-ameba.github.io/ameba/Ameba/Rule/Lint/UselessVisibilityModifier.html",
+      "properties": {
+        "SinceVersion": {
+          "type": "string",
+          "default": "1.7.0"
+        },
+        "Description": {
+          "type": "string",
+          "default": "Disallows top level `protected` method visibility modifier"
+        },
+        "Severity": {
+          "$ref": "#/definitions/Severity",
+          "default": "Warning"
+        }
+      }
+    },
+    "Lint/VoidOutsideLib": {
+      "$ref": "#/definitions/BaseRule",
+      "title": "Lint/VoidOutsideLib",
+      "description": "Disallows use of `Void` outside C lib bindings and `Pointer(Void)`\nhttps://crystal-ameba.github.io/ameba/Ameba/Rule/Lint/VoidOutsideLib.html",
+      "properties": {
+        "SinceVersion": {
+          "type": "string",
+          "default": "1.7.0"
+        },
+        "Description": {
+          "type": "string",
+          "default": "Disallows use of `Void` outside C lib bindings and `Pointer(Void)`"
+        },
+        "Severity": {
+          "$ref": "#/definitions/Severity",
+          "default": "Warning"
+        }
+      }
+    },
+    "Lint/WhitespaceAroundMacroExpression": {
+      "$ref": "#/definitions/BaseRule",
+      "title": "Lint/WhitespaceAroundMacroExpression",
+      "description": "Reports missing spaces around macro expressions\nhttps://crystal-ameba.github.io/ameba/Ameba/Rule/Lint/WhitespaceAroundMacroExpression.html",
+      "properties": {
+        "SinceVersion": {
+          "type": "string",
+          "default": "1.7.0"
+        },
+        "Description": {
+          "type": "string",
+          "default": "Reports missing spaces around macro expressions"
+        },
+        "Severity": {
+          "$ref": "#/definitions/Severity",
+          "default": "Warning"
+        }
+      }
+    },
+    "Metrics/CyclomaticComplexity": {
+      "$ref": "#/definitions/BaseRule",
+      "title": "Metrics/CyclomaticComplexity",
+      "description": "Disallows methods with a cyclomatic complexity higher than `MaxComplexity`\nhttps://crystal-ameba.github.io/ameba/Ameba/Rule/Metrics/CyclomaticComplexity.html",
+      "properties": {
+        "SinceVersion": {
+          "type": "string",
+          "default": "0.9.1"
+        },
+        "Description": {
+          "type": "string",
+          "default": "Disallows methods with a cyclomatic complexity higher than `MaxComplexity`"
+        },
+        "MaxComplexity": {
+          "type": "number",
+          "default": 12
+        },
+        "Severity": {
+          "$ref": "#/definitions/Severity",
+          "default": "Warning"
+        }
+      }
+    },
+    "Naming/AccessorMethodName": {
+      "$ref": "#/definitions/BaseRule",
+      "title": "Naming/AccessorMethodName",
+      "description": "Makes sure that accessor methods are named properly\nhttps://crystal-ameba.github.io/ameba/Ameba/Rule/Naming/AccessorMethodName.html",
+      "properties": {
+        "SinceVersion": {
+          "type": "string",
+          "default": "1.6.0"
+        },
+        "Description": {
+          "type": "string",
+          "default": "Makes sure that accessor methods are named properly"
+        }
+      }
+    },
+    "Naming/AsciiIdentifiers": {
+      "$ref": "#/definitions/BaseRule",
+      "title": "Naming/AsciiIdentifiers",
+      "description": "Disallows non-ascii characters in identifiers\nhttps://crystal-ameba.github.io/ameba/Ameba/Rule/Naming/AsciiIdentifiers.html",
+      "properties": {
+        "SinceVersion": {
+          "type": "string",
+          "default": "1.6.0"
+        },
+        "Description": {
+          "type": "string",
+          "default": "Disallows non-ascii characters in identifiers"
+        },
+        "IgnoreSymbols": {
+          "type": "boolean",
+          "default": false
+        }
+      }
+    },
+    "Naming/BinaryOperatorParameterName": {
+      "$ref": "#/definitions/BaseRule",
+      "title": "Naming/BinaryOperatorParameterName",
+      "description": "Enforces that certain binary operator methods have their sole parameter named `other`\nhttps://crystal-ameba.github.io/ameba/Ameba/Rule/Naming/BinaryOperatorParameterName.html",
+      "properties": {
+        "SinceVersion": {
+          "type": "string",
+          "default": "1.6.0"
+        },
+        "Description": {
+          "type": "string",
+          "default": "Enforces that certain binary operator methods have their sole parameter named `other`"
+        },
+        "ExcludedOperators": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": [
+            "[]",
+            "[]?",
+            "[]=",
+            "<<",
+            ">>",
+            "`",
+            "=~",
+            "!~"
+          ]
+        }
+      }
+    },
+    "Naming/BlockParameterName": {
+      "$ref": "#/definitions/BaseRule",
+      "title": "Naming/BlockParameterName",
+      "description": "Disallows non-descriptive block parameter names\nhttps://crystal-ameba.github.io/ameba/Ameba/Rule/Naming/BlockParameterName.html",
+      "properties": {
+        "SinceVersion": {
+          "type": "string",
+          "default": "1.6.0"
+        },
+        "Description": {
+          "type": "string",
+          "default": "Disallows non-descriptive block parameter names"
+        },
+        "MinNameLength": {
+          "type": "number",
+          "default": 3
+        },
+        "AllowNamesEndingInNumbers": {
+          "type": "boolean",
+          "default": true
+        },
+        "AllowedNames": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": [
+            "a",
+            "b",
+            "e",
+            "i",
+            "j",
+            "k",
+            "v",
+            "x",
+            "y",
+            "k1",
+            "k2",
+            "v1",
+            "v2",
+            "db",
+            "ex",
+            "id",
+            "io",
+            "ip",
+            "op",
+            "tx",
+            "wg",
+            "ws"
+          ]
+        },
+        "ForbiddenNames": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": []
+        }
+      }
+    },
+    "Naming/ConstantNames": {
+      "$ref": "#/definitions/BaseRule",
+      "title": "Naming/ConstantNames",
+      "description": "Enforces constant names to be in screaming case\nhttps://crystal-ameba.github.io/ameba/Ameba/Rule/Naming/ConstantNames.html",
+      "properties": {
+        "SinceVersion": {
+          "type": "string",
+          "default": "0.2.0"
+        },
+        "Description": {
+          "type": "string",
+          "default": "Enforces constant names to be in screaming case"
+        }
+      }
+    },
+    "Naming/Filename": {
+      "$ref": "#/definitions/BaseRule",
+      "title": "Naming/Filename",
+      "description": "Enforces file names to be in underscored case\nhttps://crystal-ameba.github.io/ameba/Ameba/Rule/Naming/Filename.html",
+      "properties": {
+        "SinceVersion": {
+          "type": "string",
+          "default": "1.6.0"
+        },
+        "Description": {
+          "type": "string",
+          "default": "Enforces file names to be in underscored case"
+        }
+      }
+    },
+    "Naming/MethodNames": {
+      "$ref": "#/definitions/BaseRule",
+      "title": "Naming/MethodNames",
+      "description": "Enforces method names to be in underscored case\nhttps://crystal-ameba.github.io/ameba/Ameba/Rule/Naming/MethodNames.html",
+      "properties": {
+        "SinceVersion": {
+          "type": "string",
+          "default": "0.2.0"
+        },
+        "Description": {
+          "type": "string",
+          "default": "Enforces method names to be in underscored case"
+        }
+      }
+    },
+    "Naming/PredicateName": {
+      "$ref": "#/definitions/BaseRule",
+      "title": "Naming/PredicateName",
+      "description": "Disallows tautological predicate names\nhttps://crystal-ameba.github.io/ameba/Ameba/Rule/Naming/PredicateName.html",
+      "properties": {
+        "SinceVersion": {
+          "type": "string",
+          "default": "0.2.0"
+        },
+        "Description": {
+          "type": "string",
+          "default": "Disallows tautological predicate names"
+        }
+      }
+    },
+    "Naming/QueryBoolMethods": {
+      "$ref": "#/definitions/BaseRule",
+      "title": "Naming/QueryBoolMethods",
+      "description": "Reports boolean properties without the `?` suffix\nhttps://crystal-ameba.github.io/ameba/Ameba/Rule/Naming/QueryBoolMethods.html",
+      "properties": {
+        "SinceVersion": {
+          "type": "string",
+          "default": "1.4.0"
+        },
+        "Description": {
+          "type": "string",
+          "default": "Reports boolean properties without the `?` suffix"
+        }
+      }
+    },
+    "Naming/RescuedExceptionsVariableName": {
+      "$ref": "#/definitions/BaseRule",
+      "title": "Naming/RescuedExceptionsVariableName",
+      "description": "Makes sure that rescued exceptions variables are named as expected\nhttps://crystal-ameba.github.io/ameba/Ameba/Rule/Naming/RescuedExceptionsVariableName.html",
+      "properties": {
+        "SinceVersion": {
+          "type": "string",
+          "default": "1.6.0"
+        },
+        "Description": {
+          "type": "string",
+          "default": "Makes sure that rescued exceptions variables are named as expected"
+        },
+        "AllowedNames": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": [
+            "e",
+            "ex",
+            "exception",
+            "error"
+          ]
+        }
+      }
+    },
+    "Naming/TypeNames": {
+      "$ref": "#/definitions/BaseRule",
+      "title": "Naming/TypeNames",
+      "description": "Enforces type names in camelcase manner\nhttps://crystal-ameba.github.io/ameba/Ameba/Rule/Naming/TypeNames.html",
+      "properties": {
+        "SinceVersion": {
+          "type": "string",
+          "default": "0.2.0"
+        },
+        "Description": {
+          "type": "string",
+          "default": "Enforces type names in camelcase manner"
+        }
+      }
+    },
+    "Naming/VariableNames": {
+      "$ref": "#/definitions/BaseRule",
+      "title": "Naming/VariableNames",
+      "description": "Enforces variable names to be in underscored case\nhttps://crystal-ameba.github.io/ameba/Ameba/Rule/Naming/VariableNames.html",
+      "properties": {
+        "SinceVersion": {
+          "type": "string",
+          "default": "0.2.0"
+        },
+        "Description": {
+          "type": "string",
+          "default": "Enforces variable names to be in underscored case"
+        }
+      }
+    },
+    "Performance/AnyAfterFilter": {
+      "$ref": "#/definitions/BaseRule",
+      "title": "Performance/AnyAfterFilter",
+      "description": "Identifies usage of `any?` calls that follow filters\nhttps://crystal-ameba.github.io/ameba/Ameba/Rule/Performance/AnyAfterFilter.html",
+      "properties": {
+        "SinceVersion": {
+          "type": "string",
+          "default": "0.8.1"
+        },
+        "Description": {
+          "type": "string",
+          "default": "Identifies usage of `any?` calls that follow filters"
+        },
+        "FilterNames": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": [
+            "select",
+            "reject"
+          ]
+        },
+        "Severity": {
+          "$ref": "#/definitions/Severity",
+          "default": "Warning"
+        }
+      }
+    },
+    "Performance/AnyInsteadOfEmpty": {
+      "$ref": "#/definitions/BaseRule",
+      "title": "Performance/AnyInsteadOfEmpty",
+      "description": "Identifies usage of arg-less `any?` calls\nhttps://crystal-ameba.github.io/ameba/Ameba/Rule/Performance/AnyInsteadOfEmpty.html",
+      "properties": {
+        "SinceVersion": {
+          "type": "string",
+          "default": "0.14.0"
+        },
+        "Description": {
+          "type": "string",
+          "default": "Identifies usage of arg-less `any?` calls"
+        },
+        "Severity": {
+          "$ref": "#/definitions/Severity",
+          "default": "Warning"
+        }
+      }
+    },
+    "Performance/ChainedCallWithNoBang": {
+      "$ref": "#/definitions/BaseRule",
+      "title": "Performance/ChainedCallWithNoBang",
+      "description": "Identifies usage of chained calls not utilizing the bang method variants\nhttps://crystal-ameba.github.io/ameba/Ameba/Rule/Performance/ChainedCallWithNoBang.html",
+      "properties": {
+        "SinceVersion": {
+          "type": "string",
+          "default": "0.14.0"
+        },
+        "Description": {
+          "type": "string",
+          "default": "Identifies usage of chained calls not utilizing the bang method variants"
+        },
+        "CallNames": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": [
+            "uniq",
+            "unstable_sort",
+            "sort",
+            "sort_by",
+            "shuffle",
+            "reverse"
+          ]
+        },
+        "Severity": {
+          "$ref": "#/definitions/Severity",
+          "default": "Warning"
+        }
+      }
+    },
+    "Performance/CompactAfterMap": {
+      "$ref": "#/definitions/BaseRule",
+      "title": "Performance/CompactAfterMap",
+      "description": "Identifies usage of `compact` calls that follow `map`\nhttps://crystal-ameba.github.io/ameba/Ameba/Rule/Performance/CompactAfterMap.html",
+      "properties": {
+        "SinceVersion": {
+          "type": "string",
+          "default": "0.14.0"
+        },
+        "Description": {
+          "type": "string",
+          "default": "Identifies usage of `compact` calls that follow `map`"
+        },
+        "Severity": {
+          "$ref": "#/definitions/Severity",
+          "default": "Warning"
+        }
+      }
+    },
+    "Performance/ExcessiveAllocations": {
+      "$ref": "#/definitions/BaseRule",
+      "title": "Performance/ExcessiveAllocations",
+      "description": "Identifies usage of excessive collection allocations\nhttps://crystal-ameba.github.io/ameba/Ameba/Rule/Performance/ExcessiveAllocations.html",
+      "properties": {
+        "SinceVersion": {
+          "type": "string",
+          "default": "1.5.0"
+        },
+        "Description": {
+          "type": "string",
+          "default": "Identifies usage of excessive collection allocations"
+        },
+        "CallNames": {
+          "type": "object",
+          "properties": {
+            "codepoints": {
+              "type": "string",
+              "default": "each_codepoint"
+            },
+            "graphemes": {
+              "type": "string",
+              "default": "each_grapheme"
+            },
+            "chars": {
+              "type": "string",
+              "default": "each_char"
+            },
+            "lines": {
+              "type": "string",
+              "default": "each_line"
+            }
+          }
+        },
+        "Severity": {
+          "$ref": "#/definitions/Severity",
+          "default": "Warning"
+        }
+      }
+    },
+    "Performance/FirstLastAfterFilter": {
+      "$ref": "#/definitions/BaseRule",
+      "title": "Performance/FirstLastAfterFilter",
+      "description": "Identifies usage of `first/last/first?/last?` calls that follow filters\nhttps://crystal-ameba.github.io/ameba/Ameba/Rule/Performance/FirstLastAfterFilter.html",
+      "properties": {
+        "SinceVersion": {
+          "type": "string",
+          "default": "0.8.1"
+        },
+        "Description": {
+          "type": "string",
+          "default": "Identifies usage of `first/last/first?/last?` calls that follow filters"
+        },
+        "FilterNames": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": [
+            "select"
+          ]
+        },
+        "Severity": {
+          "$ref": "#/definitions/Severity",
+          "default": "Warning"
+        }
+      }
+    },
+    "Performance/FlattenAfterMap": {
+      "$ref": "#/definitions/BaseRule",
+      "title": "Performance/FlattenAfterMap",
+      "description": "Identifies usage of `flatten` calls that follow `map`\nhttps://crystal-ameba.github.io/ameba/Ameba/Rule/Performance/FlattenAfterMap.html",
+      "properties": {
+        "SinceVersion": {
+          "type": "string",
+          "default": "0.14.0"
+        },
+        "Description": {
+          "type": "string",
+          "default": "Identifies usage of `flatten` calls that follow `map`"
+        },
+        "Severity": {
+          "$ref": "#/definitions/Severity",
+          "default": "Warning"
+        }
+      }
+    },
+    "Performance/MapInsteadOfBlock": {
+      "$ref": "#/definitions/BaseRule",
+      "title": "Performance/MapInsteadOfBlock",
+      "description": "Identifies usage of `sum/product` calls that follow `map`\nhttps://crystal-ameba.github.io/ameba/Ameba/Rule/Performance/MapInsteadOfBlock.html",
+      "properties": {
+        "SinceVersion": {
+          "type": "string",
+          "default": "0.14.0"
+        },
+        "Description": {
+          "type": "string",
+          "default": "Identifies usage of `sum/product` calls that follow `map`"
+        },
+        "Severity": {
+          "$ref": "#/definitions/Severity",
+          "default": "Warning"
+        }
+      }
+    },
+    "Performance/MinMaxAfterMap": {
+      "$ref": "#/definitions/BaseRule",
+      "title": "Performance/MinMaxAfterMap",
+      "description": "Identifies usage of `min/max/minmax` calls that follow `map`\nhttps://crystal-ameba.github.io/ameba/Ameba/Rule/Performance/MinMaxAfterMap.html",
+      "properties": {
+        "SinceVersion": {
+          "type": "string",
+          "default": "1.5.0"
+        },
+        "Description": {
+          "type": "string",
+          "default": "Identifies usage of `min/max/minmax` calls that follow `map`"
+        },
+        "Severity": {
+          "$ref": "#/definitions/Severity",
+          "default": "Warning"
+        }
+      }
+    },
+    "Performance/SizeAfterFilter": {
+      "$ref": "#/definitions/BaseRule",
+      "title": "Performance/SizeAfterFilter",
+      "description": "Identifies usage of `size` calls that follow filter\nhttps://crystal-ameba.github.io/ameba/Ameba/Rule/Performance/SizeAfterFilter.html",
+      "properties": {
+        "SinceVersion": {
+          "type": "string",
+          "default": "0.8.1"
+        },
+        "Description": {
+          "type": "string",
+          "default": "Identifies usage of `size` calls that follow filter"
+        },
+        "FilterNames": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": [
+            "select",
+            "reject"
+          ]
+        },
+        "Severity": {
+          "$ref": "#/definitions/Severity",
+          "default": "Warning"
+        }
+      }
+    },
+    "Performance/TimesMap": {
+      "$ref": "#/definitions/BaseRule",
+      "title": "Performance/TimesMap",
+      "description": "Identifies usage of `times.map { ... }.to_a` calls\nhttps://crystal-ameba.github.io/ameba/Ameba/Rule/Performance/TimesMap.html",
+      "properties": {
+        "SinceVersion": {
+          "type": "string",
+          "default": "1.7.0"
+        },
+        "Description": {
+          "type": "string",
+          "default": "Identifies usage of `times.map { ... }.to_a` calls"
+        },
+        "Severity": {
+          "$ref": "#/definitions/Severity",
+          "default": "Warning"
+        }
+      }
+    },
+    "Style/ArrayLiteralSyntax": {
+      "$ref": "#/definitions/BaseRule",
+      "title": "Style/ArrayLiteralSyntax",
+      "description": "Encourages the use of `Array(T).new` over `[] of T`\nhttps://crystal-ameba.github.io/ameba/Ameba/Rule/Style/ArrayLiteralSyntax.html",
+      "properties": {
+        "SinceVersion": {
+          "type": "string",
+          "default": "1.7.0"
+        },
+        "Enabled": {
+          "type": "boolean",
+          "default": false
+        },
+        "Description": {
+          "type": "string",
+          "default": "Encourages the use of `Array(T).new` over `[] of T`"
+        }
+      }
+    },
+    "Style/GuardClause": {
+      "$ref": "#/definitions/BaseRule",
+      "title": "Style/GuardClause",
+      "description": "Check for conditionals that can be replaced with guard clauses\nhttps://crystal-ameba.github.io/ameba/Ameba/Rule/Style/GuardClause.html",
+      "properties": {
+        "SinceVersion": {
+          "type": "string",
+          "default": "1.0.0"
+        },
+        "Enabled": {
+          "type": "boolean",
+          "default": false
+        },
+        "Description": {
+          "type": "string",
+          "default": "Check for conditionals that can be replaced with guard clauses"
+        }
+      }
+    },
+    "Style/HashLiteralSyntax": {
+      "$ref": "#/definitions/BaseRule",
+      "title": "Style/HashLiteralSyntax",
+      "description": "Encourages the use of `Hash(K, V).new` over `{} of K => V`\nhttps://crystal-ameba.github.io/ameba/Ameba/Rule/Style/HashLiteralSyntax.html",
+      "properties": {
+        "SinceVersion": {
+          "type": "string",
+          "default": "1.7.0"
+        },
+        "Enabled": {
+          "type": "boolean",
+          "default": false
+        },
+        "Description": {
+          "type": "string",
+          "default": "Encourages the use of `Hash(K, V).new` over `{} of K => V`"
+        }
+      }
+    },
+    "Style/HeredocEscape": {
+      "$ref": "#/definitions/BaseRule",
+      "title": "Style/HeredocEscape",
+      "description": "Recommends using the heredoc variant that escapes interpolation or control chars in a heredoc body\nhttps://crystal-ameba.github.io/ameba/Ameba/Rule/Style/HeredocEscape.html",
+      "properties": {
+        "SinceVersion": {
+          "type": "string",
+          "default": "1.7.0"
+        },
+        "Description": {
+          "type": "string",
+          "default": "Recommends using the heredoc variant that escapes interpolation or control chars in a heredoc body"
+        }
+      }
+    },
+    "Style/HeredocIndent": {
+      "$ref": "#/definitions/BaseRule",
+      "title": "Style/HeredocIndent",
+      "description": "Recommends heredoc bodies are indented consistently\nhttps://crystal-ameba.github.io/ameba/Ameba/Rule/Style/HeredocIndent.html",
+      "properties": {
+        "SinceVersion": {
+          "type": "string",
+          "default": "1.7.0"
+        },
+        "Description": {
+          "type": "string",
+          "default": "Recommends heredoc bodies are indented consistently"
+        },
+        "IndentBy": {
+          "type": "number",
+          "default": 2
+        }
+      }
+    },
+    "Style/IsAFilter": {
+      "$ref": "#/definitions/BaseRule",
+      "title": "Style/IsAFilter",
+      "description": "Identifies usage of `is_a?/nil?` calls within filters\nhttps://crystal-ameba.github.io/ameba/Ameba/Rule/Style/IsAFilter.html",
+      "properties": {
+        "SinceVersion": {
+          "type": "string",
+          "default": "0.14.0"
+        },
+        "Description": {
+          "type": "string",
+          "default": "Identifies usage of `is_a?/nil?` calls within filters"
+        },
+        "FilterNames": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": [
+            "select",
+            "reject",
+            "any?",
+            "all?",
+            "none?",
+            "one?"
+          ]
+        }
+      }
+    },
+    "Style/IsANil": {
+      "$ref": "#/definitions/BaseRule",
+      "title": "Style/IsANil",
+      "description": "Disallows calls to `is_a?(Nil)` in favor of `nil?`\nhttps://crystal-ameba.github.io/ameba/Ameba/Rule/Style/IsANil.html",
+      "properties": {
+        "SinceVersion": {
+          "type": "string",
+          "default": "0.13.0"
+        },
+        "Description": {
+          "type": "string",
+          "default": "Disallows calls to `is_a?(Nil)` in favor of `nil?`"
+        }
+      }
+    },
+    "Style/LargeNumbers": {
+      "$ref": "#/definitions/BaseRule",
+      "title": "Style/LargeNumbers",
+      "description": "Disallows usage of large numbers without underscore\nhttps://crystal-ameba.github.io/ameba/Ameba/Rule/Style/LargeNumbers.html",
+      "properties": {
+        "SinceVersion": {
+          "type": "string",
+          "default": "0.2.0"
+        },
+        "Enabled": {
+          "type": "boolean",
+          "default": false
+        },
+        "Description": {
+          "type": "string",
+          "default": "Disallows usage of large numbers without underscore"
+        },
+        "IntMinDigits": {
+          "type": "number",
+          "default": 6
+        }
+      }
+    },
+    "Style/MultilineCurlyBlock": {
+      "$ref": "#/definitions/BaseRule",
+      "title": "Style/MultilineCurlyBlock",
+      "description": "Disallows multi-line blocks using curly block syntax\nhttps://crystal-ameba.github.io/ameba/Ameba/Rule/Style/MultilineCurlyBlock.html",
+      "properties": {
+        "SinceVersion": {
+          "type": "string",
+          "default": "1.7.0"
+        },
+        "Description": {
+          "type": "string",
+          "default": "Disallows multi-line blocks using curly block syntax"
+        }
+      }
+    },
+    "Style/MultilineStringLiteral": {
+      "$ref": "#/definitions/BaseRule",
+      "title": "Style/MultilineStringLiteral",
+      "description": "Disallows multiline string literals not using `<<-HEREDOC` markers\nhttps://crystal-ameba.github.io/ameba/Ameba/Rule/Style/MultilineStringLiteral.html",
+      "properties": {
+        "SinceVersion": {
+          "type": "string",
+          "default": "1.7.0"
+        },
+        "Description": {
+          "type": "string",
+          "default": "Disallows multiline string literals not using `<<-HEREDOC` markers"
+        },
+        "AllowBackslashSplitStrings": {
+          "type": "boolean",
+          "default": true
+        }
+      }
+    },
+    "Style/NegatedConditionsInUnless": {
+      "$ref": "#/definitions/BaseRule",
+      "title": "Style/NegatedConditionsInUnless",
+      "description": "Disallows negated conditions in `unless`\nhttps://crystal-ameba.github.io/ameba/Ameba/Rule/Style/NegatedConditionsInUnless.html",
+      "properties": {
+        "SinceVersion": {
+          "type": "string",
+          "default": "0.2.0"
+        },
+        "Description": {
+          "type": "string",
+          "default": "Disallows negated conditions in `unless`"
+        }
+      }
+    },
+    "Style/ParenthesesAroundCondition": {
+      "$ref": "#/definitions/BaseRule",
+      "title": "Style/ParenthesesAroundCondition",
+      "description": "Disallows redundant parentheses around control expressions\nhttps://crystal-ameba.github.io/ameba/Ameba/Rule/Style/ParenthesesAroundCondition.html",
+      "properties": {
+        "SinceVersion": {
+          "type": "string",
+          "default": "1.4.0"
+        },
+        "Description": {
+          "type": "string",
+          "default": "Disallows redundant parentheses around control expressions"
+        },
+        "ExcludeTernary": {
+          "type": "boolean",
+          "default": false
+        },
+        "ExcludeMultiline": {
+          "type": "boolean",
+          "default": false
+        },
+        "AllowSafeAssignment": {
+          "type": "boolean",
+          "default": false
+        }
+      }
+    },
+    "Style/PercentLiteralDelimiters": {
+      "$ref": "#/definitions/BaseRule",
+      "title": "Style/PercentLiteralDelimiters",
+      "description": "Enforces the consistent usage of `%`-literal delimiters\nhttps://crystal-ameba.github.io/ameba/Ameba/Rule/Style/PercentLiteralDelimiters.html",
+      "properties": {
+        "SinceVersion": {
+          "type": "string",
+          "default": "1.7.0"
+        },
+        "Description": {
+          "type": "string",
+          "default": "Enforces the consistent usage of `%`-literal delimiters"
+        },
+        "DefaultDelimiters": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "default": "()"
+        },
+        "PreferredDelimiters": {
+          "type": "object",
+          "properties": {
+            "%w": {
+              "type": "string",
+              "default": "[]"
+            },
+            "%i": {
+              "type": "string",
+              "default": "[]"
+            },
+            "%r": {
+              "type": "string",
+              "default": "{}"
+            }
+          }
+        },
+        "IgnoreLiteralsContainingDelimiters": {
+          "type": "boolean",
+          "default": false
+        }
+      }
+    },
+    "Style/RedundantBegin": {
+      "$ref": "#/definitions/BaseRule",
+      "title": "Style/RedundantBegin",
+      "description": "Disallows redundant `begin` blocks\nhttps://crystal-ameba.github.io/ameba/Ameba/Rule/Style/RedundantBegin.html",
+      "properties": {
+        "SinceVersion": {
+          "type": "string",
+          "default": "0.3.0"
+        },
+        "Description": {
+          "type": "string",
+          "default": "Disallows redundant `begin` blocks"
+        }
+      }
+    },
+    "Style/RedundantNext": {
+      "$ref": "#/definitions/BaseRule",
+      "title": "Style/RedundantNext",
+      "description": "Reports redundant `next` expressions\nhttps://crystal-ameba.github.io/ameba/Ameba/Rule/Style/RedundantNext.html",
+      "properties": {
+        "SinceVersion": {
+          "type": "string",
+          "default": "0.12.0"
+        },
+        "Description": {
+          "type": "string",
+          "default": "Reports redundant `next` expressions"
+        },
+        "AllowMultiNext": {
+          "type": "boolean",
+          "default": true
+        },
+        "AllowEmptyNext": {
+          "type": "boolean",
+          "default": true
+        }
+      }
+    },
+    "Style/RedundantReturn": {
+      "$ref": "#/definitions/BaseRule",
+      "title": "Style/RedundantReturn",
+      "description": "Reports redundant `return` expressions\nhttps://crystal-ameba.github.io/ameba/Ameba/Rule/Style/RedundantReturn.html",
+      "properties": {
+        "SinceVersion": {
+          "type": "string",
+          "default": "0.9.0"
+        },
+        "Description": {
+          "type": "string",
+          "default": "Reports redundant `return` expressions"
+        },
+        "AllowMultiReturn": {
+          "type": "boolean",
+          "default": true
+        },
+        "AllowEmptyReturn": {
+          "type": "boolean",
+          "default": true
+        }
+      }
+    },
+    "Style/RedundantSelf": {
+      "$ref": "#/definitions/BaseRule",
+      "title": "Style/RedundantSelf",
+      "description": "Disallows redundant uses of `self`\nhttps://crystal-ameba.github.io/ameba/Ameba/Rule/Style/RedundantSelf.html",
+      "properties": {
+        "SinceVersion": {
+          "type": "string",
+          "default": "1.7.0"
+        },
+        "Description": {
+          "type": "string",
+          "default": "Disallows redundant uses of `self`"
+        },
+        "AllowedMethodNames": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": [
+            "in?",
+            "inspect",
+            "not_nil!"
+          ]
+        }
+      }
+    },
+    "Style/UnlessElse": {
+      "$ref": "#/definitions/BaseRule",
+      "title": "Style/UnlessElse",
+      "description": "Disallows the use of an `else` block with the `unless`\nhttps://crystal-ameba.github.io/ameba/Ameba/Rule/Style/UnlessElse.html",
+      "properties": {
+        "SinceVersion": {
+          "type": "string",
+          "default": "0.1.0"
+        },
+        "Description": {
+          "type": "string",
+          "default": "Disallows the use of an `else` block with the `unless`"
+        }
+      }
+    },
+    "Style/VerboseBlock": {
+      "$ref": "#/definitions/BaseRule",
+      "title": "Style/VerboseBlock",
+      "description": "Identifies usage of collapsible single expression blocks\nhttps://crystal-ameba.github.io/ameba/Ameba/Rule/Style/VerboseBlock.html",
+      "properties": {
+        "SinceVersion": {
+          "type": "string",
+          "default": "0.14.0"
+        },
+        "Description": {
+          "type": "string",
+          "default": "Identifies usage of collapsible single expression blocks"
+        },
+        "ExcludeMultipleLineBlocks": {
+          "type": "boolean",
+          "default": true
+        },
+        "ExcludeCallsWithBlock": {
+          "type": "boolean",
+          "default": true
+        },
+        "ExcludePrefixOperators": {
+          "type": "boolean",
+          "default": true
+        },
+        "ExcludeOperators": {
+          "type": "boolean",
+          "default": true
+        },
+        "ExcludeSetters": {
+          "type": "boolean",
+          "default": false
+        },
+        "MaxLineLength": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "default": null
+        },
+        "MaxLength": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "default": 50
+        }
+      }
+    },
+    "Style/WhileTrue": {
+      "$ref": "#/definitions/BaseRule",
+      "title": "Style/WhileTrue",
+      "description": "Disallows `while` statements with a `true` literal as condition\nhttps://crystal-ameba.github.io/ameba/Ameba/Rule/Style/WhileTrue.html",
+      "properties": {
+        "SinceVersion": {
+          "type": "string",
+          "default": "0.3.0"
+        },
+        "Description": {
+          "type": "string",
+          "default": "Disallows `while` statements with a `true` literal as condition"
+        }
+      }
+    },
+    "Typing/MacroCallArgumentTypeRestriction": {
+      "$ref": "#/definitions/BaseRule",
+      "title": "Typing/MacroCallArgumentTypeRestriction",
+      "description": "Recommends that call arguments to certain macros have type restrictions\nhttps://crystal-ameba.github.io/ameba/Ameba/Rule/Typing/MacroCallArgumentTypeRestriction.html",
+      "properties": {
+        "SinceVersion": {
+          "type": "string",
+          "default": "1.7.0"
+        },
+        "Description": {
+          "type": "string",
+          "default": "Recommends that call arguments to certain macros have type restrictions"
+        },
+        "Enabled": {
+          "type": "boolean",
+          "default": false
+        },
+        "DefaultValue": {
+          "type": "boolean",
+          "default": false
+        },
+        "MacroNames": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": [
+            "getter",
+            "getter?",
+            "getter!",
+            "class_getter",
+            "class_getter?",
+            "class_getter!",
+            "setter",
+            "setter?",
+            "setter!",
+            "class_setter",
+            "class_setter?",
+            "class_setter!",
+            "property",
+            "property?",
+            "property!",
+            "class_property",
+            "class_property?",
+            "class_property!",
+            "record"
+          ]
+        }
+      }
+    },
+    "Typing/MethodParameterTypeRestriction": {
+      "$ref": "#/definitions/BaseRule",
+      "title": "Typing/MethodParameterTypeRestriction",
+      "description": "Recommends that method parameters have type restrictions\nhttps://crystal-ameba.github.io/ameba/Ameba/Rule/Typing/MethodParameterTypeRestriction.html",
+      "properties": {
+        "SinceVersion": {
+          "type": "string",
+          "default": "1.7.0"
+        },
+        "Description": {
+          "type": "string",
+          "default": "Recommends that method parameters have type restrictions"
+        },
+        "Enabled": {
+          "type": "boolean",
+          "default": false
+        },
+        "DefaultValue": {
+          "type": "boolean",
+          "default": false
+        },
+        "BlockParameters": {
+          "type": "boolean",
+          "default": false
+        },
+        "PrivateMethods": {
+          "type": "boolean",
+          "default": false
+        },
+        "ProtectedMethods": {
+          "type": "boolean",
+          "default": false
+        },
+        "NodocMethods": {
+          "type": "boolean",
+          "default": false
+        }
+      }
+    },
+    "Typing/MethodReturnTypeRestriction": {
+      "$ref": "#/definitions/BaseRule",
+      "title": "Typing/MethodReturnTypeRestriction",
+      "description": "Recommends that methods have a return type restriction\nhttps://crystal-ameba.github.io/ameba/Ameba/Rule/Typing/MethodReturnTypeRestriction.html",
+      "properties": {
+        "SinceVersion": {
+          "type": "string",
+          "default": "1.7.0"
+        },
+        "Description": {
+          "type": "string",
+          "default": "Recommends that methods have a return type restriction"
+        },
+        "Enabled": {
+          "type": "boolean",
+          "default": false
+        },
+        "PrivateMethods": {
+          "type": "boolean",
+          "default": false
+        },
+        "ProtectedMethods": {
+          "type": "boolean",
+          "default": false
+        },
+        "NodocMethods": {
+          "type": "boolean",
+          "default": false
+        }
+      }
+    },
+    "Typing/ProcLiteralReturnTypeRestriction": {
+      "$ref": "#/definitions/BaseRule",
+      "title": "Typing/ProcLiteralReturnTypeRestriction",
+      "description": "Disallows proc literals without return type restriction\nhttps://crystal-ameba.github.io/ameba/Ameba/Rule/Typing/ProcLiteralReturnTypeRestriction.html",
+      "properties": {
+        "SinceVersion": {
+          "type": "string",
+          "default": "1.7.0"
+        },
+        "Description": {
+          "type": "string",
+          "default": "Disallows proc literals without return type restriction"
+        },
+        "Enabled": {
+          "type": "boolean",
+          "default": false
+        }
+      }
+    }
+  }
+}

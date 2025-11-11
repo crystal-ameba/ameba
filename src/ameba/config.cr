@@ -363,6 +363,93 @@ class Ameba::Config
           SemanticVersion.parse(version)
         end
       end
+
+      def self.to_json_schema(builder : JSON::Builder)
+        builder.string(rule_name)
+        builder.object do
+          builder.field("$ref", "#/definitions/BaseRule")
+          builder.field("title", rule_name)
+          {% if properties["description".id] %}
+            builder.field("description", {{ properties["description".id][:default] }} + "\nhttps://crystal-ameba.github.io/ameba/Ameba/Rule/#{rule_name}.html")
+          {% else %}
+            builder.field("description", "https://crystal-ameba.github.io/ameba/Ameba/Rule/#{rule_name}.html")
+          {% end %}
+
+          builder.string("properties")
+          builder.object do
+            {% for prop_name in properties %}
+              {% prop = properties[prop_name] %}
+              {% default_set = false %}
+
+              builder.string({{ prop[:key] }})
+              builder.object do
+                {% if prop[:type] == String %}
+                  builder.field("type", "string")
+                {% elsif (type = prop[:type]).is_a?(TypeNode) && type < Number %}
+                  builder.field("type", "number")
+                {% elsif prop[:type] == Bool %}
+                  builder.field("type", "boolean")
+                {% elsif prop[:type] == Nil %}
+                  builder.field("type", "null")
+                {% elsif prop[:type].stringify == "::Union(String, ::Nil)" %}
+                  builder.string("type")
+                  builder.array do
+                    builder.string("string")
+                    builder.string("null")
+                  end
+                {% elsif prop[:type].stringify == "::Union(Int32, ::Nil)" %}
+                  builder.string("type")
+                  builder.array do
+                    builder.string("number")
+                    builder.string("null")
+                  end
+                {% elsif prop[:type] == Ameba::Severity %}
+                  builder.field("$ref", "#/definitions/Severity")
+                  builder.field("default", {{ prop[:default].capitalize }})
+                  {% default_set = true %}
+                {% elsif prop[:default].is_a?(ArrayLiteral) %}
+                  builder.field("type", "array")
+
+                  builder.string("items")
+                  builder.object do
+                    builder.field("type", "string")
+                  end
+                {% elsif prop[:default].is_a?(HashLiteral) %}
+                  builder.field("type", "object")
+
+                  builder.string("properties")
+                  builder.object do
+                    {% for pr in prop[:default] %}
+                      builder.string({{ pr }})
+                      builder.object do
+                        builder.field("type", "string")
+                        builder.field("default", {{ prop[:default][pr] }})
+                      end
+                    {% end %}
+                  end
+                  {% default_set = true %}
+                {% else %}
+                  {% raise "Unhandled schema type for #{prop}" %}
+                {% end %}
+
+                {% if !default_set %}
+                  builder.field("default", {{ prop[:default] }})
+                {% end %}
+              end
+            {% end %}
+
+            {% unless properties["severity".id] %}
+              unless default_severity == Ameba::Rule::Base.default_severity
+                builder.string("Severity")
+                builder.object do
+                  builder.field("$ref", "#/definitions/Severity")
+                  builder.field("default", default_severity.to_s)
+                end
+              end
+            {% end %}
+          end
+        end
+      end
     end
 
     macro included
