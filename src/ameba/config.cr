@@ -438,8 +438,8 @@ class Ameba::Config
               end
             {% end %}
 
-            {% if !properties["severity".id] %}
-              if default_severity != Ameba::Rule::Base.default_severity
+            {% unless properties["severity".id] %}
+              unless default_severity == Ameba::Rule::Base.default_severity
                 builder.string("Severity")
                 builder.object do
                   builder.field("$ref", "#/definitions/Severity")
