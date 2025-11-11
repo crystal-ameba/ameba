@@ -432,9 +432,19 @@ class Ameba::Config
                   {% raise "Unhandled schema type for #{prop}" %}
                 {% end %}
 
-                {% if !prop[:default].is_a?(Ameba::Severity) && !default_set %}
+                {% if !default_set %}
                   builder.field("default", {{ prop[:default] }})
                 {% end %}
+              end
+            {% end %}
+
+            {% if !properties["severity".id] %}
+              if default_severity != Ameba::Rule::Base.default_severity
+                builder.string("Severity")
+                builder.object do
+                  builder.field("$ref", "#/definitions/Severity")
+                  builder.field("default", default_severity.to_s)
+                end
               end
             {% end %}
           end
