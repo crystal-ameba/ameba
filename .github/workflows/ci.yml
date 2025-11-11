@@ -9,7 +9,7 @@ on:
     - cron: "0 3 * * 1" # Every monday at 3 AM
 
 jobs:
-  check_json_schema:
+  check-json-schema:
     runs-on: ubuntu-latest
 
     steps:
