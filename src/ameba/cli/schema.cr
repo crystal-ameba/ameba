@@ -8,6 +8,54 @@ schema = JSON.build(2) do |builder|
     builder.field("type", "object")
     builder.field("additionalProperties", false)
 
+    builder.string("definitions")
+    builder.object do
+      builder.string("Severity")
+      builder.object do
+        builder.field("type", "string")
+        builder.string("enum")
+        builder.array do
+          Ameba::Severity.values.each do |value|
+            builder.string(value.to_s)
+          end
+        end
+      end
+
+      builder.string("BaseRule")
+      builder.object do
+        builder.field("type", "object")
+
+        builder.string("properties")
+        builder.object do
+          builder.string("SinceVersion")
+          builder.object do
+            builder.field("type", "string")
+          end
+
+          builder.string("Enabled")
+          builder.object do
+            builder.field("type", "boolean")
+            builder.field("default", true)
+          end
+
+          builder.string("Severity")
+          builder.object do
+            builder.field("$ref", "#/definitions/Severity")
+          end
+
+          builder.string("Excluded")
+          builder.object do
+            builder.field("type", "array")
+
+            builder.string("items")
+            builder.object do
+              builder.field("type", "string")
+            end
+          end
+        end
+      end
+    end
+
     builder.string("properties")
     builder.object do
       builder.string("Excluded")

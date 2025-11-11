@@ -367,7 +367,7 @@ class Ameba::Config
       def self.to_json_schema(builder : JSON::Builder)
         builder.string(rule_name)
         builder.object do
-          builder.field("type", "object")
+          builder.field("$ref", "#/definitions/BaseRule")
           builder.field("title", rule_name)
           {% if properties["description".id] %}
             builder.field("description", {{ properties["description".id][:default] }} + "\nhttps://crystal-ameba.github.io/ameba/Ameba/Rule/#{rule_name}.html")
@@ -404,13 +404,7 @@ class Ameba::Config
                     builder.string("null")
                   end
                 {% elsif prop[:type] == Ameba::Severity %}
-                  builder.field("type", "string")
-                  builder.string("enum")
-                  builder.array do
-                    Ameba::Severity.values.each do |value|
-                      builder.string(value.to_s)
-                    end
-                  end
+                  builder.field("$ref", "#/definitions/Severity")
                   builder.field("default", {{ prop[:default].capitalize }})
                   {% default_set = true %}
                 {% elsif prop[:default].is_a?(ArrayLiteral) %}
@@ -441,47 +435,6 @@ class Ameba::Config
                 {% if !prop[:default].is_a?(Ameba::Severity) && !default_set %}
                   builder.field("default", {{ prop[:default] }})
                 {% end %}
-              end
-            {% end %}
-
-            {% unless properties["enabled".id] %}
-              builder.string("Enabled")
-              builder.object do
-                builder.field("type", "boolean")
-                builder.field("default", true)
-              end
-            {% end %}
-
-            {% unless properties["since_version".id] %}
-              builder.string("SinceVersion")
-              builder.object do
-                builder.field("type", "string")
-              end
-            {% end %}
-
-            {% unless properties["severity".id] %}
-              builder.string("Severity")
-              builder.object do
-                builder.field("type", "string")
-                builder.field("default", default_severity.to_s)
-                builder.string("enum")
-                builder.array do
-                  Ameba::Severity.values.each do |value|
-                    builder.string(value.to_s)
-                  end
-                end
-              end
-            {% end %}
-
-            {% unless properties["excluded".id] %}
-              builder.string("Excluded")
-              builder.object do
-                builder.field("type", "array")
-
-                builder.string("items")
-                builder.object do
-                  builder.field("type", "string")
-                end
               end
             {% end %}
           end
