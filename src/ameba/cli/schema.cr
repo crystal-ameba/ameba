@@ -41,7 +41,7 @@ schema = JSON.build(2) do |builder|
           builder.string("Severity")
           builder.object do
             builder.field("$ref", "#/definitions/Severity")
-            builder.field("default", Ameba::Severity.default_severity.to_s)
+            builder.field("default", Ameba::Rule::Base.default_severity.to_s)
           end
 
           builder.string("Excluded")
