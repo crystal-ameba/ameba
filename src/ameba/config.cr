@@ -418,6 +418,7 @@ class Ameba::Config
 
                   builder.string("items")
                   builder.object do
+                    # TODO: Implement type validation for array items
                     builder.field("type", "string")
                   end
 
@@ -429,6 +430,7 @@ class Ameba::Config
                     {% for pr in prop[:default] %}
                       builder.string({{ pr }})
                       builder.object do
+                        # TODO: Implement type validation for object properties
                         builder.field("type", "string")
                         builder.field("default", {{ prop[:default][pr] }})
                       end
