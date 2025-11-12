@@ -27,6 +27,7 @@ module Ameba::JSONSchema::Builder
           builder.string("Severity")
           builder.object do
             builder.field("type", "string")
+
             builder.string("enum")
             builder.array do
               Severity.values.each do |value|
