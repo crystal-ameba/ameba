@@ -1,4 +1,4 @@
-name: Check JSON Schema
+name: Compare JSON Schema
 
 on:
   pull_request:
