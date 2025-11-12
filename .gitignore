@@ -2,8 +2,8 @@
 /lib/
 /bin/ameba
 /bin/ameba.dwarf
-/bin/schema
-/bin/schema.dwarf
+/bin/json-schema-builder
+/bin/json-schema-builder.dwarf
 /.shards/
 
 # Libraries don't need dependency lock
