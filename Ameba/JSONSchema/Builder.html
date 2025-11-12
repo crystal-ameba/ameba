@@ -14,7 +14,7 @@
 <script type="text/javascript" src="../../js/doc.js"></script>
 
   <meta name="repository-name" content="ameba">
-  <title>Ameba::Spec::BeValid - ameba master</title>
+  <title>Ameba::JSONSchema::Builder - ameba master</title>
   <script type="text/javascript">
     CrystalDocs.base_path = "../../";
   </script>
@@ -297,12 +297,12 @@
       
     </li>
   
-  <li class="parent " data-id="ameba/Ameba/JSONSchema" data-name="ameba::jsonschema">
+  <li class="parent open current" data-id="ameba/Ameba/JSONSchema" data-name="ameba::jsonschema">
       <a href="../../Ameba/JSONSchema.html">JSONSchema</a>
       
         <ul>
   
-  <li class=" " data-id="ameba/Ameba/JSONSchema/Builder" data-name="ameba::jsonschema::builder">
+  <li class=" current" data-id="ameba/Ameba/JSONSchema/Builder" data-name="ameba::jsonschema::builder">
       <a href="../../Ameba/JSONSchema/Builder.html">Builder</a>
       
     </li>
@@ -1007,7 +1007,7 @@
       
     </li>
   
-  <li class="parent open current" data-id="ameba/Ameba/Spec" data-name="ameba::spec">
+  <li class="parent " data-id="ameba/Ameba/Spec" data-name="ameba::spec">
       <a href="../../Ameba/Spec.html">Spec</a>
       
         <ul>
@@ -1017,7 +1017,7 @@
       
     </li>
   
-  <li class=" current" data-id="ameba/Ameba/Spec/BeValid" data-name="ameba::spec::bevalid">
+  <li class=" " data-id="ameba/Ameba/Spec/BeValid" data-name="ameba::spec::bevalid">
       <a href="../../Ameba/Spec/BeValid.html">BeValid</a>
       
     </li>
@@ -1063,7 +1063,7 @@
 
   <span class="kind">
     module
-  </span> Ameba::<wbr>Spec::<wbr>BeValid
+  </span> Ameba::<wbr>JSONSchema::<wbr>Builder
 
 </h1>
 
@@ -1078,6 +1078,20 @@
 
 
 
+
+  <h2>
+    <a id="extended-modules" class="anchor" href="#extended-modules">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>
+    Extended Modules
+  </h2>
+  <ul class="other-types-list">
+    
+      <li class="other-type"><a href="../../Ameba/JSONSchema/Builder.html">Ameba::JSONSchema::Builder</a></li>
+    
+  </ul>
 
 
 
@@ -1096,8 +1110,8 @@
   </h2>
   
     
-      <a href="https://github.com/crystal-ameba/ameba/blob/ebb580d/src/ameba/spec/be_valid.cr#L2" target="_blank">
-        ameba/spec/be_valid.cr
+      <a href="https://github.com/crystal-ameba/ameba/blob/ebb580d/src/ameba/json_schema/builder.cr#L1" target="_blank">
+        ameba/json_schema/builder.cr
       </a>
     
     <br/>
@@ -1125,7 +1139,17 @@
   <ul class="list-summary">
     
       <li class="entry-summary">
-        <a href="#be_valid-instance-method" class="signature"><strong>#be_valid</strong></a>
+        <a href="#build%28path%3APath%2Cindent%3D2%29%3ANil-instance-method" class="signature"><strong>#build</strong>(path : Path, indent = <span class="n">2</span>) : Nil</a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#build%28io%3AIO%2Cindent%3D2%29%3ANil-instance-method" class="signature"><strong>#build</strong>(io : IO, indent = <span class="n">2</span>) : Nil</a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#build%28indent%3D2%29%3AString-instance-method" class="signature"><strong>#build</strong>(indent = <span class="n">2</span>) : String</a>
         
       </li>
     
@@ -1153,18 +1177,50 @@
     Instance Method Detail
   </h2>
   
-    <div class="entry-detail" id="be_valid-instance-method">
+    <div class="entry-detail" id="build(path:Path,indent=2):Nil-instance-method">
       <div class="signature">
         
-        def <strong>be_valid</strong>
+        def <strong>build</strong>(path : Path, indent = <span class="n">2</span>) : Nil
 
-        <a class="method-permalink" href="#be_valid-instance-method">#</a>
+        <a class="method-permalink" href="#build%28path%3APath%2Cindent%3D2%29%3ANil-instance-method">#</a>
       </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/ebb580d/src/ameba/spec/be_valid.cr#L3" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/ebb580d/src/ameba/json_schema/builder.cr#L10" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="build(io:IO,indent=2):Nil-instance-method">
+      <div class="signature">
+        
+        def <strong>build</strong>(io : IO, indent = <span class="n">2</span>) : Nil
+
+        <a class="method-permalink" href="#build%28io%3AIO%2Cindent%3D2%29%3ANil-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/crystal-ameba/ameba/blob/ebb580d/src/ameba/json_schema/builder.cr#L16" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="build(indent=2):String-instance-method">
+      <div class="signature">
+        
+        def <strong>build</strong>(indent = <span class="n">2</span>) : String
+
+        <a class="method-permalink" href="#build%28indent%3D2%29%3AString-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/crystal-ameba/ameba/blob/ebb580d/src/ameba/json_schema/builder.cr#L4" target="_blank">View source</a>]
         
       </div>
     </div>
