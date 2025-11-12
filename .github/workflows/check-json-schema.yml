@@ -3,6 +3,8 @@ name: Check JSON Schema
 on:
   pull_request:
     types: [opened, synchronize, reopened]
+    paths:
+      - "**/*.cr"
 
 jobs:
   check-for-changes:

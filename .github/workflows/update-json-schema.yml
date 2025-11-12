@@ -3,6 +3,8 @@ name: Update JSON Schema
 on:
   push:
     branches: [master]
+    paths:
+      - "**/*.cr"
 
 jobs:
   update-json-schema:
