@@ -1,0 +1,30 @@
+name: Check JSON Schema
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+    paths:
+      - "**/*.cr"
+
+jobs:
+  check-for-changes:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Set timezone to UTC
+        uses: szenius/set-timezone@v2.0
+
+      - name: Install Crystal
+        uses: crystal-lang/install-crystal@v1
+
+      - name: Download source
+        uses: actions/checkout@v5
+
+      - name: Install dependencies
+        run: shards install
+
+      - name: Run JSON Schema builder
+        run: shards run json-schema-builder
+
+      - name: Check for changes
+        run: git diff --exit-code
