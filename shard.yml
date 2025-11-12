@@ -12,7 +12,7 @@ targets:
     main: src/json-schema-builder.cr
 
 scripts:
-  postinstall: shards build -Dpreview_mt
+  postinstall: shards build ameba -Dpreview_mt
 
 # TODO: remove pre-compiled executable in future releases
 executables:
