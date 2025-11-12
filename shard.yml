@@ -9,7 +9,7 @@ targets:
   ameba:
     main: src/cli.cr
   schema:
-    main: src/ameba/cli/schema.cr
+    main: src/schema.cr
 
 scripts:
   postinstall: shards build -Dpreview_mt
