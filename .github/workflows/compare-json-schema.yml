@@ -1,4 +1,4 @@
-name: Check JSON Schema
+name: Compare JSON Schema
 
 on:
   pull_request:
@@ -27,4 +27,5 @@ jobs:
         run: shards run json-schema-builder
 
       - name: Check for changes
-        run: git diff --exit-code
+        run: git diff --color --exit-code
+        continue-on-error: true

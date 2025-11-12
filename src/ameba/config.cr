@@ -364,20 +364,23 @@ class Ameba::Config
         end
       end
 
-      def self.to_json_schema(builder : JSON::Builder)
+      def self.to_json_schema(builder : JSON::Builder) : Nil
         builder.string(rule_name)
         builder.object do
           builder.field("$ref", "#/definitions/BaseRule")
           builder.field("title", rule_name)
 
+          documentation_url =
+            "https://crystal-ameba.github.io/ameba/Ameba/Rule/%s.html" % rule_name
+
           builder.field "description",
             {% if description = properties["description".id] %}
               <<-TEXT
                 {{ description[:default].id }}
-                https://crystal-ameba.github.io/ameba/Ameba/Rule/#{rule_name}.html
+                #{documentation_url}
                 TEXT
             {% else %}
-              "https://crystal-ameba.github.io/ameba/Ameba/Rule/#{rule_name}.html"
+              documentation_url
             {% end %}
 
           builder.string("properties")
@@ -418,6 +421,7 @@ class Ameba::Config
 
                   builder.string("items")
                   builder.object do
+                    # TODO: Implement type validation for array items
                     builder.field("type", "string")
                   end
 
@@ -429,6 +433,7 @@ class Ameba::Config
                     {% for pr in prop[:default] %}
                       builder.string({{ pr }})
                       builder.object do
+                        # TODO: Implement type validation for object properties
                         builder.field("type", "string")
                         builder.field("default", {{ prop[:default][pr] }})
                       end
