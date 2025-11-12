@@ -122,7 +122,7 @@ module Ameba::Formatter
       property start_location : Crystal::Location?
       property end_location : Crystal::Location?
 
-      # TODO(margret): Add `contextRegion` pointing to a few lines of surrouding code
+      # TODO(margret): Add `contextRegion` pointing to a few lines of surrounding code
 
       # TODO(margret): Add `snippet` for the given location
 
