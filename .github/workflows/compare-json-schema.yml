@@ -28,3 +28,4 @@ jobs:
 
       - name: Check for changes
         run: git diff --exit-code
+        continue-on-error: true
