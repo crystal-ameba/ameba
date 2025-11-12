@@ -36,6 +36,10 @@ module Ameba::Rule::Performance
     MSG        = "Use `%s {...}` instead of `map {...}.%s`"
     CALL_NAMES = %w[min min? max max? minmax minmax?]
 
+    def self.autocorrect_incompatible_with
+      [Style::VerboseBlock]
+    end
+
     def test(source)
       AST::NodeVisitor.new self, source, skip: :macro
     end
