@@ -3,7 +3,7 @@ require "./ameba"
 JSON_SCHEMA_FILEPATH =
   Path[".ameba.yml.schema.json"]
 
-module Ameba::JSONSchema
+module Ameba::JSONSchema::Builder
   extend self
 
   def build(indent = 2) : String
@@ -120,4 +120,4 @@ module Ameba::JSONSchema
   end
 end
 
-Ameba::JSONSchema.build(JSON_SCHEMA_FILEPATH)
+Ameba::JSONSchema::Builder.build(JSON_SCHEMA_FILEPATH)

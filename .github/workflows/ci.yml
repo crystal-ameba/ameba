@@ -25,8 +25,8 @@ jobs:
       - name: Install dependencies
         run: shards install
 
-      - name: Run schema builder
-        run: shards run schema
+      - name: Run JSON Schema builder
+        run: shards run json-schema-builder
 
       - name: Check for changes
         run: git diff --exit-code || exit 1

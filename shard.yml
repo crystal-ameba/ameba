@@ -8,8 +8,8 @@ authors:
 targets:
   ameba:
     main: src/cli.cr
-  schema:
-    main: src/schema.cr
+  json-schema-builder:
+    main: src/json-schema-builder.cr
 
 scripts:
   postinstall: shards build -Dpreview_mt
