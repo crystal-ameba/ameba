@@ -5,7 +5,8 @@ extend-ignore-re = [
   '\\u\{[0-9a-fA-F]+\}',
   # fixed test values
   '[Ff][Oo][Oo]+',
-  "[A-z]+[0-9]+", # words including a number are likely some kind of identifier
+  # words including a number are likely some kind of identifier
+  "[A-z]+[0-9]+",
 ]
 
 [files]
