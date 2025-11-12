@@ -370,49 +370,48 @@ class Ameba::Config
           builder.field("$ref", "#/definitions/BaseRule")
           builder.field("title", rule_name)
 
-          {% if properties["description".id] %}
-            builder.field("description",
-              {{ properties["description".id][:default] }} + "\nhttps://crystal-ameba.github.io/ameba/Ameba/Rule/#{rule_name}.html")
-          {% else %}
-            builder.field("description",
-              "https://crystal-ameba.github.io/ameba/Ameba/Rule/#{rule_name}.html")
-          {% end %}
+          builder.field "description",
+            {% if description = properties["description".id] %}
+              <<-TEXT
+                {{ description[:default].id }}
+                https://crystal-ameba.github.io/ameba/Ameba/Rule/#{rule_name}.html
+                TEXT
+            {% else %}
+              "https://crystal-ameba.github.io/ameba/Ameba/Rule/#{rule_name}.html"
+            {% end %}
 
           builder.string("properties")
           builder.object do
             {% for prop_name in properties %}
-              {% prop = properties[prop_name] %}
               {% default_set = false %}
+
+              {% prop = properties[prop_name] %}
+              {% prop_stringified = prop[:type].stringify %}
 
               builder.string({{ prop[:key] }})
               builder.object do
-                {% if prop[:type] == String %}
-                  builder.field("type", "string")
-
-                {% elsif (type = prop[:type]).is_a?(TypeNode) && type < Number %}
-                  builder.field("type", "number")
-
-                {% elsif prop[:type] == Bool %}
+                {% if prop[:type] == Bool %}
                   builder.field("type", "boolean")
 
-                {% elsif prop[:type].stringify == "::Union(String, ::Nil)" %}
+                {% elsif prop[:type] == String %}
+                  builder.field("type", "string")
+
+                {% elsif prop_stringified == "::Union(String, ::Nil)" %}
                   builder.string("type")
                   builder.array do
                     builder.string("string")
                     builder.string("null")
                   end
 
-                {% elsif prop[:type].stringify =~ /^::Union\((Int|Float)\d+, ::Nil\)$/ %}
+                {% elsif prop_stringified =~ /^(Int|Float)\d+$/ %}
+                  builder.field("type", "number")
+
+                {% elsif prop_stringified =~ /^::Union\((Int|Float)\d+, ::Nil\)$/ %}
                   builder.string("type")
                   builder.array do
                     builder.string("number")
                     builder.string("null")
                   end
-
-                {% elsif prop[:type] == Severity %}
-                  builder.field("$ref", "#/definitions/Severity")
-                  builder.field("default", {{ prop[:default].capitalize }})
-                  {% default_set = true %}
 
                 {% elsif prop[:default].is_a?(ArrayLiteral) %}
                   builder.field("type", "array")
@@ -435,6 +434,12 @@ class Ameba::Config
                       end
                     {% end %}
                   end
+                  {% default_set = true %}
+
+                {% elsif prop[:type] == Severity %}
+                  builder.field("$ref", "#/definitions/Severity")
+                  builder.field("default", {{ prop[:default].capitalize }})
+
                   {% default_set = true %}
 
                 {% else %}
