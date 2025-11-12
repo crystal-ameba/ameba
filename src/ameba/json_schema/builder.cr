@@ -62,6 +62,9 @@ module Ameba::JSONSchema::Builder
               builder.string("Excluded")
               builder.object do
                 builder.field("type", "array")
+                builder.field("title", "Excluded files and paths")
+                builder.field("description",
+                  "An array of wildcards (or paths) to exclude from the source list")
 
                 builder.string("items")
                 builder.object do
