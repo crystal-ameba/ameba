@@ -29,6 +29,8 @@
         },
         "Excluded": {
           "type": "array",
+          "title": "Excluded files and paths",
+          "description": "An array of wildcards (or paths) to exclude from the source list",
           "items": {
             "type": "string"
           }
@@ -70,10 +72,6 @@
           "type": "boolean",
           "default": false
         },
-        "Description": {
-          "type": "string",
-          "default": "Reports documentation admonitions"
-        },
         "Severity": {
           "$ref": "#/definitions/Severity",
           "default": "Warning"
@@ -107,10 +105,6 @@
         "Enabled": {
           "type": "boolean",
           "default": false
-        },
-        "Description": {
-          "type": "string",
-          "default": "Enforces public types to be documented"
         },
         "IgnoreClasses": {
           "type": "boolean",
@@ -151,10 +145,6 @@
           "type": "boolean",
           "default": false
         },
-        "Description": {
-          "type": "string",
-          "default": "Disallows lines longer than `MaxLength` number of symbols"
-        },
         "MaxLength": {
           "type": "number",
           "default": 140
@@ -169,10 +159,6 @@
         "SinceVersion": {
           "type": "string",
           "default": "0.1.0"
-        },
-        "Description": {
-          "type": "string",
-          "default": "Disallows trailing blank lines"
         }
       }
     },
@@ -184,10 +170,6 @@
         "SinceVersion": {
           "type": "string",
           "default": "0.1.0"
-        },
-        "Description": {
-          "type": "string",
-          "default": "Disallows trailing whitespace"
         }
       }
     },
@@ -199,10 +181,6 @@
         "SinceVersion": {
           "type": "string",
           "default": "1.0.0"
-        },
-        "Description": {
-          "type": "string",
-          "default": "Disallows ambiguous `=-/=+/=!`"
         },
         "Severity": {
           "$ref": "#/definitions/Severity",
@@ -218,10 +196,6 @@
         "SinceVersion": {
           "type": "string",
           "default": "0.13.0"
-        },
-        "Description": {
-          "type": "string",
-          "default": "Reports bad comment directives"
         },
         "Severity": {
           "$ref": "#/definitions/Severity",
@@ -242,10 +216,6 @@
           "type": "boolean",
           "default": false
         },
-        "Description": {
-          "type": "string",
-          "default": "Disallows comparison to booleans"
-        },
         "Severity": {
           "$ref": "#/definitions/Severity",
           "default": "Warning"
@@ -260,10 +230,6 @@
         "SinceVersion": {
           "type": "string",
           "default": "1.0.0"
-        },
-        "Description": {
-          "type": "string",
-          "default": "Disallows debug-related calls"
         },
         "MethodNames": {
           "type": "array",
@@ -292,10 +258,6 @@
           "type": "string",
           "default": "0.1.0"
         },
-        "Description": {
-          "type": "string",
-          "default": "Disallows calls to debugger"
-        },
         "Severity": {
           "$ref": "#/definitions/Severity",
           "default": "Warning"
@@ -310,10 +272,6 @@
         "SinceVersion": {
           "type": "string",
           "default": "1.7.0"
-        },
-        "Description": {
-          "type": "string",
-          "default": "Reports duplicated `enum` member values"
         },
         "Severity": {
           "$ref": "#/definitions/Severity",
@@ -330,10 +288,6 @@
           "type": "string",
           "default": "1.7.0"
         },
-        "Description": {
-          "type": "string",
-          "default": "Reports repeated conditions used in case `when` expressions"
-        },
         "Severity": {
           "$ref": "#/definitions/Severity",
           "default": "Warning"
@@ -348,10 +302,6 @@
         "SinceVersion": {
           "type": "string",
           "default": "0.14.0"
-        },
-        "Description": {
-          "type": "string",
-          "default": "Reports duplicated `require` statements"
         },
         "Severity": {
           "$ref": "#/definitions/Severity",
@@ -368,10 +318,6 @@
           "type": "string",
           "default": "1.7.0"
         },
-        "Description": {
-          "type": "string",
-          "default": "Disallows `else` blocks with `nil` as their body"
-        },
         "Severity": {
           "$ref": "#/definitions/Severity",
           "default": "Warning"
@@ -386,10 +332,6 @@
         "SinceVersion": {
           "type": "string",
           "default": "0.3.0"
-        },
-        "Description": {
-          "type": "string",
-          "default": "Disallows empty `ensure` statement"
         },
         "Severity": {
           "$ref": "#/definitions/Severity",
@@ -406,10 +348,6 @@
           "type": "string",
           "default": "0.2.0"
         },
-        "Description": {
-          "type": "string",
-          "default": "Disallows empty expressions"
-        },
         "Severity": {
           "$ref": "#/definitions/Severity",
           "default": "Warning"
@@ -425,10 +363,6 @@
           "type": "string",
           "default": "0.12.0"
         },
-        "Description": {
-          "type": "string",
-          "default": "Disallows empty loops"
-        },
         "Severity": {
           "$ref": "#/definitions/Severity",
           "default": "Warning"
@@ -443,10 +377,6 @@
         "SinceVersion": {
           "type": "string",
           "default": "1.4.0"
-        },
-        "Description": {
-          "type": "string",
-          "default": "Reports not formatted sources"
         },
         "FailOnError": {
           "type": "boolean",
@@ -467,10 +397,6 @@
           "type": "string",
           "default": "0.3.0"
         },
-        "Description": {
-          "type": "string",
-          "default": "Disallows duplicated keys in hash literals"
-        },
         "Severity": {
           "$ref": "#/definitions/Severity",
           "default": "Warning"
@@ -485,10 +411,6 @@
         "SinceVersion": {
           "type": "string",
           "default": "1.4.0"
-        },
-        "Description": {
-          "type": "string",
-          "default": "Disallows assignments with literal values in control expressions"
         },
         "Severity": {
           "$ref": "#/definitions/Severity",
@@ -505,10 +427,6 @@
           "type": "string",
           "default": "0.1.0"
         },
-        "Description": {
-          "type": "string",
-          "default": "Disallows useless conditional statements that contain a literal in place of a variable or predicate function"
-        },
         "Severity": {
           "$ref": "#/definitions/Severity",
           "default": "Warning"
@@ -523,10 +441,6 @@
         "SinceVersion": {
           "type": "string",
           "default": "0.1.0"
-        },
-        "Description": {
-          "type": "string",
-          "default": "Disallows useless string interpolations"
         },
         "Severity": {
           "$ref": "#/definitions/Severity",
@@ -543,10 +457,6 @@
           "type": "string",
           "default": "1.3.0"
         },
-        "Description": {
-          "type": "string",
-          "default": "Identifies comparisons between literals"
-        },
         "Severity": {
           "$ref": "#/definitions/Severity",
           "default": "Warning"
@@ -561,10 +471,6 @@
         "SinceVersion": {
           "type": "string",
           "default": "1.4.0"
-        },
-        "Description": {
-          "type": "string",
-          "default": "Disallows yielding method definitions without block argument"
         },
         "Severity": {
           "$ref": "#/definitions/Severity",
@@ -581,10 +487,6 @@
           "type": "string",
           "default": "1.3.0"
         },
-        "Description": {
-          "type": "string",
-          "default": "Identifies usage of `not_nil!` calls"
-        },
         "Severity": {
           "$ref": "#/definitions/Severity",
           "default": "Warning"
@@ -600,10 +502,6 @@
           "type": "string",
           "default": "1.3.0"
         },
-        "Description": {
-          "type": "string",
-          "default": "Identifies usage of `index/rindex/find/match` calls followed by `not_nil!`"
-        },
         "Severity": {
           "$ref": "#/definitions/Severity",
           "default": "Warning"
@@ -618,10 +516,6 @@
         "SinceVersion": {
           "type": "string",
           "default": "0.3.0"
-        },
-        "Description": {
-          "type": "string",
-          "default": "Disallows some unwanted symbols in percent array literals"
         },
         "StringArrayUnwantedSymbols": {
           "type": "string",
@@ -646,10 +540,6 @@
           "type": "string",
           "default": "0.5.1"
         },
-        "Description": {
-          "type": "string",
-          "default": "Disallows `rand` zero calls"
-        },
         "Severity": {
           "$ref": "#/definitions/Severity",
           "default": "Warning"
@@ -664,10 +554,6 @@
         "SinceVersion": {
           "type": "string",
           "default": "0.12.0"
-        },
-        "Description": {
-          "type": "string",
-          "default": "Disallows redundant string conversions in interpolation"
         },
         "Severity": {
           "$ref": "#/definitions/Severity",
@@ -684,10 +570,6 @@
           "type": "string",
           "default": "0.11.0"
         },
-        "Description": {
-          "type": "string",
-          "default": "Disallows redundant `with_index` calls"
-        },
         "Severity": {
           "$ref": "#/definitions/Severity",
           "default": "Warning"
@@ -702,10 +584,6 @@
         "SinceVersion": {
           "type": "string",
           "default": "0.11.0"
-        },
-        "Description": {
-          "type": "string",
-          "default": "Disallows redundant `with_object` calls"
         },
         "Severity": {
           "$ref": "#/definitions/Severity",
@@ -722,10 +600,6 @@
           "type": "string",
           "default": "1.7.0"
         },
-        "Description": {
-          "type": "string",
-          "default": "Disallows method calls with no parentheses and a logical operator in the argument list"
-        },
         "Severity": {
           "$ref": "#/definitions/Severity",
           "default": "Warning"
@@ -740,10 +614,6 @@
         "SinceVersion": {
           "type": "string",
           "default": "1.7.0"
-        },
-        "Description": {
-          "type": "string",
-          "default": "Reports `initialize` method definitions with a `self` receiver"
         },
         "Severity": {
           "$ref": "#/definitions/Severity",
@@ -760,10 +630,6 @@
           "type": "string",
           "default": "0.7.0"
         },
-        "Description": {
-          "type": "string",
-          "default": "Disallows shadowed arguments"
-        },
         "Severity": {
           "$ref": "#/definitions/Severity",
           "default": "Warning"
@@ -778,10 +644,6 @@
         "SinceVersion": {
           "type": "string",
           "default": "0.3.0"
-        },
-        "Description": {
-          "type": "string",
-          "default": "Disallows rescued exception that get shadowed"
         },
         "Severity": {
           "$ref": "#/definitions/Severity",
@@ -798,10 +660,6 @@
           "type": "string",
           "default": "0.7.0"
         },
-        "Description": {
-          "type": "string",
-          "default": "Disallows the usage of the same name as outer local variables for block or proc arguments"
-        },
         "Severity": {
           "$ref": "#/definitions/Severity",
           "default": "Warning"
@@ -816,10 +674,6 @@
         "SinceVersion": {
           "type": "string",
           "default": "0.12.0"
-        },
-        "Description": {
-          "type": "string",
-          "default": "Disallows shared variables in fibers"
         },
         "Severity": {
           "$ref": "#/definitions/Severity",
@@ -836,10 +690,6 @@
           "type": "string",
           "default": "1.7.0"
         },
-        "Description": {
-          "type": "string",
-          "default": "Disallows `Signal::INT/HUP/TERM.trap` in favor of `Process.on_terminate`"
-        },
         "Severity": {
           "$ref": "#/definitions/Severity",
           "default": "Warning"
@@ -855,10 +705,6 @@
           "type": "string",
           "default": "1.7.0"
         },
-        "Description": {
-          "type": "string",
-          "default": "Reports `eq(true|false|nil)` expectations in specs"
-        },
         "Severity": {
           "$ref": "#/definitions/Severity",
           "default": "Warning"
@@ -873,10 +719,6 @@
         "SinceVersion": {
           "type": "string",
           "default": "1.6.0"
-        },
-        "Description": {
-          "type": "string",
-          "default": "Enforces spec filenames to have `_spec` suffix"
         },
         "IgnoredDirs": {
           "type": "array",
@@ -913,10 +755,6 @@
           "type": "string",
           "default": "0.14.0"
         },
-        "Description": {
-          "type": "string",
-          "default": "Reports focused spec items"
-        },
         "Severity": {
           "$ref": "#/definitions/Severity",
           "default": "Warning"
@@ -931,10 +769,6 @@
         "SinceVersion": {
           "type": "string",
           "default": "0.4.2"
-        },
-        "Description": {
-          "type": "string",
-          "default": "Reports invalid Crystal syntax"
         },
         "Severity": {
           "$ref": "#/definitions/Severity",
@@ -951,10 +785,6 @@
           "type": "string",
           "default": "1.7.0"
         },
-        "Description": {
-          "type": "string",
-          "default": "Disallows top level operator method definitions"
-        },
         "Severity": {
           "$ref": "#/definitions/Severity",
           "default": "Warning"
@@ -970,10 +800,6 @@
           "type": "string",
           "default": "1.7.0"
         },
-        "Description": {
-          "type": "string",
-          "default": "Disallows trailing `rescue` with a path"
-        },
         "Severity": {
           "$ref": "#/definitions/Severity",
           "default": "Warning"
@@ -988,10 +814,6 @@
         "SinceVersion": {
           "type": "string",
           "default": "1.6.0"
-        },
-        "Description": {
-          "type": "string",
-          "default": "Reports typos found in source files"
         },
         "BinPath": {
           "type": [
@@ -1023,10 +845,6 @@
           "type": "string",
           "default": "0.5.0"
         },
-        "Description": {
-          "type": "string",
-          "default": "Reports unneeded disable directives in comments"
-        },
         "Severity": {
           "$ref": "#/definitions/Severity",
           "default": "Warning"
@@ -1042,10 +860,6 @@
           "type": "string",
           "default": "0.9.0"
         },
-        "Description": {
-          "type": "string",
-          "default": "Reports unreachable code"
-        },
         "Severity": {
           "$ref": "#/definitions/Severity",
           "default": "Warning"
@@ -1060,10 +874,6 @@
         "SinceVersion": {
           "type": "string",
           "default": "0.6.0"
-        },
-        "Description": {
-          "type": "string",
-          "default": "Disallows unused arguments"
         },
         "IgnoreDefs": {
           "type": "boolean",
@@ -1092,10 +902,6 @@
           "type": "string",
           "default": "1.4.0"
         },
-        "Description": {
-          "type": "string",
-          "default": "Disallows unused block arguments"
-        },
         "Severity": {
           "$ref": "#/definitions/Severity",
           "default": "Warning"
@@ -1111,10 +917,6 @@
           "type": "string",
           "default": "1.7.0"
         },
-        "Description": {
-          "type": "string",
-          "default": "Disallows unused expressions"
-        },
         "Severity": {
           "$ref": "#/definitions/Severity",
           "default": "Warning"
@@ -1129,10 +931,6 @@
         "SinceVersion": {
           "type": "string",
           "default": "0.6.0"
-        },
-        "Description": {
-          "type": "string",
-          "default": "Disallows useless variable assignments"
         },
         "ExcludeTypeDeclarations": {
           "type": "boolean",
@@ -1153,10 +951,6 @@
           "type": "string",
           "default": "0.3.0"
         },
-        "Description": {
-          "type": "string",
-          "default": "Disallows useless conditions in `when`"
-        },
         "Severity": {
           "$ref": "#/definitions/Severity",
           "default": "Warning"
@@ -1171,10 +965,6 @@
         "SinceVersion": {
           "type": "string",
           "default": "1.7.0"
-        },
-        "Description": {
-          "type": "string",
-          "default": "Disallows top level `protected` method visibility modifier"
         },
         "Severity": {
           "$ref": "#/definitions/Severity",
@@ -1191,10 +981,6 @@
           "type": "string",
           "default": "1.7.0"
         },
-        "Description": {
-          "type": "string",
-          "default": "Disallows use of `Void` outside C lib bindings and `Pointer(Void)`"
-        },
         "Severity": {
           "$ref": "#/definitions/Severity",
           "default": "Warning"
@@ -1210,10 +996,6 @@
           "type": "string",
           "default": "1.7.0"
         },
-        "Description": {
-          "type": "string",
-          "default": "Reports missing spaces around macro expressions"
-        },
         "Severity": {
           "$ref": "#/definitions/Severity",
           "default": "Warning"
@@ -1228,10 +1010,6 @@
         "SinceVersion": {
           "type": "string",
           "default": "0.9.1"
-        },
-        "Description": {
-          "type": "string",
-          "default": "Disallows methods with a cyclomatic complexity higher than `MaxComplexity`"
         },
         "MaxComplexity": {
           "type": "number",
@@ -1251,10 +1029,6 @@
         "SinceVersion": {
           "type": "string",
           "default": "1.6.0"
-        },
-        "Description": {
-          "type": "string",
-          "default": "Makes sure that accessor methods are named properly"
         }
       }
     },
@@ -1267,10 +1041,6 @@
           "type": "string",
           "default": "1.6.0"
         },
-        "Description": {
-          "type": "string",
-          "default": "Disallows non-ascii characters in identifiers"
-        },
         "IgnoreSymbols": {
           "type": "boolean",
           "default": false
@@ -1280,15 +1050,11 @@
     "Naming/BinaryOperatorParameterName": {
       "$ref": "#/definitions/BaseRule",
       "title": "Naming/BinaryOperatorParameterName",
-      "description": "Enforces that certain binary operator methods have their sole parameter named `other`\nhttps://crystal-ameba.github.io/ameba/Ameba/Rule/Naming/BinaryOperatorParameterName.html",
+      "description": "Enforces that certain binary operator methods have their sole parameter name standardized\nhttps://crystal-ameba.github.io/ameba/Ameba/Rule/Naming/BinaryOperatorParameterName.html",
       "properties": {
         "SinceVersion": {
           "type": "string",
           "default": "1.6.0"
-        },
-        "Description": {
-          "type": "string",
-          "default": "Enforces that certain binary operator methods have their sole parameter named `other`"
         },
         "ExcludedOperators": {
           "type": "array",
@@ -1305,6 +1071,15 @@
             "=~",
             "!~"
           ]
+        },
+        "AllowedNames": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": [
+            "other"
+          ]
         }
       }
     },
@@ -1316,10 +1091,6 @@
         "SinceVersion": {
           "type": "string",
           "default": "1.6.0"
-        },
-        "Description": {
-          "type": "string",
-          "default": "Disallows non-descriptive block parameter names"
         },
         "MinNameLength": {
           "type": "number",
@@ -1376,10 +1147,6 @@
         "SinceVersion": {
           "type": "string",
           "default": "0.2.0"
-        },
-        "Description": {
-          "type": "string",
-          "default": "Enforces constant names to be in screaming case"
         }
       }
     },
@@ -1391,10 +1158,6 @@
         "SinceVersion": {
           "type": "string",
           "default": "1.6.0"
-        },
-        "Description": {
-          "type": "string",
-          "default": "Enforces file names to be in underscored case"
         }
       }
     },
@@ -1406,10 +1169,6 @@
         "SinceVersion": {
           "type": "string",
           "default": "0.2.0"
-        },
-        "Description": {
-          "type": "string",
-          "default": "Enforces method names to be in underscored case"
         }
       }
     },
@@ -1421,10 +1180,6 @@
         "SinceVersion": {
           "type": "string",
           "default": "0.2.0"
-        },
-        "Description": {
-          "type": "string",
-          "default": "Disallows tautological predicate names"
         }
       }
     },
@@ -1436,10 +1191,6 @@
         "SinceVersion": {
           "type": "string",
           "default": "1.4.0"
-        },
-        "Description": {
-          "type": "string",
-          "default": "Reports boolean properties without the `?` suffix"
         }
       }
     },
@@ -1451,10 +1202,6 @@
         "SinceVersion": {
           "type": "string",
           "default": "1.6.0"
-        },
-        "Description": {
-          "type": "string",
-          "default": "Makes sure that rescued exceptions variables are named as expected"
         },
         "AllowedNames": {
           "type": "array",
@@ -1478,10 +1225,6 @@
         "SinceVersion": {
           "type": "string",
           "default": "0.2.0"
-        },
-        "Description": {
-          "type": "string",
-          "default": "Enforces type names in camelcase manner"
         }
       }
     },
@@ -1493,10 +1236,6 @@
         "SinceVersion": {
           "type": "string",
           "default": "0.2.0"
-        },
-        "Description": {
-          "type": "string",
-          "default": "Enforces variable names to be in underscored case"
         }
       }
     },
@@ -1508,10 +1247,6 @@
         "SinceVersion": {
           "type": "string",
           "default": "0.8.1"
-        },
-        "Description": {
-          "type": "string",
-          "default": "Identifies usage of `any?` calls that follow filters"
         },
         "FilterNames": {
           "type": "array",
@@ -1538,10 +1273,6 @@
           "type": "string",
           "default": "0.14.0"
         },
-        "Description": {
-          "type": "string",
-          "default": "Identifies usage of arg-less `any?` calls"
-        },
         "Severity": {
           "$ref": "#/definitions/Severity",
           "default": "Warning"
@@ -1556,10 +1287,6 @@
         "SinceVersion": {
           "type": "string",
           "default": "0.14.0"
-        },
-        "Description": {
-          "type": "string",
-          "default": "Identifies usage of chained calls not utilizing the bang method variants"
         },
         "CallNames": {
           "type": "array",
@@ -1590,10 +1317,6 @@
           "type": "string",
           "default": "0.14.0"
         },
-        "Description": {
-          "type": "string",
-          "default": "Identifies usage of `compact` calls that follow `map`"
-        },
         "Severity": {
           "$ref": "#/definitions/Severity",
           "default": "Warning"
@@ -1608,10 +1331,6 @@
         "SinceVersion": {
           "type": "string",
           "default": "1.5.0"
-        },
-        "Description": {
-          "type": "string",
-          "default": "Identifies usage of excessive collection allocations"
         },
         "CallNames": {
           "type": "object",
@@ -1649,10 +1368,6 @@
           "type": "string",
           "default": "0.8.1"
         },
-        "Description": {
-          "type": "string",
-          "default": "Identifies usage of `first/last/first?/last?` calls that follow filters"
-        },
         "FilterNames": {
           "type": "array",
           "items": {
@@ -1677,10 +1392,6 @@
           "type": "string",
           "default": "0.14.0"
         },
-        "Description": {
-          "type": "string",
-          "default": "Identifies usage of `flatten` calls that follow `map`"
-        },
         "Severity": {
           "$ref": "#/definitions/Severity",
           "default": "Warning"
@@ -1695,10 +1406,6 @@
         "SinceVersion": {
           "type": "string",
           "default": "0.14.0"
-        },
-        "Description": {
-          "type": "string",
-          "default": "Identifies usage of `sum/product` calls that follow `map`"
         },
         "Severity": {
           "$ref": "#/definitions/Severity",
@@ -1715,10 +1422,6 @@
           "type": "string",
           "default": "1.5.0"
         },
-        "Description": {
-          "type": "string",
-          "default": "Identifies usage of `min/max/minmax` calls that follow `map`"
-        },
         "Severity": {
           "$ref": "#/definitions/Severity",
           "default": "Warning"
@@ -1733,10 +1436,6 @@
         "SinceVersion": {
           "type": "string",
           "default": "0.8.1"
-        },
-        "Description": {
-          "type": "string",
-          "default": "Identifies usage of `size` calls that follow filter"
         },
         "FilterNames": {
           "type": "array",
@@ -1763,10 +1462,6 @@
           "type": "string",
           "default": "1.7.0"
         },
-        "Description": {
-          "type": "string",
-          "default": "Identifies usage of `times.map { ... }.to_a` calls"
-        },
         "Severity": {
           "$ref": "#/definitions/Severity",
           "default": "Warning"
@@ -1785,10 +1480,6 @@
         "Enabled": {
           "type": "boolean",
           "default": false
-        },
-        "Description": {
-          "type": "string",
-          "default": "Encourages the use of `Array(T).new` over `[] of T`"
         }
       }
     },
@@ -1804,10 +1495,6 @@
         "Enabled": {
           "type": "boolean",
           "default": false
-        },
-        "Description": {
-          "type": "string",
-          "default": "Check for conditionals that can be replaced with guard clauses"
         }
       }
     },
@@ -1823,10 +1510,6 @@
         "Enabled": {
           "type": "boolean",
           "default": false
-        },
-        "Description": {
-          "type": "string",
-          "default": "Encourages the use of `Hash(K, V).new` over `{} of K => V`"
         }
       }
     },
@@ -1838,10 +1521,6 @@
         "SinceVersion": {
           "type": "string",
           "default": "1.7.0"
-        },
-        "Description": {
-          "type": "string",
-          "default": "Recommends using the heredoc variant that escapes interpolation or control chars in a heredoc body"
         }
       }
     },
@@ -1853,10 +1532,6 @@
         "SinceVersion": {
           "type": "string",
           "default": "1.7.0"
-        },
-        "Description": {
-          "type": "string",
-          "default": "Recommends heredoc bodies are indented consistently"
         },
         "IndentBy": {
           "type": "number",
@@ -1872,10 +1547,6 @@
         "SinceVersion": {
           "type": "string",
           "default": "0.14.0"
-        },
-        "Description": {
-          "type": "string",
-          "default": "Identifies usage of `is_a?/nil?` calls within filters"
         },
         "FilterNames": {
           "type": "array",
@@ -1901,10 +1572,6 @@
         "SinceVersion": {
           "type": "string",
           "default": "0.13.0"
-        },
-        "Description": {
-          "type": "string",
-          "default": "Disallows calls to `is_a?(Nil)` in favor of `nil?`"
         }
       }
     },
@@ -1921,10 +1588,6 @@
           "type": "boolean",
           "default": false
         },
-        "Description": {
-          "type": "string",
-          "default": "Disallows usage of large numbers without underscore"
-        },
         "IntMinDigits": {
           "type": "number",
           "default": 6
@@ -1939,10 +1602,6 @@
         "SinceVersion": {
           "type": "string",
           "default": "1.7.0"
-        },
-        "Description": {
-          "type": "string",
-          "default": "Disallows multi-line blocks using curly block syntax"
         }
       }
     },
@@ -1954,10 +1613,6 @@
         "SinceVersion": {
           "type": "string",
           "default": "1.7.0"
-        },
-        "Description": {
-          "type": "string",
-          "default": "Disallows multiline string literals not using `<<-HEREDOC` markers"
         },
         "AllowBackslashSplitStrings": {
           "type": "boolean",
@@ -1973,10 +1628,6 @@
         "SinceVersion": {
           "type": "string",
           "default": "0.2.0"
-        },
-        "Description": {
-          "type": "string",
-          "default": "Disallows negated conditions in `unless`"
         }
       }
     },
@@ -1988,10 +1639,6 @@
         "SinceVersion": {
           "type": "string",
           "default": "1.4.0"
-        },
-        "Description": {
-          "type": "string",
-          "default": "Disallows redundant parentheses around control expressions"
         },
         "ExcludeTernary": {
           "type": "boolean",
@@ -2015,10 +1662,6 @@
         "SinceVersion": {
           "type": "string",
           "default": "1.7.0"
-        },
-        "Description": {
-          "type": "string",
-          "default": "Enforces the consistent usage of `%`-literal delimiters"
         },
         "DefaultDelimiters": {
           "type": [
@@ -2058,10 +1701,6 @@
         "SinceVersion": {
           "type": "string",
           "default": "0.3.0"
-        },
-        "Description": {
-          "type": "string",
-          "default": "Disallows redundant `begin` blocks"
         }
       }
     },
@@ -2073,10 +1712,6 @@
         "SinceVersion": {
           "type": "string",
           "default": "0.12.0"
-        },
-        "Description": {
-          "type": "string",
-          "default": "Reports redundant `next` expressions"
         },
         "AllowMultiNext": {
           "type": "boolean",
@@ -2097,10 +1732,6 @@
           "type": "string",
           "default": "0.9.0"
         },
-        "Description": {
-          "type": "string",
-          "default": "Reports redundant `return` expressions"
-        },
         "AllowMultiReturn": {
           "type": "boolean",
           "default": true
@@ -2119,10 +1750,6 @@
         "SinceVersion": {
           "type": "string",
           "default": "1.7.0"
-        },
-        "Description": {
-          "type": "string",
-          "default": "Disallows redundant uses of `self`"
         },
         "AllowedMethodNames": {
           "type": "array",
@@ -2145,10 +1772,6 @@
         "SinceVersion": {
           "type": "string",
           "default": "0.1.0"
-        },
-        "Description": {
-          "type": "string",
-          "default": "Disallows the use of an `else` block with the `unless`"
         }
       }
     },
@@ -2160,10 +1783,6 @@
         "SinceVersion": {
           "type": "string",
           "default": "0.14.0"
-        },
-        "Description": {
-          "type": "string",
-          "default": "Identifies usage of collapsible single expression blocks"
         },
         "ExcludeMultipleLineBlocks": {
           "type": "boolean",
@@ -2209,10 +1828,6 @@
         "SinceVersion": {
           "type": "string",
           "default": "0.3.0"
-        },
-        "Description": {
-          "type": "string",
-          "default": "Disallows `while` statements with a `true` literal as condition"
         }
       }
     },
@@ -2224,10 +1839,6 @@
         "SinceVersion": {
           "type": "string",
           "default": "1.7.0"
-        },
-        "Description": {
-          "type": "string",
-          "default": "Recommends that call arguments to certain macros have type restrictions"
         },
         "Enabled": {
           "type": "boolean",
@@ -2275,10 +1886,6 @@
           "type": "string",
           "default": "1.7.0"
         },
-        "Description": {
-          "type": "string",
-          "default": "Recommends that method parameters have type restrictions"
-        },
         "Enabled": {
           "type": "boolean",
           "default": false
@@ -2314,10 +1921,6 @@
           "type": "string",
           "default": "1.7.0"
         },
-        "Description": {
-          "type": "string",
-          "default": "Recommends that methods have a return type restriction"
-        },
         "Enabled": {
           "type": "boolean",
           "default": false
@@ -2344,10 +1947,6 @@
         "SinceVersion": {
           "type": "string",
           "default": "1.7.0"
-        },
-        "Description": {
-          "type": "string",
-          "default": "Disallows proc literals without return type restriction"
         },
         "Enabled": {
           "type": "boolean",
