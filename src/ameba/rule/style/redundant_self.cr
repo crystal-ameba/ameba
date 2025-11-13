@@ -73,6 +73,8 @@ module Ameba::Rule::Style
     end
 
     def test(source, node : Crystal::Call, scope : AST::Scope)
+      return if operator_method?(node)
+
       # Guard against auto-expanded `OpAssign` nodes, i.e.
       # `self.a += b` is expanded to `self.a = self.a + b`.
       return unless node.location && node.end_location
@@ -83,7 +85,6 @@ module Ameba::Rule::Style
       return if name.in?(CRYSTAL_KEYWORDS)
       return if name.in?(allowed_method_names)
       return if name.ends_with?('=')
-      return if name.chars.none?(&.alphanumeric?)
 
       vars = Set(String).new
 

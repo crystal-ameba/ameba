@@ -24,6 +24,8 @@ module Ameba::Rule::Lint
   #   Enabled: true
   # ```
   class TopLevelOperatorDefinition < Base
+    include AST::Util
+
     properties do
       since_version "1.7.0"
       description "Disallows top level operator method definitions"
@@ -41,8 +43,7 @@ module Ameba::Rule::Lint
     end
 
     def test(source, node : Crystal::Def)
-      return if node.receiver || node.name == "->"
-      return if node.name.chars.any?(&.alphanumeric?)
+      return if node.receiver || !operator_method?(node)
 
       issue_for node, MSG
     end
