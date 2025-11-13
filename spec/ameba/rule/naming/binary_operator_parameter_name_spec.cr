@@ -46,5 +46,33 @@ module Ameba::Rule::Naming
           CRYSTAL
       end
     end
+
+    context "properties" do
+      context "#allowed_names" do
+        it "uses `other` as the default" do
+          expect_issue subject, <<-CRYSTAL
+            def +(foo); end
+                # ^^^ error: When defining the `+` operator, name its argument `other`
+            CRYSTAL
+        end
+
+        it "allows setting custom names" do
+          rule = BinaryOperatorParameterName.new
+
+          rule.allowed_names = %w[a b c]
+          expect_issue rule, <<-CRYSTAL
+            def +(foo); end
+                # ^^^ error: When defining the `+` operator, name its argument `a` or `b` or `c`
+            CRYSTAL
+
+          rule.allowed_names = %w[foo bar baz]
+          expect_no_issues rule, <<-CRYSTAL
+            def +(foo); end
+            def -(bar); end
+            def /(baz); end
+            CRYSTAL
+        end
+      end
+    end
   end
 end

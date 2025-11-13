@@ -1,6 +1,6 @@
 module Ameba::Rule::Naming
   # A rule that enforces that certain binary operator methods have
-  # their sole parameter named `other`.
+  # standardized parameter names - by default `other`.
   #
   # For example, this is considered valid:
   #
@@ -26,16 +26,18 @@ module Ameba::Rule::Naming
   # Naming/BinaryOperatorParameterName:
   #   Enabled: true
   #   ExcludedOperators: ["[]", "[]?", "[]=", "<<", ">>", "=~", "!~"]
+  #   AllowedNames: [other]
   # ```
   class BinaryOperatorParameterName < Base
     properties do
       since_version "1.6.0"
       description "Enforces that certain binary operator methods have " \
-                  "their sole parameter named `other`"
+                  "their sole parameter name standardized"
       excluded_operators %w[[] []? []= << >> ` =~ !~]
+      allowed_names %w[other]
     end
 
-    MSG = "When defining the `%s` operator, name its argument `other`"
+    MSG = "When defining the `%s` operator, name its argument %s"
 
     def test(source, node : Crystal::Def)
       name = node.name
@@ -43,9 +45,12 @@ module Ameba::Rule::Naming
       return if name == "->" || name.in?(excluded_operators)
       return if name.chars.any?(&.alphanumeric?)
       return unless node.args.size == 1
-      return if (arg = node.args.first).name == "other"
+      return if (arg = node.args.first).name.in?(allowed_names)
 
-      issue_for arg, MSG % name, prefer_name_location: true
+      opts =
+        allowed_names.map { |val| "`#{val}`" }.join(" or ")
+
+      issue_for arg, MSG % {name, opts}, prefer_name_location: true
     end
   end
 end
