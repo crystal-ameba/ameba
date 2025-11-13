@@ -383,12 +383,17 @@ class Ameba::Config
               documentation_url
             {% end %}
 
+          {%
+            serializable_props =
+              properties.to_a.reject { |(key, _)| key == "description" }
+          %}
+
           builder.string("properties")
           builder.object do
-            {% for prop_name in properties %}
+            {% for prop in serializable_props %}
               {% default_set = false %}
 
-              {% prop = properties[prop_name] %}
+              {% prop_name, prop = prop %}
               {% prop_stringified = prop[:type].stringify %}
 
               builder.string({{ prop[:key] }})
