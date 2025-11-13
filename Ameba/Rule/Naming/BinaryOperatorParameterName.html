@@ -1083,7 +1083,7 @@
   </h2>
 
   <p>A rule that enforces that certain binary operator methods have
-their sole parameter named <code>other</code>.</p>
+standardized parameter names - by default <code>other</code>.</p>
 <p>For example, this is considered valid:</p>
 <pre><code class="language-crystal"><span class="k">class</span> <span class="t">Money</span>
   <span class="k">def</span> <span class="m">+</span>(other)
@@ -1097,7 +1097,8 @@ their sole parameter named <code>other</code>.</p>
 <p>YAML configuration example:</p>
 <pre><code class="language-crystal"><span class="t">Naming</span><span class="o">/</span><span class="t">BinaryOperatorParameterName</span>:
   <span class="t">Enabled</span>: <span class="n">true</span>
-  <span class="t">ExcludedOperators</span>: [<span class="s">&quot;[]&quot;</span>, <span class="s">&quot;[]?&quot;</span>, <span class="s">&quot;[]=&quot;</span>, <span class="s">&quot;&lt;&lt;&quot;</span>, <span class="s">&quot;&gt;&gt;&quot;</span>, <span class="s">&quot;=~&quot;</span>, <span class="s">&quot;!~&quot;</span>]</code></pre>
+  <span class="t">ExcludedOperators</span>: [<span class="s">&quot;[]&quot;</span>, <span class="s">&quot;[]?&quot;</span>, <span class="s">&quot;[]=&quot;</span>, <span class="s">&quot;&lt;&lt;&quot;</span>, <span class="s">&quot;&gt;&gt;&quot;</span>, <span class="s">&quot;=~&quot;</span>, <span class="s">&quot;!~&quot;</span>]
+  <span class="t">AllowedNames</span>: [other]</code></pre>
 
 
 
@@ -1140,7 +1141,7 @@ their sole parameter named <code>other</code>.</p>
   </h2>
   
     
-      <a href="https://github.com/crystal-ameba/ameba/blob/5c8c503/src/ameba/rule/naming/binary_operator_parameter_name.cr#L30" target="_blank">
+      <a href="https://github.com/crystal-ameba/ameba/blob/60226e5/src/ameba/rule/naming/binary_operator_parameter_name.cr#L31" target="_blank">
         ameba/rule/naming/binary_operator_parameter_name.cr
       </a>
     
@@ -1162,7 +1163,7 @@ their sole parameter named <code>other</code>.</p>
   <dl>
     
       <dt class="entry-const" id="MSG">
-        <strong>MSG</strong> = <code><span class="s">&quot;When defining the `%s` operator, name its argument `other`&quot;</span></code>
+        <strong>MSG</strong> = <code><span class="s">&quot;When defining the `%s` operator, name its argument %s&quot;</span></code>
       </dt>
       
     
@@ -1189,7 +1190,7 @@ their sole parameter named <code>other</code>.</p>
       <li class="entry-summary">
         <a href="#new%28config%3Dnil%29-class-method" class="signature"><strong>.new</strong>(config = <span class="n">nil</span>)</a>
         
-          <div class="summary"><p>A rule that enforces that certain binary operator methods have their sole parameter named <code>other</code>.</p></div>
+          <div class="summary"><p>A rule that enforces that certain binary operator methods have standardized parameter names - by default <code>other</code>.</p></div>
         
       </li>
     
@@ -1239,6 +1240,16 @@ their sole parameter named <code>other</code>.</p>
     Instance Method Summary
   </h2>
   <ul class="list-summary">
+    
+      <li class="entry-summary">
+        <a href="#allowed_names%3AArray%28String%29-instance-method" class="signature"><strong>#allowed_names</strong> : Array(String)</a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#allowed_names%3D%28allowed_names%3AArray%28String%29%29-instance-method" class="signature"><strong>#allowed_names=</strong>(allowed_names : Array(String))</a>
+        
+      </li>
     
       <li class="entry-summary">
         <a href="#description%3AString-instance-method" class="signature"><strong>#description</strong> : String</a>
@@ -1497,7 +1508,7 @@ their sole parameter named <code>other</code>.</p>
         <div class="doc">
           
           <p>A rule that enforces that certain binary operator methods have
-their sole parameter named <code>other</code>.</p>
+standardized parameter names - by default <code>other</code>.</p>
 <p>For example, this is considered valid:</p>
 <pre><code class="language-crystal"><span class="k">class</span> <span class="t">Money</span>
   <span class="k">def</span> <span class="m">+</span>(other)
@@ -1511,13 +1522,14 @@ their sole parameter named <code>other</code>.</p>
 <p>YAML configuration example:</p>
 <pre><code class="language-crystal"><span class="t">Naming</span><span class="o">/</span><span class="t">BinaryOperatorParameterName</span>:
   <span class="t">Enabled</span>: <span class="n">true</span>
-  <span class="t">ExcludedOperators</span>: [<span class="s">&quot;[]&quot;</span>, <span class="s">&quot;[]?&quot;</span>, <span class="s">&quot;[]=&quot;</span>, <span class="s">&quot;&lt;&lt;&quot;</span>, <span class="s">&quot;&gt;&gt;&quot;</span>, <span class="s">&quot;=~&quot;</span>, <span class="s">&quot;!~&quot;</span>]</code></pre>
+  <span class="t">ExcludedOperators</span>: [<span class="s">&quot;[]&quot;</span>, <span class="s">&quot;[]?&quot;</span>, <span class="s">&quot;[]=&quot;</span>, <span class="s">&quot;&lt;&lt;&quot;</span>, <span class="s">&quot;&gt;&gt;&quot;</span>, <span class="s">&quot;=~&quot;</span>, <span class="s">&quot;!~&quot;</span>]
+  <span class="t">AllowedNames</span>: [other]</code></pre>
         </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/5c8c503/src/ameba/rule/naming/binary_operator_parameter_name.cr#L30" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/60226e5/src/ameba/rule/naming/binary_operator_parameter_name.cr#L31" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1588,7 +1600,7 @@ their sole parameter named <code>other</code>.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/5c8c503/src/ameba/rule/naming/binary_operator_parameter_name.cr#L31" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/60226e5/src/ameba/rule/naming/binary_operator_parameter_name.cr#L32" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1606,6 +1618,34 @@ their sole parameter named <code>other</code>.</p>
 </a>
     Instance Method Detail
   </h2>
+  
+    <div class="entry-detail" id="allowed_names:Array(String)-instance-method">
+      <div class="signature">
+        
+        def <strong>allowed_names</strong> : Array(String)
+
+        <a class="method-permalink" href="#allowed_names%3AArray%28String%29-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="allowed_names=(allowed_names:Array(String))-instance-method">
+      <div class="signature">
+        
+        def <strong>allowed_names=</strong>(allowed_names : Array(String))
+
+        <a class="method-permalink" href="#allowed_names%3D%28allowed_names%3AArray%28String%29%29-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+      </div>
+    </div>
   
     <div class="entry-detail" id="description:String-instance-method">
       <div class="signature">
@@ -1758,7 +1798,7 @@ their sole parameter named <code>other</code>.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/5c8c503/src/ameba/rule/naming/binary_operator_parameter_name.cr#L31" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/60226e5/src/ameba/rule/naming/binary_operator_parameter_name.cr#L32" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1788,7 +1828,7 @@ their sole parameter named <code>other</code>.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/5c8c503/src/ameba/rule/naming/binary_operator_parameter_name.cr#L40" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/60226e5/src/ameba/rule/naming/binary_operator_parameter_name.cr#L42" target="_blank">View source</a>]
         
       </div>
     </div>
