@@ -311,7 +311,7 @@ class Ameba::Config
         {% unless type %}
           {% if value.is_a?(BoolLiteral) %}
             {% type = Bool %}
-          {% elsif value.is_a?(StringLiteral) %}
+          {% elsif value.is_a?(StringLiteral) || value.is_a?(StringInterpolation) %}
             {% type = String %}
           {% elsif value.is_a?(NumberLiteral) %}
             {% if value.kind == :i32 %}
