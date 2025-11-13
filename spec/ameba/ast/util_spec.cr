@@ -418,6 +418,47 @@ module Ameba::AST
       end
     end
 
+    describe "#operator_method_name?" do
+      it "returns true for operator method names" do
+        %w[+ - * / == != ~= !~ <=>].each do |op|
+          subject.operator_method_name?(op).should be_true
+        end
+      end
+
+      it "returns false for non-operator method names" do
+        %w[foo? foo! ->].each do |op|
+          subject.operator_method_name?(op).should be_false
+        end
+      end
+    end
+
+    describe "#operator_method?" do
+      it "returns true for operator method definitions" do
+        node = as_node "def +(other); end"
+        subject.operator_method?(node).should be_true
+      end
+
+      it "returns false for other method definitions" do
+        node = as_node "def method; end"
+        subject.operator_method?(node).should be_false
+      end
+
+      it "returns true for operator method calls" do
+        node = as_node "obj + 1"
+        subject.operator_method?(node).should be_true
+      end
+
+      it "returns false for other method calls" do
+        node = as_node "obj.method"
+        subject.operator_method?(node).should be_false
+      end
+
+      it "returns false for procs" do
+        node = as_node "-> { nil }"
+        subject.operator_method?(node).should be_false
+      end
+    end
+
     describe "#nodoc?" do
       it "returns true if a node has a single `:nodoc:` annotation" do
         node = as_node <<-CRYSTAL, wants_doc: true

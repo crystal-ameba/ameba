@@ -206,6 +206,20 @@ module Ameba::AST::Util
     end
   end
 
+  # Returns `true` if *name* represents operator method.
+  def operator_method_name?(name : String)
+    name != "->" &&
+      name.chars.none?(&.alphanumeric?)
+  end
+
+  # Returns `true` if *node* represents operator method.
+  def operator_method?(node)
+    return false unless node.responds_to?(:name)
+    return false unless name = node.name.try(&.to_s.presence)
+
+    operator_method_name?(name)
+  end
+
   # Returns `true` if node has a `:nodoc:` annotation as the first line.
   def nodoc?(node)
     return false unless node.responds_to?(:doc)
