@@ -14,7 +14,7 @@
 <script type="text/javascript" src="../../../js/doc.js"></script>
 
   <meta name="repository-name" content="ameba">
-  <title>Ameba::Rule::Lint::UnreachableCode - ameba master</title>
+  <title>Ameba::Rule::Lint::EnumMemberNameConflict - ameba master</title>
   <script type="text/javascript">
     CrystalDocs.base_path = "../../../";
   </script>
@@ -467,7 +467,7 @@
       
     </li>
   
-  <li class=" " data-id="ameba/Ameba/Rule/Lint/EnumMemberNameConflict" data-name="ameba::rule::lint::enummembernameconflict">
+  <li class=" current" data-id="ameba/Ameba/Rule/Lint/EnumMemberNameConflict" data-name="ameba::rule::lint::enummembernameconflict">
       <a href="../../../Ameba/Rule/Lint/EnumMemberNameConflict.html">EnumMemberNameConflict</a>
       
     </li>
@@ -617,7 +617,7 @@
       
     </li>
   
-  <li class=" current" data-id="ameba/Ameba/Rule/Lint/UnreachableCode" data-name="ameba::rule::lint::unreachablecode">
+  <li class=" " data-id="ameba/Ameba/Rule/Lint/UnreachableCode" data-name="ameba::rule::lint::unreachablecode">
       <a href="../../../Ameba/Rule/Lint/UnreachableCode.html">UnreachableCode</a>
       
     </li>
@@ -1068,12 +1068,12 @@
 
   <span class="kind">
     class
-  </span> Ameba::<wbr>Rule::<wbr>Lint::<wbr>UnreachableCode
+  </span> Ameba::<wbr>Rule::<wbr>Lint::<wbr>EnumMemberNameConflict
 
 </h1>
 
 
-  <ul class="superclass-hierarchy"><li class="superclass"><a href="../../../Ameba/Rule/Lint/UnreachableCode.html">Ameba::Rule::Lint::UnreachableCode</a></li><li class="superclass"><a href="../../../Ameba/Rule/Base.html">Ameba::Rule::Base</a></li><li class="superclass">Reference</li><li class="superclass">Object</li></ul>
+  <ul class="superclass-hierarchy"><li class="superclass"><a href="../../../Ameba/Rule/Lint/EnumMemberNameConflict.html">Ameba::Rule::Lint::EnumMemberNameConflict</a></li><li class="superclass"><a href="../../../Ameba/Rule/Base.html">Ameba::Rule::Base</a></li><li class="superclass">Reference</li><li class="superclass">Object</li></ul>
 
 
 
@@ -1087,29 +1087,20 @@
     Overview
   </h2>
 
-  <p>A rule that reports unreachable code.</p>
-<p>For example, this is considered invalid:</p>
-<pre><code class="language-crystal"><span class="k">def</span> <span class="m">method</span>(a)
-  <span class="k">return</span> <span class="n">42</span>
-  a <span class="o">+</span> <span class="n">1</span>
-<span class="k">end</span></code></pre>
-<pre><code class="language-crystal">a <span class="o">=</span> <span class="n">1</span>
-loop <span class="k">do</span>
-  <span class="k">break</span>
-  a <span class="o">+=</span> <span class="n">1</span>
-<span class="k">end</span></code></pre>
-<p>And has to be written as the following:</p>
-<pre><code class="language-crystal"><span class="k">def</span> <span class="m">method</span>(a)
-  <span class="k">return</span> <span class="n">42</span> <span class="k">if</span> a <span class="o">==</span> <span class="n">0</span>
-  a <span class="o">+</span> <span class="n">1</span>
-<span class="k">end</span></code></pre>
-<pre><code class="language-crystal">a <span class="o">=</span> <span class="n">1</span>
-loop <span class="k">do</span>
-  <span class="k">break</span> a <span class="o">&gt;</span> <span class="n">3</span>
-  a <span class="o">+=</span> <span class="n">1</span>
-<span class="k">end</span></code></pre>
+  <p>A rule that reports conflicting enum member names.</p>
+<p>Since Crystal will parse enum member names using <code>String#camelcase</code> and
+<code>String#downcase</code>, it is important to ensure that each member has a name
+that stays unique after the transformation.</p>
+<pre><code class="language-crystal"><span class="k">enum</span> <span class="t">Foo</span>
+  <span class="t">Bar</span>
+  <span class="t">BAR</span>
+<span class="k">end</span>
+
+<span class="t">Foo</span>.parse(<span class="s">&quot;bar&quot;</span>) <span class="c"># =&gt; Foo::Bar</span>
+<span class="t">Foo</span>.parse(<span class="s">&quot;Bar&quot;</span>) <span class="c"># =&gt; Foo::Bar</span>
+<span class="t">Foo</span>.parse(<span class="s">&quot;BAR&quot;</span>) <span class="c"># =&gt; Foo::Bar</span></code></pre>
 <p>YAML configuration example:</p>
-<pre><code class="language-crystal"><span class="t">Lint</span><span class="o">/</span><span class="t">UnreachableCode</span>:
+<pre><code class="language-crystal"><span class="t">Lint</span><span class="o">/</span><span class="t">EnumMemberNameConflict</span>:
   <span class="t">Enabled</span>: <span class="n">true</span></code></pre>
 
 
@@ -1153,8 +1144,8 @@ loop <span class="k">do</span>
   </h2>
   
     
-      <a href="https://github.com/crystal-ameba/ameba/blob/f15dd3c/src/ameba/rule/lint/unreachable_code.cr#L44" target="_blank">
-        ameba/rule/lint/unreachable_code.cr
+      <a href="https://github.com/crystal-ameba/ameba/blob/f15dd3c/src/ameba/rule/lint/enum_member_name_conflict.cr#L25" target="_blank">
+        ameba/rule/lint/enum_member_name_conflict.cr
       </a>
     
     <br/>
@@ -1175,7 +1166,7 @@ loop <span class="k">do</span>
   <dl>
     
       <dt class="entry-const" id="MSG">
-        <strong>MSG</strong> = <code><span class="s">&quot;Unreachable code detected&quot;</span></code>
+        <strong>MSG</strong> = <code><span class="s">&quot;Enum member name conflict detected&quot;</span></code>
       </dt>
       
     
@@ -1202,7 +1193,7 @@ loop <span class="k">do</span>
       <li class="entry-summary">
         <a href="#new%28config%3Dnil%29-class-method" class="signature"><strong>.new</strong>(config = <span class="n">nil</span>)</a>
         
-          <div class="summary"><p>A rule that reports unreachable code.</p></div>
+          <div class="summary"><p>A rule that reports conflicting enum member names.</p></div>
         
       </li>
     
@@ -1304,12 +1295,7 @@ loop <span class="k">do</span>
       </li>
     
       <li class="entry-summary">
-        <a href="#test%28source%2Cnode%2Cflow_expression%3AAST%3A%3AFlowExpression%29-instance-method" class="signature"><strong>#test</strong>(source, node, flow_expression : AST::FlowExpression)</a>
-        
-      </li>
-    
-      <li class="entry-summary">
-        <a href="#test%28source%29-instance-method" class="signature"><strong>#test</strong>(source)</a>
+        <a href="#test%28source%2Cnode%3ACrystal%3A%3AEnumDef%29-instance-method" class="signature"><strong>#test</strong>(source, node : Crystal::EnumDef)</a>
         
       </li>
     
@@ -1504,36 +1490,27 @@ loop <span class="k">do</span>
       
         <div class="doc">
           
-          <p>A rule that reports unreachable code.</p>
-<p>For example, this is considered invalid:</p>
-<pre><code class="language-crystal"><span class="k">def</span> <span class="m">method</span>(a)
-  <span class="k">return</span> <span class="n">42</span>
-  a <span class="o">+</span> <span class="n">1</span>
-<span class="k">end</span></code></pre>
-<pre><code class="language-crystal">a <span class="o">=</span> <span class="n">1</span>
-loop <span class="k">do</span>
-  <span class="k">break</span>
-  a <span class="o">+=</span> <span class="n">1</span>
-<span class="k">end</span></code></pre>
-<p>And has to be written as the following:</p>
-<pre><code class="language-crystal"><span class="k">def</span> <span class="m">method</span>(a)
-  <span class="k">return</span> <span class="n">42</span> <span class="k">if</span> a <span class="o">==</span> <span class="n">0</span>
-  a <span class="o">+</span> <span class="n">1</span>
-<span class="k">end</span></code></pre>
-<pre><code class="language-crystal">a <span class="o">=</span> <span class="n">1</span>
-loop <span class="k">do</span>
-  <span class="k">break</span> a <span class="o">&gt;</span> <span class="n">3</span>
-  a <span class="o">+=</span> <span class="n">1</span>
-<span class="k">end</span></code></pre>
+          <p>A rule that reports conflicting enum member names.</p>
+<p>Since Crystal will parse enum member names using <code>String#camelcase</code> and
+<code>String#downcase</code>, it is important to ensure that each member has a name
+that stays unique after the transformation.</p>
+<pre><code class="language-crystal"><span class="k">enum</span> <span class="t">Foo</span>
+  <span class="t">Bar</span>
+  <span class="t">BAR</span>
+<span class="k">end</span>
+
+<span class="t">Foo</span>.parse(<span class="s">&quot;bar&quot;</span>) <span class="c"># =&gt; Foo::Bar</span>
+<span class="t">Foo</span>.parse(<span class="s">&quot;Bar&quot;</span>) <span class="c"># =&gt; Foo::Bar</span>
+<span class="t">Foo</span>.parse(<span class="s">&quot;BAR&quot;</span>) <span class="c"># =&gt; Foo::Bar</span></code></pre>
 <p>YAML configuration example:</p>
-<pre><code class="language-crystal"><span class="t">Lint</span><span class="o">/</span><span class="t">UnreachableCode</span>:
+<pre><code class="language-crystal"><span class="t">Lint</span><span class="o">/</span><span class="t">EnumMemberNameConflict</span>:
   <span class="t">Enabled</span>: <span class="n">true</span></code></pre>
         </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/f15dd3c/src/ameba/rule/lint/unreachable_code.cr#L44" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/f15dd3c/src/ameba/rule/lint/enum_member_name_conflict.cr#L25" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1604,7 +1581,7 @@ loop <span class="k">do</span>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/f15dd3c/src/ameba/rule/lint/unreachable_code.cr#L45" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/f15dd3c/src/ameba/rule/lint/enum_member_name_conflict.cr#L26" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1746,7 +1723,7 @@ loop <span class="k">do</span>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/f15dd3c/src/ameba/rule/lint/unreachable_code.cr#L45" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/f15dd3c/src/ameba/rule/lint/enum_member_name_conflict.cr#L26" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1765,34 +1742,18 @@ loop <span class="k">do</span>
       </div>
     </div>
   
-    <div class="entry-detail" id="test(source,node,flow_expression:AST::FlowExpression)-instance-method">
+    <div class="entry-detail" id="test(source,node:Crystal::EnumDef)-instance-method">
       <div class="signature">
         
-        def <strong>test</strong>(source, node, flow_expression : <a href="../../../Ameba/AST/FlowExpression.html">AST::FlowExpression</a>)
+        def <strong>test</strong>(source, node : Crystal::EnumDef)
 
-        <a class="method-permalink" href="#test%28source%2Cnode%2Cflow_expression%3AAST%3A%3AFlowExpression%29-instance-method">#</a>
+        <a class="method-permalink" href="#test%28source%2Cnode%3ACrystal%3A%3AEnumDef%29-instance-method">#</a>
       </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/f15dd3c/src/ameba/rule/lint/unreachable_code.cr#L56" target="_blank">View source</a>]
-        
-      </div>
-    </div>
-  
-    <div class="entry-detail" id="test(source)-instance-method">
-      <div class="signature">
-        
-        def <strong>test</strong>(source)
-
-        <a class="method-permalink" href="#test%28source%29-instance-method">#</a>
-      </div>
-      
-      <br/>
-      <div>
-        
-          [<a href="https://github.com/crystal-ameba/ameba/blob/f15dd3c/src/ameba/rule/lint/unreachable_code.cr#L52" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/f15dd3c/src/ameba/rule/lint/enum_member_name_conflict.cr#L33" target="_blank">View source</a>]
         
       </div>
     </div>
