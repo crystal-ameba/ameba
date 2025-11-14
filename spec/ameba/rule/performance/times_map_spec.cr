@@ -30,7 +30,7 @@ module Ameba::Rule::Performance
         Array.new(foo.bar) do |i|
           i * i
         end
-        Array.new(3) do |i| i * i end
+        Array.new(3) { |i| i * i }
         Array.new(3, &block)
         Array.new(3, &block).select(&.odd?)
         CRYSTAL
