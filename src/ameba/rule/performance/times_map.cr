@@ -53,7 +53,10 @@ module Ameba::Rule::Performance
         corrected_code =
           case
           when block = obj.block
-            "Array.new(%s) %s" % {obj3, block}
+            block_code =
+              node_source(block, source.lines)
+
+            "Array.new(%s) %s" % {obj3, block_code}
           when block_arg = obj.block_arg
             "Array.new(%s, &%s)" % {obj3, block_arg}
           end
