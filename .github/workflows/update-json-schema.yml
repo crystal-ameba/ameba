@@ -1,6 +1,7 @@
 name: Update JSON Schema
 
 on:
+  workflow_dispatch:
   push:
     branches: [master]
     paths:
@@ -17,17 +18,10 @@ jobs:
       - name: Install Crystal
         uses: crystal-lang/install-crystal@v1
 
-      - name: Create GitHub App token
-        uses: actions/create-github-app-token@v1
-        id: app-token
-        with:
-          app-id: ${{ secrets.MASTER_PUSHER_APP_ID }}
-          private-key: ${{ secrets.MASTER_PUSHER_PRIVATE_KEY }}
-
       - name: Download source
         uses: actions/checkout@v5
         with:
-          token: ${{ steps.app-token.outputs.token }}
+          ssh-key: ${{ secrets.MASTER_PUSHER_SSH_KEY }}
 
       - name: Install dependencies
         run: shards install
