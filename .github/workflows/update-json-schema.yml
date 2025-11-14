@@ -1,6 +1,7 @@
 name: Update JSON Schema
 
 on:
+  workflow_dispatch:
   push:
     branches: [master]
     paths:
