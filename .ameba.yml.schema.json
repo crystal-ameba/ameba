@@ -369,6 +369,21 @@
         }
       }
     },
+    "Lint/EnumMemberNameConflict": {
+      "$ref": "#/definitions/BaseRule",
+      "title": "Lint/EnumMemberNameConflict",
+      "description": "Reports conflicting enum member names\nhttps://crystal-ameba.github.io/ameba/Ameba/Rule/Lint/EnumMemberNameConflict.html",
+      "properties": {
+        "SinceVersion": {
+          "type": "string",
+          "default": "1.7.0"
+        },
+        "Severity": {
+          "$ref": "#/definitions/Severity",
+          "default": "Warning"
+        }
+      }
+    },
     "Lint/Formatting": {
       "$ref": "#/definitions/BaseRule",
       "title": "Lint/Formatting",
