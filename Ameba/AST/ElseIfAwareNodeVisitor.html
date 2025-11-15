@@ -14,7 +14,7 @@
 <script type="text/javascript" src="../../js/doc.js"></script>
 
   <meta name="repository-name" content="ameba">
-  <title>Ameba::AST::BaseVisitor - ameba master</title>
+  <title>Ameba::AST::ElseIfAwareNodeVisitor - ameba master</title>
   <script type="text/javascript">
     CrystalDocs.base_path = "../../";
   </script>
@@ -82,7 +82,7 @@
       
     </li>
   
-  <li class=" current" data-id="ameba/Ameba/AST/BaseVisitor" data-name="ameba::ast::basevisitor">
+  <li class=" " data-id="ameba/Ameba/AST/BaseVisitor" data-name="ameba::ast::basevisitor">
       <a href="../../Ameba/AST/BaseVisitor.html">BaseVisitor</a>
       
     </li>
@@ -102,7 +102,7 @@
       
     </li>
   
-  <li class=" " data-id="ameba/Ameba/AST/ElseIfAwareNodeVisitor" data-name="ameba::ast::elseifawarenodevisitor">
+  <li class=" current" data-id="ameba/Ameba/AST/ElseIfAwareNodeVisitor" data-name="ameba::ast::elseifawarenodevisitor">
       <a href="../../Ameba/AST/ElseIfAwareNodeVisitor.html">ElseIfAwareNodeVisitor</a>
       
     </li>
@@ -1077,13 +1077,13 @@
 <h1 class="type-name">
 
   <span class="kind">
-    abstract class
-  </span> Ameba::<wbr>AST::<wbr>BaseVisitor
+    class
+  </span> Ameba::<wbr>AST::<wbr>ElseIfAwareNodeVisitor
 
 </h1>
 
 
-  <ul class="superclass-hierarchy"><li class="superclass"><a href="../../Ameba/AST/BaseVisitor.html">Ameba::AST::BaseVisitor</a></li><li class="superclass">Crystal::Visitor</li><li class="superclass">Reference</li><li class="superclass">Object</li></ul>
+  <ul class="superclass-hierarchy"><li class="superclass"><a href="../../Ameba/AST/ElseIfAwareNodeVisitor.html">Ameba::AST::ElseIfAwareNodeVisitor</a></li><li class="superclass"><a href="../../Ameba/AST/NodeVisitor.html">Ameba::AST::NodeVisitor</a></li><li class="superclass"><a href="../../Ameba/AST/BaseVisitor.html">Ameba::AST::BaseVisitor</a></li><li class="superclass">Crystal::Visitor</li><li class="superclass">Reference</li><li class="superclass">Object</li></ul>
 
 
 
@@ -1097,7 +1097,36 @@
     Overview
   </h2>
 
-  <p>An abstract base visitor that utilizes general logic for all visitors.</p>
+  <p>A class that utilizes a logic inherited from <code><a href="../../Ameba/AST/NodeVisitor.html">NodeVisitor</a></code> to traverse AST
+nodes and fire a source test callback with the <code>Crystal::If</code> node and an array
+containing all <code>elsif</code> branches (first branch is an <code>if</code> node) in case
+at least one <code>elsif</code> branch is reached, and <code>nil</code> otherwise.</p>
+<p>In Crystal, consecutive <code>elsif</code> branches are transformed into <code>if</code> branches
+attached to the <code>else</code> branch of an adjacent <code>if</code> branch.</p>
+<p>For example:</p>
+<pre><code class="language-crystal"><span class="k">if</span> foo
+  do_foo
+<span class="k">elsif</span> bar
+  do_bar
+<span class="k">elsif</span> baz
+  do_baz
+<span class="k">else</span>
+  do_something_else
+<span class="k">end</span></code></pre>
+<p>is transformed into:</p>
+<pre><code class="language-crystal"><span class="k">if</span> foo
+  do_foo
+<span class="k">else</span>
+  <span class="k">if</span> bar
+    do_bar
+  <span class="k">else</span>
+    <span class="k">if</span> baz
+      do_baz
+    <span class="k">else</span>
+      do_something_else
+    <span class="k">end</span>
+  <span class="k">end</span>
+<span class="k">end</span></code></pre>
 
 
 
@@ -1108,26 +1137,6 @@
 
 
 
-
-  <h2>
-    <a id="direct-known-subclasses" class="anchor" href="#direct-known-subclasses">
-  <svg class="octicon-link" aria-hidden="true">
-    <use href="#octicon-link"/>
-  </svg>
-</a>
-    Direct Known Subclasses
-  </h2>
-  <ul class="other-types-list">
-    
-      <li class="other-type"><a href="../../Ameba/AST/FlowExpressionVisitor.html">Ameba::AST::FlowExpressionVisitor</a></li>
-    
-      <li class="other-type"><a href="../../Ameba/AST/ImplicitReturnVisitor.html">Ameba::AST::ImplicitReturnVisitor</a></li>
-    
-      <li class="other-type"><a href="../../Ameba/AST/NodeVisitor.html">Ameba::AST::NodeVisitor</a></li>
-    
-      <li class="other-type"><a href="../../Ameba/AST/ScopeVisitor.html">Ameba::AST::ScopeVisitor</a></li>
-    
-  </ul>
 
 
 
@@ -1144,8 +1153,8 @@
   </h2>
   
     
-      <a href="https://github.com/crystal-ameba/ameba/blob/c16d661/src/ameba/ast/visitors/base_visitor.cr#L6" target="_blank">
-        ameba/ast/visitors/base_visitor.cr
+      <a href="https://github.com/crystal-ameba/ameba/blob/c16d661/src/ameba/ast/visitors/elseif_aware_node_visitor.cr#L43" target="_blank">
+        ameba/ast/visitors/elseif_aware_node_visitor.cr
       </a>
     
     <br/>
@@ -1156,25 +1165,6 @@
 
 
   
-  <h2>
-    <a id="constructors" class="anchor" href="#constructors">
-  <svg class="octicon-link" aria-hidden="true">
-    <use href="#octicon-link"/>
-  </svg>
-</a>
-    Constructors
-  </h2>
-  <ul class="list-summary">
-    
-      <li class="entry-summary">
-        <a href="#new%28rule%3AAmeba%3A%3ARule%3A%3ABase%2Csource%3AAmeba%3A%3ASource%29-class-method" class="signature"><strong>.new</strong>(rule : Ameba::Rule::Base, source : Ameba::Source)</a>
-        
-          <div class="summary"><p>Creates instance of this visitor.</p></div>
-        
-      </li>
-    
-  </ul>
-
 
   
 
@@ -1192,9 +1182,9 @@
   <ul class="list-summary">
     
       <li class="entry-summary">
-        <a href="#visit%28node%3ACrystal%3A%3AASTNode%29-instance-method" class="signature"><strong>#visit</strong>(node : Crystal::ASTNode)</a>
+        <a href="#visit%28node%3ACrystal%3A%3AIf%29-instance-method" class="signature"><strong>#visit</strong>(node : Crystal::If)</a>
         
-          <div class="summary"><p>A main visit method that accepts <code>Crystal::ASTNode</code>.</p></div>
+          <div class="summary"><p>A visit callback for <code>Crystal::If</code> node.</p></div>
         
       </li>
     
@@ -1203,6 +1193,77 @@
 
 
   <div class="methods-inherited">
+    
+      
+
+  <h3>Instance methods inherited from class <code><a href="../../Ameba/AST/NodeVisitor.html">Ameba::AST::NodeVisitor</a></code></h3>
+  
+  
+    <a href="../../Ameba/AST/NodeVisitor.html#visit%28node%3ACrystal%3A%3AVisibilityModifier%29-instance-method" class="tooltip">
+      <span>visit(node : Crystal::VisibilityModifier)<br/>visit(node : Crystal::Alias)<br/>visit(node : Crystal::ArrayLiteral)<br/>visit(node : Crystal::Assign)<br/>visit(node : Crystal::Block)<br/>visit(node : Crystal::Call)<br/>visit(node : Crystal::Case)<br/>visit(node : Crystal::ClassDef)<br/>visit(node : Crystal::ClassVar)<br/>visit(node : Crystal::Def)<br/>visit(node : Crystal::EnumDef)<br/>visit(node : Crystal::ExceptionHandler)<br/>visit(node : Crystal::Expressions)<br/>visit(node : Crystal::HashLiteral)<br/>visit(node : Crystal::If)<br/>visit(node : Crystal::InstanceVar)<br/>visit(node : Crystal::IsA)<br/>visit(node : Crystal::LibDef)<br/>visit(node : Crystal::MacroExpression)<br/>visit(node : Crystal::ModuleDef)<br/>visit(node : Crystal::MultiAssign)<br/>visit(node : Crystal::NilLiteral)<br/>visit(node : Crystal::ProcLiteral)<br/>visit(node : Crystal::Select)<br/>visit(node : Crystal::StringInterpolation)<br/>visit(node : Crystal::StringLiteral)<br/>visit(node : Crystal::Unless)<br/>visit(node : Crystal::Until)<br/>visit(node : Crystal::Var)<br/>visit(node : Crystal::When)<br/>visit(node : Crystal::While)<br/>visit(node)</span>
+    visit</a>
+    
+  
+
+
+      
+
+  <h3>Constructor methods inherited from class <code><a href="../../Ameba/AST/NodeVisitor.html">Ameba::AST::NodeVisitor</a></code></h3>
+  
+  
+    <a href="../../Ameba/AST/NodeVisitor.html#new%28rule%2Csource%2C%2A%2Cskip%3ACategory%29-class-method" class="tooltip">
+      <span>new(rule, source, *, skip : Category)<br/>new(rule, source, *, skip : Array | Nil = <span class="n">nil</span>)</span>
+    new</a>
+    
+  
+
+
+      
+
+  <h3>Class methods inherited from class <code><a href="../../Ameba/AST/NodeVisitor.html">Ameba::AST::NodeVisitor</a></code></h3>
+  
+  
+    <a href="../../Ameba/AST/NodeVisitor.html#category_to_node_classes%28category%3ACategory%29-class-method" class="tooltip">
+      <span>category_to_node_classes(category : Category)</span>
+    category_to_node_classes</a>
+    
+  
+
+
+      
+
+
+    
+      
+
+  <h3>Instance methods inherited from class <code><a href="../../Ameba/AST/BaseVisitor.html">Ameba::AST::BaseVisitor</a></code></h3>
+  
+  
+    <a href="../../Ameba/AST/BaseVisitor.html#visit%28node%3ACrystal%3A%3AASTNode%29-instance-method" class="tooltip">
+      <span>visit(node : Crystal::ASTNode)</span>
+    visit</a>
+    
+  
+
+
+      
+
+  <h3>Constructor methods inherited from class <code><a href="../../Ameba/AST/BaseVisitor.html">Ameba::AST::BaseVisitor</a></code></h3>
+  
+  
+    <a href="../../Ameba/AST/BaseVisitor.html#new%28rule%3AAmeba%3A%3ARule%3A%3ABase%2Csource%3AAmeba%3A%3ASource%29-class-method" class="tooltip">
+      <span>new(rule : Ameba::Rule::Base, source : Ameba::Source)</span>
+    new</a>
+    
+  
+
+
+      
+
+
+      
+
+
     
       
 
@@ -1246,38 +1307,6 @@
   </div>
 
   
-  <h2>
-    <a id="constructor-detail" class="anchor" href="#constructor-detail">
-  <svg class="octicon-link" aria-hidden="true">
-    <use href="#octicon-link"/>
-  </svg>
-</a>
-    Constructor Detail
-  </h2>
-  
-    <div class="entry-detail" id="new(rule:Ameba::Rule::Base,source:Ameba::Source)-class-method">
-      <div class="signature">
-        
-        def self.<strong>new</strong>(rule : <a href="../../Ameba/Rule/Base.html">Ameba::Rule::Base</a>, source : <a href="../../Ameba/Source.html">Ameba::Source</a>)
-
-        <a class="method-permalink" href="#new%28rule%3AAmeba%3A%3ARule%3A%3ABase%2Csource%3AAmeba%3A%3ASource%29-class-method">#</a>
-      </div>
-      
-        <div class="doc">
-          
-          <p>Creates instance of this visitor.</p>
-<pre><code class="language-crystal">visitor <span class="o">=</span> <span class="t">Ameba</span><span class="t">::</span><span class="t">AST</span><span class="t">::</span><span class="t">NodeVisitor</span>.new(rule, source)</code></pre>
-        </div>
-      
-      <br/>
-      <div>
-        
-          [<a href="https://github.com/crystal-ameba/ameba/blob/c16d661/src/ameba/ast/visitors/base_visitor.cr#L18" target="_blank">View source</a>]
-        
-      </div>
-    </div>
-  
-
 
   
 
@@ -1293,24 +1322,29 @@
     Instance Method Detail
   </h2>
   
-    <div class="entry-detail" id="visit(node:Crystal::ASTNode)-instance-method">
+    <div class="entry-detail" id="visit(node:Crystal::If)-instance-method">
       <div class="signature">
         
-        def <strong>visit</strong>(node : Crystal::ASTNode)
+        def <strong>visit</strong>(node : Crystal::If)
 
-        <a class="method-permalink" href="#visit%28node%3ACrystal%3A%3AASTNode%29-instance-method">#</a>
+        <a class="method-permalink" href="#visit%28node%3ACrystal%3A%3AIf%29-instance-method">#</a>
       </div>
       
         <div class="doc">
           
-          <p>A main visit method that accepts <code>Crystal::ASTNode</code>.
-Returns <code>true</code>, meaning all child nodes will be traversed.</p>
+            <div class="doc-inherited">
+              Description copied from class <a href="../../Ameba/AST/NodeVisitor.html">Ameba::AST::NodeVisitor</a>
+            </div>
+          
+          <p>A visit callback for <code>Crystal::If</code> node.</p>
+<p>Returns <code>true</code> if the child nodes should be traversed as well,
+<code>false</code> otherwise.</p>
         </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/c16d661/src/ameba/ast/visitors/base_visitor.cr#L24" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/c16d661/src/ameba/ast/visitors/elseif_aware_node_visitor.cr#L44" target="_blank">View source</a>]
         
       </div>
     </div>

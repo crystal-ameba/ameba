@@ -14,7 +14,7 @@
 <script type="text/javascript" src="../../../js/doc.js"></script>
 
   <meta name="repository-name" content="ameba">
-  <title>Ameba::Rule::Typing::MethodParameterTypeRestriction - ameba master</title>
+  <title>Ameba::Rule::Lint::DuplicateBranch - ameba master</title>
   <script type="text/javascript">
     CrystalDocs.base_path = "../../../";
   </script>
@@ -407,7 +407,7 @@
       
     </li>
   
-  <li class="parent " data-id="ameba/Ameba/Rule/Lint" data-name="ameba::rule::lint">
+  <li class="parent open current" data-id="ameba/Ameba/Rule/Lint" data-name="ameba::rule::lint">
       <a href="../../../Ameba/Rule/Lint.html">Lint</a>
       
         <ul>
@@ -437,7 +437,7 @@
       
     </li>
   
-  <li class=" " data-id="ameba/Ameba/Rule/Lint/DuplicateBranch" data-name="ameba::rule::lint::duplicatebranch">
+  <li class=" current" data-id="ameba/Ameba/Rule/Lint/DuplicateBranch" data-name="ameba::rule::lint::duplicatebranch">
       <a href="../../../Ameba/Rule/Lint/DuplicateBranch.html">DuplicateBranch</a>
       
     </li>
@@ -942,7 +942,7 @@
       
     </li>
   
-  <li class="parent open current" data-id="ameba/Ameba/Rule/Typing" data-name="ameba::rule::typing">
+  <li class="parent " data-id="ameba/Ameba/Rule/Typing" data-name="ameba::rule::typing">
       <a href="../../../Ameba/Rule/Typing.html">Typing</a>
       
         <ul>
@@ -952,7 +952,7 @@
       
     </li>
   
-  <li class=" current" data-id="ameba/Ameba/Rule/Typing/MethodParameterTypeRestriction" data-name="ameba::rule::typing::methodparametertyperestriction">
+  <li class=" " data-id="ameba/Ameba/Rule/Typing/MethodParameterTypeRestriction" data-name="ameba::rule::typing::methodparametertyperestriction">
       <a href="../../../Ameba/Rule/Typing/MethodParameterTypeRestriction.html">MethodParameterTypeRestriction</a>
       
     </li>
@@ -1078,12 +1078,12 @@
 
   <span class="kind">
     class
-  </span> Ameba::<wbr>Rule::<wbr>Typing::<wbr>MethodParameterTypeRestriction
+  </span> Ameba::<wbr>Rule::<wbr>Lint::<wbr>DuplicateBranch
 
 </h1>
 
 
-  <ul class="superclass-hierarchy"><li class="superclass"><a href="../../../Ameba/Rule/Typing/MethodParameterTypeRestriction.html">Ameba::Rule::Typing::MethodParameterTypeRestriction</a></li><li class="superclass"><a href="../../../Ameba/Rule/Base.html">Ameba::Rule::Base</a></li><li class="superclass">Reference</li><li class="superclass">Object</li></ul>
+  <ul class="superclass-hierarchy"><li class="superclass"><a href="../../../Ameba/Rule/Lint/DuplicateBranch.html">Ameba::Rule::Lint::DuplicateBranch</a></li><li class="superclass"><a href="../../../Ameba/Rule/Base.html">Ameba::Rule::Base</a></li><li class="superclass">Reference</li><li class="superclass">Object</li></ul>
 
 
 
@@ -1097,38 +1097,36 @@
     Overview
   </h2>
 
-  <p>A rule that enforces method parameters have type restrictions, with optional enforcement of block parameters.</p>
-<p>For example, this is considered invalid:</p>
-<pre><code class="language-crystal"><span class="k">def</span> <span class="m">add</span>(a, b)
-  a <span class="o">+</span> b
-<span class="k">end</span></code></pre>
-<p>And this is considered valid:</p>
-<pre><code class="language-crystal"><span class="k">def</span> <span class="m">add</span>(a : <span class="t">String</span>, b : <span class="t">String</span>)
-  a <span class="o">+</span> b
-<span class="k">end</span></code></pre>
-<p>When the config options <code>PrivateMethods</code> and <code>ProtectedMethods</code>
-are true, this rule is also applied to private and protected methods, respectively.</p>
-<p>The <code>NodocMethods</code> configuration option controls whether this rule applies to
-methods with a <code>:nodoc:</code> directive.</p>
-<p>The <code>BlockParameters</code> configuration option will extend this to block parameters, where these are invalid:</p>
-<pre><code class="language-crystal"><span class="k">def</span> <span class="m">exec</span>(<span class="o">&amp;</span>)
-<span class="k">end</span>
-
-<span class="k">def</span> <span class="m">exec</span>(<span class="o">&amp;</span>block)
+  <p>Checks that there are no repeated bodies within <code>if/unless</code>,
+<code>case-when</code>, <code>case-in</code> and <code>rescue</code> constructs.</p>
+<p>This is considered invalid:</p>
+<pre><code class="language-crystal"><span class="k">if</span> foo
+  do_foo
+  do_something_else
+<span class="k">elsif</span> bar
+  do_foo
+  do_something_else
 <span class="k">end</span></code></pre>
 <p>And this is valid:</p>
-<pre><code class="language-crystal"><span class="k">def</span> <span class="m">exec</span>(<span class="o">&amp;</span>block : <span class="t">String</span> <span class="o">-&gt;</span> <span class="t">String</span>)
-  <span class="k">yield</span> <span class="s">&quot;cmd&quot;</span>
+<pre><code class="language-crystal"><span class="k">if</span> foo <span class="o">||</span> bar
+  do_foo
+  do_something_else
 <span class="k">end</span></code></pre>
-<p>The config option <code>DefaultValue</code> controls whether this rule applies to parameters that have a default value.</p>
+<p>With <code>IgnoreLiteralBranches: true</code>, branches are not registered
+as offenses if they return a basic literal value (string, symbol,
+integer, float, <code>true</code>, <code>false</code>, or <code>nil</code>), or return an array,
+hash, regexp or range that only contains one of the above basic
+literal values.</p>
+<p>With <code>IgnoreConstantBranches: true</code>, branches are not registered
+as offenses if they return a constant value.</p>
+<p>With <code>IgnoreDuplicateElseBranch: true</code>, in conditionals with multiple branches,
+duplicate 'else' branches are not registered as offenses.</p>
 <p>YAML configuration example:</p>
-<pre><code class="language-crystal"><span class="t">Typing</span><span class="o">/</span><span class="t">MethodParameterTypeRestriction</span>:
+<pre><code class="language-crystal"><span class="t">Lint</span><span class="o">/</span><span class="t">DuplicateBranch</span>:
   <span class="t">Enabled</span>: <span class="n">true</span>
-  <span class="t">DefaultValue</span>: <span class="n">false</span>
-  <span class="t">BlockParameters</span>: <span class="n">false</span>
-  <span class="t">PrivateMethods</span>: <span class="n">false</span>
-  <span class="t">ProtectedMethods</span>: <span class="n">false</span>
-  <span class="t">NodocMethods</span>: <span class="n">false</span></code></pre>
+  <span class="t">IgnoreLiteralBranches</span>: <span class="n">false</span>
+  <span class="t">IgnoreConstantBranches</span>: <span class="n">false</span>
+  <span class="t">IgnoreDuplicateElseBranch</span>: <span class="n">false</span></code></pre>
 
 
 
@@ -1173,8 +1171,8 @@ methods with a <code>:nodoc:</code> directive.</p>
   </h2>
   
     
-      <a href="https://github.com/crystal-ameba/ameba/blob/c16d661/src/ameba/rule/typing/method_parameter_type_restriction.cr#L57" target="_blank">
-        ameba/rule/typing/method_parameter_type_restriction.cr
+      <a href="https://github.com/crystal-ameba/ameba/blob/c16d661/src/ameba/rule/lint/duplicate_branch.cr#L47" target="_blank">
+        ameba/rule/lint/duplicate_branch.cr
       </a>
     
     <br/>
@@ -1195,7 +1193,7 @@ methods with a <code>:nodoc:</code> directive.</p>
   <dl>
     
       <dt class="entry-const" id="MSG">
-        <strong>MSG</strong> = <code><span class="s">&quot;Method parameter should have a type restriction&quot;</span></code>
+        <strong>MSG</strong> = <code><span class="s">&quot;Duplicate branch body detected&quot;</span></code>
       </dt>
       
     
@@ -1222,7 +1220,7 @@ methods with a <code>:nodoc:</code> directive.</p>
       <li class="entry-summary">
         <a href="#new%28config%3Dnil%29-class-method" class="signature"><strong>.new</strong>(config = <span class="n">nil</span>)</a>
         
-          <div class="summary"><p>A rule that enforces method parameters have type restrictions, with optional enforcement of block parameters.</p></div>
+          <div class="summary"><p>Checks that there are no repeated bodies within <code>if/unless</code>, <code>case-when</code>, <code>case-in</code> and <code>rescue</code> constructs.</p></div>
         
       </li>
     
@@ -1274,26 +1272,6 @@ methods with a <code>:nodoc:</code> directive.</p>
   <ul class="list-summary">
     
       <li class="entry-summary">
-        <a href="#block_parameters%3D%28block_parameters%3ABool%29-instance-method" class="signature"><strong>#block_parameters=</strong>(block_parameters : Bool)</a>
-        
-      </li>
-    
-      <li class="entry-summary">
-        <a href="#block_parameters%3F%3ABool-instance-method" class="signature"><strong>#block_parameters?</strong> : Bool</a>
-        
-      </li>
-    
-      <li class="entry-summary">
-        <a href="#default_value%3D%28default_value%3ABool%29-instance-method" class="signature"><strong>#default_value=</strong>(default_value : Bool)</a>
-        
-      </li>
-    
-      <li class="entry-summary">
-        <a href="#default_value%3F%3ABool-instance-method" class="signature"><strong>#default_value?</strong> : Bool</a>
-        
-      </li>
-    
-      <li class="entry-summary">
         <a href="#description%3AString-instance-method" class="signature"><strong>#description</strong> : String</a>
         
       </li>
@@ -1324,32 +1302,32 @@ methods with a <code>:nodoc:</code> directive.</p>
       </li>
     
       <li class="entry-summary">
-        <a href="#nodoc_methods%3D%28nodoc_methods%3ABool%29-instance-method" class="signature"><strong>#nodoc_methods=</strong>(nodoc_methods : Bool)</a>
+        <a href="#ignore_constant_branches%3D%28ignore_constant_branches%3ABool%29-instance-method" class="signature"><strong>#ignore_constant_branches=</strong>(ignore_constant_branches : Bool)</a>
         
       </li>
     
       <li class="entry-summary">
-        <a href="#nodoc_methods%3F%3ABool-instance-method" class="signature"><strong>#nodoc_methods?</strong> : Bool</a>
+        <a href="#ignore_constant_branches%3F%3ABool-instance-method" class="signature"><strong>#ignore_constant_branches?</strong> : Bool</a>
         
       </li>
     
       <li class="entry-summary">
-        <a href="#private_methods%3D%28private_methods%3ABool%29-instance-method" class="signature"><strong>#private_methods=</strong>(private_methods : Bool)</a>
+        <a href="#ignore_duplicate_else_branch%3D%28ignore_duplicate_else_branch%3ABool%29-instance-method" class="signature"><strong>#ignore_duplicate_else_branch=</strong>(ignore_duplicate_else_branch : Bool)</a>
         
       </li>
     
       <li class="entry-summary">
-        <a href="#private_methods%3F%3ABool-instance-method" class="signature"><strong>#private_methods?</strong> : Bool</a>
+        <a href="#ignore_duplicate_else_branch%3F%3ABool-instance-method" class="signature"><strong>#ignore_duplicate_else_branch?</strong> : Bool</a>
         
       </li>
     
       <li class="entry-summary">
-        <a href="#protected_methods%3D%28protected_methods%3ABool%29-instance-method" class="signature"><strong>#protected_methods=</strong>(protected_methods : Bool)</a>
+        <a href="#ignore_literal_branches%3D%28ignore_literal_branches%3ABool%29-instance-method" class="signature"><strong>#ignore_literal_branches=</strong>(ignore_literal_branches : Bool)</a>
         
       </li>
     
       <li class="entry-summary">
-        <a href="#protected_methods%3F%3ABool-instance-method" class="signature"><strong>#protected_methods?</strong> : Bool</a>
+        <a href="#ignore_literal_branches%3F%3ABool-instance-method" class="signature"><strong>#ignore_literal_branches?</strong> : Bool</a>
         
       </li>
     
@@ -1374,7 +1352,12 @@ methods with a <code>:nodoc:</code> directive.</p>
       </li>
     
       <li class="entry-summary">
-        <a href="#test%28source%2Cnode%3ACrystal%3A%3ADef%29-instance-method" class="signature"><strong>#test</strong>(source, node : Crystal::Def)</a>
+        <a href="#test%28source%2Cnode%3ACrystal%3A%3AIf%7CCrystal%3A%3AUnless%7CCrystal%3A%3ACase%7CCrystal%3A%3AExceptionHandler%2Cifs%3AEnumerable%28Crystal%3A%3AIf%29%7CNil%3Dnil%29-instance-method" class="signature"><strong>#test</strong>(source, node : Crystal::If | Crystal::Unless | Crystal::Case | Crystal::ExceptionHandler, ifs : Enumerable(Crystal::If) | Nil = <span class="n">nil</span>)</a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#test%28source%29-instance-method" class="signature"><strong>#test</strong>(source)</a>
         
       </li>
     
@@ -1691,44 +1674,42 @@ methods with a <code>:nodoc:</code> directive.</p>
       
         <div class="doc">
           
-          <p>A rule that enforces method parameters have type restrictions, with optional enforcement of block parameters.</p>
-<p>For example, this is considered invalid:</p>
-<pre><code class="language-crystal"><span class="k">def</span> <span class="m">add</span>(a, b)
-  a <span class="o">+</span> b
-<span class="k">end</span></code></pre>
-<p>And this is considered valid:</p>
-<pre><code class="language-crystal"><span class="k">def</span> <span class="m">add</span>(a : <span class="t">String</span>, b : <span class="t">String</span>)
-  a <span class="o">+</span> b
-<span class="k">end</span></code></pre>
-<p>When the config options <code>PrivateMethods</code> and <code>ProtectedMethods</code>
-are true, this rule is also applied to private and protected methods, respectively.</p>
-<p>The <code>NodocMethods</code> configuration option controls whether this rule applies to
-methods with a <code>:nodoc:</code> directive.</p>
-<p>The <code>BlockParameters</code> configuration option will extend this to block parameters, where these are invalid:</p>
-<pre><code class="language-crystal"><span class="k">def</span> <span class="m">exec</span>(<span class="o">&amp;</span>)
-<span class="k">end</span>
-
-<span class="k">def</span> <span class="m">exec</span>(<span class="o">&amp;</span>block)
+          <p>Checks that there are no repeated bodies within <code>if/unless</code>,
+<code>case-when</code>, <code>case-in</code> and <code>rescue</code> constructs.</p>
+<p>This is considered invalid:</p>
+<pre><code class="language-crystal"><span class="k">if</span> foo
+  do_foo
+  do_something_else
+<span class="k">elsif</span> bar
+  do_foo
+  do_something_else
 <span class="k">end</span></code></pre>
 <p>And this is valid:</p>
-<pre><code class="language-crystal"><span class="k">def</span> <span class="m">exec</span>(<span class="o">&amp;</span>block : <span class="t">String</span> <span class="o">-&gt;</span> <span class="t">String</span>)
-  <span class="k">yield</span> <span class="s">&quot;cmd&quot;</span>
+<pre><code class="language-crystal"><span class="k">if</span> foo <span class="o">||</span> bar
+  do_foo
+  do_something_else
 <span class="k">end</span></code></pre>
-<p>The config option <code>DefaultValue</code> controls whether this rule applies to parameters that have a default value.</p>
+<p>With <code>IgnoreLiteralBranches: true</code>, branches are not registered
+as offenses if they return a basic literal value (string, symbol,
+integer, float, <code>true</code>, <code>false</code>, or <code>nil</code>), or return an array,
+hash, regexp or range that only contains one of the above basic
+literal values.</p>
+<p>With <code>IgnoreConstantBranches: true</code>, branches are not registered
+as offenses if they return a constant value.</p>
+<p>With <code>IgnoreDuplicateElseBranch: true</code>, in conditionals with multiple branches,
+duplicate 'else' branches are not registered as offenses.</p>
 <p>YAML configuration example:</p>
-<pre><code class="language-crystal"><span class="t">Typing</span><span class="o">/</span><span class="t">MethodParameterTypeRestriction</span>:
+<pre><code class="language-crystal"><span class="t">Lint</span><span class="o">/</span><span class="t">DuplicateBranch</span>:
   <span class="t">Enabled</span>: <span class="n">true</span>
-  <span class="t">DefaultValue</span>: <span class="n">false</span>
-  <span class="t">BlockParameters</span>: <span class="n">false</span>
-  <span class="t">PrivateMethods</span>: <span class="n">false</span>
-  <span class="t">ProtectedMethods</span>: <span class="n">false</span>
-  <span class="t">NodocMethods</span>: <span class="n">false</span></code></pre>
+  <span class="t">IgnoreLiteralBranches</span>: <span class="n">false</span>
+  <span class="t">IgnoreConstantBranches</span>: <span class="n">false</span>
+  <span class="t">IgnoreDuplicateElseBranch</span>: <span class="n">false</span></code></pre>
         </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/c16d661/src/ameba/rule/typing/method_parameter_type_restriction.cr#L57" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/c16d661/src/ameba/rule/lint/duplicate_branch.cr#L47" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1799,7 +1780,7 @@ methods with a <code>:nodoc:</code> directive.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/c16d661/src/ameba/rule/typing/method_parameter_type_restriction.cr#L60" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/c16d661/src/ameba/rule/lint/duplicate_branch.cr#L50" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1817,62 +1798,6 @@ methods with a <code>:nodoc:</code> directive.</p>
 </a>
     Instance Method Detail
   </h2>
-  
-    <div class="entry-detail" id="block_parameters=(block_parameters:Bool)-instance-method">
-      <div class="signature">
-        
-        def <strong>block_parameters=</strong>(block_parameters : Bool)
-
-        <a class="method-permalink" href="#block_parameters%3D%28block_parameters%3ABool%29-instance-method">#</a>
-      </div>
-      
-      <br/>
-      <div>
-        
-      </div>
-    </div>
-  
-    <div class="entry-detail" id="block_parameters?:Bool-instance-method">
-      <div class="signature">
-        
-        def <strong>block_parameters?</strong> : Bool
-
-        <a class="method-permalink" href="#block_parameters%3F%3ABool-instance-method">#</a>
-      </div>
-      
-      <br/>
-      <div>
-        
-      </div>
-    </div>
-  
-    <div class="entry-detail" id="default_value=(default_value:Bool)-instance-method">
-      <div class="signature">
-        
-        def <strong>default_value=</strong>(default_value : Bool)
-
-        <a class="method-permalink" href="#default_value%3D%28default_value%3ABool%29-instance-method">#</a>
-      </div>
-      
-      <br/>
-      <div>
-        
-      </div>
-    </div>
-  
-    <div class="entry-detail" id="default_value?:Bool-instance-method">
-      <div class="signature">
-        
-        def <strong>default_value?</strong> : Bool
-
-        <a class="method-permalink" href="#default_value%3F%3ABool-instance-method">#</a>
-      </div>
-      
-      <br/>
-      <div>
-        
-      </div>
-    </div>
   
     <div class="entry-detail" id="description:String-instance-method">
       <div class="signature">
@@ -1958,12 +1883,12 @@ methods with a <code>:nodoc:</code> directive.</p>
       </div>
     </div>
   
-    <div class="entry-detail" id="nodoc_methods=(nodoc_methods:Bool)-instance-method">
+    <div class="entry-detail" id="ignore_constant_branches=(ignore_constant_branches:Bool)-instance-method">
       <div class="signature">
         
-        def <strong>nodoc_methods=</strong>(nodoc_methods : Bool)
+        def <strong>ignore_constant_branches=</strong>(ignore_constant_branches : Bool)
 
-        <a class="method-permalink" href="#nodoc_methods%3D%28nodoc_methods%3ABool%29-instance-method">#</a>
+        <a class="method-permalink" href="#ignore_constant_branches%3D%28ignore_constant_branches%3ABool%29-instance-method">#</a>
       </div>
       
       <br/>
@@ -1972,12 +1897,12 @@ methods with a <code>:nodoc:</code> directive.</p>
       </div>
     </div>
   
-    <div class="entry-detail" id="nodoc_methods?:Bool-instance-method">
+    <div class="entry-detail" id="ignore_constant_branches?:Bool-instance-method">
       <div class="signature">
         
-        def <strong>nodoc_methods?</strong> : Bool
+        def <strong>ignore_constant_branches?</strong> : Bool
 
-        <a class="method-permalink" href="#nodoc_methods%3F%3ABool-instance-method">#</a>
+        <a class="method-permalink" href="#ignore_constant_branches%3F%3ABool-instance-method">#</a>
       </div>
       
       <br/>
@@ -1986,12 +1911,12 @@ methods with a <code>:nodoc:</code> directive.</p>
       </div>
     </div>
   
-    <div class="entry-detail" id="private_methods=(private_methods:Bool)-instance-method">
+    <div class="entry-detail" id="ignore_duplicate_else_branch=(ignore_duplicate_else_branch:Bool)-instance-method">
       <div class="signature">
         
-        def <strong>private_methods=</strong>(private_methods : Bool)
+        def <strong>ignore_duplicate_else_branch=</strong>(ignore_duplicate_else_branch : Bool)
 
-        <a class="method-permalink" href="#private_methods%3D%28private_methods%3ABool%29-instance-method">#</a>
+        <a class="method-permalink" href="#ignore_duplicate_else_branch%3D%28ignore_duplicate_else_branch%3ABool%29-instance-method">#</a>
       </div>
       
       <br/>
@@ -2000,12 +1925,12 @@ methods with a <code>:nodoc:</code> directive.</p>
       </div>
     </div>
   
-    <div class="entry-detail" id="private_methods?:Bool-instance-method">
+    <div class="entry-detail" id="ignore_duplicate_else_branch?:Bool-instance-method">
       <div class="signature">
         
-        def <strong>private_methods?</strong> : Bool
+        def <strong>ignore_duplicate_else_branch?</strong> : Bool
 
-        <a class="method-permalink" href="#private_methods%3F%3ABool-instance-method">#</a>
+        <a class="method-permalink" href="#ignore_duplicate_else_branch%3F%3ABool-instance-method">#</a>
       </div>
       
       <br/>
@@ -2014,12 +1939,12 @@ methods with a <code>:nodoc:</code> directive.</p>
       </div>
     </div>
   
-    <div class="entry-detail" id="protected_methods=(protected_methods:Bool)-instance-method">
+    <div class="entry-detail" id="ignore_literal_branches=(ignore_literal_branches:Bool)-instance-method">
       <div class="signature">
         
-        def <strong>protected_methods=</strong>(protected_methods : Bool)
+        def <strong>ignore_literal_branches=</strong>(ignore_literal_branches : Bool)
 
-        <a class="method-permalink" href="#protected_methods%3D%28protected_methods%3ABool%29-instance-method">#</a>
+        <a class="method-permalink" href="#ignore_literal_branches%3D%28ignore_literal_branches%3ABool%29-instance-method">#</a>
       </div>
       
       <br/>
@@ -2028,12 +1953,12 @@ methods with a <code>:nodoc:</code> directive.</p>
       </div>
     </div>
   
-    <div class="entry-detail" id="protected_methods?:Bool-instance-method">
+    <div class="entry-detail" id="ignore_literal_branches?:Bool-instance-method">
       <div class="signature">
         
-        def <strong>protected_methods?</strong> : Bool
+        def <strong>ignore_literal_branches?</strong> : Bool
 
-        <a class="method-permalink" href="#protected_methods%3F%3ABool-instance-method">#</a>
+        <a class="method-permalink" href="#ignore_literal_branches%3F%3ABool-instance-method">#</a>
       </div>
       
       <br/>
@@ -2081,7 +2006,7 @@ methods with a <code>:nodoc:</code> directive.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/c16d661/src/ameba/rule/typing/method_parameter_type_restriction.cr#L60" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/c16d661/src/ameba/rule/lint/duplicate_branch.cr#L50" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2100,18 +2025,34 @@ methods with a <code>:nodoc:</code> directive.</p>
       </div>
     </div>
   
-    <div class="entry-detail" id="test(source,node:Crystal::Def)-instance-method">
+    <div class="entry-detail" id="test(source,node:Crystal::If|Crystal::Unless|Crystal::Case|Crystal::ExceptionHandler,ifs:Enumerable(Crystal::If)|Nil=nil)-instance-method">
       <div class="signature">
         
-        def <strong>test</strong>(source, node : Crystal::Def)
+        def <strong>test</strong>(source, node : Crystal::If | Crystal::Unless | Crystal::Case | Crystal::ExceptionHandler, ifs : Enumerable(Crystal::If) | Nil = <span class="n">nil</span>)
 
-        <a class="method-permalink" href="#test%28source%2Cnode%3ACrystal%3A%3ADef%29-instance-method">#</a>
+        <a class="method-permalink" href="#test%28source%2Cnode%3ACrystal%3A%3AIf%7CCrystal%3A%3AUnless%7CCrystal%3A%3ACase%7CCrystal%3A%3AExceptionHandler%2Cifs%3AEnumerable%28Crystal%3A%3AIf%29%7CNil%3Dnil%29-instance-method">#</a>
       </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/c16d661/src/ameba/rule/typing/method_parameter_type_restriction.cr#L73" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/c16d661/src/ameba/rule/lint/duplicate_branch.cr#L66" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="test(source)-instance-method">
+      <div class="signature">
+        
+        def <strong>test</strong>(source)
+
+        <a class="method-permalink" href="#test%28source%29-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/crystal-ameba/ameba/blob/c16d661/src/ameba/rule/lint/duplicate_branch.cr#L62" target="_blank">View source</a>]
         
       </div>
     </div>
