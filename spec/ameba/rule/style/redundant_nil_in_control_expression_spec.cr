@@ -35,6 +35,17 @@ module Ameba::Rule::Style
         CRYSTAL
     end
 
+    it "reports `return(nil)` constructs" do
+      source = expect_issue subject, <<-CRYSTAL
+        def foo
+          return(nil) if empty?
+               # ^^^ error: Redundant `nil` detected
+        end
+        CRYSTAL
+
+      expect_no_corrections source
+    end
+
     it "reports `return nil` constructs (deep)" do
       expect_issue subject, <<-CRYSTAL
         def foo

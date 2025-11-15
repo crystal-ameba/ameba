@@ -29,6 +29,8 @@ module Ameba::Rule::Style
   #   Enabled: true
   # ```
   class RedundantNilInControlExpression < Base
+    include AST::Util
+
     properties do
       since_version "1.7.0"
       description "Disallows control expressions with `nil` argument"
@@ -39,8 +41,16 @@ module Ameba::Rule::Style
     def test(source, node : Crystal::ControlExpression)
       return unless (exp = node.exp).is_a?(Crystal::NilLiteral)
 
-      issue_for exp, MSG do |corrector|
-        corrector.remove_trailing(node, {{ " nil".size }})
+      node_code =
+        node_source(node, source.lines)
+
+      # `return(nil)`
+      if node_code.try(&.includes?('('))
+        issue_for exp, MSG
+      else
+        issue_for exp, MSG do |corrector|
+          corrector.replace(node, node.to_s.sub(/\s*\(?nil\)?$/, ""))
+        end
       end
     end
   end
