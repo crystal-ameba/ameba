@@ -370,18 +370,9 @@ class Ameba::Config
           builder.field("$ref", "#/definitions/BaseRule")
           builder.field("title", rule_name)
 
-          documentation_url =
-            "https://crystal-ameba.github.io/ameba/Ameba/Rule/%s.html" % rule_name
-
-          builder.field "description",
-            {% if description = properties["description".id] %}
-              <<-TEXT
-                {{ description[:default].id }}
-                #{documentation_url}
-                TEXT
-            {% else %}
-              documentation_url
-            {% end %}
+          {% if description = properties["description".id] %}
+            builder.field "description", {{ description[:default] }}
+          {% end %}
 
           {%
             serializable_props =
