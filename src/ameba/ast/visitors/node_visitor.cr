@@ -23,6 +23,7 @@ module Ameba::AST
       Case,
       ClassDef,
       ClassVar,
+      ControlExpression,
       Def,
       EnumDef,
       ExceptionHandler,
