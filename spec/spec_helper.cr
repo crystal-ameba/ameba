@@ -76,6 +76,19 @@ module Ameba
     end
   end
 
+  class ElseIfRule < Rule::Base
+    @[YAML::Field(ignore: true)]
+    getter ifs = [] of {Crystal::If, Array(Crystal::If)?}
+
+    properties do
+      description "Internal rule to test else if branches"
+    end
+
+    def test(source, node : Crystal::If, ifs : Array(Crystal::If)? = nil)
+      @ifs << {node, ifs}
+    end
+  end
+
   class FlowExpressionRule < Rule::Base
     @[YAML::Field(ignore: true)]
     getter expressions = [] of AST::FlowExpression
