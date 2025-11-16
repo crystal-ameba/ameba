@@ -17,6 +17,7 @@ module Ameba::JSONSchema::Builder
     JSON.build(io, indent: indent) do |builder|
       builder.object do
         builder.field("$schema", "https://json-schema.org/draft/2020-12/schema")
+        builder.field("$id", "https://crystal-ameba.github.io/.ameba.yml.schema.json")
         builder.field("title", ".ameba.yml")
         builder.field("description", "Configuration rules for the Crystal language Ameba linter")
         builder.field("type", "object")
