@@ -47,6 +47,12 @@ module Ameba::JSONSchema::Builder
             builder.string("items")
             builder.object do
               builder.field("type", "string")
+
+              builder.string("examples")
+              builder.array do
+                builder.string("src/**/*.{cr,ecr}")
+                builder.string("!lib")
+              end
             end
           end
 
@@ -60,6 +66,12 @@ module Ameba::JSONSchema::Builder
             builder.string("items")
             builder.object do
               builder.field("type", "string")
+
+              builder.string("examples")
+              builder.array do
+                builder.string("spec/fixtures/**")
+                builder.string("spec/**/*.manual_spec.cr")
+              end
             end
           end
 
@@ -101,6 +113,12 @@ module Ameba::JSONSchema::Builder
             builder.field("type", "string")
             builder.field("description",
               "The version of Ameba to limit rules to")
+
+            builder.string("examples")
+            builder.array do
+              builder.string("1.7.0")
+              builder.string("1.6.4")
+            end
           end
 
           builder.string("Globs")
