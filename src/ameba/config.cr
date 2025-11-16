@@ -371,7 +371,7 @@ class Ameba::Config
           builder.field("title", rule_name)
 
           {% if description = properties["description".id] %}
-            builder.field "description", {{ description[:default] }}
+            builder.field("description", {{ description[:default] }})
           {% end %}
 
           {%

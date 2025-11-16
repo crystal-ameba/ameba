@@ -111,8 +111,7 @@ module Ameba::JSONSchema::Builder
           builder.string("Version")
           builder.object do
             builder.field("type", "string")
-            builder.field("description",
-              "The version of Ameba to limit rules to")
+            builder.field("description", "The version of Ameba to limit rules to")
 
             builder.string("examples")
             builder.array do
