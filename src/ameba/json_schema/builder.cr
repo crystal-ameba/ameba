@@ -37,6 +37,32 @@ module Ameba::JSONSchema::Builder
             end
           end
 
+          builder.string("Globs")
+          builder.object do
+            builder.field("type", "array")
+            builder.field("title", "Globbed files and paths")
+            builder.field("description",
+              "An array of wildcards (or paths) to include to the inspection")
+
+            builder.string("items")
+            builder.object do
+              builder.field("type", "string")
+            end
+          end
+
+          builder.string("Excluded")
+          builder.object do
+            builder.field("type", "array")
+            builder.field("title", "Excluded files and paths")
+            builder.field("description",
+              "An array of wildcards (or paths) to exclude from the source list")
+
+            builder.string("items")
+            builder.object do
+              builder.field("type", "string")
+            end
+          end
+
           builder.string("BaseRule")
           builder.object do
             builder.field("type", "object")
@@ -62,15 +88,7 @@ module Ameba::JSONSchema::Builder
 
               builder.string("Excluded")
               builder.object do
-                builder.field("type", "array")
-                builder.field("title", "Excluded files and paths")
-                builder.field("description",
-                  "An array of wildcards (or paths) to exclude from the source list")
-
-                builder.string("items")
-                builder.object do
-                  builder.field("type", "string")
-                end
+                builder.field("$ref", "#/$defs/Excluded")
               end
             end
           end
@@ -85,30 +103,14 @@ module Ameba::JSONSchema::Builder
               "The version of Ameba to limit rules to")
           end
 
-          builder.string("Excluded")
-          builder.object do
-            builder.field("type", "array")
-            builder.field("title", "Excluded files and paths")
-            builder.field("description",
-              "An array of wildcards (or paths) to exclude from the source list")
-
-            builder.string("items")
-            builder.object do
-              builder.field("type", "string")
-            end
-          end
-
           builder.string("Globs")
           builder.object do
-            builder.field("type", "array")
-            builder.field("title", "Globbed files and paths")
-            builder.field("description",
-              "An array of wildcards (or paths) to include to the inspection")
+            builder.field("$ref", "#/$defs/Globs")
+          end
 
-            builder.string("items")
-            builder.object do
-              builder.field("type", "string")
-            end
+          builder.string("Excluded")
+          builder.object do
+            builder.field("$ref", "#/$defs/Excluded")
           end
 
           Rule.rules.each do |rule|
