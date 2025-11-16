@@ -367,7 +367,7 @@ class Ameba::Config
       def self.to_json_schema(builder : JSON::Builder) : Nil
         builder.string(rule_name)
         builder.object do
-          builder.field("$ref", "#/definitions/BaseRule")
+          builder.field("$ref", "#/$defs/BaseRule")
           builder.field("title", rule_name)
 
           {% if description = properties["description".id] %}
@@ -438,7 +438,7 @@ class Ameba::Config
                   {% default_set = true %}
 
                 {% elsif prop[:type] == Severity %}
-                  builder.field("$ref", "#/definitions/Severity")
+                  builder.field("$ref", "#/$defs/Severity")
                   builder.field("default", {{ prop[:default].capitalize }})
 
                   {% default_set = true %}
@@ -457,7 +457,7 @@ class Ameba::Config
               unless default_severity == Rule::Base.default_severity
                 builder.string("Severity")
                 builder.object do
-                  builder.field("$ref", "#/definitions/Severity")
+                  builder.field("$ref", "#/$defs/Severity")
                   builder.field("default", default_severity.to_s)
                 end
               end

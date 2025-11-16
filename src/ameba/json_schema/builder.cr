@@ -23,7 +23,7 @@ module Ameba::JSONSchema::Builder
         builder.field("type", "object")
         builder.field("additionalProperties", false)
 
-        builder.string("definitions")
+        builder.string("$defs")
         builder.object do
           builder.string("Severity")
           builder.object do
@@ -56,7 +56,7 @@ module Ameba::JSONSchema::Builder
 
               builder.string("Severity")
               builder.object do
-                builder.field("$ref", "#/definitions/Severity")
+                builder.field("$ref", "#/$defs/Severity")
                 builder.field("default", Rule::Base.default_severity.to_s)
               end
 
