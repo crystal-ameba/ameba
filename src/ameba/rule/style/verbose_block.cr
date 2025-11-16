@@ -48,8 +48,6 @@ module Ameba::Rule::Style
     CALL_PATTERN = "%s(%s&.%s)"
 
     private PREFIX_OPERATORS = {"+", "-", "~"}
-    private OPERATOR_CHARS   =
-      {'[', ']', '!', '=', '>', '<', '~', '+', '-', '*', '/', '%', '^', '|', '&'}
 
     def test(source, node : Crystal::Call)
       # we are interested only in calls with block taking a single argument
@@ -88,7 +86,7 @@ module Ameba::Rule::Style
       return if exclude_calls_with_block? && body.block
       return if exclude_multiple_line_blocks? && !same_location_lines?(call, body)
       return if exclude_prefix_operators? && prefix_operator?(body)
-      return if exclude_operators? && operator?(body.name)
+      return if exclude_operators? && operator_method?(body)
       return if exclude_setters? && setter?(body.name)
 
       call_code =
@@ -191,10 +189,6 @@ module Ameba::Rule::Style
 
     private def prefix_operator?(node)
       node.name.in?(PREFIX_OPERATORS) && node.args.empty?
-    end
-
-    private def operator?(name)
-      !name.empty? && name[0].in?(OPERATOR_CHARS)
     end
 
     private def setter?(name)
