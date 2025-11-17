@@ -1,10 +1,11 @@
 {
-  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://crystal-ameba.github.io/.ameba.yml.schema.json",
   "title": ".ameba.yml",
   "description": "Configuration rules for the Crystal language Ameba linter",
   "type": "object",
   "additionalProperties": false,
-  "definitions": {
+  "$defs": {
     "Severity": {
       "type": "string",
       "enum": [
@@ -12,6 +13,30 @@
         "Warning",
         "Convention"
       ]
+    },
+    "Globs": {
+      "type": "array",
+      "title": "Globbed files and paths",
+      "description": "An array of wildcards (or paths) to include to the inspection",
+      "items": {
+        "type": "string",
+        "examples": [
+          "src/**/*.{cr,ecr}",
+          "!lib"
+        ]
+      }
+    },
+    "Excluded": {
+      "type": "array",
+      "title": "Excluded files and paths",
+      "description": "An array of wildcards (or paths) to exclude from the source list",
+      "items": {
+        "type": "string",
+        "examples": [
+          "spec/fixtures/**",
+          "spec/**/*.manual_spec.cr"
+        ]
+      }
     },
     "BaseRule": {
       "type": "object",
@@ -24,16 +49,11 @@
           "default": true
         },
         "Severity": {
-          "$ref": "#/definitions/Severity",
+          "$ref": "#/$defs/Severity",
           "default": "Convention"
         },
         "Excluded": {
-          "type": "array",
-          "title": "Excluded files and paths",
-          "description": "An array of wildcards (or paths) to exclude from the source list",
-          "items": {
-            "type": "string"
-          }
+          "$ref": "#/$defs/Excluded"
         }
       }
     }
@@ -41,26 +61,20 @@
   "properties": {
     "Version": {
       "type": "string",
-      "description": "The version of Ameba to limit rules to"
-    },
-    "Excluded": {
-      "type": "array",
-      "title": "Excluded files and paths",
-      "description": "An array of wildcards (or paths) to exclude from the source list",
-      "items": {
-        "type": "string"
-      }
+      "description": "The version of Ameba to limit rules to",
+      "examples": [
+        "1.7.0",
+        "1.6.4"
+      ]
     },
     "Globs": {
-      "type": "array",
-      "title": "Globbed files and paths",
-      "description": "An array of wildcards (or paths) to include to the inspection",
-      "items": {
-        "type": "string"
-      }
+      "$ref": "#/$defs/Globs"
+    },
+    "Excluded": {
+      "$ref": "#/$defs/Excluded"
     },
     "Documentation/Admonition": {
-      "$ref": "#/definitions/BaseRule",
+      "$ref": "#/$defs/BaseRule",
       "title": "Documentation/Admonition",
       "description": "Reports documentation admonitions",
       "properties": {
@@ -73,7 +87,7 @@
           "default": false
         },
         "Severity": {
-          "$ref": "#/definitions/Severity",
+          "$ref": "#/$defs/Severity",
           "default": "Warning"
         },
         "Admonitions": {
@@ -94,7 +108,7 @@
       }
     },
     "Documentation/Documentation": {
-      "$ref": "#/definitions/BaseRule",
+      "$ref": "#/$defs/BaseRule",
       "title": "Documentation/Documentation",
       "description": "Enforces public types to be documented",
       "properties": {
@@ -133,7 +147,7 @@
       }
     },
     "Layout/LineLength": {
-      "$ref": "#/definitions/BaseRule",
+      "$ref": "#/$defs/BaseRule",
       "title": "Layout/LineLength",
       "description": "Disallows lines longer than `MaxLength` number of symbols",
       "properties": {
@@ -152,7 +166,7 @@
       }
     },
     "Layout/TrailingBlankLines": {
-      "$ref": "#/definitions/BaseRule",
+      "$ref": "#/$defs/BaseRule",
       "title": "Layout/TrailingBlankLines",
       "description": "Disallows trailing blank lines",
       "properties": {
@@ -163,7 +177,7 @@
       }
     },
     "Layout/TrailingWhitespace": {
-      "$ref": "#/definitions/BaseRule",
+      "$ref": "#/$defs/BaseRule",
       "title": "Layout/TrailingWhitespace",
       "description": "Disallows trailing whitespace",
       "properties": {
@@ -174,7 +188,7 @@
       }
     },
     "Lint/AmbiguousAssignment": {
-      "$ref": "#/definitions/BaseRule",
+      "$ref": "#/$defs/BaseRule",
       "title": "Lint/AmbiguousAssignment",
       "description": "Disallows ambiguous `=-/=+/=!`",
       "properties": {
@@ -183,13 +197,13 @@
           "default": "1.0.0"
         },
         "Severity": {
-          "$ref": "#/definitions/Severity",
+          "$ref": "#/$defs/Severity",
           "default": "Warning"
         }
       }
     },
     "Lint/BadDirective": {
-      "$ref": "#/definitions/BaseRule",
+      "$ref": "#/$defs/BaseRule",
       "title": "Lint/BadDirective",
       "description": "Reports bad comment directives",
       "properties": {
@@ -198,13 +212,13 @@
           "default": "0.13.0"
         },
         "Severity": {
-          "$ref": "#/definitions/Severity",
+          "$ref": "#/$defs/Severity",
           "default": "Warning"
         }
       }
     },
     "Lint/ComparisonToBoolean": {
-      "$ref": "#/definitions/BaseRule",
+      "$ref": "#/$defs/BaseRule",
       "title": "Lint/ComparisonToBoolean",
       "description": "Disallows comparison to booleans",
       "properties": {
@@ -217,13 +231,13 @@
           "default": false
         },
         "Severity": {
-          "$ref": "#/definitions/Severity",
+          "$ref": "#/$defs/Severity",
           "default": "Warning"
         }
       }
     },
     "Lint/DebugCalls": {
-      "$ref": "#/definitions/BaseRule",
+      "$ref": "#/$defs/BaseRule",
       "title": "Lint/DebugCalls",
       "description": "Disallows debug-related calls",
       "properties": {
@@ -244,13 +258,13 @@
           ]
         },
         "Severity": {
-          "$ref": "#/definitions/Severity",
+          "$ref": "#/$defs/Severity",
           "default": "Warning"
         }
       }
     },
     "Lint/DebuggerStatement": {
-      "$ref": "#/definitions/BaseRule",
+      "$ref": "#/$defs/BaseRule",
       "title": "Lint/DebuggerStatement",
       "description": "Disallows calls to debugger",
       "properties": {
@@ -259,13 +273,13 @@
           "default": "0.1.0"
         },
         "Severity": {
-          "$ref": "#/definitions/Severity",
+          "$ref": "#/$defs/Severity",
           "default": "Warning"
         }
       }
     },
     "Lint/DuplicateBranch": {
-      "$ref": "#/definitions/BaseRule",
+      "$ref": "#/$defs/BaseRule",
       "title": "Lint/DuplicateBranch",
       "description": "Reports duplicated branch bodies",
       "properties": {
@@ -290,13 +304,13 @@
           "default": false
         },
         "Severity": {
-          "$ref": "#/definitions/Severity",
+          "$ref": "#/$defs/Severity",
           "default": "Warning"
         }
       }
     },
     "Lint/DuplicateEnumValue": {
-      "$ref": "#/definitions/BaseRule",
+      "$ref": "#/$defs/BaseRule",
       "title": "Lint/DuplicateEnumValue",
       "description": "Reports duplicated `enum` member values",
       "properties": {
@@ -305,13 +319,13 @@
           "default": "1.7.0"
         },
         "Severity": {
-          "$ref": "#/definitions/Severity",
+          "$ref": "#/$defs/Severity",
           "default": "Warning"
         }
       }
     },
     "Lint/DuplicateWhenCondition": {
-      "$ref": "#/definitions/BaseRule",
+      "$ref": "#/$defs/BaseRule",
       "title": "Lint/DuplicateWhenCondition",
       "description": "Reports repeated conditions used in case `when` expressions",
       "properties": {
@@ -320,13 +334,13 @@
           "default": "1.7.0"
         },
         "Severity": {
-          "$ref": "#/definitions/Severity",
+          "$ref": "#/$defs/Severity",
           "default": "Warning"
         }
       }
     },
     "Lint/DuplicatedRequire": {
-      "$ref": "#/definitions/BaseRule",
+      "$ref": "#/$defs/BaseRule",
       "title": "Lint/DuplicatedRequire",
       "description": "Reports duplicated `require` statements",
       "properties": {
@@ -335,13 +349,13 @@
           "default": "0.14.0"
         },
         "Severity": {
-          "$ref": "#/definitions/Severity",
+          "$ref": "#/$defs/Severity",
           "default": "Warning"
         }
       }
     },
     "Lint/ElseNil": {
-      "$ref": "#/definitions/BaseRule",
+      "$ref": "#/$defs/BaseRule",
       "title": "Lint/ElseNil",
       "description": "Disallows `else` blocks with `nil` as their body",
       "properties": {
@@ -350,13 +364,13 @@
           "default": "1.7.0"
         },
         "Severity": {
-          "$ref": "#/definitions/Severity",
+          "$ref": "#/$defs/Severity",
           "default": "Warning"
         }
       }
     },
     "Lint/EmptyEnsure": {
-      "$ref": "#/definitions/BaseRule",
+      "$ref": "#/$defs/BaseRule",
       "title": "Lint/EmptyEnsure",
       "description": "Disallows empty `ensure` statement",
       "properties": {
@@ -365,13 +379,13 @@
           "default": "0.3.0"
         },
         "Severity": {
-          "$ref": "#/definitions/Severity",
+          "$ref": "#/$defs/Severity",
           "default": "Warning"
         }
       }
     },
     "Lint/EmptyExpression": {
-      "$ref": "#/definitions/BaseRule",
+      "$ref": "#/$defs/BaseRule",
       "title": "Lint/EmptyExpression",
       "description": "Disallows empty expressions",
       "properties": {
@@ -380,13 +394,13 @@
           "default": "0.2.0"
         },
         "Severity": {
-          "$ref": "#/definitions/Severity",
+          "$ref": "#/$defs/Severity",
           "default": "Warning"
         }
       }
     },
     "Lint/EmptyLoop": {
-      "$ref": "#/definitions/BaseRule",
+      "$ref": "#/$defs/BaseRule",
       "title": "Lint/EmptyLoop",
       "description": "Disallows empty loops",
       "properties": {
@@ -395,13 +409,13 @@
           "default": "0.12.0"
         },
         "Severity": {
-          "$ref": "#/definitions/Severity",
+          "$ref": "#/$defs/Severity",
           "default": "Warning"
         }
       }
     },
     "Lint/EnumMemberNameConflict": {
-      "$ref": "#/definitions/BaseRule",
+      "$ref": "#/$defs/BaseRule",
       "title": "Lint/EnumMemberNameConflict",
       "description": "Reports conflicting enum member names",
       "properties": {
@@ -410,13 +424,13 @@
           "default": "1.7.0"
         },
         "Severity": {
-          "$ref": "#/definitions/Severity",
+          "$ref": "#/$defs/Severity",
           "default": "Warning"
         }
       }
     },
     "Lint/Formatting": {
-      "$ref": "#/definitions/BaseRule",
+      "$ref": "#/$defs/BaseRule",
       "title": "Lint/Formatting",
       "description": "Reports not formatted sources",
       "properties": {
@@ -429,13 +443,13 @@
           "default": false
         },
         "Severity": {
-          "$ref": "#/definitions/Severity",
+          "$ref": "#/$defs/Severity",
           "default": "Warning"
         }
       }
     },
     "Lint/HashDuplicatedKey": {
-      "$ref": "#/definitions/BaseRule",
+      "$ref": "#/$defs/BaseRule",
       "title": "Lint/HashDuplicatedKey",
       "description": "Disallows duplicated keys in hash literals",
       "properties": {
@@ -444,13 +458,13 @@
           "default": "0.3.0"
         },
         "Severity": {
-          "$ref": "#/definitions/Severity",
+          "$ref": "#/$defs/Severity",
           "default": "Warning"
         }
       }
     },
     "Lint/LiteralAssignmentsInExpressions": {
-      "$ref": "#/definitions/BaseRule",
+      "$ref": "#/$defs/BaseRule",
       "title": "Lint/LiteralAssignmentsInExpressions",
       "description": "Disallows assignments with literal values in control expressions",
       "properties": {
@@ -459,13 +473,13 @@
           "default": "1.4.0"
         },
         "Severity": {
-          "$ref": "#/definitions/Severity",
+          "$ref": "#/$defs/Severity",
           "default": "Warning"
         }
       }
     },
     "Lint/LiteralInCondition": {
-      "$ref": "#/definitions/BaseRule",
+      "$ref": "#/$defs/BaseRule",
       "title": "Lint/LiteralInCondition",
       "description": "Disallows useless conditional statements that contain a literal in place of a variable or predicate function",
       "properties": {
@@ -474,13 +488,13 @@
           "default": "0.1.0"
         },
         "Severity": {
-          "$ref": "#/definitions/Severity",
+          "$ref": "#/$defs/Severity",
           "default": "Warning"
         }
       }
     },
     "Lint/LiteralInInterpolation": {
-      "$ref": "#/definitions/BaseRule",
+      "$ref": "#/$defs/BaseRule",
       "title": "Lint/LiteralInInterpolation",
       "description": "Disallows useless string interpolations",
       "properties": {
@@ -489,13 +503,13 @@
           "default": "0.1.0"
         },
         "Severity": {
-          "$ref": "#/definitions/Severity",
+          "$ref": "#/$defs/Severity",
           "default": "Warning"
         }
       }
     },
     "Lint/LiteralsComparison": {
-      "$ref": "#/definitions/BaseRule",
+      "$ref": "#/$defs/BaseRule",
       "title": "Lint/LiteralsComparison",
       "description": "Identifies comparisons between literals",
       "properties": {
@@ -504,13 +518,13 @@
           "default": "1.3.0"
         },
         "Severity": {
-          "$ref": "#/definitions/Severity",
+          "$ref": "#/$defs/Severity",
           "default": "Warning"
         }
       }
     },
     "Lint/MissingBlockArgument": {
-      "$ref": "#/definitions/BaseRule",
+      "$ref": "#/$defs/BaseRule",
       "title": "Lint/MissingBlockArgument",
       "description": "Disallows yielding method definitions without block argument",
       "properties": {
@@ -519,13 +533,13 @@
           "default": "1.4.0"
         },
         "Severity": {
-          "$ref": "#/definitions/Severity",
+          "$ref": "#/$defs/Severity",
           "default": "Warning"
         }
       }
     },
     "Lint/NotNil": {
-      "$ref": "#/definitions/BaseRule",
+      "$ref": "#/$defs/BaseRule",
       "title": "Lint/NotNil",
       "description": "Identifies usage of `not_nil!` calls",
       "properties": {
@@ -534,13 +548,13 @@
           "default": "1.3.0"
         },
         "Severity": {
-          "$ref": "#/definitions/Severity",
+          "$ref": "#/$defs/Severity",
           "default": "Warning"
         }
       }
     },
     "Lint/NotNilAfterNoBang": {
-      "$ref": "#/definitions/BaseRule",
+      "$ref": "#/$defs/BaseRule",
       "title": "Lint/NotNilAfterNoBang",
       "description": "Identifies usage of `index/rindex/find/match` calls followed by `not_nil!`",
       "properties": {
@@ -549,13 +563,13 @@
           "default": "1.3.0"
         },
         "Severity": {
-          "$ref": "#/definitions/Severity",
+          "$ref": "#/$defs/Severity",
           "default": "Warning"
         }
       }
     },
     "Lint/PercentArrays": {
-      "$ref": "#/definitions/BaseRule",
+      "$ref": "#/$defs/BaseRule",
       "title": "Lint/PercentArrays",
       "description": "Disallows some unwanted symbols in percent array literals",
       "properties": {
@@ -572,13 +586,13 @@
           "default": ",:"
         },
         "Severity": {
-          "$ref": "#/definitions/Severity",
+          "$ref": "#/$defs/Severity",
           "default": "Warning"
         }
       }
     },
     "Lint/RandZero": {
-      "$ref": "#/definitions/BaseRule",
+      "$ref": "#/$defs/BaseRule",
       "title": "Lint/RandZero",
       "description": "Disallows `rand` zero calls",
       "properties": {
@@ -587,13 +601,13 @@
           "default": "0.5.1"
         },
         "Severity": {
-          "$ref": "#/definitions/Severity",
+          "$ref": "#/$defs/Severity",
           "default": "Warning"
         }
       }
     },
     "Lint/RedundantStringCoercion": {
-      "$ref": "#/definitions/BaseRule",
+      "$ref": "#/$defs/BaseRule",
       "title": "Lint/RedundantStringCoercion",
       "description": "Disallows redundant string conversions in interpolation",
       "properties": {
@@ -602,13 +616,13 @@
           "default": "0.12.0"
         },
         "Severity": {
-          "$ref": "#/definitions/Severity",
+          "$ref": "#/$defs/Severity",
           "default": "Warning"
         }
       }
     },
     "Lint/RedundantWithIndex": {
-      "$ref": "#/definitions/BaseRule",
+      "$ref": "#/$defs/BaseRule",
       "title": "Lint/RedundantWithIndex",
       "description": "Disallows redundant `with_index` calls",
       "properties": {
@@ -617,13 +631,13 @@
           "default": "0.11.0"
         },
         "Severity": {
-          "$ref": "#/definitions/Severity",
+          "$ref": "#/$defs/Severity",
           "default": "Warning"
         }
       }
     },
     "Lint/RedundantWithObject": {
-      "$ref": "#/definitions/BaseRule",
+      "$ref": "#/$defs/BaseRule",
       "title": "Lint/RedundantWithObject",
       "description": "Disallows redundant `with_object` calls",
       "properties": {
@@ -632,13 +646,13 @@
           "default": "0.11.0"
         },
         "Severity": {
-          "$ref": "#/definitions/Severity",
+          "$ref": "#/$defs/Severity",
           "default": "Warning"
         }
       }
     },
     "Lint/RequireParentheses": {
-      "$ref": "#/definitions/BaseRule",
+      "$ref": "#/$defs/BaseRule",
       "title": "Lint/RequireParentheses",
       "description": "Disallows method calls with no parentheses and a logical operator in the argument list",
       "properties": {
@@ -647,13 +661,13 @@
           "default": "1.7.0"
         },
         "Severity": {
-          "$ref": "#/definitions/Severity",
+          "$ref": "#/$defs/Severity",
           "default": "Warning"
         }
       }
     },
     "Lint/SelfInitializeDefinition": {
-      "$ref": "#/definitions/BaseRule",
+      "$ref": "#/$defs/BaseRule",
       "title": "Lint/SelfInitializeDefinition",
       "description": "Reports `initialize` method definitions with a `self` receiver",
       "properties": {
@@ -662,13 +676,13 @@
           "default": "1.7.0"
         },
         "Severity": {
-          "$ref": "#/definitions/Severity",
+          "$ref": "#/$defs/Severity",
           "default": "Warning"
         }
       }
     },
     "Lint/ShadowedArgument": {
-      "$ref": "#/definitions/BaseRule",
+      "$ref": "#/$defs/BaseRule",
       "title": "Lint/ShadowedArgument",
       "description": "Disallows shadowed arguments",
       "properties": {
@@ -677,13 +691,13 @@
           "default": "0.7.0"
         },
         "Severity": {
-          "$ref": "#/definitions/Severity",
+          "$ref": "#/$defs/Severity",
           "default": "Warning"
         }
       }
     },
     "Lint/ShadowedException": {
-      "$ref": "#/definitions/BaseRule",
+      "$ref": "#/$defs/BaseRule",
       "title": "Lint/ShadowedException",
       "description": "Disallows rescued exception that get shadowed",
       "properties": {
@@ -692,13 +706,13 @@
           "default": "0.3.0"
         },
         "Severity": {
-          "$ref": "#/definitions/Severity",
+          "$ref": "#/$defs/Severity",
           "default": "Warning"
         }
       }
     },
     "Lint/ShadowingOuterLocalVar": {
-      "$ref": "#/definitions/BaseRule",
+      "$ref": "#/$defs/BaseRule",
       "title": "Lint/ShadowingOuterLocalVar",
       "description": "Disallows the usage of the same name as outer local variables for block or proc arguments",
       "properties": {
@@ -707,13 +721,13 @@
           "default": "0.7.0"
         },
         "Severity": {
-          "$ref": "#/definitions/Severity",
+          "$ref": "#/$defs/Severity",
           "default": "Warning"
         }
       }
     },
     "Lint/SharedVarInFiber": {
-      "$ref": "#/definitions/BaseRule",
+      "$ref": "#/$defs/BaseRule",
       "title": "Lint/SharedVarInFiber",
       "description": "Disallows shared variables in fibers",
       "properties": {
@@ -722,13 +736,13 @@
           "default": "0.12.0"
         },
         "Severity": {
-          "$ref": "#/definitions/Severity",
+          "$ref": "#/$defs/Severity",
           "default": "Warning"
         }
       }
     },
     "Lint/SignalTrap": {
-      "$ref": "#/definitions/BaseRule",
+      "$ref": "#/$defs/BaseRule",
       "title": "Lint/SignalTrap",
       "description": "Disallows `Signal::INT/HUP/TERM.trap` in favor of `Process.on_terminate`",
       "properties": {
@@ -737,13 +751,13 @@
           "default": "1.7.0"
         },
         "Severity": {
-          "$ref": "#/definitions/Severity",
+          "$ref": "#/$defs/Severity",
           "default": "Warning"
         }
       }
     },
     "Lint/SpecEqWithBoolOrNilLiteral": {
-      "$ref": "#/definitions/BaseRule",
+      "$ref": "#/$defs/BaseRule",
       "title": "Lint/SpecEqWithBoolOrNilLiteral",
       "description": "Reports `eq(true|false|nil)` expectations in specs",
       "properties": {
@@ -752,13 +766,13 @@
           "default": "1.7.0"
         },
         "Severity": {
-          "$ref": "#/definitions/Severity",
+          "$ref": "#/$defs/Severity",
           "default": "Warning"
         }
       }
     },
     "Lint/SpecFilename": {
-      "$ref": "#/definitions/BaseRule",
+      "$ref": "#/$defs/BaseRule",
       "title": "Lint/SpecFilename",
       "description": "Enforces spec filenames to have `_spec` suffix",
       "properties": {
@@ -787,13 +801,13 @@
           ]
         },
         "Severity": {
-          "$ref": "#/definitions/Severity",
+          "$ref": "#/$defs/Severity",
           "default": "Warning"
         }
       }
     },
     "Lint/SpecFocus": {
-      "$ref": "#/definitions/BaseRule",
+      "$ref": "#/$defs/BaseRule",
       "title": "Lint/SpecFocus",
       "description": "Reports focused spec items",
       "properties": {
@@ -802,13 +816,13 @@
           "default": "0.14.0"
         },
         "Severity": {
-          "$ref": "#/definitions/Severity",
+          "$ref": "#/$defs/Severity",
           "default": "Warning"
         }
       }
     },
     "Lint/Syntax": {
-      "$ref": "#/definitions/BaseRule",
+      "$ref": "#/$defs/BaseRule",
       "title": "Lint/Syntax",
       "description": "Reports invalid Crystal syntax",
       "properties": {
@@ -817,13 +831,13 @@
           "default": "0.4.2"
         },
         "Severity": {
-          "$ref": "#/definitions/Severity",
+          "$ref": "#/$defs/Severity",
           "default": "Error"
         }
       }
     },
     "Lint/TopLevelOperatorDefinition": {
-      "$ref": "#/definitions/BaseRule",
+      "$ref": "#/$defs/BaseRule",
       "title": "Lint/TopLevelOperatorDefinition",
       "description": "Disallows top level operator method definitions",
       "properties": {
@@ -832,13 +846,13 @@
           "default": "1.7.0"
         },
         "Severity": {
-          "$ref": "#/definitions/Severity",
+          "$ref": "#/$defs/Severity",
           "default": "Warning"
         }
       }
     },
     "Lint/TrailingRescueException": {
-      "$ref": "#/definitions/BaseRule",
+      "$ref": "#/$defs/BaseRule",
       "title": "Lint/TrailingRescueException",
       "description": "Disallows trailing `rescue` with a path",
       "properties": {
@@ -847,13 +861,13 @@
           "default": "1.7.0"
         },
         "Severity": {
-          "$ref": "#/definitions/Severity",
+          "$ref": "#/$defs/Severity",
           "default": "Warning"
         }
       }
     },
     "Lint/Typos": {
-      "$ref": "#/definitions/BaseRule",
+      "$ref": "#/$defs/BaseRule",
       "title": "Lint/Typos",
       "description": "Reports typos found in source files",
       "properties": {
@@ -877,13 +891,13 @@
           "default": true
         },
         "Severity": {
-          "$ref": "#/definitions/Severity",
+          "$ref": "#/$defs/Severity",
           "default": "Warning"
         }
       }
     },
     "Lint/UnneededDisableDirective": {
-      "$ref": "#/definitions/BaseRule",
+      "$ref": "#/$defs/BaseRule",
       "title": "Lint/UnneededDisableDirective",
       "description": "Reports unneeded disable directives in comments",
       "properties": {
@@ -892,13 +906,13 @@
           "default": "0.5.0"
         },
         "Severity": {
-          "$ref": "#/definitions/Severity",
+          "$ref": "#/$defs/Severity",
           "default": "Warning"
         }
       }
     },
     "Lint/UnreachableCode": {
-      "$ref": "#/definitions/BaseRule",
+      "$ref": "#/$defs/BaseRule",
       "title": "Lint/UnreachableCode",
       "description": "Reports unreachable code",
       "properties": {
@@ -907,13 +921,13 @@
           "default": "0.9.0"
         },
         "Severity": {
-          "$ref": "#/definitions/Severity",
+          "$ref": "#/$defs/Severity",
           "default": "Warning"
         }
       }
     },
     "Lint/UnusedArgument": {
-      "$ref": "#/definitions/BaseRule",
+      "$ref": "#/$defs/BaseRule",
       "title": "Lint/UnusedArgument",
       "description": "Disallows unused arguments",
       "properties": {
@@ -934,13 +948,13 @@
           "default": false
         },
         "Severity": {
-          "$ref": "#/definitions/Severity",
+          "$ref": "#/$defs/Severity",
           "default": "Warning"
         }
       }
     },
     "Lint/UnusedBlockArgument": {
-      "$ref": "#/definitions/BaseRule",
+      "$ref": "#/$defs/BaseRule",
       "title": "Lint/UnusedBlockArgument",
       "description": "Disallows unused block arguments",
       "properties": {
@@ -949,13 +963,13 @@
           "default": "1.4.0"
         },
         "Severity": {
-          "$ref": "#/definitions/Severity",
+          "$ref": "#/$defs/Severity",
           "default": "Warning"
         }
       }
     },
     "Lint/UnusedExpression": {
-      "$ref": "#/definitions/BaseRule",
+      "$ref": "#/$defs/BaseRule",
       "title": "Lint/UnusedExpression",
       "description": "Disallows unused expressions",
       "properties": {
@@ -964,13 +978,13 @@
           "default": "1.7.0"
         },
         "Severity": {
-          "$ref": "#/definitions/Severity",
+          "$ref": "#/$defs/Severity",
           "default": "Warning"
         }
       }
     },
     "Lint/UselessAssign": {
-      "$ref": "#/definitions/BaseRule",
+      "$ref": "#/$defs/BaseRule",
       "title": "Lint/UselessAssign",
       "description": "Disallows useless variable assignments",
       "properties": {
@@ -983,13 +997,13 @@
           "default": false
         },
         "Severity": {
-          "$ref": "#/definitions/Severity",
+          "$ref": "#/$defs/Severity",
           "default": "Warning"
         }
       }
     },
     "Lint/UselessConditionInWhen": {
-      "$ref": "#/definitions/BaseRule",
+      "$ref": "#/$defs/BaseRule",
       "title": "Lint/UselessConditionInWhen",
       "description": "Disallows useless conditions in `when`",
       "properties": {
@@ -998,13 +1012,13 @@
           "default": "0.3.0"
         },
         "Severity": {
-          "$ref": "#/definitions/Severity",
+          "$ref": "#/$defs/Severity",
           "default": "Warning"
         }
       }
     },
     "Lint/UselessVisibilityModifier": {
-      "$ref": "#/definitions/BaseRule",
+      "$ref": "#/$defs/BaseRule",
       "title": "Lint/UselessVisibilityModifier",
       "description": "Disallows top level `protected` method visibility modifier",
       "properties": {
@@ -1013,13 +1027,13 @@
           "default": "1.7.0"
         },
         "Severity": {
-          "$ref": "#/definitions/Severity",
+          "$ref": "#/$defs/Severity",
           "default": "Warning"
         }
       }
     },
     "Lint/VoidOutsideLib": {
-      "$ref": "#/definitions/BaseRule",
+      "$ref": "#/$defs/BaseRule",
       "title": "Lint/VoidOutsideLib",
       "description": "Disallows use of `Void` outside C lib bindings and `Pointer(Void)`",
       "properties": {
@@ -1028,13 +1042,13 @@
           "default": "1.7.0"
         },
         "Severity": {
-          "$ref": "#/definitions/Severity",
+          "$ref": "#/$defs/Severity",
           "default": "Warning"
         }
       }
     },
     "Lint/WhitespaceAroundMacroExpression": {
-      "$ref": "#/definitions/BaseRule",
+      "$ref": "#/$defs/BaseRule",
       "title": "Lint/WhitespaceAroundMacroExpression",
       "description": "Reports missing spaces around macro expressions",
       "properties": {
@@ -1043,13 +1057,13 @@
           "default": "1.7.0"
         },
         "Severity": {
-          "$ref": "#/definitions/Severity",
+          "$ref": "#/$defs/Severity",
           "default": "Warning"
         }
       }
     },
     "Metrics/CyclomaticComplexity": {
-      "$ref": "#/definitions/BaseRule",
+      "$ref": "#/$defs/BaseRule",
       "title": "Metrics/CyclomaticComplexity",
       "description": "Disallows methods with a cyclomatic complexity higher than `MaxComplexity`",
       "properties": {
@@ -1062,13 +1076,13 @@
           "default": 12
         },
         "Severity": {
-          "$ref": "#/definitions/Severity",
+          "$ref": "#/$defs/Severity",
           "default": "Warning"
         }
       }
     },
     "Naming/AccessorMethodName": {
-      "$ref": "#/definitions/BaseRule",
+      "$ref": "#/$defs/BaseRule",
       "title": "Naming/AccessorMethodName",
       "description": "Makes sure that accessor methods are named properly",
       "properties": {
@@ -1079,7 +1093,7 @@
       }
     },
     "Naming/AsciiIdentifiers": {
-      "$ref": "#/definitions/BaseRule",
+      "$ref": "#/$defs/BaseRule",
       "title": "Naming/AsciiIdentifiers",
       "description": "Disallows non-ascii characters in identifiers",
       "properties": {
@@ -1094,7 +1108,7 @@
       }
     },
     "Naming/BinaryOperatorParameterName": {
-      "$ref": "#/definitions/BaseRule",
+      "$ref": "#/$defs/BaseRule",
       "title": "Naming/BinaryOperatorParameterName",
       "description": "Enforces that certain binary operator methods have their sole parameter name standardized",
       "properties": {
@@ -1130,7 +1144,7 @@
       }
     },
     "Naming/BlockParameterName": {
-      "$ref": "#/definitions/BaseRule",
+      "$ref": "#/$defs/BaseRule",
       "title": "Naming/BlockParameterName",
       "description": "Disallows non-descriptive block parameter names",
       "properties": {
@@ -1186,7 +1200,7 @@
       }
     },
     "Naming/ConstantNames": {
-      "$ref": "#/definitions/BaseRule",
+      "$ref": "#/$defs/BaseRule",
       "title": "Naming/ConstantNames",
       "description": "Enforces constant names to be in screaming case",
       "properties": {
@@ -1197,7 +1211,7 @@
       }
     },
     "Naming/Filename": {
-      "$ref": "#/definitions/BaseRule",
+      "$ref": "#/$defs/BaseRule",
       "title": "Naming/Filename",
       "description": "Enforces file names to be in underscored case",
       "properties": {
@@ -1208,7 +1222,7 @@
       }
     },
     "Naming/MethodNames": {
-      "$ref": "#/definitions/BaseRule",
+      "$ref": "#/$defs/BaseRule",
       "title": "Naming/MethodNames",
       "description": "Enforces method names to be in underscored case",
       "properties": {
@@ -1219,7 +1233,7 @@
       }
     },
     "Naming/PredicateName": {
-      "$ref": "#/definitions/BaseRule",
+      "$ref": "#/$defs/BaseRule",
       "title": "Naming/PredicateName",
       "description": "Disallows tautological predicate names",
       "properties": {
@@ -1230,7 +1244,7 @@
       }
     },
     "Naming/QueryBoolMethods": {
-      "$ref": "#/definitions/BaseRule",
+      "$ref": "#/$defs/BaseRule",
       "title": "Naming/QueryBoolMethods",
       "description": "Reports boolean properties without the `?` suffix",
       "properties": {
@@ -1241,7 +1255,7 @@
       }
     },
     "Naming/RescuedExceptionsVariableName": {
-      "$ref": "#/definitions/BaseRule",
+      "$ref": "#/$defs/BaseRule",
       "title": "Naming/RescuedExceptionsVariableName",
       "description": "Makes sure that rescued exceptions variables are named as expected",
       "properties": {
@@ -1264,7 +1278,7 @@
       }
     },
     "Naming/TypeNames": {
-      "$ref": "#/definitions/BaseRule",
+      "$ref": "#/$defs/BaseRule",
       "title": "Naming/TypeNames",
       "description": "Enforces type names in camelcase manner",
       "properties": {
@@ -1275,7 +1289,7 @@
       }
     },
     "Naming/VariableNames": {
-      "$ref": "#/definitions/BaseRule",
+      "$ref": "#/$defs/BaseRule",
       "title": "Naming/VariableNames",
       "description": "Enforces variable names to be in underscored case",
       "properties": {
@@ -1286,7 +1300,7 @@
       }
     },
     "Performance/AnyAfterFilter": {
-      "$ref": "#/definitions/BaseRule",
+      "$ref": "#/$defs/BaseRule",
       "title": "Performance/AnyAfterFilter",
       "description": "Identifies usage of `any?` calls that follow filters",
       "properties": {
@@ -1305,13 +1319,13 @@
           ]
         },
         "Severity": {
-          "$ref": "#/definitions/Severity",
+          "$ref": "#/$defs/Severity",
           "default": "Warning"
         }
       }
     },
     "Performance/AnyInsteadOfEmpty": {
-      "$ref": "#/definitions/BaseRule",
+      "$ref": "#/$defs/BaseRule",
       "title": "Performance/AnyInsteadOfEmpty",
       "description": "Identifies usage of arg-less `any?` calls",
       "properties": {
@@ -1320,13 +1334,13 @@
           "default": "0.14.0"
         },
         "Severity": {
-          "$ref": "#/definitions/Severity",
+          "$ref": "#/$defs/Severity",
           "default": "Warning"
         }
       }
     },
     "Performance/ChainedCallWithNoBang": {
-      "$ref": "#/definitions/BaseRule",
+      "$ref": "#/$defs/BaseRule",
       "title": "Performance/ChainedCallWithNoBang",
       "description": "Identifies usage of chained calls not utilizing the bang method variants",
       "properties": {
@@ -1349,13 +1363,13 @@
           ]
         },
         "Severity": {
-          "$ref": "#/definitions/Severity",
+          "$ref": "#/$defs/Severity",
           "default": "Warning"
         }
       }
     },
     "Performance/CompactAfterMap": {
-      "$ref": "#/definitions/BaseRule",
+      "$ref": "#/$defs/BaseRule",
       "title": "Performance/CompactAfterMap",
       "description": "Identifies usage of `compact` calls that follow `map`",
       "properties": {
@@ -1364,13 +1378,13 @@
           "default": "0.14.0"
         },
         "Severity": {
-          "$ref": "#/definitions/Severity",
+          "$ref": "#/$defs/Severity",
           "default": "Warning"
         }
       }
     },
     "Performance/ExcessiveAllocations": {
-      "$ref": "#/definitions/BaseRule",
+      "$ref": "#/$defs/BaseRule",
       "title": "Performance/ExcessiveAllocations",
       "description": "Identifies usage of excessive collection allocations",
       "properties": {
@@ -1400,13 +1414,13 @@
           }
         },
         "Severity": {
-          "$ref": "#/definitions/Severity",
+          "$ref": "#/$defs/Severity",
           "default": "Warning"
         }
       }
     },
     "Performance/FirstLastAfterFilter": {
-      "$ref": "#/definitions/BaseRule",
+      "$ref": "#/$defs/BaseRule",
       "title": "Performance/FirstLastAfterFilter",
       "description": "Identifies usage of `first/last/first?/last?` calls that follow filters",
       "properties": {
@@ -1424,13 +1438,13 @@
           ]
         },
         "Severity": {
-          "$ref": "#/definitions/Severity",
+          "$ref": "#/$defs/Severity",
           "default": "Warning"
         }
       }
     },
     "Performance/FlattenAfterMap": {
-      "$ref": "#/definitions/BaseRule",
+      "$ref": "#/$defs/BaseRule",
       "title": "Performance/FlattenAfterMap",
       "description": "Identifies usage of `flatten` calls that follow `map`",
       "properties": {
@@ -1439,13 +1453,13 @@
           "default": "0.14.0"
         },
         "Severity": {
-          "$ref": "#/definitions/Severity",
+          "$ref": "#/$defs/Severity",
           "default": "Warning"
         }
       }
     },
     "Performance/MapInsteadOfBlock": {
-      "$ref": "#/definitions/BaseRule",
+      "$ref": "#/$defs/BaseRule",
       "title": "Performance/MapInsteadOfBlock",
       "description": "Identifies usage of `sum/product` calls that follow `map`",
       "properties": {
@@ -1454,13 +1468,13 @@
           "default": "0.14.0"
         },
         "Severity": {
-          "$ref": "#/definitions/Severity",
+          "$ref": "#/$defs/Severity",
           "default": "Warning"
         }
       }
     },
     "Performance/MinMaxAfterMap": {
-      "$ref": "#/definitions/BaseRule",
+      "$ref": "#/$defs/BaseRule",
       "title": "Performance/MinMaxAfterMap",
       "description": "Identifies usage of `min/max/minmax` calls that follow `map`",
       "properties": {
@@ -1469,13 +1483,13 @@
           "default": "1.5.0"
         },
         "Severity": {
-          "$ref": "#/definitions/Severity",
+          "$ref": "#/$defs/Severity",
           "default": "Warning"
         }
       }
     },
     "Performance/SizeAfterFilter": {
-      "$ref": "#/definitions/BaseRule",
+      "$ref": "#/$defs/BaseRule",
       "title": "Performance/SizeAfterFilter",
       "description": "Identifies usage of `size` calls that follow filter",
       "properties": {
@@ -1494,13 +1508,13 @@
           ]
         },
         "Severity": {
-          "$ref": "#/definitions/Severity",
+          "$ref": "#/$defs/Severity",
           "default": "Warning"
         }
       }
     },
     "Performance/TimesMap": {
-      "$ref": "#/definitions/BaseRule",
+      "$ref": "#/$defs/BaseRule",
       "title": "Performance/TimesMap",
       "description": "Identifies usage of `times.map { ... }.to_a` calls",
       "properties": {
@@ -1509,13 +1523,13 @@
           "default": "1.7.0"
         },
         "Severity": {
-          "$ref": "#/definitions/Severity",
+          "$ref": "#/$defs/Severity",
           "default": "Warning"
         }
       }
     },
     "Style/ArrayLiteralSyntax": {
-      "$ref": "#/definitions/BaseRule",
+      "$ref": "#/$defs/BaseRule",
       "title": "Style/ArrayLiteralSyntax",
       "description": "Encourages the use of `Array(T).new` over `[] of T`",
       "properties": {
@@ -1530,7 +1544,7 @@
       }
     },
     "Style/GuardClause": {
-      "$ref": "#/definitions/BaseRule",
+      "$ref": "#/$defs/BaseRule",
       "title": "Style/GuardClause",
       "description": "Check for conditionals that can be replaced with guard clauses",
       "properties": {
@@ -1545,7 +1559,7 @@
       }
     },
     "Style/HashLiteralSyntax": {
-      "$ref": "#/definitions/BaseRule",
+      "$ref": "#/$defs/BaseRule",
       "title": "Style/HashLiteralSyntax",
       "description": "Encourages the use of `Hash(K, V).new` over `{} of K => V`",
       "properties": {
@@ -1560,7 +1574,7 @@
       }
     },
     "Style/HeredocEscape": {
-      "$ref": "#/definitions/BaseRule",
+      "$ref": "#/$defs/BaseRule",
       "title": "Style/HeredocEscape",
       "description": "Recommends using the heredoc variant that escapes interpolation or control chars in a heredoc body",
       "properties": {
@@ -1571,7 +1585,7 @@
       }
     },
     "Style/HeredocIndent": {
-      "$ref": "#/definitions/BaseRule",
+      "$ref": "#/$defs/BaseRule",
       "title": "Style/HeredocIndent",
       "description": "Recommends heredoc bodies are indented consistently",
       "properties": {
@@ -1586,7 +1600,7 @@
       }
     },
     "Style/IsAFilter": {
-      "$ref": "#/definitions/BaseRule",
+      "$ref": "#/$defs/BaseRule",
       "title": "Style/IsAFilter",
       "description": "Identifies usage of `is_a?/nil?` calls within filters",
       "properties": {
@@ -1611,7 +1625,7 @@
       }
     },
     "Style/IsANil": {
-      "$ref": "#/definitions/BaseRule",
+      "$ref": "#/$defs/BaseRule",
       "title": "Style/IsANil",
       "description": "Disallows calls to `is_a?(Nil)` in favor of `nil?`",
       "properties": {
@@ -1622,7 +1636,7 @@
       }
     },
     "Style/LargeNumbers": {
-      "$ref": "#/definitions/BaseRule",
+      "$ref": "#/$defs/BaseRule",
       "title": "Style/LargeNumbers",
       "description": "Disallows usage of large numbers without underscore",
       "properties": {
@@ -1641,7 +1655,7 @@
       }
     },
     "Style/MultilineCurlyBlock": {
-      "$ref": "#/definitions/BaseRule",
+      "$ref": "#/$defs/BaseRule",
       "title": "Style/MultilineCurlyBlock",
       "description": "Disallows multi-line blocks using curly block syntax",
       "properties": {
@@ -1652,7 +1666,7 @@
       }
     },
     "Style/MultilineStringLiteral": {
-      "$ref": "#/definitions/BaseRule",
+      "$ref": "#/$defs/BaseRule",
       "title": "Style/MultilineStringLiteral",
       "description": "Disallows multiline string literals not using `<<-HEREDOC` markers",
       "properties": {
@@ -1667,7 +1681,7 @@
       }
     },
     "Style/NegatedConditionsInUnless": {
-      "$ref": "#/definitions/BaseRule",
+      "$ref": "#/$defs/BaseRule",
       "title": "Style/NegatedConditionsInUnless",
       "description": "Disallows negated conditions in `unless`",
       "properties": {
@@ -1678,7 +1692,7 @@
       }
     },
     "Style/ParenthesesAroundCondition": {
-      "$ref": "#/definitions/BaseRule",
+      "$ref": "#/$defs/BaseRule",
       "title": "Style/ParenthesesAroundCondition",
       "description": "Disallows redundant parentheses around control expressions",
       "properties": {
@@ -1701,7 +1715,7 @@
       }
     },
     "Style/PercentLiteralDelimiters": {
-      "$ref": "#/definitions/BaseRule",
+      "$ref": "#/$defs/BaseRule",
       "title": "Style/PercentLiteralDelimiters",
       "description": "Enforces the consistent usage of `%`-literal delimiters",
       "properties": {
@@ -1740,7 +1754,7 @@
       }
     },
     "Style/RedundantBegin": {
-      "$ref": "#/definitions/BaseRule",
+      "$ref": "#/$defs/BaseRule",
       "title": "Style/RedundantBegin",
       "description": "Disallows redundant `begin` blocks",
       "properties": {
@@ -1751,7 +1765,7 @@
       }
     },
     "Style/RedundantNext": {
-      "$ref": "#/definitions/BaseRule",
+      "$ref": "#/$defs/BaseRule",
       "title": "Style/RedundantNext",
       "description": "Reports redundant `next` expressions",
       "properties": {
@@ -1770,7 +1784,7 @@
       }
     },
     "Style/RedundantNilInControlExpression": {
-      "$ref": "#/definitions/BaseRule",
+      "$ref": "#/$defs/BaseRule",
       "title": "Style/RedundantNilInControlExpression",
       "description": "Disallows control expressions with `nil` argument",
       "properties": {
@@ -1781,7 +1795,7 @@
       }
     },
     "Style/RedundantReturn": {
-      "$ref": "#/definitions/BaseRule",
+      "$ref": "#/$defs/BaseRule",
       "title": "Style/RedundantReturn",
       "description": "Reports redundant `return` expressions",
       "properties": {
@@ -1800,7 +1814,7 @@
       }
     },
     "Style/RedundantSelf": {
-      "$ref": "#/definitions/BaseRule",
+      "$ref": "#/$defs/BaseRule",
       "title": "Style/RedundantSelf",
       "description": "Disallows redundant uses of `self`",
       "properties": {
@@ -1822,7 +1836,7 @@
       }
     },
     "Style/UnlessElse": {
-      "$ref": "#/definitions/BaseRule",
+      "$ref": "#/$defs/BaseRule",
       "title": "Style/UnlessElse",
       "description": "Disallows the use of an `else` block with the `unless`",
       "properties": {
@@ -1833,7 +1847,7 @@
       }
     },
     "Style/VerboseBlock": {
-      "$ref": "#/definitions/BaseRule",
+      "$ref": "#/$defs/BaseRule",
       "title": "Style/VerboseBlock",
       "description": "Identifies usage of collapsible single expression blocks",
       "properties": {
@@ -1878,7 +1892,7 @@
       }
     },
     "Style/WhileTrue": {
-      "$ref": "#/definitions/BaseRule",
+      "$ref": "#/$defs/BaseRule",
       "title": "Style/WhileTrue",
       "description": "Disallows `while` statements with a `true` literal as condition",
       "properties": {
@@ -1889,7 +1903,7 @@
       }
     },
     "Typing/MacroCallArgumentTypeRestriction": {
-      "$ref": "#/definitions/BaseRule",
+      "$ref": "#/$defs/BaseRule",
       "title": "Typing/MacroCallArgumentTypeRestriction",
       "description": "Recommends that call arguments to certain macros have type restrictions",
       "properties": {
@@ -1935,7 +1949,7 @@
       }
     },
     "Typing/MethodParameterTypeRestriction": {
-      "$ref": "#/definitions/BaseRule",
+      "$ref": "#/$defs/BaseRule",
       "title": "Typing/MethodParameterTypeRestriction",
       "description": "Recommends that method parameters have type restrictions",
       "properties": {
@@ -1970,7 +1984,7 @@
       }
     },
     "Typing/MethodReturnTypeRestriction": {
-      "$ref": "#/definitions/BaseRule",
+      "$ref": "#/$defs/BaseRule",
       "title": "Typing/MethodReturnTypeRestriction",
       "description": "Recommends that methods have a return type restriction",
       "properties": {
@@ -1997,7 +2011,7 @@
       }
     },
     "Typing/ProcLiteralReturnTypeRestriction": {
-      "$ref": "#/definitions/BaseRule",
+      "$ref": "#/$defs/BaseRule",
       "title": "Typing/ProcLiteralReturnTypeRestriction",
       "description": "Disallows proc literals without return type restriction",
       "properties": {
