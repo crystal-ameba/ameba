@@ -27,6 +27,42 @@ module Ameba::Formatter
       "#{minutes}:#{seconds < 10 ? "0" : ""}#{seconds} minutes"
     end
 
+    def colorize_markdown(string : String, code_color : Colorize::Color = :dark_gray)
+      string = colorize_code_fences(string)
+      string = colorize_text_styles(string)
+      string
+    end
+
+    def colorize_code_fences(string : String, color : Colorize::Color = :dark_gray)
+      string
+        .gsub(/```(.+?)```/m, &.colorize(color))
+        .gsub(/`(?!`)(.+?)`/, &.colorize(color))
+    end
+
+    def colorize_text_styles(string : String)
+      {% begin %}
+        {%
+          modes = {
+            underline:     {/^([#]{1,6})(?=\s+)(.+?)$/m, "%1$s%2$s"},
+            strikethrough: {/([~]{2})(.+?)\1/, "%1$s%2$s%1$s"},
+            bold:          {/([*_]{2})(.+?)\1/, "%1$s%2$s%1$s"},
+            italic:        {/([*_])(.+?)\1/, "%1$s%2$s%1$s"},
+          }
+        %}
+
+        string
+        {% for mode, pattern in modes %}
+          .gsub({{ pattern[0] }}, %(<{{ mode.id }} fence="\\1">\\2</{{ mode.id }}>))
+        {% end %}
+        {% for mode, pattern in modes %}
+          .gsub(/<{{ mode.id }} fence="(.+?)">(.+?)<\/{{ mode.id }}>/) do |_, match|
+            string = {{ pattern[1] }} % {match[1], match[2]}
+            string.colorize.{{ mode.id }}
+          end
+        {% end %}
+      {% end %}
+    end
+
     def deansify(message : String?) : String?
       message.try &.gsub(/\x1b[^m]*m/, "").presence
     end

@@ -8,6 +8,66 @@ module Ameba::Formatter
   describe Util do
     subject = Subject.new
 
+    describe "#colorize_text_styles" do
+      it "underlines headings" do
+        1.upto(6) do |i|
+          string = "#{("#" * i)} foo"
+
+          subject.colorize_text_styles(string)
+            .should eq string.colorize.underline.to_s
+        end
+      end
+
+      it "applies italic" do
+        %w[* _].each do |char|
+          string = "%1$s|foo|%1$s" % char
+
+          subject.colorize_text_styles(string)
+            .should eq string.colorize.italic.to_s
+        end
+      end
+
+      it "applies bold" do
+        %w[* _].each do |char|
+          string = "%1$s|foo|%1$s" % (char * 2)
+
+          subject.colorize_text_styles(string)
+            .should eq string.colorize.bold.to_s
+        end
+      end
+
+      it "applies strikethrough" do
+        string = "~~foo~~"
+
+        subject.colorize_text_styles(string)
+          .should eq string.colorize.strikethrough.to_s
+      end
+
+      it "combines styles" do
+        subject.colorize_text_styles("~~*__foo__*~~")
+          .should eq "~~#{"*#{"__foo__".colorize.bold}*".colorize.italic}~~"
+            .colorize.strikethrough.to_s
+      end
+    end
+
+    describe "#colorize_code_fences" do
+      it "highlights multiline code blocks" do
+        code_string = "```\nfoo\nbar\nbaz\n```"
+        string = "foo\n\n%s\n\nbar"
+
+        subject.colorize_code_fences(string % code_string, :red)
+          .should eq (string % code_string.colorize.red).to_s
+      end
+
+      it "highlights inline code blocks" do
+        code_string = "`foo bar baz`"
+        string = "foo %s bar"
+
+        subject.colorize_code_fences(string % code_string, :red)
+          .should eq (string % code_string.colorize.red).to_s
+      end
+    end
+
     describe "#deansify" do
       it "returns given string without ANSI codes" do
         str = String.build do |io|

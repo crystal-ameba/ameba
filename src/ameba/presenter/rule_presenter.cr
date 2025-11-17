@@ -1,5 +1,7 @@
 module Ameba::Presenter
   class RulePresenter < BasePresenter
+    include Formatter::Util
+
     def run(rule) : Nil
       output_title "Rule info"
 
@@ -17,14 +19,14 @@ module Ameba::Presenter
         (rule.since_version.try(&.to_s) || "N/A").colorize(:white),
       }
 
-      if rule_description = colorize_code_fences(rule.description)
+      if rule_description = rule.description
         output_title "Description"
-        output_paragraph rule_description
+        output_paragraph colorize_markdown(rule_description)
       end
 
-      if rule_doc = colorize_code_fences(rule.class.parsed_doc)
+      if rule_doc = rule.class.parsed_doc
         output_title "Detailed description"
-        output_paragraph rule_doc
+        output_paragraph colorize_markdown(rule_doc)
       end
     end
 
@@ -41,13 +43,6 @@ module Ameba::Presenter
         output.puts "    #{line}"
       end
       output.puts
-    end
-
-    private def colorize_code_fences(string)
-      return unless string
-      string
-        .gsub(/```(.+?)```/m, &.colorize(:dark_gray))
-        .gsub(/`(?!`)(.+?)`/, &.colorize(:dark_gray))
     end
   end
 end

@@ -62,22 +62,14 @@ module Ameba::Formatter
         rule.name.colorize(:magenta),
         rule.severity.to_s.colorize(rule.severity.color),
       }
-      if rule_description = colorize_code_fences(rule.description)
-        output_paragraph rule_description
+      if rule_description = rule.description
+        output_paragraph colorize_markdown(rule_description)
       end
 
-      rule_doc = colorize_code_fences(rule.class.parsed_doc)
-      return unless rule_doc
-
-      output_title "Detailed description"
-      output_paragraph rule_doc
-    end
-
-    private def colorize_code_fences(string)
-      return unless string
-      string
-        .gsub(/```(.+?)```/m, &.colorize(:dark_gray))
-        .gsub(/`(?!`)(.+?)`/, &.colorize(:dark_gray))
+      if rule_doc = rule.class.parsed_doc
+        output_title "Detailed description"
+        output_paragraph colorize_markdown(rule_doc)
+      end
     end
 
     private def output_title(title)
