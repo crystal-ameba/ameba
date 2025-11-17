@@ -1133,6 +1133,8 @@
     
       <li class="other-type"><a href="../../Ameba/Formatter/GitHubActionsFormatter.html">Ameba::Formatter::GitHubActionsFormatter</a></li>
     
+      <li class="other-type"><a href="../../Ameba/Presenter/RulePresenter.html">Ameba::Presenter::RulePresenter</a></li>
+    
   </ul>
 
 
@@ -1148,7 +1150,7 @@
   </h2>
   
     
-      <a href="https://github.com/crystal-ameba/ameba/blob/0764747/src/ameba/formatter/util.cr#L2" target="_blank">
+      <a href="https://github.com/crystal-ameba/ameba/blob/37fe65d/src/ameba/formatter/util.cr#L2" target="_blank">
         ameba/formatter/util.cr
       </a>
     
@@ -1183,6 +1185,21 @@
     
       <li class="entry-summary">
         <a href="#affected_code%28code%2Clocation%2Cend_location%3Dnil%2Ccontext_lines%3D0%2Cmax_length%3D120%2Cellipsis%3D%22...%22%2Cprompt%3D%22%3E%22%29-instance-method" class="signature"><strong>#affected_code</strong>(code, location, end_location = <span class="n">nil</span>, context_lines = <span class="n">0</span>, max_length = <span class="n">120</span>, ellipsis = <span class="s">&quot; ...&quot;</span>, prompt = <span class="s">&quot;&gt; &quot;</span>)</a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#colorize_code_fences%28string%3AString%2Ccolor%3AColorize%3A%3AColor%3D%3Adark_gray%29-instance-method" class="signature"><strong>#colorize_code_fences</strong>(string : String, color : Colorize::Color = <span class="n">:dark_gray</span>)</a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#colorize_markdown%28string%3AString%2Ccode_color%3AColorize%3A%3AColor%3D%3Adark_gray%29-instance-method" class="signature"><strong>#colorize_markdown</strong>(string : String, code_color : Colorize::Color = <span class="n">:dark_gray</span>)</a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#colorize_text_styles%28string%3AString%29-instance-method" class="signature"><strong>#colorize_text_styles</strong>(string : String)</a>
         
       </li>
     
@@ -1246,7 +1263,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/0764747/src/ameba/formatter/util.cr#L70" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/37fe65d/src/ameba/formatter/util.cr#L106" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1262,7 +1279,55 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/0764747/src/ameba/formatter/util.cr#L76" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/37fe65d/src/ameba/formatter/util.cr#L112" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="colorize_code_fences(string:String,color:Colorize::Color=:dark_gray)-instance-method">
+      <div class="signature">
+        
+        def <strong>colorize_code_fences</strong>(string : String, color : Colorize::Color = <span class="n">:dark_gray</span>)
+
+        <a class="method-permalink" href="#colorize_code_fences%28string%3AString%2Ccolor%3AColorize%3A%3AColor%3D%3Adark_gray%29-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/crystal-ameba/ameba/blob/37fe65d/src/ameba/formatter/util.cr#L36" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="colorize_markdown(string:String,code_color:Colorize::Color=:dark_gray)-instance-method">
+      <div class="signature">
+        
+        def <strong>colorize_markdown</strong>(string : String, code_color : Colorize::Color = <span class="n">:dark_gray</span>)
+
+        <a class="method-permalink" href="#colorize_markdown%28string%3AString%2Ccode_color%3AColorize%3A%3AColor%3D%3Adark_gray%29-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/crystal-ameba/ameba/blob/37fe65d/src/ameba/formatter/util.cr#L30" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="colorize_text_styles(string:String)-instance-method">
+      <div class="signature">
+        
+        def <strong>colorize_text_styles</strong>(string : String)
+
+        <a class="method-permalink" href="#colorize_text_styles%28string%3AString%29-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/crystal-ameba/ameba/blob/37fe65d/src/ameba/formatter/util.cr#L42" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1278,7 +1343,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/0764747/src/ameba/formatter/util.cr#L44" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/37fe65d/src/ameba/formatter/util.cr#L80" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1294,7 +1359,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/0764747/src/ameba/formatter/util.cr#L30" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/37fe65d/src/ameba/formatter/util.cr#L66" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1310,7 +1375,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/0764747/src/ameba/formatter/util.cr#L5" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/37fe65d/src/ameba/formatter/util.cr#L5" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1326,7 +1391,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/0764747/src/ameba/formatter/util.cr#L9" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/37fe65d/src/ameba/formatter/util.cr#L9" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1342,7 +1407,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/0764747/src/ameba/formatter/util.cr#L34" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/37fe65d/src/ameba/formatter/util.cr#L70" target="_blank">View source</a>]
         
       </div>
     </div>
