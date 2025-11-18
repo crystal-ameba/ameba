@@ -279,6 +279,38 @@ module Ameba::Rule::Style
         CRYSTAL
     end
 
+    it "correctly replaces multiline calls" do
+      source = expect_issue subject, <<-CRYSTAL
+        class Foo
+          property bar : String
+
+          def foo
+            self
+          # ^^^^ error: Redundant `self` detected
+              .bar
+              .chars.map do |char|
+                char.upcase
+              end
+              .each { |char| raise "Boom!" if char.empty? }
+          end
+        end
+        CRYSTAL
+
+      expect_correction source, <<-CRYSTAL
+        class Foo
+          property bar : String
+
+          def foo
+            bar
+              .chars.map do |char|
+                char.upcase
+              end
+              .each { |char| raise "Boom!" if char.empty? }
+          end
+        end
+        CRYSTAL
+    end
+
     it "reports if there is redundant `self` used in a method arguments' default values" do
       source = expect_issue subject, <<-CRYSTAL
         class Foo
