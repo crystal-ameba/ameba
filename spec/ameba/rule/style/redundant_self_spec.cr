@@ -65,6 +65,28 @@ module Ameba::Rule::Style
         CRYSTAL
     end
 
+    it "does not report if `self` is used in the presence of a block argument with the same name (inside block)" do
+      expect_no_issues subject, <<-CRYSTAL
+        class Foo
+          def foo
+            42
+          end
+
+          def bar
+            foo : Int32?
+
+            1.try do |x|
+              2.try do |y|
+                3.try do |z|
+                  self.foo + foo
+                end
+              end
+            end
+          end
+        end
+        CRYSTAL
+    end
+
     it "does not report if `self` is used in the presence of a method argument with the same name inherited from the parent scope" do
       expect_no_issues subject, <<-CRYSTAL
         class Foo
@@ -213,6 +235,22 @@ module Ameba::Rule::Style
 
           def foo!
             self[0] = 42
+          end
+        end
+        CRYSTAL
+    end
+
+    it "reports if `self` is used in the presence of a type declaration with the same name in outer scope" do
+      expect_issue subject, <<-CRYSTAL
+        class Foo
+          foo : Int32?
+
+          def foo; end
+
+          def foo!
+            bar = self.foo
+                # ^^^^ error: Redundant `self` detected
+            bar
           end
         end
         CRYSTAL

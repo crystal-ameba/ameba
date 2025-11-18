@@ -89,6 +89,8 @@ module Ameba::Rule::Style
       vars = Set(String).new
 
       while scope
+        break if scope.type_definition?
+
         scope.arguments.each do |arg|
           vars << arg.name
         end
