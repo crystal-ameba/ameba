@@ -1,0 +1,9 @@
+{
+  "versions": [
+    {
+      "name": "nightly",
+      "url": "/ameba/master/",
+      "released": false
+    }
+  ]
+}
