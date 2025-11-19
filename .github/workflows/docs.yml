@@ -2,37 +2,43 @@ name: Docs
 
 on:
   push:
-    branches: [master]
+    branches:
+      - master
+    tags:
+      - "v*.*.*"
 
 permissions:
   contents: write
 
 jobs:
-  build-and-deploy:
-    concurrency: ci-${{ github.ref }}
+  setup:
     runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.variables.outputs.version }}
+      ref: ${{ steps.variables.outputs.ref }}
+
     steps:
       - name: Inject slug/short variables
         uses: rlespinasse/github-slug-action@v5
 
-      - name: Install Crystal
-        uses: crystal-lang/install-crystal@v1
-
-      - name: Download source
-        uses: actions/checkout@v5
-
-      - name: Install dependencies
-        run: shards install
-
-      - name: Build docs
+      - name: Set output variables
+        id: variables
         run: |
-          crystal docs \
-            --project-version="${{ env.GITHUB_REF_SLUG }}" \
-            --source-refname="${{ env.GITHUB_SHA_SHORT }}"
+          VERSION="${GITHUB_REF_NAME}"
+          if [[ $VERSION =~ ^v[0-9].* ]]; then
+            VERSION=${VERSION#"v"}
+          fi
+          echo "VERSION: ${VERSION}"
+          echo "version=${VERSION}" >> $GITHUB_OUTPUT
 
-      - name: Deploy docs 🚀
-        uses: JamesIves/github-pages-deploy-action@v4
-        with:
-          branch: gh-pages
-          folder: docs
-          clean: true
+          REF="${GITHUB_REF_POINT}"
+          echo "REF: ${REF}"
+          echo "ref=${REF}" >> $GITHUB_OUTPUT
+
+  build-and-deploy:
+    uses: ./.github/workflows/build-and-deploy-docs.yml
+    with:
+      version: ${{ needs.setup.outputs.version }}
+      ref: ${{ needs.setup.outputs.ref }}
+    needs:
+      - setup
