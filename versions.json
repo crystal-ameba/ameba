@@ -4,6 +4,11 @@
       "name": "nightly",
       "url": "/ameba/master/",
       "released": false
+    },
+    {
+      "name": "1.6.4",
+      "url": "/ameba/1.6.4/",
+      "released": true
     }
   ]
 }
