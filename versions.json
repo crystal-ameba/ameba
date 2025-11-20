@@ -24,6 +24,11 @@
       "name": "1.6.1",
       "url": "/ameba/1.6.1/",
       "released": true
+    },
+    {
+      "name": "1.6.0",
+      "url": "/ameba/1.6.0/",
+      "released": true
     }
   ]
 }
