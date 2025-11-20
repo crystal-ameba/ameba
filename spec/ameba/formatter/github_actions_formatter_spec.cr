@@ -80,18 +80,22 @@ module Ameba::Formatter
             summary.should contain "## Ameba Results :bug:"
             summary.should contain "### Issues found:"
             summary.should contain "#### `src/source.cr` (**2** issues)"
+
+            linked_name =
+              "[#{DummyRule.rule_name}](#{DummyRule.documentation_url})"
+
             if repo && sha
               summary.should contain(
                 "| [1-2](https://github.com/#{repo}/blob/#{sha}/src/source.cr#L1-L2) " \
-                "| Convention | Ameba/DummyRule | DummyRuleError |"
+                "| Convention | #{linked_name} | DummyRuleError |"
               )
               summary.should contain(
                 "| [1](https://github.com/#{repo}/blob/#{sha}/src/source.cr#L1) " \
-                "| Convention | Ameba/DummyRule | DummyRuleError 2 |"
+                "| Convention | #{linked_name} | DummyRuleError 2 |"
               )
             else
-              summary.should contain "| 1-2 | Convention | Ameba/DummyRule | DummyRuleError |"
-              summary.should contain "| 1 | Convention | Ameba/DummyRule | DummyRuleError 2 |"
+              summary.should contain "| 1-2 | Convention | #{linked_name} | DummyRuleError |"
+              summary.should contain "| 1 | Convention | #{linked_name} | DummyRuleError 2 |"
             end
             summary.should_not contain "NamedRuleError"
             summary.should contain "**1** sources inspected, **2** failures."
