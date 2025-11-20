@@ -5,6 +5,7 @@ on:
   push:
     branches: [master]
     paths:
+      - ".github/workflows/update-json-schema.yml"
       - "**/*.cr"
 
 permissions:
