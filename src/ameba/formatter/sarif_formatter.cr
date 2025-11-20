@@ -10,12 +10,30 @@ module Ameba::Formatter
   # - https://docs.oasis-open.org/sarif/sarif/v2.1.0/sarif-v2.1.0.pdf
   class SARIFFormatter < BaseFormatter
     def finished(sources) : Nil
+      sarif_rules = Rule.rules.map do |rule|
+        rule_inst = rule.new
+
+        AsSARIF::ReportingDescriptor.new(
+          id: rule_inst.name,
+          name: rule_inst.name,
+          short_description: rule_inst.description,
+          full_description: rule.parsed_doc || "",
+          help_uri: "https://crystal-ameba.github.io/#{rule_inst.name}",
+          default_configuration: AsSARIF::ReportingConfiguration.new(
+            enabled: rule_inst.enabled?,
+            level: AsSARIF::Level.from_severity(rule_inst.severity),
+            parameters: ""
+          ),
+        )
+      end
+
       sarif_tool = AsSARIF::Tool.new(
         driver: AsSARIF::ToolComponent.new(
           name: "ameba",
           version: Ameba::VERSION,
+          rules: sarif_rules,
           # TODO(margret): Better version-specific link
-          information_uri: "https://crystal-ameba.github.io/"
+          information_uri: "https://crystal-ameba.github.io/",
         )
       )
 
@@ -28,14 +46,30 @@ module Ameba::Formatter
           next if issue.disabled?
 
           start_location = issue.location || issue.end_location
-          end_location = issue.end_location
+          end_location = issue.end_location || issue.location
+
+          if start_location && end_location
+            context_snippet =
+              source.lines[(start_location.line_number - 1)...end_location.line_number].join('\n')
+
+            context_region = AsSARIF::ContextRegion.new(
+              start_line: start_location.line_number,
+              start_column: start_location.column_number,
+              end_line: end_location.line_number,
+              end_column: end_location.line_number,
+              snippet: context_snippet,
+              source_language: source.ecr? ? "ECR" : "Crystal",
+            )
+          end
 
           sarif_run.results << AsSARIF::RunResult.new(
             message: issue.rule.description,
             rule_id: issue.rule.name,
+            rule_index: sarif_rules.index! { |rule| rule.name == issue.rule.name },
             level: AsSARIF::Level.from_severity(issue.rule.severity),
             locations: [AsSARIF::Location.new(
               uri: "file://#{source.fullpath}",
+              context_region: context_region,
               start_location: start_location,
               end_location: end_location
             )]
@@ -84,13 +118,13 @@ module Ameba::Formatter
     end
 
     struct RunResult
-      # TODO(margret): Replace with `id` and `arguments` properties, to reference the `rules` listed in the tool component
       property message : String
       property rule_id : String
+      property rule_index : Int32
       property level : Level
       property locations : Array(Location)
 
-      def initialize(@message, @rule_id, @level, @locations)
+      def initialize(@message, @rule_id, @rule_index, @level, @locations)
       end
 
       def to_json(json)
@@ -99,6 +133,7 @@ module Ameba::Formatter
             text: message,
           },
           ruleId:    rule_id,
+          ruleIndex: rule_index,
           level:     level,
           locations: locations,
         }.to_json(json)
@@ -121,16 +156,13 @@ module Ameba::Formatter
       property uri : String
       property start_location : Crystal::Location?
       property end_location : Crystal::Location?
+      property context_region : ContextRegion?
 
-      # TODO(margret): Add `contextRegion` pointing to a few lines of surrounding code
-
-      # TODO(margret): Add `snippet` for the given location
-
-      def initialize(@uri, @start_location, @end_location = nil)
+      def initialize(@uri, @start_location, @end_location = nil, @context_region = nil)
       end
 
       def to_json(json)
-        region_data = Hash(String, Int32).new
+        region_data = Hash(String, Int32 | String).new
 
         if start_loc = start_location
           region_data["startLine"] = start_loc.line_number
@@ -150,8 +182,32 @@ module Ameba::Formatter
             artifactLocation: {
               uri: uri,
             },
-            region: region_data,
+            region:        region_data,
+            contextRegion: context_region,
           },
+        }.to_json(json)
+      end
+    end
+
+    struct ContextRegion
+      getter start_line : Int32
+      getter start_column : Int32
+      getter end_line : Int32
+      getter end_column : Int32
+      getter snippet : String
+      getter source_language : String
+
+      def initialize(@start_line, @start_column, @end_line, @end_column, @snippet, @source_language)
+      end
+
+      def to_json(json)
+        {
+          startLine:      start_line,
+          startColumn:    start_column,
+          endLine:        end_line,
+          endColumn:      end_column,
+          snippet:        {text: snippet},
+          sourceLanguage: source_language,
         }.to_json(json)
       end
     end
@@ -189,30 +245,60 @@ module Ameba::Formatter
 
     struct ToolComponent
       property name : String
-      property version : String?
-      property information_uri : String?
+      property version : String
+      property information_uri : String
+      property rules : Array(ReportingDescriptor)
 
-      # TODO(margret): Add `versionControlProvenance` to record what version of the code was analyzed
-
-      # TODO(margret): Add `rules` which lists all available rules
-
-      def initialize(@name, @version = nil, @information_uri = nil)
+      def initialize(@name, @version, @information_uri, @rules)
       end
 
       def to_json(json)
-        data = {
-          "name" => name,
-        }
+        {
+          name:           name,
+          version:        version,
+          informationUri: information_uri,
+          rules:          rules,
+        }.to_json(json)
+      end
+    end
 
-        if v = version
-          data["version"] = v
-        end
+    struct ReportingDescriptor
+      getter id : String
+      getter name : String
+      getter short_description : String
+      getter full_description : String
+      getter default_configuration : ReportingConfiguration
+      getter help_uri : String
 
-        if uri = information_uri
-          data["informationUri"] = uri
-        end
+      def initialize(@id, @name, @short_description, @full_description, @default_configuration, @help_uri)
+      end
 
-        data.to_json(json)
+      def to_json(json)
+        {
+          id:                   id,
+          name:                 name,
+          shortDescription:     {text: short_description},
+          fullDescription:      {text: full_description},
+          defaultConfiguration: default_configuration,
+          helpUri:              help_uri,
+        }.to_json(json)
+      end
+    end
+
+    struct ReportingConfiguration
+      getter? enabled : Bool
+      getter level : Level
+      getter parameters : String
+
+      def initialize(@enabled, @level, @parameters)
+      end
+
+      def to_json(json)
+        {
+          enabled:    enabled?,
+          level:      level,
+          parameters: {} of String => String,
+        }.to_json(json)
       end
     end
   end
