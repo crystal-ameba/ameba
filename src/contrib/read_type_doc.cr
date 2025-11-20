@@ -26,6 +26,4 @@ nodes = Crystal::Parser.new(source)
   .tap(&.wants_doc = true)
   .parse
 
-true
-
 puts DocFinder.new(nodes, type_name).doc
