@@ -63,7 +63,7 @@ module Ameba::Formatter
           end
 
           sarif_run.results << AsSARIF::RunResult.new(
-            message: issue.rule.description,
+            message: issue.message,
             rule_id: issue.rule.name,
             rule_index: sarif_rules.index! { |rule| rule.name == issue.rule.name },
             level: AsSARIF::Level.from_severity(issue.rule.severity),
