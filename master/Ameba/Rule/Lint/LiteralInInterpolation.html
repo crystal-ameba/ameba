@@ -1156,7 +1156,7 @@ that contain a literal value instead of a variable or function.</p>
   </h2>
   
     
-      <a href="https://github.com/crystal-ameba/ameba/blob/6a076ae/src/ameba/rule/lint/literal_in_interpolation.cr#L18" target="_blank">
+      <a href="https://github.com/crystal-ameba/ameba/blob/dd6692f/src/ameba/rule/lint/literal_in_interpolation.cr#L18" target="_blank">
         ameba/rule/lint/literal_in_interpolation.cr
       </a>
     
@@ -1232,6 +1232,13 @@ that contain a literal value instead of a variable or function.</p>
     Class Method Summary
   </h2>
   <ul class="list-summary">
+    
+      <li class="entry-summary">
+        <a href="#documentation_url%3AString-class-method" class="signature"><strong>.documentation_url</strong> : String</a>
+        
+          <div class="summary"><p>A rule that disallows useless string interpolations that contain a literal value instead of a variable or function.</p></div>
+        
+      </li>
     
       <li class="entry-summary">
         <a href="#parsed_doc%3AString%7CNil-class-method" class="signature"><strong>.parsed_doc</strong> : String | Nil</a>
@@ -1642,7 +1649,7 @@ that contain a literal value instead of a variable or function.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/6a076ae/src/ameba/rule/lint/literal_in_interpolation.cr#L18" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/dd6692f/src/ameba/rule/lint/literal_in_interpolation.cr#L18" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1672,6 +1679,32 @@ that contain a literal value instead of a variable or function.</p>
 </a>
     Class Method Detail
   </h2>
+  
+    <div class="entry-detail" id="documentation_url:String-class-method">
+      <div class="signature">
+        
+        def self.<strong>documentation_url</strong> : String
+
+        <a class="method-permalink" href="#documentation_url%3AString-class-method">#</a>
+      </div>
+      
+        <div class="doc">
+          
+          <p>A rule that disallows useless string interpolations
+that contain a literal value instead of a variable or function.</p>
+<p>For example:</p>
+<pre><code class="language-crystal"><span class="s">&quot;Hello, </span><span class="i">#{</span><span class="n">:Ary</span><span class="i">}</span><span class="s">&quot;</span>
+<span class="s">&quot;There are </span><span class="i">#{</span><span class="n">4</span><span class="i">}</span><span class="s"> cats&quot;</span></code></pre>
+<p>YAML configuration example:</p>
+<pre><code class="language-crystal"><span class="t">Lint</span><span class="o">/</span><span class="t">LiteralInInterpolation</span>:
+  <span class="t">Enabled</span>: <span class="n">true</span></code></pre>
+        </div>
+      
+      <br/>
+      <div>
+        
+      </div>
+    </div>
   
     <div class="entry-detail" id="parsed_doc:String|Nil-class-method">
       <div class="signature">
@@ -1713,7 +1746,7 @@ that contain a literal value instead of a variable or function.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/6a076ae/src/ameba/rule/lint/literal_in_interpolation.cr#L21" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/dd6692f/src/ameba/rule/lint/literal_in_interpolation.cr#L21" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1855,7 +1888,7 @@ that contain a literal value instead of a variable or function.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/6a076ae/src/ameba/rule/lint/literal_in_interpolation.cr#L21" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/dd6692f/src/ameba/rule/lint/literal_in_interpolation.cr#L21" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1885,7 +1918,7 @@ that contain a literal value instead of a variable or function.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/6a076ae/src/ameba/rule/lint/literal_in_interpolation.cr#L30" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/dd6692f/src/ameba/rule/lint/literal_in_interpolation.cr#L30" target="_blank">View source</a>]
         
       </div>
     </div>

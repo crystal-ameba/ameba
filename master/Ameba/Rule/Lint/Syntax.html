@@ -1157,7 +1157,7 @@
   </h2>
   
     
-      <a href="https://github.com/crystal-ameba/ameba/blob/6a076ae/src/ameba/rule/lint/syntax.cr#L21" target="_blank">
+      <a href="https://github.com/crystal-ameba/ameba/blob/dd6692f/src/ameba/rule/lint/syntax.cr#L21" target="_blank">
         ameba/rule/lint/syntax.cr
       </a>
     
@@ -1209,6 +1209,13 @@
     Class Method Summary
   </h2>
   <ul class="list-summary">
+    
+      <li class="entry-summary">
+        <a href="#documentation_url%3AString-class-method" class="signature"><strong>.documentation_url</strong> : String</a>
+        
+          <div class="summary"><p>A rule that reports invalid Crystal syntax.</p></div>
+        
+      </li>
     
       <li class="entry-summary">
         <a href="#parsed_doc%3AString%7CNil-class-method" class="signature"><strong>.parsed_doc</strong> : String | Nil</a>
@@ -1500,7 +1507,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/6a076ae/src/ameba/rule/lint/syntax.cr#L21" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/dd6692f/src/ameba/rule/lint/syntax.cr#L21" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1530,6 +1537,35 @@
 </a>
     Class Method Detail
   </h2>
+  
+    <div class="entry-detail" id="documentation_url:String-class-method">
+      <div class="signature">
+        
+        def self.<strong>documentation_url</strong> : String
+
+        <a class="method-permalink" href="#documentation_url%3AString-class-method">#</a>
+      </div>
+      
+        <div class="doc">
+          
+          <p>A rule that reports invalid Crystal syntax.</p>
+<p>For example, this syntax is invalid:</p>
+<pre><code class="language-crystal"><span class="k">def</span> <span class="m">hello</span>
+  do_something
+<span class="k">rescue</span> <span class="t">Exception</span> <span class="o">=&gt;</span> e
+<span class="k">end</span></code></pre>
+<p>And should be properly written:</p>
+<pre><code class="language-crystal"><span class="k">def</span> <span class="m">hello</span>
+  do_something
+<span class="k">rescue</span> e : <span class="t">Exception</span>
+<span class="k">end</span></code></pre>
+        </div>
+      
+      <br/>
+      <div>
+        
+      </div>
+    </div>
   
     <div class="entry-detail" id="parsed_doc:String|Nil-class-method">
       <div class="signature">
@@ -1571,7 +1607,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/6a076ae/src/ameba/rule/lint/syntax.cr#L22" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/dd6692f/src/ameba/rule/lint/syntax.cr#L22" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1713,7 +1749,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/6a076ae/src/ameba/rule/lint/syntax.cr#L22" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/dd6692f/src/ameba/rule/lint/syntax.cr#L22" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1743,7 +1779,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/6a076ae/src/ameba/rule/lint/syntax.cr#L28" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/dd6692f/src/ameba/rule/lint/syntax.cr#L28" target="_blank">View source</a>]
         
       </div>
     </div>

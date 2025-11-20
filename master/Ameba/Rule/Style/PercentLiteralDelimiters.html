@@ -1162,7 +1162,7 @@ contain one or both delimiters.</p>
   </h2>
   
     
-      <a href="https://github.com/crystal-ameba/ameba/blob/6a076ae/src/ameba/rule/style/percent_literal_delimiters.cr#L24" target="_blank">
+      <a href="https://github.com/crystal-ameba/ameba/blob/dd6692f/src/ameba/rule/style/percent_literal_delimiters.cr#L24" target="_blank">
         ameba/rule/style/percent_literal_delimiters.cr
       </a>
     
@@ -1233,6 +1233,13 @@ contain one or both delimiters.</p>
     Class Method Summary
   </h2>
   <ul class="list-summary">
+    
+      <li class="entry-summary">
+        <a href="#documentation_url%3AString-class-method" class="signature"><strong>.documentation_url</strong> : String</a>
+        
+          <div class="summary"><p>A rule that enforces the consistent usage of <code>%</code>-literal delimiters.</p></div>
+        
+      </li>
     
       <li class="entry-summary">
         <a href="#parsed_doc%3AString%7CNil-class-method" class="signature"><strong>.parsed_doc</strong> : String | Nil</a>
@@ -1559,7 +1566,7 @@ contain one or both delimiters.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/6a076ae/src/ameba/rule/style/percent_literal_delimiters.cr#L24" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/dd6692f/src/ameba/rule/style/percent_literal_delimiters.cr#L24" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1589,6 +1596,40 @@ contain one or both delimiters.</p>
 </a>
     Class Method Detail
   </h2>
+  
+    <div class="entry-detail" id="documentation_url:String-class-method">
+      <div class="signature">
+        
+        def self.<strong>documentation_url</strong> : String
+
+        <a class="method-permalink" href="#documentation_url%3AString-class-method">#</a>
+      </div>
+      
+        <div class="doc">
+          
+          <p>A rule that enforces the consistent usage of <code>%</code>-literal delimiters.</p>
+<p>Specifying <code>DefaultDelimiters</code> option will set all preferred delimiters at once. You
+can continue to specify individual preferred delimiters via <code>PreferredDelimiters</code>
+setting to override the default. In both cases the delimiters should be specified
+as a string of two characters, or <code>nil</code> to ignore a particular <code>%</code>-literal / default.</p>
+<p>Setting <code>IgnoreLiteralsContainingDelimiters</code> to <code>true</code> will ignore <code>%</code>-literals that
+contain one or both delimiters.</p>
+<p>YAML configuration example:</p>
+<pre><code class="language-crystal">Style/PercentLiteralDelimiters:
+  Enabled: true
+  DefaultDelimiters: &#39;()&#39;
+  PreferredDelimiters:
+    &#39;%w&#39;: &#39;[]&#39;
+    &#39;%i&#39;: &#39;[]&#39;
+    &#39;%r&#39;: &#39;{}&#39;
+  IgnoreLiteralsContainingDelimiters: false</code></pre>
+        </div>
+      
+      <br/>
+      <div>
+        
+      </div>
+    </div>
   
     <div class="entry-detail" id="parsed_doc:String|Nil-class-method">
       <div class="signature">
@@ -1630,7 +1671,7 @@ contain one or both delimiters.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/6a076ae/src/ameba/rule/style/percent_literal_delimiters.cr#L25" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/dd6692f/src/ameba/rule/style/percent_literal_delimiters.cr#L25" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1856,7 +1897,7 @@ contain one or both delimiters.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/6a076ae/src/ameba/rule/style/percent_literal_delimiters.cr#L25" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/dd6692f/src/ameba/rule/style/percent_literal_delimiters.cr#L25" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1886,7 +1927,7 @@ contain one or both delimiters.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/6a076ae/src/ameba/rule/style/percent_literal_delimiters.cr#L40" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/dd6692f/src/ameba/rule/style/percent_literal_delimiters.cr#L40" target="_blank">View source</a>]
         
       </div>
     </div>

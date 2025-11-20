@@ -1153,7 +1153,7 @@
   </h2>
   
     
-      <a href="https://github.com/crystal-ameba/ameba/blob/6a076ae/src/ameba/rule/lint/duplicated_require.cr#L16" target="_blank">
+      <a href="https://github.com/crystal-ameba/ameba/blob/dd6692f/src/ameba/rule/lint/duplicated_require.cr#L16" target="_blank">
         ameba/rule/lint/duplicated_require.cr
       </a>
     
@@ -1224,6 +1224,13 @@
     Class Method Summary
   </h2>
   <ul class="list-summary">
+    
+      <li class="entry-summary">
+        <a href="#documentation_url%3AString-class-method" class="signature"><strong>.documentation_url</strong> : String</a>
+        
+          <div class="summary"><p>A rule that reports duplicated <code>require</code> statements.</p></div>
+        
+      </li>
     
       <li class="entry-summary">
         <a href="#parsed_doc%3AString%7CNil-class-method" class="signature"><strong>.parsed_doc</strong> : String | Nil</a>
@@ -1511,7 +1518,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/6a076ae/src/ameba/rule/lint/duplicated_require.cr#L16" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/dd6692f/src/ameba/rule/lint/duplicated_require.cr#L16" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1541,6 +1548,31 @@
 </a>
     Class Method Detail
   </h2>
+  
+    <div class="entry-detail" id="documentation_url:String-class-method">
+      <div class="signature">
+        
+        def self.<strong>documentation_url</strong> : String
+
+        <a class="method-permalink" href="#documentation_url%3AString-class-method">#</a>
+      </div>
+      
+        <div class="doc">
+          
+          <p>A rule that reports duplicated <code>require</code> statements.</p>
+<pre><code class="language-crystal"><span class="k">require</span> <span class="s">&quot;./thing&quot;</span>
+<span class="k">require</span> <span class="s">&quot;./stuff&quot;</span>
+<span class="k">require</span> <span class="s">&quot;./thing&quot;</span> <span class="c"># duplicated require</span></code></pre>
+<p>YAML configuration example:</p>
+<pre><code class="language-crystal"><span class="t">Lint</span><span class="o">/</span><span class="t">DuplicatedRequire</span>:
+  <span class="t">Enabled</span>: <span class="n">true</span></code></pre>
+        </div>
+      
+      <br/>
+      <div>
+        
+      </div>
+    </div>
   
     <div class="entry-detail" id="parsed_doc:String|Nil-class-method">
       <div class="signature">
@@ -1582,7 +1614,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/6a076ae/src/ameba/rule/lint/duplicated_require.cr#L17" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/dd6692f/src/ameba/rule/lint/duplicated_require.cr#L17" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1724,7 +1756,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/6a076ae/src/ameba/rule/lint/duplicated_require.cr#L17" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/dd6692f/src/ameba/rule/lint/duplicated_require.cr#L17" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1754,7 +1786,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/6a076ae/src/ameba/rule/lint/duplicated_require.cr#L24" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/dd6692f/src/ameba/rule/lint/duplicated_require.cr#L24" target="_blank">View source</a>]
         
       </div>
     </div>

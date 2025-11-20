@@ -1164,7 +1164,7 @@ argument as a receiver, that can be collapsed into a short form.</p>
   </h2>
   
     
-      <a href="https://github.com/crystal-ameba/ameba/blob/6a076ae/src/ameba/rule/style/verbose_block.cr#L30" target="_blank">
+      <a href="https://github.com/crystal-ameba/ameba/blob/dd6692f/src/ameba/rule/style/verbose_block.cr#L30" target="_blank">
         ameba/rule/style/verbose_block.cr
       </a>
     
@@ -1240,6 +1240,13 @@ argument as a receiver, that can be collapsed into a short form.</p>
     Class Method Summary
   </h2>
   <ul class="list-summary">
+    
+      <li class="entry-summary">
+        <a href="#documentation_url%3AString-class-method" class="signature"><strong>.documentation_url</strong> : String</a>
+        
+          <div class="summary"><p>This rule is used to identify usage of single expression blocks with argument as a receiver, that can be collapsed into a short form.</p></div>
+        
+      </li>
     
       <li class="entry-summary">
         <a href="#parsed_doc%3AString%7CNil-class-method" class="signature"><strong>.parsed_doc</strong> : String | Nil</a>
@@ -1728,7 +1735,7 @@ argument as a receiver, that can be collapsed into a short form.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/6a076ae/src/ameba/rule/style/verbose_block.cr#L30" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/dd6692f/src/ameba/rule/style/verbose_block.cr#L30" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1758,6 +1765,40 @@ argument as a receiver, that can be collapsed into a short form.</p>
 </a>
     Class Method Detail
   </h2>
+  
+    <div class="entry-detail" id="documentation_url:String-class-method">
+      <div class="signature">
+        
+        def self.<strong>documentation_url</strong> : String
+
+        <a class="method-permalink" href="#documentation_url%3AString-class-method">#</a>
+      </div>
+      
+        <div class="doc">
+          
+          <p>This rule is used to identify usage of single expression blocks with
+argument as a receiver, that can be collapsed into a short form.</p>
+<p>For example, this is considered invalid:</p>
+<pre><code class="language-crystal">(<span class="n">1</span>..<span class="n">3</span>).any? { <span class="o">|</span>i<span class="o">|</span> i.odd? }</code></pre>
+<p>And it should be written as this:</p>
+<pre><code class="language-crystal">(<span class="n">1</span>..<span class="n">3</span>).any?(<span class="o">&amp;</span>.odd?)</code></pre>
+<p>YAML configuration example:</p>
+<pre><code class="language-crystal"><span class="t">Style</span><span class="o">/</span><span class="t">VerboseBlock</span>:
+  <span class="t">Enabled</span>: <span class="n">true</span>
+  <span class="t">ExcludeMultipleLineBlocks</span>: <span class="n">true</span>
+  <span class="t">ExcludeCallsWithBlock</span>: <span class="n">true</span>
+  <span class="t">ExcludePrefixOperators</span>: <span class="n">true</span>
+  <span class="t">ExcludeOperators</span>: <span class="n">true</span>
+  <span class="t">ExcludeSetters</span>: <span class="n">false</span>
+  <span class="t">MaxLineLength</span>: <span class="o">~</span>
+  <span class="t">MaxLength</span>: <span class="n">50</span> <span class="c"># use ~ to disable</span></code></pre>
+        </div>
+      
+      <br/>
+      <div>
+        
+      </div>
+    </div>
   
     <div class="entry-detail" id="parsed_doc:String|Nil-class-method">
       <div class="signature">
@@ -1799,7 +1840,7 @@ argument as a receiver, that can be collapsed into a short form.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/6a076ae/src/ameba/rule/style/verbose_block.cr#L33" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/dd6692f/src/ameba/rule/style/verbose_block.cr#L33" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2137,7 +2178,7 @@ argument as a receiver, that can be collapsed into a short form.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/6a076ae/src/ameba/rule/style/verbose_block.cr#L33" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/dd6692f/src/ameba/rule/style/verbose_block.cr#L33" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2167,7 +2208,7 @@ argument as a receiver, that can be collapsed into a short form.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/6a076ae/src/ameba/rule/style/verbose_block.cr#L52" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/dd6692f/src/ameba/rule/style/verbose_block.cr#L52" target="_blank">View source</a>]
         
       </div>
     </div>

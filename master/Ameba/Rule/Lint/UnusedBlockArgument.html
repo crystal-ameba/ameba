@@ -1168,7 +1168,7 @@ For example, this is considered invalid:</p>
   </h2>
   
     
-      <a href="https://github.com/crystal-ameba/ameba/blob/6a076ae/src/ameba/rule/lint/unused_block_argument.cr#L33" target="_blank">
+      <a href="https://github.com/crystal-ameba/ameba/blob/dd6692f/src/ameba/rule/lint/unused_block_argument.cr#L33" target="_blank">
         ameba/rule/lint/unused_block_argument.cr
       </a>
     
@@ -1244,6 +1244,13 @@ For example, this is considered invalid:</p>
     Class Method Summary
   </h2>
   <ul class="list-summary">
+    
+      <li class="entry-summary">
+        <a href="#documentation_url%3AString-class-method" class="signature"><strong>.documentation_url</strong> : String</a>
+        
+          <div class="summary"><p>A rule that reports unused block arguments.</p></div>
+        
+      </li>
     
       <li class="entry-summary">
         <a href="#parsed_doc%3AString%7CNil-class-method" class="signature"><strong>.parsed_doc</strong> : String | Nil</a>
@@ -1671,7 +1678,7 @@ For example, this is considered invalid:</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/6a076ae/src/ameba/rule/lint/unused_block_argument.cr#L33" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/dd6692f/src/ameba/rule/lint/unused_block_argument.cr#L33" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1701,6 +1708,44 @@ For example, this is considered invalid:</p>
 </a>
     Class Method Detail
   </h2>
+  
+    <div class="entry-detail" id="documentation_url:String-class-method">
+      <div class="signature">
+        
+        def self.<strong>documentation_url</strong> : String
+
+        <a class="method-permalink" href="#documentation_url%3AString-class-method">#</a>
+      </div>
+      
+        <div class="doc">
+          
+          <p>A rule that reports unused block arguments.
+For example, this is considered invalid:</p>
+<pre><code class="language-crystal"><span class="k">def</span> <span class="m">foo</span>(a, b, <span class="o">&amp;</span>block)
+  a <span class="o">+</span> b
+<span class="k">end</span>
+
+<span class="k">def</span> <span class="m">bar</span>(<span class="o">&amp;</span>block)
+  <span class="k">yield</span> <span class="n">42</span>
+<span class="k">end</span></code></pre>
+<p>and should be written as:</p>
+<pre><code class="language-crystal"><span class="k">def</span> <span class="m">foo</span>(a, b, <span class="o">&amp;</span>_block)
+  a <span class="o">+</span> b
+<span class="k">end</span>
+
+<span class="k">def</span> <span class="m">bar</span>(<span class="o">&amp;</span>)
+  <span class="k">yield</span> <span class="n">42</span>
+<span class="k">end</span></code></pre>
+<p>YAML configuration example:</p>
+<pre><code class="language-crystal"><span class="t">Lint</span><span class="o">/</span><span class="t">UnusedBlockArgument</span>:
+  <span class="t">Enabled</span>: <span class="n">true</span></code></pre>
+        </div>
+      
+      <br/>
+      <div>
+        
+      </div>
+    </div>
   
     <div class="entry-detail" id="parsed_doc:String|Nil-class-method">
       <div class="signature">
@@ -1742,7 +1787,7 @@ For example, this is considered invalid:</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/6a076ae/src/ameba/rule/lint/unused_block_argument.cr#L36" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/dd6692f/src/ameba/rule/lint/unused_block_argument.cr#L36" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1884,7 +1929,7 @@ For example, this is considered invalid:</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/6a076ae/src/ameba/rule/lint/unused_block_argument.cr#L36" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/dd6692f/src/ameba/rule/lint/unused_block_argument.cr#L36" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1914,7 +1959,7 @@ For example, this is considered invalid:</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/6a076ae/src/ameba/rule/lint/unused_block_argument.cr#L50" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/dd6692f/src/ameba/rule/lint/unused_block_argument.cr#L50" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1930,7 +1975,7 @@ For example, this is considered invalid:</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/6a076ae/src/ameba/rule/lint/unused_block_argument.cr#L46" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/dd6692f/src/ameba/rule/lint/unused_block_argument.cr#L46" target="_blank">View source</a>]
         
       </div>
     </div>

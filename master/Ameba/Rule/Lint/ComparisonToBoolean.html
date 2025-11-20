@@ -1159,7 +1159,7 @@ or negating the variable.</p>
   </h2>
   
     
-      <a href="https://github.com/crystal-ameba/ameba/blob/6a076ae/src/ameba/rule/lint/comparison_to_boolean.cr#L22" target="_blank">
+      <a href="https://github.com/crystal-ameba/ameba/blob/dd6692f/src/ameba/rule/lint/comparison_to_boolean.cr#L22" target="_blank">
         ameba/rule/lint/comparison_to_boolean.cr
       </a>
     
@@ -1235,6 +1235,13 @@ or negating the variable.</p>
     Class Method Summary
   </h2>
   <ul class="list-summary">
+    
+      <li class="entry-summary">
+        <a href="#documentation_url%3AString-class-method" class="signature"><strong>.documentation_url</strong> : String</a>
+        
+          <div class="summary"><p>A rule that disallows comparison to booleans.</p></div>
+        
+      </li>
     
       <li class="entry-summary">
         <a href="#parsed_doc%3AString%7CNil-class-method" class="signature"><strong>.parsed_doc</strong> : String | Nil</a>
@@ -1648,7 +1655,7 @@ or negating the variable.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/6a076ae/src/ameba/rule/lint/comparison_to_boolean.cr#L22" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/dd6692f/src/ameba/rule/lint/comparison_to_boolean.cr#L22" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1678,6 +1685,35 @@ or negating the variable.</p>
 </a>
     Class Method Detail
   </h2>
+  
+    <div class="entry-detail" id="documentation_url:String-class-method">
+      <div class="signature">
+        
+        def self.<strong>documentation_url</strong> : String
+
+        <a class="method-permalink" href="#documentation_url%3AString-class-method">#</a>
+      </div>
+      
+        <div class="doc">
+          
+          <p>A rule that disallows comparison to booleans.</p>
+<p>For example, these are considered invalid:</p>
+<pre><code class="language-crystal">foo <span class="o">==</span> <span class="n">true</span>
+bar <span class="o">!=</span> <span class="n">false</span>
+<span class="n">false</span> <span class="o">===</span> baz</code></pre>
+<p>This is because these expressions evaluate to <code>true</code> or <code>false</code>, so you
+could get the same result by using either the variable directly,
+or negating the variable.</p>
+<p>YAML configuration example:</p>
+<pre><code class="language-crystal"><span class="t">Lint</span><span class="o">/</span><span class="t">ComparisonToBoolean</span>:
+  <span class="t">Enabled</span>: <span class="n">true</span></code></pre>
+        </div>
+      
+      <br/>
+      <div>
+        
+      </div>
+    </div>
   
     <div class="entry-detail" id="parsed_doc:String|Nil-class-method">
       <div class="signature">
@@ -1719,7 +1755,7 @@ or negating the variable.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/6a076ae/src/ameba/rule/lint/comparison_to_boolean.cr#L25" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/dd6692f/src/ameba/rule/lint/comparison_to_boolean.cr#L25" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1861,7 +1897,7 @@ or negating the variable.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/6a076ae/src/ameba/rule/lint/comparison_to_boolean.cr#L25" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/dd6692f/src/ameba/rule/lint/comparison_to_boolean.cr#L25" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1891,7 +1927,7 @@ or negating the variable.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/6a076ae/src/ameba/rule/lint/comparison_to_boolean.cr#L34" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/dd6692f/src/ameba/rule/lint/comparison_to_boolean.cr#L34" target="_blank">View source</a>]
         
       </div>
     </div>

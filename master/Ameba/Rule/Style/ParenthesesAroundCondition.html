@@ -1162,7 +1162,7 @@ around the condition of <code>if</code>, <code>unless</code>, <code>case</code>,
   </h2>
   
     
-      <a href="https://github.com/crystal-ameba/ameba/blob/6a076ae/src/ameba/rule/style/parentheses_around_condition.cr#L30" target="_blank">
+      <a href="https://github.com/crystal-ameba/ameba/blob/dd6692f/src/ameba/rule/style/parentheses_around_condition.cr#L30" target="_blank">
         ameba/rule/style/parentheses_around_condition.cr
       </a>
     
@@ -1238,6 +1238,13 @@ around the condition of <code>if</code>, <code>unless</code>, <code>case</code>,
     Class Method Summary
   </h2>
   <ul class="list-summary">
+    
+      <li class="entry-summary">
+        <a href="#documentation_url%3AString-class-method" class="signature"><strong>.documentation_url</strong> : String</a>
+        
+          <div class="summary"><p>A rule that checks for the presence of superfluous parentheses around the condition of <code>if</code>, <code>unless</code>, <code>case</code>, <code>while</code> and <code>until</code>.</p></div>
+        
+      </li>
     
       <li class="entry-summary">
         <a href="#parsed_doc%3AString%7CNil-class-method" class="signature"><strong>.parsed_doc</strong> : String | Nil</a>
@@ -1564,7 +1571,7 @@ around the condition of <code>if</code>, <code>unless</code>, <code>case</code>,
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/6a076ae/src/ameba/rule/style/parentheses_around_condition.cr#L30" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/dd6692f/src/ameba/rule/style/parentheses_around_condition.cr#L30" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1594,6 +1601,40 @@ around the condition of <code>if</code>, <code>unless</code>, <code>case</code>,
 </a>
     Class Method Detail
   </h2>
+  
+    <div class="entry-detail" id="documentation_url:String-class-method">
+      <div class="signature">
+        
+        def self.<strong>documentation_url</strong> : String
+
+        <a class="method-permalink" href="#documentation_url%3AString-class-method">#</a>
+      </div>
+      
+        <div class="doc">
+          
+          <p>A rule that checks for the presence of superfluous parentheses
+around the condition of <code>if</code>, <code>unless</code>, <code>case</code>, <code>while</code> and <code>until</code>.</p>
+<p>For example, this is considered invalid:</p>
+<pre><code class="language-crystal"><span class="k">if</span> (foo <span class="o">==</span> <span class="n">42</span>)
+  do_something
+<span class="k">end</span></code></pre>
+<p>And should be replaced by the following:</p>
+<pre><code class="language-crystal"><span class="k">if</span> foo <span class="o">==</span> <span class="n">42</span>
+  do_something
+<span class="k">end</span></code></pre>
+<p>YAML configuration example:</p>
+<pre><code class="language-crystal"><span class="t">Style</span><span class="o">/</span><span class="t">ParenthesesAroundCondition</span>:
+  <span class="t">Enabled</span>: <span class="n">true</span>
+  <span class="t">ExcludeTernary</span>: <span class="n">false</span>
+  <span class="t">ExcludeMultiline</span>: <span class="n">false</span>
+  <span class="t">AllowSafeAssignment</span>: <span class="n">false</span></code></pre>
+        </div>
+      
+      <br/>
+      <div>
+        
+      </div>
+    </div>
   
     <div class="entry-detail" id="parsed_doc:String|Nil-class-method">
       <div class="signature">
@@ -1635,7 +1676,7 @@ around the condition of <code>if</code>, <code>unless</code>, <code>case</code>,
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/6a076ae/src/ameba/rule/style/parentheses_around_condition.cr#L31" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/dd6692f/src/ameba/rule/style/parentheses_around_condition.cr#L31" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1861,7 +1902,7 @@ around the condition of <code>if</code>, <code>unless</code>, <code>case</code>,
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/6a076ae/src/ameba/rule/style/parentheses_around_condition.cr#L31" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/dd6692f/src/ameba/rule/style/parentheses_around_condition.cr#L31" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1891,7 +1932,7 @@ around the condition of <code>if</code>, <code>unless</code>, <code>case</code>,
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/6a076ae/src/ameba/rule/style/parentheses_around_condition.cr#L43" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/dd6692f/src/ameba/rule/style/parentheses_around_condition.cr#L43" target="_blank">View source</a>]
         
       </div>
     </div>

@@ -1178,7 +1178,7 @@ duplicate 'else' branches are not registered as offenses.</p>
   </h2>
   
     
-      <a href="https://github.com/crystal-ameba/ameba/blob/6a076ae/src/ameba/rule/lint/duplicate_branch.cr#L47" target="_blank">
+      <a href="https://github.com/crystal-ameba/ameba/blob/dd6692f/src/ameba/rule/lint/duplicate_branch.cr#L47" target="_blank">
         ameba/rule/lint/duplicate_branch.cr
       </a>
     
@@ -1249,6 +1249,13 @@ duplicate 'else' branches are not registered as offenses.</p>
     Class Method Summary
   </h2>
   <ul class="list-summary">
+    
+      <li class="entry-summary">
+        <a href="#documentation_url%3AString-class-method" class="signature"><strong>.documentation_url</strong> : String</a>
+        
+          <div class="summary"><p>Checks that there are no repeated bodies within <code>if/unless</code>, <code>case-when</code>, <code>case-in</code> and <code>rescue</code> constructs.</p></div>
+        
+      </li>
     
       <li class="entry-summary">
         <a href="#parsed_doc%3AString%7CNil-class-method" class="signature"><strong>.parsed_doc</strong> : String | Nil</a>
@@ -1716,7 +1723,7 @@ duplicate 'else' branches are not registered as offenses.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/6a076ae/src/ameba/rule/lint/duplicate_branch.cr#L47" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/dd6692f/src/ameba/rule/lint/duplicate_branch.cr#L47" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1746,6 +1753,54 @@ duplicate 'else' branches are not registered as offenses.</p>
 </a>
     Class Method Detail
   </h2>
+  
+    <div class="entry-detail" id="documentation_url:String-class-method">
+      <div class="signature">
+        
+        def self.<strong>documentation_url</strong> : String
+
+        <a class="method-permalink" href="#documentation_url%3AString-class-method">#</a>
+      </div>
+      
+        <div class="doc">
+          
+          <p>Checks that there are no repeated bodies within <code>if/unless</code>,
+<code>case-when</code>, <code>case-in</code> and <code>rescue</code> constructs.</p>
+<p>This is considered invalid:</p>
+<pre><code class="language-crystal"><span class="k">if</span> foo
+  do_foo
+  do_something_else
+<span class="k">elsif</span> bar
+  do_foo
+  do_something_else
+<span class="k">end</span></code></pre>
+<p>And this is valid:</p>
+<pre><code class="language-crystal"><span class="k">if</span> foo <span class="o">||</span> bar
+  do_foo
+  do_something_else
+<span class="k">end</span></code></pre>
+<p>With <code>IgnoreLiteralBranches: true</code>, branches are not registered
+as offenses if they return a basic literal value (string, symbol,
+integer, float, <code>true</code>, <code>false</code>, or <code>nil</code>), or return an array,
+hash, regexp or range that only contains one of the above basic
+literal values.</p>
+<p>With <code>IgnoreConstantBranches: true</code>, branches are not registered
+as offenses if they return a constant value.</p>
+<p>With <code>IgnoreDuplicateElseBranch: true</code>, in conditionals with multiple branches,
+duplicate 'else' branches are not registered as offenses.</p>
+<p>YAML configuration example:</p>
+<pre><code class="language-crystal"><span class="t">Lint</span><span class="o">/</span><span class="t">DuplicateBranch</span>:
+  <span class="t">Enabled</span>: <span class="n">true</span>
+  <span class="t">IgnoreLiteralBranches</span>: <span class="n">false</span>
+  <span class="t">IgnoreConstantBranches</span>: <span class="n">false</span>
+  <span class="t">IgnoreDuplicateElseBranch</span>: <span class="n">false</span></code></pre>
+        </div>
+      
+      <br/>
+      <div>
+        
+      </div>
+    </div>
   
     <div class="entry-detail" id="parsed_doc:String|Nil-class-method">
       <div class="signature">
@@ -1787,7 +1842,7 @@ duplicate 'else' branches are not registered as offenses.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/6a076ae/src/ameba/rule/lint/duplicate_branch.cr#L50" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/dd6692f/src/ameba/rule/lint/duplicate_branch.cr#L50" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2013,7 +2068,7 @@ duplicate 'else' branches are not registered as offenses.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/6a076ae/src/ameba/rule/lint/duplicate_branch.cr#L50" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/dd6692f/src/ameba/rule/lint/duplicate_branch.cr#L50" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2043,7 +2098,7 @@ duplicate 'else' branches are not registered as offenses.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/6a076ae/src/ameba/rule/lint/duplicate_branch.cr#L66" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/dd6692f/src/ameba/rule/lint/duplicate_branch.cr#L66" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2059,7 +2114,7 @@ duplicate 'else' branches are not registered as offenses.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/6a076ae/src/ameba/rule/lint/duplicate_branch.cr#L62" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/dd6692f/src/ameba/rule/lint/duplicate_branch.cr#L62" target="_blank">View source</a>]
         
       </div>
     </div>

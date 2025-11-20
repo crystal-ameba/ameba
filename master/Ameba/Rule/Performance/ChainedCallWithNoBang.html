@@ -1172,7 +1172,7 @@ chars <span class="o">=</span> names
   </h2>
   
     
-      <a href="https://github.com/crystal-ameba/ameba/blob/6a076ae/src/ameba/rule/performance/chained_call_with_no_bang.cr#L40" target="_blank">
+      <a href="https://github.com/crystal-ameba/ameba/blob/dd6692f/src/ameba/rule/performance/chained_call_with_no_bang.cr#L40" target="_blank">
         ameba/rule/performance/chained_call_with_no_bang.cr
       </a>
     
@@ -1254,6 +1254,13 @@ chars <span class="o">=</span> names
     Class Method Summary
   </h2>
   <ul class="list-summary">
+    
+      <li class="entry-summary">
+        <a href="#documentation_url%3AString-class-method" class="signature"><strong>.documentation_url</strong> : String</a>
+        
+          <div class="summary"><p>This rule is used to identify usage of chained calls not utilizing the bang method variants.</p></div>
+        
+      </li>
     
       <li class="entry-summary">
         <a href="#parsed_doc%3AString%7CNil-class-method" class="signature"><strong>.parsed_doc</strong> : String | Nil</a>
@@ -1536,6 +1543,11 @@ chars <span class="o">=</span> names
   <h3>Class methods inherited from class <code><a href="../../../Ameba/Rule/Performance/Base.html">Ameba::Rule::Performance::Base</a></code></h3>
   
   
+    <a href="../../../Ameba/Rule/Performance/Base.html#documentation_url%3AString-class-method" class="tooltip">
+      <span>documentation_url : String</span>
+    documentation_url</a>, 
+    
+  
     <a href="../../../Ameba/Rule/Performance/Base.html#parsed_doc%3AString%7CNil-class-method" class="tooltip">
       <span>parsed_doc : String | Nil</span>
     parsed_doc</a>
@@ -1789,7 +1801,7 @@ chars <span class="o">=</span> names
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/6a076ae/src/ameba/rule/performance/chained_call_with_no_bang.cr#L40" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/dd6692f/src/ameba/rule/performance/chained_call_with_no_bang.cr#L40" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1819,6 +1831,48 @@ chars <span class="o">=</span> names
 </a>
     Class Method Detail
   </h2>
+  
+    <div class="entry-detail" id="documentation_url:String-class-method">
+      <div class="signature">
+        
+        def self.<strong>documentation_url</strong> : String
+
+        <a class="method-permalink" href="#documentation_url%3AString-class-method">#</a>
+      </div>
+      
+        <div class="doc">
+          
+          <p>This rule is used to identify usage of chained calls not utilizing
+the bang method variants.</p>
+<p>For example, this is considered inefficient:</p>
+<pre><code class="language-crystal">names <span class="o">=</span> <span class="s">%w[Alice Bob]</span>
+chars <span class="o">=</span> names
+  .flat_map(<span class="o">&amp;</span>.chars)
+  .uniq
+  .sort</code></pre>
+<p>And can be written as this:</p>
+<pre><code class="language-crystal">names <span class="o">=</span> <span class="s">%w[Alice Bob]</span>
+chars <span class="o">=</span> names
+  .flat_map(<span class="o">&amp;</span>.chars)
+  .uniq!
+  .sort!</code></pre>
+<p>YAML configuration example:</p>
+<pre><code class="language-crystal"><span class="t">Performance</span><span class="o">/</span><span class="t">ChainedCallWithNoBang</span>:
+  <span class="t">Enabled</span>: <span class="n">true</span>
+  <span class="t">CallNames</span>:
+    <span class="o">-</span> uniq
+    <span class="o">-</span> unstable_sort
+    <span class="o">-</span> sort
+    <span class="o">-</span> sort_by
+    <span class="o">-</span> shuffle
+    <span class="o">-</span> reverse</code></pre>
+        </div>
+      
+      <br/>
+      <div>
+        
+      </div>
+    </div>
   
     <div class="entry-detail" id="parsed_doc:String|Nil-class-method">
       <div class="signature">
@@ -1860,7 +1914,7 @@ chars <span class="o">=</span> names
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/6a076ae/src/ameba/rule/performance/chained_call_with_no_bang.cr#L43" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/dd6692f/src/ameba/rule/performance/chained_call_with_no_bang.cr#L43" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2030,7 +2084,7 @@ chars <span class="o">=</span> names
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/6a076ae/src/ameba/rule/performance/chained_call_with_no_bang.cr#L43" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/dd6692f/src/ameba/rule/performance/chained_call_with_no_bang.cr#L43" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2060,7 +2114,7 @@ chars <span class="o">=</span> names
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/6a076ae/src/ameba/rule/performance/chained_call_with_no_bang.cr#L67" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/dd6692f/src/ameba/rule/performance/chained_call_with_no_bang.cr#L67" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2076,7 +2130,7 @@ chars <span class="o">=</span> names
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/6a076ae/src/ameba/rule/performance/chained_call_with_no_bang.cr#L63" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/dd6692f/src/ameba/rule/performance/chained_call_with_no_bang.cr#L63" target="_blank">View source</a>]
         
       </div>
     </div>

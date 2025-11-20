@@ -1155,7 +1155,7 @@
   </h2>
   
     
-      <a href="https://github.com/crystal-ameba/ameba/blob/6a076ae/src/ameba/rule/lint/typos.cr#L16" target="_blank">
+      <a href="https://github.com/crystal-ameba/ameba/blob/dd6692f/src/ameba/rule/lint/typos.cr#L16" target="_blank">
         ameba/rule/lint/typos.cr
       </a>
     
@@ -1235,6 +1235,13 @@
     Class Method Summary
   </h2>
   <ul class="list-summary">
+    
+      <li class="entry-summary">
+        <a href="#documentation_url%3AString-class-method" class="signature"><strong>.documentation_url</strong> : String</a>
+        
+          <div class="summary"><p>A rule that reports typos found in source files.</p></div>
+        
+      </li>
     
       <li class="entry-summary">
         <a href="#parsed_doc%3AString%7CNil-class-method" class="signature"><strong>.parsed_doc</strong> : String | Nil</a>
@@ -1556,7 +1563,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/6a076ae/src/ameba/rule/lint/typos.cr#L16" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/dd6692f/src/ameba/rule/lint/typos.cr#L16" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1586,6 +1593,33 @@
 </a>
     Class Method Detail
   </h2>
+  
+    <div class="entry-detail" id="documentation_url:String-class-method">
+      <div class="signature">
+        
+        def self.<strong>documentation_url</strong> : String
+
+        <a class="method-permalink" href="#documentation_url%3AString-class-method">#</a>
+      </div>
+      
+        <div class="doc">
+          
+          <p>A rule that reports typos found in source files.</p>
+<p><span class="flag purple">NOTE</span>  Needs <a href="https://github.com/crate-ci/typos">typos</a> CLI tool.</p>
+<p><span class="flag purple">NOTE</span>  See the chapter on <a href="https://github.com/crate-ci/typos#false-positives">false positives</a>.</p>
+<p>YAML configuration example:</p>
+<pre><code class="language-crystal"><span class="t">Lint</span><span class="o">/</span><span class="t">Typos</span>:
+  <span class="t">Enabled</span>: <span class="n">true</span>
+  <span class="t">BinPath</span>: <span class="o">~</span>
+  <span class="t">FailOnMissingBin</span>: <span class="n">false</span>
+  <span class="t">FailOnError</span>: <span class="n">true</span></code></pre>
+        </div>
+      
+      <br/>
+      <div>
+        
+      </div>
+    </div>
   
     <div class="entry-detail" id="parsed_doc:String|Nil-class-method">
       <div class="signature">
@@ -1627,7 +1661,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/6a076ae/src/ameba/rule/lint/typos.cr#L17" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/dd6692f/src/ameba/rule/lint/typos.cr#L17" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1657,7 +1691,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/6a076ae/src/ameba/rule/lint/typos.cr#L86" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/dd6692f/src/ameba/rule/lint/typos.cr#L86" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1855,7 +1889,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/6a076ae/src/ameba/rule/lint/typos.cr#L17" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/dd6692f/src/ameba/rule/lint/typos.cr#L17" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1897,7 +1931,7 @@ that are tested by this rule, it should add an issue.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/6a076ae/src/ameba/rule/lint/typos.cr#L90" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/dd6692f/src/ameba/rule/lint/typos.cr#L90" target="_blank">View source</a>]
         
       </div>
     </div>

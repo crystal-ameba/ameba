@@ -1158,7 +1158,7 @@
   </h2>
   
     
-      <a href="https://github.com/crystal-ameba/ameba/blob/6a076ae/src/ameba/rule/naming/block_parameter_name.cr#L26" target="_blank">
+      <a href="https://github.com/crystal-ameba/ameba/blob/dd6692f/src/ameba/rule/naming/block_parameter_name.cr#L26" target="_blank">
         ameba/rule/naming/block_parameter_name.cr
       </a>
     
@@ -1229,6 +1229,13 @@
     Class Method Summary
   </h2>
   <ul class="list-summary">
+    
+      <li class="entry-summary">
+        <a href="#documentation_url%3AString-class-method" class="signature"><strong>.documentation_url</strong> : String</a>
+        
+          <div class="summary"><p>A rule that reports non-descriptive block parameter names.</p></div>
+        
+      </li>
     
       <li class="entry-summary">
         <a href="#parsed_doc%3AString%7CNil-class-method" class="signature"><strong>.parsed_doc</strong> : String | Nil</a>
@@ -1561,7 +1568,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/6a076ae/src/ameba/rule/naming/block_parameter_name.cr#L26" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/dd6692f/src/ameba/rule/naming/block_parameter_name.cr#L26" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1591,6 +1598,36 @@
 </a>
     Class Method Detail
   </h2>
+  
+    <div class="entry-detail" id="documentation_url:String-class-method">
+      <div class="signature">
+        
+        def self.<strong>documentation_url</strong> : String
+
+        <a class="method-permalink" href="#documentation_url%3AString-class-method">#</a>
+      </div>
+      
+        <div class="doc">
+          
+          <p>A rule that reports non-descriptive block parameter names.</p>
+<p>Favour this:</p>
+<pre><code class="language-crystal">tokens.each { <span class="o">|</span>token<span class="o">|</span> token.last_accessed_at <span class="o">=</span> <span class="t">Time</span>.utc }</code></pre>
+<p>Over this:</p>
+<pre><code class="language-crystal">tokens.each { <span class="o">|</span>t<span class="o">|</span> t.last_accessed_at <span class="o">=</span> <span class="t">Time</span>.utc }</code></pre>
+<p>YAML configuration example:</p>
+<pre><code class="language-crystal"><span class="t">Naming</span><span class="o">/</span><span class="t">BlockParameterName</span>:
+  <span class="t">Enabled</span>: <span class="n">true</span>
+  <span class="t">MinNameLength</span>: <span class="n">3</span>
+  <span class="t">AllowNamesEndingInNumbers</span>: <span class="n">true</span>
+  <span class="t">AllowedNames</span>: [a, b, e, i, j, k, v, x, y, k1, k2, v1, v2, db, ex, id, io, ip, op, tx, wg, ws]
+  <span class="t">ForbiddenNames</span>: <span class="o">[]</span></code></pre>
+        </div>
+      
+      <br/>
+      <div>
+        
+      </div>
+    </div>
   
     <div class="entry-detail" id="parsed_doc:String|Nil-class-method">
       <div class="signature">
@@ -1632,7 +1669,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/6a076ae/src/ameba/rule/naming/block_parameter_name.cr#L27" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/dd6692f/src/ameba/rule/naming/block_parameter_name.cr#L27" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1886,7 +1923,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/6a076ae/src/ameba/rule/naming/block_parameter_name.cr#L27" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/dd6692f/src/ameba/rule/naming/block_parameter_name.cr#L27" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1916,7 +1953,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/6a076ae/src/ameba/rule/naming/block_parameter_name.cr#L38" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/dd6692f/src/ameba/rule/naming/block_parameter_name.cr#L38" target="_blank">View source</a>]
         
       </div>
     </div>
