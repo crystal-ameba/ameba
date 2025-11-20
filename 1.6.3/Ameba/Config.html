@@ -1,0 +1,1710 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="generator" content="Crystal Docs 1.17.1">
+<meta name="crystal_docs.project_version" content="1.6.3">
+<meta name="crystal_docs.project_name" content="ameba">
+
+  <meta name="crystal_docs.json_config_url" content="/ameba/versions.json">
+
+
+
+<link href="../css/style.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="../js/doc.js"></script>
+
+  <meta name="repository-name" content="ameba">
+  <title>Ameba::Config - ameba 1.6.3</title>
+  <script type="text/javascript">
+    CrystalDocs.base_path = "../";
+  </script>
+</head>
+<body>
+
+<svg class="hidden">
+  <symbol id="octicon-link" viewBox="0 0 16 16">
+    <path fill="currentColor" fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path>
+  </symbol>
+</svg>
+<input type="checkbox" id="sidebar-btn">
+<label for="sidebar-btn" id="sidebar-btn-label">
+  <svg class="open" xmlns="http://www.w3.org/2000/svg" height="2em" width="2em" viewBox="0 0 512 512"><title>Open Sidebar</title><path fill="currentColor" d="M80 96v64h352V96H80zm0 112v64h352v-64H80zm0 112v64h352v-64H80z"></path></svg>
+  <svg class="close" xmlns="http://www.w3.org/2000/svg" width="2em" height="2em" viewBox="0 0 512 512"><title>Close Sidebar</title><path fill="currentColor" d="m118.6 73.4-45.2 45.2L210.7 256 73.4 393.4l45.2 45.2L256 301.3l137.4 137.3 45.2-45.2L301.3 256l137.3-137.4-45.2-45.2L256 210.7Z"></path></svg>
+</label>
+<div class="sidebar">
+  <div class="sidebar-header">
+    <div class="search-box">
+      <input type="search" class="search-input" placeholder="Search..." spellcheck="false" aria-label="Search">
+    </div>
+
+    <div class="project-summary">
+      <h1 class="project-name">
+        <a href="../index.html">
+          ameba
+        </a>
+      </h1>
+
+      <span class="project-version">
+        1.6.3
+      </span>
+    </div>
+  </div>
+
+  <div class="search-results hidden">
+    <ul class="search-list"></ul>
+  </div>
+
+  <div class="types-list">
+    <ul>
+  
+  <li class="parent open current" data-id="ameba/Ameba" data-name="ameba">
+      <a href="../Ameba.html">Ameba</a>
+      
+        <ul>
+  
+  <li class="parent " data-id="ameba/Ameba/AST" data-name="ameba::ast">
+      <a href="../Ameba/AST.html">AST</a>
+      
+        <ul>
+  
+  <li class=" " data-id="ameba/Ameba/AST/Argument" data-name="ameba::ast::argument">
+      <a href="../Ameba/AST/Argument.html">Argument</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/AST/Assignment" data-name="ameba::ast::assignment">
+      <a href="../Ameba/AST/Assignment.html">Assignment</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/AST/BaseVisitor" data-name="ameba::ast::basevisitor">
+      <a href="../Ameba/AST/BaseVisitor.html">BaseVisitor</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/AST/Branch" data-name="ameba::ast::branch">
+      <a href="../Ameba/AST/Branch.html">Branch</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/AST/Branchable" data-name="ameba::ast::branchable">
+      <a href="../Ameba/AST/Branchable.html">Branchable</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/AST/CountingVisitor" data-name="ameba::ast::countingvisitor">
+      <a href="../Ameba/AST/CountingVisitor.html">CountingVisitor</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/AST/FlowExpression" data-name="ameba::ast::flowexpression">
+      <a href="../Ameba/AST/FlowExpression.html">FlowExpression</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/AST/FlowExpressionVisitor" data-name="ameba::ast::flowexpressionvisitor">
+      <a href="../Ameba/AST/FlowExpressionVisitor.html">FlowExpressionVisitor</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/AST/InstanceVariable" data-name="ameba::ast::instancevariable">
+      <a href="../Ameba/AST/InstanceVariable.html">InstanceVariable</a>
+      
+    </li>
+  
+  <li class="parent " data-id="ameba/Ameba/AST/NodeVisitor" data-name="ameba::ast::nodevisitor">
+      <a href="../Ameba/AST/NodeVisitor.html">NodeVisitor</a>
+      
+        <ul>
+  
+  <li class=" " data-id="ameba/Ameba/AST/NodeVisitor/Category" data-name="ameba::ast::nodevisitor::category">
+      <a href="../Ameba/AST/NodeVisitor/Category.html">Category</a>
+      
+    </li>
+  
+</ul>
+
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/AST/RedundantControlExpressionVisitor" data-name="ameba::ast::redundantcontrolexpressionvisitor">
+      <a href="../Ameba/AST/RedundantControlExpressionVisitor.html">RedundantControlExpressionVisitor</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/AST/Reference" data-name="ameba::ast::reference">
+      <a href="../Ameba/AST/Reference.html">Reference</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/AST/Scope" data-name="ameba::ast::scope">
+      <a href="../Ameba/AST/Scope.html">Scope</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/AST/ScopeVisitor" data-name="ameba::ast::scopevisitor">
+      <a href="../Ameba/AST/ScopeVisitor.html">ScopeVisitor</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/AST/TopLevelNodesVisitor" data-name="ameba::ast::toplevelnodesvisitor">
+      <a href="../Ameba/AST/TopLevelNodesVisitor.html">TopLevelNodesVisitor</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/AST/TypeDecVariable" data-name="ameba::ast::typedecvariable">
+      <a href="../Ameba/AST/TypeDecVariable.html">TypeDecVariable</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/AST/Util" data-name="ameba::ast::util">
+      <a href="../Ameba/AST/Util.html">Util</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/AST/Variable" data-name="ameba::ast::variable">
+      <a href="../Ameba/AST/Variable.html">Variable</a>
+      
+    </li>
+  
+</ul>
+
+      
+    </li>
+  
+  <li class=" current" data-id="ameba/Ameba/Config" data-name="ameba::config">
+      <a href="../Ameba/Config.html">Config</a>
+      
+    </li>
+  
+  <li class="parent " data-id="ameba/Ameba/Ext" data-name="ameba::ext">
+      <a href="../Ameba/Ext.html">Ext</a>
+      
+        <ul>
+  
+  <li class=" " data-id="ameba/Ameba/Ext/Location" data-name="ameba::ext::location">
+      <a href="../Ameba/Ext/Location.html">Location</a>
+      
+    </li>
+  
+</ul>
+
+      
+    </li>
+  
+  <li class="parent " data-id="ameba/Ameba/Formatter" data-name="ameba::formatter">
+      <a href="../Ameba/Formatter.html">Formatter</a>
+      
+        <ul>
+  
+  <li class=" " data-id="ameba/Ameba/Formatter/BaseFormatter" data-name="ameba::formatter::baseformatter">
+      <a href="../Ameba/Formatter/BaseFormatter.html">BaseFormatter</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/Formatter/DisabledFormatter" data-name="ameba::formatter::disabledformatter">
+      <a href="../Ameba/Formatter/DisabledFormatter.html">DisabledFormatter</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/Formatter/DotFormatter" data-name="ameba::formatter::dotformatter">
+      <a href="../Ameba/Formatter/DotFormatter.html">DotFormatter</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/Formatter/ExplainFormatter" data-name="ameba::formatter::explainformatter">
+      <a href="../Ameba/Formatter/ExplainFormatter.html">ExplainFormatter</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/Formatter/FlycheckFormatter" data-name="ameba::formatter::flycheckformatter">
+      <a href="../Ameba/Formatter/FlycheckFormatter.html">FlycheckFormatter</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/Formatter/JSONFormatter" data-name="ameba::formatter::jsonformatter">
+      <a href="../Ameba/Formatter/JSONFormatter.html">JSONFormatter</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/Formatter/TODOFormatter" data-name="ameba::formatter::todoformatter">
+      <a href="../Ameba/Formatter/TODOFormatter.html">TODOFormatter</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/Formatter/Util" data-name="ameba::formatter::util">
+      <a href="../Ameba/Formatter/Util.html">Util</a>
+      
+    </li>
+  
+</ul>
+
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/GlobUtils" data-name="ameba::globutils">
+      <a href="../Ameba/GlobUtils.html">GlobUtils</a>
+      
+    </li>
+  
+  <li class="parent " data-id="ameba/Ameba/InlineComments" data-name="ameba::inlinecomments">
+      <a href="../Ameba/InlineComments.html">InlineComments</a>
+      
+        <ul>
+  
+  <li class=" " data-id="ameba/Ameba/InlineComments/Action" data-name="ameba::inlinecomments::action">
+      <a href="../Ameba/InlineComments/Action.html">Action</a>
+      
+    </li>
+  
+</ul>
+
+      
+    </li>
+  
+  <li class="parent " data-id="ameba/Ameba/Issue" data-name="ameba::issue">
+      <a href="../Ameba/Issue.html">Issue</a>
+      
+        <ul>
+  
+  <li class=" " data-id="ameba/Ameba/Issue/Status" data-name="ameba::issue::status">
+      <a href="../Ameba/Issue/Status.html">Status</a>
+      
+    </li>
+  
+</ul>
+
+      
+    </li>
+  
+  <li class="parent " data-id="ameba/Ameba/Presenter" data-name="ameba::presenter">
+      <a href="../Ameba/Presenter.html">Presenter</a>
+      
+        <ul>
+  
+  <li class=" " data-id="ameba/Ameba/Presenter/BasePresenter" data-name="ameba::presenter::basepresenter">
+      <a href="../Ameba/Presenter/BasePresenter.html">BasePresenter</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/Presenter/RuleCollectionPresenter" data-name="ameba::presenter::rulecollectionpresenter">
+      <a href="../Ameba/Presenter/RuleCollectionPresenter.html">RuleCollectionPresenter</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/Presenter/RulePresenter" data-name="ameba::presenter::rulepresenter">
+      <a href="../Ameba/Presenter/RulePresenter.html">RulePresenter</a>
+      
+    </li>
+  
+</ul>
+
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/Reportable" data-name="ameba::reportable">
+      <a href="../Ameba/Reportable.html">Reportable</a>
+      
+    </li>
+  
+  <li class="parent " data-id="ameba/Ameba/Rule" data-name="ameba::rule">
+      <a href="../Ameba/Rule.html">Rule</a>
+      
+        <ul>
+  
+  <li class=" " data-id="ameba/Ameba/Rule/Base" data-name="ameba::rule::base">
+      <a href="../Ameba/Rule/Base.html">Base</a>
+      
+    </li>
+  
+  <li class="parent " data-id="ameba/Ameba/Rule/Documentation" data-name="ameba::rule::documentation">
+      <a href="../Ameba/Rule/Documentation.html">Documentation</a>
+      
+        <ul>
+  
+  <li class=" " data-id="ameba/Ameba/Rule/Documentation/Documentation" data-name="ameba::rule::documentation::documentation">
+      <a href="../Ameba/Rule/Documentation/Documentation.html">Documentation</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/Rule/Documentation/DocumentationAdmonition" data-name="ameba::rule::documentation::documentationadmonition">
+      <a href="../Ameba/Rule/Documentation/DocumentationAdmonition.html">DocumentationAdmonition</a>
+      
+    </li>
+  
+</ul>
+
+      
+    </li>
+  
+  <li class="parent " data-id="ameba/Ameba/Rule/Layout" data-name="ameba::rule::layout">
+      <a href="../Ameba/Rule/Layout.html">Layout</a>
+      
+        <ul>
+  
+  <li class=" " data-id="ameba/Ameba/Rule/Layout/LineLength" data-name="ameba::rule::layout::linelength">
+      <a href="../Ameba/Rule/Layout/LineLength.html">LineLength</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/Rule/Layout/TrailingBlankLines" data-name="ameba::rule::layout::trailingblanklines">
+      <a href="../Ameba/Rule/Layout/TrailingBlankLines.html">TrailingBlankLines</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/Rule/Layout/TrailingWhitespace" data-name="ameba::rule::layout::trailingwhitespace">
+      <a href="../Ameba/Rule/Layout/TrailingWhitespace.html">TrailingWhitespace</a>
+      
+    </li>
+  
+</ul>
+
+      
+    </li>
+  
+  <li class="parent " data-id="ameba/Ameba/Rule/Lint" data-name="ameba::rule::lint">
+      <a href="../Ameba/Rule/Lint.html">Lint</a>
+      
+        <ul>
+  
+  <li class=" " data-id="ameba/Ameba/Rule/Lint/AmbiguousAssignment" data-name="ameba::rule::lint::ambiguousassignment">
+      <a href="../Ameba/Rule/Lint/AmbiguousAssignment.html">AmbiguousAssignment</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/Rule/Lint/BadDirective" data-name="ameba::rule::lint::baddirective">
+      <a href="../Ameba/Rule/Lint/BadDirective.html">BadDirective</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/Rule/Lint/ComparisonToBoolean" data-name="ameba::rule::lint::comparisontoboolean">
+      <a href="../Ameba/Rule/Lint/ComparisonToBoolean.html">ComparisonToBoolean</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/Rule/Lint/DebugCalls" data-name="ameba::rule::lint::debugcalls">
+      <a href="../Ameba/Rule/Lint/DebugCalls.html">DebugCalls</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/Rule/Lint/DebuggerStatement" data-name="ameba::rule::lint::debuggerstatement">
+      <a href="../Ameba/Rule/Lint/DebuggerStatement.html">DebuggerStatement</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/Rule/Lint/DuplicatedRequire" data-name="ameba::rule::lint::duplicatedrequire">
+      <a href="../Ameba/Rule/Lint/DuplicatedRequire.html">DuplicatedRequire</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/Rule/Lint/EmptyEnsure" data-name="ameba::rule::lint::emptyensure">
+      <a href="../Ameba/Rule/Lint/EmptyEnsure.html">EmptyEnsure</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/Rule/Lint/EmptyExpression" data-name="ameba::rule::lint::emptyexpression">
+      <a href="../Ameba/Rule/Lint/EmptyExpression.html">EmptyExpression</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/Rule/Lint/EmptyLoop" data-name="ameba::rule::lint::emptyloop">
+      <a href="../Ameba/Rule/Lint/EmptyLoop.html">EmptyLoop</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/Rule/Lint/Formatting" data-name="ameba::rule::lint::formatting">
+      <a href="../Ameba/Rule/Lint/Formatting.html">Formatting</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/Rule/Lint/HashDuplicatedKey" data-name="ameba::rule::lint::hashduplicatedkey">
+      <a href="../Ameba/Rule/Lint/HashDuplicatedKey.html">HashDuplicatedKey</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/Rule/Lint/LiteralAssignmentsInExpressions" data-name="ameba::rule::lint::literalassignmentsinexpressions">
+      <a href="../Ameba/Rule/Lint/LiteralAssignmentsInExpressions.html">LiteralAssignmentsInExpressions</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/Rule/Lint/LiteralInCondition" data-name="ameba::rule::lint::literalincondition">
+      <a href="../Ameba/Rule/Lint/LiteralInCondition.html">LiteralInCondition</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/Rule/Lint/LiteralInInterpolation" data-name="ameba::rule::lint::literalininterpolation">
+      <a href="../Ameba/Rule/Lint/LiteralInInterpolation.html">LiteralInInterpolation</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/Rule/Lint/LiteralsComparison" data-name="ameba::rule::lint::literalscomparison">
+      <a href="../Ameba/Rule/Lint/LiteralsComparison.html">LiteralsComparison</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/Rule/Lint/MissingBlockArgument" data-name="ameba::rule::lint::missingblockargument">
+      <a href="../Ameba/Rule/Lint/MissingBlockArgument.html">MissingBlockArgument</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/Rule/Lint/NotNil" data-name="ameba::rule::lint::notnil">
+      <a href="../Ameba/Rule/Lint/NotNil.html">NotNil</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/Rule/Lint/NotNilAfterNoBang" data-name="ameba::rule::lint::notnilafternobang">
+      <a href="../Ameba/Rule/Lint/NotNilAfterNoBang.html">NotNilAfterNoBang</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/Rule/Lint/PercentArrays" data-name="ameba::rule::lint::percentarrays">
+      <a href="../Ameba/Rule/Lint/PercentArrays.html">PercentArrays</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/Rule/Lint/RandZero" data-name="ameba::rule::lint::randzero">
+      <a href="../Ameba/Rule/Lint/RandZero.html">RandZero</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/Rule/Lint/RedundantStringCoercion" data-name="ameba::rule::lint::redundantstringcoercion">
+      <a href="../Ameba/Rule/Lint/RedundantStringCoercion.html">RedundantStringCoercion</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/Rule/Lint/RedundantWithIndex" data-name="ameba::rule::lint::redundantwithindex">
+      <a href="../Ameba/Rule/Lint/RedundantWithIndex.html">RedundantWithIndex</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/Rule/Lint/RedundantWithObject" data-name="ameba::rule::lint::redundantwithobject">
+      <a href="../Ameba/Rule/Lint/RedundantWithObject.html">RedundantWithObject</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/Rule/Lint/ShadowedArgument" data-name="ameba::rule::lint::shadowedargument">
+      <a href="../Ameba/Rule/Lint/ShadowedArgument.html">ShadowedArgument</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/Rule/Lint/ShadowedException" data-name="ameba::rule::lint::shadowedexception">
+      <a href="../Ameba/Rule/Lint/ShadowedException.html">ShadowedException</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/Rule/Lint/ShadowingOuterLocalVar" data-name="ameba::rule::lint::shadowingouterlocalvar">
+      <a href="../Ameba/Rule/Lint/ShadowingOuterLocalVar.html">ShadowingOuterLocalVar</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/Rule/Lint/SharedVarInFiber" data-name="ameba::rule::lint::sharedvarinfiber">
+      <a href="../Ameba/Rule/Lint/SharedVarInFiber.html">SharedVarInFiber</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/Rule/Lint/SpecFilename" data-name="ameba::rule::lint::specfilename">
+      <a href="../Ameba/Rule/Lint/SpecFilename.html">SpecFilename</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/Rule/Lint/SpecFocus" data-name="ameba::rule::lint::specfocus">
+      <a href="../Ameba/Rule/Lint/SpecFocus.html">SpecFocus</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/Rule/Lint/Syntax" data-name="ameba::rule::lint::syntax">
+      <a href="../Ameba/Rule/Lint/Syntax.html">Syntax</a>
+      
+    </li>
+  
+  <li class="parent " data-id="ameba/Ameba/Rule/Lint/Typos" data-name="ameba::rule::lint::typos">
+      <a href="../Ameba/Rule/Lint/Typos.html">Typos</a>
+      
+        <ul>
+  
+  <li class=" " data-id="ameba/Ameba/Rule/Lint/Typos/Typo" data-name="ameba::rule::lint::typos::typo">
+      <a href="../Ameba/Rule/Lint/Typos/Typo.html">Typo</a>
+      
+    </li>
+  
+</ul>
+
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/Rule/Lint/UnneededDisableDirective" data-name="ameba::rule::lint::unneededdisabledirective">
+      <a href="../Ameba/Rule/Lint/UnneededDisableDirective.html">UnneededDisableDirective</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/Rule/Lint/UnreachableCode" data-name="ameba::rule::lint::unreachablecode">
+      <a href="../Ameba/Rule/Lint/UnreachableCode.html">UnreachableCode</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/Rule/Lint/UnusedArgument" data-name="ameba::rule::lint::unusedargument">
+      <a href="../Ameba/Rule/Lint/UnusedArgument.html">UnusedArgument</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/Rule/Lint/UnusedBlockArgument" data-name="ameba::rule::lint::unusedblockargument">
+      <a href="../Ameba/Rule/Lint/UnusedBlockArgument.html">UnusedBlockArgument</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/Rule/Lint/UselessAssign" data-name="ameba::rule::lint::uselessassign">
+      <a href="../Ameba/Rule/Lint/UselessAssign.html">UselessAssign</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/Rule/Lint/UselessConditionInWhen" data-name="ameba::rule::lint::uselessconditioninwhen">
+      <a href="../Ameba/Rule/Lint/UselessConditionInWhen.html">UselessConditionInWhen</a>
+      
+    </li>
+  
+</ul>
+
+      
+    </li>
+  
+  <li class="parent " data-id="ameba/Ameba/Rule/Metrics" data-name="ameba::rule::metrics">
+      <a href="../Ameba/Rule/Metrics.html">Metrics</a>
+      
+        <ul>
+  
+  <li class=" " data-id="ameba/Ameba/Rule/Metrics/CyclomaticComplexity" data-name="ameba::rule::metrics::cyclomaticcomplexity">
+      <a href="../Ameba/Rule/Metrics/CyclomaticComplexity.html">CyclomaticComplexity</a>
+      
+    </li>
+  
+</ul>
+
+      
+    </li>
+  
+  <li class="parent " data-id="ameba/Ameba/Rule/Naming" data-name="ameba::rule::naming">
+      <a href="../Ameba/Rule/Naming.html">Naming</a>
+      
+        <ul>
+  
+  <li class=" " data-id="ameba/Ameba/Rule/Naming/AccessorMethodName" data-name="ameba::rule::naming::accessormethodname">
+      <a href="../Ameba/Rule/Naming/AccessorMethodName.html">AccessorMethodName</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/Rule/Naming/AsciiIdentifiers" data-name="ameba::rule::naming::asciiidentifiers">
+      <a href="../Ameba/Rule/Naming/AsciiIdentifiers.html">AsciiIdentifiers</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/Rule/Naming/BinaryOperatorParameterName" data-name="ameba::rule::naming::binaryoperatorparametername">
+      <a href="../Ameba/Rule/Naming/BinaryOperatorParameterName.html">BinaryOperatorParameterName</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/Rule/Naming/BlockParameterName" data-name="ameba::rule::naming::blockparametername">
+      <a href="../Ameba/Rule/Naming/BlockParameterName.html">BlockParameterName</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/Rule/Naming/ConstantNames" data-name="ameba::rule::naming::constantnames">
+      <a href="../Ameba/Rule/Naming/ConstantNames.html">ConstantNames</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/Rule/Naming/Filename" data-name="ameba::rule::naming::filename">
+      <a href="../Ameba/Rule/Naming/Filename.html">Filename</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/Rule/Naming/MethodNames" data-name="ameba::rule::naming::methodnames">
+      <a href="../Ameba/Rule/Naming/MethodNames.html">MethodNames</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/Rule/Naming/PredicateName" data-name="ameba::rule::naming::predicatename">
+      <a href="../Ameba/Rule/Naming/PredicateName.html">PredicateName</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/Rule/Naming/QueryBoolMethods" data-name="ameba::rule::naming::queryboolmethods">
+      <a href="../Ameba/Rule/Naming/QueryBoolMethods.html">QueryBoolMethods</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/Rule/Naming/RescuedExceptionsVariableName" data-name="ameba::rule::naming::rescuedexceptionsvariablename">
+      <a href="../Ameba/Rule/Naming/RescuedExceptionsVariableName.html">RescuedExceptionsVariableName</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/Rule/Naming/TypeNames" data-name="ameba::rule::naming::typenames">
+      <a href="../Ameba/Rule/Naming/TypeNames.html">TypeNames</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/Rule/Naming/VariableNames" data-name="ameba::rule::naming::variablenames">
+      <a href="../Ameba/Rule/Naming/VariableNames.html">VariableNames</a>
+      
+    </li>
+  
+</ul>
+
+      
+    </li>
+  
+  <li class="parent " data-id="ameba/Ameba/Rule/Performance" data-name="ameba::rule::performance">
+      <a href="../Ameba/Rule/Performance.html">Performance</a>
+      
+        <ul>
+  
+  <li class=" " data-id="ameba/Ameba/Rule/Performance/AnyAfterFilter" data-name="ameba::rule::performance::anyafterfilter">
+      <a href="../Ameba/Rule/Performance/AnyAfterFilter.html">AnyAfterFilter</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/Rule/Performance/AnyInsteadOfEmpty" data-name="ameba::rule::performance::anyinsteadofempty">
+      <a href="../Ameba/Rule/Performance/AnyInsteadOfEmpty.html">AnyInsteadOfEmpty</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/Rule/Performance/Base" data-name="ameba::rule::performance::base">
+      <a href="../Ameba/Rule/Performance/Base.html">Base</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/Rule/Performance/ChainedCallWithNoBang" data-name="ameba::rule::performance::chainedcallwithnobang">
+      <a href="../Ameba/Rule/Performance/ChainedCallWithNoBang.html">ChainedCallWithNoBang</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/Rule/Performance/CompactAfterMap" data-name="ameba::rule::performance::compactaftermap">
+      <a href="../Ameba/Rule/Performance/CompactAfterMap.html">CompactAfterMap</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/Rule/Performance/ExcessiveAllocations" data-name="ameba::rule::performance::excessiveallocations">
+      <a href="../Ameba/Rule/Performance/ExcessiveAllocations.html">ExcessiveAllocations</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/Rule/Performance/FirstLastAfterFilter" data-name="ameba::rule::performance::firstlastafterfilter">
+      <a href="../Ameba/Rule/Performance/FirstLastAfterFilter.html">FirstLastAfterFilter</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/Rule/Performance/FlattenAfterMap" data-name="ameba::rule::performance::flattenaftermap">
+      <a href="../Ameba/Rule/Performance/FlattenAfterMap.html">FlattenAfterMap</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/Rule/Performance/MapInsteadOfBlock" data-name="ameba::rule::performance::mapinsteadofblock">
+      <a href="../Ameba/Rule/Performance/MapInsteadOfBlock.html">MapInsteadOfBlock</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/Rule/Performance/MinMaxAfterMap" data-name="ameba::rule::performance::minmaxaftermap">
+      <a href="../Ameba/Rule/Performance/MinMaxAfterMap.html">MinMaxAfterMap</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/Rule/Performance/SizeAfterFilter" data-name="ameba::rule::performance::sizeafterfilter">
+      <a href="../Ameba/Rule/Performance/SizeAfterFilter.html">SizeAfterFilter</a>
+      
+    </li>
+  
+</ul>
+
+      
+    </li>
+  
+  <li class="parent " data-id="ameba/Ameba/Rule/Style" data-name="ameba::rule::style">
+      <a href="../Ameba/Rule/Style.html">Style</a>
+      
+        <ul>
+  
+  <li class=" " data-id="ameba/Ameba/Rule/Style/GuardClause" data-name="ameba::rule::style::guardclause">
+      <a href="../Ameba/Rule/Style/GuardClause.html">GuardClause</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/Rule/Style/IsAFilter" data-name="ameba::rule::style::isafilter">
+      <a href="../Ameba/Rule/Style/IsAFilter.html">IsAFilter</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/Rule/Style/IsANil" data-name="ameba::rule::style::isanil">
+      <a href="../Ameba/Rule/Style/IsANil.html">IsANil</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/Rule/Style/LargeNumbers" data-name="ameba::rule::style::largenumbers">
+      <a href="../Ameba/Rule/Style/LargeNumbers.html">LargeNumbers</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/Rule/Style/NegatedConditionsInUnless" data-name="ameba::rule::style::negatedconditionsinunless">
+      <a href="../Ameba/Rule/Style/NegatedConditionsInUnless.html">NegatedConditionsInUnless</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/Rule/Style/ParenthesesAroundCondition" data-name="ameba::rule::style::parenthesesaroundcondition">
+      <a href="../Ameba/Rule/Style/ParenthesesAroundCondition.html">ParenthesesAroundCondition</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/Rule/Style/RedundantBegin" data-name="ameba::rule::style::redundantbegin">
+      <a href="../Ameba/Rule/Style/RedundantBegin.html">RedundantBegin</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/Rule/Style/RedundantNext" data-name="ameba::rule::style::redundantnext">
+      <a href="../Ameba/Rule/Style/RedundantNext.html">RedundantNext</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/Rule/Style/RedundantReturn" data-name="ameba::rule::style::redundantreturn">
+      <a href="../Ameba/Rule/Style/RedundantReturn.html">RedundantReturn</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/Rule/Style/UnlessElse" data-name="ameba::rule::style::unlesselse">
+      <a href="../Ameba/Rule/Style/UnlessElse.html">UnlessElse</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/Rule/Style/VerboseBlock" data-name="ameba::rule::style::verboseblock">
+      <a href="../Ameba/Rule/Style/VerboseBlock.html">VerboseBlock</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/Rule/Style/WhileTrue" data-name="ameba::rule::style::whiletrue">
+      <a href="../Ameba/Rule/Style/WhileTrue.html">WhileTrue</a>
+      
+    </li>
+  
+</ul>
+
+      
+    </li>
+  
+</ul>
+
+      
+    </li>
+  
+  <li class="parent " data-id="ameba/Ameba/Runner" data-name="ameba::runner">
+      <a href="../Ameba/Runner.html">Runner</a>
+      
+        <ul>
+  
+  <li class=" " data-id="ameba/Ameba/Runner/InfiniteCorrectionLoopError" data-name="ameba::runner::infinitecorrectionlooperror">
+      <a href="../Ameba/Runner/InfiniteCorrectionLoopError.html">InfiniteCorrectionLoopError</a>
+      
+    </li>
+  
+</ul>
+
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/Severity" data-name="ameba::severity">
+      <a href="../Ameba/Severity.html">Severity</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/SeverityYamlConverter" data-name="ameba::severityyamlconverter">
+      <a href="../Ameba/SeverityYamlConverter.html">SeverityYamlConverter</a>
+      
+    </li>
+  
+  <li class="parent " data-id="ameba/Ameba/Source" data-name="ameba::source">
+      <a href="../Ameba/Source.html">Source</a>
+      
+        <ul>
+  
+  <li class=" " data-id="ameba/Ameba/Source/Corrector" data-name="ameba::source::corrector">
+      <a href="../Ameba/Source/Corrector.html">Corrector</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/Source/Rewriter" data-name="ameba::source::rewriter">
+      <a href="../Ameba/Source/Rewriter.html">Rewriter</a>
+      
+    </li>
+  
+</ul>
+
+      
+    </li>
+  
+  <li class="parent " data-id="ameba/Ameba/Spec" data-name="ameba::spec">
+      <a href="../Ameba/Spec.html">Spec</a>
+      
+        <ul>
+  
+  <li class=" " data-id="ameba/Ameba/Spec/AnnotatedSource" data-name="ameba::spec::annotatedsource">
+      <a href="../Ameba/Spec/AnnotatedSource.html">AnnotatedSource</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/Spec/BeValid" data-name="ameba::spec::bevalid">
+      <a href="../Ameba/Spec/BeValid.html">BeValid</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/Spec/BeValidExpectation" data-name="ameba::spec::bevalidexpectation">
+      <a href="../Ameba/Spec/BeValidExpectation.html">BeValidExpectation</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/Spec/ExpectIssue" data-name="ameba::spec::expectissue">
+      <a href="../Ameba/Spec/ExpectIssue.html">ExpectIssue</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/Spec/Util" data-name="ameba::spec::util">
+      <a href="../Ameba/Spec/Util.html">Util</a>
+      
+    </li>
+  
+</ul>
+
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/Tokenizer" data-name="ameba::tokenizer">
+      <a href="../Ameba/Tokenizer.html">Tokenizer</a>
+      
+    </li>
+  
+</ul>
+
+      
+    </li>
+  
+</ul>
+
+  </div>
+</div>
+
+
+<div class="main-content">
+<h1 class="type-name">
+
+  <span class="kind">
+    class
+  </span> Ameba::<wbr>Config
+
+</h1>
+
+
+  <ul class="superclass-hierarchy"><li class="superclass"><a href="../Ameba/Config.html">Ameba::Config</a></li><li class="superclass">Reference</li><li class="superclass">Object</li></ul>
+
+
+
+
+  <h2>
+    <a id="overview" class="anchor" href="#overview">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>
+    Overview
+  </h2>
+
+  <p>A configuration entry for <code><a href="../Ameba/Runner.html">Ameba::Runner</a></code>.</p>
+<p>Config can be loaded from configuration YAML file and adjusted.</p>
+<pre><code class="language-crystal">config <span class="o">=</span> <span class="t">Config</span>.load
+config.formatter <span class="o">=</span> my_formatter</code></pre>
+<p>By default config loads <code>.ameba.yml</code> file located in a current
+working directory.</p>
+<p>If it cannot be found until reaching the root directory, then it will be
+searched for in the user’s global config locations, which consists of a
+dotfile or a config file inside the XDG Base Directory specification.</p>
+<ul>
+<li><code>~/.ameba.yml</code></li>
+<li><code>$<a href="../Ameba/Config.html#XDG_CONFIG_HOME">XDG_CONFIG_HOME</a>/ameba/config.yml</code> (expands to <code>~/.config/ameba/config.yml</code>
+if <code>$<a href="../Ameba/Config.html#XDG_CONFIG_HOME">XDG_CONFIG_HOME</a></code> is not set)</li>
+</ul>
+<p>If both files exist, the dotfile will be selected.</p>
+<p>As an example, if Ameba is invoked from inside <code>/path/to/project/lib/utils</code>,
+then it will use the config as specified inside the first of the following files:</p>
+<ul>
+<li><code>/path/to/project/lib/utils/.ameba.yml</code></li>
+<li><code>/path/to/project/lib/.ameba.yml</code></li>
+<li><code>/path/to/project/.ameba.yml</code></li>
+<li><code>/path/to/.ameba.yml</code></li>
+<li><code>/path/.ameba.yml</code></li>
+<li><code>/.ameba.yml</code></li>
+<li><code>~/.ameba.yml</code></li>
+<li><code>~/.config/ameba/config.yml</code></li>
+</ul>
+
+
+
+
+
+
+
+  <h2>
+    <a id="included-modules" class="anchor" href="#included-modules">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>
+    Included Modules
+  </h2>
+  <ul class="other-types-list">
+    
+      <li class="other-type"><a href="../Ameba/GlobUtils.html">Ameba::GlobUtils</a></li>
+    
+  </ul>
+
+
+
+
+
+
+
+
+
+
+  <h2>
+    <a id="defined-in" class="anchor" href="#defined-in">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>
+    Defined in:
+  </h2>
+  
+    
+      <a href="https://github.com/crystal-ameba/ameba/blob/2addfb2/src/ameba/config.cr#L37" target="_blank">
+        ameba/config.cr
+      </a>
+    
+    <br/>
+  
+
+
+
+  
+    <h2>
+      <a id="constant-summary" class="anchor" href="#constant-summary">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>
+      Constant Summary
+    </h2>
+  
+  <dl>
+    
+      <dt class="entry-const" id="AVAILABLE_FORMATTERS">
+        <strong>AVAILABLE_FORMATTERS</strong> = <code>{
+  progress: <span class="t">Formatter</span><span class="t">::</span><span class="t">DotFormatter</span>,
+  todo: <span class="t">Formatter</span><span class="t">::</span><span class="t">TODOFormatter</span>,
+  flycheck: <span class="t">Formatter</span><span class="t">::</span><span class="t">FlycheckFormatter</span>,
+  silent: <span class="t">Formatter</span><span class="t">::</span><span class="t">BaseFormatter</span>,
+  disabled: <span class="t">Formatter</span><span class="t">::</span><span class="t">DisabledFormatter</span>,
+  json: <span class="t">Formatter</span><span class="t">::</span><span class="t">JSONFormatter</span>,
+}</code>
+      </dt>
+      
+    
+      <dt class="entry-const" id="DEFAULT_GLOBS">
+        <strong>DEFAULT_GLOBS</strong> = <code>[<span class="s">&quot;**/*.cr&quot;</span>, <span class="s">&quot;!lib&quot;</span>] <span class="k">of</span> <span class="t">::</span><span class="t">String</span></code>
+      </dt>
+      
+    
+      <dt class="entry-const" id="DEFAULT_PATH">
+        <strong>DEFAULT_PATH</strong> = <code><span class="t">Path</span>[<span class="t">Dir</span>.current] <span class="o">/</span> <span class="t">FILENAME</span></code>
+      </dt>
+      
+    
+      <dt class="entry-const" id="DEFAULT_PATHS">
+        <strong>DEFAULT_PATHS</strong> = <code>{<span class="t">Path</span>[<span class="s">&quot;~&quot;</span>] <span class="o">/</span> <span class="t">FILENAME</span>, <span class="t">Path</span>[<span class="t">XDG_CONFIG_HOME</span>] <span class="o">/</span> <span class="s">&quot;ameba/config.yml&quot;</span>}</code>
+      </dt>
+      
+    
+      <dt class="entry-const" id="FILENAME">
+        <strong>FILENAME</strong> = <code><span class="s">&quot;.ameba.yml&quot;</span></code>
+      </dt>
+      
+    
+      <dt class="entry-const" id="XDG_CONFIG_HOME">
+        <strong>XDG_CONFIG_HOME</strong> = <code><span class="t">ENV</span>.fetch(<span class="s">&quot;XDG_CONFIG_HOME&quot;</span>, <span class="s">&quot;~/.config&quot;</span>)</code>
+      </dt>
+      
+    
+  </dl>
+
+
+
+  
+
+  
+  <h2>
+    <a id="class-method-summary" class="anchor" href="#class-method-summary">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>
+    Class Method Summary
+  </h2>
+  <ul class="list-summary">
+    
+      <li class="entry-summary">
+        <a href="#formatter_names-class-method" class="signature"><strong>.formatter_names</strong></a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#load%28path%3Dnil%2Ccolors%3Dtrue%2Cskip_reading_config%3Dfalse%29-class-method" class="signature"><strong>.load</strong>(path = <span class="n">nil</span>, colors = <span class="n">true</span>, skip_reading_config = <span class="n">false</span>)</a>
+        
+          <div class="summary"><p>Loads YAML configuration file by <code>path</code>.</p></div>
+        
+      </li>
+    
+  </ul>
+
+
+  
+
+  
+  <h2>
+    <a id="instance-method-summary" class="anchor" href="#instance-method-summary">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>
+    Instance Method Summary
+  </h2>
+  <ul class="list-summary">
+    
+      <li class="entry-summary">
+        <a href="#autocorrect%3D%28autocorrect%3ABool%29-instance-method" class="signature"><strong>#autocorrect=</strong>(autocorrect : Bool)</a>
+        
+          <div class="summary"><p>Returns <code>true</code> if correctable issues should be autocorrected.</p></div>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#autocorrect%3F%3ABool-instance-method" class="signature"><strong>#autocorrect?</strong> : Bool</a>
+        
+          <div class="summary"><p>Returns <code>true</code> if correctable issues should be autocorrected.</p></div>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#excluded%3AArray%28String%29-instance-method" class="signature"><strong>#excluded</strong> : Array(String)</a>
+        
+          <div class="summary"><p>Represents a list of paths to exclude from globs.</p></div>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#excluded%3D%28excluded%3AArray%28String%29%29-instance-method" class="signature"><strong>#excluded=</strong>(excluded : Array(String))</a>
+        
+          <div class="summary"><p>Represents a list of paths to exclude from globs.</p></div>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#formatter%3AFormatter%3A%3ABaseFormatter-instance-method" class="signature"><strong>#formatter</strong> : Formatter::BaseFormatter</a>
+        
+          <div class="summary"><p>Returns a formatter to be used while inspecting files.</p></div>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#formatter%3D%28name%3AString%7CSymbol%29-instance-method" class="signature"><strong>#formatter=</strong>(name : String | Symbol)</a>
+        
+          <div class="summary"><p>Sets formatter by name.</p></div>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#formatter%3D%28formatter%3AFormatter%3A%3ABaseFormatter%29-instance-method" class="signature"><strong>#formatter=</strong>(formatter : Formatter::BaseFormatter)</a>
+        
+          <div class="summary"><p>Returns a formatter to be used while inspecting files.</p></div>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#globs%3AArray%28String%29-instance-method" class="signature"><strong>#globs</strong> : Array(String)</a>
+        
+          <div class="summary"><p>Returns a list of paths (with wildcards) to files.</p></div>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#globs%3D%28globs%3AArray%28String%29%29-instance-method" class="signature"><strong>#globs=</strong>(globs : Array(String))</a>
+        
+          <div class="summary"><p>Returns a list of paths (with wildcards) to files.</p></div>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#rules%3AArray%28Rule%3A%3ABase%29-instance-method" class="signature"><strong>#rules</strong> : Array(Rule::Base)</a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#severity%3AAmeba%3A%3ASeverity-instance-method" class="signature"><strong>#severity</strong> : Ameba::Severity</a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#severity%3D%28severity%3AAmeba%3A%3ASeverity%29-instance-method" class="signature"><strong>#severity=</strong>(severity : Ameba::Severity)</a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#sources-instance-method" class="signature"><strong>#sources</strong></a>
+        
+          <div class="summary"><p>Returns a list of sources matching globs and excluded sections.</p></div>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#stdin_filename%3AString%7CNil-instance-method" class="signature"><strong>#stdin_filename</strong> : String | Nil</a>
+        
+          <div class="summary"><p>Returns a filename if reading source file from STDIN.</p></div>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#stdin_filename%3D%28stdin_filename%3AString%7CNil%29-instance-method" class="signature"><strong>#stdin_filename=</strong>(stdin_filename : String | Nil)</a>
+        
+          <div class="summary"><p>Returns a filename if reading source file from STDIN.</p></div>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#update_rule%28name%2Cenabled%3Dtrue%2Cexcluded%3Dnil%29-instance-method" class="signature"><strong>#update_rule</strong>(name, enabled = <span class="n">true</span>, excluded = <span class="n">nil</span>)</a>
+        
+          <div class="summary"><p>Updates rule properties.</p></div>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#update_rules%28names%2Cenabled%3Dtrue%2Cexcluded%3Dnil%29-instance-method" class="signature"><strong>#update_rules</strong>(names, enabled = <span class="n">true</span>, excluded = <span class="n">nil</span>)</a>
+        
+          <div class="summary"><p>Updates rules properties.</p></div>
+        
+      </li>
+    
+  </ul>
+
+
+
+  <div class="methods-inherited">
+    
+      
+
+  <h3>Instance methods inherited from module <code><a href="../Ameba/GlobUtils.html">Ameba::GlobUtils</a></code></h3>
+  
+  
+    <a href="../Ameba/GlobUtils.html#expand%28globs%29-instance-method" class="tooltip">
+      <span>expand(globs)</span>
+    expand</a>, 
+    
+  
+    <a href="../Ameba/GlobUtils.html#find_files_by_globs%28globs%29-instance-method" class="tooltip">
+      <span>find_files_by_globs(globs)</span>
+    find_files_by_globs</a>
+    
+  
+
+
+      
+
+
+      
+
+
+      
+
+
+    
+      
+
+
+      
+
+
+      
+
+
+      
+
+
+    
+      
+
+
+      
+
+
+      
+
+
+      
+
+
+    
+  </div>
+
+  
+
+  
+  <h2>
+    <a id="class-method-detail" class="anchor" href="#class-method-detail">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>
+    Class Method Detail
+  </h2>
+  
+    <div class="entry-detail" id="formatter_names-class-method">
+      <div class="signature">
+        
+        def self.<strong>formatter_names</strong>
+
+        <a class="method-permalink" href="#formatter_names-class-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/crystal-ameba/ameba/blob/2addfb2/src/ameba/config.cr#L148" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="load(path=nil,colors=true,skip_reading_config=false)-class-method">
+      <div class="signature">
+        
+        def self.<strong>load</strong>(path = <span class="n">nil</span>, colors = <span class="n">true</span>, skip_reading_config = <span class="n">false</span>)
+
+        <a class="method-permalink" href="#load%28path%3Dnil%2Ccolors%3Dtrue%2Cskip_reading_config%3Dfalse%29-class-method">#</a>
+      </div>
+      
+        <div class="doc">
+          
+          <p>Loads YAML configuration file by <code>path</code>.</p>
+<pre><code class="language-crystal">config <span class="o">=</span> <span class="t">Ameba</span><span class="t">::</span><span class="t">Config</span>.load</code></pre>
+        </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/crystal-ameba/ameba/blob/2addfb2/src/ameba/config.cr#L113" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+
+
+  
+
+  
+  <h2>
+    <a id="instance-method-detail" class="anchor" href="#instance-method-detail">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>
+    Instance Method Detail
+  </h2>
+  
+    <div class="entry-detail" id="autocorrect=(autocorrect:Bool)-instance-method">
+      <div class="signature">
+        
+        def <strong>autocorrect=</strong>(autocorrect : Bool)
+
+        <a class="method-permalink" href="#autocorrect%3D%28autocorrect%3ABool%29-instance-method">#</a>
+      </div>
+      
+        <div class="doc">
+          
+          <p>Returns <code>true</code> if correctable issues should be autocorrected.</p>
+        </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/crystal-ameba/ameba/blob/2addfb2/src/ameba/config.cr#L87" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="autocorrect?:Bool-instance-method">
+      <div class="signature">
+        
+        def <strong>autocorrect?</strong> : Bool
+
+        <a class="method-permalink" href="#autocorrect%3F%3ABool-instance-method">#</a>
+      </div>
+      
+        <div class="doc">
+          
+          <p>Returns <code>true</code> if correctable issues should be autocorrected.</p>
+        </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/crystal-ameba/ameba/blob/2addfb2/src/ameba/config.cr#L87" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="excluded:Array(String)-instance-method">
+      <div class="signature">
+        
+        def <strong>excluded</strong> : Array(String)
+
+        <a class="method-permalink" href="#excluded%3AArray%28String%29-instance-method">#</a>
+      </div>
+      
+        <div class="doc">
+          
+          <p>Represents a list of paths to exclude from globs.
+Can have wildcards.</p>
+<pre><code class="language-crystal">config <span class="o">=</span> <span class="t">Ameba</span><span class="t">::</span><span class="t">Config</span>.load
+config.excluded <span class="o">=</span> [<span class="s">&quot;spec&quot;</span>, <span class="s">&quot;src/server/*.cr&quot;</span>]</code></pre>
+        </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/crystal-ameba/ameba/blob/2addfb2/src/ameba/config.cr#L84" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="excluded=(excluded:Array(String))-instance-method">
+      <div class="signature">
+        
+        def <strong>excluded=</strong>(excluded : Array(String))
+
+        <a class="method-permalink" href="#excluded%3D%28excluded%3AArray%28String%29%29-instance-method">#</a>
+      </div>
+      
+        <div class="doc">
+          
+          <p>Represents a list of paths to exclude from globs.
+Can have wildcards.</p>
+<pre><code class="language-crystal">config <span class="o">=</span> <span class="t">Ameba</span><span class="t">::</span><span class="t">Config</span>.load
+config.excluded <span class="o">=</span> [<span class="s">&quot;spec&quot;</span>, <span class="s">&quot;src/server/*.cr&quot;</span>]</code></pre>
+        </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/crystal-ameba/ameba/blob/2addfb2/src/ameba/config.cr#L84" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="formatter:Formatter::BaseFormatter-instance-method">
+      <div class="signature">
+        
+        def <strong>formatter</strong> : <a href="../Ameba/Formatter/BaseFormatter.html">Formatter::BaseFormatter</a>
+
+        <a class="method-permalink" href="#formatter%3AFormatter%3A%3ABaseFormatter-instance-method">#</a>
+      </div>
+      
+        <div class="doc">
+          
+          <p>Returns a formatter to be used while inspecting files.
+If formatter is not set, it will return default formatter.</p>
+<pre><code class="language-crystal">config <span class="o">=</span> <span class="t">Ameba</span><span class="t">::</span><span class="t">Config</span>.load
+config.formatter <span class="o">=</span> custom_formatter
+config.formatter</code></pre>
+        </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/crystal-ameba/ameba/blob/2addfb2/src/ameba/config.cr#L180" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="formatter=(name:String|Symbol)-instance-method">
+      <div class="signature">
+        
+        def <strong>formatter=</strong>(name : String | Symbol)
+
+        <a class="method-permalink" href="#formatter%3D%28name%3AString%7CSymbol%29-instance-method">#</a>
+      </div>
+      
+        <div class="doc">
+          
+          <p>Sets formatter by name.</p>
+<pre><code class="language-crystal">config <span class="o">=</span> <span class="t">Ameba</span><span class="t">::</span><span class="t">Config</span>.load
+config.formatter <span class="o">=</span> <span class="n">:progress</span></code></pre>
+        </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/crystal-ameba/ameba/blob/2addfb2/src/ameba/config.cr#L190" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="formatter=(formatter:Formatter::BaseFormatter)-instance-method">
+      <div class="signature">
+        
+        def <strong>formatter=</strong>(formatter : <a href="../Ameba/Formatter/BaseFormatter.html">Formatter::BaseFormatter</a>)
+
+        <a class="method-permalink" href="#formatter%3D%28formatter%3AFormatter%3A%3ABaseFormatter%29-instance-method">#</a>
+      </div>
+      
+        <div class="doc">
+          
+          <p>Returns a formatter to be used while inspecting files.
+If formatter is not set, it will return default formatter.</p>
+<pre><code class="language-crystal">config <span class="o">=</span> <span class="t">Ameba</span><span class="t">::</span><span class="t">Config</span>.load
+config.formatter <span class="o">=</span> custom_formatter
+config.formatter</code></pre>
+        </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/crystal-ameba/ameba/blob/2addfb2/src/ameba/config.cr#L180" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="globs:Array(String)-instance-method">
+      <div class="signature">
+        
+        def <strong>globs</strong> : Array(String)
+
+        <a class="method-permalink" href="#globs%3AArray%28String%29-instance-method">#</a>
+      </div>
+      
+        <div class="doc">
+          
+          <p>Returns a list of paths (with wildcards) to files.
+Represents a list of sources to be inspected.
+If globs are not set, it will return default list of files.</p>
+<pre><code class="language-crystal">config <span class="o">=</span> <span class="t">Ameba</span><span class="t">::</span><span class="t">Config</span>.load
+config.globs <span class="o">=</span> [<span class="s">&quot;**/*.cr&quot;</span>]
+config.globs</code></pre>
+        </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/crystal-ameba/ameba/blob/2addfb2/src/ameba/config.cr#L75" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="globs=(globs:Array(String))-instance-method">
+      <div class="signature">
+        
+        def <strong>globs=</strong>(globs : Array(String))
+
+        <a class="method-permalink" href="#globs%3D%28globs%3AArray%28String%29%29-instance-method">#</a>
+      </div>
+      
+        <div class="doc">
+          
+          <p>Returns a list of paths (with wildcards) to files.
+Represents a list of sources to be inspected.
+If globs are not set, it will return default list of files.</p>
+<pre><code class="language-crystal">config <span class="o">=</span> <span class="t">Ameba</span><span class="t">::</span><span class="t">Config</span>.load
+config.globs <span class="o">=</span> [<span class="s">&quot;**/*.cr&quot;</span>]
+config.globs</code></pre>
+        </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/crystal-ameba/ameba/blob/2addfb2/src/ameba/config.cr#L75" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="rules:Array(Rule::Base)-instance-method">
+      <div class="signature">
+        
+        def <strong>rules</strong> : Array(<a href="../Ameba/Rule/Base.html">Rule::Base</a>)
+
+        <a class="method-permalink" href="#rules%3AArray%28Rule%3A%3ABase%29-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/crystal-ameba/ameba/blob/2addfb2/src/ameba/config.cr#L63" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="severity:Ameba::Severity-instance-method">
+      <div class="signature">
+        
+        def <strong>severity</strong> : <a href="../Ameba/Severity.html">Ameba::Severity</a>
+
+        <a class="method-permalink" href="#severity%3AAmeba%3A%3ASeverity-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/crystal-ameba/ameba/blob/2addfb2/src/ameba/config.cr#L64" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="severity=(severity:Ameba::Severity)-instance-method">
+      <div class="signature">
+        
+        def <strong>severity=</strong>(severity : <a href="../Ameba/Severity.html">Ameba::Severity</a>)
+
+        <a class="method-permalink" href="#severity%3D%28severity%3AAmeba%3A%3ASeverity%29-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/crystal-ameba/ameba/blob/2addfb2/src/ameba/config.cr#L64" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="sources-instance-method">
+      <div class="signature">
+        
+        def <strong>sources</strong>
+
+        <a class="method-permalink" href="#sources-instance-method">#</a>
+      </div>
+      
+        <div class="doc">
+          
+          <p>Returns a list of sources matching globs and excluded sections.</p>
+<pre><code class="language-crystal">config <span class="o">=</span> <span class="t">Ameba</span><span class="t">::</span><span class="t">Config</span>.load
+config.sources <span class="c"># =&gt; list of default sources</span>
+config.globs <span class="o">=</span> [<span class="s">&quot;**/*.cr&quot;</span>]
+config.excluded <span class="o">=</span> [<span class="s">&quot;spec&quot;</span>]
+config.sources <span class="c"># =&gt; list of sources pointing to files found by the wildcards</span></code></pre>
+        </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/crystal-ameba/ameba/blob/2addfb2/src/ameba/config.cr#L161" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="stdin_filename:String|Nil-instance-method">
+      <div class="signature">
+        
+        def <strong>stdin_filename</strong> : String | Nil
+
+        <a class="method-permalink" href="#stdin_filename%3AString%7CNil-instance-method">#</a>
+      </div>
+      
+        <div class="doc">
+          
+          <p>Returns a filename if reading source file from STDIN.</p>
+        </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/crystal-ameba/ameba/blob/2addfb2/src/ameba/config.cr#L90" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="stdin_filename=(stdin_filename:String|Nil)-instance-method">
+      <div class="signature">
+        
+        def <strong>stdin_filename=</strong>(stdin_filename : String | Nil)
+
+        <a class="method-permalink" href="#stdin_filename%3D%28stdin_filename%3AString%7CNil%29-instance-method">#</a>
+      </div>
+      
+        <div class="doc">
+          
+          <p>Returns a filename if reading source file from STDIN.</p>
+        </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/crystal-ameba/ameba/blob/2addfb2/src/ameba/config.cr#L90" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="update_rule(name,enabled=true,excluded=nil)-instance-method">
+      <div class="signature">
+        
+        def <strong>update_rule</strong>(name, enabled = <span class="n">true</span>, excluded = <span class="n">nil</span>)
+
+        <a class="method-permalink" href="#update_rule%28name%2Cenabled%3Dtrue%2Cexcluded%3Dnil%29-instance-method">#</a>
+      </div>
+      
+        <div class="doc">
+          
+          <p>Updates rule properties.</p>
+<pre><code class="language-crystal">config <span class="o">=</span> <span class="t">Ameba</span><span class="t">::</span><span class="t">Config</span>.load
+config.update_rule <span class="s">&quot;MyRuleName&quot;</span>, enabled: <span class="n">false</span></code></pre>
+        </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/crystal-ameba/ameba/blob/2addfb2/src/ameba/config.cr#L203" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="update_rules(names,enabled=true,excluded=nil)-instance-method">
+      <div class="signature">
+        
+        def <strong>update_rules</strong>(names, enabled = <span class="n">true</span>, excluded = <span class="n">nil</span>)
+
+        <a class="method-permalink" href="#update_rules%28names%2Cenabled%3Dtrue%2Cexcluded%3Dnil%29-instance-method">#</a>
+      </div>
+      
+        <div class="doc">
+          
+          <p>Updates rules properties.</p>
+<pre><code class="language-crystal">config <span class="o">=</span> <span class="t">Ameba</span><span class="t">::</span><span class="t">Config</span>.load
+config.update_rules <span class="s">%w[Rule1 Rule2]</span>, enabled: <span class="n">true</span></code></pre>
+<p>also it allows to update groups of rules:</p>
+<pre><code class="language-crystal">config.update_rules <span class="s">%w[Group1 Group2]</span>, enabled: <span class="n">true</span></code></pre>
+        </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/crystal-ameba/ameba/blob/2addfb2/src/ameba/config.cr#L224" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+
+
+
+</div>
+
+</body>
+</html>
