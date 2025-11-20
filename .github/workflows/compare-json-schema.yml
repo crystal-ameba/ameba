@@ -6,6 +6,9 @@ on:
     paths:
       - "**/*.cr"
 
+permissions:
+  contents: read
+
 jobs:
   check-for-changes:
     runs-on: ubuntu-latest

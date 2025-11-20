@@ -7,6 +7,9 @@ on:
     paths:
       - "**/*.cr"
 
+permissions:
+  contents: write
+
 jobs:
   update-json-schema:
     runs-on: ubuntu-latest
