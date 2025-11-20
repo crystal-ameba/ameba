@@ -1,0 +1,62 @@
+name: Build and deploy docs
+
+on:
+  workflow_dispatch:
+    inputs: &inputs
+      ref:
+        required: true
+        type: string
+        description: The tag or branch to deploy
+      version:
+        type: string
+        description: The version to deploy
+      git-branch:
+        type: string
+        description: Git branch to deploy to
+        default: gh-pages
+  workflow_call:
+    inputs: *inputs
+
+permissions:
+  contents: write
+
+jobs:
+  build-and-deploy:
+    concurrency: ci-${{ github.ref }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Inject slug/short variables
+        uses: rlespinasse/github-slug-action@v5
+
+      - name: Install Crystal
+        uses: crystal-lang/install-crystal@v1
+
+      - name: Download source
+        uses: actions/checkout@v5
+        with:
+          ref: ${{ inputs.ref }}
+
+      - name: Get ref SHA
+        id: ref-sha
+        run: |
+          REF_SHA="$(git rev-parse --short HEAD)"
+          echo "REF_SHA: ${REF_SHA}"
+          echo "sha=${REF_SHA}" >> $GITHUB_OUTPUT
+
+      - name: Install dependencies
+        run: shards install
+
+      - name: Build docs
+        run: |
+          crystal docs \
+            --project-version="${{ inputs.version || inputs.ref }}" \
+            --source-refname="${{ steps.ref-sha.outputs.sha }}" \
+            --json-config-url="/ameba/versions.json"
+
+      - name: Deploy docs 🚀
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          branch: ${{ inputs.git-branch }}
+          folder: docs
+          target-folder: ${{ inputs.version || inputs.ref }}
+          clean: true
