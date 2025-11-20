@@ -28,7 +28,6 @@ module Ameba
   # Ameba.run config
   # ```
   def run(config = Config.load)
-    config
     Runner.new(config).run
   end
 end
