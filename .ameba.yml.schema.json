@@ -75,6 +75,7 @@
     },
     "Documentation/Admonition": {
       "$ref": "#/$defs/BaseRule",
+      "$comment": "https://crystal-ameba.github.io/ameba/master/Ameba/Rule/Documentation/Admonition.html",
       "title": "Documentation/Admonition",
       "description": "Reports documentation admonitions",
       "properties": {
@@ -109,6 +110,7 @@
     },
     "Documentation/Documentation": {
       "$ref": "#/$defs/BaseRule",
+      "$comment": "https://crystal-ameba.github.io/ameba/master/Ameba/Rule/Documentation/Documentation.html",
       "title": "Documentation/Documentation",
       "description": "Enforces public types to be documented",
       "properties": {
@@ -148,6 +150,7 @@
     },
     "Layout/LineLength": {
       "$ref": "#/$defs/BaseRule",
+      "$comment": "https://crystal-ameba.github.io/ameba/master/Ameba/Rule/Layout/LineLength.html",
       "title": "Layout/LineLength",
       "description": "Disallows lines longer than `MaxLength` number of symbols",
       "properties": {
@@ -167,6 +170,7 @@
     },
     "Layout/TrailingBlankLines": {
       "$ref": "#/$defs/BaseRule",
+      "$comment": "https://crystal-ameba.github.io/ameba/master/Ameba/Rule/Layout/TrailingBlankLines.html",
       "title": "Layout/TrailingBlankLines",
       "description": "Disallows trailing blank lines",
       "properties": {
@@ -178,6 +182,7 @@
     },
     "Layout/TrailingWhitespace": {
       "$ref": "#/$defs/BaseRule",
+      "$comment": "https://crystal-ameba.github.io/ameba/master/Ameba/Rule/Layout/TrailingWhitespace.html",
       "title": "Layout/TrailingWhitespace",
       "description": "Disallows trailing whitespace",
       "properties": {
@@ -189,6 +194,7 @@
     },
     "Lint/AmbiguousAssignment": {
       "$ref": "#/$defs/BaseRule",
+      "$comment": "https://crystal-ameba.github.io/ameba/master/Ameba/Rule/Lint/AmbiguousAssignment.html",
       "title": "Lint/AmbiguousAssignment",
       "description": "Disallows ambiguous `=-/=+/=!`",
       "properties": {
@@ -204,6 +210,7 @@
     },
     "Lint/BadDirective": {
       "$ref": "#/$defs/BaseRule",
+      "$comment": "https://crystal-ameba.github.io/ameba/master/Ameba/Rule/Lint/BadDirective.html",
       "title": "Lint/BadDirective",
       "description": "Reports bad comment directives",
       "properties": {
@@ -219,6 +226,7 @@
     },
     "Lint/ComparisonToBoolean": {
       "$ref": "#/$defs/BaseRule",
+      "$comment": "https://crystal-ameba.github.io/ameba/master/Ameba/Rule/Lint/ComparisonToBoolean.html",
       "title": "Lint/ComparisonToBoolean",
       "description": "Disallows comparison to booleans",
       "properties": {
@@ -238,6 +246,7 @@
     },
     "Lint/DebugCalls": {
       "$ref": "#/$defs/BaseRule",
+      "$comment": "https://crystal-ameba.github.io/ameba/master/Ameba/Rule/Lint/DebugCalls.html",
       "title": "Lint/DebugCalls",
       "description": "Disallows debug-related calls",
       "properties": {
@@ -265,6 +274,7 @@
     },
     "Lint/DebuggerStatement": {
       "$ref": "#/$defs/BaseRule",
+      "$comment": "https://crystal-ameba.github.io/ameba/master/Ameba/Rule/Lint/DebuggerStatement.html",
       "title": "Lint/DebuggerStatement",
       "description": "Disallows calls to debugger",
       "properties": {
@@ -280,6 +290,7 @@
     },
     "Lint/DuplicateBranch": {
       "$ref": "#/$defs/BaseRule",
+      "$comment": "https://crystal-ameba.github.io/ameba/master/Ameba/Rule/Lint/DuplicateBranch.html",
       "title": "Lint/DuplicateBranch",
       "description": "Reports duplicated branch bodies",
       "properties": {
@@ -311,6 +322,7 @@
     },
     "Lint/DuplicateEnumValue": {
       "$ref": "#/$defs/BaseRule",
+      "$comment": "https://crystal-ameba.github.io/ameba/master/Ameba/Rule/Lint/DuplicateEnumValue.html",
       "title": "Lint/DuplicateEnumValue",
       "description": "Reports duplicated `enum` member values",
       "properties": {
@@ -326,6 +338,7 @@
     },
     "Lint/DuplicateWhenCondition": {
       "$ref": "#/$defs/BaseRule",
+      "$comment": "https://crystal-ameba.github.io/ameba/master/Ameba/Rule/Lint/DuplicateWhenCondition.html",
       "title": "Lint/DuplicateWhenCondition",
       "description": "Reports repeated conditions used in case `when` expressions",
       "properties": {
@@ -341,6 +354,7 @@
     },
     "Lint/DuplicatedRequire": {
       "$ref": "#/$defs/BaseRule",
+      "$comment": "https://crystal-ameba.github.io/ameba/master/Ameba/Rule/Lint/DuplicatedRequire.html",
       "title": "Lint/DuplicatedRequire",
       "description": "Reports duplicated `require` statements",
       "properties": {
@@ -356,6 +370,7 @@
     },
     "Lint/ElseNil": {
       "$ref": "#/$defs/BaseRule",
+      "$comment": "https://crystal-ameba.github.io/ameba/master/Ameba/Rule/Lint/ElseNil.html",
       "title": "Lint/ElseNil",
       "description": "Disallows `else` blocks with `nil` as their body",
       "properties": {
@@ -371,6 +386,7 @@
     },
     "Lint/EmptyEnsure": {
       "$ref": "#/$defs/BaseRule",
+      "$comment": "https://crystal-ameba.github.io/ameba/master/Ameba/Rule/Lint/EmptyEnsure.html",
       "title": "Lint/EmptyEnsure",
       "description": "Disallows empty `ensure` statement",
       "properties": {
@@ -386,6 +402,7 @@
     },
     "Lint/EmptyExpression": {
       "$ref": "#/$defs/BaseRule",
+      "$comment": "https://crystal-ameba.github.io/ameba/master/Ameba/Rule/Lint/EmptyExpression.html",
       "title": "Lint/EmptyExpression",
       "description": "Disallows empty expressions",
       "properties": {
@@ -401,6 +418,7 @@
     },
     "Lint/EmptyLoop": {
       "$ref": "#/$defs/BaseRule",
+      "$comment": "https://crystal-ameba.github.io/ameba/master/Ameba/Rule/Lint/EmptyLoop.html",
       "title": "Lint/EmptyLoop",
       "description": "Disallows empty loops",
       "properties": {
@@ -416,6 +434,7 @@
     },
     "Lint/EnumMemberNameConflict": {
       "$ref": "#/$defs/BaseRule",
+      "$comment": "https://crystal-ameba.github.io/ameba/master/Ameba/Rule/Lint/EnumMemberNameConflict.html",
       "title": "Lint/EnumMemberNameConflict",
       "description": "Reports conflicting enum member names",
       "properties": {
@@ -431,6 +450,7 @@
     },
     "Lint/Formatting": {
       "$ref": "#/$defs/BaseRule",
+      "$comment": "https://crystal-ameba.github.io/ameba/master/Ameba/Rule/Lint/Formatting.html",
       "title": "Lint/Formatting",
       "description": "Reports not formatted sources",
       "properties": {
@@ -450,6 +470,7 @@
     },
     "Lint/HashDuplicatedKey": {
       "$ref": "#/$defs/BaseRule",
+      "$comment": "https://crystal-ameba.github.io/ameba/master/Ameba/Rule/Lint/HashDuplicatedKey.html",
       "title": "Lint/HashDuplicatedKey",
       "description": "Disallows duplicated keys in hash literals",
       "properties": {
@@ -465,6 +486,7 @@
     },
     "Lint/LiteralAssignmentsInExpressions": {
       "$ref": "#/$defs/BaseRule",
+      "$comment": "https://crystal-ameba.github.io/ameba/master/Ameba/Rule/Lint/LiteralAssignmentsInExpressions.html",
       "title": "Lint/LiteralAssignmentsInExpressions",
       "description": "Disallows assignments with literal values in control expressions",
       "properties": {
@@ -480,6 +502,7 @@
     },
     "Lint/LiteralInCondition": {
       "$ref": "#/$defs/BaseRule",
+      "$comment": "https://crystal-ameba.github.io/ameba/master/Ameba/Rule/Lint/LiteralInCondition.html",
       "title": "Lint/LiteralInCondition",
       "description": "Disallows useless conditional statements that contain a literal in place of a variable or predicate function",
       "properties": {
@@ -495,6 +518,7 @@
     },
     "Lint/LiteralInInterpolation": {
       "$ref": "#/$defs/BaseRule",
+      "$comment": "https://crystal-ameba.github.io/ameba/master/Ameba/Rule/Lint/LiteralInInterpolation.html",
       "title": "Lint/LiteralInInterpolation",
       "description": "Disallows useless string interpolations",
       "properties": {
@@ -510,6 +534,7 @@
     },
     "Lint/LiteralsComparison": {
       "$ref": "#/$defs/BaseRule",
+      "$comment": "https://crystal-ameba.github.io/ameba/master/Ameba/Rule/Lint/LiteralsComparison.html",
       "title": "Lint/LiteralsComparison",
       "description": "Identifies comparisons between literals",
       "properties": {
@@ -525,6 +550,7 @@
     },
     "Lint/MissingBlockArgument": {
       "$ref": "#/$defs/BaseRule",
+      "$comment": "https://crystal-ameba.github.io/ameba/master/Ameba/Rule/Lint/MissingBlockArgument.html",
       "title": "Lint/MissingBlockArgument",
       "description": "Disallows yielding method definitions without block argument",
       "properties": {
@@ -540,6 +566,7 @@
     },
     "Lint/NotNil": {
       "$ref": "#/$defs/BaseRule",
+      "$comment": "https://crystal-ameba.github.io/ameba/master/Ameba/Rule/Lint/NotNil.html",
       "title": "Lint/NotNil",
       "description": "Identifies usage of `not_nil!` calls",
       "properties": {
@@ -555,6 +582,7 @@
     },
     "Lint/NotNilAfterNoBang": {
       "$ref": "#/$defs/BaseRule",
+      "$comment": "https://crystal-ameba.github.io/ameba/master/Ameba/Rule/Lint/NotNilAfterNoBang.html",
       "title": "Lint/NotNilAfterNoBang",
       "description": "Identifies usage of `index/rindex/find/match` calls followed by `not_nil!`",
       "properties": {
@@ -570,6 +598,7 @@
     },
     "Lint/PercentArrays": {
       "$ref": "#/$defs/BaseRule",
+      "$comment": "https://crystal-ameba.github.io/ameba/master/Ameba/Rule/Lint/PercentArrays.html",
       "title": "Lint/PercentArrays",
       "description": "Disallows some unwanted symbols in percent array literals",
       "properties": {
@@ -593,6 +622,7 @@
     },
     "Lint/RandZero": {
       "$ref": "#/$defs/BaseRule",
+      "$comment": "https://crystal-ameba.github.io/ameba/master/Ameba/Rule/Lint/RandZero.html",
       "title": "Lint/RandZero",
       "description": "Disallows `rand` zero calls",
       "properties": {
@@ -608,6 +638,7 @@
     },
     "Lint/RedundantStringCoercion": {
       "$ref": "#/$defs/BaseRule",
+      "$comment": "https://crystal-ameba.github.io/ameba/master/Ameba/Rule/Lint/RedundantStringCoercion.html",
       "title": "Lint/RedundantStringCoercion",
       "description": "Disallows redundant string conversions in interpolation",
       "properties": {
@@ -623,6 +654,7 @@
     },
     "Lint/RedundantWithIndex": {
       "$ref": "#/$defs/BaseRule",
+      "$comment": "https://crystal-ameba.github.io/ameba/master/Ameba/Rule/Lint/RedundantWithIndex.html",
       "title": "Lint/RedundantWithIndex",
       "description": "Disallows redundant `with_index` calls",
       "properties": {
@@ -638,6 +670,7 @@
     },
     "Lint/RedundantWithObject": {
       "$ref": "#/$defs/BaseRule",
+      "$comment": "https://crystal-ameba.github.io/ameba/master/Ameba/Rule/Lint/RedundantWithObject.html",
       "title": "Lint/RedundantWithObject",
       "description": "Disallows redundant `with_object` calls",
       "properties": {
@@ -653,6 +686,7 @@
     },
     "Lint/RequireParentheses": {
       "$ref": "#/$defs/BaseRule",
+      "$comment": "https://crystal-ameba.github.io/ameba/master/Ameba/Rule/Lint/RequireParentheses.html",
       "title": "Lint/RequireParentheses",
       "description": "Disallows method calls with no parentheses and a logical operator in the argument list",
       "properties": {
@@ -668,6 +702,7 @@
     },
     "Lint/SelfInitializeDefinition": {
       "$ref": "#/$defs/BaseRule",
+      "$comment": "https://crystal-ameba.github.io/ameba/master/Ameba/Rule/Lint/SelfInitializeDefinition.html",
       "title": "Lint/SelfInitializeDefinition",
       "description": "Reports `initialize` method definitions with a `self` receiver",
       "properties": {
@@ -683,6 +718,7 @@
     },
     "Lint/ShadowedArgument": {
       "$ref": "#/$defs/BaseRule",
+      "$comment": "https://crystal-ameba.github.io/ameba/master/Ameba/Rule/Lint/ShadowedArgument.html",
       "title": "Lint/ShadowedArgument",
       "description": "Disallows shadowed arguments",
       "properties": {
@@ -698,6 +734,7 @@
     },
     "Lint/ShadowedException": {
       "$ref": "#/$defs/BaseRule",
+      "$comment": "https://crystal-ameba.github.io/ameba/master/Ameba/Rule/Lint/ShadowedException.html",
       "title": "Lint/ShadowedException",
       "description": "Disallows rescued exception that get shadowed",
       "properties": {
@@ -713,6 +750,7 @@
     },
     "Lint/ShadowingOuterLocalVar": {
       "$ref": "#/$defs/BaseRule",
+      "$comment": "https://crystal-ameba.github.io/ameba/master/Ameba/Rule/Lint/ShadowingOuterLocalVar.html",
       "title": "Lint/ShadowingOuterLocalVar",
       "description": "Disallows the usage of the same name as outer local variables for block or proc arguments",
       "properties": {
@@ -728,6 +766,7 @@
     },
     "Lint/SharedVarInFiber": {
       "$ref": "#/$defs/BaseRule",
+      "$comment": "https://crystal-ameba.github.io/ameba/master/Ameba/Rule/Lint/SharedVarInFiber.html",
       "title": "Lint/SharedVarInFiber",
       "description": "Disallows shared variables in fibers",
       "properties": {
@@ -743,6 +782,7 @@
     },
     "Lint/SignalTrap": {
       "$ref": "#/$defs/BaseRule",
+      "$comment": "https://crystal-ameba.github.io/ameba/master/Ameba/Rule/Lint/SignalTrap.html",
       "title": "Lint/SignalTrap",
       "description": "Disallows `Signal::INT/HUP/TERM.trap` in favor of `Process.on_terminate`",
       "properties": {
@@ -758,6 +798,7 @@
     },
     "Lint/SpecEqWithBoolOrNilLiteral": {
       "$ref": "#/$defs/BaseRule",
+      "$comment": "https://crystal-ameba.github.io/ameba/master/Ameba/Rule/Lint/SpecEqWithBoolOrNilLiteral.html",
       "title": "Lint/SpecEqWithBoolOrNilLiteral",
       "description": "Reports `eq(true|false|nil)` expectations in specs",
       "properties": {
@@ -773,6 +814,7 @@
     },
     "Lint/SpecFilename": {
       "$ref": "#/$defs/BaseRule",
+      "$comment": "https://crystal-ameba.github.io/ameba/master/Ameba/Rule/Lint/SpecFilename.html",
       "title": "Lint/SpecFilename",
       "description": "Enforces spec filenames to have `_spec` suffix",
       "properties": {
@@ -808,6 +850,7 @@
     },
     "Lint/SpecFocus": {
       "$ref": "#/$defs/BaseRule",
+      "$comment": "https://crystal-ameba.github.io/ameba/master/Ameba/Rule/Lint/SpecFocus.html",
       "title": "Lint/SpecFocus",
       "description": "Reports focused spec items",
       "properties": {
@@ -823,6 +866,7 @@
     },
     "Lint/Syntax": {
       "$ref": "#/$defs/BaseRule",
+      "$comment": "https://crystal-ameba.github.io/ameba/master/Ameba/Rule/Lint/Syntax.html",
       "title": "Lint/Syntax",
       "description": "Reports invalid Crystal syntax",
       "properties": {
@@ -838,6 +882,7 @@
     },
     "Lint/TopLevelOperatorDefinition": {
       "$ref": "#/$defs/BaseRule",
+      "$comment": "https://crystal-ameba.github.io/ameba/master/Ameba/Rule/Lint/TopLevelOperatorDefinition.html",
       "title": "Lint/TopLevelOperatorDefinition",
       "description": "Disallows top level operator method definitions",
       "properties": {
@@ -853,6 +898,7 @@
     },
     "Lint/TrailingRescueException": {
       "$ref": "#/$defs/BaseRule",
+      "$comment": "https://crystal-ameba.github.io/ameba/master/Ameba/Rule/Lint/TrailingRescueException.html",
       "title": "Lint/TrailingRescueException",
       "description": "Disallows trailing `rescue` with a path",
       "properties": {
@@ -868,6 +914,7 @@
     },
     "Lint/Typos": {
       "$ref": "#/$defs/BaseRule",
+      "$comment": "https://crystal-ameba.github.io/ameba/master/Ameba/Rule/Lint/Typos.html",
       "title": "Lint/Typos",
       "description": "Reports typos found in source files",
       "properties": {
@@ -898,6 +945,7 @@
     },
     "Lint/UnneededDisableDirective": {
       "$ref": "#/$defs/BaseRule",
+      "$comment": "https://crystal-ameba.github.io/ameba/master/Ameba/Rule/Lint/UnneededDisableDirective.html",
       "title": "Lint/UnneededDisableDirective",
       "description": "Reports unneeded disable directives in comments",
       "properties": {
@@ -913,6 +961,7 @@
     },
     "Lint/UnreachableCode": {
       "$ref": "#/$defs/BaseRule",
+      "$comment": "https://crystal-ameba.github.io/ameba/master/Ameba/Rule/Lint/UnreachableCode.html",
       "title": "Lint/UnreachableCode",
       "description": "Reports unreachable code",
       "properties": {
@@ -928,6 +977,7 @@
     },
     "Lint/UnusedArgument": {
       "$ref": "#/$defs/BaseRule",
+      "$comment": "https://crystal-ameba.github.io/ameba/master/Ameba/Rule/Lint/UnusedArgument.html",
       "title": "Lint/UnusedArgument",
       "description": "Disallows unused arguments",
       "properties": {
@@ -955,6 +1005,7 @@
     },
     "Lint/UnusedBlockArgument": {
       "$ref": "#/$defs/BaseRule",
+      "$comment": "https://crystal-ameba.github.io/ameba/master/Ameba/Rule/Lint/UnusedBlockArgument.html",
       "title": "Lint/UnusedBlockArgument",
       "description": "Disallows unused block arguments",
       "properties": {
@@ -970,6 +1021,7 @@
     },
     "Lint/UnusedExpression": {
       "$ref": "#/$defs/BaseRule",
+      "$comment": "https://crystal-ameba.github.io/ameba/master/Ameba/Rule/Lint/UnusedExpression.html",
       "title": "Lint/UnusedExpression",
       "description": "Disallows unused expressions",
       "properties": {
@@ -985,6 +1037,7 @@
     },
     "Lint/UselessAssign": {
       "$ref": "#/$defs/BaseRule",
+      "$comment": "https://crystal-ameba.github.io/ameba/master/Ameba/Rule/Lint/UselessAssign.html",
       "title": "Lint/UselessAssign",
       "description": "Disallows useless variable assignments",
       "properties": {
@@ -1004,6 +1057,7 @@
     },
     "Lint/UselessConditionInWhen": {
       "$ref": "#/$defs/BaseRule",
+      "$comment": "https://crystal-ameba.github.io/ameba/master/Ameba/Rule/Lint/UselessConditionInWhen.html",
       "title": "Lint/UselessConditionInWhen",
       "description": "Disallows useless conditions in `when`",
       "properties": {
@@ -1019,6 +1073,7 @@
     },
     "Lint/UselessVisibilityModifier": {
       "$ref": "#/$defs/BaseRule",
+      "$comment": "https://crystal-ameba.github.io/ameba/master/Ameba/Rule/Lint/UselessVisibilityModifier.html",
       "title": "Lint/UselessVisibilityModifier",
       "description": "Disallows top level `protected` method visibility modifier",
       "properties": {
@@ -1034,6 +1089,7 @@
     },
     "Lint/VoidOutsideLib": {
       "$ref": "#/$defs/BaseRule",
+      "$comment": "https://crystal-ameba.github.io/ameba/master/Ameba/Rule/Lint/VoidOutsideLib.html",
       "title": "Lint/VoidOutsideLib",
       "description": "Disallows use of `Void` outside C lib bindings and `Pointer(Void)`",
       "properties": {
@@ -1049,6 +1105,7 @@
     },
     "Lint/WhitespaceAroundMacroExpression": {
       "$ref": "#/$defs/BaseRule",
+      "$comment": "https://crystal-ameba.github.io/ameba/master/Ameba/Rule/Lint/WhitespaceAroundMacroExpression.html",
       "title": "Lint/WhitespaceAroundMacroExpression",
       "description": "Reports missing spaces around macro expressions",
       "properties": {
@@ -1064,6 +1121,7 @@
     },
     "Metrics/CyclomaticComplexity": {
       "$ref": "#/$defs/BaseRule",
+      "$comment": "https://crystal-ameba.github.io/ameba/master/Ameba/Rule/Metrics/CyclomaticComplexity.html",
       "title": "Metrics/CyclomaticComplexity",
       "description": "Disallows methods with a cyclomatic complexity higher than `MaxComplexity`",
       "properties": {
@@ -1083,6 +1141,7 @@
     },
     "Naming/AccessorMethodName": {
       "$ref": "#/$defs/BaseRule",
+      "$comment": "https://crystal-ameba.github.io/ameba/master/Ameba/Rule/Naming/AccessorMethodName.html",
       "title": "Naming/AccessorMethodName",
       "description": "Makes sure that accessor methods are named properly",
       "properties": {
@@ -1094,6 +1153,7 @@
     },
     "Naming/AsciiIdentifiers": {
       "$ref": "#/$defs/BaseRule",
+      "$comment": "https://crystal-ameba.github.io/ameba/master/Ameba/Rule/Naming/AsciiIdentifiers.html",
       "title": "Naming/AsciiIdentifiers",
       "description": "Disallows non-ascii characters in identifiers",
       "properties": {
@@ -1109,6 +1169,7 @@
     },
     "Naming/BinaryOperatorParameterName": {
       "$ref": "#/$defs/BaseRule",
+      "$comment": "https://crystal-ameba.github.io/ameba/master/Ameba/Rule/Naming/BinaryOperatorParameterName.html",
       "title": "Naming/BinaryOperatorParameterName",
       "description": "Enforces that certain binary operator methods have their sole parameter name standardized",
       "properties": {
@@ -1145,6 +1206,7 @@
     },
     "Naming/BlockParameterName": {
       "$ref": "#/$defs/BaseRule",
+      "$comment": "https://crystal-ameba.github.io/ameba/master/Ameba/Rule/Naming/BlockParameterName.html",
       "title": "Naming/BlockParameterName",
       "description": "Disallows non-descriptive block parameter names",
       "properties": {
@@ -1201,6 +1263,7 @@
     },
     "Naming/ConstantNames": {
       "$ref": "#/$defs/BaseRule",
+      "$comment": "https://crystal-ameba.github.io/ameba/master/Ameba/Rule/Naming/ConstantNames.html",
       "title": "Naming/ConstantNames",
       "description": "Enforces constant names to be in screaming case",
       "properties": {
@@ -1212,6 +1275,7 @@
     },
     "Naming/Filename": {
       "$ref": "#/$defs/BaseRule",
+      "$comment": "https://crystal-ameba.github.io/ameba/master/Ameba/Rule/Naming/Filename.html",
       "title": "Naming/Filename",
       "description": "Enforces file names to be in underscored case",
       "properties": {
@@ -1223,6 +1287,7 @@
     },
     "Naming/MethodNames": {
       "$ref": "#/$defs/BaseRule",
+      "$comment": "https://crystal-ameba.github.io/ameba/master/Ameba/Rule/Naming/MethodNames.html",
       "title": "Naming/MethodNames",
       "description": "Enforces method names to be in underscored case",
       "properties": {
@@ -1234,6 +1299,7 @@
     },
     "Naming/PredicateName": {
       "$ref": "#/$defs/BaseRule",
+      "$comment": "https://crystal-ameba.github.io/ameba/master/Ameba/Rule/Naming/PredicateName.html",
       "title": "Naming/PredicateName",
       "description": "Disallows tautological predicate names",
       "properties": {
@@ -1245,6 +1311,7 @@
     },
     "Naming/QueryBoolMethods": {
       "$ref": "#/$defs/BaseRule",
+      "$comment": "https://crystal-ameba.github.io/ameba/master/Ameba/Rule/Naming/QueryBoolMethods.html",
       "title": "Naming/QueryBoolMethods",
       "description": "Reports boolean properties without the `?` suffix",
       "properties": {
@@ -1256,6 +1323,7 @@
     },
     "Naming/RescuedExceptionsVariableName": {
       "$ref": "#/$defs/BaseRule",
+      "$comment": "https://crystal-ameba.github.io/ameba/master/Ameba/Rule/Naming/RescuedExceptionsVariableName.html",
       "title": "Naming/RescuedExceptionsVariableName",
       "description": "Makes sure that rescued exceptions variables are named as expected",
       "properties": {
@@ -1279,6 +1347,7 @@
     },
     "Naming/TypeNames": {
       "$ref": "#/$defs/BaseRule",
+      "$comment": "https://crystal-ameba.github.io/ameba/master/Ameba/Rule/Naming/TypeNames.html",
       "title": "Naming/TypeNames",
       "description": "Enforces type names in camelcase manner",
       "properties": {
@@ -1290,6 +1359,7 @@
     },
     "Naming/VariableNames": {
       "$ref": "#/$defs/BaseRule",
+      "$comment": "https://crystal-ameba.github.io/ameba/master/Ameba/Rule/Naming/VariableNames.html",
       "title": "Naming/VariableNames",
       "description": "Enforces variable names to be in underscored case",
       "properties": {
@@ -1301,6 +1371,7 @@
     },
     "Performance/AnyAfterFilter": {
       "$ref": "#/$defs/BaseRule",
+      "$comment": "https://crystal-ameba.github.io/ameba/master/Ameba/Rule/Performance/AnyAfterFilter.html",
       "title": "Performance/AnyAfterFilter",
       "description": "Identifies usage of `any?` calls that follow filters",
       "properties": {
@@ -1326,6 +1397,7 @@
     },
     "Performance/AnyInsteadOfEmpty": {
       "$ref": "#/$defs/BaseRule",
+      "$comment": "https://crystal-ameba.github.io/ameba/master/Ameba/Rule/Performance/AnyInsteadOfEmpty.html",
       "title": "Performance/AnyInsteadOfEmpty",
       "description": "Identifies usage of arg-less `any?` calls",
       "properties": {
@@ -1341,6 +1413,7 @@
     },
     "Performance/ChainedCallWithNoBang": {
       "$ref": "#/$defs/BaseRule",
+      "$comment": "https://crystal-ameba.github.io/ameba/master/Ameba/Rule/Performance/ChainedCallWithNoBang.html",
       "title": "Performance/ChainedCallWithNoBang",
       "description": "Identifies usage of chained calls not utilizing the bang method variants",
       "properties": {
@@ -1370,6 +1443,7 @@
     },
     "Performance/CompactAfterMap": {
       "$ref": "#/$defs/BaseRule",
+      "$comment": "https://crystal-ameba.github.io/ameba/master/Ameba/Rule/Performance/CompactAfterMap.html",
       "title": "Performance/CompactAfterMap",
       "description": "Identifies usage of `compact` calls that follow `map`",
       "properties": {
@@ -1385,6 +1459,7 @@
     },
     "Performance/ExcessiveAllocations": {
       "$ref": "#/$defs/BaseRule",
+      "$comment": "https://crystal-ameba.github.io/ameba/master/Ameba/Rule/Performance/ExcessiveAllocations.html",
       "title": "Performance/ExcessiveAllocations",
       "description": "Identifies usage of excessive collection allocations",
       "properties": {
@@ -1421,6 +1496,7 @@
     },
     "Performance/FirstLastAfterFilter": {
       "$ref": "#/$defs/BaseRule",
+      "$comment": "https://crystal-ameba.github.io/ameba/master/Ameba/Rule/Performance/FirstLastAfterFilter.html",
       "title": "Performance/FirstLastAfterFilter",
       "description": "Identifies usage of `first/last/first?/last?` calls that follow filters",
       "properties": {
@@ -1445,6 +1521,7 @@
     },
     "Performance/FlattenAfterMap": {
       "$ref": "#/$defs/BaseRule",
+      "$comment": "https://crystal-ameba.github.io/ameba/master/Ameba/Rule/Performance/FlattenAfterMap.html",
       "title": "Performance/FlattenAfterMap",
       "description": "Identifies usage of `flatten` calls that follow `map`",
       "properties": {
@@ -1460,6 +1537,7 @@
     },
     "Performance/MapInsteadOfBlock": {
       "$ref": "#/$defs/BaseRule",
+      "$comment": "https://crystal-ameba.github.io/ameba/master/Ameba/Rule/Performance/MapInsteadOfBlock.html",
       "title": "Performance/MapInsteadOfBlock",
       "description": "Identifies usage of `sum/product` calls that follow `map`",
       "properties": {
@@ -1475,6 +1553,7 @@
     },
     "Performance/MinMaxAfterMap": {
       "$ref": "#/$defs/BaseRule",
+      "$comment": "https://crystal-ameba.github.io/ameba/master/Ameba/Rule/Performance/MinMaxAfterMap.html",
       "title": "Performance/MinMaxAfterMap",
       "description": "Identifies usage of `min/max/minmax` calls that follow `map`",
       "properties": {
@@ -1490,6 +1569,7 @@
     },
     "Performance/SizeAfterFilter": {
       "$ref": "#/$defs/BaseRule",
+      "$comment": "https://crystal-ameba.github.io/ameba/master/Ameba/Rule/Performance/SizeAfterFilter.html",
       "title": "Performance/SizeAfterFilter",
       "description": "Identifies usage of `size` calls that follow filter",
       "properties": {
@@ -1515,6 +1595,7 @@
     },
     "Performance/TimesMap": {
       "$ref": "#/$defs/BaseRule",
+      "$comment": "https://crystal-ameba.github.io/ameba/master/Ameba/Rule/Performance/TimesMap.html",
       "title": "Performance/TimesMap",
       "description": "Identifies usage of `times.map { ... }.to_a` calls",
       "properties": {
@@ -1530,6 +1611,7 @@
     },
     "Style/ArrayLiteralSyntax": {
       "$ref": "#/$defs/BaseRule",
+      "$comment": "https://crystal-ameba.github.io/ameba/master/Ameba/Rule/Style/ArrayLiteralSyntax.html",
       "title": "Style/ArrayLiteralSyntax",
       "description": "Encourages the use of `Array(T).new` over `[] of T`",
       "properties": {
@@ -1545,6 +1627,7 @@
     },
     "Style/GuardClause": {
       "$ref": "#/$defs/BaseRule",
+      "$comment": "https://crystal-ameba.github.io/ameba/master/Ameba/Rule/Style/GuardClause.html",
       "title": "Style/GuardClause",
       "description": "Check for conditionals that can be replaced with guard clauses",
       "properties": {
@@ -1560,6 +1643,7 @@
     },
     "Style/HashLiteralSyntax": {
       "$ref": "#/$defs/BaseRule",
+      "$comment": "https://crystal-ameba.github.io/ameba/master/Ameba/Rule/Style/HashLiteralSyntax.html",
       "title": "Style/HashLiteralSyntax",
       "description": "Encourages the use of `Hash(K, V).new` over `{} of K => V`",
       "properties": {
@@ -1575,6 +1659,7 @@
     },
     "Style/HeredocEscape": {
       "$ref": "#/$defs/BaseRule",
+      "$comment": "https://crystal-ameba.github.io/ameba/master/Ameba/Rule/Style/HeredocEscape.html",
       "title": "Style/HeredocEscape",
       "description": "Recommends using the heredoc variant that escapes interpolation or control chars in a heredoc body",
       "properties": {
@@ -1586,6 +1671,7 @@
     },
     "Style/HeredocIndent": {
       "$ref": "#/$defs/BaseRule",
+      "$comment": "https://crystal-ameba.github.io/ameba/master/Ameba/Rule/Style/HeredocIndent.html",
       "title": "Style/HeredocIndent",
       "description": "Recommends heredoc bodies are indented consistently",
       "properties": {
@@ -1601,6 +1687,7 @@
     },
     "Style/IsAFilter": {
       "$ref": "#/$defs/BaseRule",
+      "$comment": "https://crystal-ameba.github.io/ameba/master/Ameba/Rule/Style/IsAFilter.html",
       "title": "Style/IsAFilter",
       "description": "Identifies usage of `is_a?/nil?` calls within filters",
       "properties": {
@@ -1626,6 +1713,7 @@
     },
     "Style/IsANil": {
       "$ref": "#/$defs/BaseRule",
+      "$comment": "https://crystal-ameba.github.io/ameba/master/Ameba/Rule/Style/IsANil.html",
       "title": "Style/IsANil",
       "description": "Disallows calls to `is_a?(Nil)` in favor of `nil?`",
       "properties": {
@@ -1637,6 +1725,7 @@
     },
     "Style/LargeNumbers": {
       "$ref": "#/$defs/BaseRule",
+      "$comment": "https://crystal-ameba.github.io/ameba/master/Ameba/Rule/Style/LargeNumbers.html",
       "title": "Style/LargeNumbers",
       "description": "Disallows usage of large numbers without underscore",
       "properties": {
@@ -1656,6 +1745,7 @@
     },
     "Style/MultilineCurlyBlock": {
       "$ref": "#/$defs/BaseRule",
+      "$comment": "https://crystal-ameba.github.io/ameba/master/Ameba/Rule/Style/MultilineCurlyBlock.html",
       "title": "Style/MultilineCurlyBlock",
       "description": "Disallows multi-line blocks using curly block syntax",
       "properties": {
@@ -1667,6 +1757,7 @@
     },
     "Style/MultilineStringLiteral": {
       "$ref": "#/$defs/BaseRule",
+      "$comment": "https://crystal-ameba.github.io/ameba/master/Ameba/Rule/Style/MultilineStringLiteral.html",
       "title": "Style/MultilineStringLiteral",
       "description": "Disallows multiline string literals not using `<<-HEREDOC` markers",
       "properties": {
@@ -1682,6 +1773,7 @@
     },
     "Style/NegatedConditionsInUnless": {
       "$ref": "#/$defs/BaseRule",
+      "$comment": "https://crystal-ameba.github.io/ameba/master/Ameba/Rule/Style/NegatedConditionsInUnless.html",
       "title": "Style/NegatedConditionsInUnless",
       "description": "Disallows negated conditions in `unless`",
       "properties": {
@@ -1693,6 +1785,7 @@
     },
     "Style/ParenthesesAroundCondition": {
       "$ref": "#/$defs/BaseRule",
+      "$comment": "https://crystal-ameba.github.io/ameba/master/Ameba/Rule/Style/ParenthesesAroundCondition.html",
       "title": "Style/ParenthesesAroundCondition",
       "description": "Disallows redundant parentheses around control expressions",
       "properties": {
@@ -1716,6 +1809,7 @@
     },
     "Style/PercentLiteralDelimiters": {
       "$ref": "#/$defs/BaseRule",
+      "$comment": "https://crystal-ameba.github.io/ameba/master/Ameba/Rule/Style/PercentLiteralDelimiters.html",
       "title": "Style/PercentLiteralDelimiters",
       "description": "Enforces the consistent usage of `%`-literal delimiters",
       "properties": {
@@ -1755,6 +1849,7 @@
     },
     "Style/RedundantBegin": {
       "$ref": "#/$defs/BaseRule",
+      "$comment": "https://crystal-ameba.github.io/ameba/master/Ameba/Rule/Style/RedundantBegin.html",
       "title": "Style/RedundantBegin",
       "description": "Disallows redundant `begin` blocks",
       "properties": {
@@ -1766,6 +1861,7 @@
     },
     "Style/RedundantNext": {
       "$ref": "#/$defs/BaseRule",
+      "$comment": "https://crystal-ameba.github.io/ameba/master/Ameba/Rule/Style/RedundantNext.html",
       "title": "Style/RedundantNext",
       "description": "Reports redundant `next` expressions",
       "properties": {
@@ -1785,6 +1881,7 @@
     },
     "Style/RedundantNilInControlExpression": {
       "$ref": "#/$defs/BaseRule",
+      "$comment": "https://crystal-ameba.github.io/ameba/master/Ameba/Rule/Style/RedundantNilInControlExpression.html",
       "title": "Style/RedundantNilInControlExpression",
       "description": "Disallows control expressions with `nil` argument",
       "properties": {
@@ -1796,6 +1893,7 @@
     },
     "Style/RedundantReturn": {
       "$ref": "#/$defs/BaseRule",
+      "$comment": "https://crystal-ameba.github.io/ameba/master/Ameba/Rule/Style/RedundantReturn.html",
       "title": "Style/RedundantReturn",
       "description": "Reports redundant `return` expressions",
       "properties": {
@@ -1815,6 +1913,7 @@
     },
     "Style/RedundantSelf": {
       "$ref": "#/$defs/BaseRule",
+      "$comment": "https://crystal-ameba.github.io/ameba/master/Ameba/Rule/Style/RedundantSelf.html",
       "title": "Style/RedundantSelf",
       "description": "Disallows redundant uses of `self`",
       "properties": {
@@ -1837,6 +1936,7 @@
     },
     "Style/UnlessElse": {
       "$ref": "#/$defs/BaseRule",
+      "$comment": "https://crystal-ameba.github.io/ameba/master/Ameba/Rule/Style/UnlessElse.html",
       "title": "Style/UnlessElse",
       "description": "Disallows the use of an `else` block with the `unless`",
       "properties": {
@@ -1848,6 +1948,7 @@
     },
     "Style/VerboseBlock": {
       "$ref": "#/$defs/BaseRule",
+      "$comment": "https://crystal-ameba.github.io/ameba/master/Ameba/Rule/Style/VerboseBlock.html",
       "title": "Style/VerboseBlock",
       "description": "Identifies usage of collapsible single expression blocks",
       "properties": {
@@ -1893,6 +1994,7 @@
     },
     "Style/WhileTrue": {
       "$ref": "#/$defs/BaseRule",
+      "$comment": "https://crystal-ameba.github.io/ameba/master/Ameba/Rule/Style/WhileTrue.html",
       "title": "Style/WhileTrue",
       "description": "Disallows `while` statements with a `true` literal as condition",
       "properties": {
@@ -1904,6 +2006,7 @@
     },
     "Typing/MacroCallArgumentTypeRestriction": {
       "$ref": "#/$defs/BaseRule",
+      "$comment": "https://crystal-ameba.github.io/ameba/master/Ameba/Rule/Typing/MacroCallArgumentTypeRestriction.html",
       "title": "Typing/MacroCallArgumentTypeRestriction",
       "description": "Recommends that call arguments to certain macros have type restrictions",
       "properties": {
@@ -1950,6 +2053,7 @@
     },
     "Typing/MethodParameterTypeRestriction": {
       "$ref": "#/$defs/BaseRule",
+      "$comment": "https://crystal-ameba.github.io/ameba/master/Ameba/Rule/Typing/MethodParameterTypeRestriction.html",
       "title": "Typing/MethodParameterTypeRestriction",
       "description": "Recommends that method parameters have type restrictions",
       "properties": {
@@ -1985,6 +2089,7 @@
     },
     "Typing/MethodReturnTypeRestriction": {
       "$ref": "#/$defs/BaseRule",
+      "$comment": "https://crystal-ameba.github.io/ameba/master/Ameba/Rule/Typing/MethodReturnTypeRestriction.html",
       "title": "Typing/MethodReturnTypeRestriction",
       "description": "Recommends that methods have a return type restriction",
       "properties": {
@@ -2012,6 +2117,7 @@
     },
     "Typing/ProcLiteralReturnTypeRestriction": {
       "$ref": "#/$defs/BaseRule",
+      "$comment": "https://crystal-ameba.github.io/ameba/master/Ameba/Rule/Typing/ProcLiteralReturnTypeRestriction.html",
       "title": "Typing/ProcLiteralReturnTypeRestriction",
       "description": "Disallows proc literals without return type restriction",
       "properties": {
