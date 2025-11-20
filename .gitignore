@@ -3,6 +3,7 @@
 /bin/**/*
 !/bin/ameba.cr
 /.shards/
+/results.sarif.json
 
 # Libraries don't need dependency lock
 # Dependencies will be locked in application that uses them

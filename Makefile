@@ -65,6 +65,11 @@ lint: $(BUILD_TARGET)
 test: ## Run the spec suite and linter
 test: spec lint
 
+.PHONY: sarif
+sarif: ## Run the linter, saving the results to `results.sarif.json`
+sarif: $(BUILD_TARGET)
+	$(BUILD_TARGET) --format=sarif > results.sarif.json
+
 .PHONY: clean
 clean: ## Remove application binary and API docs
 clean:
