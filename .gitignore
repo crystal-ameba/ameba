@@ -7,6 +7,7 @@
 # Built binaries
 /bin/**/*
 !/bin/ameba.cr
+/results.sarif.json
 
 # Libraries don't need dependency lock
 # Dependencies will be locked in application that uses them
