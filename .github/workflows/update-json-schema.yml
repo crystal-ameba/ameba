@@ -34,20 +34,20 @@ jobs:
         run: |
           if [[ -n "$(git diff --exit-code)" ]]; then
             echo "Changes detected."
-            echo "has_changes=true" >> $GITHUB_OUTPUT
+            echo "has-changes=true" >> $GITHUB_OUTPUT
           else
             echo "No changes detected."
-            echo "has_changes=false" >> $GITHUB_OUTPUT
+            echo "has-changes=false" >> $GITHUB_OUTPUT
           fi
 
       - name: Configure Git identity
-        if: steps.git-diff-changes.outputs.has_changes == 'true'
+        if: steps.git-diff-changes.outputs.has-changes == 'true'
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
       - name: Commit and push changes
-        if: steps.git-diff-changes.outputs.has_changes == 'true'
+        if: steps.git-diff-changes.outputs.has-changes == 'true'
         run: |
           git commit -am "Update JSON Schema"
           git push -u origin HEAD
