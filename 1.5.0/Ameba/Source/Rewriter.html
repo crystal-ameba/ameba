@@ -1,0 +1,1322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="generator" content="Crystal Docs 1.17.1">
+<meta name="crystal_docs.project_version" content="1.5.0">
+<meta name="crystal_docs.project_name" content="ameba">
+
+  <meta name="crystal_docs.json_config_url" content="/ameba/versions.json">
+
+
+
+<link href="../../css/style.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="../../js/doc.js"></script>
+
+  <meta name="repository-name" content="ameba">
+  <title>Ameba::Source::Rewriter - ameba 1.5.0</title>
+  <script type="text/javascript">
+    CrystalDocs.base_path = "../../";
+  </script>
+</head>
+<body>
+
+<svg class="hidden">
+  <symbol id="octicon-link" viewBox="0 0 16 16">
+    <path fill="currentColor" fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path>
+  </symbol>
+</svg>
+<input type="checkbox" id="sidebar-btn">
+<label for="sidebar-btn" id="sidebar-btn-label">
+  <svg class="open" xmlns="http://www.w3.org/2000/svg" height="2em" width="2em" viewBox="0 0 512 512"><title>Open Sidebar</title><path fill="currentColor" d="M80 96v64h352V96H80zm0 112v64h352v-64H80zm0 112v64h352v-64H80z"></path></svg>
+  <svg class="close" xmlns="http://www.w3.org/2000/svg" width="2em" height="2em" viewBox="0 0 512 512"><title>Close Sidebar</title><path fill="currentColor" d="m118.6 73.4-45.2 45.2L210.7 256 73.4 393.4l45.2 45.2L256 301.3l137.4 137.3 45.2-45.2L301.3 256l137.3-137.4-45.2-45.2L256 210.7Z"></path></svg>
+</label>
+<div class="sidebar">
+  <div class="sidebar-header">
+    <div class="search-box">
+      <input type="search" class="search-input" placeholder="Search..." spellcheck="false" aria-label="Search">
+    </div>
+
+    <div class="project-summary">
+      <h1 class="project-name">
+        <a href="../../index.html">
+          ameba
+        </a>
+      </h1>
+
+      <span class="project-version">
+        1.5.0
+      </span>
+    </div>
+  </div>
+
+  <div class="search-results hidden">
+    <ul class="search-list"></ul>
+  </div>
+
+  <div class="types-list">
+    <ul>
+  
+  <li class="parent open current" data-id="ameba/Ameba" data-name="ameba">
+      <a href="../../Ameba.html">Ameba</a>
+      
+        <ul>
+  
+  <li class="parent " data-id="ameba/Ameba/AST" data-name="ameba::ast">
+      <a href="../../Ameba/AST.html">AST</a>
+      
+        <ul>
+  
+  <li class=" " data-id="ameba/Ameba/AST/Argument" data-name="ameba::ast::argument">
+      <a href="../../Ameba/AST/Argument.html">Argument</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/AST/Assignment" data-name="ameba::ast::assignment">
+      <a href="../../Ameba/AST/Assignment.html">Assignment</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/AST/BaseVisitor" data-name="ameba::ast::basevisitor">
+      <a href="../../Ameba/AST/BaseVisitor.html">BaseVisitor</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/AST/Branch" data-name="ameba::ast::branch">
+      <a href="../../Ameba/AST/Branch.html">Branch</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/AST/Branchable" data-name="ameba::ast::branchable">
+      <a href="../../Ameba/AST/Branchable.html">Branchable</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/AST/CountingVisitor" data-name="ameba::ast::countingvisitor">
+      <a href="../../Ameba/AST/CountingVisitor.html">CountingVisitor</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/AST/FlowExpression" data-name="ameba::ast::flowexpression">
+      <a href="../../Ameba/AST/FlowExpression.html">FlowExpression</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/AST/FlowExpressionVisitor" data-name="ameba::ast::flowexpressionvisitor">
+      <a href="../../Ameba/AST/FlowExpressionVisitor.html">FlowExpressionVisitor</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/AST/InstanceVariable" data-name="ameba::ast::instancevariable">
+      <a href="../../Ameba/AST/InstanceVariable.html">InstanceVariable</a>
+      
+    </li>
+  
+  <li class="parent " data-id="ameba/Ameba/AST/NodeVisitor" data-name="ameba::ast::nodevisitor">
+      <a href="../../Ameba/AST/NodeVisitor.html">NodeVisitor</a>
+      
+        <ul>
+  
+  <li class=" " data-id="ameba/Ameba/AST/NodeVisitor/Category" data-name="ameba::ast::nodevisitor::category">
+      <a href="../../Ameba/AST/NodeVisitor/Category.html">Category</a>
+      
+    </li>
+  
+</ul>
+
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/AST/RedundantControlExpressionVisitor" data-name="ameba::ast::redundantcontrolexpressionvisitor">
+      <a href="../../Ameba/AST/RedundantControlExpressionVisitor.html">RedundantControlExpressionVisitor</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/AST/Reference" data-name="ameba::ast::reference">
+      <a href="../../Ameba/AST/Reference.html">Reference</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/AST/Scope" data-name="ameba::ast::scope">
+      <a href="../../Ameba/AST/Scope.html">Scope</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/AST/ScopeVisitor" data-name="ameba::ast::scopevisitor">
+      <a href="../../Ameba/AST/ScopeVisitor.html">ScopeVisitor</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/AST/TopLevelNodesVisitor" data-name="ameba::ast::toplevelnodesvisitor">
+      <a href="../../Ameba/AST/TopLevelNodesVisitor.html">TopLevelNodesVisitor</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/AST/TypeDecVariable" data-name="ameba::ast::typedecvariable">
+      <a href="../../Ameba/AST/TypeDecVariable.html">TypeDecVariable</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/AST/Util" data-name="ameba::ast::util">
+      <a href="../../Ameba/AST/Util.html">Util</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/AST/Variable" data-name="ameba::ast::variable">
+      <a href="../../Ameba/AST/Variable.html">Variable</a>
+      
+    </li>
+  
+</ul>
+
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/Config" data-name="ameba::config">
+      <a href="../../Ameba/Config.html">Config</a>
+      
+    </li>
+  
+  <li class="parent " data-id="ameba/Ameba/Ext" data-name="ameba::ext">
+      <a href="../../Ameba/Ext.html">Ext</a>
+      
+        <ul>
+  
+  <li class=" " data-id="ameba/Ameba/Ext/Location" data-name="ameba::ext::location">
+      <a href="../../Ameba/Ext/Location.html">Location</a>
+      
+    </li>
+  
+</ul>
+
+      
+    </li>
+  
+  <li class="parent " data-id="ameba/Ameba/Formatter" data-name="ameba::formatter">
+      <a href="../../Ameba/Formatter.html">Formatter</a>
+      
+        <ul>
+  
+  <li class=" " data-id="ameba/Ameba/Formatter/BaseFormatter" data-name="ameba::formatter::baseformatter">
+      <a href="../../Ameba/Formatter/BaseFormatter.html">BaseFormatter</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/Formatter/DisabledFormatter" data-name="ameba::formatter::disabledformatter">
+      <a href="../../Ameba/Formatter/DisabledFormatter.html">DisabledFormatter</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/Formatter/DotFormatter" data-name="ameba::formatter::dotformatter">
+      <a href="../../Ameba/Formatter/DotFormatter.html">DotFormatter</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/Formatter/ExplainFormatter" data-name="ameba::formatter::explainformatter">
+      <a href="../../Ameba/Formatter/ExplainFormatter.html">ExplainFormatter</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/Formatter/FlycheckFormatter" data-name="ameba::formatter::flycheckformatter">
+      <a href="../../Ameba/Formatter/FlycheckFormatter.html">FlycheckFormatter</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/Formatter/JSONFormatter" data-name="ameba::formatter::jsonformatter">
+      <a href="../../Ameba/Formatter/JSONFormatter.html">JSONFormatter</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/Formatter/TODOFormatter" data-name="ameba::formatter::todoformatter">
+      <a href="../../Ameba/Formatter/TODOFormatter.html">TODOFormatter</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/Formatter/Util" data-name="ameba::formatter::util">
+      <a href="../../Ameba/Formatter/Util.html">Util</a>
+      
+    </li>
+  
+</ul>
+
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/GlobUtils" data-name="ameba::globutils">
+      <a href="../../Ameba/GlobUtils.html">GlobUtils</a>
+      
+    </li>
+  
+  <li class="parent " data-id="ameba/Ameba/InlineComments" data-name="ameba::inlinecomments">
+      <a href="../../Ameba/InlineComments.html">InlineComments</a>
+      
+        <ul>
+  
+  <li class=" " data-id="ameba/Ameba/InlineComments/Action" data-name="ameba::inlinecomments::action">
+      <a href="../../Ameba/InlineComments/Action.html">Action</a>
+      
+    </li>
+  
+</ul>
+
+      
+    </li>
+  
+  <li class="parent " data-id="ameba/Ameba/Issue" data-name="ameba::issue">
+      <a href="../../Ameba/Issue.html">Issue</a>
+      
+        <ul>
+  
+  <li class=" " data-id="ameba/Ameba/Issue/Status" data-name="ameba::issue::status">
+      <a href="../../Ameba/Issue/Status.html">Status</a>
+      
+    </li>
+  
+</ul>
+
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/Reportable" data-name="ameba::reportable">
+      <a href="../../Ameba/Reportable.html">Reportable</a>
+      
+    </li>
+  
+  <li class="parent " data-id="ameba/Ameba/Rule" data-name="ameba::rule">
+      <a href="../../Ameba/Rule.html">Rule</a>
+      
+        <ul>
+  
+  <li class=" " data-id="ameba/Ameba/Rule/Base" data-name="ameba::rule::base">
+      <a href="../../Ameba/Rule/Base.html">Base</a>
+      
+    </li>
+  
+  <li class="parent " data-id="ameba/Ameba/Rule/Layout" data-name="ameba::rule::layout">
+      <a href="../../Ameba/Rule/Layout.html">Layout</a>
+      
+        <ul>
+  
+  <li class=" " data-id="ameba/Ameba/Rule/Layout/LineLength" data-name="ameba::rule::layout::linelength">
+      <a href="../../Ameba/Rule/Layout/LineLength.html">LineLength</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/Rule/Layout/TrailingBlankLines" data-name="ameba::rule::layout::trailingblanklines">
+      <a href="../../Ameba/Rule/Layout/TrailingBlankLines.html">TrailingBlankLines</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/Rule/Layout/TrailingWhitespace" data-name="ameba::rule::layout::trailingwhitespace">
+      <a href="../../Ameba/Rule/Layout/TrailingWhitespace.html">TrailingWhitespace</a>
+      
+    </li>
+  
+</ul>
+
+      
+    </li>
+  
+  <li class="parent " data-id="ameba/Ameba/Rule/Lint" data-name="ameba::rule::lint">
+      <a href="../../Ameba/Rule/Lint.html">Lint</a>
+      
+        <ul>
+  
+  <li class=" " data-id="ameba/Ameba/Rule/Lint/AmbiguousAssignment" data-name="ameba::rule::lint::ambiguousassignment">
+      <a href="../../Ameba/Rule/Lint/AmbiguousAssignment.html">AmbiguousAssignment</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/Rule/Lint/BadDirective" data-name="ameba::rule::lint::baddirective">
+      <a href="../../Ameba/Rule/Lint/BadDirective.html">BadDirective</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/Rule/Lint/ComparisonToBoolean" data-name="ameba::rule::lint::comparisontoboolean">
+      <a href="../../Ameba/Rule/Lint/ComparisonToBoolean.html">ComparisonToBoolean</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/Rule/Lint/DebugCalls" data-name="ameba::rule::lint::debugcalls">
+      <a href="../../Ameba/Rule/Lint/DebugCalls.html">DebugCalls</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/Rule/Lint/DebuggerStatement" data-name="ameba::rule::lint::debuggerstatement">
+      <a href="../../Ameba/Rule/Lint/DebuggerStatement.html">DebuggerStatement</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/Rule/Lint/Documentation" data-name="ameba::rule::lint::documentation">
+      <a href="../../Ameba/Rule/Lint/Documentation.html">Documentation</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/Rule/Lint/DuplicatedRequire" data-name="ameba::rule::lint::duplicatedrequire">
+      <a href="../../Ameba/Rule/Lint/DuplicatedRequire.html">DuplicatedRequire</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/Rule/Lint/EmptyEnsure" data-name="ameba::rule::lint::emptyensure">
+      <a href="../../Ameba/Rule/Lint/EmptyEnsure.html">EmptyEnsure</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/Rule/Lint/EmptyExpression" data-name="ameba::rule::lint::emptyexpression">
+      <a href="../../Ameba/Rule/Lint/EmptyExpression.html">EmptyExpression</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/Rule/Lint/EmptyLoop" data-name="ameba::rule::lint::emptyloop">
+      <a href="../../Ameba/Rule/Lint/EmptyLoop.html">EmptyLoop</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/Rule/Lint/Formatting" data-name="ameba::rule::lint::formatting">
+      <a href="../../Ameba/Rule/Lint/Formatting.html">Formatting</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/Rule/Lint/HashDuplicatedKey" data-name="ameba::rule::lint::hashduplicatedkey">
+      <a href="../../Ameba/Rule/Lint/HashDuplicatedKey.html">HashDuplicatedKey</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/Rule/Lint/LiteralAssignmentsInExpressions" data-name="ameba::rule::lint::literalassignmentsinexpressions">
+      <a href="../../Ameba/Rule/Lint/LiteralAssignmentsInExpressions.html">LiteralAssignmentsInExpressions</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/Rule/Lint/LiteralInCondition" data-name="ameba::rule::lint::literalincondition">
+      <a href="../../Ameba/Rule/Lint/LiteralInCondition.html">LiteralInCondition</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/Rule/Lint/LiteralInInterpolation" data-name="ameba::rule::lint::literalininterpolation">
+      <a href="../../Ameba/Rule/Lint/LiteralInInterpolation.html">LiteralInInterpolation</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/Rule/Lint/LiteralsComparison" data-name="ameba::rule::lint::literalscomparison">
+      <a href="../../Ameba/Rule/Lint/LiteralsComparison.html">LiteralsComparison</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/Rule/Lint/MissingBlockArgument" data-name="ameba::rule::lint::missingblockargument">
+      <a href="../../Ameba/Rule/Lint/MissingBlockArgument.html">MissingBlockArgument</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/Rule/Lint/NotNil" data-name="ameba::rule::lint::notnil">
+      <a href="../../Ameba/Rule/Lint/NotNil.html">NotNil</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/Rule/Lint/NotNilAfterNoBang" data-name="ameba::rule::lint::notnilafternobang">
+      <a href="../../Ameba/Rule/Lint/NotNilAfterNoBang.html">NotNilAfterNoBang</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/Rule/Lint/PercentArrays" data-name="ameba::rule::lint::percentarrays">
+      <a href="../../Ameba/Rule/Lint/PercentArrays.html">PercentArrays</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/Rule/Lint/RandZero" data-name="ameba::rule::lint::randzero">
+      <a href="../../Ameba/Rule/Lint/RandZero.html">RandZero</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/Rule/Lint/RedundantStringCoercion" data-name="ameba::rule::lint::redundantstringcoercion">
+      <a href="../../Ameba/Rule/Lint/RedundantStringCoercion.html">RedundantStringCoercion</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/Rule/Lint/RedundantWithIndex" data-name="ameba::rule::lint::redundantwithindex">
+      <a href="../../Ameba/Rule/Lint/RedundantWithIndex.html">RedundantWithIndex</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/Rule/Lint/RedundantWithObject" data-name="ameba::rule::lint::redundantwithobject">
+      <a href="../../Ameba/Rule/Lint/RedundantWithObject.html">RedundantWithObject</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/Rule/Lint/ShadowedArgument" data-name="ameba::rule::lint::shadowedargument">
+      <a href="../../Ameba/Rule/Lint/ShadowedArgument.html">ShadowedArgument</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/Rule/Lint/ShadowedException" data-name="ameba::rule::lint::shadowedexception">
+      <a href="../../Ameba/Rule/Lint/ShadowedException.html">ShadowedException</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/Rule/Lint/ShadowingOuterLocalVar" data-name="ameba::rule::lint::shadowingouterlocalvar">
+      <a href="../../Ameba/Rule/Lint/ShadowingOuterLocalVar.html">ShadowingOuterLocalVar</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/Rule/Lint/SharedVarInFiber" data-name="ameba::rule::lint::sharedvarinfiber">
+      <a href="../../Ameba/Rule/Lint/SharedVarInFiber.html">SharedVarInFiber</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/Rule/Lint/SpecFocus" data-name="ameba::rule::lint::specfocus">
+      <a href="../../Ameba/Rule/Lint/SpecFocus.html">SpecFocus</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/Rule/Lint/Syntax" data-name="ameba::rule::lint::syntax">
+      <a href="../../Ameba/Rule/Lint/Syntax.html">Syntax</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/Rule/Lint/UnneededDisableDirective" data-name="ameba::rule::lint::unneededdisabledirective">
+      <a href="../../Ameba/Rule/Lint/UnneededDisableDirective.html">UnneededDisableDirective</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/Rule/Lint/UnreachableCode" data-name="ameba::rule::lint::unreachablecode">
+      <a href="../../Ameba/Rule/Lint/UnreachableCode.html">UnreachableCode</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/Rule/Lint/UnusedArgument" data-name="ameba::rule::lint::unusedargument">
+      <a href="../../Ameba/Rule/Lint/UnusedArgument.html">UnusedArgument</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/Rule/Lint/UnusedBlockArgument" data-name="ameba::rule::lint::unusedblockargument">
+      <a href="../../Ameba/Rule/Lint/UnusedBlockArgument.html">UnusedBlockArgument</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/Rule/Lint/UselessAssign" data-name="ameba::rule::lint::uselessassign">
+      <a href="../../Ameba/Rule/Lint/UselessAssign.html">UselessAssign</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/Rule/Lint/UselessConditionInWhen" data-name="ameba::rule::lint::uselessconditioninwhen">
+      <a href="../../Ameba/Rule/Lint/UselessConditionInWhen.html">UselessConditionInWhen</a>
+      
+    </li>
+  
+</ul>
+
+      
+    </li>
+  
+  <li class="parent " data-id="ameba/Ameba/Rule/Metrics" data-name="ameba::rule::metrics">
+      <a href="../../Ameba/Rule/Metrics.html">Metrics</a>
+      
+        <ul>
+  
+  <li class=" " data-id="ameba/Ameba/Rule/Metrics/CyclomaticComplexity" data-name="ameba::rule::metrics::cyclomaticcomplexity">
+      <a href="../../Ameba/Rule/Metrics/CyclomaticComplexity.html">CyclomaticComplexity</a>
+      
+    </li>
+  
+</ul>
+
+      
+    </li>
+  
+  <li class="parent " data-id="ameba/Ameba/Rule/Performance" data-name="ameba::rule::performance">
+      <a href="../../Ameba/Rule/Performance.html">Performance</a>
+      
+        <ul>
+  
+  <li class=" " data-id="ameba/Ameba/Rule/Performance/AnyAfterFilter" data-name="ameba::rule::performance::anyafterfilter">
+      <a href="../../Ameba/Rule/Performance/AnyAfterFilter.html">AnyAfterFilter</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/Rule/Performance/AnyInsteadOfEmpty" data-name="ameba::rule::performance::anyinsteadofempty">
+      <a href="../../Ameba/Rule/Performance/AnyInsteadOfEmpty.html">AnyInsteadOfEmpty</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/Rule/Performance/Base" data-name="ameba::rule::performance::base">
+      <a href="../../Ameba/Rule/Performance/Base.html">Base</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/Rule/Performance/ChainedCallWithNoBang" data-name="ameba::rule::performance::chainedcallwithnobang">
+      <a href="../../Ameba/Rule/Performance/ChainedCallWithNoBang.html">ChainedCallWithNoBang</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/Rule/Performance/CompactAfterMap" data-name="ameba::rule::performance::compactaftermap">
+      <a href="../../Ameba/Rule/Performance/CompactAfterMap.html">CompactAfterMap</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/Rule/Performance/ExcessiveAllocations" data-name="ameba::rule::performance::excessiveallocations">
+      <a href="../../Ameba/Rule/Performance/ExcessiveAllocations.html">ExcessiveAllocations</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/Rule/Performance/FirstLastAfterFilter" data-name="ameba::rule::performance::firstlastafterfilter">
+      <a href="../../Ameba/Rule/Performance/FirstLastAfterFilter.html">FirstLastAfterFilter</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/Rule/Performance/FlattenAfterMap" data-name="ameba::rule::performance::flattenaftermap">
+      <a href="../../Ameba/Rule/Performance/FlattenAfterMap.html">FlattenAfterMap</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/Rule/Performance/MapInsteadOfBlock" data-name="ameba::rule::performance::mapinsteadofblock">
+      <a href="../../Ameba/Rule/Performance/MapInsteadOfBlock.html">MapInsteadOfBlock</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/Rule/Performance/MinMaxAfterMap" data-name="ameba::rule::performance::minmaxaftermap">
+      <a href="../../Ameba/Rule/Performance/MinMaxAfterMap.html">MinMaxAfterMap</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/Rule/Performance/SizeAfterFilter" data-name="ameba::rule::performance::sizeafterfilter">
+      <a href="../../Ameba/Rule/Performance/SizeAfterFilter.html">SizeAfterFilter</a>
+      
+    </li>
+  
+</ul>
+
+      
+    </li>
+  
+  <li class="parent " data-id="ameba/Ameba/Rule/Style" data-name="ameba::rule::style">
+      <a href="../../Ameba/Rule/Style.html">Style</a>
+      
+        <ul>
+  
+  <li class=" " data-id="ameba/Ameba/Rule/Style/ConstantNames" data-name="ameba::rule::style::constantnames">
+      <a href="../../Ameba/Rule/Style/ConstantNames.html">ConstantNames</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/Rule/Style/GuardClause" data-name="ameba::rule::style::guardclause">
+      <a href="../../Ameba/Rule/Style/GuardClause.html">GuardClause</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/Rule/Style/IsAFilter" data-name="ameba::rule::style::isafilter">
+      <a href="../../Ameba/Rule/Style/IsAFilter.html">IsAFilter</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/Rule/Style/IsANil" data-name="ameba::rule::style::isanil">
+      <a href="../../Ameba/Rule/Style/IsANil.html">IsANil</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/Rule/Style/LargeNumbers" data-name="ameba::rule::style::largenumbers">
+      <a href="../../Ameba/Rule/Style/LargeNumbers.html">LargeNumbers</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/Rule/Style/MethodNames" data-name="ameba::rule::style::methodnames">
+      <a href="../../Ameba/Rule/Style/MethodNames.html">MethodNames</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/Rule/Style/NegatedConditionsInUnless" data-name="ameba::rule::style::negatedconditionsinunless">
+      <a href="../../Ameba/Rule/Style/NegatedConditionsInUnless.html">NegatedConditionsInUnless</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/Rule/Style/ParenthesesAroundCondition" data-name="ameba::rule::style::parenthesesaroundcondition">
+      <a href="../../Ameba/Rule/Style/ParenthesesAroundCondition.html">ParenthesesAroundCondition</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/Rule/Style/PredicateName" data-name="ameba::rule::style::predicatename">
+      <a href="../../Ameba/Rule/Style/PredicateName.html">PredicateName</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/Rule/Style/QueryBoolMethods" data-name="ameba::rule::style::queryboolmethods">
+      <a href="../../Ameba/Rule/Style/QueryBoolMethods.html">QueryBoolMethods</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/Rule/Style/RedundantBegin" data-name="ameba::rule::style::redundantbegin">
+      <a href="../../Ameba/Rule/Style/RedundantBegin.html">RedundantBegin</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/Rule/Style/RedundantNext" data-name="ameba::rule::style::redundantnext">
+      <a href="../../Ameba/Rule/Style/RedundantNext.html">RedundantNext</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/Rule/Style/RedundantReturn" data-name="ameba::rule::style::redundantreturn">
+      <a href="../../Ameba/Rule/Style/RedundantReturn.html">RedundantReturn</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/Rule/Style/TypeNames" data-name="ameba::rule::style::typenames">
+      <a href="../../Ameba/Rule/Style/TypeNames.html">TypeNames</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/Rule/Style/UnlessElse" data-name="ameba::rule::style::unlesselse">
+      <a href="../../Ameba/Rule/Style/UnlessElse.html">UnlessElse</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/Rule/Style/VariableNames" data-name="ameba::rule::style::variablenames">
+      <a href="../../Ameba/Rule/Style/VariableNames.html">VariableNames</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/Rule/Style/VerboseBlock" data-name="ameba::rule::style::verboseblock">
+      <a href="../../Ameba/Rule/Style/VerboseBlock.html">VerboseBlock</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/Rule/Style/WhileTrue" data-name="ameba::rule::style::whiletrue">
+      <a href="../../Ameba/Rule/Style/WhileTrue.html">WhileTrue</a>
+      
+    </li>
+  
+</ul>
+
+      
+    </li>
+  
+</ul>
+
+      
+    </li>
+  
+  <li class="parent " data-id="ameba/Ameba/Runner" data-name="ameba::runner">
+      <a href="../../Ameba/Runner.html">Runner</a>
+      
+        <ul>
+  
+  <li class=" " data-id="ameba/Ameba/Runner/InfiniteCorrectionLoopError" data-name="ameba::runner::infinitecorrectionlooperror">
+      <a href="../../Ameba/Runner/InfiniteCorrectionLoopError.html">InfiniteCorrectionLoopError</a>
+      
+    </li>
+  
+</ul>
+
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/Severity" data-name="ameba::severity">
+      <a href="../../Ameba/Severity.html">Severity</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/SeverityYamlConverter" data-name="ameba::severityyamlconverter">
+      <a href="../../Ameba/SeverityYamlConverter.html">SeverityYamlConverter</a>
+      
+    </li>
+  
+  <li class="parent open current" data-id="ameba/Ameba/Source" data-name="ameba::source">
+      <a href="../../Ameba/Source.html">Source</a>
+      
+        <ul>
+  
+  <li class=" " data-id="ameba/Ameba/Source/Corrector" data-name="ameba::source::corrector">
+      <a href="../../Ameba/Source/Corrector.html">Corrector</a>
+      
+    </li>
+  
+  <li class=" current" data-id="ameba/Ameba/Source/Rewriter" data-name="ameba::source::rewriter">
+      <a href="../../Ameba/Source/Rewriter.html">Rewriter</a>
+      
+    </li>
+  
+</ul>
+
+      
+    </li>
+  
+  <li class="parent " data-id="ameba/Ameba/Spec" data-name="ameba::spec">
+      <a href="../../Ameba/Spec.html">Spec</a>
+      
+        <ul>
+  
+  <li class=" " data-id="ameba/Ameba/Spec/AnnotatedSource" data-name="ameba::spec::annotatedsource">
+      <a href="../../Ameba/Spec/AnnotatedSource.html">AnnotatedSource</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/Spec/BeValid" data-name="ameba::spec::bevalid">
+      <a href="../../Ameba/Spec/BeValid.html">BeValid</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/Spec/BeValidExpectation" data-name="ameba::spec::bevalidexpectation">
+      <a href="../../Ameba/Spec/BeValidExpectation.html">BeValidExpectation</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/Spec/ExpectIssue" data-name="ameba::spec::expectissue">
+      <a href="../../Ameba/Spec/ExpectIssue.html">ExpectIssue</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/Spec/Util" data-name="ameba::spec::util">
+      <a href="../../Ameba/Spec/Util.html">Util</a>
+      
+    </li>
+  
+</ul>
+
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/Tokenizer" data-name="ameba::tokenizer">
+      <a href="../../Ameba/Tokenizer.html">Tokenizer</a>
+      
+    </li>
+  
+</ul>
+
+      
+    </li>
+  
+</ul>
+
+  </div>
+</div>
+
+
+<div class="main-content">
+<h1 class="type-name">
+
+  <span class="kind">
+    class
+  </span> Ameba::<wbr>Source::<wbr>Rewriter
+
+</h1>
+
+
+  <ul class="superclass-hierarchy"><li class="superclass"><a href="../../Ameba/Source/Rewriter.html">Ameba::Source::Rewriter</a></li><li class="superclass">Reference</li><li class="superclass">Object</li></ul>
+
+
+
+
+  <h2>
+    <a id="overview" class="anchor" href="#overview">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>
+    Overview
+  </h2>
+
+  <p>This class performs the heavy lifting in the source rewriting process.
+It schedules code updates to be performed in the correct order.</p>
+<p>For simple cases, the resulting source will be obvious.</p>
+<p>Examples for more complex cases follow. Assume these examples are acting on
+the source <code>puts(:hello, :world)</code>. The methods <code><a href="../../Ameba/Source/Rewriter.html#wrap%28begin_pos%2Cend_pos%2Cinsert_before%2Cinsert_after%29-instance-method">#wrap</a></code>, <code><a href="../../Ameba/Source/Rewriter.html#remove%28begin_pos%2Cend_pos%29-instance-method">#remove</a></code>, etc.
+receive a range as the first two arguments; for clarity, examples below use
+English sentences and a string of raw code instead.</p>
+<h2><a id="overlapping-deletions" class="anchor" href="#overlapping-deletions">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>Overlapping deletions:</h2>
+<ul>
+<li>remove <code>:hello, </code></li>
+<li>remove <code>, :world</code></li>
+</ul>
+<p>The overlapping ranges are merged and <code>:hello, :world</code> will be removed.</p>
+<h2><a id="multiple-actions-at-the-same-end-points" class="anchor" href="#multiple-actions-at-the-same-end-points">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>Multiple actions at the same end points:</h2>
+<p>Results will always be independent of the order they were given.
+Exception: rewriting actions done on exactly the same range (covered next).</p>
+<p>Example:</p>
+<ul>
+<li>replace <code>, </code> by <code>=&gt;</code></li>
+<li>wrap <code>:hello, :world</code> with <code>{</code> and <code>}</code></li>
+<li>replace <code>:world</code> with <code>:everybody</code></li>
+<li>wrap <code>:world</code> with <code>[</code>, <code>]</code></li>
+</ul>
+<p>The resulting string will be <code>puts({:hello =&gt; [:everybody]})</code>
+and this result is independent of the order the instructions were given in.</p>
+<h2><a id="multiple-wraps-on-same-range" class="anchor" href="#multiple-wraps-on-same-range">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>Multiple wraps on same range:</h2>
+<ul>
+<li>wrap <code>:hello</code> with <code>(</code> and <code>)</code></li>
+<li>wrap <code>:hello</code> with <code>[</code> and <code>]</code></li>
+</ul>
+<p>The wraps are combined in order given and results would be <code>puts([(:hello)], :world)</code>.</p>
+<h2><a id="multiple-replacements-on-same-range" class="anchor" href="#multiple-replacements-on-same-range">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>Multiple replacements on same range:</h2>
+<ul>
+<li>replace <code>:hello</code> by <code>:hi</code>, then</li>
+<li>replace <code>:hello</code> by <code>:hey</code></li>
+</ul>
+<p>The replacements are made in the order given, so the latter replacement
+supersedes the former and <code>:hello</code> will be replaced by <code>:hey</code>.</p>
+<h2><a id="swallowed-insertions" class="anchor" href="#swallowed-insertions">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>Swallowed insertions:</h2>
+<ul>
+<li>wrap <code>world</code> by <code>__</code>, <code>__</code></li>
+<li>replace <code>:hello, :world</code> with <code>:hi</code></li>
+</ul>
+<p>A containing replacement will swallow the contained rewriting actions
+and <code>:hello, :world</code> will be replaced by <code>:hi</code>.</p>
+<h2><a id="implementation" class="anchor" href="#implementation">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>Implementation</h2>
+<p>The updates are organized in a tree, according to the ranges they act on
+(where children are strictly contained by their parent).</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <h2>
+    <a id="defined-in" class="anchor" href="#defined-in">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>
+    Defined in:
+  </h2>
+  
+    
+      <a href="https://github.com/crystal-ameba/ameba/blob/7b8316f/src/ameba/source/rewriter.cr#L61" target="_blank">
+        ameba/source/rewriter.cr
+      </a>
+    
+    <br/>
+  
+    
+      <a href="https://github.com/crystal-ameba/ameba/blob/7b8316f/src/ameba/source/rewriter/action.cr#L1" target="_blank">
+        ameba/source/rewriter/action.cr
+      </a>
+    
+    <br/>
+  
+
+
+
+
+
+  
+  <h2>
+    <a id="constructors" class="anchor" href="#constructors">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>
+    Constructors
+  </h2>
+  <ul class="list-summary">
+    
+      <li class="entry-summary">
+        <a href="#new%28code%3AString%29-class-method" class="signature"><strong>.new</strong>(code : String)</a>
+        
+      </li>
+    
+  </ul>
+
+
+  
+
+  
+
+  
+  <h2>
+    <a id="instance-method-summary" class="anchor" href="#instance-method-summary">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>
+    Instance Method Summary
+  </h2>
+  <ul class="list-summary">
+    
+      <li class="entry-summary">
+        <a href="#code%3AString-instance-method" class="signature"><strong>#code</strong> : String</a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#empty%3F-instance-method" class="signature"><strong>#empty?</strong></a>
+        
+          <div class="summary"><p>Returns <code>true</code> if no (non trivial) update has been recorded</p></div>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#insert_after%28begin_pos%2Cend_pos%2Ccontent%29-instance-method" class="signature"><strong>#insert_after</strong>(begin_pos, end_pos, content)</a>
+        
+          <div class="summary"><p>Shortcut for <code><a href="../../Ameba/Source/Rewriter.html#wrap%28begin_pos%2Cend_pos%2Cinsert_before%2Cinsert_after%29-instance-method">#wrap(begin_pos, end_pos, nil, content)</a></code></p></div>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#insert_after%28pos%2Ccontent%29-instance-method" class="signature"><strong>#insert_after</strong>(pos, content)</a>
+        
+          <div class="summary"><p>Shortcut for <code><a href="../../Ameba/Source/Rewriter.html#insert_after%28begin_pos%2Cend_pos%2Ccontent%29-instance-method">#insert_after(pos, pos, content)</a></code></p></div>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#insert_before%28begin_pos%2Cend_pos%2Ccontent%29-instance-method" class="signature"><strong>#insert_before</strong>(begin_pos, end_pos, content)</a>
+        
+          <div class="summary"><p>Shortcut for <code><a href="../../Ameba/Source/Rewriter.html#wrap%28begin_pos%2Cend_pos%2Cinsert_before%2Cinsert_after%29-instance-method">#wrap(begin_pos, end_pos, content, nil)</a></code></p></div>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#insert_before%28pos%2Ccontent%29-instance-method" class="signature"><strong>#insert_before</strong>(pos, content)</a>
+        
+          <div class="summary"><p>Shortcut for <code><a href="../../Ameba/Source/Rewriter.html#insert_before%28begin_pos%2Cend_pos%2Ccontent%29-instance-method">#insert_before(pos, pos, content)</a></code></p></div>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#process-instance-method" class="signature"><strong>#process</strong></a>
+        
+          <div class="summary"><p>Applies all scheduled changes and returns modified source as a new string.</p></div>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#remove%28begin_pos%2Cend_pos%29-instance-method" class="signature"><strong>#remove</strong>(begin_pos, end_pos)</a>
+        
+          <div class="summary"><p>Shortcut for <code><a href="../../Ameba/Source/Rewriter.html#replace%28begin_pos%2Cend_pos%2Ccontent%29-instance-method">#replace(begin_pos, end_pos, &quot;&quot;)</a></code></p></div>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#replace%28begin_pos%2Cend_pos%2Ccontent%29-instance-method" class="signature"><strong>#replace</strong>(begin_pos, end_pos, content)</a>
+        
+          <div class="summary"><p>Replaces the code of the given range with <em>content</em>.</p></div>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#wrap%28begin_pos%2Cend_pos%2Cinsert_before%2Cinsert_after%29-instance-method" class="signature"><strong>#wrap</strong>(begin_pos, end_pos, insert_before, insert_after)</a>
+        
+          <div class="summary"><p>Inserts the given strings before and after the given range.</p></div>
+        
+      </li>
+    
+  </ul>
+
+
+
+  <div class="methods-inherited">
+    
+      
+
+
+      
+
+
+      
+
+
+      
+
+
+    
+      
+
+
+      
+
+
+      
+
+
+      
+
+
+    
+  </div>
+
+  
+  <h2>
+    <a id="constructor-detail" class="anchor" href="#constructor-detail">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>
+    Constructor Detail
+  </h2>
+  
+    <div class="entry-detail" id="new(code:String)-class-method">
+      <div class="signature">
+        
+        def self.<strong>new</strong>(code : String)
+
+        <a class="method-permalink" href="#new%28code%3AString%29-class-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/crystal-ameba/ameba/blob/7b8316f/src/ameba/source/rewriter.cr#L64" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+
+
+  
+
+  
+
+  
+  <h2>
+    <a id="instance-method-detail" class="anchor" href="#instance-method-detail">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>
+    Instance Method Detail
+  </h2>
+  
+    <div class="entry-detail" id="code:String-instance-method">
+      <div class="signature">
+        
+        def <strong>code</strong> : String
+
+        <a class="method-permalink" href="#code%3AString-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/crystal-ameba/ameba/blob/7b8316f/src/ameba/source/rewriter.cr#L62" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="empty?-instance-method">
+      <div class="signature">
+        
+        def <strong>empty?</strong>
+
+        <a class="method-permalink" href="#empty%3F-instance-method">#</a>
+      </div>
+      
+        <div class="doc">
+          
+          <p>Returns <code>true</code> if no (non trivial) update has been recorded</p>
+        </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/crystal-ameba/ameba/blob/7b8316f/src/ameba/source/rewriter.cr#L69" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="insert_after(begin_pos,end_pos,content)-instance-method">
+      <div class="signature">
+        
+        def <strong>insert_after</strong>(begin_pos, end_pos, content)
+
+        <a class="method-permalink" href="#insert_after%28begin_pos%2Cend_pos%2Ccontent%29-instance-method">#</a>
+      </div>
+      
+        <div class="doc">
+          
+          <p>Shortcut for <code><a href="../../Ameba/Source/Rewriter.html#wrap%28begin_pos%2Cend_pos%2Cinsert_before%2Cinsert_after%29-instance-method">#wrap(begin_pos, end_pos, nil, content)</a></code></p>
+        </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/crystal-ameba/ameba/blob/7b8316f/src/ameba/source/rewriter.cr#L94" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="insert_after(pos,content)-instance-method">
+      <div class="signature">
+        
+        def <strong>insert_after</strong>(pos, content)
+
+        <a class="method-permalink" href="#insert_after%28pos%2Ccontent%29-instance-method">#</a>
+      </div>
+      
+        <div class="doc">
+          
+          <p>Shortcut for <code><a href="../../Ameba/Source/Rewriter.html#insert_after%28begin_pos%2Cend_pos%2Ccontent%29-instance-method">#insert_after(pos, pos, content)</a></code></p>
+        </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/crystal-ameba/ameba/blob/7b8316f/src/ameba/source/rewriter.cr#L104" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="insert_before(begin_pos,end_pos,content)-instance-method">
+      <div class="signature">
+        
+        def <strong>insert_before</strong>(begin_pos, end_pos, content)
+
+        <a class="method-permalink" href="#insert_before%28begin_pos%2Cend_pos%2Ccontent%29-instance-method">#</a>
+      </div>
+      
+        <div class="doc">
+          
+          <p>Shortcut for <code><a href="../../Ameba/Source/Rewriter.html#wrap%28begin_pos%2Cend_pos%2Cinsert_before%2Cinsert_after%29-instance-method">#wrap(begin_pos, end_pos, content, nil)</a></code></p>
+        </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/crystal-ameba/ameba/blob/7b8316f/src/ameba/source/rewriter.cr#L89" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="insert_before(pos,content)-instance-method">
+      <div class="signature">
+        
+        def <strong>insert_before</strong>(pos, content)
+
+        <a class="method-permalink" href="#insert_before%28pos%2Ccontent%29-instance-method">#</a>
+      </div>
+      
+        <div class="doc">
+          
+          <p>Shortcut for <code><a href="../../Ameba/Source/Rewriter.html#insert_before%28begin_pos%2Cend_pos%2Ccontent%29-instance-method">#insert_before(pos, pos, content)</a></code></p>
+        </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/crystal-ameba/ameba/blob/7b8316f/src/ameba/source/rewriter.cr#L99" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="process-instance-method">
+      <div class="signature">
+        
+        def <strong>process</strong>
+
+        <a class="method-permalink" href="#process-instance-method">#</a>
+      </div>
+      
+        <div class="doc">
+          
+          <p>Applies all scheduled changes and returns modified source as a new string.</p>
+        </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/crystal-ameba/ameba/blob/7b8316f/src/ameba/source/rewriter.cr#L109" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="remove(begin_pos,end_pos)-instance-method">
+      <div class="signature">
+        
+        def <strong>remove</strong>(begin_pos, end_pos)
+
+        <a class="method-permalink" href="#remove%28begin_pos%2Cend_pos%29-instance-method">#</a>
+      </div>
+      
+        <div class="doc">
+          
+          <p>Shortcut for <code><a href="../../Ameba/Source/Rewriter.html#replace%28begin_pos%2Cend_pos%2Ccontent%29-instance-method">#replace(begin_pos, end_pos, &quot;&quot;)</a></code></p>
+        </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/crystal-ameba/ameba/blob/7b8316f/src/ameba/source/rewriter.cr#L84" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="replace(begin_pos,end_pos,content)-instance-method">
+      <div class="signature">
+        
+        def <strong>replace</strong>(begin_pos, end_pos, content)
+
+        <a class="method-permalink" href="#replace%28begin_pos%2Cend_pos%2Ccontent%29-instance-method">#</a>
+      </div>
+      
+        <div class="doc">
+          
+          <p>Replaces the code of the given range with <em>content</em>.</p>
+        </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/crystal-ameba/ameba/blob/7b8316f/src/ameba/source/rewriter.cr#L74" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="wrap(begin_pos,end_pos,insert_before,insert_after)-instance-method">
+      <div class="signature">
+        
+        def <strong>wrap</strong>(begin_pos, end_pos, insert_before, insert_after)
+
+        <a class="method-permalink" href="#wrap%28begin_pos%2Cend_pos%2Cinsert_before%2Cinsert_after%29-instance-method">#</a>
+      </div>
+      
+        <div class="doc">
+          
+          <p>Inserts the given strings before and after the given range.</p>
+        </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/crystal-ameba/ameba/blob/7b8316f/src/ameba/source/rewriter.cr#L79" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+
+
+
+</div>
+
+</body>
+</html>
