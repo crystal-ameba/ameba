@@ -18,7 +18,7 @@ jobs:
         uses: crystal-lang/install-crystal@v1
 
       - name: Download source
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
 
       - name: Install dependencies
         run: shards install
