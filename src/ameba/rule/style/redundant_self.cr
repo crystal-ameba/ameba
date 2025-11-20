@@ -89,6 +89,8 @@ module Ameba::Rule::Style
       vars = Set(String).new
 
       while scope
+        break if scope.type_definition?
+
         scope.arguments.each do |arg|
           vars << arg.name
         end
@@ -102,12 +104,8 @@ module Ameba::Rule::Style
 
       return if name.in?(vars)
 
-      if location = obj.location
-        issue_for obj, MSG do |corrector|
-          corrector.remove(location, location.adjust(column_number: {{ "self".size }}))
-        end
-      else
-        issue_for obj, MSG
+      issue_for obj, MSG do |corrector|
+        corrector.replace(node, node.to_s.sub(/\Aself\s*\./, ""))
       end
     end
   end
