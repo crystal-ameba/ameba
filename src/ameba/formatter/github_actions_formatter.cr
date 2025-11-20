@@ -90,7 +90,10 @@ module Ameba::Formatter
                 output.puts "| %s | %s | %s | %s |" % {
                   issue_location_value(issue) || "-",
                   issue.rule.severity,
-                  issue.rule.name,
+                  "[%s](%s)" % {
+                    issue.rule.name,
+                    issue.rule.class.documentation_url,
+                  },
                   issue.message,
                 }
               end
