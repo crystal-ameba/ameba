@@ -146,6 +146,15 @@ module Ameba::Rule
     end
 
     macro inherited
+      class_getter documentation_url : String do
+        version =
+          VERSION.ends_with?("-dev") ? "master" : VERSION
+
+        "https://crystal-ameba.github.io/ameba/%s/Ameba/Rule/%s.html" % {
+          version, rule_name,
+        }
+      end
+
       # Returns documentation for this rule, if there is any.
       #
       # ```

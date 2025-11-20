@@ -74,6 +74,13 @@ module Ameba::Rule
       end
     end
 
+    describe ".documentation_url" do
+      it "returns the parsed rule documentation URL" do
+        Lint::Syntax.documentation_url.should eq \
+          "https://crystal-ameba.github.io/ameba/master/Ameba/Rule/Lint/Syntax.html"
+      end
+    end
+
     describe ".parsed_doc" do
       it "returns the parsed rule doc" do
         DummyRule.parsed_doc.should eq "Dummy Rule which does nothing."
