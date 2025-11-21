@@ -268,7 +268,7 @@ class Ameba::Config
     when .as_s? then [value.as_s]
     when .as_a? then value.as_a.map(&.as_s)
     else
-      raise "Incorrect '#{section_name}' section in a config files"
+      raise "Incorrect `#{section_name}` section in a config files"
     end
   end
 
