@@ -9,6 +9,9 @@ on:
   schedule:
     - cron: "0 3 * * 1" # Every monday at 3 AM
 
+permissions:
+  contents: read
+
 jobs:
   test:
     strategy:

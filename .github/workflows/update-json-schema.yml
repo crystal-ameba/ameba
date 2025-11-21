@@ -5,7 +5,12 @@ on:
   push:
     branches: [master]
     paths:
+      - ".github/workflows/update-json-schema.yml"
+      - "shard.yml"
       - "**/*.cr"
+
+permissions:
+  contents: write
 
 jobs:
   update-json-schema:
