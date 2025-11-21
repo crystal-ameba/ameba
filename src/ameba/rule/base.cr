@@ -10,7 +10,7 @@ module Ameba::Rule
   # inherits from this struct:
   #
   # ```
-  # class MyRule < Ameba::Rule::Base
+  # class Ameba::Rule::MyRule < Ameba::Rule::Base
   #   def test(source)
   #     if invalid?(source)
   #       issue_for line, column, "Something wrong"
@@ -57,12 +57,14 @@ module Ameba::Rule
     # Returns a name of this rule, which is basically a class name.
     #
     # ```
-    # class MyRule < Ameba::Rule::Base
-    #   def test(source)
+    # module Ameba
+    #   class Rule::MyRule < Rule::Base
+    #     def test(source)
+    #     end
     #   end
     # end
     #
-    # MyRule.new.name # => "MyRule"
+    # Ameba::Rule::MyRule.new.name # => "MyRule"
     # ```
     def name
       {{ @type }}.rule_name
@@ -71,11 +73,13 @@ module Ameba::Rule
     # Returns a group this rule belong to.
     #
     # ```
-    # class MyGroup::MyRule < Ameba::Rule::Base
-    #   # ...
+    # module Ameba
+    #   class Rule::MyGroup::MyRule < Rule::Base
+    #     # ...
+    #   end
     # end
     #
-    # MyGroup::MyRule.new.group # => "MyGroup"
+    # Ameba::Rule::MyGroup::MyRule.new.group # => "MyGroup"
     # ```
     def group
       {{ @type }}.group_name
@@ -161,13 +165,13 @@ module Ameba::Rule
       # module Ameba
       #   # This is a test rule.
       #   # Does nothing.
-      #   class MyRule < Ameba::Rule::Base
+      #   class Rule::MyRule < Rule::Base
       #     def test(source)
       #     end
       #   end
       # end
       #
-      # MyRule.parsed_doc # => "This is a test rule.\nDoes nothing."
+      # Ameba::Rule::MyRule.parsed_doc # => "This is a test rule.\nDoes nothing."
       # ```
       class_getter parsed_doc : String? = read_type_doc
     end
