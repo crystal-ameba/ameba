@@ -6,6 +6,7 @@ on:
     branches: [master]
     paths:
       - ".github/workflows/update-json-schema.yml"
+      - "shard.yml"
       - "**/*.cr"
 
 permissions:
