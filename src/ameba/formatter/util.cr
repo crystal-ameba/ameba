@@ -28,7 +28,7 @@ module Ameba::Formatter
     end
 
     def colorize_markdown(string : String, code_color : Colorize::Color = :dark_gray)
-      string = colorize_code_fences(string)
+      string = colorize_code_fences(string, code_color)
       string = colorize_text_styles(string)
       string
     end
