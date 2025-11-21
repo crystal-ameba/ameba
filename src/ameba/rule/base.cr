@@ -150,6 +150,12 @@ module Ameba::Rule
     end
 
     macro inherited
+      # Returns the documentation URL for this rule.
+      #
+      # ```
+      # Ameba::Rule::Lint::Syntax.documentation_url
+      # # => "https://crystal-ameba.github.io/ameba/master/Ameba/Rule/Lint/Syntax.html"
+      # ```
       class_getter documentation_url : String do
         version =
           VERSION.ends_with?("-dev") ? "master" : VERSION
