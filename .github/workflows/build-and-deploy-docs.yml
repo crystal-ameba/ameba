@@ -9,8 +9,9 @@ on:
         description: The tag or branch to deploy
       version:
         type: string
-        description: The version to deploy
+        description: Version to deploy
       git-branch:
+        required: true
         type: string
         description: Git branch to deploy to
         default: gh-pages
@@ -24,6 +25,7 @@ jobs:
   build-and-deploy:
     concurrency: ci-${{ github.ref }}
     runs-on: ubuntu-latest
+
     steps:
       - name: Inject slug/short variables
         uses: rlespinasse/github-slug-action@v5
@@ -62,60 +64,9 @@ jobs:
           clean: true
 
   add-version-to-json-index:
-    runs-on: ubuntu-latest
+    uses: ./.github/workflows/add-docs-version-to-json-index.yml
+    with:
+      git-branch: ${{ inputs.git-branch }}
+      version: ${{ inputs.version || inputs.ref }}
     needs:
       - build-and-deploy
-
-    steps:
-      - name: Download source
-        uses: actions/checkout@v6
-        with:
-          ref: ${{ inputs.git-branch }}
-
-      - name: Update version list
-        run: |
-          VERSION="${{ inputs.version || inputs.ref }}"
-
-          if [[ $VERSION =~ ^[0-9] ]]; then
-            RELEASED="true"
-          else
-            RELEASED="false"
-          fi
-
-          JQ_EXPRESSION="
-            .versions |= (
-              if ( . | map(.name) | index(\"${VERSION}\") | not ) then
-                . += [ {\"name\": \"${VERSION}\", \"url\": \"/ameba/${VERSION}/\", \"released\": ${RELEASED}} ]
-              else
-                .
-              end
-            )"
-
-          cat versions.json | \
-            jq "$JQ_EXPRESSION" > versions.json.tmp && \
-            mv versions.json.tmp versions.json
-
-      - name: Check for changes
-        id: git-diff-changes
-        run: |
-          git diff --color
-
-          if [[ -n "$(git diff --exit-code)" ]]; then
-            echo "Changes detected."
-            echo "has-changes=true" >> $GITHUB_OUTPUT
-          else
-            echo "No changes detected."
-            echo "has-changes=false" >> $GITHUB_OUTPUT
-          fi
-
-      - name: Configure Git identity
-        if: steps.git-diff-changes.outputs.has-changes == 'true'
-        run: |
-          git config --global user.name "github-actions[bot]"
-          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
-
-      - name: Commit changes to git
-        if: steps.git-diff-changes.outputs.has-changes == 'true'
-        run: |
-          git commit -am "Update versions.json"
-          git push -u origin HEAD

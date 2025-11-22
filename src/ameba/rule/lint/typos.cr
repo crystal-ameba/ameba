@@ -35,7 +35,8 @@ module Ameba::Rule::Lint
       location : {Int32, Int32},
       end_location : {Int32, Int32} do
       def self.parse(str) : self?
-        issue = JSON.parse(str)
+        issue =
+          JSON.parse(str)
 
         return unless issue["type"] == "typo"
 
@@ -46,7 +47,7 @@ module Ameba::Rule::Lint
 
         line_no = issue["line_num"].as_i
         col_no = issue["byte_offset"].as_i + 1
-        end_col_no = col_no + typo.size - 1
+        end_col_no = col_no + (typo.size - 1)
 
         new(typo, corrections,
           {line_no, col_no},
