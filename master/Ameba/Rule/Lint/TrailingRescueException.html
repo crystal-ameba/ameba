@@ -1164,7 +1164,7 @@ to use if an exception occurs, not the exception class to rescue from.</p>
   </h2>
   
     
-      <a href="https://github.com/crystal-ameba/ameba/blob/368bb38/src/ameba/rule/lint/trailing_rescue_exception.cr#L36" target="_blank">
+      <a href="https://github.com/crystal-ameba/ameba/blob/4b3d330/src/ameba/rule/lint/trailing_rescue_exception.cr#L36" target="_blank">
         ameba/rule/lint/trailing_rescue_exception.cr
       </a>
     
@@ -1239,7 +1239,7 @@ to use if an exception occurs, not the exception class to rescue from.</p>
       <li class="entry-summary">
         <a href="#documentation_url%3AString-class-method" class="signature"><strong>.documentation_url</strong> : String</a>
         
-          <div class="summary"><p>A rule that prohibits the misconception about how trailing <code>rescue</code> statements work, preventing Paths (exception class names or otherwise) from being used as the trailing value.</p></div>
+          <div class="summary"><p>Returns the documentation URL for this rule.</p></div>
         
       </li>
     
@@ -1540,7 +1540,7 @@ to use if an exception occurs, not the exception class to rescue from.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/368bb38/src/ameba/rule/lint/trailing_rescue_exception.cr#L36" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/4b3d330/src/ameba/rule/lint/trailing_rescue_exception.cr#L36" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1581,24 +1581,9 @@ to use if an exception occurs, not the exception class to rescue from.</p>
       
         <div class="doc">
           
-          <p>A rule that prohibits the misconception about how trailing <code>rescue</code> statements work,
-preventing Paths (exception class names or otherwise) from being used as the
-trailing value. The value after the trailing <code>rescue</code> statement is the value
-to use if an exception occurs, not the exception class to rescue from.</p>
-<p>For example, this is considered invalid - if an exception occurs,
-<code>response</code> will be assigned with the value of <code>IO::Error</code> instead of <code>nil</code>:</p>
-<pre><code class="language-crystal">response <span class="o">=</span> <span class="t">HTTP</span><span class="t">::</span><span class="t">Client</span>.get(<span class="s">&quot;http://www.example.com&quot;</span>) <span class="k">rescue</span> <span class="t">IO</span><span class="t">::</span><span class="t">Error</span></code></pre>
-<p>And should instead be written as this in order to capture only <code>IO::Error</code> exceptions:</p>
-<pre><code class="language-crystal">response <span class="o">=</span> <span class="k">begin</span>
-  <span class="t">HTTP</span><span class="t">::</span><span class="t">Client</span>.get(<span class="s">&quot;http://www.example.com&quot;</span>)
-<span class="k">rescue</span> <span class="t">IO</span><span class="t">::</span><span class="t">Error</span>
-  <span class="s">&quot;default value&quot;</span>
-<span class="k">end</span></code></pre>
-<p>Or to rescue all exceptions (instead of just <code>IO::Error</code>):</p>
-<pre><code class="language-crystal">response <span class="o">=</span> <span class="t">HTTP</span><span class="t">::</span><span class="t">Client</span>.get(<span class="s">&quot;http://www.example.com&quot;</span>) <span class="k">rescue</span> <span class="s">&quot;default value&quot;</span></code></pre>
-<p>YAML configuration example:</p>
-<pre><code class="language-crystal"><span class="t">Lint</span><span class="o">/</span><span class="t">TrailingRescueException</span>:
-  <span class="t">Enabled</span>: <span class="n">true</span></code></pre>
+          <p>Returns the documentation URL for this rule.</p>
+<pre><code class="language-crystal"><span class="t">Ameba</span><span class="t">::</span><span class="t">Rule</span><span class="t">::</span><span class="t">Lint</span><span class="t">::</span><span class="t">Syntax</span>.documentation_url
+<span class="c"># =&gt; &quot;https://crystal-ameba.github.io/ameba/master/Ameba/Rule/Lint/Syntax.html&quot;</span></code></pre>
         </div>
       
       <br/>
@@ -1621,13 +1606,13 @@ to use if an exception occurs, not the exception class to rescue from.</p>
 <pre><code class="language-crystal"><span class="k">module</span> <span class="t">Ameba</span>
   <span class="c"># This is a test rule.</span>
   <span class="c"># Does nothing.</span>
-  <span class="k">class</span> <span class="t">MyRule</span> <span class="o">&lt;</span> <span class="t">Ameba</span><span class="t">::</span><span class="t">Rule</span><span class="t">::</span><span class="t">Base</span>
+  <span class="k">class</span> <span class="t">Rule</span><span class="t">::</span><span class="t">MyRule</span> <span class="o">&lt;</span> <span class="t">Rule</span><span class="t">::</span><span class="t">Base</span>
     <span class="k">def</span> <span class="m">test</span>(source)
     <span class="k">end</span>
   <span class="k">end</span>
 <span class="k">end</span>
 
-<span class="t">MyRule</span>.parsed_doc <span class="c"># =&gt; &quot;This is a test rule.\nDoes nothing.&quot;</span></code></pre>
+<span class="t">Ameba</span><span class="t">::</span><span class="t">Rule</span><span class="t">::</span><span class="t">MyRule</span>.parsed_doc <span class="c"># =&gt; &quot;This is a test rule.\nDoes nothing.&quot;</span></code></pre>
         </div>
       
       <br/>
@@ -1647,7 +1632,7 @@ to use if an exception occurs, not the exception class to rescue from.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/368bb38/src/ameba/rule/lint/trailing_rescue_exception.cr#L37" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/4b3d330/src/ameba/rule/lint/trailing_rescue_exception.cr#L37" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1789,7 +1774,7 @@ to use if an exception occurs, not the exception class to rescue from.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/368bb38/src/ameba/rule/lint/trailing_rescue_exception.cr#L37" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/4b3d330/src/ameba/rule/lint/trailing_rescue_exception.cr#L37" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1819,7 +1804,7 @@ to use if an exception occurs, not the exception class to rescue from.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/368bb38/src/ameba/rule/lint/trailing_rescue_exception.cr#L44" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/4b3d330/src/ameba/rule/lint/trailing_rescue_exception.cr#L44" target="_blank">View source</a>]
         
       </div>
     </div>

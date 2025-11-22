@@ -1158,7 +1158,7 @@
   </h2>
   
     
-      <a href="https://github.com/crystal-ameba/ameba/blob/368bb38/src/ameba/rule/lint/percent_arrays.cr#L26" target="_blank">
+      <a href="https://github.com/crystal-ameba/ameba/blob/4b3d330/src/ameba/rule/lint/percent_arrays.cr#L26" target="_blank">
         ameba/rule/lint/percent_arrays.cr
       </a>
     
@@ -1233,7 +1233,7 @@
       <li class="entry-summary">
         <a href="#documentation_url%3AString-class-method" class="signature"><strong>.documentation_url</strong> : String</a>
         
-          <div class="summary"><p>A rule that disallows some unwanted symbols in percent string and symbol array literals.</p></div>
+          <div class="summary"><p>Returns the documentation URL for this rule.</p></div>
         
       </li>
     
@@ -1548,7 +1548,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/368bb38/src/ameba/rule/lint/percent_arrays.cr#L26" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/4b3d330/src/ameba/rule/lint/percent_arrays.cr#L26" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1589,18 +1589,9 @@
       
         <div class="doc">
           
-          <p>A rule that disallows some unwanted symbols in percent string and symbol array literals.</p>
-<p>For example, this is usually written by mistake:</p>
-<pre><code class="language-crystal"><span class="s">%w[&quot;one&quot;, &quot;two&quot;]</span>
-<span class="s">%i[:one, :two]</span></code></pre>
-<p>And the expected example is:</p>
-<pre><code class="language-crystal"><span class="s">%w[one two]</span>
-<span class="s">%i[one two]</span></code></pre>
-<p>YAML configuration example:</p>
-<pre><code class="language-crystal">Lint/PercentArrays:
-  Enabled: true
-  StringArrayUnwantedSymbols: &#39;,&quot;&#39;
-  SymbolArrayUnwantedSymbols: &#39;,:&#39;</code></pre>
+          <p>Returns the documentation URL for this rule.</p>
+<pre><code class="language-crystal"><span class="t">Ameba</span><span class="t">::</span><span class="t">Rule</span><span class="t">::</span><span class="t">Lint</span><span class="t">::</span><span class="t">Syntax</span>.documentation_url
+<span class="c"># =&gt; &quot;https://crystal-ameba.github.io/ameba/master/Ameba/Rule/Lint/Syntax.html&quot;</span></code></pre>
         </div>
       
       <br/>
@@ -1623,13 +1614,13 @@
 <pre><code class="language-crystal"><span class="k">module</span> <span class="t">Ameba</span>
   <span class="c"># This is a test rule.</span>
   <span class="c"># Does nothing.</span>
-  <span class="k">class</span> <span class="t">MyRule</span> <span class="o">&lt;</span> <span class="t">Ameba</span><span class="t">::</span><span class="t">Rule</span><span class="t">::</span><span class="t">Base</span>
+  <span class="k">class</span> <span class="t">Rule</span><span class="t">::</span><span class="t">MyRule</span> <span class="o">&lt;</span> <span class="t">Rule</span><span class="t">::</span><span class="t">Base</span>
     <span class="k">def</span> <span class="m">test</span>(source)
     <span class="k">end</span>
   <span class="k">end</span>
 <span class="k">end</span>
 
-<span class="t">MyRule</span>.parsed_doc <span class="c"># =&gt; &quot;This is a test rule.\nDoes nothing.&quot;</span></code></pre>
+<span class="t">Ameba</span><span class="t">::</span><span class="t">Rule</span><span class="t">::</span><span class="t">MyRule</span>.parsed_doc <span class="c"># =&gt; &quot;This is a test rule.\nDoes nothing.&quot;</span></code></pre>
         </div>
       
       <br/>
@@ -1649,7 +1640,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/368bb38/src/ameba/rule/lint/percent_arrays.cr#L27" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/4b3d330/src/ameba/rule/lint/percent_arrays.cr#L27" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1791,7 +1782,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/368bb38/src/ameba/rule/lint/percent_arrays.cr#L27" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/4b3d330/src/ameba/rule/lint/percent_arrays.cr#L27" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1877,7 +1868,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/368bb38/src/ameba/rule/lint/percent_arrays.cr#L37" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/4b3d330/src/ameba/rule/lint/percent_arrays.cr#L37" target="_blank">View source</a>]
         
       </div>
     </div>

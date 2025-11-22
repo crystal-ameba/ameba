@@ -1158,7 +1158,7 @@
   </h2>
   
     
-      <a href="https://github.com/crystal-ameba/ameba/blob/368bb38/src/ameba/rule/naming/block_parameter_name.cr#L26" target="_blank">
+      <a href="https://github.com/crystal-ameba/ameba/blob/4b3d330/src/ameba/rule/naming/block_parameter_name.cr#L26" target="_blank">
         ameba/rule/naming/block_parameter_name.cr
       </a>
     
@@ -1233,7 +1233,7 @@
       <li class="entry-summary">
         <a href="#documentation_url%3AString-class-method" class="signature"><strong>.documentation_url</strong> : String</a>
         
-          <div class="summary"><p>A rule that reports non-descriptive block parameter names.</p></div>
+          <div class="summary"><p>Returns the documentation URL for this rule.</p></div>
         
       </li>
     
@@ -1568,7 +1568,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/368bb38/src/ameba/rule/naming/block_parameter_name.cr#L26" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/4b3d330/src/ameba/rule/naming/block_parameter_name.cr#L26" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1609,18 +1609,9 @@
       
         <div class="doc">
           
-          <p>A rule that reports non-descriptive block parameter names.</p>
-<p>Favour this:</p>
-<pre><code class="language-crystal">tokens.each { <span class="o">|</span>token<span class="o">|</span> token.last_accessed_at <span class="o">=</span> <span class="t">Time</span>.utc }</code></pre>
-<p>Over this:</p>
-<pre><code class="language-crystal">tokens.each { <span class="o">|</span>t<span class="o">|</span> t.last_accessed_at <span class="o">=</span> <span class="t">Time</span>.utc }</code></pre>
-<p>YAML configuration example:</p>
-<pre><code class="language-crystal"><span class="t">Naming</span><span class="o">/</span><span class="t">BlockParameterName</span>:
-  <span class="t">Enabled</span>: <span class="n">true</span>
-  <span class="t">MinNameLength</span>: <span class="n">3</span>
-  <span class="t">AllowNamesEndingInNumbers</span>: <span class="n">true</span>
-  <span class="t">AllowedNames</span>: [a, b, e, i, j, k, v, x, y, k1, k2, v1, v2, db, ex, id, io, ip, op, tx, wg, ws]
-  <span class="t">ForbiddenNames</span>: <span class="o">[]</span></code></pre>
+          <p>Returns the documentation URL for this rule.</p>
+<pre><code class="language-crystal"><span class="t">Ameba</span><span class="t">::</span><span class="t">Rule</span><span class="t">::</span><span class="t">Lint</span><span class="t">::</span><span class="t">Syntax</span>.documentation_url
+<span class="c"># =&gt; &quot;https://crystal-ameba.github.io/ameba/master/Ameba/Rule/Lint/Syntax.html&quot;</span></code></pre>
         </div>
       
       <br/>
@@ -1643,13 +1634,13 @@
 <pre><code class="language-crystal"><span class="k">module</span> <span class="t">Ameba</span>
   <span class="c"># This is a test rule.</span>
   <span class="c"># Does nothing.</span>
-  <span class="k">class</span> <span class="t">MyRule</span> <span class="o">&lt;</span> <span class="t">Ameba</span><span class="t">::</span><span class="t">Rule</span><span class="t">::</span><span class="t">Base</span>
+  <span class="k">class</span> <span class="t">Rule</span><span class="t">::</span><span class="t">MyRule</span> <span class="o">&lt;</span> <span class="t">Rule</span><span class="t">::</span><span class="t">Base</span>
     <span class="k">def</span> <span class="m">test</span>(source)
     <span class="k">end</span>
   <span class="k">end</span>
 <span class="k">end</span>
 
-<span class="t">MyRule</span>.parsed_doc <span class="c"># =&gt; &quot;This is a test rule.\nDoes nothing.&quot;</span></code></pre>
+<span class="t">Ameba</span><span class="t">::</span><span class="t">Rule</span><span class="t">::</span><span class="t">MyRule</span>.parsed_doc <span class="c"># =&gt; &quot;This is a test rule.\nDoes nothing.&quot;</span></code></pre>
         </div>
       
       <br/>
@@ -1669,7 +1660,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/368bb38/src/ameba/rule/naming/block_parameter_name.cr#L27" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/4b3d330/src/ameba/rule/naming/block_parameter_name.cr#L27" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1923,7 +1914,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/368bb38/src/ameba/rule/naming/block_parameter_name.cr#L27" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/4b3d330/src/ameba/rule/naming/block_parameter_name.cr#L27" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1953,7 +1944,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/368bb38/src/ameba/rule/naming/block_parameter_name.cr#L38" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/4b3d330/src/ameba/rule/naming/block_parameter_name.cr#L38" target="_blank">View source</a>]
         
       </div>
     </div>

@@ -1106,7 +1106,7 @@
 
   <p>Represents a base of all rules. In other words, all rules
 inherits from this struct:</p>
-<pre><code class="language-crystal"><span class="k">class</span> <span class="t">MyRule</span> <span class="o">&lt;</span> <span class="t">Ameba</span><span class="t">::</span><span class="t">Rule</span><span class="t">::</span><span class="t">Base</span>
+<pre><code class="language-crystal"><span class="k">class</span> <span class="t">Ameba</span><span class="t">::</span><span class="t">Rule</span><span class="t">::</span><span class="t">MyRule</span> <span class="o">&lt;</span> <span class="t">Ameba</span><span class="t">::</span><span class="t">Rule</span><span class="t">::</span><span class="t">Base</span>
   <span class="k">def</span> <span class="m">test</span>(source)
     <span class="k">if</span> invalid?(source)
       issue_for line, column, <span class="s">&quot;Something wrong&quot;</span>
@@ -1364,7 +1364,7 @@ that are tested by this rule, it should add an issue.</p>
   </h2>
   
     
-      <a href="https://github.com/crystal-ameba/ameba/blob/368bb38/src/ameba/rule/base.cr#L29" target="_blank">
+      <a href="https://github.com/crystal-ameba/ameba/blob/4b3d330/src/ameba/rule/base.cr#L29" target="_blank">
         ameba/rule/base.cr
       </a>
     
@@ -1624,7 +1624,7 @@ that are tested by this rule, it should add an issue.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/368bb38/src/ameba/rule/base.cr#L115" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/4b3d330/src/ameba/rule/base.cr#L119" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1661,7 +1661,7 @@ that are tested by this rule, it should add an issue.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/368bb38/src/ameba/rule/base.cr#L108" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/4b3d330/src/ameba/rule/base.cr#L112" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1685,7 +1685,7 @@ source.valid?</code></pre>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/368bb38/src/ameba/rule/base.cr#L53" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/4b3d330/src/ameba/rule/base.cr#L53" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1709,7 +1709,7 @@ the one of the given source.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/368bb38/src/ameba/rule/base.cr#L91" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/4b3d330/src/ameba/rule/base.cr#L95" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1725,17 +1725,19 @@ the one of the given source.</p>
         <div class="doc">
           
           <p>Returns a group this rule belong to.</p>
-<pre><code class="language-crystal"><span class="k">class</span> <span class="t">MyGroup</span><span class="t">::</span><span class="t">MyRule</span> <span class="o">&lt;</span> <span class="t">Ameba</span><span class="t">::</span><span class="t">Rule</span><span class="t">::</span><span class="t">Base</span>
-  <span class="c"># ...</span>
+<pre><code class="language-crystal"><span class="k">module</span> <span class="t">Ameba</span>
+  <span class="k">class</span> <span class="t">Rule</span><span class="t">::</span><span class="t">MyGroup</span><span class="t">::</span><span class="t">MyRule</span> <span class="o">&lt;</span> <span class="t">Rule</span><span class="t">::</span><span class="t">Base</span>
+    <span class="c"># ...</span>
+  <span class="k">end</span>
 <span class="k">end</span>
 
-<span class="t">MyGroup</span><span class="t">::</span><span class="t">MyRule</span>.new.group <span class="c"># =&gt; &quot;MyGroup&quot;</span></code></pre>
+<span class="t">Ameba</span><span class="t">::</span><span class="t">Rule</span><span class="t">::</span><span class="t">MyGroup</span><span class="t">::</span><span class="t">MyRule</span>.new.group <span class="c"># =&gt; &quot;MyGroup&quot;</span></code></pre>
         </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/368bb38/src/ameba/rule/base.cr#L80" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/4b3d330/src/ameba/rule/base.cr#L84" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1760,7 +1762,7 @@ the one of the given source.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/368bb38/src/ameba/rule/base.cr#L112" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/4b3d330/src/ameba/rule/base.cr#L116" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1776,18 +1778,20 @@ the one of the given source.</p>
         <div class="doc">
           
           <p>Returns a name of this rule, which is basically a class name.</p>
-<pre><code class="language-crystal"><span class="k">class</span> <span class="t">MyRule</span> <span class="o">&lt;</span> <span class="t">Ameba</span><span class="t">::</span><span class="t">Rule</span><span class="t">::</span><span class="t">Base</span>
-  <span class="k">def</span> <span class="m">test</span>(source)
+<pre><code class="language-crystal"><span class="k">module</span> <span class="t">Ameba</span>
+  <span class="k">class</span> <span class="t">Rule</span><span class="t">::</span><span class="t">MyRule</span> <span class="o">&lt;</span> <span class="t">Rule</span><span class="t">::</span><span class="t">Base</span>
+    <span class="k">def</span> <span class="m">test</span>(source)
+    <span class="k">end</span>
   <span class="k">end</span>
 <span class="k">end</span>
 
-<span class="t">MyRule</span>.new.name <span class="c"># =&gt; &quot;MyRule&quot;</span></code></pre>
+<span class="t">Ameba</span><span class="t">::</span><span class="t">Rule</span><span class="t">::</span><span class="t">MyRule</span>.new.name <span class="c"># =&gt; &quot;MyRule&quot;</span></code></pre>
         </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/368bb38/src/ameba/rule/base.cr#L67" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/4b3d330/src/ameba/rule/base.cr#L69" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1810,7 +1814,7 @@ usual rules.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/368bb38/src/ameba/rule/base.cr#L104" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/4b3d330/src/ameba/rule/base.cr#L108" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1831,7 +1835,7 @@ usual rules.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/368bb38/src/ameba/rule/base.cr#L43" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/4b3d330/src/ameba/rule/base.cr#L43" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1855,7 +1859,7 @@ that are tested by this rule, it should add an issue.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/368bb38/src/ameba/rule/base.cr#L38" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/4b3d330/src/ameba/rule/base.cr#L38" target="_blank">View source</a>]
         
       </div>
     </div>

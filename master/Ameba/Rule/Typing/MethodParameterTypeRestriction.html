@@ -1180,7 +1180,7 @@ methods with a <code>:nodoc:</code> directive.</p>
   </h2>
   
     
-      <a href="https://github.com/crystal-ameba/ameba/blob/368bb38/src/ameba/rule/typing/method_parameter_type_restriction.cr#L57" target="_blank">
+      <a href="https://github.com/crystal-ameba/ameba/blob/4b3d330/src/ameba/rule/typing/method_parameter_type_restriction.cr#L57" target="_blank">
         ameba/rule/typing/method_parameter_type_restriction.cr
       </a>
     
@@ -1255,7 +1255,7 @@ methods with a <code>:nodoc:</code> directive.</p>
       <li class="entry-summary">
         <a href="#documentation_url%3AString-class-method" class="signature"><strong>.documentation_url</strong> : String</a>
         
-          <div class="summary"><p>A rule that enforces method parameters have type restrictions, with optional enforcement of block parameters.</p></div>
+          <div class="summary"><p>Returns the documentation URL for this rule.</p></div>
         
       </li>
     
@@ -1742,7 +1742,7 @@ methods with a <code>:nodoc:</code> directive.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/368bb38/src/ameba/rule/typing/method_parameter_type_restriction.cr#L57" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/4b3d330/src/ameba/rule/typing/method_parameter_type_restriction.cr#L57" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1783,38 +1783,9 @@ methods with a <code>:nodoc:</code> directive.</p>
       
         <div class="doc">
           
-          <p>A rule that enforces method parameters have type restrictions, with optional enforcement of block parameters.</p>
-<p>For example, this is considered invalid:</p>
-<pre><code class="language-crystal"><span class="k">def</span> <span class="m">add</span>(a, b)
-  a <span class="o">+</span> b
-<span class="k">end</span></code></pre>
-<p>And this is considered valid:</p>
-<pre><code class="language-crystal"><span class="k">def</span> <span class="m">add</span>(a : <span class="t">String</span>, b : <span class="t">String</span>)
-  a <span class="o">+</span> b
-<span class="k">end</span></code></pre>
-<p>When the config options <code>PrivateMethods</code> and <code>ProtectedMethods</code>
-are true, this rule is also applied to private and protected methods, respectively.</p>
-<p>The <code>NodocMethods</code> configuration option controls whether this rule applies to
-methods with a <code>:nodoc:</code> directive.</p>
-<p>The <code>BlockParameters</code> configuration option will extend this to block parameters, where these are invalid:</p>
-<pre><code class="language-crystal"><span class="k">def</span> <span class="m">exec</span>(<span class="o">&amp;</span>)
-<span class="k">end</span>
-
-<span class="k">def</span> <span class="m">exec</span>(<span class="o">&amp;</span>block)
-<span class="k">end</span></code></pre>
-<p>And this is valid:</p>
-<pre><code class="language-crystal"><span class="k">def</span> <span class="m">exec</span>(<span class="o">&amp;</span>block : <span class="t">String</span> <span class="o">-&gt;</span> <span class="t">String</span>)
-  <span class="k">yield</span> <span class="s">&quot;cmd&quot;</span>
-<span class="k">end</span></code></pre>
-<p>The config option <code>DefaultValue</code> controls whether this rule applies to parameters that have a default value.</p>
-<p>YAML configuration example:</p>
-<pre><code class="language-crystal"><span class="t">Typing</span><span class="o">/</span><span class="t">MethodParameterTypeRestriction</span>:
-  <span class="t">Enabled</span>: <span class="n">true</span>
-  <span class="t">DefaultValue</span>: <span class="n">false</span>
-  <span class="t">BlockParameters</span>: <span class="n">false</span>
-  <span class="t">PrivateMethods</span>: <span class="n">false</span>
-  <span class="t">ProtectedMethods</span>: <span class="n">false</span>
-  <span class="t">NodocMethods</span>: <span class="n">false</span></code></pre>
+          <p>Returns the documentation URL for this rule.</p>
+<pre><code class="language-crystal"><span class="t">Ameba</span><span class="t">::</span><span class="t">Rule</span><span class="t">::</span><span class="t">Lint</span><span class="t">::</span><span class="t">Syntax</span>.documentation_url
+<span class="c"># =&gt; &quot;https://crystal-ameba.github.io/ameba/master/Ameba/Rule/Lint/Syntax.html&quot;</span></code></pre>
         </div>
       
       <br/>
@@ -1837,13 +1808,13 @@ methods with a <code>:nodoc:</code> directive.</p>
 <pre><code class="language-crystal"><span class="k">module</span> <span class="t">Ameba</span>
   <span class="c"># This is a test rule.</span>
   <span class="c"># Does nothing.</span>
-  <span class="k">class</span> <span class="t">MyRule</span> <span class="o">&lt;</span> <span class="t">Ameba</span><span class="t">::</span><span class="t">Rule</span><span class="t">::</span><span class="t">Base</span>
+  <span class="k">class</span> <span class="t">Rule</span><span class="t">::</span><span class="t">MyRule</span> <span class="o">&lt;</span> <span class="t">Rule</span><span class="t">::</span><span class="t">Base</span>
     <span class="k">def</span> <span class="m">test</span>(source)
     <span class="k">end</span>
   <span class="k">end</span>
 <span class="k">end</span>
 
-<span class="t">MyRule</span>.parsed_doc <span class="c"># =&gt; &quot;This is a test rule.\nDoes nothing.&quot;</span></code></pre>
+<span class="t">Ameba</span><span class="t">::</span><span class="t">Rule</span><span class="t">::</span><span class="t">MyRule</span>.parsed_doc <span class="c"># =&gt; &quot;This is a test rule.\nDoes nothing.&quot;</span></code></pre>
         </div>
       
       <br/>
@@ -1863,7 +1834,7 @@ methods with a <code>:nodoc:</code> directive.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/368bb38/src/ameba/rule/typing/method_parameter_type_restriction.cr#L60" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/4b3d330/src/ameba/rule/typing/method_parameter_type_restriction.cr#L60" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2145,7 +2116,7 @@ methods with a <code>:nodoc:</code> directive.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/368bb38/src/ameba/rule/typing/method_parameter_type_restriction.cr#L60" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/4b3d330/src/ameba/rule/typing/method_parameter_type_restriction.cr#L60" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2175,7 +2146,7 @@ methods with a <code>:nodoc:</code> directive.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/368bb38/src/ameba/rule/typing/method_parameter_type_restriction.cr#L73" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/4b3d330/src/ameba/rule/typing/method_parameter_type_restriction.cr#L73" target="_blank">View source</a>]
         
       </div>
     </div>

@@ -1190,7 +1190,7 @@
   </h2>
   
     
-      <a href="https://github.com/crystal-ameba/ameba/blob/368bb38/src/ameba/rule/style/redundant_self.cr#L58" target="_blank">
+      <a href="https://github.com/crystal-ameba/ameba/blob/4b3d330/src/ameba/rule/style/redundant_self.cr#L58" target="_blank">
         ameba/rule/style/redundant_self.cr
       </a>
     
@@ -1270,7 +1270,7 @@
       <li class="entry-summary">
         <a href="#documentation_url%3AString-class-method" class="signature"><strong>.documentation_url</strong> : String</a>
         
-          <div class="summary"><p>A rule that disallows redundant uses of <code>self</code>.</p></div>
+          <div class="summary"><p>Returns the documentation URL for this rule.</p></div>
         
       </li>
     
@@ -1732,7 +1732,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/368bb38/src/ameba/rule/style/redundant_self.cr#L58" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/4b3d330/src/ameba/rule/style/redundant_self.cr#L58" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1773,48 +1773,9 @@
       
         <div class="doc">
           
-          <p>A rule that disallows redundant uses of <code>self</code>.</p>
-<p>This is considered bad:</p>
-<pre><code class="language-crystal"><span class="k">class</span> <span class="t">Greeter</span>
-  getter name : <span class="t">String</span>
-
-  <span class="k">def</span> <span class="m">self</span>.init
-    <span class="k">self</span>.new(<span class="s">&quot;Crystal&quot;</span>).greet
-  <span class="k">end</span>
-
-  <span class="k">def</span> <span class="m">initialize</span>(@name)
-  <span class="k">end</span>
-
-  <span class="k">def</span> <span class="m">greet</span>
-    puts <span class="s">&quot;Hello, my name is </span><span class="i">#{</span><span class="k">self</span>.name<span class="i">}</span><span class="s">&quot;</span>
-  <span class="k">end</span>
-
-  <span class="k">self</span>.init
-<span class="k">end</span></code></pre>
-<p>And needs to be written as:</p>
-<pre><code class="language-crystal"><span class="k">class</span> <span class="t">Greeter</span>
-  getter name : <span class="t">String</span>
-
-  <span class="k">def</span> <span class="m">self</span>.init
-    new(<span class="s">&quot;Crystal&quot;</span>).greet
-  <span class="k">end</span>
-
-  <span class="k">def</span> <span class="m">initialize</span>(@name)
-  <span class="k">end</span>
-
-  <span class="k">def</span> <span class="m">greet</span>
-    puts <span class="s">&quot;Hello, my name is </span><span class="i">#{</span>name<span class="i">}</span><span class="s">&quot;</span>
-  <span class="k">end</span>
-
-  init
-<span class="k">end</span></code></pre>
-<p>YAML configuration example:</p>
-<pre><code class="language-crystal"><span class="t">Style</span><span class="o">/</span><span class="t">RedundantSelf</span>:
-  <span class="t">Enabled</span>: <span class="n">true</span>
-  <span class="t">AllowedMethodNames</span>:
-    <span class="o">-</span> in?
-    <span class="o">-</span> inspect
-    <span class="o">-</span> not_nil!</code></pre>
+          <p>Returns the documentation URL for this rule.</p>
+<pre><code class="language-crystal"><span class="t">Ameba</span><span class="t">::</span><span class="t">Rule</span><span class="t">::</span><span class="t">Lint</span><span class="t">::</span><span class="t">Syntax</span>.documentation_url
+<span class="c"># =&gt; &quot;https://crystal-ameba.github.io/ameba/master/Ameba/Rule/Lint/Syntax.html&quot;</span></code></pre>
         </div>
       
       <br/>
@@ -1837,13 +1798,13 @@
 <pre><code class="language-crystal"><span class="k">module</span> <span class="t">Ameba</span>
   <span class="c"># This is a test rule.</span>
   <span class="c"># Does nothing.</span>
-  <span class="k">class</span> <span class="t">MyRule</span> <span class="o">&lt;</span> <span class="t">Ameba</span><span class="t">::</span><span class="t">Rule</span><span class="t">::</span><span class="t">Base</span>
+  <span class="k">class</span> <span class="t">Rule</span><span class="t">::</span><span class="t">MyRule</span> <span class="o">&lt;</span> <span class="t">Rule</span><span class="t">::</span><span class="t">Base</span>
     <span class="k">def</span> <span class="m">test</span>(source)
     <span class="k">end</span>
   <span class="k">end</span>
 <span class="k">end</span>
 
-<span class="t">MyRule</span>.parsed_doc <span class="c"># =&gt; &quot;This is a test rule.\nDoes nothing.&quot;</span></code></pre>
+<span class="t">Ameba</span><span class="t">::</span><span class="t">Rule</span><span class="t">::</span><span class="t">MyRule</span>.parsed_doc <span class="c"># =&gt; &quot;This is a test rule.\nDoes nothing.&quot;</span></code></pre>
         </div>
       
       <br/>
@@ -1863,7 +1824,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/368bb38/src/ameba/rule/style/redundant_self.cr#L61" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/4b3d330/src/ameba/rule/style/redundant_self.cr#L61" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2033,7 +1994,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/368bb38/src/ameba/rule/style/redundant_self.cr#L61" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/4b3d330/src/ameba/rule/style/redundant_self.cr#L61" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2063,7 +2024,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/368bb38/src/ameba/rule/style/redundant_self.cr#L75" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/4b3d330/src/ameba/rule/style/redundant_self.cr#L75" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2079,7 +2040,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/368bb38/src/ameba/rule/style/redundant_self.cr#L71" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/4b3d330/src/ameba/rule/style/redundant_self.cr#L71" target="_blank">View source</a>]
         
       </div>
     </div>

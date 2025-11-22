@@ -1151,7 +1151,7 @@
   </h2>
   
     
-      <a href="https://github.com/crystal-ameba/ameba/blob/368bb38/src/ameba/rule/layout/line_length.cr#L11" target="_blank">
+      <a href="https://github.com/crystal-ameba/ameba/blob/4b3d330/src/ameba/rule/layout/line_length.cr#L11" target="_blank">
         ameba/rule/layout/line_length.cr
       </a>
     
@@ -1226,7 +1226,7 @@
       <li class="entry-summary">
         <a href="#documentation_url%3AString-class-method" class="signature"><strong>.documentation_url</strong> : String</a>
         
-          <div class="summary"><p>A rule that disallows lines longer than <code><a href="../../../Ameba/Rule/Layout/LineLength.html#max_length%3AInt32-instance-method">#max_length</a></code> number of symbols.</p></div>
+          <div class="summary"><p>Returns the documentation URL for this rule.</p></div>
         
       </li>
     
@@ -1524,7 +1524,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/368bb38/src/ameba/rule/layout/line_length.cr#L11" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/4b3d330/src/ameba/rule/layout/line_length.cr#L11" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1565,11 +1565,9 @@
       
         <div class="doc">
           
-          <p>A rule that disallows lines longer than <code><a href="../../../Ameba/Rule/Layout/LineLength.html#max_length%3AInt32-instance-method">#max_length</a></code> number of symbols.</p>
-<p>YAML configuration example:</p>
-<pre><code class="language-crystal"><span class="t">Layout</span><span class="o">/</span><span class="t">LineLength</span>:
-  <span class="t">Enabled</span>: <span class="n">true</span>
-  <span class="t">MaxLength</span>: <span class="n">100</span></code></pre>
+          <p>Returns the documentation URL for this rule.</p>
+<pre><code class="language-crystal"><span class="t">Ameba</span><span class="t">::</span><span class="t">Rule</span><span class="t">::</span><span class="t">Lint</span><span class="t">::</span><span class="t">Syntax</span>.documentation_url
+<span class="c"># =&gt; &quot;https://crystal-ameba.github.io/ameba/master/Ameba/Rule/Lint/Syntax.html&quot;</span></code></pre>
         </div>
       
       <br/>
@@ -1592,13 +1590,13 @@
 <pre><code class="language-crystal"><span class="k">module</span> <span class="t">Ameba</span>
   <span class="c"># This is a test rule.</span>
   <span class="c"># Does nothing.</span>
-  <span class="k">class</span> <span class="t">MyRule</span> <span class="o">&lt;</span> <span class="t">Ameba</span><span class="t">::</span><span class="t">Rule</span><span class="t">::</span><span class="t">Base</span>
+  <span class="k">class</span> <span class="t">Rule</span><span class="t">::</span><span class="t">MyRule</span> <span class="o">&lt;</span> <span class="t">Rule</span><span class="t">::</span><span class="t">Base</span>
     <span class="k">def</span> <span class="m">test</span>(source)
     <span class="k">end</span>
   <span class="k">end</span>
 <span class="k">end</span>
 
-<span class="t">MyRule</span>.parsed_doc <span class="c"># =&gt; &quot;This is a test rule.\nDoes nothing.&quot;</span></code></pre>
+<span class="t">Ameba</span><span class="t">::</span><span class="t">Rule</span><span class="t">::</span><span class="t">MyRule</span>.parsed_doc <span class="c"># =&gt; &quot;This is a test rule.\nDoes nothing.&quot;</span></code></pre>
         </div>
       
       <br/>
@@ -1618,7 +1616,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/368bb38/src/ameba/rule/layout/line_length.cr#L12" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/4b3d330/src/ameba/rule/layout/line_length.cr#L12" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1788,7 +1786,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/368bb38/src/ameba/rule/layout/line_length.cr#L12" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/4b3d330/src/ameba/rule/layout/line_length.cr#L12" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1818,7 +1816,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/368bb38/src/ameba/rule/layout/line_length.cr#L21" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/4b3d330/src/ameba/rule/layout/line_length.cr#L21" target="_blank">View source</a>]
         
       </div>
     </div>

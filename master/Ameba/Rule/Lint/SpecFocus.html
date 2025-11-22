@@ -1180,7 +1180,7 @@ it <span class="s">&quot;works&quot;</span> <span class="k">do</span>
   </h2>
   
     
-      <a href="https://github.com/crystal-ameba/ameba/blob/368bb38/src/ameba/rule/lint/spec_focus.cr#L47" target="_blank">
+      <a href="https://github.com/crystal-ameba/ameba/blob/4b3d330/src/ameba/rule/lint/spec_focus.cr#L47" target="_blank">
         ameba/rule/lint/spec_focus.cr
       </a>
     
@@ -1260,7 +1260,7 @@ it <span class="s">&quot;works&quot;</span> <span class="k">do</span>
       <li class="entry-summary">
         <a href="#documentation_url%3AString-class-method" class="signature"><strong>.documentation_url</strong> : String</a>
         
-          <div class="summary"><p>Checks if specs are focused.</p></div>
+          <div class="summary"><p>Returns the documentation URL for this rule.</p></div>
         
       </li>
     
@@ -1702,7 +1702,7 @@ it <span class="s">&quot;works&quot;</span> <span class="k">do</span>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/368bb38/src/ameba/rule/lint/spec_focus.cr#L47" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/4b3d330/src/ameba/rule/lint/spec_focus.cr#L47" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1743,38 +1743,9 @@ it <span class="s">&quot;works&quot;</span> <span class="k">do</span>
       
         <div class="doc">
           
-          <p>Checks if specs are focused.</p>
-<p>In specs <code>focus: true</code> is mainly used to focus on a spec
-item locally during development. However, if such change
-is committed, it silently runs only focused spec on all
-other environment, which is undesired.</p>
-<p>This is considered bad:</p>
-<pre><code class="language-crystal">describe <span class="t">MyClass</span>, focus: <span class="n">true</span> <span class="k">do</span>
-<span class="k">end</span>
-
-describe <span class="s">&quot;.new&quot;</span>, focus: <span class="n">true</span> <span class="k">do</span>
-<span class="k">end</span>
-
-context <span class="s">&quot;my context&quot;</span>, focus: <span class="n">true</span> <span class="k">do</span>
-<span class="k">end</span>
-
-it <span class="s">&quot;works&quot;</span>, focus: <span class="n">true</span> <span class="k">do</span>
-<span class="k">end</span></code></pre>
-<p>And it should be written as the following:</p>
-<pre><code class="language-crystal">describe <span class="t">MyClass</span> <span class="k">do</span>
-<span class="k">end</span>
-
-describe <span class="s">&quot;.new&quot;</span> <span class="k">do</span>
-<span class="k">end</span>
-
-context <span class="s">&quot;my context&quot;</span> <span class="k">do</span>
-<span class="k">end</span>
-
-it <span class="s">&quot;works&quot;</span> <span class="k">do</span>
-<span class="k">end</span></code></pre>
-<p>YAML configuration example:</p>
-<pre><code class="language-crystal"><span class="t">Lint</span><span class="o">/</span><span class="t">SpecFocus</span>:
-  <span class="t">Enabled</span>: <span class="n">true</span></code></pre>
+          <p>Returns the documentation URL for this rule.</p>
+<pre><code class="language-crystal"><span class="t">Ameba</span><span class="t">::</span><span class="t">Rule</span><span class="t">::</span><span class="t">Lint</span><span class="t">::</span><span class="t">Syntax</span>.documentation_url
+<span class="c"># =&gt; &quot;https://crystal-ameba.github.io/ameba/master/Ameba/Rule/Lint/Syntax.html&quot;</span></code></pre>
         </div>
       
       <br/>
@@ -1797,13 +1768,13 @@ it <span class="s">&quot;works&quot;</span> <span class="k">do</span>
 <pre><code class="language-crystal"><span class="k">module</span> <span class="t">Ameba</span>
   <span class="c"># This is a test rule.</span>
   <span class="c"># Does nothing.</span>
-  <span class="k">class</span> <span class="t">MyRule</span> <span class="o">&lt;</span> <span class="t">Ameba</span><span class="t">::</span><span class="t">Rule</span><span class="t">::</span><span class="t">Base</span>
+  <span class="k">class</span> <span class="t">Rule</span><span class="t">::</span><span class="t">MyRule</span> <span class="o">&lt;</span> <span class="t">Rule</span><span class="t">::</span><span class="t">Base</span>
     <span class="k">def</span> <span class="m">test</span>(source)
     <span class="k">end</span>
   <span class="k">end</span>
 <span class="k">end</span>
 
-<span class="t">MyRule</span>.parsed_doc <span class="c"># =&gt; &quot;This is a test rule.\nDoes nothing.&quot;</span></code></pre>
+<span class="t">Ameba</span><span class="t">::</span><span class="t">Rule</span><span class="t">::</span><span class="t">MyRule</span>.parsed_doc <span class="c"># =&gt; &quot;This is a test rule.\nDoes nothing.&quot;</span></code></pre>
         </div>
       
       <br/>
@@ -1823,7 +1794,7 @@ it <span class="s">&quot;works&quot;</span> <span class="k">do</span>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/368bb38/src/ameba/rule/lint/spec_focus.cr#L50" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/4b3d330/src/ameba/rule/lint/spec_focus.cr#L50" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1965,7 +1936,7 @@ it <span class="s">&quot;works&quot;</span> <span class="k">do</span>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/368bb38/src/ameba/rule/lint/spec_focus.cr#L50" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/4b3d330/src/ameba/rule/lint/spec_focus.cr#L50" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1995,7 +1966,7 @@ it <span class="s">&quot;works&quot;</span> <span class="k">do</span>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/368bb38/src/ameba/rule/lint/spec_focus.cr#L63" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/4b3d330/src/ameba/rule/lint/spec_focus.cr#L63" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2011,7 +1982,7 @@ it <span class="s">&quot;works&quot;</span> <span class="k">do</span>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/368bb38/src/ameba/rule/lint/spec_focus.cr#L59" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/4b3d330/src/ameba/rule/lint/spec_focus.cr#L59" target="_blank">View source</a>]
         
       </div>
     </div>

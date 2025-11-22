@@ -1194,7 +1194,7 @@ call arguments that have a default value.</p>
   </h2>
   
     
-      <a href="https://github.com/crystal-ameba/ameba/blob/368bb38/src/ameba/rule/typing/macro_call_argument_type_restriction.cr#L63" target="_blank">
+      <a href="https://github.com/crystal-ameba/ameba/blob/4b3d330/src/ameba/rule/typing/macro_call_argument_type_restriction.cr#L63" target="_blank">
         ameba/rule/typing/macro_call_argument_type_restriction.cr
       </a>
     
@@ -1269,7 +1269,7 @@ call arguments that have a default value.</p>
       <li class="entry-summary">
         <a href="#documentation_url%3AString-class-method" class="signature"><strong>.documentation_url</strong> : String</a>
         
-          <div class="summary"><p>A rule that enforces call arguments to specific macros have a type restriction.</p></div>
+          <div class="summary"><p>Returns the documentation URL for this rule.</p></div>
         
       </li>
     
@@ -1620,7 +1620,7 @@ call arguments that have a default value.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/368bb38/src/ameba/rule/typing/macro_call_argument_type_restriction.cr#L63" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/4b3d330/src/ameba/rule/typing/macro_call_argument_type_restriction.cr#L63" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1661,54 +1661,9 @@ call arguments that have a default value.</p>
       
         <div class="doc">
           
-          <p>A rule that enforces call arguments to specific macros have a type restriction.
-By default these macros are: <code>(class_)getter/setter/property(?/!)</code> and <code>record</code>.</p>
-<p>For example, these are considered invalid:</p>
-<pre><code class="language-crystal"><span class="k">class</span> <span class="t">Greeter</span>
-  getter name
-  getter age <span class="o">=</span> <span class="n">0</span>.days
-  getter <span class="n">:height</span>
-<span class="k">end</span>
-
-record <span class="t">Task</span>,
-  cmd <span class="o">=</span> <span class="s">&quot;&quot;</span>,
-  args <span class="o">=</span> <span class="s">%w[]</span></code></pre>
-<p>And these are considered valid:</p>
-<pre><code class="language-crystal"><span class="k">class</span> <span class="t">Greeter</span>
-  getter name : <span class="t">String</span>?
-  getter age : <span class="t">Time</span><span class="t">::</span><span class="t">Span</span> <span class="o">=</span> <span class="n">0</span>.days
-  getter height : <span class="t">Float64</span>?
-<span class="k">end</span>
-
-record <span class="t">Task</span>,
-  cmd : <span class="t">String</span> <span class="o">=</span> <span class="s">&quot;&quot;</span>,
-  args : <span class="t">Array</span>(<span class="t">String</span>) <span class="o">=</span> <span class="s">%w[]</span></code></pre>
-<p>The <code>DefaultValue</code> configuration option controls whether this rule applies to
-call arguments that have a default value.</p>
-<p>YAML configuration example:</p>
-<pre><code class="language-crystal"><span class="t">Typing</span><span class="o">/</span><span class="t">MacroCallArgumentTypeRestriction</span>:
-  <span class="t">Enabled</span>: <span class="n">true</span>
-  <span class="t">DefaultValue</span>: <span class="n">false</span>
-  <span class="t">MacroNames</span>:
-   <span class="o">-</span> getter
-   <span class="o">-</span> getter?
-   <span class="o">-</span> getter!
-   <span class="o">-</span> class_getter
-   <span class="o">-</span> class_getter?
-   <span class="o">-</span> class_getter!
-   <span class="o">-</span> setter
-   <span class="o">-</span> setter?
-   <span class="o">-</span> setter!
-   <span class="o">-</span> class_setter
-   <span class="o">-</span> class_setter?
-   <span class="o">-</span> class_setter!
-   <span class="o">-</span> property
-   <span class="o">-</span> property?
-   <span class="o">-</span> property!
-   <span class="o">-</span> class_property
-   <span class="o">-</span> class_property?
-   <span class="o">-</span> class_property!
-   <span class="o">-</span> record</code></pre>
+          <p>Returns the documentation URL for this rule.</p>
+<pre><code class="language-crystal"><span class="t">Ameba</span><span class="t">::</span><span class="t">Rule</span><span class="t">::</span><span class="t">Lint</span><span class="t">::</span><span class="t">Syntax</span>.documentation_url
+<span class="c"># =&gt; &quot;https://crystal-ameba.github.io/ameba/master/Ameba/Rule/Lint/Syntax.html&quot;</span></code></pre>
         </div>
       
       <br/>
@@ -1731,13 +1686,13 @@ call arguments that have a default value.</p>
 <pre><code class="language-crystal"><span class="k">module</span> <span class="t">Ameba</span>
   <span class="c"># This is a test rule.</span>
   <span class="c"># Does nothing.</span>
-  <span class="k">class</span> <span class="t">MyRule</span> <span class="o">&lt;</span> <span class="t">Ameba</span><span class="t">::</span><span class="t">Rule</span><span class="t">::</span><span class="t">Base</span>
+  <span class="k">class</span> <span class="t">Rule</span><span class="t">::</span><span class="t">MyRule</span> <span class="o">&lt;</span> <span class="t">Rule</span><span class="t">::</span><span class="t">Base</span>
     <span class="k">def</span> <span class="m">test</span>(source)
     <span class="k">end</span>
   <span class="k">end</span>
 <span class="k">end</span>
 
-<span class="t">MyRule</span>.parsed_doc <span class="c"># =&gt; &quot;This is a test rule.\nDoes nothing.&quot;</span></code></pre>
+<span class="t">Ameba</span><span class="t">::</span><span class="t">Rule</span><span class="t">::</span><span class="t">MyRule</span>.parsed_doc <span class="c"># =&gt; &quot;This is a test rule.\nDoes nothing.&quot;</span></code></pre>
         </div>
       
       <br/>
@@ -1757,7 +1712,7 @@ call arguments that have a default value.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/368bb38/src/ameba/rule/typing/macro_call_argument_type_restriction.cr#L64" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/4b3d330/src/ameba/rule/typing/macro_call_argument_type_restriction.cr#L64" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1955,7 +1910,7 @@ call arguments that have a default value.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/368bb38/src/ameba/rule/typing/macro_call_argument_type_restriction.cr#L64" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/4b3d330/src/ameba/rule/typing/macro_call_argument_type_restriction.cr#L64" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1985,7 +1940,7 @@ call arguments that have a default value.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/368bb38/src/ameba/rule/typing/macro_call_argument_type_restriction.cr#L79" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/4b3d330/src/ameba/rule/typing/macro_call_argument_type_restriction.cr#L79" target="_blank">View source</a>]
         
       </div>
     </div>

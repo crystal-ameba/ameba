@@ -1180,7 +1180,7 @@ the second one.</p>
   </h2>
   
     
-      <a href="https://github.com/crystal-ameba/ameba/blob/368bb38/src/ameba/rule/lint/shared_var_in_fiber.cr#L52" target="_blank">
+      <a href="https://github.com/crystal-ameba/ameba/blob/4b3d330/src/ameba/rule/lint/shared_var_in_fiber.cr#L52" target="_blank">
         ameba/rule/lint/shared_var_in_fiber.cr
       </a>
     
@@ -1255,7 +1255,7 @@ the second one.</p>
       <li class="entry-summary">
         <a href="#documentation_url%3AString-class-method" class="signature"><strong>.documentation_url</strong> : String</a>
         
-          <div class="summary"><p>A rule that disallows using shared variables in fibers, which are mutated during iterations.</p></div>
+          <div class="summary"><p>Returns the documentation URL for this rule.</p></div>
         
       </li>
     
@@ -1577,7 +1577,7 @@ the second one.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/368bb38/src/ameba/rule/lint/shared_var_in_fiber.cr#L52" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/4b3d330/src/ameba/rule/lint/shared_var_in_fiber.cr#L52" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1618,40 +1618,9 @@ the second one.</p>
       
         <div class="doc">
           
-          <p>A rule that disallows using shared variables in fibers,
-which are mutated during iterations.</p>
-<p>In most cases it leads to unexpected behaviour and is undesired.</p>
-<p>For example, having this example:</p>
-<pre><code class="language-crystal">n <span class="o">=</span> <span class="n">0</span>
-channel <span class="o">=</span> <span class="t">Channel</span>(<span class="t">Int32</span>).new
-
-<span class="k">while</span> n <span class="o">&lt;</span> <span class="n">3</span>
-  n <span class="o">=</span> n <span class="o">+</span> <span class="n">1</span>
-  spawn { channel.send n }
-<span class="k">end</span>
-
-<span class="n">3</span>.times { puts channel.receive } <span class="c"># =&gt; # 3, 3, 3</span></code></pre>
-<p>The problem is there is only one shared between fibers variable <code>n</code>
-and when <code>channel.receive</code> is executed its value is <code>3</code>.</p>
-<p>To solve this, the code above needs to be rewritten to the following:</p>
-<pre><code class="language-crystal">n <span class="o">=</span> <span class="n">0</span>
-channel <span class="o">=</span> <span class="t">Channel</span>(<span class="t">Int32</span>).new
-
-<span class="k">while</span> n <span class="o">&lt;</span> <span class="n">3</span>
-  n <span class="o">=</span> n <span class="o">+</span> <span class="n">1</span>
-  m <span class="o">=</span> n
-  spawn <span class="k">do</span> { channel.send m }
-<span class="k">end</span>
-
-<span class="n">3</span>.times { puts channel.receive } <span class="c"># =&gt; # 1, 2, 3</span></code></pre>
-<p>This rule is able to find the shared variables between fibers, which are mutated
-during iterations. So it reports the issue on the first sample and passes on
-the second one.</p>
-<p>There are also other techniques to solve the problem above which are
-<a href="https://crystal-lang.org/reference/guides/concurrency.html">officially documented</a></p>
-<p>YAML configuration example:</p>
-<pre><code class="language-crystal"><span class="t">Lint</span><span class="o">/</span><span class="t">SharedVarInFiber</span>:
-  <span class="t">Enabled</span>: <span class="n">true</span></code></pre>
+          <p>Returns the documentation URL for this rule.</p>
+<pre><code class="language-crystal"><span class="t">Ameba</span><span class="t">::</span><span class="t">Rule</span><span class="t">::</span><span class="t">Lint</span><span class="t">::</span><span class="t">Syntax</span>.documentation_url
+<span class="c"># =&gt; &quot;https://crystal-ameba.github.io/ameba/master/Ameba/Rule/Lint/Syntax.html&quot;</span></code></pre>
         </div>
       
       <br/>
@@ -1674,13 +1643,13 @@ the second one.</p>
 <pre><code class="language-crystal"><span class="k">module</span> <span class="t">Ameba</span>
   <span class="c"># This is a test rule.</span>
   <span class="c"># Does nothing.</span>
-  <span class="k">class</span> <span class="t">MyRule</span> <span class="o">&lt;</span> <span class="t">Ameba</span><span class="t">::</span><span class="t">Rule</span><span class="t">::</span><span class="t">Base</span>
+  <span class="k">class</span> <span class="t">Rule</span><span class="t">::</span><span class="t">MyRule</span> <span class="o">&lt;</span> <span class="t">Rule</span><span class="t">::</span><span class="t">Base</span>
     <span class="k">def</span> <span class="m">test</span>(source)
     <span class="k">end</span>
   <span class="k">end</span>
 <span class="k">end</span>
 
-<span class="t">MyRule</span>.parsed_doc <span class="c"># =&gt; &quot;This is a test rule.\nDoes nothing.&quot;</span></code></pre>
+<span class="t">Ameba</span><span class="t">::</span><span class="t">Rule</span><span class="t">::</span><span class="t">MyRule</span>.parsed_doc <span class="c"># =&gt; &quot;This is a test rule.\nDoes nothing.&quot;</span></code></pre>
         </div>
       
       <br/>
@@ -1700,7 +1669,7 @@ the second one.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/368bb38/src/ameba/rule/lint/shared_var_in_fiber.cr#L53" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/4b3d330/src/ameba/rule/lint/shared_var_in_fiber.cr#L53" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1842,7 +1811,7 @@ the second one.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/368bb38/src/ameba/rule/lint/shared_var_in_fiber.cr#L53" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/4b3d330/src/ameba/rule/lint/shared_var_in_fiber.cr#L53" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1872,7 +1841,7 @@ the second one.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/368bb38/src/ameba/rule/lint/shared_var_in_fiber.cr#L64" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/4b3d330/src/ameba/rule/lint/shared_var_in_fiber.cr#L64" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1888,7 +1857,7 @@ the second one.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/368bb38/src/ameba/rule/lint/shared_var_in_fiber.cr#L60" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/4b3d330/src/ameba/rule/lint/shared_var_in_fiber.cr#L60" target="_blank">View source</a>]
         
       </div>
     </div>

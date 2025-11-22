@@ -1164,7 +1164,7 @@ that can be avoided by using <code>each_&lt;member&gt;</code> instead of <code>&
   </h2>
   
     
-      <a href="https://github.com/crystal-ameba/ameba/blob/368bb38/src/ameba/rule/performance/excessive_allocations.cr#L32" target="_blank">
+      <a href="https://github.com/crystal-ameba/ameba/blob/4b3d330/src/ameba/rule/performance/excessive_allocations.cr#L32" target="_blank">
         ameba/rule/performance/excessive_allocations.cr
       </a>
     
@@ -1241,7 +1241,7 @@ that can be avoided by using <code>each_&lt;member&gt;</code> instead of <code>&
       <li class="entry-summary">
         <a href="#documentation_url%3AString-class-method" class="signature"><strong>.documentation_url</strong> : String</a>
         
-          <div class="summary"><p>This rule is used to identify excessive collection allocations, that can be avoided by using <code>each_&lt;member&gt;</code> instead of <code>&lt;collection&gt;.each</code>.</p></div>
+          <div class="summary"><p>Returns the documentation URL for this rule.</p></div>
         
       </li>
     
@@ -1768,7 +1768,7 @@ that can be avoided by using <code>each_&lt;member&gt;</code> instead of <code>&
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/368bb38/src/ameba/rule/performance/excessive_allocations.cr#L32" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/4b3d330/src/ameba/rule/performance/excessive_allocations.cr#L32" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1809,22 +1809,9 @@ that can be avoided by using <code>each_&lt;member&gt;</code> instead of <code>&
       
         <div class="doc">
           
-          <p>This rule is used to identify excessive collection allocations,
-that can be avoided by using <code>each_&lt;member&gt;</code> instead of <code>&lt;collection&gt;.each</code>.</p>
-<p>For example, this is considered inefficient:</p>
-<pre><code class="language-crystal"><span class="s">&quot;Alice&quot;</span>.chars.each { <span class="o">|</span>c<span class="o">|</span> puts c }
-<span class="s">&quot;Alice\nBob&quot;</span>.lines.each { <span class="o">|</span>l<span class="o">|</span> puts l }</code></pre>
-<p>And can be written as this:</p>
-<pre><code class="language-crystal"><span class="s">&quot;Alice&quot;</span>.each_char { <span class="o">|</span>c<span class="o">|</span> puts c }
-<span class="s">&quot;Alice\nBob&quot;</span>.each_line { <span class="o">|</span>l<span class="o">|</span> puts l }</code></pre>
-<p>YAML configuration example:</p>
-<pre><code class="language-crystal"><span class="t">Performance</span><span class="o">/</span><span class="t">ExcessiveAllocations</span>:
-  <span class="t">Enabled</span>: <span class="n">true</span>
-  <span class="t">CallNames</span>:
-    codepoints: each_codepoint
-    graphemes: each_grapheme
-    chars: each_char
-    lines: each_line</code></pre>
+          <p>Returns the documentation URL for this rule.</p>
+<pre><code class="language-crystal"><span class="t">Ameba</span><span class="t">::</span><span class="t">Rule</span><span class="t">::</span><span class="t">Lint</span><span class="t">::</span><span class="t">Syntax</span>.documentation_url
+<span class="c"># =&gt; &quot;https://crystal-ameba.github.io/ameba/master/Ameba/Rule/Lint/Syntax.html&quot;</span></code></pre>
         </div>
       
       <br/>
@@ -1847,13 +1834,13 @@ that can be avoided by using <code>each_&lt;member&gt;</code> instead of <code>&
 <pre><code class="language-crystal"><span class="k">module</span> <span class="t">Ameba</span>
   <span class="c"># This is a test rule.</span>
   <span class="c"># Does nothing.</span>
-  <span class="k">class</span> <span class="t">MyRule</span> <span class="o">&lt;</span> <span class="t">Ameba</span><span class="t">::</span><span class="t">Rule</span><span class="t">::</span><span class="t">Base</span>
+  <span class="k">class</span> <span class="t">Rule</span><span class="t">::</span><span class="t">MyRule</span> <span class="o">&lt;</span> <span class="t">Rule</span><span class="t">::</span><span class="t">Base</span>
     <span class="k">def</span> <span class="m">test</span>(source)
     <span class="k">end</span>
   <span class="k">end</span>
 <span class="k">end</span>
 
-<span class="t">MyRule</span>.parsed_doc <span class="c"># =&gt; &quot;This is a test rule.\nDoes nothing.&quot;</span></code></pre>
+<span class="t">Ameba</span><span class="t">::</span><span class="t">Rule</span><span class="t">::</span><span class="t">MyRule</span>.parsed_doc <span class="c"># =&gt; &quot;This is a test rule.\nDoes nothing.&quot;</span></code></pre>
         </div>
       
       <br/>
@@ -1873,7 +1860,7 @@ that can be avoided by using <code>each_&lt;member&gt;</code> instead of <code>&
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/368bb38/src/ameba/rule/performance/excessive_allocations.cr#L35" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/4b3d330/src/ameba/rule/performance/excessive_allocations.cr#L35" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2043,7 +2030,7 @@ that can be avoided by using <code>each_&lt;member&gt;</code> instead of <code>&
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/368bb38/src/ameba/rule/performance/excessive_allocations.cr#L35" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/4b3d330/src/ameba/rule/performance/excessive_allocations.cr#L35" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2073,7 +2060,7 @@ that can be avoided by using <code>each_&lt;member&gt;</code> instead of <code>&
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/368bb38/src/ameba/rule/performance/excessive_allocations.cr#L55" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/4b3d330/src/ameba/rule/performance/excessive_allocations.cr#L55" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2089,7 +2076,7 @@ that can be avoided by using <code>each_&lt;member&gt;</code> instead of <code>&
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/368bb38/src/ameba/rule/performance/excessive_allocations.cr#L51" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/4b3d330/src/ameba/rule/performance/excessive_allocations.cr#L51" target="_blank">View source</a>]
         
       </div>
     </div>

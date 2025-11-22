@@ -1169,7 +1169,7 @@ and are therefore reported by Ameba.</p>
   </h2>
   
     
-      <a href="https://github.com/crystal-ameba/ameba/blob/368bb38/src/ameba/rule/documentation/admonition.cr#L35" target="_blank">
+      <a href="https://github.com/crystal-ameba/ameba/blob/4b3d330/src/ameba/rule/documentation/admonition.cr#L35" target="_blank">
         ameba/rule/documentation/admonition.cr
       </a>
     
@@ -1254,7 +1254,7 @@ and are therefore reported by Ameba.</p>
       <li class="entry-summary">
         <a href="#documentation_url%3AString-class-method" class="signature"><strong>.documentation_url</strong> : String</a>
         
-          <div class="summary"><p>A rule that reports documentation admonitions.</p></div>
+          <div class="summary"><p>Returns the documentation URL for this rule.</p></div>
         
       </li>
     
@@ -1700,7 +1700,7 @@ and are therefore reported by Ameba.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/368bb38/src/ameba/rule/documentation/admonition.cr#L35" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/4b3d330/src/ameba/rule/documentation/admonition.cr#L35" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1741,27 +1741,9 @@ and are therefore reported by Ameba.</p>
       
         <div class="doc">
           
-          <p>A rule that reports documentation admonitions.</p>
-<p>Optionally, these can fail at an appropriate time.</p>
-<pre><code class="language-crystal"><span class="k">def</span> <span class="m">get_user</span>(id)
-  <span class="c"># TODO(2024-04-24) Fix this hack when the database migration is complete</span>
-  <span class="k">if</span> id <span class="o">&lt;</span> <span class="n">1_000_000</span>
-    v1_api_call(id)
-  <span class="k">else</span>
-    v2_api_call(id)
-  <span class="k">end</span>
-<span class="k">end</span></code></pre>
-<p><code>TODO</code> comments are used to remind yourself of source code related things.</p>
-<p>The premise here is that <code>TODO</code> should be dealt with in the near future
-and are therefore reported by Ameba.</p>
-<p><code>FIXME</code> comments are used to indicate places where source code needs fixing.</p>
-<p>The premise here is that <code>FIXME</code> should indeed be fixed as soon as possible
-and are therefore reported by Ameba.</p>
-<p>YAML configuration example:</p>
-<pre><code class="language-crystal"><span class="t">Documentation</span><span class="o">/</span><span class="t">Admonition</span>:
-  <span class="t">Enabled</span>: <span class="n">true</span>
-  <span class="t">Admonitions</span>: [<span class="t">TODO</span>, <span class="t">FIXME</span>, <span class="t">BUG</span>]
-  <span class="t">Timezone</span>: <span class="t">UTC</span></code></pre>
+          <p>Returns the documentation URL for this rule.</p>
+<pre><code class="language-crystal"><span class="t">Ameba</span><span class="t">::</span><span class="t">Rule</span><span class="t">::</span><span class="t">Lint</span><span class="t">::</span><span class="t">Syntax</span>.documentation_url
+<span class="c"># =&gt; &quot;https://crystal-ameba.github.io/ameba/master/Ameba/Rule/Lint/Syntax.html&quot;</span></code></pre>
         </div>
       
       <br/>
@@ -1784,13 +1766,13 @@ and are therefore reported by Ameba.</p>
 <pre><code class="language-crystal"><span class="k">module</span> <span class="t">Ameba</span>
   <span class="c"># This is a test rule.</span>
   <span class="c"># Does nothing.</span>
-  <span class="k">class</span> <span class="t">MyRule</span> <span class="o">&lt;</span> <span class="t">Ameba</span><span class="t">::</span><span class="t">Rule</span><span class="t">::</span><span class="t">Base</span>
+  <span class="k">class</span> <span class="t">Rule</span><span class="t">::</span><span class="t">MyRule</span> <span class="o">&lt;</span> <span class="t">Rule</span><span class="t">::</span><span class="t">Base</span>
     <span class="k">def</span> <span class="m">test</span>(source)
     <span class="k">end</span>
   <span class="k">end</span>
 <span class="k">end</span>
 
-<span class="t">MyRule</span>.parsed_doc <span class="c"># =&gt; &quot;This is a test rule.\nDoes nothing.&quot;</span></code></pre>
+<span class="t">Ameba</span><span class="t">::</span><span class="t">Rule</span><span class="t">::</span><span class="t">MyRule</span>.parsed_doc <span class="c"># =&gt; &quot;This is a test rule.\nDoes nothing.&quot;</span></code></pre>
         </div>
       
       <br/>
@@ -1810,7 +1792,7 @@ and are therefore reported by Ameba.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/368bb38/src/ameba/rule/documentation/admonition.cr#L38" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/4b3d330/src/ameba/rule/documentation/admonition.cr#L38" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1980,7 +1962,7 @@ and are therefore reported by Ameba.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/368bb38/src/ameba/rule/documentation/admonition.cr#L38" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/4b3d330/src/ameba/rule/documentation/admonition.cr#L38" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2010,7 +1992,7 @@ and are therefore reported by Ameba.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/368bb38/src/ameba/rule/documentation/admonition.cr#L56" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/4b3d330/src/ameba/rule/documentation/admonition.cr#L56" target="_blank">View source</a>]
         
       </div>
     </div>

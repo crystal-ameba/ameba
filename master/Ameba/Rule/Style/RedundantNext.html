@@ -1220,7 +1220,7 @@ without arguments. Sometimes such statements are used to yield the <code>nil</co
   </h2>
   
     
-      <a href="https://github.com/crystal-ameba/ameba/blob/368bb38/src/ameba/rule/style/redundant_next.cr#L99" target="_blank">
+      <a href="https://github.com/crystal-ameba/ameba/blob/4b3d330/src/ameba/rule/style/redundant_next.cr#L99" target="_blank">
         ameba/rule/style/redundant_next.cr
       </a>
     
@@ -1295,7 +1295,7 @@ without arguments. Sometimes such statements are used to yield the <code>nil</co
       <li class="entry-summary">
         <a href="#documentation_url%3AString-class-method" class="signature"><strong>.documentation_url</strong> : String</a>
         
-          <div class="summary"><p>A rule that disallows redundant <code>next</code> expressions.</p></div>
+          <div class="summary"><p>Returns the documentation URL for this rule.</p></div>
         
       </li>
     
@@ -1797,7 +1797,7 @@ without arguments. Sometimes such statements are used to yield the <code>nil</co
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/368bb38/src/ameba/rule/style/redundant_next.cr#L99" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/4b3d330/src/ameba/rule/style/redundant_next.cr#L99" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1838,78 +1838,9 @@ without arguments. Sometimes such statements are used to yield the <code>nil</co
       
         <div class="doc">
           
-          <p>A rule that disallows redundant <code>next</code> expressions. A <code>next</code> keyword allows
-a block to skip to the next iteration early, however, it is considered
-redundant in cases where it is the last expression in a block or combines
-into the node which is the last in a block.</p>
-<p>For example, this is considered invalid:</p>
-<pre><code class="language-crystal">block <span class="k">do</span> <span class="o">|</span>v<span class="o">|</span>
-  <span class="k">next</span> v <span class="o">+</span> <span class="n">1</span>
-<span class="k">end</span></code></pre>
-<pre><code class="language-crystal">block <span class="k">do</span> <span class="o">|</span>v<span class="o">|</span>
-  <span class="k">case</span> v
-  <span class="k">when</span> .<span class="k">nil?</span>
-    <span class="k">next</span> <span class="s">&quot;nil&quot;</span>
-  <span class="k">when</span> .blank?
-    <span class="k">next</span> <span class="s">&quot;blank&quot;</span>
-  <span class="k">else</span>
-    <span class="k">next</span> <span class="s">&quot;empty&quot;</span>
-  <span class="k">end</span>
-<span class="k">end</span></code></pre>
-<p>And has to be written as the following:</p>
-<pre><code class="language-crystal">block <span class="k">do</span> <span class="o">|</span>v<span class="o">|</span>
-  v <span class="o">+</span> <span class="n">1</span>
-<span class="k">end</span></code></pre>
-<pre><code class="language-crystal">block <span class="k">do</span> <span class="o">|</span>v<span class="o">|</span>
-  <span class="k">case</span> arg
-  <span class="k">when</span> .<span class="k">nil?</span>
-    <span class="s">&quot;nil&quot;</span>
-  <span class="k">when</span> .blank?
-    <span class="s">&quot;blank&quot;</span>
-  <span class="k">else</span>
-    <span class="s">&quot;empty&quot;</span>
-  <span class="k">end</span>
-<span class="k">end</span></code></pre>
-<h3><a id="configuration-params" class="anchor" href="#configuration-params">
-  <svg class="octicon-link" aria-hidden="true">
-    <use href="#octicon-link"/>
-  </svg>
-</a>Configuration params</h3>
-<ol>
-<li><em>allow_multi_next</em>, default: true</li>
-</ol>
-<p>Allows end-user to configure whether to report or not the <code>next</code> statements
-which yield tuple literals i.e.</p>
-<pre><code class="language-crystal">block <span class="k">do</span>
-  <span class="k">next</span> a, b
-<span class="k">end</span></code></pre>
-<p>If this param equals to <code>false</code>, the block above will be forced to be written as:</p>
-<pre><code class="language-crystal">block <span class="k">do</span>
-  {a, b}
-<span class="k">end</span></code></pre>
-<ol start="2">
-<li><em>allow_empty_next</em>, default: true</li>
-</ol>
-<p>Allows end-user to configure whether to report or not the <code>next</code> statements
-without arguments. Sometimes such statements are used to yield the <code>nil</code> value explicitly.</p>
-<pre><code class="language-crystal">block <span class="k">do</span>
-  @foo <span class="o">=</span> <span class="n">:empty</span>
-  <span class="k">next</span>
-<span class="k">end</span></code></pre>
-<p>If this param equals to <code>false</code>, the block above will be forced to be written as:</p>
-<pre><code class="language-crystal">block <span class="k">do</span>
-  @foo <span class="o">=</span> <span class="n">:empty</span>
-  <span class="n">nil</span>
-<span class="k">end</span></code></pre>
-<h3><a id="yaml-config-example" class="anchor" href="#yaml-config-example">
-  <svg class="octicon-link" aria-hidden="true">
-    <use href="#octicon-link"/>
-  </svg>
-</a>YAML config example</h3>
-<pre><code class="language-crystal"><span class="t">Style</span><span class="o">/</span><span class="t">RedundantNext</span>:
-  <span class="t">Enabled</span>: <span class="n">true</span>
-  <span class="t">AllowMultiNext</span>: <span class="n">true</span>
-  <span class="t">AllowEmptyNext</span>: <span class="n">true</span></code></pre>
+          <p>Returns the documentation URL for this rule.</p>
+<pre><code class="language-crystal"><span class="t">Ameba</span><span class="t">::</span><span class="t">Rule</span><span class="t">::</span><span class="t">Lint</span><span class="t">::</span><span class="t">Syntax</span>.documentation_url
+<span class="c"># =&gt; &quot;https://crystal-ameba.github.io/ameba/master/Ameba/Rule/Lint/Syntax.html&quot;</span></code></pre>
         </div>
       
       <br/>
@@ -1932,13 +1863,13 @@ without arguments. Sometimes such statements are used to yield the <code>nil</co
 <pre><code class="language-crystal"><span class="k">module</span> <span class="t">Ameba</span>
   <span class="c"># This is a test rule.</span>
   <span class="c"># Does nothing.</span>
-  <span class="k">class</span> <span class="t">MyRule</span> <span class="o">&lt;</span> <span class="t">Ameba</span><span class="t">::</span><span class="t">Rule</span><span class="t">::</span><span class="t">Base</span>
+  <span class="k">class</span> <span class="t">Rule</span><span class="t">::</span><span class="t">MyRule</span> <span class="o">&lt;</span> <span class="t">Rule</span><span class="t">::</span><span class="t">Base</span>
     <span class="k">def</span> <span class="m">test</span>(source)
     <span class="k">end</span>
   <span class="k">end</span>
 <span class="k">end</span>
 
-<span class="t">MyRule</span>.parsed_doc <span class="c"># =&gt; &quot;This is a test rule.\nDoes nothing.&quot;</span></code></pre>
+<span class="t">Ameba</span><span class="t">::</span><span class="t">Rule</span><span class="t">::</span><span class="t">MyRule</span>.parsed_doc <span class="c"># =&gt; &quot;This is a test rule.\nDoes nothing.&quot;</span></code></pre>
         </div>
       
       <br/>
@@ -1958,7 +1889,7 @@ without arguments. Sometimes such statements are used to yield the <code>nil</co
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/368bb38/src/ameba/rule/style/redundant_next.cr#L102" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/4b3d330/src/ameba/rule/style/redundant_next.cr#L102" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2156,7 +2087,7 @@ without arguments. Sometimes such statements are used to yield the <code>nil</co
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/368bb38/src/ameba/rule/style/redundant_next.cr#L102" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/4b3d330/src/ameba/rule/style/redundant_next.cr#L102" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2186,7 +2117,7 @@ without arguments. Sometimes such statements are used to yield the <code>nil</co
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/368bb38/src/ameba/rule/style/redundant_next.cr#L116" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/4b3d330/src/ameba/rule/style/redundant_next.cr#L116" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2202,7 +2133,7 @@ without arguments. Sometimes such statements are used to yield the <code>nil</co
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/368bb38/src/ameba/rule/style/redundant_next.cr#L112" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/4b3d330/src/ameba/rule/style/redundant_next.cr#L112" target="_blank">View source</a>]
         
       </div>
     </div>

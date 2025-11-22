@@ -1160,7 +1160,7 @@
   </h2>
   
     
-      <a href="https://github.com/crystal-ameba/ameba/blob/368bb38/src/ameba/rule/performance/minmax_after_map.cr#L28" target="_blank">
+      <a href="https://github.com/crystal-ameba/ameba/blob/4b3d330/src/ameba/rule/performance/minmax_after_map.cr#L28" target="_blank">
         ameba/rule/performance/minmax_after_map.cr
       </a>
     
@@ -1242,7 +1242,7 @@
       <li class="entry-summary">
         <a href="#documentation_url%3AString-class-method" class="signature"><strong>.documentation_url</strong> : String</a>
         
-          <div class="summary"><p>This rule is used to identify usage of <code>min/max/minmax</code> calls that follow <code>map</code>.</p></div>
+          <div class="summary"><p>Returns the documentation URL for this rule.</p></div>
         
       </li>
     
@@ -1751,7 +1751,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/368bb38/src/ameba/rule/performance/minmax_after_map.cr#L28" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/4b3d330/src/ameba/rule/performance/minmax_after_map.cr#L28" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1792,18 +1792,9 @@
       
         <div class="doc">
           
-          <p>This rule is used to identify usage of <code>min/max/minmax</code> calls that follow <code>map</code>.</p>
-<p>For example, this is considered invalid:</p>
-<pre><code class="language-crystal"><span class="s">%w[Alice Bob]</span>.map(<span class="o">&amp;</span>.size).min
-<span class="s">%w[Alice Bob]</span>.map(<span class="o">&amp;</span>.size).max
-<span class="s">%w[Alice Bob]</span>.map(<span class="o">&amp;</span>.size).minmax</code></pre>
-<p>And it should be written as this:</p>
-<pre><code class="language-crystal"><span class="s">%w[Alice Bob]</span>.min_of(<span class="o">&amp;</span>.size)
-<span class="s">%w[Alice Bob]</span>.max_of(<span class="o">&amp;</span>.size)
-<span class="s">%w[Alice Bob]</span>.minmax_of(<span class="o">&amp;</span>.size)</code></pre>
-<p>YAML configuration example:</p>
-<pre><code class="language-crystal"><span class="t">Performance</span><span class="o">/</span><span class="t">MinMaxAfterMap</span>:
-  <span class="t">Enabled</span>: <span class="n">true</span></code></pre>
+          <p>Returns the documentation URL for this rule.</p>
+<pre><code class="language-crystal"><span class="t">Ameba</span><span class="t">::</span><span class="t">Rule</span><span class="t">::</span><span class="t">Lint</span><span class="t">::</span><span class="t">Syntax</span>.documentation_url
+<span class="c"># =&gt; &quot;https://crystal-ameba.github.io/ameba/master/Ameba/Rule/Lint/Syntax.html&quot;</span></code></pre>
         </div>
       
       <br/>
@@ -1826,13 +1817,13 @@
 <pre><code class="language-crystal"><span class="k">module</span> <span class="t">Ameba</span>
   <span class="c"># This is a test rule.</span>
   <span class="c"># Does nothing.</span>
-  <span class="k">class</span> <span class="t">MyRule</span> <span class="o">&lt;</span> <span class="t">Ameba</span><span class="t">::</span><span class="t">Rule</span><span class="t">::</span><span class="t">Base</span>
+  <span class="k">class</span> <span class="t">Rule</span><span class="t">::</span><span class="t">MyRule</span> <span class="o">&lt;</span> <span class="t">Rule</span><span class="t">::</span><span class="t">Base</span>
     <span class="k">def</span> <span class="m">test</span>(source)
     <span class="k">end</span>
   <span class="k">end</span>
 <span class="k">end</span>
 
-<span class="t">MyRule</span>.parsed_doc <span class="c"># =&gt; &quot;This is a test rule.\nDoes nothing.&quot;</span></code></pre>
+<span class="t">Ameba</span><span class="t">::</span><span class="t">Rule</span><span class="t">::</span><span class="t">MyRule</span>.parsed_doc <span class="c"># =&gt; &quot;This is a test rule.\nDoes nothing.&quot;</span></code></pre>
         </div>
       
       <br/>
@@ -1852,7 +1843,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/368bb38/src/ameba/rule/performance/minmax_after_map.cr#L31" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/4b3d330/src/ameba/rule/performance/minmax_after_map.cr#L31" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1994,7 +1985,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/368bb38/src/ameba/rule/performance/minmax_after_map.cr#L31" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/4b3d330/src/ameba/rule/performance/minmax_after_map.cr#L31" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2024,7 +2015,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/368bb38/src/ameba/rule/performance/minmax_after_map.cr#L43" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/4b3d330/src/ameba/rule/performance/minmax_after_map.cr#L43" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2040,7 +2031,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/368bb38/src/ameba/rule/performance/minmax_after_map.cr#L39" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/4b3d330/src/ameba/rule/performance/minmax_after_map.cr#L39" target="_blank">View source</a>]
         
       </div>
     </div>

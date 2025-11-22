@@ -1160,7 +1160,7 @@ replaced with either the body of the construct, or deleted entirely.</p>
   </h2>
   
     
-      <a href="https://github.com/crystal-ameba/ameba/blob/368bb38/src/ameba/rule/lint/literal_in_condition.cr#L23" target="_blank">
+      <a href="https://github.com/crystal-ameba/ameba/blob/4b3d330/src/ameba/rule/lint/literal_in_condition.cr#L23" target="_blank">
         ameba/rule/lint/literal_in_condition.cr
       </a>
     
@@ -1235,7 +1235,7 @@ replaced with either the body of the construct, or deleted entirely.</p>
       <li class="entry-summary">
         <a href="#documentation_url%3AString-class-method" class="signature"><strong>.documentation_url</strong> : String</a>
         
-          <div class="summary"><p>A rule that disallows useless conditional statements that contain a literal in place of a variable or predicate function.</p></div>
+          <div class="summary"><p>Returns the documentation URL for this rule.</p></div>
         
       </li>
     
@@ -1662,7 +1662,7 @@ replaced with either the body of the construct, or deleted entirely.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/368bb38/src/ameba/rule/lint/literal_in_condition.cr#L23" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/4b3d330/src/ameba/rule/lint/literal_in_condition.cr#L23" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1703,18 +1703,9 @@ replaced with either the body of the construct, or deleted entirely.</p>
       
         <div class="doc">
           
-          <p>A rule that disallows useless conditional statements that contain a literal
-in place of a variable or predicate function.</p>
-<p>This is because a conditional construct with a literal predicate will
-always result in the same behavior at run time, meaning it can be
-replaced with either the body of the construct, or deleted entirely.</p>
-<p>This is considered invalid:</p>
-<pre><code class="language-crystal"><span class="k">if</span> <span class="s">&quot;something&quot;</span>
-  <span class="n">:ok</span>
-<span class="k">end</span></code></pre>
-<p>YAML configuration example:</p>
-<pre><code class="language-crystal"><span class="t">Lint</span><span class="o">/</span><span class="t">LiteralInCondition</span>:
-  <span class="t">Enabled</span>: <span class="n">true</span></code></pre>
+          <p>Returns the documentation URL for this rule.</p>
+<pre><code class="language-crystal"><span class="t">Ameba</span><span class="t">::</span><span class="t">Rule</span><span class="t">::</span><span class="t">Lint</span><span class="t">::</span><span class="t">Syntax</span>.documentation_url
+<span class="c"># =&gt; &quot;https://crystal-ameba.github.io/ameba/master/Ameba/Rule/Lint/Syntax.html&quot;</span></code></pre>
         </div>
       
       <br/>
@@ -1737,13 +1728,13 @@ replaced with either the body of the construct, or deleted entirely.</p>
 <pre><code class="language-crystal"><span class="k">module</span> <span class="t">Ameba</span>
   <span class="c"># This is a test rule.</span>
   <span class="c"># Does nothing.</span>
-  <span class="k">class</span> <span class="t">MyRule</span> <span class="o">&lt;</span> <span class="t">Ameba</span><span class="t">::</span><span class="t">Rule</span><span class="t">::</span><span class="t">Base</span>
+  <span class="k">class</span> <span class="t">Rule</span><span class="t">::</span><span class="t">MyRule</span> <span class="o">&lt;</span> <span class="t">Rule</span><span class="t">::</span><span class="t">Base</span>
     <span class="k">def</span> <span class="m">test</span>(source)
     <span class="k">end</span>
   <span class="k">end</span>
 <span class="k">end</span>
 
-<span class="t">MyRule</span>.parsed_doc <span class="c"># =&gt; &quot;This is a test rule.\nDoes nothing.&quot;</span></code></pre>
+<span class="t">Ameba</span><span class="t">::</span><span class="t">Rule</span><span class="t">::</span><span class="t">MyRule</span>.parsed_doc <span class="c"># =&gt; &quot;This is a test rule.\nDoes nothing.&quot;</span></code></pre>
         </div>
       
       <br/>
@@ -1763,7 +1754,7 @@ replaced with either the body of the construct, or deleted entirely.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/368bb38/src/ameba/rule/lint/literal_in_condition.cr#L26" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/4b3d330/src/ameba/rule/lint/literal_in_condition.cr#L26" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1905,7 +1896,7 @@ replaced with either the body of the construct, or deleted entirely.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/368bb38/src/ameba/rule/lint/literal_in_condition.cr#L26" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/4b3d330/src/ameba/rule/lint/literal_in_condition.cr#L26" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1935,7 +1926,7 @@ replaced with either the body of the construct, or deleted entirely.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/368bb38/src/ameba/rule/lint/literal_in_condition.cr#L34" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/4b3d330/src/ameba/rule/lint/literal_in_condition.cr#L34" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1951,7 +1942,7 @@ replaced with either the body of the construct, or deleted entirely.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/368bb38/src/ameba/rule/lint/literal_in_condition.cr#L38" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/4b3d330/src/ameba/rule/lint/literal_in_condition.cr#L38" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1967,7 +1958,7 @@ replaced with either the body of the construct, or deleted entirely.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/368bb38/src/ameba/rule/lint/literal_in_condition.cr#L45" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/4b3d330/src/ameba/rule/lint/literal_in_condition.cr#L45" target="_blank">View source</a>]
         
       </div>
     </div>

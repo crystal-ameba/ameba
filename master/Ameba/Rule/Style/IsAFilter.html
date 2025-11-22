@@ -1175,7 +1175,7 @@ matches.one?(<span class="t">Nil</span>)              <span class="c"># =&gt; tr
   </h2>
   
     
-      <a href="https://github.com/crystal-ameba/ameba/blob/368bb38/src/ameba/rule/style/is_a_filter.cr#L41" target="_blank">
+      <a href="https://github.com/crystal-ameba/ameba/blob/4b3d330/src/ameba/rule/style/is_a_filter.cr#L41" target="_blank">
         ameba/rule/style/is_a_filter.cr
       </a>
     
@@ -1260,7 +1260,7 @@ matches.one?(<span class="t">Nil</span>)              <span class="c"># =&gt; tr
       <li class="entry-summary">
         <a href="#documentation_url%3AString-class-method" class="signature"><strong>.documentation_url</strong> : String</a>
         
-          <div class="summary"><p>This rule is used to identify usage of <code>is_a?/nil?</code> calls within filters.</p></div>
+          <div class="summary"><p>Returns the documentation URL for this rule.</p></div>
         
       </li>
     
@@ -1707,7 +1707,7 @@ matches.one?(<span class="t">Nil</span>)              <span class="c"># =&gt; tr
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/368bb38/src/ameba/rule/style/is_a_filter.cr#L41" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/4b3d330/src/ameba/rule/style/is_a_filter.cr#L41" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1748,33 +1748,9 @@ matches.one?(<span class="t">Nil</span>)              <span class="c"># =&gt; tr
       
         <div class="doc">
           
-          <p>This rule is used to identify usage of <code>is_a?/nil?</code> calls within filters.</p>
-<p>For example, this is considered invalid:</p>
-<pre><code class="language-crystal">matches <span class="o">=</span> <span class="s">%w[Alice Bob]</span>.map(<span class="o">&amp;</span>.match(<span class="o">/</span><span class="o">^</span><span class="t">A</span>.<span class="o">/</span>))
-
-matches.any?(<span class="o">&amp;</span>.<span class="k">is_a?</span>(<span class="t">Regex</span><span class="t">::</span><span class="t">MatchData</span>)) <span class="c"># =&gt; true</span>
-matches.one?(<span class="o">&amp;</span>.<span class="k">nil?</span>)                    <span class="c"># =&gt; true</span>
-
-<span class="k">typeof</span>(matches.reject(<span class="o">&amp;</span>.<span class="k">nil?</span>))                    <span class="c"># =&gt; Array(Regex::MatchData | Nil)</span>
-<span class="k">typeof</span>(matches.<span class="k">select</span>(<span class="o">&amp;</span>.<span class="k">is_a?</span>(<span class="t">Regex</span><span class="t">::</span><span class="t">MatchData</span>))) <span class="c"># =&gt; Array(Regex::MatchData | Nil)</span></code></pre>
-<p>And it should be written as this:</p>
-<pre><code class="language-crystal">matches <span class="o">=</span> <span class="s">%w[Alice Bob]</span>.map(<span class="o">&amp;</span>.match(<span class="o">/</span><span class="o">^</span><span class="t">A</span>.<span class="o">/</span>))
-
-matches.any?(<span class="t">Regex</span><span class="t">::</span><span class="t">MatchData</span>) <span class="c"># =&gt; true</span>
-matches.one?(<span class="t">Nil</span>)              <span class="c"># =&gt; true</span>
-
-<span class="k">typeof</span>(matches.reject(<span class="t">Nil</span>))              <span class="c"># =&gt; Array(Regex::MatchData)</span>
-<span class="k">typeof</span>(matches.<span class="k">select</span>(<span class="t">Regex</span><span class="t">::</span><span class="t">MatchData</span>)) <span class="c"># =&gt; Array(Regex::MatchData)</span></code></pre>
-<p>YAML configuration example:</p>
-<pre><code class="language-crystal"><span class="t">Style</span><span class="o">/</span><span class="t">IsAFilter</span>:
-  <span class="t">Enabled</span>: <span class="n">true</span>
-  <span class="t">FilterNames</span>:
-    <span class="o">-</span> <span class="k">select</span>
-    <span class="o">-</span> reject
-    <span class="o">-</span> any?
-    <span class="o">-</span> all?
-    <span class="o">-</span> none?
-    <span class="o">-</span> one?</code></pre>
+          <p>Returns the documentation URL for this rule.</p>
+<pre><code class="language-crystal"><span class="t">Ameba</span><span class="t">::</span><span class="t">Rule</span><span class="t">::</span><span class="t">Lint</span><span class="t">::</span><span class="t">Syntax</span>.documentation_url
+<span class="c"># =&gt; &quot;https://crystal-ameba.github.io/ameba/master/Ameba/Rule/Lint/Syntax.html&quot;</span></code></pre>
         </div>
       
       <br/>
@@ -1797,13 +1773,13 @@ matches.one?(<span class="t">Nil</span>)              <span class="c"># =&gt; tr
 <pre><code class="language-crystal"><span class="k">module</span> <span class="t">Ameba</span>
   <span class="c"># This is a test rule.</span>
   <span class="c"># Does nothing.</span>
-  <span class="k">class</span> <span class="t">MyRule</span> <span class="o">&lt;</span> <span class="t">Ameba</span><span class="t">::</span><span class="t">Rule</span><span class="t">::</span><span class="t">Base</span>
+  <span class="k">class</span> <span class="t">Rule</span><span class="t">::</span><span class="t">MyRule</span> <span class="o">&lt;</span> <span class="t">Rule</span><span class="t">::</span><span class="t">Base</span>
     <span class="k">def</span> <span class="m">test</span>(source)
     <span class="k">end</span>
   <span class="k">end</span>
 <span class="k">end</span>
 
-<span class="t">MyRule</span>.parsed_doc <span class="c"># =&gt; &quot;This is a test rule.\nDoes nothing.&quot;</span></code></pre>
+<span class="t">Ameba</span><span class="t">::</span><span class="t">Rule</span><span class="t">::</span><span class="t">MyRule</span>.parsed_doc <span class="c"># =&gt; &quot;This is a test rule.\nDoes nothing.&quot;</span></code></pre>
         </div>
       
       <br/>
@@ -1823,7 +1799,7 @@ matches.one?(<span class="t">Nil</span>)              <span class="c"># =&gt; tr
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/368bb38/src/ameba/rule/style/is_a_filter.cr#L44" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/4b3d330/src/ameba/rule/style/is_a_filter.cr#L44" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1993,7 +1969,7 @@ matches.one?(<span class="t">Nil</span>)              <span class="c"># =&gt; tr
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/368bb38/src/ameba/rule/style/is_a_filter.cr#L44" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/4b3d330/src/ameba/rule/style/is_a_filter.cr#L44" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2023,7 +1999,7 @@ matches.one?(<span class="t">Nil</span>)              <span class="c"># =&gt; tr
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/368bb38/src/ameba/rule/style/is_a_filter.cr#L59" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/4b3d330/src/ameba/rule/style/is_a_filter.cr#L59" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2039,7 +2015,7 @@ matches.one?(<span class="t">Nil</span>)              <span class="c"># =&gt; tr
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/368bb38/src/ameba/rule/style/is_a_filter.cr#L55" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/4b3d330/src/ameba/rule/style/is_a_filter.cr#L55" target="_blank">View source</a>]
         
       </div>
     </div>
