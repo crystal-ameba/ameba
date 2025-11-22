@@ -11,7 +11,6 @@ on:
         type: string
         description: Version to deploy
       git-branch:
-        required: true
         type: string
         description: Git branch to deploy to
         default: gh-pages
