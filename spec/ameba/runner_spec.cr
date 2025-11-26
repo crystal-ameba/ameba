@@ -56,13 +56,13 @@ module Ameba
         source = Source.new path: "source.cr"
 
         v1_0_0 = SemanticVersion.parse("1.0.0")
-        Runner.new(rules, [source], formatter, default_severity, false, v1_0_0).run.success?.should be_true
+        Runner.new(rules, [source], formatter, default_severity, false, false, v1_0_0).run.success?.should be_true
 
         v1_5_0 = SemanticVersion.parse("1.5.0")
-        Runner.new(rules, [source], formatter, default_severity, false, v1_5_0).run.success?.should be_false
+        Runner.new(rules, [source], formatter, default_severity, false, false, v1_5_0).run.success?.should be_false
 
         v1_10_0 = SemanticVersion.parse("1.10.0")
-        Runner.new(rules, [source], formatter, default_severity, false, v1_10_0).run.success?.should be_false
+        Runner.new(rules, [source], formatter, default_severity, false, false, v1_10_0).run.success?.should be_false
       end
 
       it "skips rule check if source is excluded" do
