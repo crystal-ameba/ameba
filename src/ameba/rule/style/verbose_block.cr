@@ -49,6 +49,10 @@ module Ameba::Rule::Style
 
     private PREFIX_OPERATORS = {"+", "-", "~"}
 
+    def self.autocorrect_incompatible_with
+      [Performance::MinMaxAfterMap]
+    end
+
     def test(source, node : Crystal::Call)
       # we are interested only in calls with block taking a single argument
       #
