@@ -1,0 +1,88 @@
+name: Release Nightly
+
+on:
+  # allow manually triggering from within GitHub Actions
+  workflow_dispatch: {}
+
+  # TODO: automatically trigger after successful CI pipeline?
+  # workflow_run:
+  #   workflows:
+  #     - CI
+  #   types:
+  #     - completed
+  #   branches:
+  #     - main
+
+# We must only run one release workflow at a time to prevent corrupting
+# our release artifacts.
+concurrency:
+  group: ${{ github.workflow }}
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        platform:
+          - x86_64-linux-musl
+          - aarch64-linux-musl
+          - aarch64-apple-darwin
+    steps:
+      - name: Download sources
+        uses: actions/checkout@v4
+
+      - name: Install dependencies
+        uses: docker://ghcr.io/luislavena/hydrofoil-crystal:1.16
+        with:
+          args: sh -c "shards check || shards install --skip-postinstall --skip-executables"
+
+      - name: Build for ${{ matrix.platform }}
+        uses: docker://ghcr.io/luislavena/crystal-xbuild:tip
+        with:
+          entrypoint: xbuild
+          args: src/cli.cr ameba ${{ matrix.platform }}
+
+      - name: Create tarball
+        run: |
+          tar -czf ameba-nightly-${{ matrix.platform }}.tar.gz -C build/${{ matrix.platform }} ameba
+
+      - name: Upload tarball artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-${{ matrix.platform }}
+          path: |
+            ameba-nightly-${{ matrix.platform }}.tar.gz
+
+  release:
+    needs: [build]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Download sources
+        uses: actions/checkout@v4
+
+      - name: Download tarballs
+        uses: actions/download-artifact@v4
+        with:
+          pattern: release-*
+          path: ./release
+          merge-multiple: true
+
+      - name: Update Nightly tag to latest
+        run: |
+          git config user.name "GitHub Actions Bot"
+          git config user.email "<>"
+          git tag -fa nightly -m "Latest Continuous Build" ${GITHUB_SHA}
+          git push --force origin nightly
+
+      - name: Release Nightly
+        uses: softprops/action-gh-release@v2
+        with:
+          name: Ameba Nightly Build
+          prerelease: true
+          tag_name: nightly
+          target_commitish: ${{ github.sha }}
+          files: |
+            release/*.tar.gz
