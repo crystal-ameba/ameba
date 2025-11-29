@@ -179,8 +179,7 @@ class Ameba::Config
     else
       (find_files_by_globs(globs, root) - find_files_by_globs(excluded, root))
         .map do |path|
-          relative_path = Path[path].relative_to(root).to_s
-          Source.new File.read(path), relative_path
+          Source.new(File.read(path), path)
         end
     end
   end
