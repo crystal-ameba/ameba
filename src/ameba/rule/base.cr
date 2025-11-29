@@ -94,10 +94,10 @@ module Ameba::Rule
     # ```
     def excluded?(source, root = Dir.current)
       !!excluded.try &.any? do |path|
-        path = Path.posix(path).expand(root).to_s
+        path = Path.posix(path).to_native.expand(root)
 
-        source.fullpath == path ||
-          Dir.glob(path).includes?(source.fullpath)
+        source.fullpath == path.to_s ||
+          Dir.glob(path.to_posix).includes?(source.fullpath)
       end
     end
 
