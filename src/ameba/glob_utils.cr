@@ -24,15 +24,13 @@ module Ameba
     def expand(globs, root = Dir.current)
       globs
         .flat_map do |glob|
-          glob = Path[glob].expand(root)
+          glob = Path[glob].expand(root).to_posix
 
-          if File.directory?(Path.posix(glob))
+          if File.directory?(glob)
             glob = glob / "**" / "*.{cr,ecr}"
           end
 
-          glob = glob.to_posix.to_s
-
-          Dir[glob]
+          Dir[glob.to_s]
         end
         .uniq!
         .select! { |path| File.file?(path) }
