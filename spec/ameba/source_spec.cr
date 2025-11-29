@@ -35,18 +35,6 @@ module Ameba
       end
     end
 
-    describe "#matches_path?" do
-      it "returns true if source's path is matched" do
-        source = Source.new path: "source.cr"
-        source.matches_path?("source.cr").should be_true
-      end
-
-      it "returns false if source's path is not matched" do
-        source = Source.new path: "source.cr"
-        source.matches_path?("new_source.cr").should be_false
-      end
-    end
-
     describe "#pos" do
       it "works" do
         source = Source.new <<-CRYSTAL

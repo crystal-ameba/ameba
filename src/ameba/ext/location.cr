@@ -1,5 +1,15 @@
 # Extensions to `Crystal::Location`
 module Ameba::Ext::Location
+  # Returns `self` relative to the given *base* directory.
+  def relative(base = Dir.current) : self
+    return self unless path = original_filename
+
+    path =
+      Path[path].relative_to(base).to_s
+
+    self.class.new(path, @line_number, @column_number)
+  end
+
   # Returns `true` if the line numbers of `self` and *other* are the same.
   def same_line?(other : self?) : Bool
     !!other &&

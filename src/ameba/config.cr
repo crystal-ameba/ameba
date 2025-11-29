@@ -58,14 +58,14 @@ class Ameba::Config
     Path[XDG_CONFIG_HOME] / "ameba" / "config.yml",
   }
 
-  DEFAULT_GLOBS = %w[
-    **/*.cr
-    **/*.ecr
-    !lib
-  ]
+  DEFAULT_EXCLUDED = Set{"lib"}
+  DEFAULT_GLOBS    = Set{"**/*.{cr,ecr}"}
 
   getter rules : Array(Rule::Base)
   property severity = Severity::Convention
+
+  # Returns a root directory to be used by `Ameba::Runner`.
+  property root : Path { Path[Dir.current] }
 
   # Returns an ameba version to be used by `Ameba::Runner`.
   property version : SemanticVersion?
@@ -76,19 +76,19 @@ class Ameba::Config
   #
   # ```
   # config = Ameba::Config.load
-  # config.globs = ["**/*.cr"]
+  # config.globs = Set{"**/*.cr"}
   # config.globs
   # ```
-  property globs : Array(String)
+  property globs : Set(String)
 
   # Represents a list of paths to exclude from globs.
   # Can have wildcards.
   #
   # ```
   # config = Ameba::Config.load
-  # config.excluded = ["spec", "src/server/*.cr"]
+  # config.excluded = Set{"spec", "src/server/*.cr"}
   # ```
-  property excluded : Array(String)
+  property excluded : Set(String)
 
   # Returns `true` if correctable issues should be autocorrected.
   property? autocorrect = false
@@ -101,7 +101,7 @@ class Ameba::Config
   # Creates a new instance of `Ameba::Config` based on YAML parameters.
   #
   # `Config.load` uses this constructor to instantiate new config by YAML file.
-  protected def initialize(config : YAML::Any)
+  protected def initialize(config : YAML::Any, @root = nil)
     if config.raw.nil?
       config = YAML.parse("{}")
     elsif !config.raw.is_a?(Hash)
@@ -109,8 +109,8 @@ class Ameba::Config
     end
     @rules = Rule.rules.map &.new(config).as(Rule::Base)
     @rule_groups = @rules.group_by &.group
-    @excluded = load_array_section(config, "Excluded")
-    @globs = load_array_section(config, "Globs", DEFAULT_GLOBS)
+    @excluded = load_array_section(config, "Excluded", DEFAULT_EXCLUDED).to_set
+    @globs = load_array_section(config, "Globs", DEFAULT_GLOBS).to_set
 
     if version = config["Version"]?.try(&.as_s).presence
       self.version = version
@@ -125,38 +125,37 @@ class Ameba::Config
   # ```
   # config = Ameba::Config.load
   # ```
-  def self.load(path = nil, colors = true, skip_reading_config = false)
-    Colorize.enabled = colors
+  def self.load(path = nil, root = nil, skip_reading_config = false)
     content = if skip_reading_config
                 "{}"
               else
-                read_config(path) || "{}"
+                read_config(path, root) || "{}"
               end
-    Config.new YAML.parse(content)
+    Config.new YAML.parse(content), root
   rescue e
     raise "Unable to load config file: #{e.message}"
   end
 
-  protected def self.read_config(path = nil)
+  protected def self.read_config(path = nil, root = nil)
     if path
       return File.read(path) if File.exists?(path)
       raise "Config file does not exist"
     end
-    each_config_path do |config_path|
-      return File.read(config_path) if File.exists?(config_path)
+    path = root ? root / FILENAME : DEFAULT_PATH
+    if config_path = find_config_path(path)
+      return File.read(config_path)
     end
   end
 
-  protected def self.each_config_path(&)
-    path = Path[DEFAULT_PATH].expand(home: true)
-
-    search_paths = path.parents
-    search_paths.reverse_each do |search_path|
-      yield search_path / FILENAME
+  protected def self.find_config_path(path : Path)
+    path.parents.reverse_each do |search_path|
+      config_path =
+        search_path / FILENAME
+      return config_path if File.exists?(config_path)
     end
 
     DEFAULT_PATHS.each do |default_path|
-      yield default_path
+      return default_path if File.exists?(default_path)
     end
   end
 
@@ -169,16 +168,18 @@ class Ameba::Config
   # ```
   # config = Ameba::Config.load
   # config.sources # => list of default sources
-  # config.globs = ["**/*.cr", "**/*.ecr"]
-  # config.excluded = ["spec"]
+  # config.globs = Set{"**/*.cr", "**/*.ecr"}
+  # config.excluded = Set{"spec"}
   # config.sources # => list of sources pointing to files found by the wildcards
   # ```
   def sources
     if file = stdin_filename
       [Source.new(STDIN.gets_to_end, file)]
     else
-      (find_files_by_globs(globs) - find_files_by_globs(excluded))
-        .map { |path| Source.new File.read(path), path }
+      (find_files_by_globs(globs, root) - find_files_by_globs(excluded, root))
+        .map do |path|
+          Source.new(File.read(path), path)
+        end
     end
   end
 
@@ -229,7 +230,7 @@ class Ameba::Config
 
     rule
       .tap(&.enabled = enabled)
-      .tap(&.excluded = excluded)
+      .tap(&.excluded = excluded.try &.to_set)
   end
 
   # Updates rules properties.
@@ -245,6 +246,8 @@ class Ameba::Config
   # config.update_rules %w[Group1 Group2], enabled: true
   # ```
   def update_rules(names : Enumerable(String), enabled = true, excluded = nil)
+    excluded = excluded.try &.to_set
+
     names.each do |name|
       if rules = @rule_groups[name]?
         rules.each do |rule|
@@ -350,7 +353,7 @@ class Ameba::Config
 
       {% unless properties["excluded".id] %}
         @[YAML::Field(key: "Excluded")]
-        property excluded : Array(String)?
+        property excluded : Set(String)?
       {% end %}
 
       {% unless properties["since_version".id] %}

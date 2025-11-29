@@ -31,6 +31,14 @@ module Ameba
       @status = status || Status::Enabled
     end
 
+    def location : Crystal::Location?
+      @location.try(&.relative)
+    end
+
+    def end_location : Crystal::Location?
+      @end_location.try(&.relative)
+    end
+
     def syntax?
       rule.is_a?(Rule::Lint::Syntax)
     end

@@ -81,7 +81,7 @@ module Ameba::Formatter
     private def exclude_paths(issues)
       issues
         .compact_map(&.location.try &.filename.try &.to_s)
-        .uniq!
+        .to_set
         .map { |path| Path[path].to_posix.to_s }
     end
 

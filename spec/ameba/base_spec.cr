@@ -1,6 +1,8 @@
 require "../spec_helper"
 
 module Ameba::Rule
+  root = Path[__DIR__, "..", ".."]
+
   describe Base do
     context ".rules" do
       it "returns a list of all rules" do
@@ -51,25 +53,25 @@ module Ameba::Rule
 
       it "returns false if source is not excluded from this rule" do
         rule = DummyRule.new
-        rule.excluded = %w[some_source.cr]
+        rule.excluded = Set{"some_source.cr"}
         rule.excluded?(Source.new path: "another_source.cr").should_not be_true
       end
 
       it "returns true if source is excluded from this rule" do
         rule = DummyRule.new
-        rule.excluded = %w[source.cr]
+        rule.excluded = Set{"source.cr"}
         rule.excluded?(Source.new path: "source.cr").should be_true
       end
 
       it "returns true if source matches the wildcard" do
         rule = DummyRule.new
-        rule.excluded = %w[**/*.cr]
-        rule.excluded?(Source.new(path: __FILE__)).should be_true
+        rule.excluded = Set{"**/*.cr"}
+        rule.excluded?(Source.new(path: __FILE__), root).should be_true
       end
 
       it "returns false if source does not match the wildcard" do
         rule = DummyRule.new
-        rule.excluded = %w[*_spec.cr]
+        rule.excluded = Set{"*_spec.cr"}
         rule.excluded?(Source.new path: "source.cr").should be_false
       end
     end

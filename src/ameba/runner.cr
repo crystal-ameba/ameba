@@ -31,6 +31,9 @@ module Ameba
     # A list of rules to do inspection based on.
     @rules : Array(Rule::Base)
 
+    # Project root path.
+    getter root : Path
+
     # A list of sources to run inspection on.
     getter sources : Array(Source)
 
@@ -69,10 +72,11 @@ module Ameba
         config.severity,
         config.autocorrect?,
         config.version,
+        config.root,
       )
     end
 
-    protected def initialize(rules, sources, @formatter, @severity, @autocorrect = false, @version = nil)
+    protected def initialize(rules, sources, @formatter, @severity, @autocorrect = false, @version = nil, @root = Path[Dir.current])
       @sources = sources.sort_by(&.path)
       @rules =
         rules.select { |rule| rule_runnable?(rule, @version) }
@@ -142,7 +146,7 @@ module Ameba
         break unless source.valid?
 
         @rules.each do |rule|
-          next if rule.excluded?(source)
+          next if rule.excluded?(source, root)
           rule.test(source)
         end
         check_unneeded_directives(source)

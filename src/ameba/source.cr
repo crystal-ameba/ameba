@@ -93,11 +93,6 @@ module Ameba
       path.ends_with?(".ecr")
     end
 
-    # Returns `true` if *filepath* matches the source's path, `false` otherwise.
-    def matches_path?(filepath)
-      fullpath == File.expand_path(filepath)
-    end
-
     # Converts an AST location to a string position.
     def pos(location : Crystal::Location, end end_pos = false) : Int32
       line, column = location.line_number, location.column_number
