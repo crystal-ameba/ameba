@@ -96,8 +96,8 @@ module Ameba::Rule
       !!excluded.try &.any? do |path|
         path = Path.posix(path).expand(root).to_s
 
-        source.matches_path?(path) ||
-          Dir.glob(path).any? { |glob| source.matches_path?(glob) }
+        source.fullpath == path ||
+          Dir.glob(path).includes?(source.fullpath)
       end
     end
 
