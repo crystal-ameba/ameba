@@ -125,8 +125,7 @@ class Ameba::Config
   # ```
   # config = Ameba::Config.load
   # ```
-  def self.load(path = nil, root = nil, colors = true, skip_reading_config = false)
-    Colorize.enabled = colors
+  def self.load(path = nil, root = nil, skip_reading_config = false)
     content = if skip_reading_config
                 "{}"
               else

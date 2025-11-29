@@ -28,6 +28,8 @@ module Ameba::Cli
   def run(args = ARGV) : Nil
     opts = parse_args(args)
 
+    Colorize.enabled = opts.colors?
+
     if (location_to_explain = opts.location_to_explain) && opts.autocorrect?
       raise "Invalid usage: Cannot explain an issue and autocorrect at the same time."
     end
@@ -163,7 +165,6 @@ module Ameba::Cli
     config = Config.load(
       root: root_path_from_opts(opts),
       path: opts.config,
-      colors: opts.colors?,
       skip_reading_config: opts.skip_reading_config?,
     )
     config.autocorrect = opts.autocorrect?
