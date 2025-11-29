@@ -81,7 +81,10 @@ module Ameba::Cli
         when arr.size == 1 && arr.first.matches?(/.+:\d+:\d+/)
           configure_explain_opts(arr.first, opts)
         else
-          opts.globs = arr.to_set unless arr.empty?
+          next if arr.empty?
+          opts.globs = arr
+            .map { |glob| Path[glob].expand(home: true).to_s }
+            .to_set
         end
       end
 

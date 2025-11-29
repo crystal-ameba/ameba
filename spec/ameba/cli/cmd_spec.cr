@@ -165,7 +165,10 @@ module Ameba::Cli
 
       it "accepts unknown args as globs" do
         c = Cli.parse_args %w[source1.cr source2.cr]
-        c.globs.should eq Set{"source1.cr", "source2.cr"}
+        c.globs.should eq Set{
+          Path["source1.cr"].expand.to_s,
+          Path["source2.cr"].expand.to_s,
+        }
       end
 
       it "accepts single '-' argument as STDIN" do
