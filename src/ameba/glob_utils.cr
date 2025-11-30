@@ -24,7 +24,7 @@ module Ameba
     def expand(globs, root = Dir.current)
       globs
         .flat_map do |glob|
-          glob = Path[glob].expand(root).to_posix
+          glob = Path[glob].expand(root).relative_to(Dir.current).to_posix
 
           if File.directory?(glob)
             glob = glob / "**" / "*.{cr,ecr}"
