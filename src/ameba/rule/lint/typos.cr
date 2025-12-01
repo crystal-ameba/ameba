@@ -60,9 +60,11 @@ module Ameba::Rule::Lint
         output = IO::Memory.new
 
         status =
-          if source.path.presence
+          if path = source.path.presence
+            path = Path[path].relative_to(Dir.current).to_s
+
             args = %w[--force-exclude --format json]
-            args << source.path
+            args << path
 
             Process.run bin_path, args: args,
               output: output

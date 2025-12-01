@@ -1,8 +1,10 @@
 require "../spec_helper"
 
 module Ameba
+  root = Path[__DIR__, "..", ".."]
+
   describe Config do
-    config_sample = Path["spec", "fixtures", "config.yml"].to_s
+    config_sample = Path[__DIR__, "..", "fixtures", "config.yml"].to_s
 
     it "should have a list of available formatters" do
       Config::AVAILABLE_FORMATTERS.should_not be_nil
@@ -36,7 +38,7 @@ module Ameba
           Globs: src/*.cr
           CONFIG
         config = Config.new(yml)
-        config.globs.should eq %w[src/*.cr]
+        config.globs.should eq Set{"src/*.cr"}
       end
 
       it "initializes globs as array" do
@@ -47,7 +49,7 @@ module Ameba
            - "!spec"
           CONFIG
         config = Config.new(yml)
-        config.globs.should eq %w[src/*.cr !spec]
+        config.globs.should eq Set{"src/*.cr", "!spec"}
       end
 
       it "raises if Globs has a wrong type" do
@@ -66,7 +68,7 @@ module Ameba
           Excluded: spec
           CONFIG
         config = Config.new(yml)
-        config.excluded.should eq %w[spec]
+        config.excluded.should eq Set{"spec"}
       end
 
       it "initializes excluded as array" do
@@ -77,7 +79,7 @@ module Ameba
            - lib/*.cr
           CONFIG
         config = Config.new(yml)
-        config.excluded.should eq %w[spec lib/*.cr]
+        config.excluded.should eq Set{"spec", "lib/*.cr"}
       end
 
       it "raises if Excluded has a wrong type" do
@@ -123,26 +125,26 @@ module Ameba
       end
 
       it "allows to set globs" do
-        config.globs = ["file.cr"]
-        config.globs.should eq ["file.cr"]
+        config.globs = Set{"file.cr"}
+        config.globs.should eq Set{"file.cr"}
       end
     end
 
     describe "#excluded, #excluded=" do
       config = Config.load config_sample
 
-      it "defaults to empty array" do
-        config.excluded.should be_empty
+      it "defaults to `lib`" do
+        config.excluded.should eq Set{"lib"}
       end
 
       it "allows to set excluded" do
-        config.excluded = ["spec"]
-        config.excluded.should eq ["spec"]
+        config.excluded = Set{"spec"}
+        config.excluded.should eq Set{"spec"}
       end
     end
 
     describe "#sources" do
-      config = Config.load config_sample
+      config = Config.load config_sample, root: root
 
       it "returns list of sources" do
         config.sources.size.should be > 0
@@ -151,12 +153,12 @@ module Ameba
       end
 
       it "returns a list of sources matching globs" do
-        config.globs = %w[**/config_spec.cr]
+        config.globs = Set{"**/config_spec.cr"}
         config.sources.size.should eq(1)
       end
 
       it "returns a list of sources excluding 'Excluded'" do
-        config.excluded = %w[**/config_spec.cr]
+        config.excluded = Set{"**/config_spec.cr"}
         config.sources.any?(&.fullpath.==(__FILE__)).should be_false
       end
     end
@@ -223,7 +225,7 @@ module Ameba
 
       it "updates excluded property" do
         name = DummyRule.rule_name
-        excluded = %w[spec/source.cr]
+        excluded = Set{"spec/source.cr"}
         config.update_rule name, excluded: excluded
         rule = config.rules.find!(&.name.== name)
         rule.excluded.should eq excluded
@@ -242,7 +244,7 @@ module Ameba
 
       it "updates multiple rules by excluded property" do
         name = DummyRule.rule_name
-        excluded = %w[spec/source.cr]
+        excluded = Set{"spec/source.cr"}
         config.update_rules [name], excluded: excluded
         rule = config.rules.find!(&.name.== name)
         rule.excluded.should eq excluded
@@ -257,7 +259,7 @@ module Ameba
 
       it "updates a group by excluded property" do
         name = DummyRule.group_name
-        excluded = %w[spec/source.cr]
+        excluded = Set{"spec/source.cr"}
         config.update_rules [name], excluded: excluded
         rule = config.rules.find!(&.name.== DummyRule.rule_name)
         rule.excluded.should eq excluded
