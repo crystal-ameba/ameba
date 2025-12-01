@@ -1252,18 +1252,19 @@ It allows to configure rule properties, disable specific rules and exclude sourc
 <p><strong>List of sources to run Ameba on can be configured globally via:</strong></p>
 <ul>
 <li><code>Globs</code> section - an array of wildcards (or paths) to include to the
-inspection. Defaults to <code>%w[**/*.cr !lib]</code>, meaning it includes all project
-files with <code>*.cr</code> extension except those which exist in <code>lib</code> folder.</li>
+inspection. Defaults to <code>%w[**/*.cr **/*.ecr]</code>, meaning it includes all project
+files with <code>*.cr</code> and <code>*.ecr</code> extensions.</li>
 <li><code>Excluded</code> section - an array of wildcards (or paths) to exclude from the
-source list defined by <code>Globs</code>. Defaults to an empty array.</li>
+source list defined by <code>Globs</code>. Defaults to <code>%w[lib]</code>, meaning it excludes the
+<code>lib</code> folder.</li>
 </ul>
-<p>In this example we define default globs and exclude <code>src/compiler</code> folder:</p>
+<p>In this example we define default globs and exclude <code>lib</code> and <code>src/compiler</code> folders:</p>
 <pre><code class="language-yaml">Globs:
   - &quot;**/*.cr&quot;
   - &quot;**/*.ecr&quot;
-  - &quot;!lib&quot;
 
 Excluded:
+  - lib
   - src/compiler</code></pre>
 <p><strong>Specific sources can be excluded at rule level</strong>:</p>
 <pre><code class="language-yaml">Style/RedundantBegin:
