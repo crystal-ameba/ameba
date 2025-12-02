@@ -102,24 +102,13 @@ module Ameba::Formatter
       sources = [] of Source,
       metadata = Metadata.new,
       summary = Summary.new do
-      def to_json(json)
-        {
-          sources:  sources,
-          metadata: metadata,
-          summary:  summary,
-        }.to_json(json)
-      end
+      include JSON::Serializable
     end
 
     record Source,
       path : String,
       issues = [] of Issue do
-      def to_json(json)
-        {
-          path:   path,
-          issues: issues,
-        }.to_json(json)
-      end
+      include JSON::Serializable
     end
 
     record Issue,
@@ -148,23 +137,16 @@ module Ameba::Formatter
     record Metadata,
       ameba_version : String = Ameba::VERSION,
       crystal_version : String = Crystal::VERSION do
-      def to_json(json)
-        {
-          ameba_version:   ameba_version,
-          crystal_version: crystal_version,
-        }.to_json(json)
-      end
+      include JSON::Serializable
     end
 
     class Summary
+      include JSON::Serializable
+
       property target_sources_count = 0
       property issues_count = 0
 
-      def to_json(json)
-        {
-          target_sources_count: target_sources_count,
-          issues_count:         issues_count,
-        }.to_json(json)
+      def initialize(@target_sources_count = 0, @issues_count = 0)
       end
     end
   end
