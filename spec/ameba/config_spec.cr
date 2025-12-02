@@ -99,7 +99,7 @@ module Ameba
         config.should_not be_nil
         config.version.should_not be_nil
         config.globs.should_not be_nil
-        config.formatter.should_not be_nil
+        config.formatter.should be_a Formatter::FlycheckFormatter
       end
 
       it "raises when custom config file doesn't exist" do

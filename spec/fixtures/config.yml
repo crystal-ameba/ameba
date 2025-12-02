@@ -1,4 +1,7 @@
 Version: "1.5.0"
 
+Formatter:
+  Name: flycheck
+
 Lint/ComparisonToBoolean:
   Enabled: true
