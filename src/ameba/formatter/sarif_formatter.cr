@@ -18,7 +18,7 @@ module Ameba::Formatter
           name: rule_inst.name,
           short_description: rule_inst.description,
           full_description: rule.parsed_doc || "",
-          help_uri: "https://crystal-ameba.github.io/#{rule_inst.name}",
+          help_uri: rule.documentation_url,
           default_configuration: AsSARIF::ReportingConfiguration.new(
             enabled: rule_inst.enabled?,
             level: AsSARIF::Level.from_severity(rule_inst.severity),
@@ -86,19 +86,14 @@ module Ameba::Formatter
 
   private module AsSARIF
     struct Result
-      property schema : String = "https://www.schemastore.org/sarif-2.1.0.json"
-      property version : String = "2.1.0"
-      property runs = Array(Run).new
+      include JSON::Serializable
+      
+      @[JSON::Field(key: "$schema")]
+      property schema = "https://www.schemastore.org/sarif-2.1.0.json"
+      property version = "2.1.0"
+      property runs = [] of Run
 
       def initialize
-      end
-
-      def to_json(json)
-        {
-          "$schema": schema,
-          version:   version,
-          runs:      runs,
-        }.to_json(json)
       end
     end
 
@@ -162,7 +157,7 @@ module Ameba::Formatter
       end
 
       def to_json(json)
-        region_data = Hash(String, Int32 | String).new
+        region_data = Hash(String, Int32).new
 
         if start_loc = start_location
           region_data["startLine"] = start_loc.line_number
@@ -220,12 +215,9 @@ module Ameba::Formatter
 
       def self.from_severity(severity)
         case severity
-        in .error?
-          Error
-        in .warning?
-          Warning
-        in .convention?
-          Note
+        in .error?      then Error
+        in .warning?    then Warning
+        in .convention? then Note
         end
       end
     end
