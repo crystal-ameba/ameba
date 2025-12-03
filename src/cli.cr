@@ -1,3 +1,3 @@
 require "./ameba/cli/cmd"
 
-Ameba::Cli.run
+Ameba::CLI.run

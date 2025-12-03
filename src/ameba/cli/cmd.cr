@@ -2,7 +2,7 @@ require "../../ameba"
 require "option_parser"
 
 # :nodoc:
-module Ameba::Cli
+module Ameba::CLI
   extend self
 
   private class Opts
