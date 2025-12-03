@@ -176,11 +176,23 @@ class Ameba::Config
     if file = stdin_filename
       [Source.new(STDIN.gets_to_end, file)]
     else
-      (find_files_by_globs(globs, root) - find_files_by_globs(excluded, root))
-        .map do |path|
-          Source.new(File.read(path), path)
-        end
+      files.map do |path|
+        Source.new(File.read(path), path)
+      end
     end
+  end
+
+  # Returns a list of files matching globs and excluded sections.
+  #
+  # ```
+  # config = Ameba::Config.load
+  # config.files # => list of default files
+  # config.globs = Set{"**/*.cr", "**/*.ecr"}
+  # config.excluded = Set{"spec"}
+  # config.files # => list of files found by the wildcards
+  # ```
+  def files
+    find_files_by_globs(globs, root) - find_files_by_globs(excluded, root)
   end
 
   # Returns a formatter to be used while inspecting files.
