@@ -2,7 +2,7 @@ require "../spec_helper"
 
 module Ameba
   subject = GlobUtils
-  root = Path[__DIR__, "..", ".."]
+  root = Path[__DIR__, "..", ".."].expand
   current_file_basename = File.basename(__FILE__)
   current_file_path = __FILE__
   current_file_relative_path =

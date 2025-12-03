@@ -1,7 +1,7 @@
 require "../spec_helper"
 
 module Ameba
-  root = Path[__DIR__, "..", ".."]
+  root = Path[__DIR__, "..", ".."].expand
 
   describe Config do
     config_sample = Path[__DIR__, "..", "fixtures", "config.yml"].to_s
