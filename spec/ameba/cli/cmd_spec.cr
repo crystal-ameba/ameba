@@ -2,6 +2,8 @@ require "../../spec_helper"
 require "../../../src/ameba/cli/cmd"
 
 module Ameba::Cli
+  root = Path[__DIR__, "..", "..", ".."].expand
+
   describe "Cmd" do
     describe ".run" do
       it "runs ameba" do
@@ -168,6 +170,35 @@ module Ameba::Cli
         c.globs.should eq Set{
           Path["source1.cr"].expand.to_s,
           Path["source2.cr"].expand.to_s,
+        }
+      end
+
+      it "leaves the absolute paths intact" do
+        c = Cli.parse_args %w[/tmp/foo.cr /tmp/bar.cr /tmp/baz*.cr]
+        c.root.should eq Path[Dir.current]
+        c.globs.should eq Set{
+          "/tmp/foo.cr",
+          "/tmp/bar.cr",
+          "/tmp/baz*.cr",
+        }
+      end
+
+      it "expands relative globs using current directory as base" do
+        c = Cli.parse_args %w[/tmp/foo.cr **/bar.cr]
+        c.root.should eq Path[Dir.current]
+        c.globs.should eq Set{
+          "/tmp/foo.cr",
+          File.join(Dir.current, "/**/bar.cr"),
+        }
+      end
+
+      it "expands relative globs using project root directory as base" do
+        c = Cli.parse_args [root.to_s] + %w[/tmp/foo.cr **/bar.cr]
+        c.root.should eq root
+        c.globs.should eq Set{
+          root.to_s,
+          "/tmp/foo.cr",
+          File.join(root, "/**/bar.cr"),
         }
       end
 

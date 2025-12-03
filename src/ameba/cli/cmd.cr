@@ -9,7 +9,9 @@ module Ameba::Cli
     property config : Path?
     property version : String?
     property formatter : Symbol | String | Nil
+    property root : Path?
     property globs : Set(String)?
+    property excluded : Set(String)?
     property only : Set(String)?
     property except : Set(String)?
     property describe_rule : String?
@@ -83,10 +85,7 @@ module Ameba::Cli
         when arr.size == 1 && arr.first.matches?(/.+:\d+:\d+/)
           configure_explain_opts(arr.first, opts)
         else
-          next if arr.empty?
-          opts.globs = arr
-            .map { |glob| Path[glob].expand(home: true).to_s }
-            .to_set
+          configure_globs(arr, opts) if arr.present?
         end
       end
 
@@ -163,7 +162,7 @@ module Ameba::Cli
 
   private def config_from_opts(opts)
     config = Config.load(
-      root: root_path_from_opts(opts),
+      root: opts.root,
       path: opts.config,
       skip_reading_config: opts.skip_reading_config?,
     )
@@ -176,6 +175,9 @@ module Ameba::Cli
     if globs = opts.globs
       config.globs = globs
     end
+    if excluded = opts.excluded
+      config.excluded += excluded
+    end
     if fail_level = opts.fail_level
       config.severity = fail_level
     end
@@ -186,24 +188,61 @@ module Ameba::Cli
     config
   end
 
-  private def root_path_from_opts(opts)
-    return unless globs = opts.globs
-    root =
-      case
-      when path = globs.find(&->File.file?(String))
-        Path[path].parents.reverse!.find(&->root_path?(Path))
-      when path = globs.find(&->File.directory?(String))
-        path = Path[path]
-        if root_path?(path)
-          path
-        else
-          path.parents.reverse!.find(&->root_path?(Path))
-        end
-      end
-    root.try &.expand(home: true)
+  private def configure_globs(args, opts) : Nil
+    excluded, globs =
+      args.partition(&.starts_with?('!'))
+
+    root = root_path_from_globs(globs)
+    root ||= Path[Dir.current]
+
+    if globs.present?
+      opts.globs = globs
+        .map! { |path| path_to_glob(path, root) }
+        .to_set
+    end
+    if excluded.present?
+      opts.excluded = excluded
+        .map! { |path| path_to_glob(path.lchop, root) }
+        .to_set
+    end
+    opts.root = root
   end
 
-  private def root_path?(path)
+  private def path_to_glob(path : String, root : Path) : String
+    base = glob?(path) ? root : Dir.current
+
+    Path[path]
+      .expand(base, home: true)
+      .to_posix
+      .to_s
+  end
+
+  private def glob?(string : String) : Bool
+    string.each_char.any?(&.in?('*', '?', '[', ']', '{', '}'))
+  end
+
+  private def root_path_from_globs(globs) : Path?
+    dynasty =
+      case
+      when path = find_as_path(globs, &->File.directory?(String))
+        path.parents + [path]
+      when path = find_as_path(globs, &->File.file?(String))
+        path.parents
+      end
+
+    dynasty
+      .try &.reverse!
+        .find(&->root_path?(Path))
+        .try(&.expand(home: true))
+  end
+
+  private def find_as_path(globs, &) : Path?
+    globs
+      .find { |glob| yield glob }
+      .try(&->Path.new(String))
+  end
+
+  private def root_path?(path : Path) : Bool
     File.exists?(path / Config::FILENAME) ||
       File.exists?(path / "shard.yml")
   end
