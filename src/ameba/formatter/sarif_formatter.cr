@@ -10,19 +10,22 @@ module Ameba::Formatter
   # - https://docs.oasis-open.org/sarif/sarif/v2.1.0/sarif-v2.1.0.pdf
   class SARIFFormatter < BaseFormatter
     def finished(sources) : Nil
-      sarif_rules = Rule.rules.map do |rule|
-        rule_inst = rule.new
+      # TODO(margret): ruleConfigurationOverrides https://github.com/dotnet/roslyn/issues/67365#issuecomment-1641906334
+      # ameba_rules : Array(Rule::Base) = sources.flat_map { |source| source.issues.flat_map(&.rule) }.uniq!
+
+      sarif_rules = Rule.rules.map do |rule_class|
+        rule = rule_class.new
 
         AsSARIF::ReportingDescriptor.new(
-          id: rule_inst.name,
-          name: rule_inst.name,
-          short_description: rule_inst.description,
-          full_description: rule.parsed_doc || "",
-          help_uri: rule.documentation_url,
+          id: rule.name,
+          name: rule.name,
+          short_description: rule.description,
+          full_description: rule.class.parsed_doc || "",
+          help_uri: rule.class.documentation_url,
           default_configuration: AsSARIF::ReportingConfiguration.new(
-            enabled: rule_inst.enabled?,
-            level: AsSARIF::Level.from_severity(rule_inst.severity),
-            parameters: ""
+            enabled: rule.enabled?,
+            level: AsSARIF::Level.from_severity(rule.severity),
+            parameters: rule.class
           ),
         )
       end
@@ -98,17 +101,12 @@ module Ameba::Formatter
     end
 
     struct Run
+      include JSON::Serializable
+
       property tool : Tool
       property results : Array(RunResult)
 
       def initialize(@tool, @results = Array(RunResult).new)
-      end
-
-      def to_json(json)
-        {
-          tool:    tool,
-          results: results,
-        }.to_json(json)
       end
     end
 
@@ -125,7 +123,8 @@ module Ameba::Formatter
       def to_json(json)
         {
           message: {
-            text: message,
+            text:     message,
+            markdown: message,
           },
           ruleId:    rule_id,
           ruleIndex: rule_index,
@@ -223,34 +222,24 @@ module Ameba::Formatter
     end
 
     struct Tool
+      include JSON::Serializable
+
       property driver : ToolComponent
 
       def initialize(@driver)
       end
-
-      def to_json(json)
-        {
-          driver: driver,
-        }.to_json(json)
-      end
     end
 
     struct ToolComponent
+      include JSON::Serializable
+
       property name : String
       property version : String
+      @[JSON::Field(key: "informationUri")]
       property information_uri : String
       property rules : Array(ReportingDescriptor)
 
       def initialize(@name, @version, @information_uri, @rules)
-      end
-
-      def to_json(json)
-        {
-          name:           name,
-          version:        version,
-          informationUri: information_uri,
-          rules:          rules,
-        }.to_json(json)
       end
     end
 
@@ -267,10 +256,16 @@ module Ameba::Formatter
 
       def to_json(json)
         {
-          id:                   id,
-          name:                 name,
-          shortDescription:     {text: short_description},
-          fullDescription:      {text: full_description},
+          id:               id,
+          name:             name,
+          shortDescription: {
+            text:     short_description,
+            markdown: short_description,
+          },
+          fullDescription: {
+            text:     full_description,
+            markdown: full_description,
+          },
           defaultConfiguration: default_configuration,
           helpUri:              help_uri,
         }.to_json(json)
@@ -280,17 +275,22 @@ module Ameba::Formatter
     struct ReportingConfiguration
       getter? enabled : Bool
       getter level : Level
-      getter parameters : String
+      getter parameters : Rule::Base.class
 
       def initialize(@enabled, @level, @parameters)
       end
 
       def to_json(json)
-        {
-          enabled:    enabled?,
-          level:      level,
-          parameters: {} of String => String,
-        }.to_json(json)
+        json.object do
+          if !enabled?
+            json.field("enabled", enabled?)
+          end
+
+          json.field("level", level)
+          json.field("parameters") do
+            parameters.to_sarif(json)
+          end
+        end
       end
     end
   end
