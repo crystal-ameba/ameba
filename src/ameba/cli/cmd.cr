@@ -1,5 +1,5 @@
-require "../../ameba"
 require "option_parser"
+require "../../ameba"
 
 # :nodoc:
 module Ameba::CLI

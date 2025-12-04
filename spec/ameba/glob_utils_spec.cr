@@ -3,8 +3,9 @@ require "../spec_helper"
 module Ameba
   subject = GlobUtils
   root = Path[__DIR__, "..", ".."].expand
-  current_file_basename = File.basename(__FILE__)
+
   current_file_path = __FILE__
+  current_file_basename = File.basename(current_file_path)
   current_file_relative_path =
     Path[current_file_path].relative_to(Dir.current).to_s
 
@@ -57,11 +58,11 @@ module Ameba
       end
 
       it "does not list duplicated files" do
-        subject.expand(["**/#{current_file_basename}", "**/#{current_file_basename}"], root: root)
+        subject.expand(["**/#{current_file_basename}"] * 3, root: root)
           .should eq [current_file_relative_path]
       end
 
-      it "does not list folders" do
+      it "list only files" do
         subject.expand(["**/*"], root: root).each do |path|
           fail "#{path.inspect} should be a file" unless File.file?(path)
         end

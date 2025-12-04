@@ -25,28 +25,28 @@ module Ameba::AST
     {% for node in %i[if unless while until rescue or and] %}
       # :nodoc:
       def visit(node : Crystal::{{ node.id.capitalize }})
-        @count += 1 unless macro_condition?
+        unless macro_condition?
+          @count += 1
+        end
         true
       end
     {% end %}
 
     # :nodoc:
     def visit(node : Crystal::Case)
-      return true if macro_condition?
-
-      # Count the complexity of an exhaustive `Case` as 1
-      # Otherwise count the number of `When`s
-      @count += node.exhaustive? ? 1 : node.whens.size
-
+      unless macro_condition?
+        # Count the complexity of an exhaustive `Case` as 1
+        # Otherwise count the number of `When`s
+        @count += node.exhaustive? ? 1 : node.whens.size
+      end
       true
     end
 
     # :nodoc:
     def visit(node : Crystal::Select)
-      return true if macro_condition?
-
-      @count += node.whens.size
-
+      unless macro_condition?
+        @count += node.whens.size
+      end
       true
     end
 

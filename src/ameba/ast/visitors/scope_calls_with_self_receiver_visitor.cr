@@ -128,7 +128,6 @@ module Ameba::AST
         calls = @scope_call_queue[@current_scope] ||= [] of Crystal::Call
         calls << node
       end
-
       true
     end
   end

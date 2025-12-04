@@ -125,8 +125,8 @@ module Ameba
       end
 
       it "allows to set globs" do
-        config.globs = Set{"file.cr"}
-        config.globs.should eq Set{"file.cr"}
+        config.globs = Set{"src/**/*.cr"}
+        config.globs.should eq Set{"src/**/*.cr"}
       end
     end
 

@@ -71,7 +71,7 @@ module Ameba::Formatter
     end
 
     def source_finished(source : Source) : Nil
-      json_source = AsJSON::Source.new source.path
+      json_source = AsJSON::Source.new(source.path)
 
       source.issues.each do |issue|
         next if issue.disabled?
