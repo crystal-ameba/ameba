@@ -46,6 +46,7 @@ class Ameba::Config
     silent:           Formatter::BaseFormatter,
     disabled:         Formatter::DisabledFormatter,
     json:             Formatter::JSONFormatter,
+    sarif:            Formatter::SARIFFormatter,
     "github-actions": Formatter::GitHubActionsFormatter,
   }
 
@@ -467,6 +468,22 @@ class Ameba::Config
               end
             {% end %}
           end
+        end
+      end
+
+      def self.to_sarif(builder : JSON::Builder) : Nil
+        {%
+          serializable_props = properties.to_a.reject do |(key, prop)|
+            !prop[:default] || {"description", "enabled", "severity", "since_version"}.includes?(key.stringify)
+          end
+        %}
+
+        builder.object do
+          {% for prop in serializable_props %}
+            {% prop_name, prop = prop %}
+
+            builder.field({{ prop_name.stringify }}, {{ prop[:default] }})
+          {% end %}
         end
       end
     end
