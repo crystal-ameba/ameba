@@ -87,7 +87,7 @@ module Ameba::Formatter
   private module AsSARIF
     struct Result
       include JSON::Serializable
-      
+
       @[JSON::Field(key: "$schema")]
       property schema = "https://www.schemastore.org/sarif-2.1.0.json"
       property version = "2.1.0"
