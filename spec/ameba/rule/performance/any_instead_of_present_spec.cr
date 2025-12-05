@@ -28,10 +28,9 @@ module Ameba::Rule::Performance
     end
 
     context "macro" do
-      it "reports in macro scope" do
-        expect_issue subject, <<-CRYSTAL
+      it "does not report in macro scope" do
+        expect_no_issues subject, <<-CRYSTAL
           {{ [1, 2, 3].any? }}
-                     # ^^^^ error: Use `{...}.present?` instead of `{...}.any?`
           CRYSTAL
       end
     end
