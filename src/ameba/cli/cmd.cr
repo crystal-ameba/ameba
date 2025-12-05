@@ -36,48 +36,59 @@ module Ameba::CLI
   end
 
   def run(args = ARGV) : Bool
-    opts = parse_args(args)
+    safe_colorize_toggle do
+      opts = parse_args(args)
 
-    Colorize.enabled = opts.colors?
+      Colorize.enabled = opts.colors?
 
-    if (location_to_explain = opts.location_to_explain) && opts.autocorrect?
-      raise "Invalid usage: Cannot explain an issue and autocorrect at the same time."
-    end
-
-    if opts.stdin_filename && opts.autocorrect?
-      raise "Invalid usage: Cannot autocorrect from stdin."
-    end
-
-    config = config_from_opts(opts)
-
-    if opts.rules?
-      print_rules(config.rules)
-      return true
-    end
-
-    if opts.rule_versions?
-      print_rule_versions(config.rules)
-      return true
-    end
-
-    if describe_rule_name = opts.describe_rule
-      unless rule = config.rules.find(&.name.== describe_rule_name)
-        raise "Unknown rule"
+      if (location_to_explain = opts.location_to_explain) && opts.autocorrect?
+        raise "Invalid usage: Cannot explain an issue and autocorrect at the same time."
       end
-      describe_rule(rule)
-      return true
+
+      if opts.stdin_filename && opts.autocorrect?
+        raise "Invalid usage: Cannot autocorrect from stdin."
+      end
+
+      config = config_from_opts(opts)
+
+      if opts.rules?
+        print_rules(config.rules)
+        return true
+      end
+
+      if opts.rule_versions?
+        print_rule_versions(config.rules)
+        return true
+      end
+
+      if describe_rule_name = opts.describe_rule
+        unless rule = config.rules.find(&.name.== describe_rule_name)
+          raise "Unknown rule"
+        end
+        describe_rule(rule)
+        return true
+      end
+
+      runner = Ameba.run(config)
+
+      if location_to_explain
+        runner.explain(location_to_explain)
+        return true
+      end
+
+      runner.success?
     end
-
-    runner = Ameba.run(config)
-
-    if location_to_explain
-      runner.explain(location_to_explain)
-      return true
-    end
-
-    runner.success?
   rescue ex : ExitException
     ex.code.zero?
+  end
+
+  private def safe_colorize_toggle(&)
+    prev_colorize_enabled = Colorize.enabled?
+    begin
+      yield
+    ensure
+      Colorize.enabled = prev_colorize_enabled
+    end
   end
 
   def parse_args(args, opts = Opts.new)
