@@ -139,7 +139,7 @@ class Ameba::Config
   protected def self.read_config(path = nil, root = nil)
     if path
       return File.read(path) if File.exists?(path)
-      raise "Config file does not exist"
+      raise "Config file #{path.to_s.inspect} does not exist"
     end
     path = root ? root / FILENAME : DEFAULT_PATH
     if config_path = find_config_path(path)
