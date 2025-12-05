@@ -1,8 +1,8 @@
 require "../../../spec_helper"
 
 module Ameba::Rule::Performance
-  describe AnyInsteadOfEmpty do
-    subject = AnyInsteadOfEmpty.new
+  describe AnyInsteadOfPresent do
+    subject = AnyInsteadOfPresent.new
 
     it "passes if there is no potential performance improvements" do
       expect_no_issues subject, <<-CRYSTAL
@@ -17,7 +17,7 @@ module Ameba::Rule::Performance
     it "reports if there is any? call without a block nor argument" do
       expect_issue subject, <<-CRYSTAL
         [1, 2, 3].any?
-                # ^^^^ error: Use `!{...}.empty?` instead of `{...}.any?`
+                # ^^^^ error: Use `{...}.present?` instead of `{...}.any?`
         CRYSTAL
     end
 
@@ -31,7 +31,7 @@ module Ameba::Rule::Performance
       it "reports in macro scope" do
         expect_issue subject, <<-CRYSTAL
           {{ [1, 2, 3].any? }}
-                     # ^^^^ error: Use `!{...}.empty?` instead of `{...}.any?`
+                     # ^^^^ error: Use `{...}.present?` instead of `{...}.any?`
           CRYSTAL
       end
     end
