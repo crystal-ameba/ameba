@@ -35,9 +35,9 @@ module Ameba::CLI
     end
   end
 
-  def run(args = ARGV) : Bool
+  def run(args = ARGV, output : IO = STDOUT) : Bool
     safe_colorize_toggle do
-      opts = parse_args(args)
+      opts = parse_args(args, output: output)
 
       Colorize.enabled = opts.colors?
 
@@ -52,12 +52,12 @@ module Ameba::CLI
       config = config_from_opts(opts)
 
       if opts.rules?
-        print_rules(config.rules)
+        print_rules(config.rules, output)
         return true
       end
 
       if opts.rule_versions?
-        print_rule_versions(config.rules)
+        print_rule_versions(config.rules, output)
         return true
       end
 
@@ -65,14 +65,14 @@ module Ameba::CLI
         unless rule = config.rules.find(&.name.== describe_rule_name)
           raise "Unknown rule"
         end
-        describe_rule(rule)
+        describe_rule(rule, output)
         return true
       end
 
       runner = Ameba.run(config)
 
       if location_to_explain
-        runner.explain(location_to_explain)
+        runner.explain(location_to_explain, output)
         return true
       end
 
@@ -91,16 +91,16 @@ module Ameba::CLI
     end
   end
 
-  def parse_args(args, opts = Opts.new)
+  def parse_args(args, opts = Opts.new, output : IO = STDOUT)
     OptionParser.parse(args) do |parser|
       parser.banner = "Usage: ameba [options] [file1 file2 ...]"
 
       parser.on("-v", "--version", "Print version") do
-        print_version
+        print_version(output)
         raise ExitException.new
       end
       parser.on("-h", "--help", "Show this help") do
-        print_help(parser)
+        print_help(parser, output)
         raise ExitException.new
       end
       parser.on("-r", "--rules", "Show all available rules") { opts.rules = true }
@@ -323,27 +323,27 @@ module Ameba::CLI
     raise "location should have PATH:line:column format"
   end
 
-  private def print_version
+  private def print_version(output)
     if GIT_SHA
-      puts "%s [%s]" % {VERSION, GIT_SHA}
+      output.puts "%s [%s]" % {VERSION, GIT_SHA}
     else
-      puts VERSION
+      output.puts VERSION
     end
   end
 
-  private def print_help(parser)
-    puts parser
+  private def print_help(parser, output)
+    output.puts parser
   end
 
-  private def describe_rule(rule)
-    Presenter::RulePresenter.new.run(rule)
+  private def describe_rule(rule, output)
+    Presenter::RulePresenter.new(output).run(rule)
   end
 
-  private def print_rules(rules)
-    Presenter::RuleCollectionPresenter.new.run(rules)
+  private def print_rules(rules, output)
+    Presenter::RuleCollectionPresenter.new(output).run(rules)
   end
 
-  private def print_rule_versions(rules)
-    Presenter::RuleVersionsPresenter.new.run(rules)
+  private def print_rule_versions(rules, output)
+    Presenter::RuleVersionsPresenter.new(output).run(rules)
   end
 end
