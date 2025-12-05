@@ -8,6 +8,11 @@ module Ameba
     # Path to the source file.
     getter path : String
 
+    # Absolute path to the source file.
+    getter fullpath : String do
+      File.expand_path(path)
+    end
+
     # Crystal code (content of a source file).
     getter code : String
 
@@ -77,10 +82,6 @@ module Ameba
         .tap(&.wants_doc = true)
         .tap(&.filename = path)
         .parse
-    end
-
-    getter fullpath : String do
-      File.expand_path(path)
     end
 
     # Returns `true` if the source is a spec file, `false` otherwise.
