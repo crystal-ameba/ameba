@@ -27,7 +27,15 @@ module Ameba::CLI
     property? autocorrect = false
   end
 
-  def run(args = ARGV) : Nil
+  private class ExitException < Exception
+    getter code : Int32
+
+    def initialize(@code = 0)
+      super("Exit with code #{code}")
+    end
+  end
+
+  def run(args = ARGV) : Bool
     opts = parse_args(args)
 
     Colorize.enabled = opts.colors?
@@ -44,10 +52,12 @@ module Ameba::CLI
 
     if opts.rules?
       print_rules(config.rules)
+      return true
     end
 
     if opts.rule_versions?
       print_rule_versions(config.rules)
+      return true
     end
 
     if describe_rule_name = opts.describe_rule
@@ -55,26 +65,33 @@ module Ameba::CLI
         raise "Unknown rule"
       end
       describe_rule(rule)
+      return true
     end
 
     runner = Ameba.run(config)
 
     if location_to_explain
       runner.explain(location_to_explain)
-    else
-      exit 1 unless runner.success?
+      return true
     end
-  rescue e
-    puts "Error: #{e.message}"
-    exit 255
+
+    runner.success?
+  rescue ex : ExitException
+    ex.code.zero?
   end
 
   def parse_args(args, opts = Opts.new)
     OptionParser.parse(args) do |parser|
       parser.banner = "Usage: ameba [options] [file1 file2 ...]"
 
-      parser.on("-v", "--version", "Print version") { print_version }
-      parser.on("-h", "--help", "Show this help") { print_help(parser) }
+      parser.on("-v", "--version", "Print version") do
+        print_version
+        raise ExitException.new
+      end
+      parser.on("-h", "--help", "Show this help") do
+        print_help(parser)
+        raise ExitException.new
+      end
       parser.on("-r", "--rules", "Show all available rules") { opts.rules = true }
       parser.on("-R", "--rule-versions", "Show all available rule versions") { opts.rule_versions = true }
       parser.on("-s", "--silent", "Disable output") { opts.formatter = :silent }
@@ -301,26 +318,21 @@ module Ameba::CLI
     else
       puts VERSION
     end
-    exit 0
   end
 
   private def print_help(parser)
     puts parser
-    exit 0
   end
 
   private def describe_rule(rule)
     Presenter::RulePresenter.new.run(rule)
-    exit 0
   end
 
   private def print_rules(rules)
     Presenter::RuleCollectionPresenter.new.run(rules)
-    exit 0
   end
 
   private def print_rule_versions(rules)
     Presenter::RuleVersionsPresenter.new.run(rules)
-    exit 0
   end
 end

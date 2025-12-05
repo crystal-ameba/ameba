@@ -8,7 +8,7 @@ module Ameba::CLI
     describe ".run" do
       it "runs ameba" do
         r = CLI.run %w[-f silent file.cr]
-        r.should be_nil
+        r.should be_true
       end
     end
 
