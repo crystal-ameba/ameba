@@ -168,8 +168,8 @@ class Ameba::Config
     initialize(
       rules: rules,
       root: root,
-      excluded: load_array_section(config, "Excluded", DEFAULT_EXCLUDED).to_set,
-      globs: load_array_section(config, "Globs", DEFAULT_GLOBS).to_set,
+      excluded: load_array_section(config, "Excluded", DEFAULT_EXCLUDED.dup).to_set,
+      globs: load_array_section(config, "Globs", DEFAULT_GLOBS.dup).to_set,
       version: load_string_key(config, "Version"),
       formatter: load_string_key(config, "Formatter", "Name"),
     )
