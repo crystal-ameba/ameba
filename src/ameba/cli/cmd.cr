@@ -271,7 +271,7 @@ module Ameba::CLI
   end
 
   private def root_path?(path : Path) : Bool
-    File.exists?(path / Config::FILENAME) ||
+    File.exists?(path / Config::Loader::FILENAME) ||
       File.exists?(path / "shard.yml")
   end
 
