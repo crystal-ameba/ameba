@@ -3,7 +3,7 @@ require "./base"
 module Ameba::Rule::Performance
   # This rule is used to identify usage of arg-less `Enumerable#any?` calls.
   #
-  # Using `Enumerable#any?` instead of `Enumerable#empty?` might lead to an
+  # Using `Enumerable#any?` instead of `Enumerable#present?` might lead to an
   # unexpected results (like `[nil, false].any? # => false`). In some cases
   # it also might be less efficient, since it iterates until the block will
   # return a _truthy_ value, instead of just checking if there's at least
@@ -18,30 +18,36 @@ module Ameba::Rule::Performance
   # And it should be written as this:
   #
   # ```
-  # ![1, 2, 3].empty?
+  # [1, 2, 3].present?
   # ```
   #
   # YAML configuration example:
   #
   # ```
-  # Performance/AnyInsteadOfEmpty:
+  # Performance/AnyInsteadOfPresent:
   #   Enabled: true
   # ```
-  class AnyInsteadOfEmpty < Base
+  class AnyInsteadOfPresent < Base
     include AST::Util
 
     properties do
-      since_version "0.14.0"
+      since_version "1.7.0"
       description "Identifies usage of arg-less `any?` calls"
     end
 
-    MSG = "Use `!{...}.empty?` instead of `{...}.any?`"
+    MSG = "Use `{...}.present?` instead of `{...}.any?`"
+
+    def test(source)
+      AST::NodeVisitor.new self, source, skip: :macro
+    end
 
     def test(source, node : Crystal::Call)
-      return unless node.name == "any?" && node.args.empty? && node.obj
+      return unless node.name == "any?" && node.args.empty? && (obj = node.obj)
       return if has_block?(node)
 
-      issue_for node, MSG, prefer_name_location: true
+      issue_for node, MSG, prefer_name_location: true do |corrector|
+        corrector.replace(node, "#{obj}.present?")
+      end
     end
   end
 end
