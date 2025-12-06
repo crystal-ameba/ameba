@@ -70,6 +70,41 @@ class Ameba::Config
   # Returns an ameba version to be used by `Ameba::Runner`.
   property version : SemanticVersion?
 
+  # Sets version from string.
+  #
+  # ```
+  # config = Ameba::Config.load
+  # config.version = "1.6.0"
+  # ```
+  def version=(version : String)
+    @version = SemanticVersion.parse(version)
+  end
+
+  # Returns a formatter to be used while inspecting files.
+  # If formatter is not set, it will return default formatter.
+  #
+  # ```
+  # config = Ameba::Config.load
+  # config.formatter = custom_formatter
+  # config.formatter
+  # ```
+  property formatter : Formatter::BaseFormatter do
+    Formatter::DotFormatter.new
+  end
+
+  # Sets formatter by name.
+  #
+  # ```
+  # config = Ameba::Config.load
+  # config.formatter = :progress
+  # ```
+  def formatter=(name : String | Symbol)
+    unless formatter = AVAILABLE_FORMATTERS[name]?
+      raise "Unknown formatter `#{name}`. Use one of #{Config.formatter_names}."
+    end
+    @formatter = formatter.new
+  end
+
   # Returns a list of paths (with wildcards) to files.
   # Represents a list of sources to be inspected.
   # If globs are not set, it will return default list of files.
@@ -213,41 +248,6 @@ class Ameba::Config
   # ```
   def files
     find_files_by_globs(globs, root) - find_files_by_globs(excluded, root)
-  end
-
-  # Returns a formatter to be used while inspecting files.
-  # If formatter is not set, it will return default formatter.
-  #
-  # ```
-  # config = Ameba::Config.load
-  # config.formatter = custom_formatter
-  # config.formatter
-  # ```
-  property formatter : Formatter::BaseFormatter do
-    Formatter::DotFormatter.new
-  end
-
-  # Sets formatter by name.
-  #
-  # ```
-  # config = Ameba::Config.load
-  # config.formatter = :progress
-  # ```
-  def formatter=(name : String | Symbol)
-    unless formatter = AVAILABLE_FORMATTERS[name]?
-      raise "Unknown formatter `#{name}`. Use one of #{Config.formatter_names}."
-    end
-    @formatter = formatter.new
-  end
-
-  # Sets version from string.
-  #
-  # ```
-  # config = Ameba::Config.load
-  # config.version = "1.6.0"
-  # ```
-  def version=(version : String)
-    @version = SemanticVersion.parse(version)
   end
 
   # Updates rule properties.
