@@ -180,23 +180,33 @@ class Ameba::Config
   # ```
   # config = Ameba::Config.load
   # ```
-  def self.load(path = nil, root = nil, skip_reading_config = false)
-    content = if skip_reading_config
-                "{}"
-              else
-                read_config(path, root) || "{}"
-              end
+  def self.load(path : Path | String? = nil, root : Path? = nil, skip_reading_config : Bool = false)
+    unless skip_reading_config
+      content = begin
+        if path
+          read_config(path: path)
+        else
+          read_config(root: root)
+        end
+      end
+    end
+    content ||= "{}"
+
     Config.new YAML.parse(content), root
   rescue e
     raise "Unable to load config file: #{e.message}"
   end
 
-  protected def self.read_config(path = nil, root = nil)
-    if path
-      return File.read(path) if File.exists?(path)
+  protected def self.read_config(*, path : Path | String)
+    unless File.exists?(path)
       raise "Config file #{path.to_s.inspect} does not exist"
     end
+    File.read(path)
+  end
+
+  protected def self.read_config(*, root : Path?)
     path = root ? root / FILENAME : DEFAULT_PATH
+
     if config_path = find_config_path(path)
       return File.read(config_path)
     end
