@@ -98,26 +98,46 @@ class Ameba::Config
 
   @rule_groups : Hash(String, Array(Rule::Base))
 
+  protected def initialize(
+    *,
+    @rules = [] of Rule::Base,
+    @severity : Severity = :convention,
+    @root = nil,
+    @globs = Set(String).new,
+    @excluded = Set(String).new,
+    @autocorrect = false,
+    @stdin_filename = nil,
+    version = nil,
+    formatter = nil,
+  )
+    @rule_groups = @rules.group_by &.group
+
+    if version
+      self.version = version
+    end
+    if formatter
+      self.formatter = formatter
+    end
+  end
+
   # Creates a new instance of `Ameba::Config` based on YAML parameters.
   #
   # `Config.load` uses this constructor to instantiate new config by YAML file.
-  protected def initialize(config : YAML::Any, @root = nil)
-    if config.raw.nil?
-      config = YAML.parse("{}")
-    elsif !config.raw.is_a?(Hash)
+  protected def initialize(config : YAML::Any, root = nil)
+    config = YAML.parse("{}") if config.raw.nil?
+    config.raw.is_a?(Hash) ||
       raise "Invalid config file format"
-    end
-    @rules = Rule.rules.map &.new(config).as(Rule::Base)
-    @rule_groups = @rules.group_by &.group
-    @excluded = load_array_section(config, "Excluded", DEFAULT_EXCLUDED).to_set
-    @globs = load_array_section(config, "Globs", DEFAULT_GLOBS).to_set
 
-    if version = config["Version"]?.try(&.as_s).presence
-      self.version = version
-    end
-    if formatter_name = load_formatter_name(config)
-      self.formatter = formatter_name
-    end
+    rules = Rule.rules.map &.new(config).as(Rule::Base)
+
+    initialize(
+      rules: rules,
+      root: root,
+      excluded: load_array_section(config, "Excluded", DEFAULT_EXCLUDED).to_set,
+      globs: load_array_section(config, "Globs", DEFAULT_GLOBS).to_set,
+      version: load_string_key(config, "Version"),
+      formatter: load_string_key(config, "Formatter", "Name"),
+    )
   end
 
   # Loads YAML configuration file by `path`.
@@ -272,9 +292,8 @@ class Ameba::Config
     end
   end
 
-  private def load_formatter_name(config)
-    name = config["Formatter"]?.try &.["Name"]?
-    name.try(&.to_s)
+  private def load_string_key(config, *path)
+    config.dig?(*path).try(&.as_s).presence
   end
 
   private def load_array_section(config, section_name, default = [] of String)
