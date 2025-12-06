@@ -16,7 +16,7 @@
 <script type="text/javascript" src="../../../js/doc.js"></script>
 
   <meta name="repository-name" content="ameba">
-  <title>Ameba::Rule::Performance::AnyInsteadOfEmpty - ameba master</title>
+  <title>Ameba::Rule::Performance::AnyInsteadOfPresent - ameba master</title>
   <script type="text/javascript">
     CrystalDocs.base_path = "../../../";
   </script>
@@ -774,8 +774,8 @@
       
     </li>
   
-  <li class=" current" data-id="ameba/Ameba/Rule/Performance/AnyInsteadOfEmpty" data-name="ameba::rule::performance::anyinsteadofempty">
-      <a href="../../../Ameba/Rule/Performance/AnyInsteadOfEmpty.html">AnyInsteadOfEmpty</a>
+  <li class=" current" data-id="ameba/Ameba/Rule/Performance/AnyInsteadOfPresent" data-name="ameba::rule::performance::anyinsteadofpresent">
+      <a href="../../../Ameba/Rule/Performance/AnyInsteadOfPresent.html">AnyInsteadOfPresent</a>
       
     </li>
   
@@ -1085,12 +1085,12 @@
 
   <span class="kind">
     class
-  </span> Ameba::<wbr>Rule::<wbr>Performance::<wbr>AnyInsteadOfEmpty
+  </span> Ameba::<wbr>Rule::<wbr>Performance::<wbr>AnyInsteadOfPresent
 
 </h1>
 
 
-  <ul class="superclass-hierarchy"><li class="superclass"><a href="../../../Ameba/Rule/Performance/AnyInsteadOfEmpty.html">Ameba::Rule::Performance::AnyInsteadOfEmpty</a></li><li class="superclass"><a href="../../../Ameba/Rule/Performance/Base.html">Ameba::Rule::Performance::Base</a></li><li class="superclass"><a href="../../../Ameba/Rule/Base.html">Ameba::Rule::Base</a></li><li class="superclass">Reference</li><li class="superclass">Object</li></ul>
+  <ul class="superclass-hierarchy"><li class="superclass"><a href="../../../Ameba/Rule/Performance/AnyInsteadOfPresent.html">Ameba::Rule::Performance::AnyInsteadOfPresent</a></li><li class="superclass"><a href="../../../Ameba/Rule/Performance/Base.html">Ameba::Rule::Performance::Base</a></li><li class="superclass"><a href="../../../Ameba/Rule/Base.html">Ameba::Rule::Base</a></li><li class="superclass">Reference</li><li class="superclass">Object</li></ul>
 
 
 
@@ -1105,7 +1105,7 @@
   </h2>
 
   <p>This rule is used to identify usage of arg-less <code>Enumerable#any?</code> calls.</p>
-<p>Using <code>Enumerable#any?</code> instead of <code>Enumerable#empty?</code> might lead to an
+<p>Using <code>Enumerable#any?</code> instead of <code>Enumerable#present?</code> might lead to an
 unexpected results (like <code>[nil, false].any? # =&gt; false</code>). In some cases
 it also might be less efficient, since it iterates until the block will
 return a <em>truthy</em> value, instead of just checking if there's at least
@@ -1113,9 +1113,9 @@ one value present.</p>
 <p>For example, this is considered invalid:</p>
 <pre><code class="language-crystal">[<span class="n">1</span>, <span class="n">2</span>, <span class="n">3</span>].any?</code></pre>
 <p>And it should be written as this:</p>
-<pre><code class="language-crystal"><span class="o">!</span>[<span class="n">1</span>, <span class="n">2</span>, <span class="n">3</span>].empty?</code></pre>
+<pre><code class="language-crystal">[<span class="n">1</span>, <span class="n">2</span>, <span class="n">3</span>].present?</code></pre>
 <p>YAML configuration example:</p>
-<pre><code class="language-crystal"><span class="t">Performance</span><span class="o">/</span><span class="t">AnyInsteadOfEmpty</span>:
+<pre><code class="language-crystal"><span class="t">Performance</span><span class="o">/</span><span class="t">AnyInsteadOfPresent</span>:
   <span class="t">Enabled</span>: <span class="n">true</span></code></pre>
 
 
@@ -1161,8 +1161,8 @@ one value present.</p>
   </h2>
   
     
-      <a href="https://github.com/crystal-ameba/ameba/blob/4c9f146/src/ameba/rule/performance/any_instead_of_empty.cr#L30" target="_blank">
-        ameba/rule/performance/any_instead_of_empty.cr
+      <a href="https://github.com/crystal-ameba/ameba/blob/92a3307/src/ameba/rule/performance/any_instead_of_present.cr#L30" target="_blank">
+        ameba/rule/performance/any_instead_of_present.cr
       </a>
     
     <br/>
@@ -1183,7 +1183,7 @@ one value present.</p>
   <dl>
     
       <dt class="entry-const" id="MSG">
-        <strong>MSG</strong> = <code><span class="s">&quot;Use `!{...}.empty?` instead of `{...}.any?`&quot;</span></code>
+        <strong>MSG</strong> = <code><span class="s">&quot;Use `{...}.present?` instead of `{...}.any?`&quot;</span></code>
       </dt>
       
     
@@ -1322,6 +1322,11 @@ one value present.</p>
     
       <li class="entry-summary">
         <a href="#test%28source%2Cnode%3ACrystal%3A%3ACall%29-instance-method" class="signature"><strong>#test</strong>(source, node : Crystal::Call)</a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#test%28source%29-instance-method" class="signature"><strong>#test</strong>(source)</a>
         
       </li>
     
@@ -1696,7 +1701,7 @@ one value present.</p>
         <div class="doc">
           
           <p>This rule is used to identify usage of arg-less <code>Enumerable#any?</code> calls.</p>
-<p>Using <code>Enumerable#any?</code> instead of <code>Enumerable#empty?</code> might lead to an
+<p>Using <code>Enumerable#any?</code> instead of <code>Enumerable#present?</code> might lead to an
 unexpected results (like <code>[nil, false].any? # =&gt; false</code>). In some cases
 it also might be less efficient, since it iterates until the block will
 return a <em>truthy</em> value, instead of just checking if there's at least
@@ -1704,9 +1709,9 @@ one value present.</p>
 <p>For example, this is considered invalid:</p>
 <pre><code class="language-crystal">[<span class="n">1</span>, <span class="n">2</span>, <span class="n">3</span>].any?</code></pre>
 <p>And it should be written as this:</p>
-<pre><code class="language-crystal"><span class="o">!</span>[<span class="n">1</span>, <span class="n">2</span>, <span class="n">3</span>].empty?</code></pre>
+<pre><code class="language-crystal">[<span class="n">1</span>, <span class="n">2</span>, <span class="n">3</span>].present?</code></pre>
 <p>YAML configuration example:</p>
-<pre><code class="language-crystal"><span class="t">Performance</span><span class="o">/</span><span class="t">AnyInsteadOfEmpty</span>:
+<pre><code class="language-crystal"><span class="t">Performance</span><span class="o">/</span><span class="t">AnyInsteadOfPresent</span>:
   <span class="t">Enabled</span>: <span class="n">true</span></code></pre>
         </div>
       
@@ -1727,7 +1732,7 @@ one value present.</p>
         <div class="doc">
           
           <p>This rule is used to identify usage of arg-less <code>Enumerable#any?</code> calls.</p>
-<p>Using <code>Enumerable#any?</code> instead of <code>Enumerable#empty?</code> might lead to an
+<p>Using <code>Enumerable#any?</code> instead of <code>Enumerable#present?</code> might lead to an
 unexpected results (like <code>[nil, false].any? # =&gt; false</code>). In some cases
 it also might be less efficient, since it iterates until the block will
 return a <em>truthy</em> value, instead of just checking if there's at least
@@ -1735,16 +1740,16 @@ one value present.</p>
 <p>For example, this is considered invalid:</p>
 <pre><code class="language-crystal">[<span class="n">1</span>, <span class="n">2</span>, <span class="n">3</span>].any?</code></pre>
 <p>And it should be written as this:</p>
-<pre><code class="language-crystal"><span class="o">!</span>[<span class="n">1</span>, <span class="n">2</span>, <span class="n">3</span>].empty?</code></pre>
+<pre><code class="language-crystal">[<span class="n">1</span>, <span class="n">2</span>, <span class="n">3</span>].present?</code></pre>
 <p>YAML configuration example:</p>
-<pre><code class="language-crystal"><span class="t">Performance</span><span class="o">/</span><span class="t">AnyInsteadOfEmpty</span>:
+<pre><code class="language-crystal"><span class="t">Performance</span><span class="o">/</span><span class="t">AnyInsteadOfPresent</span>:
   <span class="t">Enabled</span>: <span class="n">true</span></code></pre>
         </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/4c9f146/src/ameba/rule/performance/any_instead_of_empty.cr#L30" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/92a3307/src/ameba/rule/performance/any_instead_of_present.cr#L30" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1836,7 +1841,7 @@ one value present.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/4c9f146/src/ameba/rule/performance/any_instead_of_empty.cr#L33" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/92a3307/src/ameba/rule/performance/any_instead_of_present.cr#L33" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1978,7 +1983,7 @@ one value present.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/4c9f146/src/ameba/rule/performance/any_instead_of_empty.cr#L33" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/92a3307/src/ameba/rule/performance/any_instead_of_present.cr#L33" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2008,7 +2013,23 @@ one value present.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/4c9f146/src/ameba/rule/performance/any_instead_of_empty.cr#L40" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/92a3307/src/ameba/rule/performance/any_instead_of_present.cr#L44" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="test(source)-instance-method">
+      <div class="signature">
+        
+        def <strong>test</strong>(source)
+
+        <a class="method-permalink" href="#test%28source%29-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/crystal-ameba/ameba/blob/92a3307/src/ameba/rule/performance/any_instead_of_present.cr#L40" target="_blank">View source</a>]
         
       </div>
     </div>
