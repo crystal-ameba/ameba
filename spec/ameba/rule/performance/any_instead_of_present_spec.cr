@@ -16,12 +16,12 @@ module Ameba::Rule::Performance
 
     it "reports if there is any? call without a block nor argument" do
       source = expect_issue subject, <<-CRYSTAL
-        [1, 2, 3].any?
-                # ^^^^ error: Use `{...}.present?` instead of `{...}.any?`
+        %w[foo bar].any?
+                  # ^^^^ error: Use `{...}.present?` instead of `{...}.any?`
         CRYSTAL
 
       expect_correction source, <<-CRYSTAL
-        [1, 2, 3].present?
+        %w[foo bar].present?
         CRYSTAL
     end
 
