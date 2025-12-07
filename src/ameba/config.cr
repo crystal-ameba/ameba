@@ -15,7 +15,11 @@ require "./config/*"
 # ```
 class Ameba::Config
   extend Loader
+
   include GlobUtils
+
+  DEFAULT_EXCLUDED = Set{"lib"}
+  DEFAULT_GLOBS    = Set{"**/*.{cr,ecr}"}
 
   AVAILABLE_FORMATTERS = {
     progress:         Formatter::DotFormatter,
@@ -27,10 +31,15 @@ class Ameba::Config
     "github-actions": Formatter::GitHubActionsFormatter,
   }
 
-  DEFAULT_EXCLUDED = Set{"lib"}
-  DEFAULT_GLOBS    = Set{"**/*.{cr,ecr}"}
+  # Returns available formatter names joined by *separator*.
+  def self.formatter_names(separator = '|')
+    AVAILABLE_FORMATTERS.keys.join(separator)
+  end
 
+  # Returns an array of configured rules.
   getter rules : Array(Rule::Base)
+
+  # Returns minimum reported severity.
   property severity = Severity::Convention
 
   # Returns a root directory to be used by `Ameba::Runner`.
@@ -100,7 +109,8 @@ class Ameba::Config
   # Returns a filename if reading source file from STDIN.
   property stdin_filename : String?
 
-  @rule_groups : Hash(String, Array(Rule::Base))
+  # Returns rules grouped by rule group.
+  protected getter rule_groups : Hash(String, Array(Rule::Base))
 
   # Creates a new instance of `Ameba::Config` based on YAML parameters.
   #
@@ -142,10 +152,6 @@ class Ameba::Config
     if formatter
       self.formatter = formatter
     end
-  end
-
-  def self.formatter_names
-    AVAILABLE_FORMATTERS.keys.join('|')
   end
 
   # Returns a list of sources matching globs and excluded sections.
