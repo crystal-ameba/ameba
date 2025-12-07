@@ -14,13 +14,13 @@ module Ameba
       it "raises when the config is not a Hash" do
         yml = YAML.parse "[]"
         expect_raises(Exception, "Invalid config file format") do
-          Config.new(yml)
+          Config.from_yaml(yml)
         end
       end
 
       it "loads default globs when config is empty" do
         yml = YAML.parse "{}"
-        config = Config.new(yml)
+        config = Config.from_yaml(yml)
         config.globs.should eq Config::DEFAULT_GLOBS
       end
 
@@ -28,7 +28,7 @@ module Ameba
         yml = YAML.parse <<-CONFIG
           # Empty config with comment
           CONFIG
-        config = Config.new(yml)
+        config = Config.from_yaml(yml)
         config.globs.should eq Config::DEFAULT_GLOBS
       end
 
@@ -37,7 +37,7 @@ module Ameba
           ---
           Globs: src/*.cr
           CONFIG
-        config = Config.new(yml)
+        config = Config.from_yaml(yml)
         config.globs.should eq Set{"src/*.cr"}
       end
 
@@ -48,7 +48,7 @@ module Ameba
            - "src/*.cr"
            - "!spec"
           CONFIG
-        config = Config.new(yml)
+        config = Config.from_yaml(yml)
         config.globs.should eq Set{"src/*.cr", "!spec"}
       end
 
@@ -58,7 +58,7 @@ module Ameba
           Globs: 100
           CONFIG
         expect_raises(Exception, "Incorrect `Globs` section in a config file") do
-          Config.new(yml)
+          Config.from_yaml(yml)
         end
       end
 
@@ -67,7 +67,7 @@ module Ameba
           ---
           Excluded: spec
           CONFIG
-        config = Config.new(yml)
+        config = Config.from_yaml(yml)
         config.excluded.should eq Set{"spec"}
       end
 
@@ -78,7 +78,7 @@ module Ameba
            - spec
            - lib/*.cr
           CONFIG
-        config = Config.new(yml)
+        config = Config.from_yaml(yml)
         config.excluded.should eq Set{"spec", "lib/*.cr"}
       end
 
@@ -88,7 +88,7 @@ module Ameba
           Excluded: true
           CONFIG
         expect_raises(Exception, "Incorrect `Excluded` section in a config file") do
-          Config.new(yml)
+          Config.from_yaml(yml)
         end
       end
     end

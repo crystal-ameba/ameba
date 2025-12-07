@@ -112,26 +112,6 @@ class Ameba::Config
   # Returns rules grouped by rule group.
   protected getter rule_groups : Hash(String, Array(Rule::Base))
 
-  # Creates a new instance of `Ameba::Config` based on YAML parameters.
-  #
-  # `Config.load` uses this constructor to instantiate new config by YAML file.
-  protected def self.new(config : YAML::Any, root = nil)
-    config = YAML.parse("{}") if config.raw.nil?
-    config.raw.is_a?(Hash) ||
-      raise "Invalid config file format"
-
-    rules = Rule.rules.map &.new(config).as(Rule::Base)
-
-    new(
-      rules: rules,
-      root: root,
-      excluded: load_array_section(config, "Excluded", DEFAULT_EXCLUDED.dup).to_set,
-      globs: load_array_section(config, "Globs", DEFAULT_GLOBS.dup).to_set,
-      version: load_string_key(config, "Version"),
-      formatter: load_string_key(config, "Formatter", "Name"),
-    )
-  end
-
   protected def initialize(
     *,
     @rules = [] of Rule::Base,

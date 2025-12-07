@@ -35,6 +35,26 @@ class Ameba::Config
       Path[XDG_CONFIG_HOME] / "ameba" / "config.yml",
     }
 
+    # Creates a new instance of `Ameba::Config` based on YAML parameters.
+    #
+    # `Config.load` uses this constructor to instantiate new config by YAML file.
+    protected def from_yaml(config : YAML::Any, root = nil)
+      config = YAML.parse("{}") if config.raw.nil?
+      config.raw.is_a?(Hash) ||
+        raise "Invalid config file format"
+
+      rules = Rule.rules.map &.new(config).as(Rule::Base)
+
+      new(
+        rules: rules,
+        root: root,
+        excluded: load_array_section(config, "Excluded", DEFAULT_EXCLUDED.dup).to_set,
+        globs: load_array_section(config, "Globs", DEFAULT_GLOBS.dup).to_set,
+        version: load_string_key(config, "Version"),
+        formatter: load_string_key(config, "Formatter", "Name"),
+      )
+    end
+
     # Loads YAML configuration file by `path`.
     #
     # ```
@@ -52,7 +72,7 @@ class Ameba::Config
       end
       content ||= "{}"
 
-      Config.new YAML.parse(content), root
+      from_yaml YAML.parse(content), root
     rescue e
       raise "Unable to load config file: #{e.message}"
     end
