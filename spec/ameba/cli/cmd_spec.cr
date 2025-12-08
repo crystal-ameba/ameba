@@ -168,37 +168,44 @@ module Ameba::CLI
       it "accepts unknown args as globs" do
         c = CLI.parse_args %w[source1.cr source2.cr]
         c.globs.should eq Set{
-          Path["source1.cr"].expand.to_s,
-          Path["source2.cr"].expand.to_s,
+          Path["source1.cr"].expand.to_posix.to_s,
+          Path["source2.cr"].expand.to_posix.to_s,
         }
       end
 
       it "leaves the absolute paths intact" do
-        c = CLI.parse_args %w[/tmp/foo.cr /tmp/bar.cr /tmp/baz*.cr]
+        tempdir = Path[Dir.tempdir].to_posix.to_s
+        c = CLI.parse_args [
+          Path[tempdir, "foo.cr"].to_s,
+          Path[tempdir, "bar.cr"].to_s,
+          Path[tempdir, "baz*.cr"].to_s,
+        ]
         c.root.should eq Path[Dir.current]
         c.globs.should eq Set{
-          "/tmp/foo.cr",
-          "/tmp/bar.cr",
-          "/tmp/baz*.cr",
+          Path[Dir.tempdir, "foo.cr"].to_posix.to_s,
+          Path[Dir.tempdir, "bar.cr"].to_posix.to_s,
+          Path[Dir.tempdir, "baz*.cr"].to_posix.to_s,
         }
       end
 
       it "expands relative globs using current directory as base" do
-        c = CLI.parse_args %w[/tmp/foo.cr **/bar.cr]
+        tempdir = Path[Dir.tempdir].to_posix.to_s
+        c = CLI.parse_args [Path[tempdir, "foo.cr"].to_s, "**/bar.cr"]
         c.root.should eq Path[Dir.current]
         c.globs.should eq Set{
-          "/tmp/foo.cr",
-          File.join(Dir.current, "/**/bar.cr"),
+          Path[Dir.tempdir, "/foo.cr"].to_posix.to_s,
+          Path[Dir.current, "/**/bar.cr"].to_posix.to_s,
         }
       end
 
       it "expands relative globs using project root directory as base" do
-        c = CLI.parse_args [root.to_s] + %w[/tmp/foo.cr **/bar.cr]
+        tempdir = Path[Dir.tempdir].to_posix.to_s
+        c = CLI.parse_args [root.to_s, Path[tempdir, "foo.cr"].to_s, "**/bar.cr"]
         c.root.should eq root
         c.globs.should eq Set{
-          root.to_s,
-          "/tmp/foo.cr",
-          File.join(root, "/**/bar.cr"),
+          root.to_posix.to_s,
+          Path[Dir.tempdir, "/foo.cr"].to_posix.to_s,
+          Path[root, "/**/bar.cr"].to_posix.to_s,
         }
       end
 
