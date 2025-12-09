@@ -120,6 +120,27 @@ module Ameba::JSONSchema::Builder
             end
           end
 
+          builder.string("Formatter")
+          builder.object do
+            builder.field("type", "object")
+            builder.field("description", "The formatter to use for Ameba")
+
+            builder.string("properties")
+            builder.object do
+              builder.string("Name")
+              builder.object do
+                builder.field("type", "string")
+
+                builder.string("enum")
+                builder.array do
+                  Config::AVAILABLE_FORMATTERS.keys.each do |key|
+                    builder.string(key)
+                  end
+                end
+              end
+            end
+          end
+
           builder.string("Globs")
           builder.object do
             builder.field("$ref", "#/$defs/Globs")

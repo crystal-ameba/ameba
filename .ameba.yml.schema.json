@@ -67,6 +67,24 @@
         "1.6.4"
       ]
     },
+    "Formatter": {
+      "type": "object",
+      "description": "The formatter to use for Ameba",
+      "properties": {
+        "Name": {
+          "type": "string",
+          "enum": [
+            "progress",
+            "todo",
+            "flycheck",
+            "silent",
+            "disabled",
+            "json",
+            "github-actions"
+          ]
+        }
+      }
+    },
     "Globs": {
       "$ref": "#/$defs/Globs"
     },
