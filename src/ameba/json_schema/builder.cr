@@ -133,7 +133,7 @@ module Ameba::JSONSchema::Builder
 
                 builder.string("enum")
                 builder.array do
-                  Config::AVAILABLE_FORMATTERS.keys.each do |key|
+                  Config::AVAILABLE_FORMATTERS.each_key do |key|
                     builder.string(key)
                   end
                 end
