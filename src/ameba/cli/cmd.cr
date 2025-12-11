@@ -9,7 +9,7 @@ module Ameba::CLI
     property config : Path?
     property version : String?
     property formatter : Symbol | String | Nil
-    property root : Path?
+    property root = Path[Dir.current]
     property globs : Set(String)?
     property excluded : Set(String)?
     property only : Set(String)?
@@ -220,9 +220,9 @@ module Ameba::CLI
     excluded, globs =
       args.partition(&.starts_with?('!'))
 
-    root = root_path_from_globs(globs)
-    root ||= Path[Dir.current]
-
+    if root = root_path_from_globs(globs)
+      opts.root = root
+    end
     if globs.present?
       opts.globs = globs
         .map! { |path| path_to_glob(path) }
@@ -233,7 +233,6 @@ module Ameba::CLI
         .map! { |path| path_to_glob(path.lchop) }
         .to_set
     end
-    opts.root = root
   end
 
   private def path_to_glob(path : String) : String
