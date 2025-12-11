@@ -112,9 +112,9 @@ module Ameba::CLI
           opts = CLI.parse_args %w[--explain src/file.cr:3:5]
 
           location_to_explain = opts.location_to_explain.should_not be_nil
-          location_to_explain[:file].should eq "src/file.cr"
-          location_to_explain[:line].should eq 3
-          location_to_explain[:column].should eq 5
+          location_to_explain.filename.should eq "src/file.cr"
+          location_to_explain.line_number.should eq 3
+          location_to_explain.column_number.should eq 5
         end
 
         it "raises an error if location is not valid" do
@@ -236,9 +236,9 @@ module Ameba::CLI
         opts = CLI.parse_args %w[source.cr:3:22]
 
         location_to_explain = opts.location_to_explain.should_not be_nil
-        location_to_explain[:file].should eq "source.cr"
-        location_to_explain[:line].should eq 3
-        location_to_explain[:column].should eq 22
+        location_to_explain.filename.should eq "source.cr"
+        location_to_explain.line_number.should eq 3
+        location_to_explain.column_number.should eq 22
       end
 
       it "allows args to be blank" do

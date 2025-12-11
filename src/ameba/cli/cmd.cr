@@ -15,7 +15,7 @@ module Ameba::CLI
     property only : Set(String)?
     property except : Set(String)?
     property describe_rule : String?
-    property location_to_explain : NamedTuple(file: String, line: Int32, column: Int32)?
+    property location_to_explain : Crystal::Location?
     property fail_level : Severity?
     property stdin_filename : String?
     property? skip_reading_config = false
@@ -301,8 +301,12 @@ module Ameba::CLI
 
   private def configure_explain_opts(loc, opts) : Nil
     location_to_explain = parse_explain_location(loc)
+
+    filename = location_to_explain.original_filename
+    return unless filename
+
     opts.location_to_explain = location_to_explain
-    opts.globs = Set{location_to_explain[:file]}
+    opts.globs = Set{path_to_glob(filename)}
     opts.formatter = :silent
   end
 
@@ -311,11 +315,8 @@ module Ameba::CLI
     raise ArgumentError.new unless location.size === 3
 
     file, line, column = location
-    {
-      file:   file,
-      line:   line.to_i,
-      column: column.to_i,
-    }
+
+    Crystal::Location.new(file, line.to_i, column.to_i)
   rescue
     raise "location should have PATH:line:column format"
   end

@@ -184,7 +184,7 @@ module Ameba
     # ```
     # runner = Ameba::Runner.new config
     # runner.run
-    # runner.explain({file: file, line: l, column: c})
+    # runner.explain(Crystal::Location.new(file, line, column))
     # ```
     def explain(location, output = STDOUT)
       Formatter::ExplainFormatter.new(output, location).finished @sources
