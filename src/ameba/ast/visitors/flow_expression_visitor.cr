@@ -19,11 +19,13 @@ module Ameba::AST
     # :nodoc:
     def visit(node : Crystal::While | Crystal::Until)
       on_loop_started(node)
+      true
     end
 
     # :nodoc:
     def visit(node : Crystal::Call)
       on_loop_started(node) if loop?(node)
+      true
     end
 
     # :nodoc:

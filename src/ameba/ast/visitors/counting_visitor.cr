@@ -26,6 +26,7 @@ module Ameba::AST
       # :nodoc:
       def visit(node : Crystal::{{ node.id.capitalize }})
         @count += 1 unless macro_condition?
+        true
       end
     {% end %}
 

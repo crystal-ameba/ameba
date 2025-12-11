@@ -50,6 +50,7 @@ module Ameba::AST
       scope.visibility = @current_visibility
 
       @current_scope = scope
+      true
     end
 
     private def on_scope_end(node)
@@ -89,6 +90,7 @@ module Ameba::AST
     # :nodoc:
     def visit(node : Crystal::Yield)
       @current_scope.yields = true
+      true
     end
 
     # :nodoc:
@@ -99,6 +101,7 @@ module Ameba::AST
     # :nodoc:
     def visit(node : Crystal::Assign | Crystal::OpAssign | Crystal::MultiAssign | Crystal::UninitializedVar)
       @current_assign = node
+      true
     end
 
     # :nodoc:
@@ -127,6 +130,7 @@ module Ameba::AST
       @current_scope.add_type_dec_variable(node)
 
       @current_assign = node.value if node.value
+      true
     end
 
     # :nodoc:
@@ -140,11 +144,13 @@ module Ameba::AST
     # :nodoc:
     def visit(node : Crystal::Arg)
       @current_scope.add_argument(node)
+      true
     end
 
     # :nodoc:
     def visit(node : Crystal::InstanceVar)
       @current_scope.add_ivariable(node)
+      true
     end
 
     # :nodoc:
@@ -162,6 +168,7 @@ module Ameba::AST
           variable.reference_assignments!
         end
       end
+      true
     end
 
     # :nodoc:

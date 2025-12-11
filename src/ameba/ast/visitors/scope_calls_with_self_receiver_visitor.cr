@@ -21,6 +21,7 @@ module Ameba::AST
       scope = AST::Scope.new(node, @current_scope)
 
       @current_scope = scope
+      true
     end
 
     private def on_scope_end(node)
@@ -59,6 +60,7 @@ module Ameba::AST
 
     def visit(node : Crystal::Assign | Crystal::OpAssign | Crystal::MultiAssign | Crystal::UninitializedVar)
       @current_assign = node
+      true
     end
 
     def end_visit(node : Crystal::Assign | Crystal::OpAssign)
@@ -83,6 +85,7 @@ module Ameba::AST
       @current_scope.add_type_dec_variable(node)
 
       @current_assign = node.value if node.value
+      true
     end
 
     def end_visit(node : Crystal::TypeDeclaration)
@@ -94,10 +97,12 @@ module Ameba::AST
 
     def visit(node : Crystal::Arg)
       @current_scope.add_argument(node)
+      true
     end
 
     def visit(node : Crystal::InstanceVar)
       @current_scope.add_ivariable(node)
+      true
     end
 
     def visit(node : Crystal::Var)
@@ -115,6 +120,7 @@ module Ameba::AST
           variable.reference_assignments!
         end
       end
+      true
     end
 
     def visit(node : Crystal::Call)
