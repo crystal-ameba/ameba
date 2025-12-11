@@ -165,6 +165,21 @@ module Ameba::CLI
         end
       end
 
+      it "sets #root to the first directory passed as an argument if it's a project directory" do
+        c = CLI.parse_args [root.to_s]
+        c.root.should eq root
+      end
+
+      it "sets #root to the current directory if the given directory is not a project directory" do
+        c = CLI.parse_args [Dir.tempdir]
+        c.root.should eq Path[Dir.current]
+      end
+
+      it "sets #root to the current directory if no project directory is passed" do
+        c = CLI.parse_args %w[]
+        c.root.should eq Path[Dir.current]
+      end
+
       it "accepts unknown args as globs" do
         c = CLI.parse_args %w[source1.cr source2.cr]
         c.globs.should eq Set{
@@ -205,7 +220,6 @@ module Ameba::CLI
           Path[Dir.tempdir, "foo.cr"].to_s,
           "**/bar.cr",
         ]
-        c.root.should eq root
         c.globs.should eq Set{
           root.to_posix.to_s,
           Path[Dir.tempdir, "foo.cr"].to_posix.to_s,
@@ -229,6 +243,7 @@ module Ameba::CLI
 
       it "allows args to be blank" do
         c = CLI.parse_args [] of String
+        c.root.should eq Path[Dir.current]
         c.formatter.should be_nil
         c.globs.should be_nil
         c.only.should be_nil
