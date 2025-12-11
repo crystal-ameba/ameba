@@ -191,8 +191,8 @@ module Ameba::CLI
         c = CLI.parse_args [Path[Dir.tempdir, "foo.cr"].to_s, "**/bar.cr"]
         c.root.should eq Path[Dir.current]
         c.globs.should eq Set{
-          Path[Dir.tempdir, "/foo.cr"].to_posix.to_s,
-          Path[Dir.current, "/**/bar.cr"].to_posix.to_s,
+          Path[Dir.tempdir, "foo.cr"].to_posix.to_s,
+          Path[Dir.current, "**", "bar.cr"].to_posix.to_s,
         }
       end
 
@@ -201,8 +201,8 @@ module Ameba::CLI
         c.root.should eq root
         c.globs.should eq Set{
           root.to_posix.to_s,
-          Path[Dir.tempdir, "/foo.cr"].to_posix.to_s,
-          Path[Dir.current, "/**/bar.cr"].to_posix.to_s,
+          Path[Dir.tempdir, "foo.cr"].to_posix.to_s,
+          Path[Dir.current, "**", "bar.cr"].to_posix.to_s,
         }
       end
 
