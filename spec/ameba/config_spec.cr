@@ -4,7 +4,7 @@ module Ameba
   root = Path[__DIR__, "..", ".."].expand
 
   describe Config do
-    config_sample = Path[__DIR__, "..", "fixtures", "config.yml"].to_s
+    config_sample = Path[__DIR__, "..", "fixtures", ".ameba.yml"].to_s
 
     it "should have a list of available formatters" do
       Config::AVAILABLE_FORMATTERS.should_not be_nil
