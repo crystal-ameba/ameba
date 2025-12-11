@@ -188,7 +188,10 @@ module Ameba::CLI
       end
 
       it "expands relative globs using current directory as base" do
-        c = CLI.parse_args [Path[Dir.tempdir, "foo.cr"].to_s, "**/bar.cr"]
+        c = CLI.parse_args [
+          Path[Dir.tempdir, "foo.cr"].to_s,
+          "**/bar.cr",
+        ]
         c.root.should eq Path[Dir.current]
         c.globs.should eq Set{
           Path[Dir.tempdir, "foo.cr"].to_posix.to_s,
@@ -197,7 +200,11 @@ module Ameba::CLI
       end
 
       it "expands relative globs using project root directory as base" do
-        c = CLI.parse_args [root.to_s, Path[Dir.tempdir, "foo.cr"].to_s, "**/bar.cr"]
+        c = CLI.parse_args [
+          root.to_s,
+          Path[Dir.tempdir, "foo.cr"].to_s,
+          "**/bar.cr",
+        ]
         c.root.should eq root
         c.globs.should eq Set{
           root.to_posix.to_s,
