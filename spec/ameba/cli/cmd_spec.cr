@@ -2,7 +2,7 @@ require "../../spec_helper"
 require "../../../src/ameba/cli/cmd"
 
 module Ameba::CLI
-  root = Path[__DIR__, "..", "..", ".."].expand
+  root = Path[__DIR__, "..", "..", "fixtures"].expand
 
   describe "Cmd" do
     describe ".run" do
