@@ -8,7 +8,7 @@ module Ameba::CLI
   private class Opts
     property config : Path?
     property version : String?
-    property formatter : Symbol | String | Nil
+    property formatter : Symbol | String?
     property root = Path[Dir.current]
     property globs : Set(String)?
     property excluded : Set(String)?
@@ -95,17 +95,6 @@ module Ameba::CLI
     OptionParser.parse(args) do |parser|
       parser.banner = "Usage: ameba [options] [file1 file2 ...]"
 
-      parser.on("-v", "--version", "Print version") do
-        print_version(output)
-        raise ExitException.new
-      end
-      parser.on("-h", "--help", "Show this help") do
-        print_help(parser, output)
-        raise ExitException.new
-      end
-      parser.on("-r", "--rules", "Show all available rules") { opts.rules = true }
-      parser.on("-R", "--rule-versions", "Show all available rule versions") { opts.rule_versions = true }
-      parser.on("-s", "--silent", "Disable output") { opts.formatter = :silent }
       parser.unknown_args do |arr|
         case
         when arr.size == 1 && arr.first == "-"
@@ -117,13 +106,33 @@ module Ameba::CLI
         end
       end
 
-      parser.on("-c", "--config PATH",
-        "Specify a configuration file") do |path|
+      parser.on("-v", "--version", "Print version") do
+        print_version(output)
+        raise ExitException.new
+      end
+
+      parser.on("-h", "--help", "Show this help") do
+        print_help(parser, output)
+        raise ExitException.new
+      end
+
+      parser.on("-r", "--rules", "Show all available rules") do
+        opts.rules = true
+      end
+
+      parser.on("-R", "--rule-versions", "Show all available rule versions") do
+        opts.rule_versions = true
+      end
+
+      parser.on("-s", "--silent", "Disable output") do
+        opts.formatter = :silent
+      end
+
+      parser.on("-c", "--config PATH", "Specify a configuration file") do |path|
         opts.config = Path[path] unless path.empty?
       end
 
-      parser.on("-u", "--up-to-version VERSION",
-        "Choose a version") do |version|
+      parser.on("-u", "--up-to-version VERSION", "Choose a version") do |version|
         opts.version = version
       end
 
