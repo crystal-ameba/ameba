@@ -1145,6 +1145,8 @@ alice <span class="o">=</span> names.find { <span class="o">|</span>name<span cl
   </h2>
   <ul class="other-types-list">
     
+      <li class="other-type"><a href="../../../Ameba/AST/Util.html">Ameba::AST::Util</a></li>
+    
       <li class="other-type">YAML::Serializable</li>
     
       <li class="other-type">YAML::Serializable::Strict</li>
@@ -1170,7 +1172,7 @@ alice <span class="o">=</span> names.find { <span class="o">|</span>name<span cl
   </h2>
   
     
-      <a href="https://github.com/crystal-ameba/ameba/blob/c2d7f82/src/ameba/rule/lint/not_nil.cr#L28" target="_blank">
+      <a href="https://github.com/crystal-ameba/ameba/blob/5d66fb5/src/ameba/rule/lint/not_nil.cr#L28" target="_blank">
         ameba/rule/lint/not_nil.cr
       </a>
     
@@ -1342,6 +1344,138 @@ alice <span class="o">=</span> names.find { <span class="o">|</span>name<span cl
 
 
   <div class="methods-inherited">
+    
+      
+
+  <h3>Instance methods inherited from module <code><a href="../../../Ameba/AST/Util.html">Ameba::AST::Util</a></code></h3>
+  
+  
+    <a href="../../../Ameba/AST/Util.html#abort%3F%28node%29-instance-method" class="tooltip">
+      <span>abort?(node)</span>
+    abort?</a>, 
+    
+  
+    <a href="../../../Ameba/AST/Util.html#control_exp_code%28node%3ACrystal%3A%3AControlExpression%2Ccode_lines%29-instance-method" class="tooltip">
+      <span>control_exp_code(node : Crystal::ControlExpression, code_lines)</span>
+    control_exp_code</a>, 
+    
+  
+    <a href="../../../Ameba/AST/Util.html#dynamic_literal%3F%28node%29%3ABool-instance-method" class="tooltip">
+      <span>dynamic_literal?(node) : Bool</span>
+    dynamic_literal?</a>, 
+    
+  
+    <a href="../../../Ameba/AST/Util.html#exit%3F%28node%29-instance-method" class="tooltip">
+      <span>exit?(node)</span>
+    exit?</a>, 
+    
+  
+    <a href="../../../Ameba/AST/Util.html#flow_command%3F%28node%2Cin_loop%29-instance-method" class="tooltip">
+      <span>flow_command?(node, in_loop)</span>
+    flow_command?</a>, 
+    
+  
+    <a href="../../../Ameba/AST/Util.html#flow_expression%3F%28node%2Cin_loop%3Dfalse%29-instance-method" class="tooltip">
+      <span>flow_expression?(node, in_loop = <span class="n">false</span>)</span>
+    flow_expression?</a>, 
+    
+  
+    <a href="../../../Ameba/AST/Util.html#has_arguments%3F%28node%29%3ABool-instance-method" class="tooltip">
+      <span>has_arguments?(node) : Bool</span>
+    has_arguments?</a>, 
+    
+  
+    <a href="../../../Ameba/AST/Util.html#has_block%3F%28node%29%3ABool-instance-method" class="tooltip">
+      <span>has_block?(node) : Bool</span>
+    has_block?</a>, 
+    
+  
+    <a href="../../../Ameba/AST/Util.html#literal%3F%28node%29%3ABool-instance-method" class="tooltip">
+      <span>literal?(node) : Bool</span>
+    literal?</a>, 
+    
+  
+    <a href="../../../Ameba/AST/Util.html#loop%3F%28node%29-instance-method" class="tooltip">
+      <span>loop?(node)</span>
+    loop?</a>, 
+    
+  
+    <a href="../../../Ameba/AST/Util.html#name_end_location%28node%29-instance-method" class="tooltip">
+      <span>name_end_location(node)</span>
+    name_end_location</a>, 
+    
+  
+    <a href="../../../Ameba/AST/Util.html#name_location%28node%29-instance-method" class="tooltip">
+      <span>name_location(node)</span>
+    name_location</a>, 
+    
+  
+    <a href="../../../Ameba/AST/Util.html#name_location_or%28token%3ACrystal%3A%3AToken%2Cname%2C%2A%2Cadjust_location_column_number%3Dnil%29-instance-method" class="tooltip">
+      <span>name_location_or(token : Crystal::Token, name, *, adjust_location_column_number = <span class="n">nil</span>)<br/>name_location_or(node : Crystal::ASTNode, *, adjust_location_column_number = <span class="n">nil</span>)</span>
+    name_location_or</a>, 
+    
+  
+    <a href="../../../Ameba/AST/Util.html#name_size%28node%29-instance-method" class="tooltip">
+      <span>name_size(node)</span>
+    name_size</a>, 
+    
+  
+    <a href="../../../Ameba/AST/Util.html#node_source%28node%2Ccode_lines%29-instance-method" class="tooltip">
+      <span>node_source(node, code_lines)</span>
+    node_source</a>, 
+    
+  
+    <a href="../../../Ameba/AST/Util.html#nodoc%3F%28node%29-instance-method" class="tooltip">
+      <span>nodoc?(node)</span>
+    nodoc?</a>, 
+    
+  
+    <a href="../../../Ameba/AST/Util.html#operator_method%3F%28node%29-instance-method" class="tooltip">
+      <span>operator_method?(node)</span>
+    operator_method?</a>, 
+    
+  
+    <a href="../../../Ameba/AST/Util.html#operator_method_name%3F%28name%3AString%29-instance-method" class="tooltip">
+      <span>operator_method_name?(name : String)</span>
+    operator_method_name?</a>, 
+    
+  
+    <a href="../../../Ameba/AST/Util.html#path_named%3F%28node%2C%2Anames%3AString%29%3ABool-instance-method" class="tooltip">
+      <span>path_named?(node, *names : String) : Bool</span>
+    path_named?</a>, 
+    
+  
+    <a href="../../../Ameba/AST/Util.html#raise%3F%28node%29-instance-method" class="tooltip">
+      <span>raise?(node)</span>
+    raise?</a>, 
+    
+  
+    <a href="../../../Ameba/AST/Util.html#source_between%28loc%2Cend_loc%2Ccode_lines%29%3AString%7CNil-instance-method" class="tooltip">
+      <span>source_between(loc, end_loc, code_lines) : String | Nil</span>
+    source_between</a>, 
+    
+  
+    <a href="../../../Ameba/AST/Util.html#static_literal%3F%28node%29%3ABool-instance-method" class="tooltip">
+      <span>static_literal?(node) : Bool</span>
+    static_literal?</a>, 
+    
+  
+    <a href="../../../Ameba/AST/Util.html#takes_arguments%3F%28node%29%3ABool-instance-method" class="tooltip">
+      <span>takes_arguments?(node) : Bool</span>
+    takes_arguments?</a>
+    
+  
+
+
+      
+
+
+      
+
+
+      
+
+
     
       
 
@@ -1547,7 +1681,7 @@ alice <span class="o">=</span> names.find { <span class="o">|</span>name<span cl
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/c2d7f82/src/ameba/rule/lint/not_nil.cr#L28" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/5d66fb5/src/ameba/rule/lint/not_nil.cr#L28" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1639,7 +1773,7 @@ alice <span class="o">=</span> names.find { <span class="o">|</span>name<span cl
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/c2d7f82/src/ameba/rule/lint/not_nil.cr#L29" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/5d66fb5/src/ameba/rule/lint/not_nil.cr#L31" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1781,7 +1915,7 @@ alice <span class="o">=</span> names.find { <span class="o">|</span>name<span cl
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/c2d7f82/src/ameba/rule/lint/not_nil.cr#L29" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/5d66fb5/src/ameba/rule/lint/not_nil.cr#L31" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1811,7 +1945,7 @@ alice <span class="o">=</span> names.find { <span class="o">|</span>name<span cl
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/c2d7f82/src/ameba/rule/lint/not_nil.cr#L40" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/5d66fb5/src/ameba/rule/lint/not_nil.cr#L42" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1827,7 +1961,7 @@ alice <span class="o">=</span> names.find { <span class="o">|</span>name<span cl
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/c2d7f82/src/ameba/rule/lint/not_nil.cr#L36" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/5d66fb5/src/ameba/rule/lint/not_nil.cr#L38" target="_blank">View source</a>]
         
       </div>
     </div>
