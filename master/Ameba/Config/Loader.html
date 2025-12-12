@@ -16,7 +16,7 @@
 <script type="text/javascript" src="../../js/doc.js"></script>
 
   <meta name="repository-name" content="ameba">
-  <title>Ameba::Formatter::BaseFormatter - ameba master</title>
+  <title>Ameba::Config::Loader - ameba master</title>
   <script type="text/javascript">
     CrystalDocs.base_path = "../../";
   </script>
@@ -194,12 +194,12 @@
       
     </li>
   
-  <li class="parent " data-id="ameba/Ameba/Config" data-name="ameba::config">
+  <li class="parent open current" data-id="ameba/Ameba/Config" data-name="ameba::config">
       <a href="../../Ameba/Config.html">Config</a>
       
         <ul>
   
-  <li class=" " data-id="ameba/Ameba/Config/Loader" data-name="ameba::config::loader">
+  <li class=" current" data-id="ameba/Ameba/Config/Loader" data-name="ameba::config::loader">
       <a href="../../Ameba/Config/Loader.html">Loader</a>
       
     </li>
@@ -224,12 +224,12 @@
       
     </li>
   
-  <li class="parent open current" data-id="ameba/Ameba/Formatter" data-name="ameba::formatter">
+  <li class="parent " data-id="ameba/Ameba/Formatter" data-name="ameba::formatter">
       <a href="../../Ameba/Formatter.html">Formatter</a>
       
         <ul>
   
-  <li class=" current" data-id="ameba/Ameba/Formatter/BaseFormatter" data-name="ameba::formatter::baseformatter">
+  <li class=" " data-id="ameba/Ameba/Formatter/BaseFormatter" data-name="ameba::formatter::baseformatter">
       <a href="../../Ameba/Formatter/BaseFormatter.html">BaseFormatter</a>
       
     </li>
@@ -1094,13 +1094,11 @@
 <h1 class="type-name">
 
   <span class="kind">
-    class
-  </span> Ameba::<wbr>Formatter::<wbr>BaseFormatter
+    module
+  </span> Ameba::<wbr>Config::<wbr>Loader
 
 </h1>
 
-
-  <ul class="superclass-hierarchy"><li class="superclass"><a href="../../Ameba/Formatter/BaseFormatter.html">Ameba::Formatter::BaseFormatter</a></li><li class="superclass">Reference</li><li class="superclass">Object</li></ul>
 
 
 
@@ -1114,11 +1112,29 @@
     Overview
   </h2>
 
-  <p>A base formatter for all formatters. It uses <code><a href="../../Ameba/Formatter/BaseFormatter.html#output%3AIO%3A%3AFileDescriptor%7CIO%3A%3AMemory-instance-method">#output</a></code> IO
-to report results and also implements stub methods for
-callbacks in <code><a href="../../Ameba/Runner.html#run-instance-method">Ameba::Runner#run</a></code> method.</p>
-
-
+  <p>By default config loads <code>.ameba.yml</code> file located in a current
+working directory.</p>
+<p>If it cannot be found until reaching the root directory, then it will be
+searched for in the user’s global config locations, which consists of a
+dotfile or a config file inside the XDG Base Directory specification.</p>
+<ul>
+<li><code>~/.ameba.yml</code></li>
+<li><code>$<a href="../../Ameba/Config/Loader.html#XDG_CONFIG_HOME">XDG_CONFIG_HOME</a>/ameba/config.yml</code> (expands to <code>~/.config/ameba/config.yml</code>
+if <code>$<a href="../../Ameba/Config/Loader.html#XDG_CONFIG_HOME">XDG_CONFIG_HOME</a></code> is not set)</li>
+</ul>
+<p>If both files exist, the dotfile will be selected.</p>
+<p>As an example, if Ameba is invoked from inside <code>/path/to/project/lib/utils</code>,
+then it will use the config as specified inside the first of the following files:</p>
+<ul>
+<li><code>/path/to/project/lib/utils/.ameba.yml</code></li>
+<li><code>/path/to/project/lib/.ameba.yml</code></li>
+<li><code>/path/to/project/.ameba.yml</code></li>
+<li><code>/path/to/.ameba.yml</code></li>
+<li><code>/path/.ameba.yml</code></li>
+<li><code>/.ameba.yml</code></li>
+<li><code>~/.ameba.yml</code></li>
+<li><code>~/.config/ameba/config.yml</code></li>
+</ul>
 
 
 
@@ -1129,26 +1145,20 @@ callbacks in <code><a href="../../Ameba/Runner.html#run-instance-method">Ameba::
 
 
   <h2>
-    <a id="direct-known-subclasses" class="anchor" href="#direct-known-subclasses">
+    <a id="extended-modules" class="anchor" href="#extended-modules">
   <svg class="octicon-link" aria-hidden="true">
     <use href="#octicon-link"/>
   </svg>
 </a>
-    Direct Known Subclasses
+    Extended Modules
   </h2>
   <ul class="other-types-list">
     
-      <li class="other-type"><a href="../../Ameba/Formatter/DisabledFormatter.html">Ameba::Formatter::DisabledFormatter</a></li>
-    
-      <li class="other-type"><a href="../../Ameba/Formatter/DotFormatter.html">Ameba::Formatter::DotFormatter</a></li>
-    
-      <li class="other-type"><a href="../../Ameba/Formatter/FlycheckFormatter.html">Ameba::Formatter::FlycheckFormatter</a></li>
-    
-      <li class="other-type"><a href="../../Ameba/Formatter/GitHubActionsFormatter.html">Ameba::Formatter::GitHubActionsFormatter</a></li>
-    
-      <li class="other-type"><a href="../../Ameba/Formatter/JSONFormatter.html">Ameba::Formatter::JSONFormatter</a></li>
+      <li class="other-type"><a href="../../Ameba/Config/Loader.html">Ameba::Config::Loader</a></li>
     
   </ul>
+
+
 
 
 
@@ -1165,8 +1175,8 @@ callbacks in <code><a href="../../Ameba/Runner.html#run-instance-method">Ameba::
   </h2>
   
     
-      <a href="https://github.com/crystal-ameba/ameba/blob/f16fbee/src/ameba/formatter/base_formatter.cr#L8" target="_blank">
-        ameba/formatter/base_formatter.cr
+      <a href="https://github.com/crystal-ameba/ameba/blob/f16fbee/src/ameba/config/loader.cr#L26" target="_blank">
+        ameba/config/loader.cr
       </a>
     
     <br/>
@@ -1174,26 +1184,43 @@ callbacks in <code><a href="../../Ameba/Runner.html#run-instance-method">Ameba::
 
 
 
-
-
   
-  <h2>
-    <a id="constructors" class="anchor" href="#constructors">
+    <h2>
+      <a id="constant-summary" class="anchor" href="#constant-summary">
   <svg class="octicon-link" aria-hidden="true">
     <use href="#octicon-link"/>
   </svg>
 </a>
-    Constructors
-  </h2>
-  <ul class="list-summary">
+      Constant Summary
+    </h2>
+  
+  <dl>
     
-      <li class="entry-summary">
-        <a href="#new%28output%3AIO%3DSTDOUT%29-class-method" class="signature"><strong>.new</strong>(output : IO = <span class="t">STDOUT</span>)</a>
-        
-      </li>
+      <dt class="entry-const" id="DEFAULT_PATH">
+        <strong>DEFAULT_PATH</strong> = <code><span class="t">Path</span>[<span class="t">Dir</span>.current] <span class="o">/</span> <span class="t">FILENAME</span></code>
+      </dt>
+      
     
-  </ul>
+      <dt class="entry-const" id="DEFAULT_PATHS">
+        <strong>DEFAULT_PATHS</strong> = <code>{<span class="t">Path</span>[<span class="s">&quot;~&quot;</span>] <span class="o">/</span> <span class="t">FILENAME</span>, (<span class="t">Path</span>[<span class="t">XDG_CONFIG_HOME</span>] <span class="o">/</span> <span class="s">&quot;ameba&quot;</span>) <span class="o">/</span> <span class="s">&quot;config.yml&quot;</span>}</code>
+      </dt>
+      
+    
+      <dt class="entry-const" id="FILENAME">
+        <strong>FILENAME</strong> = <code><span class="s">&quot;.ameba.yml&quot;</span></code>
+      </dt>
+      
+    
+      <dt class="entry-const" id="XDG_CONFIG_HOME">
+        <strong>XDG_CONFIG_HOME</strong> = <code><span class="t">ENV</span>.fetch(<span class="s">&quot;XDG_CONFIG_HOME&quot;</span>, <span class="s">&quot;~/.config&quot;</span>)</code>
+      </dt>
+      
+    
+  </dl>
 
+
+
+  
 
   
 
@@ -1211,42 +1238,9 @@ callbacks in <code><a href="../../Ameba/Runner.html#run-instance-method">Ameba::
   <ul class="list-summary">
     
       <li class="entry-summary">
-        <a href="#config%3AHash%28Symbol%2CBool%7CString%29-instance-method" class="signature"><strong>#config</strong> : Hash(Symbol, Bool | String)</a>
+        <a href="#load%28path%3APath%7CString%7CNil%3Dnil%2Croot%3APath%7CNil%3Dnil%2Cskip_reading_config%3ABool%3Dfalse%29-instance-method" class="signature"><strong>#load</strong>(path : Path | String | Nil = <span class="n">nil</span>, root : Path | Nil = <span class="n">nil</span>, skip_reading_config : Bool = <span class="n">false</span>)</a>
         
-      </li>
-    
-      <li class="entry-summary">
-        <a href="#finished%28sources%29%3ANil-instance-method" class="signature"><strong>#finished</strong>(sources) : Nil</a>
-        
-          <div class="summary"><p>Callback that indicates when inspection is finished.</p></div>
-        
-      </li>
-    
-      <li class="entry-summary">
-        <a href="#output%3AIO%3A%3AFileDescriptor%7CIO%3A%3AMemory-instance-method" class="signature"><strong>#output</strong> : IO::FileDescriptor | IO::Memory</a>
-        
-          <div class="summary"><p><span class="flag orange">TODO</span>  allow other IOs</p></div>
-        
-      </li>
-    
-      <li class="entry-summary">
-        <a href="#source_finished%28source%3ASource%29%3ANil-instance-method" class="signature"><strong>#source_finished</strong>(source : Source) : Nil</a>
-        
-          <div class="summary"><p>Callback that indicates when source inspection is finished.</p></div>
-        
-      </li>
-    
-      <li class="entry-summary">
-        <a href="#source_started%28source%3ASource%29%3ANil-instance-method" class="signature"><strong>#source_started</strong>(source : Source) : Nil</a>
-        
-          <div class="summary"><p>Callback that indicates when source inspection is started.</p></div>
-        
-      </li>
-    
-      <li class="entry-summary">
-        <a href="#started%28sources%29%3ANil-instance-method" class="signature"><strong>#started</strong>(sources) : Nil</a>
-        
-          <div class="summary"><p>Callback that indicates when inspecting is started.</p></div>
+          <div class="summary"><p>Loads YAML configuration file by <code>path</code>.</p></div>
         
       </li>
     
@@ -1256,61 +1250,9 @@ callbacks in <code><a href="../../Ameba/Runner.html#run-instance-method">Ameba::
 
   <div class="methods-inherited">
     
-      
-
-
-      
-
-
-      
-
-
-      
-
-
-    
-      
-
-
-      
-
-
-      
-
-
-      
-
-
-    
   </div>
 
   
-  <h2>
-    <a id="constructor-detail" class="anchor" href="#constructor-detail">
-  <svg class="octicon-link" aria-hidden="true">
-    <use href="#octicon-link"/>
-  </svg>
-</a>
-    Constructor Detail
-  </h2>
-  
-    <div class="entry-detail" id="new(output:IO=STDOUT)-class-method">
-      <div class="signature">
-        
-        def self.<strong>new</strong>(output : IO = <span class="t">STDOUT</span>)
-
-        <a class="method-permalink" href="#new%28output%3AIO%3DSTDOUT%29-class-method">#</a>
-      </div>
-      
-      <br/>
-      <div>
-        
-          [<a href="https://github.com/crystal-ameba/ameba/blob/f16fbee/src/ameba/formatter/base_formatter.cr#L13" target="_blank">View source</a>]
-        
-      </div>
-    </div>
-  
-
 
   
 
@@ -1326,129 +1268,24 @@ callbacks in <code><a href="../../Ameba/Runner.html#run-instance-method">Ameba::
     Instance Method Detail
   </h2>
   
-    <div class="entry-detail" id="config:Hash(Symbol,Bool|String)-instance-method">
+    <div class="entry-detail" id="load(path:Path|String|Nil=nil,root:Path|Nil=nil,skip_reading_config:Bool=false)-instance-method">
       <div class="signature">
         
-        def <strong>config</strong> : Hash(Symbol, Bool | String)
+        def <strong>load</strong>(path : Path | String | Nil = <span class="n">nil</span>, root : Path | Nil = <span class="n">nil</span>, skip_reading_config : Bool = <span class="n">false</span>)
 
-        <a class="method-permalink" href="#config%3AHash%28Symbol%2CBool%7CString%29-instance-method">#</a>
-      </div>
-      
-      <br/>
-      <div>
-        
-          [<a href="https://github.com/crystal-ameba/ameba/blob/f16fbee/src/ameba/formatter/base_formatter.cr#L11" target="_blank">View source</a>]
-        
-      </div>
-    </div>
-  
-    <div class="entry-detail" id="finished(sources):Nil-instance-method">
-      <div class="signature">
-        
-        def <strong>finished</strong>(sources) : Nil
-
-        <a class="method-permalink" href="#finished%28sources%29%3ANil-instance-method">#</a>
+        <a class="method-permalink" href="#load%28path%3APath%7CString%7CNil%3Dnil%2Croot%3APath%7CNil%3Dnil%2Cskip_reading_config%3ABool%3Dfalse%29-instance-method">#</a>
       </div>
       
         <div class="doc">
           
-          <p>Callback that indicates when inspection is finished.
-A list of inspected sources is passed as an argument.</p>
+          <p>Loads YAML configuration file by <code>path</code>.</p>
+<pre><code class="language-crystal">config <span class="o">=</span> <span class="t">Ameba</span><span class="t">::</span><span class="t">Config</span>.load</code></pre>
         </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/f16fbee/src/ameba/formatter/base_formatter.cr#L34" target="_blank">View source</a>]
-        
-      </div>
-    </div>
-  
-    <div class="entry-detail" id="output:IO::FileDescriptor|IO::Memory-instance-method">
-      <div class="signature">
-        
-        def <strong>output</strong> : IO::FileDescriptor | IO::Memory
-
-        <a class="method-permalink" href="#output%3AIO%3A%3AFileDescriptor%7CIO%3A%3AMemory-instance-method">#</a>
-      </div>
-      
-        <div class="doc">
-          
-          <p><span class="flag orange">TODO</span>  allow other IOs</p>
-        </div>
-      
-      <br/>
-      <div>
-        
-          [<a href="https://github.com/crystal-ameba/ameba/blob/f16fbee/src/ameba/formatter/base_formatter.cr#L10" target="_blank">View source</a>]
-        
-      </div>
-    </div>
-  
-    <div class="entry-detail" id="source_finished(source:Source):Nil-instance-method">
-      <div class="signature">
-        
-        def <strong>source_finished</strong>(source : <a href="../../Ameba/Source.html">Source</a>) : Nil
-
-        <a class="method-permalink" href="#source_finished%28source%3ASource%29%3ANil-instance-method">#</a>
-      </div>
-      
-        <div class="doc">
-          
-          <p>Callback that indicates when source inspection is finished.
-A corresponding source is passed as an argument.</p>
-<p><span class="flag yellow">WARNING</span>  This method needs to be MT safe</p>
-        </div>
-      
-      <br/>
-      <div>
-        
-          [<a href="https://github.com/crystal-ameba/ameba/blob/f16fbee/src/ameba/formatter/base_formatter.cr#L30" target="_blank">View source</a>]
-        
-      </div>
-    </div>
-  
-    <div class="entry-detail" id="source_started(source:Source):Nil-instance-method">
-      <div class="signature">
-        
-        def <strong>source_started</strong>(source : <a href="../../Ameba/Source.html">Source</a>) : Nil
-
-        <a class="method-permalink" href="#source_started%28source%3ASource%29%3ANil-instance-method">#</a>
-      </div>
-      
-        <div class="doc">
-          
-          <p>Callback that indicates when source inspection is started.
-A corresponding source is passed as an argument.</p>
-<p><span class="flag yellow">WARNING</span>  This method needs to be MT safe</p>
-        </div>
-      
-      <br/>
-      <div>
-        
-          [<a href="https://github.com/crystal-ameba/ameba/blob/f16fbee/src/ameba/formatter/base_formatter.cr#L24" target="_blank">View source</a>]
-        
-      </div>
-    </div>
-  
-    <div class="entry-detail" id="started(sources):Nil-instance-method">
-      <div class="signature">
-        
-        def <strong>started</strong>(sources) : Nil
-
-        <a class="method-permalink" href="#started%28sources%29%3ANil-instance-method">#</a>
-      </div>
-      
-        <div class="doc">
-          
-          <p>Callback that indicates when inspecting is started.
-A list of sources to inspect is passed as an argument.</p>
-        </div>
-      
-      <br/>
-      <div>
-        
-          [<a href="https://github.com/crystal-ameba/ameba/blob/f16fbee/src/ameba/formatter/base_formatter.cr#L18" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/f16fbee/src/ameba/config/loader.cr#L63" target="_blank">View source</a>]
         
       </div>
     </div>

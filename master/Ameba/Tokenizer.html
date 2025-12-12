@@ -194,8 +194,18 @@
       
     </li>
   
-  <li class=" " data-id="ameba/Ameba/Config" data-name="ameba::config">
+  <li class="parent " data-id="ameba/Ameba/Config" data-name="ameba::config">
       <a href="../Ameba/Config.html">Config</a>
+      
+        <ul>
+  
+  <li class=" " data-id="ameba/Ameba/Config/Loader" data-name="ameba::config::loader">
+      <a href="../Ameba/Config/Loader.html">Loader</a>
+      
+    </li>
+  
+</ul>
+
       
     </li>
   
@@ -1105,7 +1115,7 @@
   </h2>
 
   <p>Represents Crystal syntax tokenizer based on <code>Crystal::Lexer</code>.</p>
-<pre><code class="language-crystal">source <span class="o">=</span> <span class="t">Ameba</span><span class="t">::</span><span class="t">Source</span>.new code, path
+<pre><code class="language-crystal">source <span class="o">=</span> <span class="t">Ameba</span><span class="t">::</span><span class="t">Source</span>.new(code, path)
 tokenizer <span class="o">=</span> <span class="t">Ameba</span><span class="t">::</span><span class="t">Tokenizer</span>.new(source)
 tokenizer.run <span class="k">do</span> <span class="o">|</span>token<span class="o">|</span>
   puts token
@@ -1136,7 +1146,7 @@ tokenizer.run <span class="k">do</span> <span class="o">|</span>token<span class
   </h2>
   
     
-      <a href="https://github.com/crystal-ameba/ameba/blob/6c41634/src/ameba/tokenizer.cr#L13" target="_blank">
+      <a href="https://github.com/crystal-ameba/ameba/blob/f16fbee/src/ameba/tokenizer.cr#L13" target="_blank">
         ameba/tokenizer.cr
       </a>
     
@@ -1259,7 +1269,7 @@ tokenizer.run <span class="k">do</span> <span class="o">|</span>token<span class
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/6c41634/src/ameba/tokenizer.cr#L34" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/f16fbee/src/ameba/tokenizer.cr#L34" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1275,14 +1285,14 @@ tokenizer.run <span class="k">do</span> <span class="o">|</span>token<span class
         <div class="doc">
           
           <p>Instantiates Tokenizer using a <code>source</code>.</p>
-<pre><code class="language-crystal">source <span class="o">=</span> <span class="t">Ameba</span><span class="t">::</span><span class="t">Source</span>.new code, path
+<pre><code class="language-crystal">source <span class="o">=</span> <span class="t">Ameba</span><span class="t">::</span><span class="t">Source</span>.new(code, path)
 <span class="t">Ameba</span><span class="t">::</span><span class="t">Tokenizer</span>.new(source)</code></pre>
         </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/6c41634/src/ameba/tokenizer.cr#L20" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/f16fbee/src/ameba/tokenizer.cr#L20" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1322,7 +1332,7 @@ tokenizer.run <span class="k">do</span> <span class="o">|</span>token<span class
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/6c41634/src/ameba/tokenizer.cr#L44" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/f16fbee/src/ameba/tokenizer.cr#L44" target="_blank">View source</a>]
         
       </div>
     </div>

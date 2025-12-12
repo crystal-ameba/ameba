@@ -194,8 +194,18 @@
       
     </li>
   
-  <li class=" current" data-id="ameba/Ameba/Config" data-name="ameba::config">
+  <li class="parent open current" data-id="ameba/Ameba/Config" data-name="ameba::config">
       <a href="../Ameba/Config.html">Config</a>
+      
+        <ul>
+  
+  <li class=" " data-id="ameba/Ameba/Config/Loader" data-name="ameba::config::loader">
+      <a href="../Ameba/Config/Loader.html">Loader</a>
+      
+    </li>
+  
+</ul>
+
       
     </li>
   
@@ -1108,29 +1118,6 @@
 <p>Config can be loaded from configuration YAML file and adjusted.</p>
 <pre><code class="language-crystal">config <span class="o">=</span> <span class="t">Config</span>.load
 config.formatter <span class="o">=</span> my_formatter</code></pre>
-<p>By default config loads <code>.ameba.yml</code> file located in a current
-working directory.</p>
-<p>If it cannot be found until reaching the root directory, then it will be
-searched for in the user’s global config locations, which consists of a
-dotfile or a config file inside the XDG Base Directory specification.</p>
-<ul>
-<li><code>~/.ameba.yml</code></li>
-<li><code>$<a href="../Ameba/Config.html#XDG_CONFIG_HOME">XDG_CONFIG_HOME</a>/ameba/config.yml</code> (expands to <code>~/.config/ameba/config.yml</code>
-if <code>$<a href="../Ameba/Config.html#XDG_CONFIG_HOME">XDG_CONFIG_HOME</a></code> is not set)</li>
-</ul>
-<p>If both files exist, the dotfile will be selected.</p>
-<p>As an example, if Ameba is invoked from inside <code>/path/to/project/lib/utils</code>,
-then it will use the config as specified inside the first of the following files:</p>
-<ul>
-<li><code>/path/to/project/lib/utils/.ameba.yml</code></li>
-<li><code>/path/to/project/lib/.ameba.yml</code></li>
-<li><code>/path/to/project/.ameba.yml</code></li>
-<li><code>/path/to/.ameba.yml</code></li>
-<li><code>/path/.ameba.yml</code></li>
-<li><code>/.ameba.yml</code></li>
-<li><code>~/.ameba.yml</code></li>
-<li><code>~/.config/ameba/config.yml</code></li>
-</ul>
 
 
 
@@ -1154,6 +1141,20 @@ then it will use the config as specified inside the first of the following files
 
 
 
+  <h2>
+    <a id="extended-modules" class="anchor" href="#extended-modules">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>
+    Extended Modules
+  </h2>
+  <ul class="other-types-list">
+    
+      <li class="other-type"><a href="../Ameba/Config/Loader.html">Ameba::Config::Loader</a></li>
+    
+  </ul>
+
 
 
 
@@ -1171,8 +1172,22 @@ then it will use the config as specified inside the first of the following files
   </h2>
   
     
-      <a href="https://github.com/crystal-ameba/ameba/blob/6c41634/src/ameba/config.cr#L39" target="_blank">
+      <a href="https://github.com/crystal-ameba/ameba/blob/f16fbee/src/ameba/config.cr#L16" target="_blank">
         ameba/config.cr
+      </a>
+    
+    <br/>
+  
+    
+      <a href="https://github.com/crystal-ameba/ameba/blob/f16fbee/src/ameba/config/loader.cr#L1" target="_blank">
+        ameba/config/loader.cr
+      </a>
+    
+    <br/>
+  
+    
+      <a href="https://github.com/crystal-ameba/ameba/blob/f16fbee/src/ameba/config/rule_config.cr#L1" target="_blank">
+        ameba/config/rule_config.cr
       </a>
     
     <br/>
@@ -1215,26 +1230,6 @@ then it will use the config as specified inside the first of the following files
       </dt>
       
     
-      <dt class="entry-const" id="DEFAULT_PATH">
-        <strong>DEFAULT_PATH</strong> = <code><span class="t">Path</span>[<span class="t">Dir</span>.current] <span class="o">/</span> <span class="t">FILENAME</span></code>
-      </dt>
-      
-    
-      <dt class="entry-const" id="DEFAULT_PATHS">
-        <strong>DEFAULT_PATHS</strong> = <code>{<span class="t">Path</span>[<span class="s">&quot;~&quot;</span>] <span class="o">/</span> <span class="t">FILENAME</span>, (<span class="t">Path</span>[<span class="t">XDG_CONFIG_HOME</span>] <span class="o">/</span> <span class="s">&quot;ameba&quot;</span>) <span class="o">/</span> <span class="s">&quot;config.yml&quot;</span>}</code>
-      </dt>
-      
-    
-      <dt class="entry-const" id="FILENAME">
-        <strong>FILENAME</strong> = <code><span class="s">&quot;.ameba.yml&quot;</span></code>
-      </dt>
-      
-    
-      <dt class="entry-const" id="XDG_CONFIG_HOME">
-        <strong>XDG_CONFIG_HOME</strong> = <code><span class="t">ENV</span>.fetch(<span class="s">&quot;XDG_CONFIG_HOME&quot;</span>, <span class="s">&quot;~/.config&quot;</span>)</code>
-      </dt>
-      
-    
   </dl>
 
 
@@ -1253,14 +1248,9 @@ then it will use the config as specified inside the first of the following files
   <ul class="list-summary">
     
       <li class="entry-summary">
-        <a href="#formatter_names-class-method" class="signature"><strong>.formatter_names</strong></a>
+        <a href="#formatter_names%28separator%3D%27%7C%27%29-class-method" class="signature"><strong>.formatter_names</strong>(separator = <span class="s">&#39;|&#39;</span>)</a>
         
-      </li>
-    
-      <li class="entry-summary">
-        <a href="#load%28path%3Dnil%2Croot%3Dnil%2Cskip_reading_config%3Dfalse%29-class-method" class="signature"><strong>.load</strong>(path = <span class="n">nil</span>, root = <span class="n">nil</span>, skip_reading_config = <span class="n">false</span>)</a>
-        
-          <div class="summary"><p>Loads YAML configuration file by <code>path</code>.</p></div>
+          <div class="summary"><p>Returns available formatter names joined by <em>separator</em>.</p></div>
         
       </li>
     
@@ -1305,6 +1295,13 @@ then it will use the config as specified inside the first of the following files
         <a href="#excluded%3D%28excluded%3ASet%28String%29%29-instance-method" class="signature"><strong>#excluded=</strong>(excluded : Set(String))</a>
         
           <div class="summary"><p>Represents a list of paths to exclude from globs.</p></div>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#files-instance-method" class="signature"><strong>#files</strong></a>
+        
+          <div class="summary"><p>Returns a list of files matching globs and excluded sections.</p></div>
         
       </li>
     
@@ -1360,15 +1357,21 @@ then it will use the config as specified inside the first of the following files
       <li class="entry-summary">
         <a href="#rules%3AArray%28Rule%3A%3ABase%29-instance-method" class="signature"><strong>#rules</strong> : Array(Rule::Base)</a>
         
+          <div class="summary"><p>Returns an array of configured rules.</p></div>
+        
       </li>
     
       <li class="entry-summary">
         <a href="#severity%3AAmeba%3A%3ASeverity-instance-method" class="signature"><strong>#severity</strong> : Ameba::Severity</a>
         
+          <div class="summary"><p>Returns minimum reported severity.</p></div>
+        
       </li>
     
       <li class="entry-summary">
         <a href="#severity%3D%28severity%3AAmeba%3A%3ASeverity%29-instance-method" class="signature"><strong>#severity=</strong>(severity : Ameba::Severity)</a>
+        
+          <div class="summary"><p>Returns minimum reported severity.</p></div>
         
       </li>
     
@@ -1501,40 +1504,23 @@ then it will use the config as specified inside the first of the following files
     Class Method Detail
   </h2>
   
-    <div class="entry-detail" id="formatter_names-class-method">
+    <div class="entry-detail" id="formatter_names(separator=&#39;|&#39;)-class-method">
       <div class="signature">
         
-        def self.<strong>formatter_names</strong>
+        def self.<strong>formatter_names</strong>(separator = <span class="s">&#39;|&#39;</span>)
 
-        <a class="method-permalink" href="#formatter_names-class-method">#</a>
-      </div>
-      
-      <br/>
-      <div>
-        
-          [<a href="https://github.com/crystal-ameba/ameba/blob/6c41634/src/ameba/config.cr#L162" target="_blank">View source</a>]
-        
-      </div>
-    </div>
-  
-    <div class="entry-detail" id="load(path=nil,root=nil,skip_reading_config=false)-class-method">
-      <div class="signature">
-        
-        def self.<strong>load</strong>(path = <span class="n">nil</span>, root = <span class="n">nil</span>, skip_reading_config = <span class="n">false</span>)
-
-        <a class="method-permalink" href="#load%28path%3Dnil%2Croot%3Dnil%2Cskip_reading_config%3Dfalse%29-class-method">#</a>
+        <a class="method-permalink" href="#formatter_names%28separator%3D%27%7C%27%29-class-method">#</a>
       </div>
       
         <div class="doc">
           
-          <p>Loads YAML configuration file by <code>path</code>.</p>
-<pre><code class="language-crystal">config <span class="o">=</span> <span class="t">Ameba</span><span class="t">::</span><span class="t">Config</span>.load</code></pre>
+          <p>Returns available formatter names joined by <em>separator</em>.</p>
         </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/6c41634/src/ameba/config.cr#L128" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/f16fbee/src/ameba/config.cr#L35" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1569,7 +1555,7 @@ then it will use the config as specified inside the first of the following files
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/6c41634/src/ameba/config.cr#L94" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/f16fbee/src/ameba/config.cr#L107" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1590,7 +1576,7 @@ then it will use the config as specified inside the first of the following files
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/6c41634/src/ameba/config.cr#L94" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/f16fbee/src/ameba/config.cr#L107" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1614,7 +1600,7 @@ config.excluded <span class="o">=</span> <span class="t">Set</span>{<span class=
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/6c41634/src/ameba/config.cr#L91" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/f16fbee/src/ameba/config.cr#L104" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1638,7 +1624,33 @@ config.excluded <span class="o">=</span> <span class="t">Set</span>{<span class=
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/6c41634/src/ameba/config.cr#L91" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/f16fbee/src/ameba/config.cr#L104" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="files-instance-method">
+      <div class="signature">
+        
+        def <strong>files</strong>
+
+        <a class="method-permalink" href="#files-instance-method">#</a>
+      </div>
+      
+        <div class="doc">
+          
+          <p>Returns a list of files matching globs and excluded sections.</p>
+<pre><code class="language-crystal">config <span class="o">=</span> <span class="t">Ameba</span><span class="t">::</span><span class="t">Config</span>.load
+config.files <span class="c"># =&gt; list of default files</span>
+config.globs <span class="o">=</span> <span class="t">Set</span>{<span class="s">&quot;**/*.cr&quot;</span>, <span class="s">&quot;**/*.ecr&quot;</span>}
+config.excluded <span class="o">=</span> <span class="t">Set</span>{<span class="s">&quot;spec&quot;</span>}
+config.files <span class="c"># =&gt; list of files found by the wildcards</span></code></pre>
+        </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/crystal-ameba/ameba/blob/f16fbee/src/ameba/config.cr#L165" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1663,7 +1675,7 @@ config.formatter</code></pre>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/6c41634/src/ameba/config.cr#L194" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/f16fbee/src/ameba/config.cr#L69" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1686,7 +1698,7 @@ config.formatter <span class="o">=</span> <span class="n">:progress</span></code
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/6c41634/src/ameba/config.cr#L204" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/f16fbee/src/ameba/config.cr#L79" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1711,7 +1723,7 @@ config.formatter</code></pre>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/6c41634/src/ameba/config.cr#L194" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/f16fbee/src/ameba/config.cr#L69" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1737,7 +1749,7 @@ config.globs</code></pre>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/6c41634/src/ameba/config.cr#L82" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/f16fbee/src/ameba/config.cr#L95" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1763,7 +1775,7 @@ config.globs</code></pre>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/6c41634/src/ameba/config.cr#L82" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/f16fbee/src/ameba/config.cr#L95" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1784,7 +1796,7 @@ config.globs</code></pre>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/6c41634/src/ameba/config.cr#L68" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/f16fbee/src/ameba/config.cr#L46" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1805,7 +1817,7 @@ config.globs</code></pre>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/6c41634/src/ameba/config.cr#L68" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/f16fbee/src/ameba/config.cr#L46" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1818,10 +1830,15 @@ config.globs</code></pre>
         <a class="method-permalink" href="#rules%3AArray%28Rule%3A%3ABase%29-instance-method">#</a>
       </div>
       
+        <div class="doc">
+          
+          <p>Returns an array of configured rules.</p>
+        </div>
+      
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/6c41634/src/ameba/config.cr#L64" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/f16fbee/src/ameba/config.cr#L40" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1834,10 +1851,15 @@ config.globs</code></pre>
         <a class="method-permalink" href="#severity%3AAmeba%3A%3ASeverity-instance-method">#</a>
       </div>
       
+        <div class="doc">
+          
+          <p>Returns minimum reported severity.</p>
+        </div>
+      
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/6c41634/src/ameba/config.cr#L65" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/f16fbee/src/ameba/config.cr#L43" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1850,10 +1872,15 @@ config.globs</code></pre>
         <a class="method-permalink" href="#severity%3D%28severity%3AAmeba%3A%3ASeverity%29-instance-method">#</a>
       </div>
       
+        <div class="doc">
+          
+          <p>Returns minimum reported severity.</p>
+        </div>
+      
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/6c41634/src/ameba/config.cr#L65" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/f16fbee/src/ameba/config.cr#L43" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1879,7 +1906,7 @@ config.sources <span class="c"># =&gt; list of sources pointing to files found b
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/6c41634/src/ameba/config.cr#L175" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/f16fbee/src/ameba/config.cr#L146" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1900,7 +1927,7 @@ config.sources <span class="c"># =&gt; list of sources pointing to files found b
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/6c41634/src/ameba/config.cr#L97" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/f16fbee/src/ameba/config.cr#L110" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1921,7 +1948,7 @@ config.sources <span class="c"># =&gt; list of sources pointing to files found b
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/6c41634/src/ameba/config.cr#L97" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/f16fbee/src/ameba/config.cr#L110" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1944,7 +1971,7 @@ config.update_rule <span class="s">&quot;MyRuleName&quot;</span>, enabled: <span
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/6c41634/src/ameba/config.cr#L227" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/f16fbee/src/ameba/config.cr#L175" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1969,7 +1996,7 @@ config.update_rules <span class="s">%w[Rule1 Rule2]</span>, enabled: <span class
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/6c41634/src/ameba/config.cr#L248" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/f16fbee/src/ameba/config.cr#L196" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1990,7 +2017,7 @@ config.update_rules <span class="s">%w[Rule1 Rule2]</span>, enabled: <span class
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/6c41634/src/ameba/config.cr#L71" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/f16fbee/src/ameba/config.cr#L49" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2011,7 +2038,7 @@ config.update_rules <span class="s">%w[Rule1 Rule2]</span>, enabled: <span class
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/6c41634/src/ameba/config.cr#L71" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/f16fbee/src/ameba/config.cr#L49" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2034,7 +2061,7 @@ config.version <span class="o">=</span> <span class="s">&quot;1.6.0&quot;</span>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/6c41634/src/ameba/config.cr#L217" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/f16fbee/src/ameba/config.cr#L57" target="_blank">View source</a>]
         
       </div>
     </div>
