@@ -166,7 +166,7 @@ module Ameba::CLI
       end
 
       parser.on("--fail-level SEVERITY",
-        "Change the level of failure to exit. Defaults to Convention") do |level|
+        "Change the level of failure to exit (default: #{Rule::Base.default_severity})") do |level|
         opts.fail_level = Severity.parse(level)
       end
 
