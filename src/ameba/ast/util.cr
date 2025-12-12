@@ -75,6 +75,14 @@ module Ameba::AST::Util
       !!(node.block || node.block_arg)
   end
 
+  # Returns `true` if the *node* is a `Crystal::Def`
+  # with either `args`, `splat_index`, `double_splat`, or `block_arg` set,
+  # `false` otherwise.
+  def takes_arguments?(node) : Bool
+    node.is_a?(Crystal::Def) &&
+      !!(node.args.present? || node.splat_index || node.double_splat || node.block_arg)
+  end
+
   # Returns a source code for the current node.
   # This method uses `node.location` and `node.end_location`
   # to determine and cut a piece of source of the node.
