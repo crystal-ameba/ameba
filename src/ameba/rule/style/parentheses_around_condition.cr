@@ -28,6 +28,8 @@ module Ameba::Rule::Style
   #   AllowSafeAssignment: false
   # ```
   class ParenthesesAroundCondition < Base
+    include AST::Util
+
     properties do
       since_version "1.4.0"
       description "Disallows redundant parentheses around control expressions"
@@ -83,7 +85,7 @@ module Ameba::Rule::Style
       when Crystal::BinaryOp
         !in_ternary
       when Crystal::Call
-        !in_ternary || node.has_parentheses? || node.args.empty?
+        !in_ternary || node.has_parentheses? || !has_arguments?(node)
       when Crystal::ExceptionHandler, Crystal::If, Crystal::Unless
         false
       when Crystal::Yield

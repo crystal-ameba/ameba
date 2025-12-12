@@ -26,6 +26,8 @@ module Ameba::Rule::Lint
   #   Enabled: true
   # ```
   class NotNil < Base
+    include AST::Util
+
     properties do
       since_version "1.3.0"
       description "Identifies usage of `not_nil!` calls"
@@ -38,8 +40,8 @@ module Ameba::Rule::Lint
     end
 
     def test(source, node : Crystal::Call)
-      return unless node.name == "not_nil!"
-      return unless node.obj && node.args.empty?
+      return unless node.name == "not_nil!" && node.obj
+      return if has_arguments?(node)
 
       issue_for node, MSG, prefer_name_location: true
     end

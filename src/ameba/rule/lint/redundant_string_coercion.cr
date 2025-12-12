@@ -40,9 +40,8 @@ module Ameba::Rule::Lint
       node.expressions.each do |exp|
         yield exp if exp.is_a?(Crystal::Call) &&
                      exp.name == "to_s" &&
-                     exp.args.size.zero? &&
-                     exp.named_args.nil? &&
-                     exp.obj
+                     exp.obj &&
+                     !has_arguments?(exp)
       end
     end
   end
