@@ -1,10 +1,10 @@
 require "../spec_helper"
 
 module Ameba
-  root = Path[__DIR__, "..", ".."]
+  root = Path[__DIR__, "..", ".."].expand
 
   describe Config do
-    config_sample = Path[__DIR__, "..", "fixtures", "config.yml"].to_s
+    config_sample = Path[__DIR__, "..", "fixtures", ".ameba.yml"].to_s
 
     it "should have a list of available formatters" do
       Config::AVAILABLE_FORMATTERS.should_not be_nil
@@ -14,13 +14,13 @@ module Ameba
       it "raises when the config is not a Hash" do
         yml = YAML.parse "[]"
         expect_raises(Exception, "Invalid config file format") do
-          Config.new(yml)
+          Config.from_yaml(yml)
         end
       end
 
       it "loads default globs when config is empty" do
         yml = YAML.parse "{}"
-        config = Config.new(yml)
+        config = Config.from_yaml(yml)
         config.globs.should eq Config::DEFAULT_GLOBS
       end
 
@@ -28,7 +28,7 @@ module Ameba
         yml = YAML.parse <<-CONFIG
           # Empty config with comment
           CONFIG
-        config = Config.new(yml)
+        config = Config.from_yaml(yml)
         config.globs.should eq Config::DEFAULT_GLOBS
       end
 
@@ -37,7 +37,7 @@ module Ameba
           ---
           Globs: src/*.cr
           CONFIG
-        config = Config.new(yml)
+        config = Config.from_yaml(yml)
         config.globs.should eq Set{"src/*.cr"}
       end
 
@@ -48,7 +48,7 @@ module Ameba
            - "src/*.cr"
            - "!spec"
           CONFIG
-        config = Config.new(yml)
+        config = Config.from_yaml(yml)
         config.globs.should eq Set{"src/*.cr", "!spec"}
       end
 
@@ -58,7 +58,7 @@ module Ameba
           Globs: 100
           CONFIG
         expect_raises(Exception, "Incorrect `Globs` section in a config file") do
-          Config.new(yml)
+          Config.from_yaml(yml)
         end
       end
 
@@ -67,7 +67,7 @@ module Ameba
           ---
           Excluded: spec
           CONFIG
-        config = Config.new(yml)
+        config = Config.from_yaml(yml)
         config.excluded.should eq Set{"spec"}
       end
 
@@ -78,7 +78,7 @@ module Ameba
            - spec
            - lib/*.cr
           CONFIG
-        config = Config.new(yml)
+        config = Config.from_yaml(yml)
         config.excluded.should eq Set{"spec", "lib/*.cr"}
       end
 
@@ -88,7 +88,7 @@ module Ameba
           Excluded: true
           CONFIG
         expect_raises(Exception, "Incorrect `Excluded` section in a config file") do
-          Config.new(yml)
+          Config.from_yaml(yml)
         end
       end
     end
@@ -99,11 +99,11 @@ module Ameba
         config.should_not be_nil
         config.version.should_not be_nil
         config.globs.should_not be_nil
-        config.formatter.should_not be_nil
+        config.formatter.should be_a Formatter::FlycheckFormatter
       end
 
       it "raises when custom config file doesn't exist" do
-        expect_raises(Exception, "Unable to load config file: Config file does not exist") do
+        expect_raises(Exception, %(Unable to load config file: Config file "foo.yml" does not exist)) do
           Config.load "foo.yml"
         end
       end
@@ -125,8 +125,8 @@ module Ameba
       end
 
       it "allows to set globs" do
-        config.globs = Set{"file.cr"}
-        config.globs.should eq Set{"file.cr"}
+        config.globs = Set{"src/**/*.cr"}
+        config.globs.should eq Set{"src/**/*.cr"}
       end
     end
 

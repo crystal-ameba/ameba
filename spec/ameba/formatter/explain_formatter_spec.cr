@@ -1,6 +1,6 @@
 require "../../spec_helper"
 
-private LOCATION = {file: "source.cr", line: 1, column: 1}
+private LOCATION = Crystal::Location.new("source.cr", 1, 1)
 
 private def explanation(source)
   Ameba::ErrorRule.new.catch(source)
@@ -15,20 +15,17 @@ module Ameba::Formatter
     describe "#location" do
       it "returns crystal location" do
         location = ExplainFormatter
-          .new(STDOUT, {file: "compiler.cr", line: 3, column: 8})
+          .new(STDOUT, LOCATION)
           .location
 
-        location.should be_a Crystal::Location
-        location.filename.should eq "compiler.cr"
-        location.line_number.should eq 3
-        location.column_number.should eq 8
+        location.should eq LOCATION
       end
     end
 
     describe "#output" do
       it "returns io" do
         output = ExplainFormatter
-          .new(STDOUT, {file: "compiler.cr", line: 3, column: 8})
+          .new(STDOUT, LOCATION)
           .output
 
         output.should eq STDOUT

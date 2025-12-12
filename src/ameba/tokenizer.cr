@@ -4,7 +4,7 @@ module Ameba
   # Represents Crystal syntax tokenizer based on `Crystal::Lexer`.
   #
   # ```
-  # source = Ameba::Source.new code, path
+  # source = Ameba::Source.new(code, path)
   # tokenizer = Ameba::Tokenizer.new(source)
   # tokenizer.run do |token|
   #   puts token
@@ -14,7 +14,7 @@ module Ameba
     # Instantiates Tokenizer using a `source`.
     #
     # ```
-    # source = Ameba::Source.new code, path
+    # source = Ameba::Source.new(code, path)
     # Ameba::Tokenizer.new(source)
     # ```
     def initialize(source)

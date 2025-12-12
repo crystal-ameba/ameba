@@ -64,11 +64,7 @@ module Ameba::Formatter
     end
 
     private def started_message(size)
-      if size == 1
-        "Inspecting 1 file".colorize(:default)
-      else
-        "Inspecting #{size} files".colorize(:default)
-      end
+      "Inspecting #{size} #{pluralize(size, "file")}"
     end
 
     private def finished_in_message(started, finished)

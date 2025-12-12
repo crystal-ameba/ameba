@@ -8,6 +8,11 @@ module Ameba
     # Path to the source file.
     getter path : String
 
+    # Absolute path to the source file.
+    getter fullpath : String do
+      File.expand_path(path)
+    end
+
     # Crystal code (content of a source file).
     getter code : String
 
@@ -17,7 +22,7 @@ module Ameba
     #
     # ```
     # path = "./src/source.cr"
-    # Ameba::Source.new File.read(path), path
+    # Ameba::Source.new(File.read(path), path)
     # ```
     def initialize(@code = "", @path = "")
     end
@@ -45,7 +50,7 @@ module Ameba
     # lines instantly.
     #
     # ```
-    # source = Ameba::Source.new "a = 1\nb = 2", path
+    # source = Ameba::Source.new("a = 1\nb = 2", path)
     # source.lines # => ["a = 1", "b = 2"]
     # ```
     getter lines : Array(String) { code.split(/\r?\n/) }
@@ -53,7 +58,7 @@ module Ameba
     # Returns AST nodes constructed by `Crystal::Parser`.
     #
     # ```
-    # source = Ameba::Source.new code, path
+    # source = Ameba::Source.new(code, path)
     # source.ast
     # ```
     getter ast : Crystal::ASTNode do
@@ -77,10 +82,6 @@ module Ameba
         .tap(&.wants_doc = true)
         .tap(&.filename = path)
         .parse
-    end
-
-    getter fullpath : String do
-      File.expand_path(path)
     end
 
     # Returns `true` if the source is a spec file, `false` otherwise.

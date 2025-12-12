@@ -1,19 +1,21 @@
-require "../../ameba"
 require "option_parser"
+require "../../ameba"
 
 # :nodoc:
-module Ameba::Cli
+module Ameba::CLI
   extend self
 
   private class Opts
     property config : Path?
     property version : String?
-    property formatter : Symbol | String | Nil
+    property formatter : Symbol | String?
+    property root = Path[Dir.current]
     property globs : Set(String)?
+    property excluded : Set(String)?
     property only : Set(String)?
     property except : Set(String)?
     property describe_rule : String?
-    property location_to_explain : NamedTuple(file: String, line: Int32, column: Int32)?
+    property location_to_explain : Crystal::Location?
     property fail_level : Severity?
     property stdin_filename : String?
     property? skip_reading_config = false
@@ -25,57 +27,74 @@ module Ameba::Cli
     property? autocorrect = false
   end
 
-  def run(args = ARGV) : Nil
-    opts = parse_args(args)
+  private class ExitException < Exception
+    getter code : Int32
 
-    Colorize.enabled = opts.colors?
-
-    if (location_to_explain = opts.location_to_explain) && opts.autocorrect?
-      raise "Invalid usage: Cannot explain an issue and autocorrect at the same time."
+    def initialize(@code = 0)
+      super("Exit with code #{code}")
     end
-
-    if opts.stdin_filename && opts.autocorrect?
-      raise "Invalid usage: Cannot autocorrect from stdin."
-    end
-
-    config = config_from_opts(opts)
-
-    if opts.rules?
-      print_rules(config.rules)
-    end
-
-    if opts.rule_versions?
-      print_rule_versions(config.rules)
-    end
-
-    if describe_rule_name = opts.describe_rule
-      unless rule = config.rules.find(&.name.== describe_rule_name)
-        raise "Unknown rule"
-      end
-      describe_rule(rule)
-    end
-
-    runner = Ameba.run(config)
-
-    if location_to_explain
-      runner.explain(location_to_explain)
-    else
-      exit 1 unless runner.success?
-    end
-  rescue e
-    puts "Error: #{e.message}"
-    exit 255
   end
 
-  def parse_args(args, opts = Opts.new)
+  def run(args = ARGV, output : IO = STDOUT) : Bool
+    safe_colorize_toggle do
+      opts = parse_args(args, output: output)
+
+      Colorize.enabled = opts.colors?
+
+      if (location_to_explain = opts.location_to_explain) && opts.autocorrect?
+        raise "Invalid usage: Cannot explain an issue and autocorrect at the same time."
+      end
+
+      if opts.stdin_filename && opts.autocorrect?
+        raise "Invalid usage: Cannot autocorrect from stdin."
+      end
+
+      config = config_from_opts(opts)
+
+      if opts.rules?
+        print_rules(config.rules, output)
+        return true
+      end
+
+      if opts.rule_versions?
+        print_rule_versions(config.rules, output)
+        return true
+      end
+
+      if describe_rule_name = opts.describe_rule
+        unless rule = config.rules.find(&.name.== describe_rule_name)
+          raise "Unknown rule"
+        end
+        describe_rule(rule, output)
+        return true
+      end
+
+      runner = Ameba.run(config)
+
+      if location_to_explain
+        runner.explain(location_to_explain, output)
+        return true
+      end
+
+      runner.success?
+    end
+  rescue ex : ExitException
+    ex.code.zero?
+  end
+
+  private def safe_colorize_toggle(&)
+    prev_colorize_enabled = Colorize.enabled?
+    begin
+      yield
+    ensure
+      Colorize.enabled = prev_colorize_enabled
+    end
+  end
+
+  def parse_args(args, opts = Opts.new, output : IO = STDOUT)
     OptionParser.parse(args) do |parser|
       parser.banner = "Usage: ameba [options] [file1 file2 ...]"
 
-      parser.on("-v", "--version", "Print version") { print_version }
-      parser.on("-h", "--help", "Show this help") { print_help(parser) }
-      parser.on("-r", "--rules", "Show all available rules") { opts.rules = true }
-      parser.on("-R", "--rule-versions", "Show all available rule versions") { opts.rule_versions = true }
-      parser.on("-s", "--silent", "Disable output") { opts.formatter = :silent }
       parser.unknown_args do |arr|
         case
         when arr.size == 1 && arr.first == "-"
@@ -83,20 +102,37 @@ module Ameba::Cli
         when arr.size == 1 && arr.first.matches?(/.+:\d+:\d+/)
           configure_explain_opts(arr.first, opts)
         else
-          next if arr.empty?
-          opts.globs = arr
-            .map { |glob| Path[glob].expand(home: true).to_s }
-            .to_set
+          configure_globs(arr, opts) if arr.present?
         end
       end
 
-      parser.on("-c", "--config PATH",
-        "Specify a configuration file") do |path|
+      parser.on("-v", "--version", "Print version") do
+        print_version(output)
+        raise ExitException.new
+      end
+
+      parser.on("-h", "--help", "Show this help") do
+        print_help(parser, output)
+        raise ExitException.new
+      end
+
+      parser.on("-r", "--rules", "Show all available rules") do
+        opts.rules = true
+      end
+
+      parser.on("-R", "--rule-versions", "Show all available rule versions") do
+        opts.rule_versions = true
+      end
+
+      parser.on("-s", "--silent", "Disable output") do
+        opts.formatter = :silent
+      end
+
+      parser.on("-c", "--config PATH", "Specify a configuration file") do |path|
         opts.config = Path[path] unless path.empty?
       end
 
-      parser.on("-u", "--up-to-version VERSION",
-        "Choose a version") do |version|
+      parser.on("-u", "--up-to-version VERSION", "Choose a version") do |version|
         opts.version = version
       end
 
@@ -130,7 +166,7 @@ module Ameba::Cli
       end
 
       parser.on("--fail-level SEVERITY",
-        "Change the level of failure to exit. Defaults to Convention") do |level|
+        "Change the level of failure to exit (default: #{Rule::Base.default_severity})") do |level|
         opts.fail_level = Severity.parse(level)
       end
 
@@ -163,7 +199,7 @@ module Ameba::Cli
 
   private def config_from_opts(opts)
     config = Config.load(
-      root: root_path_from_opts(opts),
+      root: opts.root,
       path: opts.config,
       skip_reading_config: opts.skip_reading_config?,
     )
@@ -176,6 +212,9 @@ module Ameba::Cli
     if globs = opts.globs
       config.globs = globs
     end
+    if excluded = opts.excluded
+      config.excluded += excluded
+    end
     if fail_level = opts.fail_level
       config.severity = fail_level
     end
@@ -186,25 +225,59 @@ module Ameba::Cli
     config
   end
 
-  private def root_path_from_opts(opts)
-    return unless globs = opts.globs
-    root =
-      case
-      when path = globs.find(&->File.file?(String))
-        Path[path].parents.reverse!.find(&->root_path?(Path))
-      when path = globs.find(&->File.directory?(String))
-        path = Path[path]
-        if root_path?(path)
-          path
-        else
-          path.parents.reverse!.find(&->root_path?(Path))
-        end
-      end
-    root.try &.expand(home: true)
+  private def configure_globs(args, opts) : Nil
+    excluded, globs =
+      args.partition(&.starts_with?('!'))
+
+    if root = root_path_from_globs(globs)
+      opts.root = root
+    end
+    if globs.present?
+      opts.globs = globs
+        .map! { |path| path_to_glob(path) }
+        .to_set
+    end
+    if excluded.present?
+      opts.excluded = excluded
+        .map! { |path| path_to_glob(path.lchop) }
+        .to_set
+    end
   end
 
-  private def root_path?(path)
-    File.exists?(path / Config::FILENAME) ||
+  private def path_to_glob(path : String) : String
+    Path[path]
+      .expand(home: true)
+      .to_posix
+      .to_s
+  end
+
+  private def glob?(string : String) : Bool
+    string.each_char.any?(&.in?('*', '?', '[', ']', '{', '}'))
+  end
+
+  private def root_path_from_globs(globs) : Path?
+    dynasty =
+      case
+      when path = find_as_path(globs, &->File.directory?(String))
+        path.parents + [path]
+      when path = find_as_path(globs, &->File.file?(String))
+        path.parents
+      end
+
+    dynasty
+      .try &.reverse!
+        .find(&->root_path?(Path))
+        .try(&.expand(home: true))
+  end
+
+  private def find_as_path(globs, &) : Path?
+    globs
+      .find { |glob| yield glob }
+      .try(&->Path.new(String))
+  end
+
+  private def root_path?(path : Path) : Bool
+    File.exists?(path / Config::Loader::FILENAME) ||
       File.exists?(path / "shard.yml")
   end
 
@@ -237,8 +310,12 @@ module Ameba::Cli
 
   private def configure_explain_opts(loc, opts) : Nil
     location_to_explain = parse_explain_location(loc)
+
+    filename = location_to_explain.original_filename
+    return unless filename
+
     opts.location_to_explain = location_to_explain
-    opts.globs = Set{location_to_explain[:file]}
+    opts.globs = Set{path_to_glob(filename)}
     opts.formatter = :silent
   end
 
@@ -247,41 +324,33 @@ module Ameba::Cli
     raise ArgumentError.new unless location.size === 3
 
     file, line, column = location
-    {
-      file:   file,
-      line:   line.to_i,
-      column: column.to_i,
-    }
+
+    Crystal::Location.new(file, line.to_i, column.to_i)
   rescue
     raise "location should have PATH:line:column format"
   end
 
-  private def print_version
+  private def print_version(output)
     if GIT_SHA
-      puts "%s [%s]" % {VERSION, GIT_SHA}
+      output.puts "%s [%s]" % {VERSION, GIT_SHA}
     else
-      puts VERSION
+      output.puts VERSION
     end
-    exit 0
   end
 
-  private def print_help(parser)
-    puts parser
-    exit 0
+  private def print_help(parser, output)
+    output.puts parser
   end
 
-  private def describe_rule(rule)
-    Presenter::RulePresenter.new.run(rule)
-    exit 0
+  private def describe_rule(rule, output)
+    Presenter::RulePresenter.new(output).run(rule)
   end
 
-  private def print_rules(rules)
-    Presenter::RuleCollectionPresenter.new.run(rules)
-    exit 0
+  private def print_rules(rules, output)
+    Presenter::RuleCollectionPresenter.new(output).run(rules)
   end
 
-  private def print_rule_versions(rules)
-    Presenter::RuleVersionsPresenter.new.run(rules)
-    exit 0
+  private def print_rule_versions(rules, output)
+    Presenter::RuleVersionsPresenter.new(output).run(rules)
   end
 end

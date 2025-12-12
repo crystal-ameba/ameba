@@ -45,10 +45,10 @@ module Ameba::Rule::Performance
       return unless node.name == "any?" && node.args.empty? && (obj = node.obj)
       return if has_block?(node)
 
-      obj_code =
-        node_source(obj, source.lines)
-
       issue_for node, MSG, prefer_name_location: true do |corrector|
+        obj_code =
+          node_source(obj, source.lines)
+
         corrector.replace(node, "#{obj_code}.present?")
       end
     end

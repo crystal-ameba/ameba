@@ -156,7 +156,7 @@ module Ameba
 
       it "writes nothing if sources are valid" do
         runner = runner(formatter: formatter).run
-        runner.explain({file: "source.cr", line: 1, column: 2}, output)
+        runner.explain(Crystal::Location.new("source.cr", 1, 2), output)
         output.to_s.should be_empty
       end
 
@@ -165,7 +165,7 @@ module Ameba
         source = Source.new "a = 1", "source.cr"
 
         runner = Runner.new(rules, [source], formatter, default_severity).run
-        runner.explain({file: "source.cr", line: 1, column: 1}, output)
+        runner.explain(Crystal::Location.new("source.cr", 1, 1), output)
         output.to_s.should_not be_empty
       end
 
@@ -174,7 +174,7 @@ module Ameba
         source = Source.new "a = 1", "source.cr"
 
         runner = Runner.new(rules, [source], formatter, default_severity).run
-        runner.explain({file: "source.cr", line: 1, column: 2}, output)
+        runner.explain(Crystal::Location.new("source.cr", 1, 2), output)
         output.to_s.should be_empty
       end
     end

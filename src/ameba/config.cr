@@ -1,7 +1,9 @@
 require "semantic_version"
 require "yaml"
 require "ecr/processor"
+
 require "./glob_utils"
+require "./config/*"
 
 # A configuration entry for `Ameba::Runner`.
 #
@@ -11,33 +13,13 @@ require "./glob_utils"
 # config = Config.load
 # config.formatter = my_formatter
 # ```
-#
-# By default config loads `.ameba.yml` file located in a current
-# working directory.
-#
-# If it cannot be found until reaching the root directory, then it will be
-# searched for in the user’s global config locations, which consists of a
-# dotfile or a config file inside the XDG Base Directory specification.
-#
-# - `~/.ameba.yml`
-# - `$XDG_CONFIG_HOME/ameba/config.yml` (expands to `~/.config/ameba/config.yml`
-#   if `$XDG_CONFIG_HOME` is not set)
-#
-# If both files exist, the dotfile will be selected.
-#
-# As an example, if Ameba is invoked from inside `/path/to/project/lib/utils`,
-# then it will use the config as specified inside the first of the following files:
-#
-# - `/path/to/project/lib/utils/.ameba.yml`
-# - `/path/to/project/lib/.ameba.yml`
-# - `/path/to/project/.ameba.yml`
-# - `/path/to/.ameba.yml`
-# - `/path/.ameba.yml`
-# - `/.ameba.yml`
-# - `~/.ameba.yml`
-# - `~/.config/ameba/config.yml`
 class Ameba::Config
+  extend Loader
+
   include GlobUtils
+
+  DEFAULT_EXCLUDED = Set{"lib"}
+  DEFAULT_GLOBS    = Set{"**/*.{cr,ecr}"}
 
   AVAILABLE_FORMATTERS = {
     progress:         Formatter::DotFormatter,
@@ -49,19 +31,15 @@ class Ameba::Config
     "github-actions": Formatter::GitHubActionsFormatter,
   }
 
-  XDG_CONFIG_HOME = ENV.fetch("XDG_CONFIG_HOME", "~/.config")
+  # Returns available formatter names joined by *separator*.
+  def self.formatter_names(separator = '|')
+    AVAILABLE_FORMATTERS.keys.join(separator)
+  end
 
-  FILENAME      = ".ameba.yml"
-  DEFAULT_PATH  = Path[Dir.current] / FILENAME
-  DEFAULT_PATHS = {
-    Path["~"] / FILENAME,
-    Path[XDG_CONFIG_HOME] / "ameba" / "config.yml",
-  }
-
-  DEFAULT_EXCLUDED = Set{"lib"}
-  DEFAULT_GLOBS    = Set{"**/*.{cr,ecr}"}
-
+  # Returns an array of configured rules.
   getter rules : Array(Rule::Base)
+
+  # Returns minimum reported severity.
   property severity = Severity::Convention
 
   # Returns a root directory to be used by `Ameba::Runner`.
@@ -70,117 +48,14 @@ class Ameba::Config
   # Returns an ameba version to be used by `Ameba::Runner`.
   property version : SemanticVersion?
 
-  # Returns a list of paths (with wildcards) to files.
-  # Represents a list of sources to be inspected.
-  # If globs are not set, it will return default list of files.
+  # Sets version from string.
   #
   # ```
   # config = Ameba::Config.load
-  # config.globs = Set{"**/*.cr"}
-  # config.globs
+  # config.version = "1.6.0"
   # ```
-  property globs : Set(String)
-
-  # Represents a list of paths to exclude from globs.
-  # Can have wildcards.
-  #
-  # ```
-  # config = Ameba::Config.load
-  # config.excluded = Set{"spec", "src/server/*.cr"}
-  # ```
-  property excluded : Set(String)
-
-  # Returns `true` if correctable issues should be autocorrected.
-  property? autocorrect = false
-
-  # Returns a filename if reading source file from STDIN.
-  property stdin_filename : String?
-
-  @rule_groups : Hash(String, Array(Rule::Base))
-
-  # Creates a new instance of `Ameba::Config` based on YAML parameters.
-  #
-  # `Config.load` uses this constructor to instantiate new config by YAML file.
-  protected def initialize(config : YAML::Any, @root = nil)
-    if config.raw.nil?
-      config = YAML.parse("{}")
-    elsif !config.raw.is_a?(Hash)
-      raise "Invalid config file format"
-    end
-    @rules = Rule.rules.map &.new(config).as(Rule::Base)
-    @rule_groups = @rules.group_by &.group
-    @excluded = load_array_section(config, "Excluded", DEFAULT_EXCLUDED).to_set
-    @globs = load_array_section(config, "Globs", DEFAULT_GLOBS).to_set
-
-    if version = config["Version"]?.try(&.as_s).presence
-      self.version = version
-    end
-    if formatter_name = load_formatter_name(config)
-      self.formatter = formatter_name
-    end
-  end
-
-  # Loads YAML configuration file by `path`.
-  #
-  # ```
-  # config = Ameba::Config.load
-  # ```
-  def self.load(path = nil, root = nil, skip_reading_config = false)
-    content = if skip_reading_config
-                "{}"
-              else
-                read_config(path, root) || "{}"
-              end
-    Config.new YAML.parse(content), root
-  rescue e
-    raise "Unable to load config file: #{e.message}"
-  end
-
-  protected def self.read_config(path = nil, root = nil)
-    if path
-      return File.read(path) if File.exists?(path)
-      raise "Config file does not exist"
-    end
-    path = root ? root / FILENAME : DEFAULT_PATH
-    if config_path = find_config_path(path)
-      return File.read(config_path)
-    end
-  end
-
-  protected def self.find_config_path(path : Path)
-    path.parents.reverse_each do |search_path|
-      config_path =
-        search_path / FILENAME
-      return config_path if File.exists?(config_path)
-    end
-
-    DEFAULT_PATHS.each do |default_path|
-      return default_path if File.exists?(default_path)
-    end
-  end
-
-  def self.formatter_names
-    AVAILABLE_FORMATTERS.keys.join('|')
-  end
-
-  # Returns a list of sources matching globs and excluded sections.
-  #
-  # ```
-  # config = Ameba::Config.load
-  # config.sources # => list of default sources
-  # config.globs = Set{"**/*.cr", "**/*.ecr"}
-  # config.excluded = Set{"spec"}
-  # config.sources # => list of sources pointing to files found by the wildcards
-  # ```
-  def sources
-    if file = stdin_filename
-      [Source.new(STDIN.gets_to_end, file)]
-    else
-      (find_files_by_globs(globs, root) - find_files_by_globs(excluded, root))
-        .map do |path|
-          Source.new(File.read(path), path)
-        end
-    end
+  def version=(version : String)
+    @version = SemanticVersion.parse(version)
   end
 
   # Returns a formatter to be used while inspecting files.
@@ -208,14 +83,87 @@ class Ameba::Config
     @formatter = formatter.new
   end
 
-  # Sets version from string.
+  # Returns a list of paths (with wildcards) to files.
+  # Represents a list of sources to be inspected.
+  # If globs are not set, it will return default list of files.
   #
   # ```
   # config = Ameba::Config.load
-  # config.version = "1.6.0"
+  # config.globs = Set{"**/*.cr"}
+  # config.globs
   # ```
-  def version=(version : String)
-    @version = SemanticVersion.parse(version)
+  property globs : Set(String)
+
+  # Represents a list of paths to exclude from globs.
+  # Can have wildcards.
+  #
+  # ```
+  # config = Ameba::Config.load
+  # config.excluded = Set{"spec", "src/server/*.cr"}
+  # ```
+  property excluded : Set(String)
+
+  # Returns `true` if correctable issues should be autocorrected.
+  property? autocorrect = false
+
+  # Returns a filename if reading source file from STDIN.
+  property stdin_filename : String?
+
+  # Returns rules grouped by rule group.
+  protected getter rule_groups : Hash(String, Array(Rule::Base))
+
+  protected def initialize(
+    *,
+    @rules = [] of Rule::Base,
+    @severity : Severity = :convention,
+    @root = nil,
+    @globs = Set(String).new,
+    @excluded = Set(String).new,
+    @autocorrect = false,
+    @stdin_filename = nil,
+    version = nil,
+    formatter = nil,
+  )
+    @rule_groups = @rules.group_by &.group
+
+    if version
+      self.version = version
+    end
+    if formatter
+      self.formatter = formatter
+    end
+  end
+
+  # Returns a list of sources matching globs and excluded sections.
+  #
+  # ```
+  # config = Ameba::Config.load
+  # config.sources # => list of default sources
+  # config.globs = Set{"**/*.cr", "**/*.ecr"}
+  # config.excluded = Set{"spec"}
+  # config.sources # => list of sources pointing to files found by the wildcards
+  # ```
+  def sources
+    if file = stdin_filename
+      [Source.new(STDIN.gets_to_end, file)]
+    else
+      files.map do |path|
+        Source.new(File.read(path), path)
+      end
+    end
+  end
+
+  # Returns a list of files matching globs and excluded sections.
+  #
+  # ```
+  # config = Ameba::Config.load
+  # config.files # => list of default files
+  # config.globs = Set{"**/*.cr", "**/*.ecr"}
+  # config.excluded = Set{"spec"}
+  # config.files # => list of files found by the wildcards
+  # ```
+  def files
+    find_files_by_globs(globs, root) - find_files_by_globs(excluded, root)
   end
 
   # Updates rule properties.
@@ -256,242 +204,6 @@ class Ameba::Config
         end
       else
         update_rule name, enabled, excluded
-      end
-    end
-  end
-
-  private def load_formatter_name(config)
-    name = config["Formatter"]?.try &.["Name"]?
-    name.try(&.to_s)
-  end
-
-  private def load_array_section(config, section_name, default = [] of String)
-    case value = config[section_name]?
-    when .nil?  then default
-    when .as_s? then [value.as_s]
-    when .as_a? then value.as_a.map(&.as_s)
-    else
-      raise "Incorrect `#{section_name}` section in a config files"
-    end
-  end
-
-  # :nodoc:
-  module RuleConfig
-    # Define rule properties
-    macro properties(&block)
-      {% definitions = [] of NamedTuple %}
-      {% if (prop = block.body).is_a? Call %}
-        {% if (named_args = prop.named_args) && (type = named_args.select(&.name.== "as".id).first) %}
-          {% definitions << {var: prop.name, value: prop.args.first, type: type.value} %}
-        {% else %}
-          {% definitions << {var: prop.name, value: prop.args.first} %}
-        {% end %}
-      {% elsif block.body.is_a? Expressions %}
-        {% for prop in block.body.expressions %}
-          {% if prop.is_a? Call %}
-            {% if (named_args = prop.named_args) && (type = named_args.select(&.name.== "as".id).first) %}
-              {% definitions << {var: prop.name, value: prop.args.first, type: type.value} %}
-            {% else %}
-              {% definitions << {var: prop.name, value: prop.args.first} %}
-            {% end %}
-          {% end %}
-        {% end %}
-      {% end %}
-
-      {% properties = {} of MacroId => NamedTuple %}
-      {% for df in definitions %}
-        {% name = df[:var].id %}
-        {% key = name.camelcase.stringify %}
-        {% value = df[:value] %}
-        {% type = df[:type] %}
-        {% converter = nil %}
-
-        {% if key == "Severity" %}
-          {% type = Severity %}
-          {% converter = SeverityYamlConverter %}
-        {% end %}
-
-        {% unless type %}
-          {% if value.is_a?(BoolLiteral) %}
-            {% type = Bool %}
-          {% elsif value.is_a?(StringLiteral) || value.is_a?(StringInterpolation) %}
-            {% type = String %}
-          {% elsif value.is_a?(NumberLiteral) %}
-            {% if value.kind == :i32 %}
-              {% type = Int32 %}
-            {% elsif value.kind == :i64 %}
-              {% type = Int64 %}
-            {% elsif value.kind == :i128 %}
-              {% type = Int128 %}
-            {% elsif value.kind == :f32 %}
-              {% type = Float32 %}
-            {% elsif value.kind == :f64 %}
-              {% type = Float64 %}
-            {% end %}
-          {% end %}
-        {% end %}
-
-        {% properties[name] = {key: key, default: value, type: type, converter: converter} %}
-
-        @[YAML::Field(key: {{ key }}, converter: {{ converter }})]
-        {% if type == Bool %}
-          property? {{ name }}{{ " : #{type}".id if type }} = {{ value }}
-        {% else %}
-          property {{ name }}{{ " : #{type}".id if type }} = {{ value }}
-        {% end %}
-      {% end %}
-
-      {% unless properties["enabled".id] %}
-        @[YAML::Field(key: "Enabled")]
-        property? enabled = true
-      {% end %}
-
-      {% unless properties["severity".id] %}
-        @[YAML::Field(key: "Severity", converter: Ameba::SeverityYamlConverter)]
-        property severity = {{ @type }}.default_severity
-      {% end %}
-
-      {% unless properties["excluded".id] %}
-        @[YAML::Field(key: "Excluded")]
-        property excluded : Set(String)?
-      {% end %}
-
-      {% unless properties["since_version".id] %}
-        @[YAML::Field(key: "SinceVersion")]
-        property since_version : String?
-      {% end %}
-
-      def since_version : SemanticVersion?
-        if version = @since_version
-          SemanticVersion.parse(version)
-        end
-      end
-
-      def self.to_json_schema(builder : JSON::Builder) : Nil
-        builder.string(rule_name)
-        builder.object do
-          builder.field("$ref", "#/$defs/BaseRule")
-          builder.field("$comment", documentation_url)
-          builder.field("title", rule_name)
-
-          {% if description = properties["description".id] %}
-            builder.field("description", {{ description[:default] }})
-          {% end %}
-
-          {%
-            serializable_props =
-              properties.to_a.reject { |(key, _)| key == "description" }
-          %}
-
-          builder.string("properties")
-          builder.object do
-            {% for prop in serializable_props %}
-              {% default_set = false %}
-
-              {% prop_name, prop = prop %}
-              {% prop_stringified = prop[:type].stringify %}
-
-              builder.string({{ prop[:key] }})
-              builder.object do
-                {% if prop[:type] == Bool %}
-                  builder.field("type", "boolean")
-
-                {% elsif prop[:type] == String %}
-                  builder.field("type", "string")
-
-                {% elsif prop_stringified == "::Union(String, ::Nil)" %}
-                  builder.string("type")
-                  builder.array do
-                    builder.string("string")
-                    builder.string("null")
-                  end
-
-                {% elsif prop_stringified =~ /^(Int|Float)\d+$/ %}
-                  builder.field("type", "number")
-
-                {% elsif prop_stringified =~ /^::Union\((Int|Float)\d+, ::Nil\)$/ %}
-                  builder.string("type")
-                  builder.array do
-                    builder.string("number")
-                    builder.string("null")
-                  end
-
-                {% elsif prop[:default].is_a?(ArrayLiteral) %}
-                  builder.field("type", "array")
-
-                  builder.string("items")
-                  builder.object do
-                    # TODO: Implement type validation for array items
-                    builder.field("type", "string")
-                  end
-
-                {% elsif prop[:default].is_a?(HashLiteral) %}
-                  builder.field("type", "object")
-
-                  builder.string("properties")
-                  builder.object do
-                    {% for pr in prop[:default] %}
-                      builder.string({{ pr }})
-                      builder.object do
-                        # TODO: Implement type validation for object properties
-                        builder.field("type", "string")
-                        builder.field("default", {{ prop[:default][pr] }})
-                      end
-                    {% end %}
-                  end
-                  {% default_set = true %}
-
-                {% elsif prop[:type] == Severity %}
-                  builder.field("$ref", "#/$defs/Severity")
-                  builder.field("default", {{ prop[:default].capitalize }})
-
-                  {% default_set = true %}
-
-                {% else %}
-                  {% raise "Unhandled schema type for #{prop}" %}
-                {% end %}
-
-                {% unless default_set %}
-                  builder.field("default", {{ prop[:default] }})
-                {% end %}
-              end
-            {% end %}
-
-            {% unless properties["severity".id] %}
-              unless default_severity == Rule::Base.default_severity
-                builder.string("Severity")
-                builder.object do
-                  builder.field("$ref", "#/$defs/Severity")
-                  builder.field("default", default_severity.to_s)
-                end
-              end
-            {% end %}
-          end
-        end
-      end
-    end
-
-    macro included
-      GROUP_SEVERITY = {
-        Lint:        Ameba::Severity::Warning,
-        Metrics:     Ameba::Severity::Warning,
-        Performance: Ameba::Severity::Warning,
-      }
-
-      class_getter default_severity : Ameba::Severity do
-        GROUP_SEVERITY[group_name]? || Ameba::Severity::Convention
-      end
-
-      macro inherited
-        include YAML::Serializable
-        include YAML::Serializable::Strict
-
-        def self.new(config = nil)
-          if (raw = config.try &.raw).is_a?(Hash)
-            yaml = raw[rule_name]?.try &.to_yaml
-          end
-          from_yaml yaml || "{}"
-        end
       end
     end
   end

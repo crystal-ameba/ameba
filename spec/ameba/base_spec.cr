@@ -1,7 +1,7 @@
 require "../spec_helper"
 
 module Ameba::Rule
-  root = Path[__DIR__, "..", ".."]
+  root = Path[__DIR__, "..", ".."].expand
 
   describe Base do
     context ".rules" do

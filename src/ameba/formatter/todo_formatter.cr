@@ -5,7 +5,7 @@ module Ameba::Formatter
   class TODOFormatter < DotFormatter
     @config_path : Path
 
-    def initialize(@output = STDOUT, @config_path = Config::DEFAULT_PATH)
+    def initialize(@output = STDOUT, @config_path = Config::Loader::DEFAULT_PATH)
     end
 
     def finished(sources) : Nil

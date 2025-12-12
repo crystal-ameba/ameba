@@ -21,12 +21,7 @@ module Ameba::Formatter
     #   column: column_number,
     # }
     # ```
-    def initialize(@output, location)
-      @location = Crystal::Location.new(
-        location[:file],
-        location[:line],
-        location[:column]
-      )
+    def initialize(@output, @location)
     end
 
     # Reports the explanations at the *@location*.
