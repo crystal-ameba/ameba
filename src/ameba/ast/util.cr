@@ -75,6 +75,13 @@ module Ameba::AST::Util
       !!(node.block || node.block_arg)
   end
 
+  # Returns `true` if the *node* is a `Crystal::Call`
+  # with either `node.block` or `node.block_arg` set, `false` otherwise.
+  def has_arguments?(node) : Bool
+    node.is_a?(Crystal::Call) &&
+      !!(node.args.present? || node.named_args.try(&.present?))
+  end
+
   # Returns `true` if the *node* is a `Crystal::Def`
   # with either `args`, `splat_index`, or `double_splat` set,
   # `false` otherwise.

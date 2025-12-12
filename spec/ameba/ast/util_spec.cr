@@ -335,6 +335,33 @@ module Ameba::AST
       end
     end
 
+    describe "#has_arguments?" do
+      it "returns false if the node has no arguments" do
+        node = as_node("foo.bar")
+        subject.has_arguments?(node).should be_false
+      end
+
+      it "returns true if the node has positional arguments" do
+        node = as_node("foo.bar(1)")
+        subject.has_arguments?(node).should be_true
+      end
+
+      it "returns true if the node has named arguments" do
+        node = as_node("foo.bar(baz: 1)")
+        subject.has_arguments?(node).should be_true
+      end
+
+      it "returns true if the node has splat arguments" do
+        node = as_node("foo.bar(*baz)")
+        subject.has_arguments?(node).should be_true
+      end
+
+      it "returns true if the node has double splat arguments" do
+        node = as_node("foo.bar(**baz)")
+        subject.has_arguments?(node).should be_true
+      end
+    end
+
     describe "#takes_arguments?" do
       it "returns false if the node takes no arguments" do
         node = as_node("def foo; end")
