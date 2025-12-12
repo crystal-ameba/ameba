@@ -223,7 +223,7 @@ module Ameba::CLI
         opts.globs.should eq Set{
           root.to_posix.to_s,
           Path[Dir.tempdir, "foo.cr"].to_posix.to_s,
-          Path[Dir.current, "**", "bar.cr"].to_posix.to_s,
+          Path[root, "**", "bar.cr"].to_posix.to_s,
         }
       end
 

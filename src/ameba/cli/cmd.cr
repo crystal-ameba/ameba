@@ -234,19 +234,21 @@ module Ameba::CLI
     end
     if globs.present?
       opts.globs = globs
-        .map! { |path| path_to_glob(path) }
+        .map! { |path| path_to_glob(path, root) }
         .to_set
     end
     if excluded.present?
       opts.excluded = excluded
-        .map! { |path| path_to_glob(path.lchop) }
+        .map! { |path| path_to_glob(path.lchop, root) }
         .to_set
     end
   end
 
-  private def path_to_glob(path : String) : String
+  private def path_to_glob(path : String, root = nil) : String
+    base = glob?(path) ? root || Dir.current : Dir.current
+
     Path[path]
-      .expand(home: true)
+      .expand(base, home: true)
       .to_posix
       .to_s
   end
