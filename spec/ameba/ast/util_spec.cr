@@ -351,11 +351,6 @@ module Ameba::AST
         subject.takes_arguments?(node).should be_true
       end
 
-      it "returns true if the node takes block argument" do
-        node = as_node("def foo(&block); end")
-        subject.takes_arguments?(node).should be_true
-      end
-
       it "returns true if the node has splat index" do
         node = as_node("def foo(*args); end")
         subject.takes_arguments?(node).should be_true

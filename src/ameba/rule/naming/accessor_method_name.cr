@@ -72,7 +72,7 @@ module Ameba::Rule::Naming
     private def check_issue(source, node : Crystal::Def)
       case node.name
       when /^get_([a-z]\w*)$/
-        return if takes_arguments?(node)
+        return if node.block_arg || takes_arguments?(node)
         issue_for node, MSG % {$1, node.name}, prefer_name_location: true
       when /^set_([a-z]\w*)$/
         return unless node.args.size == 1
