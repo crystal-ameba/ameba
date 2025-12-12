@@ -335,6 +335,38 @@ module Ameba::AST
       end
     end
 
+    describe "#takes_arguments?" do
+      it "returns false if the node takes no arguments" do
+        node = as_node("def foo; end")
+        subject.takes_arguments?(node).should be_false
+      end
+
+      it "returns true if the node takes positional arguments" do
+        node = as_node("def foo(bar); end")
+        subject.takes_arguments?(node).should be_true
+      end
+
+      it "returns true if the node takes named arguments" do
+        node = as_node("def foo(*, bar); end")
+        subject.takes_arguments?(node).should be_true
+      end
+
+      it "returns true if the node takes block argument" do
+        node = as_node("def foo(&block); end")
+        subject.takes_arguments?(node).should be_true
+      end
+
+      it "returns true if the node has splat index" do
+        node = as_node("def foo(*args); end")
+        subject.takes_arguments?(node).should be_true
+      end
+
+      it "returns true if the node has double splat" do
+        node = as_node("def foo(**kwargs); end")
+        subject.takes_arguments?(node).should be_true
+      end
+    end
+
     describe "#raise?" do
       it "returns true if this is a raise method call" do
         node = as_node "raise e"

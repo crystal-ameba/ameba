@@ -89,5 +89,42 @@ module Ameba::Rule::Naming
         end
         CRYSTAL
     end
+
+    it "ignores if the method has unexpected arity (splat)" do
+      expect_no_issues subject, <<-CRYSTAL
+        class Foo
+          def get_user(*props)
+          end
+        end
+        CRYSTAL
+    end
+
+    it "ignores if the method has unexpected arity (double splat)" do
+      expect_no_issues subject, <<-CRYSTAL
+        class Foo
+          def get_user(**kwargs)
+          end
+        end
+        CRYSTAL
+    end
+
+    it "ignores if the method has block" do
+      expect_no_issues subject, <<-CRYSTAL
+        class Foo
+          def get_user(&)
+            yield self
+          end
+        end
+        CRYSTAL
+    end
+
+    it "ignores if the method has block argument" do
+      expect_no_issues subject, <<-CRYSTAL
+        class Foo
+          def get_user(&block)
+          end
+        end
+        CRYSTAL
+    end
   end
 end
