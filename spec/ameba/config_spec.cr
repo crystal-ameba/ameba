@@ -45,8 +45,8 @@ module Ameba
         yml = YAML.parse <<-CONFIG
           ---
           Globs:
-           - "src/*.cr"
-           - "!spec"
+            - "src/*.cr"
+            - "!spec"
           CONFIG
         config = Config.from_yaml(yml)
         config.globs.should eq Set{"src/*.cr", "!spec"}
@@ -75,8 +75,8 @@ module Ameba
         yml = YAML.parse <<-CONFIG
           ---
           Excluded:
-           - spec
-           - lib/*.cr
+            - spec
+            - lib/*.cr
           CONFIG
         config = Config.from_yaml(yml)
         config.excluded.should eq Set{"spec", "lib/*.cr"}
