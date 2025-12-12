@@ -11,6 +11,8 @@ module Ameba::Rule::Lint
   #   Enabled: true
   # ```
   class DebuggerStatement < Base
+    include AST::Util
+
     properties do
       since_version "0.1.0"
       description "Disallows calls to debugger"
@@ -19,9 +21,8 @@ module Ameba::Rule::Lint
     MSG = "Possible forgotten debugger statement detected"
 
     def test(source, node : Crystal::Call)
-      return unless node.name == "debugger" &&
-                    node.args.empty? &&
-                    node.obj.nil?
+      return unless node.name == "debugger" && node.obj.nil?
+      return if has_arguments?(node)
 
       issue_for node, MSG
     end

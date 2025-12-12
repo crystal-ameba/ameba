@@ -145,7 +145,7 @@ module Ameba::Rule::Style
         else
           short_block = short_block_code(source, node)
           str << name
-          if !node.args.empty? || (node.named_args && !node.named_args.try(&.empty?)) || short_block
+          if has_arguments?(node) || short_block
             str << '('
             args_to_s(str, node, short_block)
             str << ')'
@@ -188,7 +188,7 @@ module Ameba::Rule::Style
     end
 
     private def prefix_operator?(node)
-      node.name.in?(PREFIX_OPERATORS) && node.args.empty?
+      node.name.in?(PREFIX_OPERATORS) && !has_arguments?(node)
     end
 
     private def setter?(name)

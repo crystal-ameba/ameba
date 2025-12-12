@@ -26,6 +26,8 @@ module Ameba::Rule::Lint
   #   Enabled: true
   # ```
   class RequireParentheses < Base
+    include AST::Util
+
     properties do
       since_version "1.7.0"
       description "Disallows method calls with no parentheses and a logical operator in the argument list"
@@ -36,7 +38,7 @@ module Ameba::Rule::Lint
     ALLOWED_CALL_NAMES = %w[[]? []]
 
     def test(source, node : Crystal::Call)
-      return if node.args.empty? ||
+      return if !has_arguments?(node) ||
                 node.has_parentheses? ||
                 node.name.ends_with?('=') ||
                 node.name.in?(ALLOWED_CALL_NAMES)
@@ -44,7 +46,7 @@ module Ameba::Rule::Lint
       node.args.each do |arg|
         next unless arg.is_a?(Crystal::BinaryOp)
         next unless (right = arg.right).is_a?(Crystal::Call)
-        next if right.args.empty?
+        next unless has_arguments?(right)
 
         issue_for node, MSG
       end

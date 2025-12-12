@@ -42,8 +42,8 @@ module Ameba::Rule::Performance
     end
 
     def test(source, node : Crystal::Call)
-      return unless node.name == "any?" && node.args.empty? && (obj = node.obj)
-      return if has_block?(node)
+      return unless node.name == "any?" && (obj = node.obj)
+      return if has_arguments?(node) || has_block?(node)
 
       issue_for node, MSG, prefer_name_location: true do |corrector|
         obj_code =
