@@ -940,6 +940,10 @@
           "type": "string",
           "default": "1.6.0"
         },
+        "Enabled": {
+          "type": "boolean",
+          "default": false
+        },
         "BinPath": {
           "type": [
             "string",
