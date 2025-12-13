@@ -113,7 +113,7 @@ module Ameba
 
       Process.on_terminate do
         finish_run
-        exit 1
+        exit success? ? 0 : 1
       end
 
       channels = @sources.map { Channel(Exception?).new }
