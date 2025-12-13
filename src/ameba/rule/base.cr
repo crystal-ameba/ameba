@@ -122,11 +122,21 @@ module Ameba::Rule
       source.add_issue(self, {{ args.splat(", ") }}{{ kwargs.double_splat }}) {{ block }}
     end
 
-    protected def self.rule_name
-      name.gsub("Ameba::Rule::", "").gsub("::", '/')
+    # Returns the name for this rule.
+    #
+    # ```
+    # Ameba::Rule::Lint::Syntax.rule_name # => "Lint/Syntax"
+    # ```
+    def self.rule_name
+      name.lchop("Ameba::Rule::").gsub("::", '/')
     end
 
-    protected def self.group_name
+    # Returns the group name for this rule.
+    #
+    # ```
+    # Ameba::Rule::Lint::Syntax.group_name # => "Lint"
+    # ```
+    def self.group_name
       rule_name.split('/')[0...-1].join('/')
     end
 
