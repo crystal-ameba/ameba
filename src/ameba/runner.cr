@@ -52,6 +52,9 @@ module Ameba
     # Returns `true` if correctable issues should be autocorrected.
     private getter? autocorrect : Bool
 
+    # Returns `true` if the runner has finished.
+    private getter? finished = false
+
     # Returns an ameba version up to which the rules should be ran.
     property version : SemanticVersion?
 
@@ -105,10 +108,11 @@ module Ameba
     # runner.run # => returns runner again
     # ```
     def run
+      @finished = false
       @formatter.started @sources
 
       Process.on_terminate do
-        @formatter.finished @sources
+        finish_run
         exit 1
       end
 
@@ -129,7 +133,14 @@ module Ameba
 
       self
     ensure
+      finish_run
+    end
+
+    private def finish_run : Nil
+      return if finished?
+
       @formatter.finished @sources
+      @finished = true
     end
 
     private def run_source(source) : Nil
