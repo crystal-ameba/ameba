@@ -33,7 +33,10 @@ module Ameba::Formatter
 
     describe "#finished" do
       it "writes a final message" do
-        subject.finished [Source.new]
+        formatter = DotFormatter.new output
+        formatter.source_finished Source.new
+        formatter.finished [Source.new]
+
         output.to_s.should contain "1 inspected, 0 failures"
       end
 
@@ -48,7 +51,10 @@ module Ameba::Formatter
           source.add_issue(DummyRule.new, {1, 1}, "DummyRuleError")
           source.add_issue(NamedRule.new, {1, 2}, "NamedRuleError")
 
-          subject.finished [source]
+          formatter = DotFormatter.new output
+          formatter.source_finished source
+          formatter.finished [source]
+
           log = output.to_s
           log.should contain "1 inspected, 2 failures"
           log.should contain "DummyRuleError"
@@ -103,7 +109,10 @@ module Ameba::Formatter
           source.add_issue(DummyRule.new, {1, 1}, "DummyRuleError", status: :disabled)
           source.add_issue(NamedRule.new, {1, 2}, "NamedRuleError")
 
-          subject.finished [source]
+          formatter = DotFormatter.new output
+          formatter.source_finished source
+          formatter.finished [source]
+
           log = output.to_s
           log.should_not contain "DummyRuleError"
           log.should contain "1 inspected, 1 failure"

@@ -7,11 +7,13 @@ module Ameba::Formatter
     include Util
 
     @started_at : Time::Span?
+    @inspected_sources_no = 0
     @mutex = Mutex.new
 
     # Reports a message when inspection is started.
     def started(sources) : Nil
       @started_at = Time.monotonic
+      @inspected_sources_no = 0
 
       output.puts started_message(sources.size)
       output.puts
@@ -20,7 +22,10 @@ module Ameba::Formatter
     # Reports a result of the inspection of a corresponding source.
     def source_finished(source : Source) : Nil
       sym = source.valid? ? ".".colorize(:green) : "F".colorize(:red)
-      @mutex.synchronize { output << sym }
+      @mutex.synchronize do
+        @inspected_sources_no += 1
+        output << sym
+      end
     end
 
     # Reports a message when inspection is finished.
@@ -74,11 +79,15 @@ module Ameba::Formatter
     end
 
     private def final_message(sources, failed_sources)
-      total = sources.size
       failures = failed_sources.sum(&.issues.count(&.enabled?))
       color = failures == 0 ? :green : :red
 
-      "#{total} inspected, #{failures} #{pluralize(failures, "failure")}".colorize(color)
+      message = "%d inspected, %d %s" % {
+        @inspected_sources_no,
+        failures,
+        pluralize(failures, "failure"),
+      }
+      message.colorize(color)
     end
   end
 end
