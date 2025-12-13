@@ -128,7 +128,7 @@ module Ameba::Rule
     # Ameba::Rule::Lint::Syntax.rule_name # => "Lint/Syntax"
     # ```
     def self.rule_name
-      name.gsub("Ameba::Rule::", "").gsub("::", '/')
+      name.lchop("Ameba::Rule::").gsub("::", '/')
     end
 
     # Returns the group name for this rule.
