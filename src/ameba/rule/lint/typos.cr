@@ -17,6 +17,7 @@ module Ameba::Rule::Lint
     properties do
       since_version "1.6.0"
       description "Reports typos found in source files"
+      enabled false
 
       bin_path nil, as: String?
       fail_on_missing_bin false
