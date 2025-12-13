@@ -107,6 +107,11 @@ module Ameba
     def run
       @formatter.started @sources
 
+      Process.on_terminate do
+        @formatter.finished @sources
+        exit 1
+      end
+
       channels = @sources.map { Channel(Exception?).new }
       @sources.zip(channels).each do |source, channel|
         spawn do
