@@ -1,8 +1,8 @@
 require "../../../spec_helper"
 
 module Ameba::Rule::Lint
-  describe DuplicateMethodDefinition do
-    subject = DuplicateMethodDefinition.new
+  describe DuplicateMethodSignature do
+    subject = DuplicateMethodSignature.new
 
     it "passes if there are no duplicate methods" do
       expect_no_issues subject, <<-CRYSTAL
@@ -38,7 +38,7 @@ module Ameba::Rule::Lint
           end
 
           def foo
-        # ^^^^^^^ error: Duplicate method definition detected
+        # ^^^^^^^ error: Duplicate method signature detected
             previous_definition if rand >= 0.42
             24
           end
@@ -52,9 +52,9 @@ module Ameba::Rule::Lint
           def foo; end
           def bar; end
           def foo; end
-        # ^^^^^^^^^^^^ error: Duplicate method definition detected
+        # ^^^^^^^^^^^^ error: Duplicate method signature detected
           def foo; end
-        # ^^^^^^^^^^^^ error: Duplicate method definition detected
+        # ^^^^^^^^^^^^ error: Duplicate method signature detected
         end
         CRYSTAL
     end
@@ -65,7 +65,7 @@ module Ameba::Rule::Lint
           def foo(&); end
           def bar(&); end
           def foo(&); end
-        # ^^^^^^^^^^^^^^^ error: Duplicate method definition detected
+        # ^^^^^^^^^^^^^^^ error: Duplicate method signature detected
         end
         CRYSTAL
     end
@@ -75,9 +75,9 @@ module Ameba::Rule::Lint
         class Foo
           def foo; end
           private def foo; end
-                # ^^^^^^^^^^^^ error: Duplicate method definition detected
+                # ^^^^^^^^^^^^ error: Duplicate method signature detected
           protected def foo; end
-                  # ^^^^^^^^^^^^ error: Duplicate method definition detected
+                  # ^^^^^^^^^^^^ error: Duplicate method signature detected
         end
         CRYSTAL
     end
@@ -88,7 +88,7 @@ module Ameba::Rule::Lint
           def foo(a, b, c = 3, &); end
           def foo(a, b, c = 3); end
           def foo(a, b, c = 3); end
-        # ^^^^^^^^^^^^^^^^^^^^^^^^^ error: Duplicate method definition detected
+        # ^^^^^^^^^^^^^^^^^^^^^^^^^ error: Duplicate method signature detected
         end
         CRYSTAL
     end
@@ -101,7 +101,7 @@ module Ameba::Rule::Lint
           end
 
           def foo(a, b, c = 3)
-        # ^^^^^^^^^^^^^^^^^^^^ error: Duplicate method definition detected
+        # ^^^^^^^^^^^^^^^^^^^^ error: Duplicate method signature detected
             puts :bar
           end
         end

@@ -1,5 +1,5 @@
 module Ameba::Rule::Lint
-  # Reports repeated class or module method definitions.
+  # Reports repeated class or module method signatures.
   #
   # Only methods of the same signature are considered duplicates,
   # regardless of their bodies, except for ones including `previous_def`.
@@ -10,7 +10,7 @@ module Ameba::Rule::Lint
   #     puts "Hello #{name}!"
   #   end
   #
-  #   def greet(name)
+  #   def greet(name) # duplicated method signature
   #     puts "¡Hola! #{name}"
   #   end
   # end
@@ -19,16 +19,16 @@ module Ameba::Rule::Lint
   # YAML configuration example:
   #
   # ```
-  # Lint/DuplicateMethodDefinition:
+  # Lint/DuplicateMethodSignature:
   #   Enabled: true
   # ```
-  class DuplicateMethodDefinition < Base
+  class DuplicateMethodSignature < Base
     properties do
       since_version "1.7.0"
-      description "Reports repeated method definitions"
+      description "Reports repeated method signatures"
     end
 
-    MSG = "Duplicate method definition detected"
+    MSG = "Duplicate method signature detected"
 
     def test(source)
       AST::ScopeVisitor.new self, source
