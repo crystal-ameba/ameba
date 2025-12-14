@@ -23,10 +23,11 @@ module Ameba::AST
 
       swap_stack do |old_stack|
         node.expressions.each_with_index do |exp, idx|
-          if exp.is_a?(Crystal::ControlExpression)
+          case
+          when exp.is_a?(Crystal::ControlExpression)
             incr_stack { exp.accept(self) }
             break
-          elsif idx == last_idx && old_stack.positive?
+          when idx == last_idx && old_stack.positive?
             incr_stack { exp.accept(self) }
           else
             exp.accept(self)
