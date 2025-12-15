@@ -1651,6 +1651,26 @@
         }
       }
     },
+    "Style/Elsif": {
+      "$ref": "#/$defs/BaseRule",
+      "$comment": "https://crystal-ameba.github.io/ameba/master/Ameba/Rule/Style/Elsif.html",
+      "title": "Style/Elsif",
+      "description": "Encourages the use of `case/when` syntax over `if/elsif`",
+      "properties": {
+        "SinceVersion": {
+          "type": "string",
+          "default": "1.7.0"
+        },
+        "Enabled": {
+          "type": "boolean",
+          "default": false
+        },
+        "MaxBranches": {
+          "type": "number",
+          "default": 0
+        }
+      }
+    },
     "Style/GuardClause": {
       "$ref": "#/$defs/BaseRule",
       "$comment": "https://crystal-ameba.github.io/ameba/master/Ameba/Rule/Style/GuardClause.html",
