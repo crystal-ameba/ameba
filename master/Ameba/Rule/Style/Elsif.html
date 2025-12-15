@@ -16,7 +16,7 @@
 <script type="text/javascript" src="../../../js/doc.js"></script>
 
   <meta name="repository-name" content="ameba">
-  <title>Ameba::Rule::Lint::UnusedArgument - ameba master</title>
+  <title>Ameba::Rule::Style::Elsif - ameba master</title>
   <script type="text/javascript">
     CrystalDocs.base_path = "../../../";
   </script>
@@ -419,7 +419,7 @@
       
     </li>
   
-  <li class="parent open current" data-id="ameba/Ameba/Rule/Lint" data-name="ameba::rule::lint">
+  <li class="parent " data-id="ameba/Ameba/Rule/Lint" data-name="ameba::rule::lint">
       <a href="../../../Ameba/Rule/Lint.html">Lint</a>
       
         <ul>
@@ -644,7 +644,7 @@
       
     </li>
   
-  <li class=" current" data-id="ameba/Ameba/Rule/Lint/UnusedArgument" data-name="ameba::rule::lint::unusedargument">
+  <li class=" " data-id="ameba/Ameba/Rule/Lint/UnusedArgument" data-name="ameba::rule::lint::unusedargument">
       <a href="../../../Ameba/Rule/Lint/UnusedArgument.html">UnusedArgument</a>
       
     </li>
@@ -844,7 +844,7 @@
       
     </li>
   
-  <li class="parent " data-id="ameba/Ameba/Rule/Style" data-name="ameba::rule::style">
+  <li class="parent open current" data-id="ameba/Ameba/Rule/Style" data-name="ameba::rule::style">
       <a href="../../../Ameba/Rule/Style.html">Style</a>
       
         <ul>
@@ -854,7 +854,7 @@
       
     </li>
   
-  <li class=" " data-id="ameba/Ameba/Rule/Style/Elsif" data-name="ameba::rule::style::elsif">
+  <li class=" current" data-id="ameba/Ameba/Rule/Style/Elsif" data-name="ameba::rule::style::elsif">
       <a href="../../../Ameba/Rule/Style/Elsif.html">Elsif</a>
       
     </li>
@@ -1100,12 +1100,12 @@
 
   <span class="kind">
     class
-  </span> Ameba::<wbr>Rule::<wbr>Lint::<wbr>UnusedArgument
+  </span> Ameba::<wbr>Rule::<wbr>Style::<wbr>Elsif
 
 </h1>
 
 
-  <ul class="superclass-hierarchy"><li class="superclass"><a href="../../../Ameba/Rule/Lint/UnusedArgument.html">Ameba::Rule::Lint::UnusedArgument</a></li><li class="superclass"><a href="../../../Ameba/Rule/Base.html">Ameba::Rule::Base</a></li><li class="superclass">Reference</li><li class="superclass">Object</li></ul>
+  <ul class="superclass-hierarchy"><li class="superclass"><a href="../../../Ameba/Rule/Style/Elsif.html">Ameba::Rule::Style::Elsif</a></li><li class="superclass"><a href="../../../Ameba/Rule/Base.html">Ameba::Rule::Base</a></li><li class="superclass">Reference</li><li class="superclass">Object</li></ul>
 
 
 
@@ -1119,21 +1119,24 @@
     Overview
   </h2>
 
-  <p>A rule that reports unused arguments.
-For example, this is considered invalid:</p>
-<pre><code class="language-crystal"><span class="k">def</span> <span class="m">method</span>(a, b, c)
-  a <span class="o">+</span> b
+  <p>A rule that encourages the use of <code>case/when</code> syntax over <code>if/elsif</code>.</p>
+<p>For example, this is considered invalid:</p>
+<pre><code class="language-crystal"><span class="k">if</span> foo
+  do_something_foo
+<span class="k">elsif</span> bar
+  do_something_bar
 <span class="k">end</span></code></pre>
-<p>and should be written as:</p>
-<pre><code class="language-crystal"><span class="k">def</span> <span class="m">method</span>(a, b)
-  a <span class="o">+</span> b
+<p>And should be replaced by the following:</p>
+<pre><code class="language-crystal"><span class="k">case</span>
+<span class="k">when</span> foo
+  do_something_foo
+<span class="k">when</span> bar
+  do_something_bar
 <span class="k">end</span></code></pre>
 <p>YAML configuration example:</p>
-<pre><code class="language-crystal"><span class="t">Lint</span><span class="o">/</span><span class="t">UnusedArgument</span>:
+<pre><code class="language-crystal"><span class="t">Style</span><span class="o">/</span><span class="t">Elsif</span>:
   <span class="t">Enabled</span>: <span class="n">true</span>
-  <span class="t">IgnoreDefs</span>: <span class="n">true</span>
-  <span class="t">IgnoreBlocks</span>: <span class="n">false</span>
-  <span class="t">IgnoreProcs</span>: <span class="n">false</span></code></pre>
+  <span class="t">MaxBranches</span>: <span class="n">0</span></code></pre>
 
 
 
@@ -1176,8 +1179,8 @@ For example, this is considered invalid:</p>
   </h2>
   
     
-      <a href="https://github.com/crystal-ameba/ameba/blob/fe38d2d/src/ameba/rule/lint/unused_argument.cr#L28" target="_blank">
-        ameba/rule/lint/unused_argument.cr
+      <a href="https://github.com/crystal-ameba/ameba/blob/fe38d2d/src/ameba/rule/style/elsif.cr#L32" target="_blank">
+        ameba/rule/style/elsif.cr
       </a>
     
     <br/>
@@ -1198,7 +1201,7 @@ For example, this is considered invalid:</p>
   <dl>
     
       <dt class="entry-const" id="MSG">
-        <strong>MSG</strong> = <code><span class="s">&quot;Unused argument `%s`. If it&#39;s necessary, use `%s` as an argument name to indicate that it won&#39;t be used.&quot;</span></code>
+        <strong>MSG</strong> = <code><span class="s">&quot;Prefer `case/when` over `if/elsif`&quot;</span></code>
       </dt>
       
     
@@ -1225,7 +1228,7 @@ For example, this is considered invalid:</p>
       <li class="entry-summary">
         <a href="#new%28config%3Dnil%29-class-method" class="signature"><strong>.new</strong>(config = <span class="n">nil</span>)</a>
         
-          <div class="summary"><p>A rule that reports unused arguments.</p></div>
+          <div class="summary"><p>A rule that encourages the use of <code>case/when</code> syntax over <code>if/elsif</code>.</p></div>
         
       </li>
     
@@ -1314,32 +1317,12 @@ For example, this is considered invalid:</p>
       </li>
     
       <li class="entry-summary">
-        <a href="#ignore_blocks%3D%28ignore_blocks%3ABool%29-instance-method" class="signature"><strong>#ignore_blocks=</strong>(ignore_blocks : Bool)</a>
+        <a href="#max_branches%3AInt32-instance-method" class="signature"><strong>#max_branches</strong> : Int32</a>
         
       </li>
     
       <li class="entry-summary">
-        <a href="#ignore_blocks%3F%3ABool-instance-method" class="signature"><strong>#ignore_blocks?</strong> : Bool</a>
-        
-      </li>
-    
-      <li class="entry-summary">
-        <a href="#ignore_defs%3D%28ignore_defs%3ABool%29-instance-method" class="signature"><strong>#ignore_defs=</strong>(ignore_defs : Bool)</a>
-        
-      </li>
-    
-      <li class="entry-summary">
-        <a href="#ignore_defs%3F%3ABool-instance-method" class="signature"><strong>#ignore_defs?</strong> : Bool</a>
-        
-      </li>
-    
-      <li class="entry-summary">
-        <a href="#ignore_procs%3D%28ignore_procs%3ABool%29-instance-method" class="signature"><strong>#ignore_procs=</strong>(ignore_procs : Bool)</a>
-        
-      </li>
-    
-      <li class="entry-summary">
-        <a href="#ignore_procs%3F%3ABool-instance-method" class="signature"><strong>#ignore_procs?</strong> : Bool</a>
+        <a href="#max_branches%3D%28max_branches%3AInt32%29-instance-method" class="signature"><strong>#max_branches=</strong>(max_branches : Int32)</a>
         
       </li>
     
@@ -1364,17 +1347,7 @@ For example, this is considered invalid:</p>
       </li>
     
       <li class="entry-summary">
-        <a href="#test%28source%2Cnode%3ACrystal%3A%3AProcLiteral%2Cscope%3AAST%3A%3AScope%29-instance-method" class="signature"><strong>#test</strong>(source, node : Crystal::ProcLiteral, scope : AST::Scope)</a>
-        
-      </li>
-    
-      <li class="entry-summary">
-        <a href="#test%28source%2Cnode%3ACrystal%3A%3ABlock%2Cscope%3AAST%3A%3AScope%29-instance-method" class="signature"><strong>#test</strong>(source, node : Crystal::Block, scope : AST::Scope)</a>
-        
-      </li>
-    
-      <li class="entry-summary">
-        <a href="#test%28source%2Cnode%3ACrystal%3A%3ADef%2Cscope%3AAST%3A%3AScope%29-instance-method" class="signature"><strong>#test</strong>(source, node : Crystal::Def, scope : AST::Scope)</a>
+        <a href="#test%28source%2Cnode%3ACrystal%3A%3AIf%2Cifs%3AEnumerable%28Crystal%3A%3AIf%29%29-instance-method" class="signature"><strong>#test</strong>(source, node : Crystal::If, ifs : Enumerable(Crystal::If))</a>
         
       </li>
     
@@ -1584,27 +1557,30 @@ For example, this is considered invalid:</p>
       
         <div class="doc">
           
-          <p>A rule that reports unused arguments.
-For example, this is considered invalid:</p>
-<pre><code class="language-crystal"><span class="k">def</span> <span class="m">method</span>(a, b, c)
-  a <span class="o">+</span> b
+          <p>A rule that encourages the use of <code>case/when</code> syntax over <code>if/elsif</code>.</p>
+<p>For example, this is considered invalid:</p>
+<pre><code class="language-crystal"><span class="k">if</span> foo
+  do_something_foo
+<span class="k">elsif</span> bar
+  do_something_bar
 <span class="k">end</span></code></pre>
-<p>and should be written as:</p>
-<pre><code class="language-crystal"><span class="k">def</span> <span class="m">method</span>(a, b)
-  a <span class="o">+</span> b
+<p>And should be replaced by the following:</p>
+<pre><code class="language-crystal"><span class="k">case</span>
+<span class="k">when</span> foo
+  do_something_foo
+<span class="k">when</span> bar
+  do_something_bar
 <span class="k">end</span></code></pre>
 <p>YAML configuration example:</p>
-<pre><code class="language-crystal"><span class="t">Lint</span><span class="o">/</span><span class="t">UnusedArgument</span>:
+<pre><code class="language-crystal"><span class="t">Style</span><span class="o">/</span><span class="t">Elsif</span>:
   <span class="t">Enabled</span>: <span class="n">true</span>
-  <span class="t">IgnoreDefs</span>: <span class="n">true</span>
-  <span class="t">IgnoreBlocks</span>: <span class="n">false</span>
-  <span class="t">IgnoreProcs</span>: <span class="n">false</span></code></pre>
+  <span class="t">MaxBranches</span>: <span class="n">0</span></code></pre>
         </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/fe38d2d/src/ameba/rule/lint/unused_argument.cr#L28" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/fe38d2d/src/ameba/rule/style/elsif.cr#L32" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1696,7 +1672,7 @@ For example, this is considered invalid:</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/fe38d2d/src/ameba/rule/lint/unused_argument.cr#L29" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/fe38d2d/src/ameba/rule/style/elsif.cr#L33" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1799,12 +1775,12 @@ For example, this is considered invalid:</p>
       </div>
     </div>
   
-    <div class="entry-detail" id="ignore_blocks=(ignore_blocks:Bool)-instance-method">
+    <div class="entry-detail" id="max_branches:Int32-instance-method">
       <div class="signature">
         
-        def <strong>ignore_blocks=</strong>(ignore_blocks : Bool)
+        def <strong>max_branches</strong> : Int32
 
-        <a class="method-permalink" href="#ignore_blocks%3D%28ignore_blocks%3ABool%29-instance-method">#</a>
+        <a class="method-permalink" href="#max_branches%3AInt32-instance-method">#</a>
       </div>
       
       <br/>
@@ -1813,68 +1789,12 @@ For example, this is considered invalid:</p>
       </div>
     </div>
   
-    <div class="entry-detail" id="ignore_blocks?:Bool-instance-method">
+    <div class="entry-detail" id="max_branches=(max_branches:Int32)-instance-method">
       <div class="signature">
         
-        def <strong>ignore_blocks?</strong> : Bool
+        def <strong>max_branches=</strong>(max_branches : Int32)
 
-        <a class="method-permalink" href="#ignore_blocks%3F%3ABool-instance-method">#</a>
-      </div>
-      
-      <br/>
-      <div>
-        
-      </div>
-    </div>
-  
-    <div class="entry-detail" id="ignore_defs=(ignore_defs:Bool)-instance-method">
-      <div class="signature">
-        
-        def <strong>ignore_defs=</strong>(ignore_defs : Bool)
-
-        <a class="method-permalink" href="#ignore_defs%3D%28ignore_defs%3ABool%29-instance-method">#</a>
-      </div>
-      
-      <br/>
-      <div>
-        
-      </div>
-    </div>
-  
-    <div class="entry-detail" id="ignore_defs?:Bool-instance-method">
-      <div class="signature">
-        
-        def <strong>ignore_defs?</strong> : Bool
-
-        <a class="method-permalink" href="#ignore_defs%3F%3ABool-instance-method">#</a>
-      </div>
-      
-      <br/>
-      <div>
-        
-      </div>
-    </div>
-  
-    <div class="entry-detail" id="ignore_procs=(ignore_procs:Bool)-instance-method">
-      <div class="signature">
-        
-        def <strong>ignore_procs=</strong>(ignore_procs : Bool)
-
-        <a class="method-permalink" href="#ignore_procs%3D%28ignore_procs%3ABool%29-instance-method">#</a>
-      </div>
-      
-      <br/>
-      <div>
-        
-      </div>
-    </div>
-  
-    <div class="entry-detail" id="ignore_procs?:Bool-instance-method">
-      <div class="signature">
-        
-        def <strong>ignore_procs?</strong> : Bool
-
-        <a class="method-permalink" href="#ignore_procs%3F%3ABool-instance-method">#</a>
+        <a class="method-permalink" href="#max_branches%3D%28max_branches%3AInt32%29-instance-method">#</a>
       </div>
       
       <br/>
@@ -1922,7 +1842,7 @@ For example, this is considered invalid:</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/fe38d2d/src/ameba/rule/lint/unused_argument.cr#L29" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/fe38d2d/src/ameba/rule/style/elsif.cr#L33" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1941,50 +1861,18 @@ For example, this is considered invalid:</p>
       </div>
     </div>
   
-    <div class="entry-detail" id="test(source,node:Crystal::ProcLiteral,scope:AST::Scope)-instance-method">
+    <div class="entry-detail" id="test(source,node:Crystal::If,ifs:Enumerable(Crystal::If))-instance-method">
       <div class="signature">
         
-        def <strong>test</strong>(source, node : Crystal::ProcLiteral, scope : <a href="../../../Ameba/AST/Scope.html">AST::Scope</a>)
+        def <strong>test</strong>(source, node : Crystal::If, ifs : Enumerable(Crystal::If))
 
-        <a class="method-permalink" href="#test%28source%2Cnode%3ACrystal%3A%3AProcLiteral%2Cscope%3AAST%3A%3AScope%29-instance-method">#</a>
+        <a class="method-permalink" href="#test%28source%2Cnode%3ACrystal%3A%3AIf%2Cifs%3AEnumerable%28Crystal%3A%3AIf%29%29-instance-method">#</a>
       </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/fe38d2d/src/ameba/rule/lint/unused_argument.cr#L45" target="_blank">View source</a>]
-        
-      </div>
-    </div>
-  
-    <div class="entry-detail" id="test(source,node:Crystal::Block,scope:AST::Scope)-instance-method">
-      <div class="signature">
-        
-        def <strong>test</strong>(source, node : Crystal::Block, scope : <a href="../../../Ameba/AST/Scope.html">AST::Scope</a>)
-
-        <a class="method-permalink" href="#test%28source%2Cnode%3ACrystal%3A%3ABlock%2Cscope%3AAST%3A%3AScope%29-instance-method">#</a>
-      </div>
-      
-      <br/>
-      <div>
-        
-          [<a href="https://github.com/crystal-ameba/ameba/blob/fe38d2d/src/ameba/rule/lint/unused_argument.cr#L49" target="_blank">View source</a>]
-        
-      </div>
-    </div>
-  
-    <div class="entry-detail" id="test(source,node:Crystal::Def,scope:AST::Scope)-instance-method">
-      <div class="signature">
-        
-        def <strong>test</strong>(source, node : Crystal::Def, scope : <a href="../../../Ameba/AST/Scope.html">AST::Scope</a>)
-
-        <a class="method-permalink" href="#test%28source%2Cnode%3ACrystal%3A%3ADef%2Cscope%3AAST%3A%3AScope%29-instance-method">#</a>
-      </div>
-      
-      <br/>
-      <div>
-        
-          [<a href="https://github.com/crystal-ameba/ameba/blob/fe38d2d/src/ameba/rule/lint/unused_argument.cr#L53" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/fe38d2d/src/ameba/rule/style/elsif.cr#L46" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2000,7 +1888,7 @@ For example, this is considered invalid:</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/fe38d2d/src/ameba/rule/lint/unused_argument.cr#L41" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/fe38d2d/src/ameba/rule/style/elsif.cr#L42" target="_blank">View source</a>]
         
       </div>
     </div>
