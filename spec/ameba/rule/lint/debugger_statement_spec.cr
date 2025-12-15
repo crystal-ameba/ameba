@@ -25,7 +25,7 @@ module Ameba::Rule::Lint
       source = expect_issue subject, <<-CRYSTAL
         a = 2
         debugger
-        # ^^^^^^ error: Possible forgotten debugger statement detected
+        # ^^^^^^ error: Possible forgotten `debugger` statement detected
         a = a + 1
         CRYSTAL
 
