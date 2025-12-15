@@ -163,6 +163,10 @@
         "IgnoreMacroHooks": {
           "type": "boolean",
           "default": true
+        },
+        "RequireExample": {
+          "type": "boolean",
+          "default": false
         }
       }
     },
