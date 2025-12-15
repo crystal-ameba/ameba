@@ -1124,7 +1124,8 @@ modules, classes, enums, methods and macros.</p>
   <span class="t">IgnoreEnums</span>: <span class="n">false</span>
   <span class="t">IgnoreDefs</span>: <span class="n">true</span>
   <span class="t">IgnoreMacros</span>: <span class="n">false</span>
-  <span class="t">IgnoreMacroHooks</span>: <span class="n">true</span></code></pre>
+  <span class="t">IgnoreMacroHooks</span>: <span class="n">true</span>
+  <span class="t">RequireExample</span>: <span class="n">false</span></code></pre>
 
 
 
@@ -1167,7 +1168,7 @@ modules, classes, enums, methods and macros.</p>
   </h2>
   
     
-      <a href="https://github.com/crystal-ameba/ameba/blob/3da6427/src/ameba/rule/documentation/documentation.cr#L17" target="_blank">
+      <a href="https://github.com/crystal-ameba/ameba/blob/c2dbec7/src/ameba/rule/documentation/documentation.cr#L18" target="_blank">
         ameba/rule/documentation/documentation.cr
       </a>
     
@@ -1195,6 +1196,11 @@ modules, classes, enums, methods and macros.</p>
     
       <dt class="entry-const" id="MSG">
         <strong>MSG</strong> = <code><span class="s">&quot;Missing documentation&quot;</span></code>
+      </dt>
+      
+    
+      <dt class="entry-const" id="MSG_EXAMPLE">
+        <strong>MSG_EXAMPLE</strong> = <code><span class="s">&quot;Missing documentation example&quot;</span></code>
       </dt>
       
     
@@ -1366,6 +1372,16 @@ modules, classes, enums, methods and macros.</p>
     
       <li class="entry-summary">
         <a href="#ignore_modules%3F%3ABool-instance-method" class="signature"><strong>#ignore_modules?</strong> : Bool</a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#require_example%3D%28require_example%3ABool%29-instance-method" class="signature"><strong>#require_example=</strong>(require_example : Bool)</a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#require_example%3F%3ABool-instance-method" class="signature"><strong>#require_example?</strong> : Bool</a>
         
       </li>
     
@@ -1630,13 +1646,14 @@ modules, classes, enums, methods and macros.</p>
   <span class="t">IgnoreEnums</span>: <span class="n">false</span>
   <span class="t">IgnoreDefs</span>: <span class="n">true</span>
   <span class="t">IgnoreMacros</span>: <span class="n">false</span>
-  <span class="t">IgnoreMacroHooks</span>: <span class="n">true</span></code></pre>
+  <span class="t">IgnoreMacroHooks</span>: <span class="n">true</span>
+  <span class="t">RequireExample</span>: <span class="n">false</span></code></pre>
         </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/3da6427/src/ameba/rule/documentation/documentation.cr#L17" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/c2dbec7/src/ameba/rule/documentation/documentation.cr#L18" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1728,7 +1745,7 @@ modules, classes, enums, methods and macros.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/3da6427/src/ameba/rule/documentation/documentation.cr#L18" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/c2dbec7/src/ameba/rule/documentation/documentation.cr#L19" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1999,6 +2016,34 @@ modules, classes, enums, methods and macros.</p>
       </div>
     </div>
   
+    <div class="entry-detail" id="require_example=(require_example:Bool)-instance-method">
+      <div class="signature">
+        
+        def <strong>require_example=</strong>(require_example : Bool)
+
+        <a class="method-permalink" href="#require_example%3D%28require_example%3ABool%29-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="require_example?:Bool-instance-method">
+      <div class="signature">
+        
+        def <strong>require_example?</strong> : Bool
+
+        <a class="method-permalink" href="#require_example%3F%3ABool-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+      </div>
+    </div>
+  
     <div class="entry-detail" id="severity:Ameba::Severity-instance-method">
       <div class="signature">
         
@@ -2038,7 +2083,7 @@ modules, classes, enums, methods and macros.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/3da6427/src/ameba/rule/documentation/documentation.cr#L18" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/c2dbec7/src/ameba/rule/documentation/documentation.cr#L19" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2068,7 +2113,7 @@ modules, classes, enums, methods and macros.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/3da6427/src/ameba/rule/documentation/documentation.cr#L44" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/c2dbec7/src/ameba/rule/documentation/documentation.cr#L47" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2084,7 +2129,7 @@ modules, classes, enums, methods and macros.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/3da6427/src/ameba/rule/documentation/documentation.cr#L48" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/c2dbec7/src/ameba/rule/documentation/documentation.cr#L51" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2100,7 +2145,7 @@ modules, classes, enums, methods and macros.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/3da6427/src/ameba/rule/documentation/documentation.cr#L52" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/c2dbec7/src/ameba/rule/documentation/documentation.cr#L55" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2116,7 +2161,7 @@ modules, classes, enums, methods and macros.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/3da6427/src/ameba/rule/documentation/documentation.cr#L56" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/c2dbec7/src/ameba/rule/documentation/documentation.cr#L59" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2132,7 +2177,7 @@ modules, classes, enums, methods and macros.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/3da6427/src/ameba/rule/documentation/documentation.cr#L60" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/c2dbec7/src/ameba/rule/documentation/documentation.cr#L63" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2148,7 +2193,7 @@ modules, classes, enums, methods and macros.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/3da6427/src/ameba/rule/documentation/documentation.cr#L40" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/c2dbec7/src/ameba/rule/documentation/documentation.cr#L43" target="_blank">View source</a>]
         
       </div>
     </div>
