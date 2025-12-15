@@ -46,6 +46,8 @@ module Ameba::AST
       ifs = [] of Crystal::If
 
       loop do
+        break if if_node.ternary?
+
         ifs << if_node
 
         if_node.cond.accept self

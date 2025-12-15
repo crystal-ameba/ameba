@@ -42,14 +42,14 @@ module Ameba::Rule::Style
       return unless (exp = node.exp).is_a?(Crystal::NilLiteral)
 
       node_code =
-        node_source(node, source.lines)
+        node_source(node, source.lines) || node.to_s
 
       # `return(nil)`
-      if node_code.try(&.includes?('('))
+      if node_code.includes?('(')
         issue_for exp, MSG
       else
         issue_for exp, MSG do |corrector|
-          corrector.replace(node, node.to_s.sub(/\s*\(?nil\)?$/, ""))
+          corrector.replace(node, node_code.sub(/\s*\(?nil\)?$/, ""))
         end
       end
     end

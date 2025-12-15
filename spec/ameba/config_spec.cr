@@ -25,68 +25,68 @@ module Ameba
       end
 
       it "loads default globs when config has no value" do
-        yml = YAML.parse <<-CONFIG
+        yml = YAML.parse <<-YAML
           # Empty config with comment
-          CONFIG
+          YAML
         config = Config.from_yaml(yml)
         config.globs.should eq Config::DEFAULT_GLOBS
       end
 
       it "initializes globs as string" do
-        yml = YAML.parse <<-CONFIG
+        yml = YAML.parse <<-YAML
           ---
           Globs: src/*.cr
-          CONFIG
+          YAML
         config = Config.from_yaml(yml)
         config.globs.should eq Set{"src/*.cr"}
       end
 
       it "initializes globs as array" do
-        yml = YAML.parse <<-CONFIG
+        yml = YAML.parse <<-YAML
           ---
           Globs:
-           - "src/*.cr"
-           - "!spec"
-          CONFIG
+            - "src/*.cr"
+            - "!spec"
+          YAML
         config = Config.from_yaml(yml)
         config.globs.should eq Set{"src/*.cr", "!spec"}
       end
 
       it "raises if Globs has a wrong type" do
-        yml = YAML.parse <<-CONFIG
+        yml = YAML.parse <<-YAML
           ---
           Globs: 100
-          CONFIG
+          YAML
         expect_raises(Exception, "Incorrect `Globs` section in a config file") do
           Config.from_yaml(yml)
         end
       end
 
       it "initializes excluded as string" do
-        yml = YAML.parse <<-CONFIG
+        yml = YAML.parse <<-YAML
           ---
           Excluded: spec
-          CONFIG
+          YAML
         config = Config.from_yaml(yml)
         config.excluded.should eq Set{"spec"}
       end
 
       it "initializes excluded as array" do
-        yml = YAML.parse <<-CONFIG
+        yml = YAML.parse <<-YAML
           ---
           Excluded:
-           - spec
-           - lib/*.cr
-          CONFIG
+            - spec
+            - lib/*.cr
+          YAML
         config = Config.from_yaml(yml)
         config.excluded.should eq Set{"spec", "lib/*.cr"}
       end
 
       it "raises if Excluded has a wrong type" do
-        yml = YAML.parse <<-CONFIG
+        yml = YAML.parse <<-YAML
           ---
           Excluded: true
-          CONFIG
+          YAML
         expect_raises(Exception, "Incorrect `Excluded` section in a config file") do
           Config.from_yaml(yml)
         end

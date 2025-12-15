@@ -251,10 +251,6 @@ module Ameba::CLI
       .to_s
   end
 
-  private def glob?(string : String) : Bool
-    string.each_char.any?(&.in?('*', '?', '[', ']', '{', '}'))
-  end
-
   private def root_path_from_globs(globs) : Path?
     dynasty =
       case
