@@ -9,7 +9,8 @@ module Ameba::Presenter
       first = true
 
       versions.each do |version, version_rules|
-        if verbose
+        case
+        when verbose
           output.puts unless first
           if version
             output.puts "- %s" % version.to_s.colorize(:green)
@@ -19,10 +20,8 @@ module Ameba::Presenter
           version_rules.map(&.name).sort!.each do |name|
             output.puts "  - %s" % name.colorize(:dark_gray)
           end
-        else
-          if version
-            output.puts "- %s" % version.to_s.colorize(:green)
-          end
+        when version
+          output.puts "- %s" % version.to_s.colorize(:green)
         end
 
         first = false
