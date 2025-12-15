@@ -146,6 +146,33 @@ module Ameba::Rule::Documentation
             CRYSTAL
         end
       end
+
+      describe "#require_example" do
+        rule = Documentation.new
+        rule.require_example = true
+
+        it "fails if there is a documented public type without example" do
+          expect_issue rule, <<-CRYSTAL
+            # Foo documentation
+            class Foo
+            # ^^^^^^^ error: Missing documentation example
+            end
+            CRYSTAL
+        end
+
+        it "passes if there is a documented public type with example" do
+          expect_no_issues rule, <<-CRYSTAL
+            # Foo documentation
+            #
+            # ```
+            # foo = Foo.new
+            # foo.bar # => :baz
+            # ```
+            class Foo
+            end
+            CRYSTAL
+        end
+      end
     end
   end
 end
