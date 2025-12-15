@@ -13,6 +13,7 @@ module Ameba::Rule::Documentation
   #   IgnoreDefs: true
   #   IgnoreMacros: false
   #   IgnoreMacroHooks: true
+  #   RequireExample: false
   # ```
   class Documentation < Base
     properties do
@@ -26,9 +27,11 @@ module Ameba::Rule::Documentation
       ignore_defs true
       ignore_macros false
       ignore_macro_hooks true
+      require_example false
     end
 
-    MSG = "Missing documentation"
+    MSG         = "Missing documentation"
+    MSG_EXAMPLE = "Missing documentation example"
 
     MACRO_HOOK_NAMES = %w[
       inherited
@@ -72,10 +75,15 @@ module Ameba::Rule::Documentation
       # i.e. `def bar` inside `private class Foo`
       return if (visibility = scope.visibility) && !visibility.public?
 
-      # bail out if the node has the documentation present
-      return if node.doc.presence
+      if doc = node.doc.presence
+        issue_for node, MSG_EXAMPLE unless valid_example?(doc)
+      else
+        issue_for node, MSG
+      end
+    end
 
-      issue_for node, MSG
+    private def valid_example?(doc : String)
+      !require_example? || doc.matches?(/^\s*```\n/m)
     end
   end
 end
