@@ -294,7 +294,7 @@
       "$ref": "#/$defs/BaseRule",
       "$comment": "https://crystal-ameba.github.io/ameba/master/Ameba/Rule/Lint/DebuggerStatement.html",
       "title": "Lint/DebuggerStatement",
-      "description": "Disallows calls to debugger",
+      "description": "Disallows calls to `debugger`",
       "properties": {
         "SinceVersion": {
           "type": "string",
