@@ -11,6 +11,14 @@ module Ameba::Rule::Lint
           def foo(&); end
           def foo?; end
           def foo!; end
+          def foo(
+            bar : Bar,
+          )
+          end
+          def foo(
+            baz : Baz,
+          )
+          end
         end
         CRYSTAL
     end
