@@ -30,7 +30,9 @@ module Ameba
             glob = glob / "**" / "*.{cr,ecr}"
           end
 
-          Dir[glob.to_s]
+          glob = glob.to_s.lchop("./")
+
+          Dir[glob]
         end
         .uniq!
         .select! { |path| File.file?(path) }
