@@ -4,7 +4,7 @@ RUN apk add --update crystal shards yaml-dev musl-dev make
 RUN mkdir /ameba
 WORKDIR /ameba
 COPY . /ameba/
-RUN make clean && make CRFLAGS="$CRFLAGS"
+RUN make clean && make CRFLAGS=$CRFLAGS
 
 FROM alpine:latest
 RUN apk add --update yaml pcre2 gc libevent libgcc
