@@ -10,7 +10,7 @@ require "./config/*"
 # Config can be loaded from configuration YAML file and adjusted.
 #
 # ```
-# config = Config.load
+# config = Ameba::Config.load
 # config.formatter = my_formatter
 # ```
 class Ameba::Config

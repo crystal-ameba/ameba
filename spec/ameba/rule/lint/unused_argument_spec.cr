@@ -68,8 +68,8 @@ module Ameba::Rule::Lint
       source = expect_issue subject, <<-CRYSTAL
         def method(foo, bar, baz)
                  # ^^^ error: Unused argument `foo`. If it's necessary, use `_foo` as an argument name to indicate that it won't be used.
-                      # ^^^ error: Unused argument `bar`. If it's necessary, use `_bar` as an argument name to indicate that it won't be used.
-                           # ^^^ error: Unused argument `baz`. If it's necessary, use `_baz` as an argument name to indicate that it won't be used.
+                      # ^^^ error: Unused argument `bar`. If it's necessary, use `_bar` as an argument name to [...]
+                           # ^^^ error: Unused argument `baz`. If it's necessary, use `_baz` as an argument name to [...]
           nil
         end
         CRYSTAL

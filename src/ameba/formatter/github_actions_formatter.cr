@@ -72,21 +72,19 @@ module Ameba::Formatter
           output << "### Issues found:\n\n"
 
           failed_sources.each do |source|
-            issue_count = source.issues.count(&.enabled?)
+            issues = source.issues.select(&.enabled?)
 
-            if issue_count.positive?
+            if issues.present?
               output << "#### `%s` (**%d** %s)\n\n" % {
                 source.path,
-                issue_count,
-                pluralize(issue_count, "issue"),
+                issues.size,
+                pluralize(issues.size, "issue"),
               }
 
               output.puts "| Line | Severity | Name | Message |"
               output.puts "| ---- | -------- | ---- | ------- |"
 
-              source.issues.each do |issue|
-                next if issue.disabled?
-
+              issues.each do |issue|
                 output.puts "| %s | %s | %s | %s |" % {
                   issue_location_value(issue) || "-",
                   issue.rule.severity,

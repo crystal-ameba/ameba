@@ -2,3 +2,6 @@ Lint/Typos:
   Enabled: true
   Excluded:
     - spec/ameba/rule/lint/typos_spec.cr
+
+Style/Elsif:
+  Enabled: true
