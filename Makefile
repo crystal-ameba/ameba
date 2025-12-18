@@ -39,7 +39,7 @@ build: ## Build the application binary
 build: $(BUILD_TARGET)
 
 $(BUILD_TARGET): $(SRC_SOURCES)
-	$(SHARDS_BIN) build $(CRFLAGS)
+	$(SHARDS_BIN) build ameba $(CRFLAGS)
 
 .PHONY: docs
 docs: ## Generate API docs
