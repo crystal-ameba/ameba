@@ -108,7 +108,7 @@ module Ameba
 
           Runner.new(rules, [source], formatter, default_severity).run
           source.should_not be_valid
-          source.issues.first.rule.name.should eq Rule::Lint::Syntax.rule_name
+          source.issues.first.rule.should be_a Rule::Lint::Syntax
         end
 
         it "does not run other rules" do
@@ -134,7 +134,7 @@ module Ameba
 
           Runner.new(rules, [source], formatter, default_severity).run
           source.should_not be_valid
-          source.issues.first.rule.name.should eq Rule::Lint::UnneededDisableDirective.rule_name
+          source.issues.first.rule.should be_a Rule::Lint::UnneededDisableDirective
         end
       end
 
