@@ -12,83 +12,83 @@ module Ameba
 
     describe ".new" do
       it "raises when the config is not a Hash" do
-        yml = YAML.parse "[]"
+        yaml = YAML.parse "[]"
         expect_raises(Exception, "Invalid config file format") do
-          Config.from_yaml(yml)
+          Config.from_yaml(yaml)
         end
       end
 
       it "loads default globs when config is empty" do
-        yml = YAML.parse "{}"
-        config = Config.from_yaml(yml)
+        yaml = YAML.parse "{}"
+        config = Config.from_yaml(yaml)
         config.globs.should eq Config::DEFAULT_GLOBS
       end
 
       it "loads default globs when config has no value" do
-        yml = YAML.parse <<-YAML
+        yaml = YAML.parse <<-YAML
           # Empty config with comment
           YAML
-        config = Config.from_yaml(yml)
+        config = Config.from_yaml(yaml)
         config.globs.should eq Config::DEFAULT_GLOBS
       end
 
       it "initializes globs as string" do
-        yml = YAML.parse <<-YAML
+        yaml = YAML.parse <<-YAML
           ---
           Globs: src/*.cr
           YAML
-        config = Config.from_yaml(yml)
+        config = Config.from_yaml(yaml)
         config.globs.should eq Set{"src/*.cr"}
       end
 
       it "initializes globs as array" do
-        yml = YAML.parse <<-YAML
+        yaml = YAML.parse <<-YAML
           ---
           Globs:
             - "src/*.cr"
             - "!spec"
           YAML
-        config = Config.from_yaml(yml)
+        config = Config.from_yaml(yaml)
         config.globs.should eq Set{"src/*.cr", "!spec"}
       end
 
       it "raises if Globs has a wrong type" do
-        yml = YAML.parse <<-YAML
+        yaml = YAML.parse <<-YAML
           ---
           Globs: 100
           YAML
         expect_raises(Exception, "Incorrect `Globs` section in a config file") do
-          Config.from_yaml(yml)
+          Config.from_yaml(yaml)
         end
       end
 
       it "initializes excluded as string" do
-        yml = YAML.parse <<-YAML
+        yaml = YAML.parse <<-YAML
           ---
           Excluded: spec
           YAML
-        config = Config.from_yaml(yml)
+        config = Config.from_yaml(yaml)
         config.excluded.should eq Set{"spec"}
       end
 
       it "initializes excluded as array" do
-        yml = YAML.parse <<-YAML
+        yaml = YAML.parse <<-YAML
           ---
           Excluded:
             - spec
             - lib/*.cr
           YAML
-        config = Config.from_yaml(yml)
+        config = Config.from_yaml(yaml)
         config.excluded.should eq Set{"spec", "lib/*.cr"}
       end
 
       it "raises if Excluded has a wrong type" do
-        yml = YAML.parse <<-YAML
+        yaml = YAML.parse <<-YAML
           ---
           Excluded: true
           YAML
         expect_raises(Exception, "Incorrect `Excluded` section in a config file") do
-          Config.from_yaml(yml)
+          Config.from_yaml(yaml)
         end
       end
     end
