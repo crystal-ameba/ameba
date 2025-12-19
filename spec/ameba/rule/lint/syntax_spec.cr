@@ -8,7 +8,7 @@ module Ameba::Rule::Lint
       expect_no_issues subject, <<-CRYSTAL
         def hello
           puts "totally valid"
-        rescue e : Exception
+        rescue ex : Exception
         end
         CRYSTAL
     end

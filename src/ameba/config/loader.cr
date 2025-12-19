@@ -73,8 +73,8 @@ class Ameba::Config
       content ||= "{}"
 
       from_yaml YAML.parse(content), root
-    rescue e
-      raise "Unable to load config file: #{e.message}"
+    rescue ex
+      raise "Unable to load config file: #{ex.message}"
     end
 
     protected def read_config(*, path : Path | String)

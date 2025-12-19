@@ -44,8 +44,8 @@ module Ameba
     def run(&block : Crystal::Token -> _)
       run_normal_state @lexer, &block
       true
-    rescue e : Crystal::SyntaxException
-      # puts e
+    rescue ex : Crystal::SyntaxException
+      # puts ex
       false
     end
 

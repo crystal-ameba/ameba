@@ -111,8 +111,8 @@ module Ameba
       @sources.zip(channels).each do |source, channel|
         spawn do
           run_source(source)
-        rescue e
-          channel.send(e)
+        rescue ex
+          channel.send(ex)
         else
           channel.send(nil)
         end

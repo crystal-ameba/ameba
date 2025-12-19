@@ -15,7 +15,7 @@ module Ameba::Rule::Lint
   # ```
   # def hello
   #   do_something
-  # rescue e : Exception
+  # rescue ex : Exception
   # end
   # ```
   class Syntax < Base
@@ -27,8 +27,8 @@ module Ameba::Rule::Lint
 
     def test(source)
       source.ast
-    rescue e : Crystal::SyntaxException
-      issue_for({e.line_number, e.column_number}, e.message.to_s)
+    rescue ex : Crystal::SyntaxException
+      issue_for({ex.line_number, ex.column_number}, ex.message.to_s)
     end
   end
 end

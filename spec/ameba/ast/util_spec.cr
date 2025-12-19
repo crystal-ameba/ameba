@@ -247,8 +247,8 @@ module Ameba::AST
         node = as_node <<-CRYSTAL
           begin
             raise "exp"
-          rescue e
-            return e
+          rescue ex
+            return ex
           end
           CRYSTAL
         subject.flow_expression?(node).should be_true
