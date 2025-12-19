@@ -101,6 +101,23 @@ module Ameba
         end
       end
 
+      context "issues sorting" do
+        it "sorts issues by severity, line number, and column number" do
+          rules = [
+            ErrorRule.from_yaml("{ Severity: convention, Message: foo }"),
+            ErrorRule.from_yaml("{ Severity: convention, Message: bar, LineNumber: 2 }"),
+            ErrorRule.from_yaml("{ Severity: warning, Message: baz, LineNumber: 2 }"),
+            ErrorRule.from_yaml("{ Severity: error, Message: bat, LineNumber: 2 }"),
+            ErrorRule.from_yaml("{ Severity: warning, Message: baq }"),
+          ] of Rule::Base
+          source = Source.new "foo\nbar"
+
+          Runner.new(rules, [source], formatter, default_severity).run
+          source.should_not be_valid
+          source.issues.map(&.message).should eq %w[foo baq bar baz bat]
+        end
+      end
+
       context "invalid syntax" do
         it "reports a syntax error" do
           rules = [Rule::Lint::Syntax.new] of Rule::Base
