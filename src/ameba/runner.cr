@@ -164,13 +164,10 @@ module Ameba
 
       File.write(source.path, source.code) unless corrected_issues.empty?
     ensure
-      missing_location = Crystal::Location.new(nil, 0, 0)
       source.issues.sort_by! do |issue|
-        location = issue.location || missing_location
         {
-          location.filename.to_s,
-          location.line_number,
-          location.column_number,
+          issue.location.try(&.line_number) || 0,
+          issue.location.try(&.column_number) || 0,
         }
       end
       @formatter.source_finished source
