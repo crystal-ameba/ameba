@@ -38,11 +38,14 @@ module Ameba
   # Rule extended description
   class ErrorRule < Rule::Base
     properties do
-      description "Always adds an error at 1:1"
+      description "Always adds an error"
+      message "This rule always adds an error"
+      line_number 1
+      column_number 1
     end
 
     def test(source)
-      issue_for({1, 1}, "This rule always adds an error")
+      issue_for({line_number, column_number}, message)
     end
   end
 
