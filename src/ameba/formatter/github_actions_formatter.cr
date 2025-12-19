@@ -111,6 +111,7 @@ module Ameba::Formatter
         }
         output.puts
         output.puts "> Ameba version: **%s**" % Ameba::VERSION
+        output.puts "> Crystal version: **%s**" % Crystal::VERSION
       end
     end
 
