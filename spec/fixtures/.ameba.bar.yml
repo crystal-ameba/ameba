@@ -1,0 +1,3 @@
+Layout/LineLength:
+  Enabled: true
+  MaxLength: 88
