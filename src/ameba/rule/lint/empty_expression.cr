@@ -36,7 +36,9 @@ module Ameba::Rule::Lint
     MSG = "Avoid empty expressions"
 
     def test(source, node : Crystal::Expressions)
-      return unless node.expressions.size == 1 && node.expressions.first.nop?
+      return unless node.expressions.size == 1 &&
+                    node.expressions.first.nop?
+
       issue_for node, MSG
     end
   end
