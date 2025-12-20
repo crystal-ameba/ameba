@@ -166,7 +166,6 @@ module Ameba
     ensure
       source.issues.sort_by! do |issue|
         {
-          issue.rule.severity.to_i,
           issue.location.try(&.line_number) || 0,
           issue.location.try(&.column_number) || 0,
         }
