@@ -12,7 +12,7 @@ module Ameba::Formatter
       super
 
       issues = sources.flat_map(&.issues)
-      unless issues.any? { |issue| !issue.disabled? }
+      if issues.none?(&.enabled?)
         @output.puts "No issues found. File is not generated."
         return
       end
