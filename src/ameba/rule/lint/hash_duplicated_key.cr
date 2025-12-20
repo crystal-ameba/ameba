@@ -37,7 +37,7 @@ module Ameba::Rule::Lint
       entries.map(&.key)
         .group_by(&.itself)
         .select! { |_, v| v.size > 1 }
-        .map { |k, _| k }
+        .keys
     end
   end
 end

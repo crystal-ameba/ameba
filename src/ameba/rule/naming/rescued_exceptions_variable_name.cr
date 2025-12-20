@@ -5,8 +5,8 @@ module Ameba::Rule::Naming
   #
   #     def foo
   #       # potentially raising computations
-  #     rescue e
-  #       Log.error(exception: e) { "Error" }
+  #     rescue ex
+  #       Log.error(exception: ex) { "Error" }
   #     end
   #
   # And these are invalid variable names:

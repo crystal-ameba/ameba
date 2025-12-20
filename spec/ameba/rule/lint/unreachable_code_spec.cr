@@ -411,8 +411,8 @@ module Ameba::Rule::Lint
         expect_issue subject, <<-CRYSTAL
           begin
 
-          rescue e
-            raise e
+          rescue ex
+            raise ex
             :unreachable
           # ^^^^^^^^^^^^ error: Unreachable code detected
           end
@@ -423,8 +423,8 @@ module Ameba::Rule::Lint
         expect_no_issues subject, <<-CRYSTAL
           begin
 
-          rescue e
-            raise e
+          rescue ex
+            raise ex
           end
           CRYSTAL
       end

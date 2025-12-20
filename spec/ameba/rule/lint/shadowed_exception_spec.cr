@@ -20,9 +20,9 @@ module Ameba::Rule::Lint
         end
 
         def method
-        rescue e : ArgumentError
+        rescue ex : ArgumentError
           handle_argument_error_exception
-        rescue e : Exception
+        rescue ex : Exception
           handle_exception
         end
         CRYSTAL

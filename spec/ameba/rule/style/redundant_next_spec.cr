@@ -151,7 +151,7 @@ module Ameba::Rule::Style
         expect_no_issues subject, <<-CRYSTAL
           block do |v|
             v + 1
-          rescue e
+          rescue
             next v if v > 0
           end
           CRYSTAL

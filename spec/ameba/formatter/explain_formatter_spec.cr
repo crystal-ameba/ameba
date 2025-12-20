@@ -54,7 +54,7 @@ module Ameba::Formatter
         output.should contain "RULE INFO"
         output.should contain "Convention"
         output.should contain "Ameba/ErrorRule"
-        output.should contain "Always adds an error at 1:1"
+        output.should contain "Always adds an error"
       end
 
       it "writes detailed description" do

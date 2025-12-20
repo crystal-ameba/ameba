@@ -28,7 +28,9 @@ module Ameba::Rule::Lint
     MAGIC_CONSTANTS = %w[__LINE__ __FILE__ __DIR__]
 
     def test(source, node : Crystal::StringInterpolation)
-      each_literal_node(source, node) { |exp| issue_for exp, MSG }
+      each_literal_node(source, node) do |exp|
+        issue_for exp, MSG
+      end
     end
 
     private def each_literal_node(source, node, &)

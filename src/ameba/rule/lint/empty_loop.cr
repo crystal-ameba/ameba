@@ -56,7 +56,9 @@ module Ameba::Rule::Lint
     end
 
     private def check_node(source, node, loop_body)
-      body = loop_body.is_a?(Crystal::Block) ? loop_body.body : loop_body
+      body =
+        loop_body.is_a?(Crystal::Block) ? loop_body.body : loop_body
+
       return unless body.nil? || body.nop?
 
       issue_for node, MSG
