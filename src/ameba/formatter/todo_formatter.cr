@@ -13,23 +13,23 @@ module Ameba::Formatter
 
       issues = sources.flat_map(&.issues)
       if issues.none?(&.enabled?)
-        @output.puts "No issues found. File is not generated."
+        output.puts "No issues found. File is not generated."
         return
       end
 
       if issues.any?(&.syntax?)
-        @output.puts "Unable to generate TODO file. Please fix syntax issues."
+        output.puts "Unable to generate TODO file. Please fix syntax issues."
         return
       end
 
       issues.sort_by!(&.rule.name)
       generate_todo_config(issues)
 
-      @output.puts "Created #{@config_path}"
+      output.puts "Created #{config_path}"
     end
 
     private def generate_todo_config(issues) : Nil
-      File.open(@config_path, mode: "w") do |file|
+      File.open(config_path, mode: "w") do |file|
         file.puts header
 
         YAML::Builder.build(file) do |builder|
