@@ -78,7 +78,7 @@ module Ameba::Formatter
 
             summary = File.read(summary_filename)
             summary.should contain "## Ameba Results :bug:"
-            summary.should contain "### Issues found:"
+            summary.should contain "### Issues found"
             summary.should contain "#### `src/source.cr` (**2** issues)"
 
             linked_name =
