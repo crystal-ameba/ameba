@@ -1,5 +1,6 @@
 module Ameba::Formatter
-  # A formatter that creates a todo config.
+  # A formatter that creates a TODO config.
+  #
   # Basically, it takes all issues reported and disables corresponding rules
   # or excludes failed sources from these rules.
   class TODOFormatter < DotFormatter
@@ -12,6 +13,7 @@ module Ameba::Formatter
       super
 
       issues = sources.flat_map(&.issues)
+
       if issues.none?(&.enabled?)
         output.puts "No issues found. File is not generated."
         return
@@ -22,7 +24,15 @@ module Ameba::Formatter
         return
       end
 
-      issues.sort_by!(&.rule.name)
+      issues.sort_by! do |issue|
+        location = issue.location
+        {
+          issue.rule.name,
+          location.try(&.filename).to_s,
+          location.try(&.line_number) || 0,
+          location.try(&.column_number) || 0,
+        }
+      end
       generate_todo_config(issues)
 
       output.puts "Created #{config_path}"
@@ -46,6 +56,7 @@ module Ameba::Formatter
       builder.mapping do
         rule_issues_map(issues).each do |rule, rule_issues|
           builder.flush
+
           io.puts
 
           rule_to_yaml(builder, rule, rule_issues)
