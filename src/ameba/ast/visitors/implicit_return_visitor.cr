@@ -120,9 +120,7 @@ module Ameba::AST
         node.block_arg.try &.accept(self)
       end
 
-      case
-      when node.name == "initialize",
-           node.return_type.as?(Crystal::Path).try(&.names.join("::").in?("::Nil", "Nil"))
+      if node.name == "initialize" || Util.path_named?(node.return_type, "Nil")
         # Special case of the return type being nil, meaning the last
         # line of the method body is ignored
         # Last line of initialize methods are also ignored
