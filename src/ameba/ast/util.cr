@@ -1,5 +1,7 @@
 # Utility module for Ameba's rules.
 module Ameba::AST::Util
+  extend self
+
   # Returns tuple with two bool flags:
   #
   # 1. is *node* a literal?
