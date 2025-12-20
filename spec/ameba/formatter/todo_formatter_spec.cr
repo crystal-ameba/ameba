@@ -91,12 +91,12 @@ module Ameba
             formatter.finished([s1, s2])
 
             content = File.read(CONFIG_PATH)
-            content.should contain <<-CONTENT
+            content.should contain <<-YAML
               Ameba/DummyRule:
                 Excluded:
                 - source1.cr
                 - source2.cr
-              CONTENT
+              YAML
           end
         end
       end
