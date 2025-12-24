@@ -16,8 +16,6 @@ module Ameba::Formatter
       end
 
       it "writes disabled rules if any" do
-        Colorize.enabled = false
-
         path = "source.cr"
 
         source = Source.new(path: path)
@@ -26,10 +24,9 @@ module Ameba::Formatter
 
         subject.finished [source]
         log = output.to_s
+        log = Util.deansify(log).should_not be_nil
         log.should contain "#{path}:1 #{ErrorRule.rule_name}"
         log.should contain "#{path}:2 #{NamedRule.rule_name}"
-      ensure
-        Colorize.enabled = true
       end
 
       it "does not write not-disabled rules" do
