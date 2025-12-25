@@ -53,6 +53,29 @@ module Ameba::Rule::Style
         CRYSTAL
     end
 
+    it "fails for method call without parentheses with positional + named arguments" do
+      source = expect_issue subject, <<-CRYSTAL
+        bats = bats [Bat.new path: "bat.cr"]
+        # ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ error: Missing parentheses in method call
+                   # ^^^^^^^^^^^^^^^^^^^^^^ error: Missing parentheses in method call
+        CRYSTAL
+
+      expect_correction source, <<-CRYSTAL
+        bats = bats([Bat.new(path: "bat.cr")])
+        CRYSTAL
+    end
+
+    it "fails for method call without parentheses with positional + named arguments" do
+      source = expect_issue subject, <<-CRYSTAL
+        foo bar, baz: baz if baz.fooable?
+        # ^^^^^^^^^^^^^^^ error: Missing parentheses in method call
+        CRYSTAL
+
+      expect_correction source, <<-CRYSTAL
+        foo(bar, baz: baz) if baz.fooable?
+        CRYSTAL
+    end
+
     it "fails for method call without parentheses with block arg" do
       source = expect_issue subject, <<-CRYSTAL
         foo bar: 1, &proc
