@@ -44,6 +44,17 @@ module Ameba::Rule::Style
         CRYSTAL
     end
 
+    it "fails for nested method call with named arguments" do
+      source = expect_issue subject, <<-CRYSTAL
+        foo(bar path: "bar.cr")
+          # ^^^^^^^^^^^^^^^^^^ error: Missing parentheses in method call
+        CRYSTAL
+
+      expect_correction source, <<-CRYSTAL
+        foo(bar(path: "bar.cr"))
+        CRYSTAL
+    end
+
     it "fails for method call with positional + named arguments" do
       source = expect_issue subject, <<-CRYSTAL
         foo bar, baz: 1
@@ -52,6 +63,29 @@ module Ameba::Rule::Style
 
       expect_correction source, <<-CRYSTAL
         foo(bar, baz: 1)
+        CRYSTAL
+    end
+
+    it "fails for method call with positional + named arguments" do
+      source = expect_issue subject, <<-CRYSTAL
+        bats = bats [Bat.new path: "bat.cr"]
+             # ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ error: Missing parentheses in method call
+                   # ^^^^^^^^^^^^^^^^^^^^^^ error: Missing parentheses in method call
+        CRYSTAL
+
+      expect_correction source, <<-CRYSTAL
+        bats = bats([Bat.new(path: "bat.cr")])
+        CRYSTAL
+    end
+
+    it "fails for method call with positional + named arguments" do
+      source = expect_issue subject, <<-CRYSTAL
+        foo bar, baz: baz if baz.fooable?
+        # ^^^^^^^^^^^^^^^ error: Missing parentheses in method call
+        CRYSTAL
+
+      expect_correction source, <<-CRYSTAL
+        foo(bar, baz: baz) if baz.fooable?
         CRYSTAL
     end
 
