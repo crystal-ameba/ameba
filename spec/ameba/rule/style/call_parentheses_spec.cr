@@ -100,5 +100,59 @@ module Ameba::Rule::Style
         foo(bar: 1, &.baz?)
         CRYSTAL
     end
+
+    it "fails for method call without parentheses with heredoc argument" do
+      source = expect_issue subject, <<-CRYSTAL
+        foo <<-HEREDOC
+        # ^^^^^^^^^^^^ error: Missing parentheses in method call
+          HEREDOC
+        CRYSTAL
+
+      expect_correction source, <<-CRYSTAL
+        foo(<<-HEREDOC)
+          HEREDOC
+        CRYSTAL
+    end
+
+    it "fails for method call without parentheses with multiple heredoc arguments" do
+      source = expect_issue subject, <<-CRYSTAL
+        foo <<-FOO, <<-BAR
+        # ^^^^^^^^^^^^^^^^ error: Missing parentheses in method call
+          FOO
+          BAR
+        CRYSTAL
+
+      expect_correction source, <<-CRYSTAL
+        foo(<<-FOO, <<-BAR)
+          FOO
+          BAR
+        CRYSTAL
+    end
+
+    it "fails for method call without parentheses with named + heredoc argument" do
+      source = expect_issue subject, <<-CRYSTAL
+        foo <<-HEREDOC, bar: 42
+        # ^^^^^^^^^^^^^^^^^^^^^ error: Missing parentheses in method call
+          HEREDOC
+        CRYSTAL
+
+      expect_correction source, <<-CRYSTAL
+        foo(<<-HEREDOC, bar: 42)
+          HEREDOC
+        CRYSTAL
+    end
+
+    it "fails for method call without parentheses with named + heredoc argument" do
+      source = expect_issue subject, <<-CRYSTAL
+        foo.should eq <<-HEREDOC
+                 # ^^^^^^^^^^^^^ error: Missing parentheses in method call
+          HEREDOC
+        CRYSTAL
+
+      expect_correction source, <<-CRYSTAL
+        foo.should eq(<<-HEREDOC)
+          HEREDOC
+        CRYSTAL
+    end
   end
 end
