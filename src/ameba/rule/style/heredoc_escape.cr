@@ -41,12 +41,12 @@ module Ameba::Rule::Style
       /\\(?:[abefnrtv]|[CdDhHRsSvVwWX]|[0-7]{1,3}|x[0-9a-fA-F]{2}|u[0-9a-fA-F]{4}|u\{[0-9a-fA-F]{1,6}\})/
 
     def test(source, node : Crystal::StringInterpolation)
+      return unless heredoc?(node, source)
+
       # Heredocs without interpolations have always size of 1
       return unless node.expressions.size == 1
       return unless expr = node.expressions.first.as?(Crystal::StringLiteral)
-
       return unless code = node_source(node, source.lines)
-      return unless code.starts_with?("<<-")
 
       body = code.lines[1..-2].join('\n')
 

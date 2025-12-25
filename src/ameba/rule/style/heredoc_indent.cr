@@ -33,6 +33,8 @@ module Ameba::Rule::Style
   #   IndentBy: 2
   # ```
   class HeredocIndent < Base
+    include AST::Util
+
     properties do
       since_version "1.7.0"
       description "Recommends heredoc bodies are indented consistently"
@@ -42,10 +44,8 @@ module Ameba::Rule::Style
     MSG = "Heredoc body should be indented by %d spaces"
 
     def test(source, node : Crystal::StringInterpolation)
+      return unless heredoc?(node, source)
       return unless location = node.location
-
-      location_pos = source.pos(location)
-      return unless source.code[location_pos..(location_pos + 2)]? == "<<-"
 
       correct_indent = line_indent(source, location) + indent_by
       return if node.heredoc_indent == correct_indent

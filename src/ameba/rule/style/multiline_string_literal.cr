@@ -28,6 +28,8 @@ module Ameba::Rule::Style
   #   AllowBackslashSplitStrings: true
   # ```
   class MultilineStringLiteral < Base
+    include AST::Util
+
     properties do
       since_version "1.7.0"
       description "Disallows multiline string literals not using `<<-HEREDOC` markers"
@@ -46,7 +48,7 @@ module Ameba::Rule::Style
       return if source.code[location_pos]?.in?('`', '/')
 
       # ignore heredoc string literals
-      return if source.code[location_pos..(location_pos + 2)]? == "<<-"
+      return if heredoc?(node, source)
 
       # ignore string literals split by \
       return if allow_backslash_split_strings? &&
