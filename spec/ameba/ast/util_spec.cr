@@ -379,6 +379,32 @@ module Ameba::AST
       end
     end
 
+    describe "#has_short_block?" do
+      it "returns true if the node has a short block variant" do
+        source = Source.new "foo :bar, &.baz"
+        node = as_node(source.code)
+        subject.has_short_block?(node, source.lines).should be_true
+      end
+
+      it "returns false if the node has a one line block" do
+        source = Source.new "foo :bar { |x| x.baz? }"
+        node = as_node(source.code)
+        subject.has_short_block?(node, source.lines).should be_false
+      end
+
+      it "returns false if the node does not have a short block variant" do
+        source = Source.new "foo :bar { |x| x.baz? }"
+        node = as_node(source.code)
+        subject.has_short_block?(node, source.lines).should be_false
+      end
+
+      it "returns false if the node does not have a block" do
+        source = Source.new "foo :bar"
+        node = as_node(source.code)
+        subject.has_short_block?(node, source.lines).should be_false
+      end
+    end
+
     describe "#has_block?" do
       it "returns true if the node has a block" do
         node = as_node("%w[foo bar].first { :baz }")
