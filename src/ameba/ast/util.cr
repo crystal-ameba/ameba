@@ -235,6 +235,22 @@ module Ameba::AST::Util
     operator_method_name?(name)
   end
 
+  # Returns `true` if *node* represents a short block version (`&.foo?`).
+  def short_block?(node, source)
+    return false unless node.is_a?(Crystal::Block)
+    return false unless location = node.try(&.location)
+    return false unless end_location = node.try(&.body.end_location)
+
+    !!source_between(location, end_location, source.lines)
+      .try(&.starts_with?("&."))
+  end
+
+  # Returns `true` if *node* is a call with a short block version (`&.foo?`).
+  def has_short_block?(node, source)
+    node.is_a?(Crystal::Call) &&
+      short_block?(node.block, source)
+  end
+
   # Returns `true` if node has a `:nodoc:` annotation as the first line.
   def nodoc?(node)
     return false unless node.responds_to?(:doc)
