@@ -6,12 +6,9 @@ module Ameba::Presenter
         .sort_by { |rule| rule.since_version || missing_version }
         .group_by(&.since_version)
 
-      first = true
-
-      versions.each do |version, version_rules|
-        case
-        when verbose
-          output.puts unless first
+      if verbose
+        versions.each_with_index do |(version, version_rules), idx|
+          output.puts if idx.positive?
           if version
             output.puts "- %s" % version.to_s.colorize(:green)
           else
@@ -20,11 +17,13 @@ module Ameba::Presenter
           version_rules.map(&.name).sort!.each do |name|
             output.puts "  - %s" % name.colorize(:dark_gray)
           end
-        when version
-          output.puts "- %s" % version.to_s.colorize(:green)
         end
-
-        first = false
+      else
+        versions.each_key do |version|
+          if version
+            output.puts "- %s" % version.to_s.colorize(:green)
+          end
+        end
       end
     end
   end

@@ -316,12 +316,7 @@ module Ameba::CLI
   end
 
   private def parse_explain_location(arg)
-    location = arg.split(':', remove_empty: true).map! &.strip
-    raise ArgumentError.new unless location.size === 3
-
-    file, line, column = location
-
-    Crystal::Location.new(file, line.to_i, column.to_i)
+    Crystal::Location.parse(arg)
   rescue
     raise "location should have PATH:line:column format"
   end

@@ -114,7 +114,7 @@ module Ameba
 
           Runner.new(rules, [source], formatter, default_severity).run
           source.should_not be_valid
-          source.issues.map(&.message).should eq %w[bat baq baz foo bar]
+          source.issues.map(&.message).should eq %w[foo baq bar baz bat]
         end
       end
 

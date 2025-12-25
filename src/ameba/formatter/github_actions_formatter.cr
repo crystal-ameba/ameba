@@ -69,7 +69,7 @@ module Ameba::Formatter
         }
 
         if failures.positive?
-          output << "### Issues found:\n\n"
+          output << "### Issues found\n\n"
 
           failed_sources.each do |source|
             issues = source.issues.select(&.enabled?)

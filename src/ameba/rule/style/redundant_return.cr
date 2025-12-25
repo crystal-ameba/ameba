@@ -45,7 +45,7 @@ module Ameba::Rule::Style
   #
   # ### Configuration params
   #
-  # 1. *allow_multi_return*, default: true
+  # 1. *allow_multi_return*, default: `true`
   #
   # Allows end-user to configure whether to report or not the `return` statements
   # which return tuple literals i.e.
@@ -64,7 +64,7 @@ module Ameba::Rule::Style
   # end
   # ```
   #
-  # 2. *allow_empty_return*, default: true
+  # 2. *allow_empty_return*, default: `true`
   #
   # Allows end-user to configure whether to report or not the `return` statements
   # without arguments. Sometimes such returns are used to return the `nil` value explicitly.
