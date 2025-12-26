@@ -41,6 +41,7 @@ module Ameba::AST
       Select,
       StringInterpolation,
       StringLiteral,
+      Union,
       Unless,
       Until,
       Var,
