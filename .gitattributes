@@ -3,3 +3,4 @@
 ## Generated files
 
 .ameba.yml.schema.json linguist-generated
+reference/** linguist-generated

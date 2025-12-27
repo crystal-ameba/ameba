@@ -10,6 +10,8 @@ targets:
     main: src/cli.cr
   json-schema-builder:
     main: src/json-schema-builder.cr
+  rules-reference-builder:
+    main: src/rules-reference-builder.cr
 
 scripts:
   postinstall: shards build ameba -Dpreview_mt
