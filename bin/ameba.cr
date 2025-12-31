@@ -1,3 +1,5 @@
+#!/usr/bin/env crystal
+
 # Require ameba cli which starts the inspection.
 require "ameba/cli"
 
