@@ -41,12 +41,29 @@ module Ameba::AST
   # end
   # ```
   class ElseIfAwareNodeVisitor < NodeVisitor
+    include Util
+
+    getter? exclude_ternary : Bool
+    getter? exclude_suffix : Bool
+
+    def initialize(rule, source, *, skip : Array | Category? = nil,
+                   @exclude_ternary = true,
+                   @exclude_suffix = true)
+      super rule, source,
+        skip: if skip.is_a?(Category)
+          NodeVisitor.category_to_node_classes(skip)
+        else
+          skip
+        end
+    end
+
     def visit(node : Crystal::If)
       if_node = node
       ifs = [] of Crystal::If
 
       loop do
-        break if if_node.ternary?
+        break if exclude_ternary? && if_node.ternary?
+        break if exclude_suffix? && suffix?(if_node)
 
         ifs << if_node
 
