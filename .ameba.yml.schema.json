@@ -1681,6 +1681,10 @@
           "type": "boolean",
           "default": false
         },
+        "IgnoreSuffix": {
+          "type": "boolean",
+          "default": true
+        },
         "MaxBranches": {
           "type": "number",
           "default": 0
