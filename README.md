@@ -110,7 +110,7 @@ $ CRYSTAL_WORKERS=8 ameba #=> 10.14 seconds
 
 ## Installation
 
-### As a project dependency:
+### As a project dependency
 
 Add this to your application's `shard.yml`:
 
@@ -120,7 +120,35 @@ development_dependencies:
     github: crystal-ameba/ameba
 ```
 
-Build `bin/ameba` binary within your project directory while running `shards install`.
+To prioritize runtime performance over compilation time, you can add `ameba`
+target to the `shard.yml` file:
+
+```yaml
+targets:
+  ameba:
+    main: bin/ameba.cr
+```
+
+And then run:
+
+```sh
+$ shards build ameba -Dpreview_mt
+```
+
+Alternatively, skip adding `ameba` target and use `crystal build` command directly:
+
+```sh
+$ crystal build -Dpreview_mt -o bin/ameba bin/ameba.cr
+```
+
+Both of these will result in a compiled binary placed under `bin/ameba` path.
+
+You can also just run the `bin/ameba.cr` file, compiling it on the fly,
+which is the slowest option:
+
+```sh
+$ bin/ameba.cr
+```
 
 ### OS X
 

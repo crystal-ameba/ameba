@@ -11,12 +11,7 @@ targets:
   json-schema-builder:
     main: src/json-schema-builder.cr
 
-scripts:
-  postinstall: shards build ameba -Dpreview_mt
-
-# TODO: remove pre-compiled executable in future releases
 executables:
-  - ameba
   - ameba.cr
 
 crystal: ~> 1.17
