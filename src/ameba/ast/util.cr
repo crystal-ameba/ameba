@@ -235,6 +235,18 @@ module Ameba::AST::Util
     operator_method_name?(name)
   end
 
+  # Returns `true` if *node* is a suffix node (`if` / `unless` / `rescue` / `ensure`).
+  def suffix?(node)
+    case node
+    when Crystal::If, Crystal::Unless
+      node.location == node.then.location
+    when Crystal::ExceptionHandler
+      node.suffix
+    else
+      false
+    end
+  end
+
   # Returns `true` if node has a `:nodoc:` annotation as the first line.
   def nodoc?(node)
     return false unless node.responds_to?(:doc)

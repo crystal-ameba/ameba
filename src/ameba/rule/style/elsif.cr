@@ -22,11 +22,23 @@ module Ameba::Rule::Style
   # end
   # ```
   #
+  # If `IgnoreSuffix` option is set to `true` (which is the default),
+  # the suffix `if` nodes will be ignored, i.e., considered valid.
+  #
+  # ```
+  # if foo
+  #   do_something
+  # else
+  #   do_something_else if bar # <- suffix if node
+  # end
+  # ```
+  #
   # YAML configuration example:
   #
   # ```
   # Style/Elsif:
   #   Enabled: true
+  #   IgnoreSuffix: true
   #   MaxBranches: 0
   # ```
   class Elsif < Base
@@ -34,13 +46,15 @@ module Ameba::Rule::Style
       since_version "1.7.0"
       description "Encourages the use of `case/when` syntax over `if/elsif`"
       enabled false
+      ignore_suffix true
       max_branches 0
     end
 
     MSG = "Prefer `case/when` over `if/elsif`"
 
     def test(source)
-      AST::ElseIfAwareNodeVisitor.new self, source, skip: :macro
+      AST::ElseIfAwareNodeVisitor.new self, source, skip: :macro,
+        exclude_suffix: ignore_suffix?
     end
 
     def test(source, node : Crystal::If, ifs : Enumerable(Crystal::If))

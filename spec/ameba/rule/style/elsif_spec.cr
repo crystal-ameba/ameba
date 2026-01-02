@@ -26,6 +26,18 @@ module Ameba::Rule::Style
         CRYSTAL
     end
 
+    it "does not report an issue for if/else statements with suffix if by default" do
+      expect_no_issues subject, <<-CRYSTAL
+        def func
+          if something
+            foo
+          else
+            bar if something_else
+          end
+        end
+        CRYSTAL
+    end
+
     it "does not report an issue for if statements (ternary)" do
       expect_no_issues subject, <<-CRYSTAL
         def func
@@ -56,6 +68,22 @@ module Ameba::Rule::Style
     end
 
     context "properties" do
+      it "#ignore_suffix" do
+        rule = Elsif.new
+        rule.ignore_suffix = false
+
+        expect_issue rule, <<-CRYSTAL
+          def func
+            if something
+          # ^^^^^^^^^^^^ error: Prefer `case/when` over `if/elsif`
+              foo
+            else
+              bar if something_else
+            end
+          end
+          CRYSTAL
+      end
+
       it "#allowed_branches" do
         rule = Elsif.new
         rule.max_branches = 1

@@ -308,6 +308,77 @@ module Ameba::AST
       end
     end
 
+    describe "#suffix?" do
+      it "returns true if the node is a suffix `if`" do
+        node = as_node("foo if bar")
+        subject.suffix?(node).should be_true
+      end
+
+      it "returns true if the node is a suffix `if` (2)" do
+        node = as_node("foo if bar.end")
+        subject.suffix?(node).should be_true
+      end
+
+      it "returns true if the node is a suffix `unless`" do
+        node = as_node("foo unless bar")
+        subject.suffix?(node).should be_true
+      end
+
+      it "returns true if the node is a suffix `rescue`" do
+        node = as_node("foo rescue bar")
+        subject.suffix?(node).should be_true
+      end
+
+      it "returns true if the node is a suffix `ensure`" do
+        node = as_node("foo ensure bar")
+        subject.suffix?(node).should be_true
+      end
+
+      it "returns false if the node is not a suffix `if` or `unless`" do
+        node = as_node("foo")
+        subject.suffix?(node).should be_false
+      end
+
+      it "returns false if the node is a ternary `if`" do
+        node = as_node("foo ? bar : baz")
+        subject.suffix?(node).should be_false
+      end
+
+      it "returns false if the node is a non-suffix `if`" do
+        node = as_node("if foo; bar; end")
+        subject.suffix?(node).should be_false
+      end
+
+      it "returns false if the node is a non-suffix `if` (2)" do
+        node = as_node("if foo;bar;end")
+        subject.suffix?(node).should be_false
+      end
+
+      it "returns false if the node is a non-suffix `if` (3)" do
+        node = as_node <<-CRYSTAL
+          if foo
+            bar
+          end
+          CRYSTAL
+        subject.suffix?(node).should be_false
+      end
+
+      it "returns false if the node is a non-suffix `unless`" do
+        node = as_node("unless foo; bar; end")
+        subject.suffix?(node).should be_false
+      end
+
+      it "returns false if the node is a non-suffix `rescue`" do
+        node = as_node("begin; foo; rescue; end")
+        subject.suffix?(node).should be_false
+      end
+
+      it "returns false if the node is a non-suffix `ensure`" do
+        node = as_node("begin; foo; ensure; end")
+        subject.suffix?(node).should be_false
+      end
+    end
+
     describe "#has_block?" do
       it "returns true if the node has a block" do
         node = as_node("%w[foo bar].first { :baz }")
