@@ -32,6 +32,7 @@ module Ameba
   end
 end
 
+require "./type_safe_equality"
 require "./ameba/*"
 require "./ameba/ast/**"
 require "./ameba/ext/**"
