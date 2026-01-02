@@ -2054,6 +2054,22 @@
         }
       }
     },
+    "Style/VerboseNilType": {
+      "$ref": "#/$defs/BaseRule",
+      "$comment": "https://crystal-ameba.github.io/ameba/master/Ameba/Rule/Style/VerboseNilType.html",
+      "title": "Style/VerboseNilType",
+      "description": "Enforces consistent naming of `Nil` in type unions",
+      "properties": {
+        "SinceVersion": {
+          "type": "string",
+          "default": "1.7.0"
+        },
+        "ExplicitNil": {
+          "type": "boolean",
+          "default": false
+        }
+      }
+    },
     "Style/WhileTrue": {
       "$ref": "#/$defs/BaseRule",
       "$comment": "https://crystal-ameba.github.io/ameba/master/Ameba/Rule/Style/WhileTrue.html",
