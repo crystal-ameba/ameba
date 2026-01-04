@@ -37,6 +37,7 @@ module Ameba::Rule::Style
     private PATTERN = /(\s*\|\s*Nil(?=\W|$))|((?<=\W|^)Nil\s*\|\s*)/
 
     def test(source, node : Crystal::Union)
+      return unless has_nil?(node)
       return unless node_source = node_source(node, source.lines)
 
       # https://github.com/crystal-lang/crystal/issues/11071
@@ -57,6 +58,14 @@ module Ameba::Rule::Style
           corrector.replace(node, "%s?" % node_source.gsub(PATTERN, "").rstrip('?'))
         end
       end
+    end
+
+    private def has_nil?(node : Crystal::Union)
+      node.types.any? { |type| has_nil?(type) }
+    end
+
+    private def has_nil?(node)
+      path_named?(node, "Nil")
     end
   end
 end
