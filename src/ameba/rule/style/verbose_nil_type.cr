@@ -44,20 +44,32 @@ module Ameba::Rule::Style
       return if node_source.includes?(".class")
 
       if explicit_nil?
+        # `String?` -> `String | Nil`
         return unless node_source.ends_with?('?')
 
-        # `String?` -> `String | Nil`
         issue_for node, MSG_SHORT do |corrector|
           corrector.replace(node, "%s | Nil" % node_source.rstrip('?'))
         end
       else
+        # `String | Nil` -> `String?`
         return unless node_source.matches?(PATTERN)
 
-        # `String | Nil` -> `String?`
-        issue_for node, MSG_VERBOSE do |corrector|
-          corrector.replace(node, "%s?" % node_source.gsub(PATTERN, "").rstrip('?'))
+        if has_generic?(node)
+          issue_for node, MSG_VERBOSE
+        else
+          issue_for node, MSG_VERBOSE do |corrector|
+            corrector.replace(node, "%s?" % node_source.gsub(PATTERN, "").rstrip('?'))
+          end
         end
       end
+    end
+
+    private def has_generic?(node : Crystal::Union)
+      node.types.any? { |type| has_generic?(type) }
+    end
+
+    private def has_generic?(node)
+      node.is_a?(Crystal::Generic)
     end
 
     private def has_nil?(node : Crystal::Union)
