@@ -55,14 +55,14 @@ module Ameba::Rule::Style
             # ^^^^^^^^^^^^^ error: Prefer `?` instead of `| Nil` in unions
         bar : String | Nil?
             # ^^^^^^^^^^^^^ error: Prefer `?` instead of `| Nil` in unions
-        baz : Nil | String? | Nil
-            # ^^^^^^^^^^^^^^^^^^^ error: Prefer `?` instead of `| Nil` in unions
+        baz : Nil | String? | Symbol
+            # ^^^^^^^^^^^^^^^^^^^^^^ error: Prefer `?` instead of `| Nil` in unions
         CRYSTAL
 
       expect_correction source, <<-CRYSTAL
         foo : String?
         bar : String?
-        baz : String?
+        baz : String | Symbol?
         CRYSTAL
     end
 
