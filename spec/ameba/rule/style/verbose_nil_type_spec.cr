@@ -20,24 +20,14 @@ module Ameba::Rule::Style
         CRYSTAL
     end
 
-    it "reports if there is a verbose nil type" do
+    it "reports if there is a verbose nil type (simple)" do
       source = expect_issue subject, <<-CRYSTAL
         foo : String | Nil = nil
             # ^^^^^^^^^^^^ error: Prefer `?` instead of `| Nil` in unions
         bar : Nil | String
             # ^^^^^^^^^^^^ error: Prefer `?` instead of `| Nil` in unions
-        baz : String|Nil|Int
-            # ^^^^^^^^^^^^^^ error: Prefer `?` instead of `| Nil` in unions
-
-        bun : String? | Nil
-            # ^^^^^^^^^^^^^ error: Prefer `?` instead of `| Nil` in unions
-        hun : String | Nil?
-            # ^^^^^^^^^^^^^ error: Prefer `?` instead of `| Nil` in unions
-
-        goo : (Array(String | Nil) | Nil) | Foo
-             # ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ error: Prefer `?` instead of `| Nil` in unions
-             # ^^^^^^^^^^^^^^^^^^^^^^^^^ error: Prefer `?` instead of `| Nil` in unions
-                   # ^^^^^^^^^^^^ error: Prefer `?` instead of `| Nil` in unions
+        baz : String | Nil | Int
+            # ^^^^^^^^^^^^^^^^^^ error: Prefer `?` instead of `| Nil` in unions
 
         def bat : Symbol | Nil | String
                 # ^^^^^^^^^^^^^^^^^^^^^ error: Prefer `?` instead of `| Nil` in unions
@@ -50,17 +40,53 @@ module Ameba::Rule::Style
       expect_correction source, <<-CRYSTAL
         foo : String? = nil
         bar : String?
-        baz : String|Int?
-
-        bun : String?
-        hun : String?
-
-        goo : (Array(String)) | Foo?
+        baz : String | Int?
 
         def bat : Symbol | String?
         end
 
         alias Foo = Symbol?
+        CRYSTAL
+    end
+
+    it "reports if there is a verbose nil type (edge-case)" do
+      source = expect_issue subject, <<-CRYSTAL
+        foo : String? | Nil
+            # ^^^^^^^^^^^^^ error: Prefer `?` instead of `| Nil` in unions
+        bar : String | Nil?
+            # ^^^^^^^^^^^^^ error: Prefer `?` instead of `| Nil` in unions
+        baz : Nil | String? | Symbol
+            # ^^^^^^^^^^^^^^^^^^^^^^ error: Prefer `?` instead of `| Nil` in unions
+        CRYSTAL
+
+      expect_correction source, <<-CRYSTAL
+        foo : String?
+        bar : String?
+        baz : String | Symbol?
+        CRYSTAL
+    end
+
+    it "reports if there is a verbose nil type (generics + nested unions)" do
+      source = expect_issue subject, <<-CRYSTAL
+        foo : (Array(String | Nil) | Nil) | Foo
+             # ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ error: Prefer `?` instead of `| Nil` in unions
+             # ^^^^^^^^^^^^^^^^^^^^^^^^^ error: Prefer `?` instead of `| Nil` in unions
+                   # ^^^^^^^^^^^^ error: Prefer `?` instead of `| Nil` in unions
+        CRYSTAL
+
+      expect_correction source, <<-CRYSTAL
+        foo : (Array(String?) | Nil) | Foo
+        CRYSTAL
+    end
+
+    it "reports if there is a verbose nil type (generics)" do
+      source = expect_issue subject, <<-CRYSTAL
+        foo : Array(String | Nil) | Foo
+                  # ^^^^^^^^^^^^ error: Prefer `?` instead of `| Nil` in unions
+        CRYSTAL
+
+      expect_correction source, <<-CRYSTAL
+        foo : Array(String?) | Foo
         CRYSTAL
     end
 
