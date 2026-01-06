@@ -58,10 +58,12 @@ module Ameba::Rule::Style
           issue_for node, MSG_VERBOSE
         else
           issue_for node, MSG_VERBOSE do |corrector|
-            corrector.replace(node, "%s?" % node_source
+            corrected_code = "%s?" % node_source
               .gsub(PATTERN, "")
               .gsub('?', "")
-            )
+              .gsub(/\(+(\w+)\)+/, "\\1")
+
+            corrector.replace(node, corrected_code)
           end
         end
       end

@@ -90,6 +90,19 @@ module Ameba::Rule::Style
         CRYSTAL
     end
 
+    it "corrects the parenthesized single type unions" do
+      source = expect_issue subject, <<-CRYSTAL
+        foo : (String | (Symbol | Nil)) | Foo
+             # ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ error: Prefer `?` instead of `| Nil` in unions
+             # ^^^^^^^^^^^^^^^^^^^^^^ error: Prefer `?` instead of `| Nil` in unions
+                       # ^^^^^^^^^^^^ error: Prefer `?` instead of `| Nil` in unions
+        CRYSTAL
+
+      expect_correction source, <<-CRYSTAL
+        foo : String | Symbol | Foo?
+        CRYSTAL
+    end
+
     context "properties" do
       it "#explicit_nil" do
         rule = VerboseNilType.new
