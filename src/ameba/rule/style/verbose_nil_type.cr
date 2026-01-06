@@ -61,7 +61,12 @@ module Ameba::Rule::Style
             corrected_code = "%s?" % node_source
               .gsub(PATTERN, "")
               .gsub('?', "")
-              .gsub(/\(+(\w+)\)+/, "\\1")
+
+            # https://github.com/crystal-lang/crystal/pull/16552
+            {% if compare_versions(Crystal::VERSION, "1.19.0") >= 0 %}
+              corrected_code = corrected_code
+                .gsub(/\(+(\w+)\)+/, "\\1")
+            {% end %}
 
             corrector.replace(node, corrected_code)
           end
