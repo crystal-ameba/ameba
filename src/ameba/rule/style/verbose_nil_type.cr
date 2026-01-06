@@ -56,6 +56,15 @@ module Ameba::Rule::Style
       # `String | Nil` -> `String?`
       return unless node_source.matches?(PATTERN)
 
+      # Unions that _do not_ contain generic types are safe to modify using
+      # simple find-and-replace, due to the fact that their types are being
+      # flattened in the end, so removing `Nil` type from anywhere in the
+      # union and appending `?` should be semantically the same and should
+      # not affect the type of the union.
+      #
+      # If union contains generic type however, we need to be careful, as
+      # simple find-and-replace might change the type of the union -
+      # and that's why we skip the auto-correction of those.
       if has_generic?(node)
         issue_for node, MSG_VERBOSE
         return
