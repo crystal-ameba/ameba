@@ -43,34 +43,36 @@ module Ameba::Rule::Style
       # https://github.com/crystal-lang/crystal/issues/11071
       return if node_source.includes?(".class")
 
+      # `String?` -> `String | Nil`
       if explicit_nil?
-        # `String?` -> `String | Nil`
         return unless node_source.ends_with?('?')
 
         issue_for node, MSG_SHORT do |corrector|
           corrector.replace(node, "%s | Nil" % node_source.rstrip('?'))
         end
-      else
-        # `String | Nil` -> `String?`
-        return unless node_source.matches?(PATTERN)
+        return
+      end
 
-        if has_generic?(node)
-          issue_for node, MSG_VERBOSE
-        else
-          issue_for node, MSG_VERBOSE do |corrector|
-            corrected_code = "%s?" % node_source
-              .gsub(PATTERN, "")
-              .gsub('?', "")
+      # `String | Nil` -> `String?`
+      return unless node_source.matches?(PATTERN)
 
-            # https://github.com/crystal-lang/crystal/pull/16552
-            {% if compare_versions(Crystal::VERSION, "1.19.0") >= 0 %}
-              corrected_code = corrected_code
-                .gsub(/\(+(\w+)\)+/, "\\1")
-            {% end %}
+      if has_generic?(node)
+        issue_for node, MSG_VERBOSE
+        return
+      end
 
-            corrector.replace(node, corrected_code)
-          end
-        end
+      issue_for node, MSG_VERBOSE do |corrector|
+        corrected_code = "%s?" % node_source
+          .gsub(PATTERN, "")
+          .gsub('?', "")
+
+        # https://github.com/crystal-lang/crystal/pull/16552
+        {% if compare_versions(Crystal::VERSION, "1.19.0") >= 0 %}
+          corrected_code = corrected_code
+            .gsub(/\(+(\w+)\)+/, "\\1")
+        {% end %}
+
+        corrector.replace(node, corrected_code)
       end
     end
 
