@@ -90,6 +90,26 @@ module Ameba::Rule::Style
         CRYSTAL
     end
 
+    it "corrects the parenthesized single type unions" do
+      source = expect_issue subject, <<-CRYSTAL
+        foo : (Nil | (Symbol | Nil)) | Foo
+             # ^^^^^^^^^^^^^^^^^^^^^^^^^^^ error: Prefer `?` instead of `| Nil` in unions
+             # ^^^^^^^^^^^^^^^^^^^ error: Prefer `?` instead of `| Nil` in unions
+                    # ^^^^^^^^^^^^ error: Prefer `?` instead of `| Nil` in unions
+        CRYSTAL
+
+      # https://github.com/crystal-lang/crystal/pull/16552
+      {% if compare_versions(Crystal::VERSION, "1.19.0") >= 0 %}
+        expect_correction source, <<-CRYSTAL
+          foo : Symbol | Foo?
+          CRYSTAL
+      {% else %}
+        expect_correction source, <<-CRYSTAL
+          foo : (Symbol) | Foo?
+          CRYSTAL
+      {% end %}
+    end
+
     context "properties" do
       it "#explicit_nil" do
         rule = VerboseNilType.new

@@ -34,7 +34,8 @@ module Ameba::Rule::Style
     MSG_VERBOSE = "Prefer `?` instead of `| Nil` in unions"
     MSG_SHORT   = "Prefer `| Nil` instead of `?` in unions"
 
-    private PATTERN = /(\s*\|\s*Nil(?=\W|$))|((?<=\W|^)Nil\s*\|\s*)/
+    private NIL_TYPE_PATTERN    = /(\s*\|\s*Nil(?=\W|$))|((?<=\W|^)Nil\s*\|\s*)/
+    private SINGLE_TYPE_PATTERN = /\((\w+)\)/
 
     def test(source, node : Crystal::Union)
       return unless has_nil?(node)
@@ -43,27 +44,44 @@ module Ameba::Rule::Style
       # https://github.com/crystal-lang/crystal/issues/11071
       return if node_source.includes?(".class")
 
+      # `String?` -> `String | Nil`
       if explicit_nil?
-        # `String?` -> `String | Nil`
         return unless node_source.ends_with?('?')
 
         issue_for node, MSG_SHORT do |corrector|
           corrector.replace(node, "%s | Nil" % node_source.rstrip('?'))
         end
-      else
-        # `String | Nil` -> `String?`
-        return unless node_source.matches?(PATTERN)
+        return
+      end
 
-        if has_generic?(node)
-          issue_for node, MSG_VERBOSE
-        else
-          issue_for node, MSG_VERBOSE do |corrector|
-            corrector.replace(node, "%s?" % node_source
-              .gsub(PATTERN, "")
-              .gsub('?', "")
-            )
-          end
+      # `String | Nil` -> `String?`
+      return unless node_source.matches?(NIL_TYPE_PATTERN)
+
+      # Unions that _do not_ contain generic types are safe to modify using
+      # simple find-and-replace, due to the fact that their types are being
+      # flattened in the end, so removing `Nil` type from anywhere in the
+      # union and appending `?` should be semantically the same and should
+      # not affect the type of the union.
+      #
+      # If union contains generic type however, we need to be careful, as
+      # simple find-and-replace might change the type of the union -
+      # and that's why we skip the auto-correction of those.
+      if has_generic?(node)
+        issue_for node, MSG_VERBOSE
+        return
+      end
+
+      issue_for node, MSG_VERBOSE do |corrector|
+        corrected_code = "%s?" % node_source
+          .gsub(NIL_TYPE_PATTERN, "")
+          .gsub('?', "")
+
+        # handle `(String | ((Symbol)))` cases
+        while corrected_code.matches?(SINGLE_TYPE_PATTERN)
+          corrected_code = corrected_code
+            .gsub(SINGLE_TYPE_PATTERN, "\\1")
         end
+        corrector.replace(node, corrected_code)
       end
     end
 
