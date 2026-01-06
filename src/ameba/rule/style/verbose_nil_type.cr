@@ -34,7 +34,8 @@ module Ameba::Rule::Style
     MSG_VERBOSE = "Prefer `?` instead of `| Nil` in unions"
     MSG_SHORT   = "Prefer `| Nil` instead of `?` in unions"
 
-    private PATTERN = /(\s*\|\s*Nil(?=\W|$))|((?<=\W|^)Nil\s*\|\s*)/
+    private NIL_TYPE_PATTERN    = /(\s*\|\s*Nil(?=\W|$))|((?<=\W|^)Nil\s*\|\s*)/
+    private SINGLE_TYPE_PATTERN = /\((\w+)\)/
 
     def test(source, node : Crystal::Union)
       return unless has_nil?(node)
@@ -54,7 +55,7 @@ module Ameba::Rule::Style
       end
 
       # `String | Nil` -> `String?`
-      return unless node_source.matches?(PATTERN)
+      return unless node_source.matches?(NIL_TYPE_PATTERN)
 
       # Unions that _do not_ contain generic types are safe to modify using
       # simple find-and-replace, due to the fact that their types are being
@@ -72,15 +73,14 @@ module Ameba::Rule::Style
 
       issue_for node, MSG_VERBOSE do |corrector|
         corrected_code = "%s?" % node_source
-          .gsub(PATTERN, "")
+          .gsub(NIL_TYPE_PATTERN, "")
           .gsub('?', "")
 
-        # https://github.com/crystal-lang/crystal/pull/16552
-        {% if compare_versions(Crystal::VERSION, "1.19.0") >= 0 %}
+        # handle `(String | ((Symbol)))` cases
+        while corrected_code.matches?(SINGLE_TYPE_PATTERN)
           corrected_code = corrected_code
-            .gsub(/\(+(\w+)\)+/, "\\1")
-        {% end %}
-
+            .gsub(SINGLE_TYPE_PATTERN, "\\1")
+        end
         corrector.replace(node, corrected_code)
       end
     end
