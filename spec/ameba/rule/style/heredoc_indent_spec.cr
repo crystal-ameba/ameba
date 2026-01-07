@@ -17,7 +17,7 @@ module Ameba::Rule::Style
     end
 
     it "fails if the heredoc body is indented incorrectly" do
-      expect_issue subject, <<-CRYSTAL
+      source = expect_issue subject, <<-CRYSTAL
         <<-ONE
         # ^^^^ error: Heredoc body should be indented by 2 spaces
         hello world
@@ -37,6 +37,24 @@ module Ameba::Rule::Style
         # ^^^^^^^ error: Heredoc body should be indented by 2 spaces
         hello world
         FOUR
+        CRYSTAL
+
+      expect_correction source, <<-CRYSTAL
+        <<-ONE
+          hello world
+          ONE
+
+          <<-TWO
+            hello world
+            TWO
+
+          <<-THREE
+            hello world
+            THREE
+
+          <<-FOUR
+            hello world
+            FOUR
         CRYSTAL
     end
 
@@ -58,7 +76,7 @@ module Ameba::Rule::Style
         end
 
         it "fails if the heredoc body is indented incorrectly" do
-          expect_issue rule, <<-CRYSTAL
+          source = expect_issue rule, <<-CRYSTAL
             <<-ONE
             # ^^^^ error: Heredoc body should be indented by 0 spaces
               hello world
@@ -73,6 +91,20 @@ module Ameba::Rule::Style
             # ^^^^^^^ error: Heredoc body should be indented by 0 spaces
             hello world
             FOUR
+            CRYSTAL
+
+          expect_correction source, <<-CRYSTAL
+            <<-ONE
+            hello world
+            ONE
+
+              <<-TWO
+              hello world
+              TWO
+
+              <<-FOUR
+              hello world
+              FOUR
             CRYSTAL
         end
       end
