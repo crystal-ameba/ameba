@@ -85,7 +85,7 @@ module Ameba::Formatter
         #
         # For more details on any individual rule, run `ameba --only RuleName`.
 
-        Version: "#{VERSION}"
+        Version: "#{VERSION.rchop("-dev")}"
 
         YAML
     end
