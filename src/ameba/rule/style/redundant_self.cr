@@ -103,9 +103,10 @@ module Ameba::Rule::Style
       end
 
       return if name.in?(vars)
+      return unless node_source = node_source(node, source.lines)
 
       issue_for obj, MSG do |corrector|
-        corrector.replace(node, node.to_s.sub(/\Aself\s*\./, ""))
+        corrector.replace(node, node_source.sub(/\Aself\s*\./, ""))
       end
     end
   end

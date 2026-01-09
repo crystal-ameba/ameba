@@ -259,10 +259,10 @@ module Ameba::Rule::Style
     it "reports if there is redundant `self` used in a method body" do
       source = expect_issue subject, <<-CRYSTAL
         class Foo
-          def foo; end
+          def foo(&); end
 
           def foo!
-            self.foo || 42
+            self.foo { nil } || 42
           # ^^^^ error: Redundant `self` detected
           end
         end
@@ -270,10 +270,10 @@ module Ameba::Rule::Style
 
       expect_correction source, <<-CRYSTAL
         class Foo
-          def foo; end
+          def foo(&); end
 
           def foo!
-            foo || 42
+            foo { nil } || 42
           end
         end
         CRYSTAL
