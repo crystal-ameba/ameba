@@ -58,6 +58,29 @@ module Ameba::Rule::Style
         CRYSTAL
     end
 
+    it "keeps the indentation within the heredoc string" do
+      source = expect_issue subject, <<-CRYSTAL
+        <<-HTML
+        # ^^^^^ error: Heredoc body should be indented by 2 spaces
+        <article>
+          <header>
+            <h1>{{ article.name }}</h1>
+          </header>
+        </article>
+        HTML
+        CRYSTAL
+
+      expect_correction source, <<-CRYSTAL
+        <<-HTML
+          <article>
+            <header>
+              <h1>{{ article.name }}</h1>
+            </header>
+          </article>
+          HTML
+        CRYSTAL
+    end
+
     context "properties" do
       context "#indent_by" do
         rule = HeredocIndent.new
