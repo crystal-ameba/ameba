@@ -50,14 +50,16 @@ module Ameba::Rule::Style
       return unless node_source.starts_with?("<<-")
 
       correct_indent = line_indent(source, location) + indent_by
-      return if node.heredoc_indent == correct_indent
+      heredoc_indent = node.heredoc_indent
+
+      return if heredoc_indent == correct_indent
 
       issue_for node, MSG % indent_by do |corrector|
         corrected_code = node_source
           .lines
           .map_with_index! do |line, idx|
             # ignore 1st line containing the marker
-            idx.zero? ? line : "#{" " * correct_indent}#{line.lstrip}"
+            idx.zero? ? line : "#{" " * correct_indent}#{line[heredoc_indent..]}"
           end
           .join('\n')
 
