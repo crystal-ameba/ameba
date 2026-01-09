@@ -617,6 +617,36 @@ module Ameba::AST
       end
     end
 
+    describe "#heredoc?" do
+      it "returns true if a node is a heredoc string" do
+        source = Source.new <<-CRYSTAL
+          <<-FOO
+            This is a heredoc
+            FOO
+          CRYSTAL
+
+        subject.heredoc?(source.ast, source).should be_true
+      end
+
+      it "returns true if a node is a heredoc string interpolation" do
+        source = Source.new <<-'CRYSTAL'
+          <<-FOO
+            This is a heredoc #{1 + 2}
+            FOO
+          CRYSTAL
+
+        subject.heredoc?(source.ast, source).should be_true
+      end
+
+      it "returns false if a node is a regular string interpolation" do
+        source = Source.new <<-'CRYSTAL'
+          "This is not a heredoc #{1 + 2}"
+          CRYSTAL
+
+        subject.heredoc?(source.ast, source).should be_false
+      end
+    end
+
     describe "#control_exp_code" do
       it "returns the exp code of a control expression" do
         s = "return 1"

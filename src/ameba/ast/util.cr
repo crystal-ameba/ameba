@@ -255,6 +255,16 @@ module Ameba::AST::Util
     doc.lines.first?.try(&.strip) == ":nodoc:"
   end
 
+  # Returns `true` if node is a _heredoc_, `false` otherwise.
+  def heredoc?(node, source : Source)
+    return false unless node.is_a?(Crystal::StringInterpolation) ||
+                        node.is_a?(Crystal::StringLiteral)
+    return false unless location = node.location
+    return false unless location_pos = source.pos(location)
+
+    source.code[location_pos..(location_pos + 2)]? == "<<-"
+  end
+
   # Returns the exp code of a control expression.
   # Wraps implicit tuple literal with curly brackets (e.g. multi-return).
   def control_exp_code(node : Crystal::ControlExpression, code_lines)
