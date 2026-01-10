@@ -25,12 +25,36 @@ module Ameba::Rule::Style
   # The `IndentBy` configuration option changes the enforced indentation level
   # of the _heredoc_.
   #
+  # If `BodyAutoDedent` is enabled (default), the body of the _heredoc_ will be
+  # automatically dedented to the minimum indentation level of the body lines.
+  #
+  # For example:
+  #
+  # ```
+  # <<-HEREDOC
+  #   <article>
+  #     ...
+  #   </article>
+  # HEREDOC
+  # ```
+  #
+  # Will be automatically dedented to:
+  #
+  # ```
+  # <<-HEREDOC
+  #   <article>
+  #     ...
+  #   </article>
+  #   HEREDOC
+  # ```
+  #
   # YAML configuration example:
   #
   # ```
   # Style/HeredocIndent:
   #   Enabled: true
   #   IndentBy: 2
+  #   BodyAutoDedent: true
   # ```
   class HeredocIndent < Base
     include AST::Util
@@ -39,6 +63,7 @@ module Ameba::Rule::Style
       since_version "1.7.0"
       description "Recommends heredoc bodies are indented consistently"
       indent_by 2
+      body_auto_dedent true
     end
 
     MSG = "Heredoc body should be indented by %d spaces"
@@ -55,11 +80,24 @@ module Ameba::Rule::Style
       return if heredoc_indent == correct_indent
 
       issue_for node, MSG % indent_by do |corrector|
-        corrected_code = node_source
-          .lines
+        source_lines = node_source.lines
+        body_dedent =
+          if body_auto_dedent?
+            source_lines[1...-1]
+              .min_of(&.each_char.take_while(&.whitespace?).size)
+          else
+            heredoc_indent
+          end
+
+        corrected_code = source_lines
           .map_with_index! do |line, idx|
             # ignore 1st line containing the marker
-            idx.zero? ? line : "#{" " * correct_indent}#{line[heredoc_indent..]}"
+            next line if idx.zero?
+
+            dedent =
+              idx == source_lines.size - 1 ? heredoc_indent : body_dedent
+
+            "#{" " * correct_indent}#{line[dedent..]}"
           end
           .join('\n')
 
