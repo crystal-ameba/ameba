@@ -18,6 +18,11 @@
 module Ameba
   extend self
 
+  # Returns `true` if the current `VERSION` is a development version.
+  def dev? : Bool
+    VERSION.ends_with?("-dev")
+  end
+
   # Initializes `Ameba::Runner` and runs it.
   # Can be configured via `config` parameter.
   #
