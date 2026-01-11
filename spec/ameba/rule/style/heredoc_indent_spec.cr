@@ -127,6 +127,19 @@ module Ameba::Rule::Style
         CRYSTAL
     end
 
+    it "works with empty heredoc string" do
+      source = expect_issue subject, <<-CRYSTAL
+        <<-HTML
+        # ^^^^^ error: Heredoc body should be indented by 2 spaces
+        HTML
+        CRYSTAL
+
+      expect_correction source, <<-CRYSTAL
+        <<-HTML
+          HTML
+        CRYSTAL
+    end
+
     context "properties" do
       context "#indent_by" do
         rule = HeredocIndent.new
