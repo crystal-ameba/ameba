@@ -15,7 +15,7 @@ module Ameba::Formatter
   describe JSONFormatter do
     context "metadata" do
       it "shows ameba version" do
-        get_result["metadata"]["ameba_version"].should eq Ameba::VERSION
+        get_result["metadata"]["ameba_version"].should eq Ameba.version.to_s
       end
 
       it "shows crystal version" do

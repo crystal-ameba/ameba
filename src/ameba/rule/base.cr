@@ -169,10 +169,8 @@ module Ameba::Rule
       # # => "https://crystal-ameba.github.io/ameba/master/Ameba/Rule/Lint/Syntax.html"
       # ```
       class_getter documentation_url : String do
-        version = Ameba.dev? ? "master" : VERSION
-
         "https://crystal-ameba.github.io/ameba/%s/Ameba/Rule/%s.html" % {
-          version, rule_name,
+          Ameba.version.for_docs, rule_name,
         }
       end
 

@@ -18,9 +18,9 @@
 module Ameba
   extend self
 
-  # Returns `true` if the current `VERSION` is a development version.
-  def dev? : Bool
-    VERSION.ends_with?("-dev")
+  # Returns the version object of Ameba.
+  def version : Version
+    Version::INSTANCE
   end
 
   # Initializes `Ameba::Runner` and runs it.
