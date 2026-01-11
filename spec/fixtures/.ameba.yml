@@ -3,5 +3,6 @@ Version: "1.5.0"
 Formatter:
   Name: flycheck
 
-Lint/ComparisonToBoolean:
+Layout/LineLength:
   Enabled: true
+  MaxLength: 111
