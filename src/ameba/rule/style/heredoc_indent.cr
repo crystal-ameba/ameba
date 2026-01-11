@@ -81,12 +81,12 @@ module Ameba::Rule::Style
 
       issue_for node, MSG % indent_by do |corrector|
         source_lines = node_source.lines
-        body_dedent =
-          if body_auto_dedent?
+        if body_auto_dedent?
+          body_dedent =
             source_lines[1...-1]
               .reject!(&.empty?)
               .min_of?(&.each_char.take_while(&.whitespace?).size)
-          end
+        end
         body_dedent ||= heredoc_indent
 
         corrected_code = source_lines
