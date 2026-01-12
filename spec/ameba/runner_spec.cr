@@ -65,6 +65,20 @@ module Ameba
         Runner.new(rules, [source], formatter, default_severity, false, v1_10_0).run.success?.should be_false
       end
 
+      it "skips rules based on severity" do
+        rules = [ErrorRule.new] of Rule::Base
+
+        Source.new.tap do |source|
+          Runner.new(rules, [source], formatter, :convention).run
+          source.issues.size.should eq(1)
+        end
+
+        Source.new.tap do |source|
+          Runner.new(rules, [source], formatter, :warning).run
+          source.issues.should be_empty
+        end
+      end
+
       it "skips rule check if source is excluded" do
         path = "source.cr"
         source = Source.new(path: path)

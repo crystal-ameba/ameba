@@ -79,13 +79,19 @@ module Ameba
     protected def initialize(rules, sources, @formatter, @severity, @autocorrect = false, @version = nil, @root = Path[Dir.current])
       @sources = sources.sort_by(&.path)
       @rules =
-        rules.select { |rule| rule_runnable?(rule, @version) }
+        rules.select(&->rule_runnable?(Rule::Base))
       @unneeded_disable_directive_rule =
         rules.find &.class.==(Rule::Lint::UnneededDisableDirective)
     end
 
-    protected def rule_runnable?(rule, version)
-      rule.enabled? && !rule.special? && rule_satisfies_version?(rule, version)
+    protected def rule_runnable?(rule)
+      rule.enabled? && !rule.special? &&
+        rule_satisfies_severity?(rule, @severity) &&
+        rule_satisfies_version?(rule, @version)
+    end
+
+    protected def rule_satisfies_severity?(rule, severity)
+      rule.severity <= severity
     end
 
     protected def rule_satisfies_version?(rule, version)
@@ -188,7 +194,7 @@ module Ameba
     end
 
     # Indicates whether the last inspection successful or not.
-    # It returns `true` if no issues matching severity in sources found, `false` otherwise.
+    # It returns `true` if no issues are found, `false` otherwise.
     #
     # ```
     # runner = Ameba::Runner.new config
@@ -196,9 +202,7 @@ module Ameba
     # runner.success? # => true or false
     # ```
     def success?
-      @sources.all? &.issues.none? do |issue|
-        issue.enabled? && issue.rule.severity <= @severity
-      end
+      @sources.all? &.issues.none? &.enabled?
     end
 
     private MAX_ITERATIONS = 200
