@@ -135,7 +135,7 @@ module Ameba::Formatter
     end
 
     record Metadata,
-      ameba_version : String = Ameba::VERSION,
+      ameba_version : String = Ameba.version.to_s,
       crystal_version : String = Crystal::VERSION do
       include JSON::Serializable
     end

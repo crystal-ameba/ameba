@@ -110,7 +110,7 @@ module Ameba::Formatter
           pluralize(failures, "failure"),
         }
         output.puts
-        output.puts "> Ameba version: **%s**" % Ameba::VERSION
+        output.puts "> Ameba version: **%s**" % Ameba.version
         output.puts "> Crystal version: **%s**" % Crystal::VERSION
       end
     end

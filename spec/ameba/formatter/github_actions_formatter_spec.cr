@@ -52,7 +52,7 @@ module Ameba::Formatter
           summary.should contain "## Ameba Results :green_heart:"
           summary.should contain "Finished in"
           summary.should contain "**1** sources inspected, **0** failures."
-          summary.should contain "> Ameba version: **#{Ameba::VERSION}**"
+          summary.should contain "> Ameba version: **#{Ameba.version}**"
         ensure
           ENV["GITHUB_STEP_SUMMARY"] = prev_summary
           File.delete(summary_filename) rescue nil
