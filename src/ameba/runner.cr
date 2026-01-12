@@ -85,10 +85,7 @@ module Ameba
     end
 
     protected def rule_runnable?(rule, version)
-      rule.enabled? &&
-        !rule.special? &&
-        rule.severity <= @severity &&
-        rule_satisfies_version?(rule, version)
+      rule.enabled? && !rule.special? && rule_satisfies_version?(rule, version)
     end
 
     protected def rule_satisfies_version?(rule, version)
@@ -199,7 +196,9 @@ module Ameba
     # runner.success? # => true or false
     # ```
     def success?
-      @sources.all? &.issues.none? &.enabled?
+      @sources.all? &.issues.none? do |issue|
+        issue.enabled? && issue.rule.severity <= @severity
+      end
     end
 
     private MAX_ITERATIONS = 200
