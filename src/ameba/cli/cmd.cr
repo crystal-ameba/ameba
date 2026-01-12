@@ -16,7 +16,7 @@ module Ameba::CLI
     property except : Set(String)?
     property describe_rule : String?
     property location_to_explain : Crystal::Location?
-    property fail_level : Severity?
+    property severity : Severity?
     property stdin_filename : String?
     property? skip_reading_config = false
     property? rules = false
@@ -168,7 +168,7 @@ module Ameba::CLI
 
       parser.on("--fail-level SEVERITY",
         "Change the level of failure to exit (default: #{Rule::Base.default_severity})") do |level|
-        opts.fail_level = Severity.parse(level) if level.presence
+        opts.severity = Severity.parse(level) if level.presence
       end
 
       parser.on("-e", "--explain PATH:line:column",
@@ -216,8 +216,8 @@ module Ameba::CLI
     if excluded = opts.excluded
       config.excluded += excluded
     end
-    if fail_level = opts.fail_level
-      config.severity = fail_level
+    if severity = opts.severity
+      config.severity = severity
     end
 
     configure_formatter(config, opts)

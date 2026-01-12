@@ -145,17 +145,17 @@ module Ameba::CLI
       context "--fail-level" do
         it "configures fail level Convention" do
           opts = CLI.parse_args %w[--fail-level convention]
-          opts.fail_level.should eq Severity::Convention
+          opts.severity.should eq Severity::Convention
         end
 
         it "configures fail level Warning" do
           opts = CLI.parse_args %w[--fail-level Warning]
-          opts.fail_level.should eq Severity::Warning
+          opts.severity.should eq Severity::Warning
         end
 
         it "configures fail level Error" do
           opts = CLI.parse_args %w[--fail-level error]
-          opts.fail_level.should eq Severity::Error
+          opts.severity.should eq Severity::Error
         end
 
         it "raises if fail level is incorrect" do
