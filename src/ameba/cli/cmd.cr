@@ -91,6 +91,7 @@ module Ameba::CLI
     end
   end
 
+  # ameba:disable Metrics/CyclomaticComplexity
   def parse_args(args, opts = Opts.new, output : IO = STDOUT)
     OptionParser.parse(args) do |parser|
       parser.banner = "Usage: ameba [options] [file1 file2 ...]"
@@ -129,26 +130,26 @@ module Ameba::CLI
       end
 
       parser.on("-c", "--config PATH", "Specify a configuration file") do |path|
-        opts.config = Path[path] unless path.empty?
+        opts.config = Path[path] if path.presence
       end
 
       parser.on("-u", "--up-to-version VERSION", "Choose a version") do |version|
-        opts.version = version
+        opts.version = version if version.presence
       end
 
       parser.on("-f", "--format FORMATTER",
         "Choose an output formatter: #{Config.formatter_names}") do |formatter|
-        opts.formatter = formatter
+        opts.formatter = formatter if formatter.presence
       end
 
       parser.on("--only RULE1,RULE2,...",
         "Run only given rules (or groups)") do |rules|
-        opts.only = rules.split(',').to_set
+        opts.only = rules.split(',').to_set if rules.presence
       end
 
       parser.on("--except RULE1,RULE2,...",
         "Disable the given rules (or groups)") do |rules|
-        opts.except = rules.split(',').to_set
+        opts.except = rules.split(',').to_set if rules.presence
       end
 
       parser.on("--all", "Enable all available rules") do
@@ -167,7 +168,7 @@ module Ameba::CLI
 
       parser.on("--fail-level SEVERITY",
         "Change the level of failure to exit (default: #{Rule::Base.default_severity})") do |level|
-        opts.fail_level = Severity.parse(level)
+        opts.fail_level = Severity.parse(level) if level.presence
       end
 
       parser.on("-e", "--explain PATH:line:column",
@@ -189,8 +190,8 @@ module Ameba::CLI
         opts.colors = false
       end
 
-      parser.on("--stdin-filename FILENAME", "Read source from STDIN") do |file|
-        opts.stdin_filename = file
+      parser.on("--stdin-filename FILENAME", "Read source from STDIN") do |filename|
+        opts.stdin_filename = filename if filename.presence
       end
     end
 
