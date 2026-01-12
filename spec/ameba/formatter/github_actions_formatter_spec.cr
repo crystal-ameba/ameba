@@ -69,7 +69,7 @@ module Ameba::Formatter
           begin
             source = Source.new path: "src/source.cr"
             source.add_issue(DummyRule.new, {1, 1}, {2, 1}, "DummyRuleError")
-            source.add_issue(DummyRule.new, {1, 1}, "DummyRuleError 2")
+            source.add_issue(DummyRule.new, {1, 1}, "DummyRuleError 2|3")
             source.add_issue(NamedRule.new, {1, 2}, "NamedRuleError", status: :disabled)
 
             subject.finished([source])
@@ -91,11 +91,11 @@ module Ameba::Formatter
               )
               summary.should contain(
                 "| [1](https://github.com/#{repo}/blob/#{sha}/src/source.cr#L1) " \
-                "| Convention | #{linked_name} | DummyRuleError 2 |"
+                "| Convention | #{linked_name} | DummyRuleError 2\\|3 |"
               )
             else
               summary.should contain "| 1-2 | Convention | #{linked_name} | DummyRuleError |"
-              summary.should contain "| 1 | Convention | #{linked_name} | DummyRuleError 2 |"
+              summary.should contain "| 1 | Convention | #{linked_name} | DummyRuleError 2\\|3 |"
             end
             summary.should_not contain "NamedRuleError"
             summary.should contain "**1** sources inspected, **2** failures."
