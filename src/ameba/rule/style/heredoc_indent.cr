@@ -84,15 +84,15 @@ module Ameba::Rule::Style
         body_dedent =
           if body_auto_dedent?
             source_lines[1...-1]
+              .reject!(&.empty?)
               .min_of(&.each_char.take_while(&.whitespace?).size)
-          else
-            heredoc_indent
           end
+        body_dedent ||= heredoc_indent
 
         corrected_code = source_lines
           .map_with_index! do |line, idx|
             # ignore 1st line containing the marker
-            next line if idx.zero?
+            next line if idx.zero? || line.empty?
 
             dedent =
               idx == source_lines.size - 1 ? heredoc_indent : body_dedent
