@@ -92,7 +92,7 @@ module Ameba::Formatter
                     issue.rule.name,
                     issue.rule.class.documentation_url,
                   },
-                  issue.message,
+                  issue.message.gsub('|', "\\|"),
                 }
               end
               output << "\n"
