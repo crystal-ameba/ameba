@@ -16,7 +16,7 @@
 <script type="text/javascript" src="../js/doc.js"></script>
 
   <meta name="repository-name" content="ameba">
-  <title>Ameba::Spec - ameba master</title>
+  <title>Ameba::Version - ameba master</title>
   <script type="text/javascript">
     CrystalDocs.base_path = "../";
   </script>
@@ -1054,7 +1054,7 @@
       
     </li>
   
-  <li class="parent open current" data-id="ameba/Ameba/Spec" data-name="ameba::spec">
+  <li class="parent " data-id="ameba/Ameba/Spec" data-name="ameba::spec">
       <a href="../Ameba/Spec.html">Spec</a>
       
         <ul>
@@ -1094,7 +1094,7 @@
       
     </li>
   
-  <li class=" " data-id="ameba/Ameba/Version" data-name="ameba::version">
+  <li class=" current" data-id="ameba/Ameba/Version" data-name="ameba::version">
       <a href="../Ameba/Version.html">Version</a>
       
     </li>
@@ -1114,11 +1114,13 @@
 <h1 class="type-name">
 
   <span class="kind">
-    module
-  </span> Ameba::<wbr>Spec
+    class
+  </span> Ameba::<wbr>Version
 
 </h1>
 
+
+  <ul class="superclass-hierarchy"><li class="superclass"><a href="../Ameba/Version.html">Ameba::Version</a></li><li class="superclass">Reference</li><li class="superclass">Object</li></ul>
 
 
 
@@ -1148,15 +1150,8 @@
   </h2>
   
     
-      <a href="https://github.com/crystal-ameba/ameba/blob/aac28bc/src/ameba/spec/annotated_source.cr#L2" target="_blank">
-        ameba/spec/annotated_source.cr
-      </a>
-    
-    <br/>
-  
-    
-      <a href="https://github.com/crystal-ameba/ameba/blob/aac28bc/src/ameba/spec/be_valid.cr#L1" target="_blank">
-        ameba/spec/be_valid.cr
+      <a href="https://github.com/crystal-ameba/ameba/blob/aac28bc/src/ameba/version.cr#L11" target="_blank">
+        ameba/version.cr
       </a>
     
     <br/>
@@ -1164,6 +1159,55 @@
 
 
 
+  
+    <h2>
+      <a id="constant-summary" class="anchor" href="#constant-summary">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>
+      Constant Summary
+    </h2>
+  
+  <dl>
+    
+      <dt class="entry-const" id="INSTANCE">
+        <strong>INSTANCE</strong> = <code><span class="k">begin</span>
+  version <span class="o">=</span> <span class="t">SemanticVersion</span>.parse(<span class="t">VERSION</span>)
+  <span class="k">if</span> version.build
+  <span class="k">else</span>
+    version <span class="o">=</span> version.copy_with(build: <span class="t">GIT_SHA</span>.try <span class="k">do</span> <span class="o">|</span>commit<span class="o">|</span> <span class="s">&quot;git.commit.</span><span class="i">#{</span>commit<span class="i">}</span><span class="s">&quot;</span> <span class="k">end</span>)
+  <span class="k">end</span>
+  new(version)
+<span class="k">end</span></code>
+      </dt>
+      
+      <dd class="entry-const-doc">
+        <p>Cached version object.</p>
+      </dd>
+      
+    
+  </dl>
+
+
+
+  
+  <h2>
+    <a id="constructors" class="anchor" href="#constructors">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>
+    Constructors
+  </h2>
+  <ul class="list-summary">
+    
+      <li class="entry-summary">
+        <a href="#new%28version%3ASemanticVersion%29-class-method" class="signature"><strong>.new</strong>(version : SemanticVersion)</a>
+        
+      </li>
+    
+  </ul>
 
 
   
@@ -1171,21 +1215,267 @@
   
 
   
+  <h2>
+    <a id="instance-method-summary" class="anchor" href="#instance-method-summary">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>
+    Instance Method Summary
+  </h2>
+  <ul class="list-summary">
+    
+      <li class="entry-summary">
+        <a href="#dev%3F%3ABool-instance-method" class="signature"><strong>#dev?</strong> : Bool</a>
+        
+          <div class="summary"><p>Returns <code>true</code> if the current <code><a href="../Ameba/Version.html#version%3ASemanticVersion-instance-method">#version</a></code> is a development version.</p></div>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#for_docs%3AString-instance-method" class="signature"><strong>#for_docs</strong> : String</a>
+        
+          <div class="summary"><p>Returns the <code><a href="../Ameba/Version.html#version%3ASemanticVersion-instance-method">#version</a></code> without prerelease and build metadata.</p></div>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#for_production%3AString-instance-method" class="signature"><strong>#for_production</strong> : String</a>
+        
+          <div class="summary"><p>Returns the <code><a href="../Ameba/Version.html#version%3ASemanticVersion-instance-method">#version</a></code> without prerelease and build metadata.</p></div>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#release_candidate%3F%3ABool-instance-method" class="signature"><strong>#release_candidate?</strong> : Bool</a>
+        
+          <div class="summary"><h1><a id="returns-true-if-the-current-version-is-a-release-candidate-version." class="anchor" href="#returns-true-if-the-current-version-is-a-release-candidate-version.">  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>Returns <code>true</code> if the current <code><a href="../Ameba/Version.html#version%3ASemanticVersion-instance-method">#version</a></code> is a release candidate version.</h1></div>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#to_s%28io%3AIO%29%3ANil-instance-method" class="signature"><strong>#to_s</strong>(io : IO) : Nil</a>
+        
+          <div class="summary"><p>Appends the version string to the given <em>io</em>.</p></div>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#version%3ASemanticVersion-instance-method" class="signature"><strong>#version</strong> : SemanticVersion</a>
+        
+          <div class="summary"><p>Returns the current version as a <code>SemanticVersion</code> object.</p></div>
+        
+      </li>
+    
+  </ul>
 
-  
 
 
   <div class="methods-inherited">
     
+      
+
+
+      
+
+
+      
+
+
+      
+
+
+    
+      
+
+
+      
+
+
+      
+
+
+      
+
+
+    
   </div>
 
   
+  <h2>
+    <a id="constructor-detail" class="anchor" href="#constructor-detail">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>
+    Constructor Detail
+  </h2>
+  
+    <div class="entry-detail" id="new(version:SemanticVersion)-class-method">
+      <div class="signature">
+        
+        def self.<strong>new</strong>(version : SemanticVersion)
+
+        <a class="method-permalink" href="#new%28version%3ASemanticVersion%29-class-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/crystal-ameba/ameba/blob/aac28bc/src/ameba/version.cr#L32" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+
 
   
 
   
 
   
+  <h2>
+    <a id="instance-method-detail" class="anchor" href="#instance-method-detail">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>
+    Instance Method Detail
+  </h2>
+  
+    <div class="entry-detail" id="dev?:Bool-instance-method">
+      <div class="signature">
+        
+        def <strong>dev?</strong> : Bool
+
+        <a class="method-permalink" href="#dev%3F%3ABool-instance-method">#</a>
+      </div>
+      
+        <div class="doc">
+          
+          <p>Returns <code>true</code> if the current <code><a href="../Ameba/Version.html#version%3ASemanticVersion-instance-method">#version</a></code> is a development version.</p>
+        </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/crystal-ameba/ameba/blob/aac28bc/src/ameba/version.cr#L51" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="for_docs:String-instance-method">
+      <div class="signature">
+        
+        def <strong>for_docs</strong> : String
+
+        <a class="method-permalink" href="#for_docs%3AString-instance-method">#</a>
+      </div>
+      
+        <div class="doc">
+          
+          <p>Returns the <code><a href="../Ameba/Version.html#version%3ASemanticVersion-instance-method">#version</a></code> without prerelease and build metadata.</p>
+        </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/crystal-ameba/ameba/blob/aac28bc/src/ameba/version.cr#L46" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="for_production:String-instance-method">
+      <div class="signature">
+        
+        def <strong>for_production</strong> : String
+
+        <a class="method-permalink" href="#for_production%3AString-instance-method">#</a>
+      </div>
+      
+        <div class="doc">
+          
+          <p>Returns the <code><a href="../Ameba/Version.html#version%3ASemanticVersion-instance-method">#version</a></code> without prerelease and build metadata.</p>
+        </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/crystal-ameba/ameba/blob/aac28bc/src/ameba/version.cr#L41" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="release_candidate?:Bool-instance-method">
+      <div class="signature">
+        
+        def <strong>release_candidate?</strong> : Bool
+
+        <a class="method-permalink" href="#release_candidate%3F%3ABool-instance-method">#</a>
+      </div>
+      
+        <div class="doc">
+          
+          <h1><a id="returns-true-if-the-current-version-is-a-release-candidate-version." class="anchor" href="#returns-true-if-the-current-version-is-a-release-candidate-version.">  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>Returns <code>true</code> if the current <code><a href="../Ameba/Version.html#version%3ASemanticVersion-instance-method">#version</a></code> is a release candidate version.</h1>
+        </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/crystal-ameba/ameba/blob/aac28bc/src/ameba/version.cr#L56" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="to_s(io:IO):Nil-instance-method">
+      <div class="signature">
+        
+        def <strong>to_s</strong>(io : IO) : Nil
+
+        <a class="method-permalink" href="#to_s%28io%3AIO%29%3ANil-instance-method">#</a>
+      </div>
+      
+        <div class="doc">
+          
+          <p>Appends the version string to the given <em>io</em>.</p>
+        </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/crystal-ameba/ameba/blob/aac28bc/src/ameba/version.cr#L36" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="version:SemanticVersion-instance-method">
+      <div class="signature">
+        
+        def <strong>version</strong> : SemanticVersion
+
+        <a class="method-permalink" href="#version%3ASemanticVersion-instance-method">#</a>
+      </div>
+      
+        <div class="doc">
+          
+          <p>Returns the current version as a <code>SemanticVersion</code> object.</p>
+        </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/crystal-ameba/ameba/blob/aac28bc/src/ameba/version.cr#L30" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+
 
 
 </div>

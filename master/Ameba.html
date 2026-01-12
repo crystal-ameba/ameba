@@ -1094,6 +1094,11 @@
       
     </li>
   
+  <li class=" " data-id="ameba/Ameba/Version" data-name="ameba::version">
+      <a href="Ameba/Version.html">Version</a>
+      
+    </li>
+  
 </ul>
 
       
@@ -1176,77 +1181,77 @@ config.files <span class="o">=</span> file_paths
   </h2>
   
     
-      <a href="https://github.com/crystal-ameba/ameba/blob/ed58931/src/ameba.cr#L18" target="_blank">
+      <a href="https://github.com/crystal-ameba/ameba/blob/aac28bc/src/ameba.cr#L18" target="_blank">
         ameba.cr
       </a>
     
     <br/>
   
     
-      <a href="https://github.com/crystal-ameba/ameba/blob/ed58931/src/ameba/glob_utils.cr#L1" target="_blank">
+      <a href="https://github.com/crystal-ameba/ameba/blob/aac28bc/src/ameba/glob_utils.cr#L1" target="_blank">
         ameba/glob_utils.cr
       </a>
     
     <br/>
   
     
-      <a href="https://github.com/crystal-ameba/ameba/blob/ed58931/src/ameba/inline_comments.cr#L1" target="_blank">
+      <a href="https://github.com/crystal-ameba/ameba/blob/aac28bc/src/ameba/inline_comments.cr#L1" target="_blank">
         ameba/inline_comments.cr
       </a>
     
     <br/>
   
     
-      <a href="https://github.com/crystal-ameba/ameba/blob/ed58931/src/ameba/issue.cr#L1" target="_blank">
+      <a href="https://github.com/crystal-ameba/ameba/blob/aac28bc/src/ameba/issue.cr#L1" target="_blank">
         ameba/issue.cr
       </a>
     
     <br/>
   
     
-      <a href="https://github.com/crystal-ameba/ameba/blob/ed58931/src/ameba/reportable.cr#L3" target="_blank">
+      <a href="https://github.com/crystal-ameba/ameba/blob/aac28bc/src/ameba/reportable.cr#L3" target="_blank">
         ameba/reportable.cr
       </a>
     
     <br/>
   
     
-      <a href="https://github.com/crystal-ameba/ameba/blob/ed58931/src/ameba/runner.cr#L1" target="_blank">
+      <a href="https://github.com/crystal-ameba/ameba/blob/aac28bc/src/ameba/runner.cr#L1" target="_blank">
         ameba/runner.cr
       </a>
     
     <br/>
   
     
-      <a href="https://github.com/crystal-ameba/ameba/blob/ed58931/src/ameba/severity.cr#L3" target="_blank">
+      <a href="https://github.com/crystal-ameba/ameba/blob/aac28bc/src/ameba/severity.cr#L3" target="_blank">
         ameba/severity.cr
       </a>
     
     <br/>
   
     
-      <a href="https://github.com/crystal-ameba/ameba/blob/ed58931/src/ameba/source.cr#L1" target="_blank">
+      <a href="https://github.com/crystal-ameba/ameba/blob/aac28bc/src/ameba/source.cr#L1" target="_blank">
         ameba/source.cr
       </a>
     
     <br/>
   
     
-      <a href="https://github.com/crystal-ameba/ameba/blob/ed58931/src/ameba/spec/support.cr#L7" target="_blank">
+      <a href="https://github.com/crystal-ameba/ameba/blob/aac28bc/src/ameba/spec/support.cr#L7" target="_blank">
         ameba/spec/support.cr
       </a>
     
     <br/>
   
     
-      <a href="https://github.com/crystal-ameba/ameba/blob/ed58931/src/ameba/tokenizer.cr#L3" target="_blank">
+      <a href="https://github.com/crystal-ameba/ameba/blob/aac28bc/src/ameba/tokenizer.cr#L3" target="_blank">
         ameba/tokenizer.cr
       </a>
     
     <br/>
   
     
-      <a href="https://github.com/crystal-ameba/ameba/blob/ed58931/src/ameba/version.cr#L1" target="_blank">
+      <a href="https://github.com/crystal-ameba/ameba/blob/aac28bc/src/ameba/version.cr#L1" target="_blank">
         ameba/version.cr
       </a>
     
@@ -1267,13 +1272,8 @@ config.files <span class="o">=</span> file_paths
   
   <dl>
     
-      <dt class="entry-const" id="GIT_SHA">
-        <strong>GIT_SHA</strong> = <code><span class="s">&quot;ed58931&quot;</span>.presence</code>
-      </dt>
-      
-    
       <dt class="entry-const" id="VERSION">
-        <strong>VERSION</strong> = <code><span class="o">{{</span> (<span class="s">`shards version \&quot;/home/runner/work/ameba/ameba/src/ameba\&quot;`</span>).chomp.stringify }}</code>
+        <strong>VERSION</strong> = <code>detect_version</code>
       </dt>
       
     
@@ -1299,16 +1299,16 @@ config.files <span class="o">=</span> file_paths
   <ul class="list-summary">
     
       <li class="entry-summary">
-        <a href="#dev%3F%3ABool-instance-method" class="signature"><strong>#dev?</strong> : Bool</a>
+        <a href="#run%28config%3DConfig.load%29-instance-method" class="signature"><strong>#run</strong>(config = <span class="t">Config</span>.load)</a>
         
-          <div class="summary"><p>Returns <code>true</code> if the current <code><a href="Ameba.html#VERSION">VERSION</a></code> is a development version.</p></div>
+          <div class="summary"><p>Initializes <code><a href="Ameba/Runner.html">Ameba::Runner</a></code> and runs it.</p></div>
         
       </li>
     
       <li class="entry-summary">
-        <a href="#run%28config%3DConfig.load%29-instance-method" class="signature"><strong>#run</strong>(config = <span class="t">Config</span>.load)</a>
+        <a href="#version%3AVersion-instance-method" class="signature"><strong>#version</strong> : Version</a>
         
-          <div class="summary"><p>Initializes <code><a href="Ameba/Runner.html">Ameba::Runner</a></code> and runs it.</p></div>
+          <div class="summary"><p>Returns the version object of Ameba.</p></div>
         
       </li>
     
@@ -1336,27 +1336,6 @@ config.files <span class="o">=</span> file_paths
     Instance Method Detail
   </h2>
   
-    <div class="entry-detail" id="dev?:Bool-instance-method">
-      <div class="signature">
-        
-        def <strong>dev?</strong> : Bool
-
-        <a class="method-permalink" href="#dev%3F%3ABool-instance-method">#</a>
-      </div>
-      
-        <div class="doc">
-          
-          <p>Returns <code>true</code> if the current <code><a href="Ameba.html#VERSION">VERSION</a></code> is a development version.</p>
-        </div>
-      
-      <br/>
-      <div>
-        
-          [<a href="https://github.com/crystal-ameba/ameba/blob/ed58931/src/ameba.cr#L22" target="_blank">View source</a>]
-        
-      </div>
-    </div>
-  
     <div class="entry-detail" id="run(config=Config.load)-instance-method">
       <div class="signature">
         
@@ -1377,7 +1356,28 @@ Can be configured via <code>config</code> parameter.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/ed58931/src/ameba.cr#L35" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/aac28bc/src/ameba.cr#L35" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="version:Version-instance-method">
+      <div class="signature">
+        
+        def <strong>version</strong> : <a href="Ameba/Version.html">Version</a>
+
+        <a class="method-permalink" href="#version%3AVersion-instance-method">#</a>
+      </div>
+      
+        <div class="doc">
+          
+          <p>Returns the version object of Ameba.</p>
+        </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/crystal-ameba/ameba/blob/aac28bc/src/ameba.cr#L22" target="_blank">View source</a>]
         
       </div>
     </div>
