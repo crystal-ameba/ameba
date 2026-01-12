@@ -166,8 +166,8 @@ module Ameba::CLI
         opts.skip_reading_config = true
       end
 
-      parser.on("--fail-level SEVERITY",
-        "Change the level of failure to exit (default: #{Rule::Base.default_severity})") do |level|
+      parser.on("--min-severity SEVERITY",
+        "Minimum severity of issues to report (default: #{Rule::Base.default_severity})") do |level|
         opts.severity = Severity.parse(level) if level.presence
       end
 
