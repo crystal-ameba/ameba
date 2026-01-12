@@ -67,7 +67,7 @@ module Ameba
       end
 
       it "creates a todo with version" do
-        create_todo.should contain "Ameba version #{VERSION}"
+        create_todo.should contain "Ameba version #{Ameba.version}"
       end
 
       it "creates a todo with a rule name" do
