@@ -86,6 +86,8 @@ module Ameba::Formatter
         )
       end
 
+      return if json_source.issues.empty?
+
       @mutex.synchronize do
         @result.summary.issues_count += json_source.issues.size
         @result.sources << json_source
