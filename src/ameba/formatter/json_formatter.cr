@@ -95,7 +95,7 @@ module Ameba::Formatter
     end
 
     def finished(sources) : Nil
-      @result.to_json @output
+      @result.to_pretty_json @output
     end
   end
 
