@@ -1,3 +1,5 @@
+{% skip_file if compare_versions(Crystal::VERSION, "1.19.0") < 0 %}
+
 module Ameba::Rule::Style
   # A rule that enforces usage of parentheses in method or macro calls.
   #
