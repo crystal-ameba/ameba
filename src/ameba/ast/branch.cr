@@ -20,9 +20,8 @@ module Ameba::AST
     # The parent branchable.
     getter parent : Branchable
 
-    delegate to_s, to: @node
-    delegate location, to: @node
-    delegate end_location, to: @node
+    delegate location, end_location, to_s,
+      to: @node
 
     def_equals_and_hash node, location
 
