@@ -3,9 +3,13 @@ module Ameba
 
   # Detects Ameba version from several sources.
   private macro detect_version
-    {{ env("AMEBA_BUILD_VERSION") ||
-         read_file?("#{__DIR__}/../../VERSION") ||
-         `shards version "#{__DIR__}"`.chomp.stringify }}
+    {%
+      version =
+        env("AMEBA_BUILD_VERSION") ||
+          read_file?("#{__DIR__}/../../VERSION") ||
+          `shards version "#{__DIR__}"`.stringify
+    %}
+    {{ version.chomp }}
   end
 
   class Version
