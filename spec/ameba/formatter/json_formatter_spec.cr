@@ -24,14 +24,22 @@ module Ameba::Formatter
     end
 
     context "sources" do
-      it "shows path to the source" do
+      it "doesn't add empty sources" do
         result = get_result [Source.new path: "source.cr"]
+        result["sources"].as_a.should be_empty
+      end
+
+      it "shows path to the source" do
+        source = Source.new path: "source.cr"
+        source.add_issue DummyRule.new, {1, 2}, "message"
+
+        result = get_result [source]
         result["sources"][0]["path"].should eq "source.cr"
       end
 
       it "shows rule name" do
         source = Source.new
-        source.add_issue DummyRule.new, {1, 2}, "message1"
+        source.add_issue DummyRule.new, {1, 2}, "message"
 
         result = get_result [source]
         result["sources"][0]["issues"][0]["rule_name"].should eq DummyRule.rule_name

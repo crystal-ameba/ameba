@@ -86,6 +86,8 @@ module Ameba::Formatter
         )
       end
 
+      return if json_source.issues.empty?
+
       @mutex.synchronize do
         @result.summary.issues_count += json_source.issues.size
         @result.sources << json_source
@@ -93,7 +95,7 @@ module Ameba::Formatter
     end
 
     def finished(sources) : Nil
-      @result.to_json @output
+      @result.to_pretty_json @output
     end
   end
 
