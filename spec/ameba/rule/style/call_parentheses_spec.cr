@@ -1,3 +1,5 @@
+{% skip_file if compare_versions(Crystal::VERSION, "1.19.0") < 0 %}
+
 require "../../../spec_helper"
 
 module Ameba::Rule::Style
