@@ -1154,10 +1154,25 @@ HEREDOC</span></code></pre>
   HEREDOC</span></code></pre>
 <p>The <code>IndentBy</code> configuration option changes the enforced indentation level
 of the <em>heredoc</em>.</p>
+<p>If <code>BodyAutoDedent</code> is enabled (default), the body of the <em>heredoc</em> will be
+automatically dedented to the minimum indentation level of the body lines.</p>
+<p>For example:</p>
+<pre><code class="language-crystal"><span class="s">&lt;&lt;-HEREDOC</span>
+<span class="s">  &lt;article&gt;
+    ...
+  &lt;/article&gt;
+HEREDOC</span></code></pre>
+<p>Will be automatically dedented to:</p>
+<pre><code class="language-crystal"><span class="s">&lt;&lt;-HEREDOC</span>
+<span class="s">  &lt;article&gt;
+    ...
+  &lt;/article&gt;
+  HEREDOC</span></code></pre>
 <p>YAML configuration example:</p>
 <pre><code class="language-crystal"><span class="t">Style</span><span class="o">/</span><span class="t">HeredocIndent</span>:
   <span class="t">Enabled</span>: <span class="n">true</span>
-  <span class="t">IndentBy</span>: <span class="n">2</span></code></pre>
+  <span class="t">IndentBy</span>: <span class="n">2</span>
+  <span class="t">BodyAutoDedent</span>: <span class="n">true</span></code></pre>
 
 
 
@@ -1202,7 +1217,7 @@ of the <em>heredoc</em>.</p>
   </h2>
   
     
-      <a href="https://github.com/crystal-ameba/ameba/blob/aa737d8/src/ameba/rule/style/heredoc_indent.cr#L35" target="_blank">
+      <a href="https://github.com/crystal-ameba/ameba/blob/a74c675/src/ameba/rule/style/heredoc_indent.cr#L59" target="_blank">
         ameba/rule/style/heredoc_indent.cr
       </a>
     
@@ -1308,6 +1323,16 @@ of the <em>heredoc</em>.</p>
     Instance Method Summary
   </h2>
   <ul class="list-summary">
+    
+      <li class="entry-summary">
+        <a href="#body_auto_dedent%3D%28body_auto_dedent%3ABool%29-instance-method" class="signature"><strong>#body_auto_dedent=</strong>(body_auto_dedent : Bool)</a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#body_auto_dedent%3F%3ABool-instance-method" class="signature"><strong>#body_auto_dedent?</strong> : Bool</a>
+        
+      </li>
     
       <li class="entry-summary">
         <a href="#description%3AString-instance-method" class="signature"><strong>#description</strong> : String</a>
@@ -1732,16 +1757,31 @@ HEREDOC</span></code></pre>
   HEREDOC</span></code></pre>
 <p>The <code>IndentBy</code> configuration option changes the enforced indentation level
 of the <em>heredoc</em>.</p>
+<p>If <code>BodyAutoDedent</code> is enabled (default), the body of the <em>heredoc</em> will be
+automatically dedented to the minimum indentation level of the body lines.</p>
+<p>For example:</p>
+<pre><code class="language-crystal"><span class="s">&lt;&lt;-HEREDOC</span>
+<span class="s">  &lt;article&gt;
+    ...
+  &lt;/article&gt;
+HEREDOC</span></code></pre>
+<p>Will be automatically dedented to:</p>
+<pre><code class="language-crystal"><span class="s">&lt;&lt;-HEREDOC</span>
+<span class="s">  &lt;article&gt;
+    ...
+  &lt;/article&gt;
+  HEREDOC</span></code></pre>
 <p>YAML configuration example:</p>
 <pre><code class="language-crystal"><span class="t">Style</span><span class="o">/</span><span class="t">HeredocIndent</span>:
   <span class="t">Enabled</span>: <span class="n">true</span>
-  <span class="t">IndentBy</span>: <span class="n">2</span></code></pre>
+  <span class="t">IndentBy</span>: <span class="n">2</span>
+  <span class="t">BodyAutoDedent</span>: <span class="n">true</span></code></pre>
         </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/aa737d8/src/ameba/rule/style/heredoc_indent.cr#L35" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/a74c675/src/ameba/rule/style/heredoc_indent.cr#L59" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1833,7 +1873,7 @@ of the <em>heredoc</em>.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/aa737d8/src/ameba/rule/style/heredoc_indent.cr#L38" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/a74c675/src/ameba/rule/style/heredoc_indent.cr#L62" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1851,6 +1891,34 @@ of the <em>heredoc</em>.</p>
 </a>
     Instance Method Detail
   </h2>
+  
+    <div class="entry-detail" id="body_auto_dedent=(body_auto_dedent:Bool)-instance-method">
+      <div class="signature">
+        
+        def <strong>body_auto_dedent=</strong>(body_auto_dedent : Bool)
+
+        <a class="method-permalink" href="#body_auto_dedent%3D%28body_auto_dedent%3ABool%29-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="body_auto_dedent?:Bool-instance-method">
+      <div class="signature">
+        
+        def <strong>body_auto_dedent?</strong> : Bool
+
+        <a class="method-permalink" href="#body_auto_dedent%3F%3ABool-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+      </div>
+    </div>
   
     <div class="entry-detail" id="description:String-instance-method">
       <div class="signature">
@@ -2003,7 +2071,7 @@ of the <em>heredoc</em>.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/aa737d8/src/ameba/rule/style/heredoc_indent.cr#L38" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/a74c675/src/ameba/rule/style/heredoc_indent.cr#L62" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2033,7 +2101,7 @@ of the <em>heredoc</em>.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/aa737d8/src/ameba/rule/style/heredoc_indent.cr#L46" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/a74c675/src/ameba/rule/style/heredoc_indent.cr#L71" target="_blank">View source</a>]
         
       </div>
     </div>
