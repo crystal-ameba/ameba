@@ -125,7 +125,7 @@ module Ameba
       end
 
       channels.each do |chan|
-        chan.receive.try { |e| raise e }
+        chan.receive.try { |ex| raise ex }
       end
 
       self
