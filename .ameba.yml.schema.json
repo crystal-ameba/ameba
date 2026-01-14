@@ -1748,6 +1748,10 @@
         "IndentBy": {
           "type": "number",
           "default": 2
+        },
+        "BodyAutoDedent": {
+          "type": "boolean",
+          "default": true
         }
       }
     },
