@@ -6,6 +6,12 @@ module Ameba::Rule::Style
   describe CallParentheses do
     subject = CallParentheses.new
 
+    it "ignores ECR files" do
+      expect_no_issues subject, <<-ECR, path: "foo.ecr"
+        <%= foo bar %>
+        ECR
+    end
+
     it "passes for valid method calls" do
       expect_no_issues subject, <<-CRYSTAL
         foo
