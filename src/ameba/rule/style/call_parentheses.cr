@@ -58,6 +58,10 @@ module Ameba::Rule::Style
 
     MSG = "Missing parentheses in method call"
 
+    def test(source)
+      super unless source.ecr?
+    end
+
     # ameba:disable Metrics/CyclomaticComplexity
     def test(source, node : Crystal::Call)
       return if node.args_in_brackets? ||
