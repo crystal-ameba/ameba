@@ -124,7 +124,8 @@ module Ameba::Rule::Style
           break
         when .ident?
           next unless in_body
-          return unless token.value == Crystal::Keyword::BEGIN
+          return unless (value = token.value).is_a?(Crystal::Keyword) &&
+                        value == Crystal::Keyword::BEGIN
           return token.location
         when .op_lparen?
           in_argument_list = true
@@ -144,7 +145,8 @@ module Ameba::Rule::Style
       end_loc = def_end_loc = nil
 
       Tokenizer.new(lexer).run do |token|
-        next unless token.value == Crystal::Keyword::END
+        next unless (value = token.value).is_a?(Crystal::Keyword) &&
+                    value == Crystal::Keyword::END
 
         end_loc, def_end_loc = def_end_loc, token.location
       end
