@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="generator" content="Crystal Docs 1.17.1">
+<meta name="generator" content="Crystal Docs 1.18.2">
 <meta name="crystal_docs.project_version" content="master">
 <meta name="crystal_docs.project_name" content="ameba">
 
@@ -1136,9 +1136,9 @@
 
   <p>This rule is used to identify usage of <code>compact</code> calls that follow <code>map</code>.</p>
 <p>For example, this is considered inefficient:</p>
-<pre><code class="language-crystal"><span class="s">%w[Alice Bob]</span>.map(<span class="o">&amp;</span>.match(<span class="o">/</span><span class="o">^</span><span class="t">A</span>.<span class="o">/</span>)).compact</code></pre>
+<pre><code class="language-crystal"><span class="s">%w[Alice Bob]</span>.map(<span class="o">&amp;</span>.match(<span class="s">/^A./</span>)).compact</code></pre>
 <p>And can be written as this:</p>
-<pre><code class="language-crystal"><span class="s">%w[Alice Bob]</span>.compact_map(<span class="o">&amp;</span>.match(<span class="o">/</span><span class="o">^</span><span class="t">A</span>.<span class="o">/</span>))</code></pre>
+<pre><code class="language-crystal"><span class="s">%w[Alice Bob]</span>.compact_map(<span class="o">&amp;</span>.match(<span class="s">/^A./</span>))</code></pre>
 <p>YAML configuration example:</p>
 <pre><code class="language-crystal"><span class="t">Performance</span><span class="o">/</span><span class="t">CompactAfterMap</span>:
   <span class="t">Enabled</span>: <span class="n">true</span></code></pre>
@@ -1186,7 +1186,7 @@
   </h2>
   
     
-      <a href="https://github.com/crystal-ameba/ameba/blob/a74c675/src/ameba/rule/performance/compact_after_map.cr#L24" target="_blank">
+      <a href="https://github.com/crystal-ameba/ameba/blob/89f565a/src/ameba/rule/performance/compact_after_map.cr#L24" target="_blank">
         ameba/rule/performance/compact_after_map.cr
       </a>
     
@@ -1752,9 +1752,9 @@
           
           <p>This rule is used to identify usage of <code>compact</code> calls that follow <code>map</code>.</p>
 <p>For example, this is considered inefficient:</p>
-<pre><code class="language-crystal"><span class="s">%w[Alice Bob]</span>.map(<span class="o">&amp;</span>.match(<span class="o">/</span><span class="o">^</span><span class="t">A</span>.<span class="o">/</span>)).compact</code></pre>
+<pre><code class="language-crystal"><span class="s">%w[Alice Bob]</span>.map(<span class="o">&amp;</span>.match(<span class="s">/^A./</span>)).compact</code></pre>
 <p>And can be written as this:</p>
-<pre><code class="language-crystal"><span class="s">%w[Alice Bob]</span>.compact_map(<span class="o">&amp;</span>.match(<span class="o">/</span><span class="o">^</span><span class="t">A</span>.<span class="o">/</span>))</code></pre>
+<pre><code class="language-crystal"><span class="s">%w[Alice Bob]</span>.compact_map(<span class="o">&amp;</span>.match(<span class="s">/^A./</span>))</code></pre>
 <p>YAML configuration example:</p>
 <pre><code class="language-crystal"><span class="t">Performance</span><span class="o">/</span><span class="t">CompactAfterMap</span>:
   <span class="t">Enabled</span>: <span class="n">true</span></code></pre>
@@ -1778,9 +1778,9 @@
           
           <p>This rule is used to identify usage of <code>compact</code> calls that follow <code>map</code>.</p>
 <p>For example, this is considered inefficient:</p>
-<pre><code class="language-crystal"><span class="s">%w[Alice Bob]</span>.map(<span class="o">&amp;</span>.match(<span class="o">/</span><span class="o">^</span><span class="t">A</span>.<span class="o">/</span>)).compact</code></pre>
+<pre><code class="language-crystal"><span class="s">%w[Alice Bob]</span>.map(<span class="o">&amp;</span>.match(<span class="s">/^A./</span>)).compact</code></pre>
 <p>And can be written as this:</p>
-<pre><code class="language-crystal"><span class="s">%w[Alice Bob]</span>.compact_map(<span class="o">&amp;</span>.match(<span class="o">/</span><span class="o">^</span><span class="t">A</span>.<span class="o">/</span>))</code></pre>
+<pre><code class="language-crystal"><span class="s">%w[Alice Bob]</span>.compact_map(<span class="o">&amp;</span>.match(<span class="s">/^A./</span>))</code></pre>
 <p>YAML configuration example:</p>
 <pre><code class="language-crystal"><span class="t">Performance</span><span class="o">/</span><span class="t">CompactAfterMap</span>:
   <span class="t">Enabled</span>: <span class="n">true</span></code></pre>
@@ -1789,7 +1789,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/a74c675/src/ameba/rule/performance/compact_after_map.cr#L24" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/89f565a/src/ameba/rule/performance/compact_after_map.cr#L24" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1881,7 +1881,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/a74c675/src/ameba/rule/performance/compact_after_map.cr#L27" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/89f565a/src/ameba/rule/performance/compact_after_map.cr#L27" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2023,7 +2023,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/a74c675/src/ameba/rule/performance/compact_after_map.cr#L27" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/89f565a/src/ameba/rule/performance/compact_after_map.cr#L27" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2053,7 +2053,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/a74c675/src/ameba/rule/performance/compact_after_map.cr#L38" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/89f565a/src/ameba/rule/performance/compact_after_map.cr#L38" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2069,7 +2069,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/a74c675/src/ameba/rule/performance/compact_after_map.cr#L34" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/89f565a/src/ameba/rule/performance/compact_after_map.cr#L34" target="_blank">View source</a>]
         
       </div>
     </div>

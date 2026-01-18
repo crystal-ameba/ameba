@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="generator" content="Crystal Docs 1.17.1">
+<meta name="generator" content="Crystal Docs 1.18.2">
 <meta name="crystal_docs.project_version" content="master">
 <meta name="crystal_docs.project_name" content="ameba">
 
@@ -1136,7 +1136,7 @@
 
   <p>This rule is used to identify usage of <code>is_a?/nil?</code> calls within filters.</p>
 <p>For example, this is considered invalid:</p>
-<pre><code class="language-crystal">matches <span class="o">=</span> <span class="s">%w[Alice Bob]</span>.map(<span class="o">&amp;</span>.match(<span class="o">/</span><span class="o">^</span><span class="t">A</span>.<span class="o">/</span>))
+<pre><code class="language-crystal">matches <span class="o">=</span> <span class="s">%w[Alice Bob]</span>.map(<span class="o">&amp;</span>.match(<span class="s">/^A./</span>))
 
 matches.any?(<span class="o">&amp;</span>.<span class="k">is_a?</span>(<span class="t">Regex</span><span class="t">::</span><span class="t">MatchData</span>)) <span class="c"># =&gt; true</span>
 matches.one?(<span class="o">&amp;</span>.<span class="k">nil?</span>)                    <span class="c"># =&gt; true</span>
@@ -1144,7 +1144,7 @@ matches.one?(<span class="o">&amp;</span>.<span class="k">nil?</span>)          
 <span class="k">typeof</span>(matches.reject(<span class="o">&amp;</span>.<span class="k">nil?</span>))                    <span class="c"># =&gt; Array(Regex::MatchData | Nil)</span>
 <span class="k">typeof</span>(matches.<span class="k">select</span>(<span class="o">&amp;</span>.<span class="k">is_a?</span>(<span class="t">Regex</span><span class="t">::</span><span class="t">MatchData</span>))) <span class="c"># =&gt; Array(Regex::MatchData | Nil)</span></code></pre>
 <p>And it should be written as this:</p>
-<pre><code class="language-crystal">matches <span class="o">=</span> <span class="s">%w[Alice Bob]</span>.map(<span class="o">&amp;</span>.match(<span class="o">/</span><span class="o">^</span><span class="t">A</span>.<span class="o">/</span>))
+<pre><code class="language-crystal">matches <span class="o">=</span> <span class="s">%w[Alice Bob]</span>.map(<span class="o">&amp;</span>.match(<span class="s">/^A./</span>))
 
 matches.any?(<span class="t">Regex</span><span class="t">::</span><span class="t">MatchData</span>) <span class="c"># =&gt; true</span>
 matches.one?(<span class="t">Nil</span>)              <span class="c"># =&gt; true</span>
@@ -1205,7 +1205,7 @@ matches.one?(<span class="t">Nil</span>)              <span class="c"># =&gt; tr
   </h2>
   
     
-      <a href="https://github.com/crystal-ameba/ameba/blob/a74c675/src/ameba/rule/style/is_a_filter.cr#L41" target="_blank">
+      <a href="https://github.com/crystal-ameba/ameba/blob/89f565a/src/ameba/rule/style/is_a_filter.cr#L41" target="_blank">
         ameba/rule/style/is_a_filter.cr
       </a>
     
@@ -1732,7 +1732,7 @@ matches.one?(<span class="t">Nil</span>)              <span class="c"># =&gt; tr
           
           <p>This rule is used to identify usage of <code>is_a?/nil?</code> calls within filters.</p>
 <p>For example, this is considered invalid:</p>
-<pre><code class="language-crystal">matches <span class="o">=</span> <span class="s">%w[Alice Bob]</span>.map(<span class="o">&amp;</span>.match(<span class="o">/</span><span class="o">^</span><span class="t">A</span>.<span class="o">/</span>))
+<pre><code class="language-crystal">matches <span class="o">=</span> <span class="s">%w[Alice Bob]</span>.map(<span class="o">&amp;</span>.match(<span class="s">/^A./</span>))
 
 matches.any?(<span class="o">&amp;</span>.<span class="k">is_a?</span>(<span class="t">Regex</span><span class="t">::</span><span class="t">MatchData</span>)) <span class="c"># =&gt; true</span>
 matches.one?(<span class="o">&amp;</span>.<span class="k">nil?</span>)                    <span class="c"># =&gt; true</span>
@@ -1740,7 +1740,7 @@ matches.one?(<span class="o">&amp;</span>.<span class="k">nil?</span>)          
 <span class="k">typeof</span>(matches.reject(<span class="o">&amp;</span>.<span class="k">nil?</span>))                    <span class="c"># =&gt; Array(Regex::MatchData | Nil)</span>
 <span class="k">typeof</span>(matches.<span class="k">select</span>(<span class="o">&amp;</span>.<span class="k">is_a?</span>(<span class="t">Regex</span><span class="t">::</span><span class="t">MatchData</span>))) <span class="c"># =&gt; Array(Regex::MatchData | Nil)</span></code></pre>
 <p>And it should be written as this:</p>
-<pre><code class="language-crystal">matches <span class="o">=</span> <span class="s">%w[Alice Bob]</span>.map(<span class="o">&amp;</span>.match(<span class="o">/</span><span class="o">^</span><span class="t">A</span>.<span class="o">/</span>))
+<pre><code class="language-crystal">matches <span class="o">=</span> <span class="s">%w[Alice Bob]</span>.map(<span class="o">&amp;</span>.match(<span class="s">/^A./</span>))
 
 matches.any?(<span class="t">Regex</span><span class="t">::</span><span class="t">MatchData</span>) <span class="c"># =&gt; true</span>
 matches.one?(<span class="t">Nil</span>)              <span class="c"># =&gt; true</span>
@@ -1762,7 +1762,7 @@ matches.one?(<span class="t">Nil</span>)              <span class="c"># =&gt; tr
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/a74c675/src/ameba/rule/style/is_a_filter.cr#L41" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/89f565a/src/ameba/rule/style/is_a_filter.cr#L41" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1854,7 +1854,7 @@ matches.one?(<span class="t">Nil</span>)              <span class="c"># =&gt; tr
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/a74c675/src/ameba/rule/style/is_a_filter.cr#L44" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/89f565a/src/ameba/rule/style/is_a_filter.cr#L44" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2024,7 +2024,7 @@ matches.one?(<span class="t">Nil</span>)              <span class="c"># =&gt; tr
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/a74c675/src/ameba/rule/style/is_a_filter.cr#L44" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/89f565a/src/ameba/rule/style/is_a_filter.cr#L44" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2054,7 +2054,7 @@ matches.one?(<span class="t">Nil</span>)              <span class="c"># =&gt; tr
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/a74c675/src/ameba/rule/style/is_a_filter.cr#L59" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/89f565a/src/ameba/rule/style/is_a_filter.cr#L59" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2070,7 +2070,7 @@ matches.one?(<span class="t">Nil</span>)              <span class="c"># =&gt; tr
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/a74c675/src/ameba/rule/style/is_a_filter.cr#L55" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/89f565a/src/ameba/rule/style/is_a_filter.cr#L55" target="_blank">View source</a>]
         
       </div>
     </div>
