@@ -58,7 +58,7 @@ module Ameba::Rule::Lint
       return if bad_names.empty?
 
       issue_for name_location_or(token, token.value),
-        MSG_NONEXISTENT_RULES % bad_names.join(", ")
+        MSG_NONEXISTENT_RULES % bad_names.map { |name| "`#{name}`" }.join(", ")
     end
   end
 end
