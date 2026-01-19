@@ -41,7 +41,8 @@ module Ameba::Rule::Lint
         next unless names = unneeded_disables(source, directive, token.location)
         next if names.empty?
 
-        issue_for name_location_or(token, token.value), MSG % names.join(", ")
+        issue_for name_location_or(token, token.value),
+          MSG % names.map { |name| "`#{name}`" }.join(", ")
       end
     end
 
