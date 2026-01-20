@@ -6,7 +6,7 @@ extend-ignore-re = [
   # fixed test values
   '[Ff][Oo][Oo]+',
   # words including a number are likely some kind of identifier
-  "[A-z]+[0-9]+",
+  "[a-zA-Z]+[0-9]+",
 ]
 
 [files]
