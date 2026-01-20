@@ -16,7 +16,7 @@
 <script type="text/javascript" src="../../../js/doc.js"></script>
 
   <meta name="repository-name" content="ameba">
-  <title>Ameba::Rule::Naming::VariableNames - ameba master</title>
+  <title>Ameba::Rule::Lint::UnusedRescueVariable - ameba master</title>
   <script type="text/javascript">
     CrystalDocs.base_path = "../../../";
   </script>
@@ -419,7 +419,7 @@
       
     </li>
   
-  <li class="parent " data-id="ameba/Ameba/Rule/Lint" data-name="ameba::rule::lint">
+  <li class="parent open current" data-id="ameba/Ameba/Rule/Lint" data-name="ameba::rule::lint">
       <a href="../../../Ameba/Rule/Lint.html">Lint</a>
       
         <ul>
@@ -664,7 +664,7 @@
       
     </li>
   
-  <li class=" " data-id="ameba/Ameba/Rule/Lint/UnusedRescueVariable" data-name="ameba::rule::lint::unusedrescuevariable">
+  <li class=" current" data-id="ameba/Ameba/Rule/Lint/UnusedRescueVariable" data-name="ameba::rule::lint::unusedrescuevariable">
       <a href="../../../Ameba/Rule/Lint/UnusedRescueVariable.html">UnusedRescueVariable</a>
       
     </li>
@@ -714,7 +714,7 @@
       
     </li>
   
-  <li class="parent open current" data-id="ameba/Ameba/Rule/Naming" data-name="ameba::rule::naming">
+  <li class="parent " data-id="ameba/Ameba/Rule/Naming" data-name="ameba::rule::naming">
       <a href="../../../Ameba/Rule/Naming.html">Naming</a>
       
         <ul>
@@ -774,7 +774,7 @@
       
     </li>
   
-  <li class=" current" data-id="ameba/Ameba/Rule/Naming/VariableNames" data-name="ameba::rule::naming::variablenames">
+  <li class=" " data-id="ameba/Ameba/Rule/Naming/VariableNames" data-name="ameba::rule::naming::variablenames">
       <a href="../../../Ameba/Rule/Naming/VariableNames.html">VariableNames</a>
       
     </li>
@@ -1120,12 +1120,12 @@
 
   <span class="kind">
     class
-  </span> Ameba::<wbr>Rule::<wbr>Naming::<wbr>VariableNames
+  </span> Ameba::<wbr>Rule::<wbr>Lint::<wbr>UnusedRescueVariable
 
 </h1>
 
 
-  <ul class="superclass-hierarchy"><li class="superclass"><a href="../../../Ameba/Rule/Naming/VariableNames.html">Ameba::Rule::Naming::VariableNames</a></li><li class="superclass"><a href="../../../Ameba/Rule/Base.html">Ameba::Rule::Base</a></li><li class="superclass">Reference</li><li class="superclass">Object</li></ul>
+  <ul class="superclass-hierarchy"><li class="superclass"><a href="../../../Ameba/Rule/Lint/UnusedRescueVariable.html">Ameba::Rule::Lint::UnusedRescueVariable</a></li><li class="superclass"><a href="../../../Ameba/Rule/Base.html">Ameba::Rule::Base</a></li><li class="superclass">Reference</li><li class="superclass">Object</li></ul>
 
 
 
@@ -1139,16 +1139,21 @@
     Overview
   </h2>
 
-  <p>A rule that enforces variable names to be in underscored case.</p>
-<p>For example, these variable names are considered valid:</p>
-<pre><code class="language-crystal">var_name <span class="o">=</span> <span class="n">1</span>
-name <span class="o">=</span> <span class="n">2</span>
-_another_good_name <span class="o">=</span> <span class="n">3</span></code></pre>
-<p>And these are invalid variable names:</p>
-<pre><code class="language-crystal">myBadNamedVar <span class="o">=</span> <span class="n">1</span>
-wrong_Name <span class="o">=</span> <span class="n">2</span></code></pre>
+  <p>A rule that disallows unused <code>rescue</code> variables.</p>
+<p>For example, this is considered invalid:</p>
+<pre><code class="language-crystal"><span class="k">begin</span>
+  raise <span class="t">MyException</span>.new(<span class="s">&quot;OH NO!&quot;</span>)
+<span class="k">rescue</span> ex : <span class="t">MyException</span>
+  puts <span class="s">&quot;Rescued MyException&quot;</span>
+<span class="k">end</span></code></pre>
+<p>and should be written as:</p>
+<pre><code class="language-crystal"><span class="k">begin</span>
+  raise <span class="t">MyException</span>.new(<span class="s">&quot;OH NO!&quot;</span>)
+<span class="k">rescue</span> <span class="t">MyException</span>
+  puts <span class="s">&quot;Rescued MyException&quot;</span>
+<span class="k">end</span></code></pre>
 <p>YAML configuration example:</p>
-<pre><code class="language-crystal"><span class="t">Naming</span><span class="o">/</span><span class="t">VariableNames</span>:
+<pre><code class="language-crystal"><span class="t">Lint</span><span class="o">/</span><span class="t">UnusedRescueVariable</span>:
   <span class="t">Enabled</span>: <span class="n">true</span></code></pre>
 
 
@@ -1166,6 +1171,8 @@ wrong_Name <span class="o">=</span> <span class="n">2</span></code></pre>
     Included Modules
   </h2>
   <ul class="other-types-list">
+    
+      <li class="other-type"><a href="../../../Ameba/AST/Util.html">Ameba::AST::Util</a></li>
     
       <li class="other-type">YAML::Serializable</li>
     
@@ -1192,8 +1199,8 @@ wrong_Name <span class="o">=</span> <span class="n">2</span></code></pre>
   </h2>
   
     
-      <a href="https://github.com/crystal-ameba/ameba/blob/7aaae7b/src/ameba/rule/naming/variable_names.cr#L25" target="_blank">
-        ameba/rule/naming/variable_names.cr
+      <a href="https://github.com/crystal-ameba/ameba/blob/7aaae7b/src/ameba/rule/lint/unused_rescue_variable.cr#L30" target="_blank">
+        ameba/rule/lint/unused_rescue_variable.cr
       </a>
     
     <br/>
@@ -1214,7 +1221,7 @@ wrong_Name <span class="o">=</span> <span class="n">2</span></code></pre>
   <dl>
     
       <dt class="entry-const" id="MSG">
-        <strong>MSG</strong> = <code><span class="s">&quot;Variable name should be underscore-cased: `%s`, not `%s`&quot;</span></code>
+        <strong>MSG</strong> = <code><span class="s">&quot;Unused `rescue` variable `%s`&quot;</span></code>
       </dt>
       
     
@@ -1241,7 +1248,7 @@ wrong_Name <span class="o">=</span> <span class="n">2</span></code></pre>
       <li class="entry-summary">
         <a href="#new%28config%3Dnil%29-class-method" class="signature"><strong>.new</strong>(config = <span class="n">nil</span>)</a>
         
-          <div class="summary"><p>A rule that enforces variable names to be in underscored case.</p></div>
+          <div class="summary"><p>A rule that disallows unused <code>rescue</code> variables.</p></div>
         
       </li>
     
@@ -1350,14 +1357,7 @@ wrong_Name <span class="o">=</span> <span class="n">2</span></code></pre>
       </li>
     
       <li class="entry-summary">
-        <a href="#test%28source%2Cnode%3ACrystal%3A%3AVar%7CCrystal%3A%3AInstanceVar%7CCrystal%3A%3AClassVar%29-instance-method" class="signature"><strong>#test</strong>(source, node : Crystal::Var | Crystal::InstanceVar | Crystal::ClassVar)</a>
-        
-      </li>
-    
-      <li class="entry-summary">
-        <a href="#test%28source%3ASource%29-instance-method" class="signature"><strong>#test</strong>(source : Source)</a>
-        
-          <div class="summary"><p>This method is designed to test the source passed in.</p></div>
+        <a href="#test%28source%2Cnode%3ACrystal%3A%3ARescue%29-instance-method" class="signature"><strong>#test</strong>(source, node : Crystal::Rescue)</a>
         
       </li>
     
@@ -1366,6 +1366,143 @@ wrong_Name <span class="o">=</span> <span class="n">2</span></code></pre>
 
 
   <div class="methods-inherited">
+    
+      
+
+  <h3>Instance methods inherited from module <code><a href="../../../Ameba/AST/Util.html">Ameba::AST::Util</a></code></h3>
+  
+  
+    <a href="../../../Ameba/AST/Util.html#abort%3F%28node%29-instance-method" class="tooltip">
+      <span>abort?(node)</span>
+    abort?</a>, 
+    
+  
+    <a href="../../../Ameba/AST/Util.html#control_exp_code%28node%3ACrystal%3A%3AControlExpression%2Ccode_lines%29-instance-method" class="tooltip">
+      <span>control_exp_code(node : Crystal::ControlExpression, code_lines)</span>
+    control_exp_code</a>, 
+    
+  
+    <a href="../../../Ameba/AST/Util.html#dynamic_literal%3F%28node%29%3ABool-instance-method" class="tooltip">
+      <span>dynamic_literal?(node) : Bool</span>
+    dynamic_literal?</a>, 
+    
+  
+    <a href="../../../Ameba/AST/Util.html#exit%3F%28node%29-instance-method" class="tooltip">
+      <span>exit?(node)</span>
+    exit?</a>, 
+    
+  
+    <a href="../../../Ameba/AST/Util.html#flow_command%3F%28node%2Cin_loop%29-instance-method" class="tooltip">
+      <span>flow_command?(node, in_loop)</span>
+    flow_command?</a>, 
+    
+  
+    <a href="../../../Ameba/AST/Util.html#flow_expression%3F%28node%2Cin_loop%3Dfalse%29-instance-method" class="tooltip">
+      <span>flow_expression?(node, in_loop = <span class="n">false</span>)</span>
+    flow_expression?</a>, 
+    
+  
+    <a href="../../../Ameba/AST/Util.html#has_arguments%3F%28node%29%3ABool-instance-method" class="tooltip">
+      <span>has_arguments?(node) : Bool</span>
+    has_arguments?</a>, 
+    
+  
+    <a href="../../../Ameba/AST/Util.html#has_block%3F%28node%29%3ABool-instance-method" class="tooltip">
+      <span>has_block?(node) : Bool</span>
+    has_block?</a>, 
+    
+  
+    <a href="../../../Ameba/AST/Util.html#literal%3F%28node%29%3ABool-instance-method" class="tooltip">
+      <span>literal?(node) : Bool</span>
+    literal?</a>, 
+    
+  
+    <a href="../../../Ameba/AST/Util.html#loop%3F%28node%29-instance-method" class="tooltip">
+      <span>loop?(node)</span>
+    loop?</a>, 
+    
+  
+    <a href="../../../Ameba/AST/Util.html#name_end_location%28node%29-instance-method" class="tooltip">
+      <span>name_end_location(node)</span>
+    name_end_location</a>, 
+    
+  
+    <a href="../../../Ameba/AST/Util.html#name_location%28node%29-instance-method" class="tooltip">
+      <span>name_location(node)</span>
+    name_location</a>, 
+    
+  
+    <a href="../../../Ameba/AST/Util.html#name_location_or%28token%3ACrystal%3A%3AToken%2Cname%2C%2A%2Cadjust_location_column_number%3Dnil%29-instance-method" class="tooltip">
+      <span>name_location_or(token : Crystal::Token, name, *, adjust_location_column_number = <span class="n">nil</span>)<br/>name_location_or(node : Crystal::ASTNode, *, adjust_location_column_number = <span class="n">nil</span>)</span>
+    name_location_or</a>, 
+    
+  
+    <a href="../../../Ameba/AST/Util.html#name_size%28node%29-instance-method" class="tooltip">
+      <span>name_size(node)</span>
+    name_size</a>, 
+    
+  
+    <a href="../../../Ameba/AST/Util.html#node_source%28node%2Ccode_lines%29-instance-method" class="tooltip">
+      <span>node_source(node, code_lines)</span>
+    node_source</a>, 
+    
+  
+    <a href="../../../Ameba/AST/Util.html#nodoc%3F%28node%29-instance-method" class="tooltip">
+      <span>nodoc?(node)</span>
+    nodoc?</a>, 
+    
+  
+    <a href="../../../Ameba/AST/Util.html#operator_method%3F%28node%29-instance-method" class="tooltip">
+      <span>operator_method?(node)</span>
+    operator_method?</a>, 
+    
+  
+    <a href="../../../Ameba/AST/Util.html#operator_method_name%3F%28name%3AString%29-instance-method" class="tooltip">
+      <span>operator_method_name?(name : String)</span>
+    operator_method_name?</a>, 
+    
+  
+    <a href="../../../Ameba/AST/Util.html#path_named%3F%28node%2C%2Anames%3AString%29%3ABool-instance-method" class="tooltip">
+      <span>path_named?(node, *names : String) : Bool</span>
+    path_named?</a>, 
+    
+  
+    <a href="../../../Ameba/AST/Util.html#raise%3F%28node%29-instance-method" class="tooltip">
+      <span>raise?(node)</span>
+    raise?</a>, 
+    
+  
+    <a href="../../../Ameba/AST/Util.html#source_between%28loc%2Cend_loc%2Ccode_lines%29%3AString%7CNil-instance-method" class="tooltip">
+      <span>source_between(loc, end_loc, code_lines) : String | Nil</span>
+    source_between</a>, 
+    
+  
+    <a href="../../../Ameba/AST/Util.html#static_literal%3F%28node%29%3ABool-instance-method" class="tooltip">
+      <span>static_literal?(node) : Bool</span>
+    static_literal?</a>, 
+    
+  
+    <a href="../../../Ameba/AST/Util.html#suffix%3F%28node%29-instance-method" class="tooltip">
+      <span>suffix?(node)</span>
+    suffix?</a>, 
+    
+  
+    <a href="../../../Ameba/AST/Util.html#takes_arguments%3F%28node%29%3ABool-instance-method" class="tooltip">
+      <span>takes_arguments?(node) : Bool</span>
+    takes_arguments?</a>
+    
+  
+
+
+      
+
+
+      
+
+
+      
+
+
     
       
 
@@ -1562,23 +1699,28 @@ wrong_Name <span class="o">=</span> <span class="n">2</span></code></pre>
       
         <div class="doc">
           
-          <p>A rule that enforces variable names to be in underscored case.</p>
-<p>For example, these variable names are considered valid:</p>
-<pre><code class="language-crystal">var_name <span class="o">=</span> <span class="n">1</span>
-name <span class="o">=</span> <span class="n">2</span>
-_another_good_name <span class="o">=</span> <span class="n">3</span></code></pre>
-<p>And these are invalid variable names:</p>
-<pre><code class="language-crystal">myBadNamedVar <span class="o">=</span> <span class="n">1</span>
-wrong_Name <span class="o">=</span> <span class="n">2</span></code></pre>
+          <p>A rule that disallows unused <code>rescue</code> variables.</p>
+<p>For example, this is considered invalid:</p>
+<pre><code class="language-crystal"><span class="k">begin</span>
+  raise <span class="t">MyException</span>.new(<span class="s">&quot;OH NO!&quot;</span>)
+<span class="k">rescue</span> ex : <span class="t">MyException</span>
+  puts <span class="s">&quot;Rescued MyException&quot;</span>
+<span class="k">end</span></code></pre>
+<p>and should be written as:</p>
+<pre><code class="language-crystal"><span class="k">begin</span>
+  raise <span class="t">MyException</span>.new(<span class="s">&quot;OH NO!&quot;</span>)
+<span class="k">rescue</span> <span class="t">MyException</span>
+  puts <span class="s">&quot;Rescued MyException&quot;</span>
+<span class="k">end</span></code></pre>
 <p>YAML configuration example:</p>
-<pre><code class="language-crystal"><span class="t">Naming</span><span class="o">/</span><span class="t">VariableNames</span>:
+<pre><code class="language-crystal"><span class="t">Lint</span><span class="o">/</span><span class="t">UnusedRescueVariable</span>:
   <span class="t">Enabled</span>: <span class="n">true</span></code></pre>
         </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/7aaae7b/src/ameba/rule/naming/variable_names.cr#L25" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/7aaae7b/src/ameba/rule/lint/unused_rescue_variable.cr#L30" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1670,7 +1812,7 @@ wrong_Name <span class="o">=</span> <span class="n">2</span></code></pre>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/7aaae7b/src/ameba/rule/naming/variable_names.cr#L26" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/7aaae7b/src/ameba/rule/lint/unused_rescue_variable.cr#L33" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1812,7 +1954,7 @@ wrong_Name <span class="o">=</span> <span class="n">2</span></code></pre>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/7aaae7b/src/ameba/rule/naming/variable_names.cr#L26" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/7aaae7b/src/ameba/rule/lint/unused_rescue_variable.cr#L33" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1831,46 +1973,18 @@ wrong_Name <span class="o">=</span> <span class="n">2</span></code></pre>
       </div>
     </div>
   
-    <div class="entry-detail" id="test(source,node:Crystal::Var|Crystal::InstanceVar|Crystal::ClassVar)-instance-method">
+    <div class="entry-detail" id="test(source,node:Crystal::Rescue)-instance-method">
       <div class="signature">
         
-        def <strong>test</strong>(source, node : Crystal::Var | Crystal::InstanceVar | Crystal::ClassVar)
+        def <strong>test</strong>(source, node : Crystal::Rescue)
 
-        <a class="method-permalink" href="#test%28source%2Cnode%3ACrystal%3A%3AVar%7CCrystal%3A%3AInstanceVar%7CCrystal%3A%3AClassVar%29-instance-method">#</a>
+        <a class="method-permalink" href="#test%28source%2Cnode%3ACrystal%3A%3ARescue%29-instance-method">#</a>
       </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/7aaae7b/src/ameba/rule/naming/variable_names.cr#L37" target="_blank">View source</a>]
-        
-      </div>
-    </div>
-  
-    <div class="entry-detail" id="test(source:Source)-instance-method">
-      <div class="signature">
-        
-        def <strong>test</strong>(source : <a href="../../../Ameba/Source.html">Source</a>)
-
-        <a class="method-permalink" href="#test%28source%3ASource%29-instance-method">#</a>
-      </div>
-      
-        <div class="doc">
-          
-            <div class="doc-inherited">
-              Description copied from class <a href="../../../Ameba/Rule/Base.html">Ameba::Rule::Base</a>
-            </div>
-          
-          <p>This method is designed to test the source passed in. If source has issues
-that are tested by this rule, it should add an issue.</p>
-<p>By default it uses a node visitor to traverse all the nodes in the source.</p>
-<p><span class="flag purple">NOTE</span>  Must be overridden for other type of rules.</p>
-        </div>
-      
-      <br/>
-      <div>
-        
-          [<a href="https://github.com/crystal-ameba/ameba/blob/7aaae7b/src/ameba/rule/naming/variable_names.cr#L33" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/7aaae7b/src/ameba/rule/lint/unused_rescue_variable.cr#L40" target="_blank">View source</a>]
         
       </div>
     </div>
