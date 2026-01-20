@@ -38,6 +38,7 @@ module Ameba::AST
       MultiAssign,
       NilLiteral,
       ProcLiteral,
+      Rescue,
       Select,
       StringInterpolation,
       StringLiteral,
