@@ -57,12 +57,10 @@ module Ameba::Rule::Lint
         case
         when catch_all
           shadowed.concat(types)
-          next
         when types.any?(&.single?("Exception"))
           nodes = types.reject(&.single?("Exception"))
           shadowed.concat(nodes) unless nodes.empty?
           catch_all = true
-          next
         else
           nodes = types.select { |path| traverse(path.to_s, traversed_types) }
           shadowed.concat(nodes) unless nodes.empty?
