@@ -87,8 +87,14 @@ module Ameba::Rule::Style
         replacement_locations(node, heredoc_arg, source.lines)
 
       if location && end_location
+        line = source.lines[location.line_number - 1]
+        rest = line[(location.column_number - 1)..-1]
+
+        location_end = location
+        location_end = location.with(column_number: line.size) if rest.strip == "\\"
+
         issue_for node, MSG do |corrector|
-          corrector.replace(location, location, "(")
+          corrector.replace(location, location_end, "(")
           corrector.insert_before(end_location, ")")
         end
       else

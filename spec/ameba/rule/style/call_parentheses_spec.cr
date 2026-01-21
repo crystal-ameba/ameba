@@ -196,6 +196,21 @@ module Ameba::Rule::Style
         CRYSTAL
     end
 
+    it "removes stray backslash from the end of a first line" do
+      source = expect_issue subject, <<-CRYSTAL
+        foo \\
+        # ^^^ error: Missing parentheses in method call
+          bar: 1,
+          baz: 2
+        CRYSTAL
+
+      expect_correction source, <<-CRYSTAL
+        foo(
+          bar: 1,
+          baz: 2)
+        CRYSTAL
+    end
+
     it "fails for method call with named + heredoc argument" do
       source = expect_issue subject, <<-CRYSTAL
         foo <<-HEREDOC, bar: 42
