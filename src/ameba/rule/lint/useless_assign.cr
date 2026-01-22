@@ -36,7 +36,7 @@ module Ameba::Rule::Lint
     MSG = "Useless assignment to variable `%s`"
 
     def test(source)
-      AST::ScopeVisitor.new self, source
+      UselessAssignScopeVisitor.new self, source
     end
 
     def test(source, node, scope : AST::Scope)
@@ -61,6 +61,42 @@ module Ameba::Rule::Lint
       else
         issue_for target_node, MSG % var.name
       end
+    end
+  end
+
+  private class UselessAssignScopeVisitor < AST::ScopeVisitor
+    getter? in_call_args = false
+
+    private def in_call_args(&)
+      if in_call_args?
+        yield
+      else
+        @in_call_args = true
+        yield
+        @in_call_args = false
+      end
+    end
+
+    def visit(node : Crystal::Call)
+      return false unless super
+
+      node.obj.try &.accept(self)
+      in_call_args do
+        node.args.each &.accept(self)
+        node.named_args.try &.each &.accept(self)
+      end
+      node.block_arg.try &.accept(self)
+      node.block.try &.accept(self)
+
+      false
+    end
+
+    def visit(node : Crystal::TypeDeclaration)
+      super unless in_call_args?
+    end
+
+    private def on_assign_end(target, node)
+      super unless in_call_args?
     end
   end
 end
