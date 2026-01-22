@@ -1683,6 +1683,88 @@
         }
       }
     },
+    "Style/CallParentheses": {
+      "$ref": "#/$defs/BaseRule",
+      "$comment": "https://crystal-ameba.github.io/ameba/master/Ameba/Rule/Style/CallParentheses.html",
+      "title": "Style/CallParentheses",
+      "description": "Enforces usage of parentheses in method calls",
+      "properties": {
+        "SinceVersion": {
+          "type": "string",
+          "default": "1.7.0"
+        },
+        "Enabled": {
+          "type": "boolean",
+          "default": false
+        },
+        "ExcludeTypeDeclarations": {
+          "type": "boolean",
+          "default": true
+        },
+        "ExcludeHeredocs": {
+          "type": "boolean",
+          "default": false
+        },
+        "ExcludedToplevelCallNames": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": [
+            "spawn",
+            "raise",
+            "super",
+            "previous_def",
+            "exit",
+            "abort",
+            "sleep",
+            "print",
+            "printf",
+            "puts",
+            "p",
+            "p!",
+            "pp",
+            "pp!",
+            "record",
+            "class_getter",
+            "class_getter?",
+            "class_getter!",
+            "class_property",
+            "class_property?",
+            "class_property!",
+            "class_setter",
+            "getter",
+            "getter?",
+            "getter!",
+            "property",
+            "property?",
+            "property!",
+            "setter",
+            "def_equals_and_hash",
+            "def_equals",
+            "def_hash",
+            "delegate",
+            "forward_missing_to",
+            "describe",
+            "context",
+            "it",
+            "pending",
+            "fail",
+            "use_json_discriminator"
+          ]
+        },
+        "ExcludedCallNames": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": [
+            "should",
+            "should_not"
+          ]
+        }
+      }
+    },
     "Style/Elsif": {
       "$ref": "#/$defs/BaseRule",
       "$comment": "https://crystal-ameba.github.io/ameba/master/Ameba/Rule/Style/Elsif.html",
