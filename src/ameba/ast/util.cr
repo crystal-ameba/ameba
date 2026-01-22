@@ -247,12 +247,38 @@ module Ameba::AST::Util
     end
   end
 
+  # Returns `true` if *node* represents a short block version (`&.foo?`).
+  def short_block?(node, code_lines)
+    return false unless node.is_a?(Crystal::Block)
+    return false unless location = node.location
+    return false unless end_location = node.body.end_location
+
+    !!source_between(location, end_location, code_lines)
+      .try(&.starts_with?("&."))
+  end
+
+  # Returns `true` if *node* is a call with a short block version (`&.foo?`).
+  def has_short_block?(node, code_lines)
+    node.is_a?(Crystal::Call) &&
+      short_block?(node.block, code_lines)
+  end
+
   # Returns `true` if node has a `:nodoc:` annotation as the first line.
   def nodoc?(node)
     return false unless node.responds_to?(:doc)
     return false unless doc = node.doc.presence
 
     doc.lines.first?.try(&.strip) == ":nodoc:"
+  end
+
+  # Returns `true` if node is a _heredoc_, `false` otherwise.
+  def heredoc?(node, source : Source)
+    return false unless node.is_a?(Crystal::StringInterpolation) ||
+                        node.is_a?(Crystal::StringLiteral)
+    return false unless location = node.location
+    return false unless location_pos = source.pos(location)
+
+    source.code[location_pos..(location_pos + 2)]? == "<<-"
   end
 
   # Returns the exp code of a control expression.
