@@ -283,6 +283,9 @@ module Ameba::CLI
     when only = opts.only
       config.rules.each(&.enabled = false)
       config.update_rules(only, enabled: true)
+      # We need to clear the version to ensure that the selected rules
+      # are not affected by the version constraint
+      config.version = nil
     when opts.all?
       config.rules.each(&.enabled = true)
     end
