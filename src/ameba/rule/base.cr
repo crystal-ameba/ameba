@@ -111,11 +111,7 @@ module Ameba::Rule
       name.in?(SPECIAL)
     end
 
-    def ==(other)
-      name == other.try(&.name)
-    end
-
-    def_hash group, name
+    def_equals_and_hash name
 
     # Adds an issue to the *source*
     macro issue_for(*args, **kwargs, &block)
