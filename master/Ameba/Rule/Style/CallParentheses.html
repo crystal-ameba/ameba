@@ -16,7 +16,7 @@
 <script type="text/javascript" src="../../../js/doc.js"></script>
 
   <meta name="repository-name" content="ameba">
-  <title>Ameba::Rule::Lint::EmptyEnsure - ameba master</title>
+  <title>Ameba::Rule::Style::CallParentheses - ameba master</title>
   <script type="text/javascript">
     CrystalDocs.base_path = "../../../";
   </script>
@@ -419,7 +419,7 @@
       
     </li>
   
-  <li class="parent open current" data-id="ameba/Ameba/Rule/Lint" data-name="ameba::rule::lint">
+  <li class="parent " data-id="ameba/Ameba/Rule/Lint" data-name="ameba::rule::lint">
       <a href="../../../Ameba/Rule/Lint.html">Lint</a>
       
         <ul>
@@ -479,7 +479,7 @@
       
     </li>
   
-  <li class=" current" data-id="ameba/Ameba/Rule/Lint/EmptyEnsure" data-name="ameba::rule::lint::emptyensure">
+  <li class=" " data-id="ameba/Ameba/Rule/Lint/EmptyEnsure" data-name="ameba::rule::lint::emptyensure">
       <a href="../../../Ameba/Rule/Lint/EmptyEnsure.html">EmptyEnsure</a>
       
     </li>
@@ -854,7 +854,7 @@
       
     </li>
   
-  <li class="parent " data-id="ameba/Ameba/Rule/Style" data-name="ameba::rule::style">
+  <li class="parent open current" data-id="ameba/Ameba/Rule/Style" data-name="ameba::rule::style">
       <a href="../../../Ameba/Rule/Style.html">Style</a>
       
         <ul>
@@ -864,7 +864,7 @@
       
     </li>
   
-  <li class=" " data-id="ameba/Ameba/Rule/Style/CallParentheses" data-name="ameba::rule::style::callparentheses">
+  <li class=" current" data-id="ameba/Ameba/Rule/Style/CallParentheses" data-name="ameba::rule::style::callparentheses">
       <a href="../../../Ameba/Rule/Style/CallParentheses.html">CallParentheses</a>
       
     </li>
@@ -1125,12 +1125,12 @@
 
   <span class="kind">
     class
-  </span> Ameba::<wbr>Rule::<wbr>Lint::<wbr>EmptyEnsure
+  </span> Ameba::<wbr>Rule::<wbr>Style::<wbr>CallParentheses
 
 </h1>
 
 
-  <ul class="superclass-hierarchy"><li class="superclass"><a href="../../../Ameba/Rule/Lint/EmptyEnsure.html">Ameba::Rule::Lint::EmptyEnsure</a></li><li class="superclass"><a href="../../../Ameba/Rule/Base.html">Ameba::Rule::Base</a></li><li class="superclass">Reference</li><li class="superclass">Object</li></ul>
+  <ul class="superclass-hierarchy"><li class="superclass"><a href="../../../Ameba/Rule/Style/CallParentheses.html">Ameba::Rule::Style::CallParentheses</a></li><li class="superclass"><a href="../../../Ameba/Rule/Base.html">Ameba::Rule::Base</a></li><li class="superclass">Reference</li><li class="superclass">Object</li></ul>
 
 
 
@@ -1144,32 +1144,29 @@
     Overview
   </h2>
 
-  <p>A rule that disallows empty <code>ensure</code> statement.</p>
-<p>For example, this is considered invalid:</p>
-<pre><code class="language-crystal"><span class="k">def</span> <span class="m">some_method</span>
-  do_some_stuff
-<span class="k">ensure</span>
-<span class="k">end</span>
-
-<span class="k">begin</span>
-  do_some_stuff
-<span class="k">ensure</span>
-<span class="k">end</span></code></pre>
-<p>And it should be written as this:</p>
-<pre><code class="language-crystal"><span class="k">def</span> <span class="m">some_method</span>
-  do_some_stuff
-<span class="k">ensure</span>
-  do_something_else
-<span class="k">end</span>
-
-<span class="k">begin</span>
-  do_some_stuff
-<span class="k">ensure</span>
-  do_something_else
-<span class="k">end</span></code></pre>
+  <p>A rule that enforces usage of parentheses in method or macro calls.</p>
+<p>For example, this (and all of its variants) is considered invalid:</p>
+<pre><code class="language-crystal">user.update name: <span class="s">&quot;John&quot;</span>, age: <span class="n">30</span></code></pre>
+<p>And should be replaced by the following:</p>
+<pre><code class="language-crystal">user.update(name: <span class="s">&quot;John&quot;</span>, age: <span class="n">30</span>)</code></pre>
+<h3><a id="options" class="anchor" href="#options">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>Options</h3>
+<ul>
+<li><code>ExcludeTypeDeclarations</code> — controls whether calls with type declarations should be checked.</li>
+<li><code>ExcludeHeredocs</code> — controls whether calls with heredoc arguments should be checked.</li>
+<li><code>ExcludedToplevelCallNames</code> — contains a list of top-level method names that should not be checked.</li>
+<li><code>ExcludedCallNames</code> — contains a list of non-top-level method names that should not be checked.</li>
+</ul>
 <p>YAML configuration example:</p>
-<pre><code class="language-crystal"><span class="t">Lint</span><span class="o">/</span><span class="t">EmptyEnsure</span>:
-  <span class="t">Enabled</span>: <span class="n">true</span></code></pre>
+<pre><code class="language-crystal"><span class="t">Style</span><span class="o">/</span><span class="t">CallParentheses</span>:
+  <span class="t">Enabled</span>: <span class="n">true</span>
+  <span class="t">ExcludeTypeDeclarations</span>: <span class="n">true</span>
+  <span class="t">ExcludeHeredocs</span>: <span class="n">false</span>
+  <span class="t">ExcludedToplevelCallNames</span>: [spawn, raise, <span class="k">super</span>, previous_def, exit, abort, sleep, print, printf, puts, p, p!, pp, pp!, record, class_getter, class_getter?, class_getter!, class_property, class_property?, class_property!, class_setter, getter, getter?, getter!, property, property?, property!, setter, def_equals_and_hash, def_equals, def_hash, delegate, forward_missing_to, describe, context, it, pending, fail, use_json_discriminator]
+  <span class="t">ExcludedCallNames</span>: [should, should_not]</code></pre>
 
 
 
@@ -1186,6 +1183,8 @@
     Included Modules
   </h2>
   <ul class="other-types-list">
+    
+      <li class="other-type"><a href="../../../Ameba/AST/Util.html">Ameba::AST::Util</a></li>
     
       <li class="other-type">YAML::Serializable</li>
     
@@ -1212,8 +1211,8 @@
   </h2>
   
     
-      <a href="https://github.com/crystal-ameba/ameba/blob/9dfbb63/src/ameba/rule/lint/empty_ensure.cr#L40" target="_blank">
-        ameba/rule/lint/empty_ensure.cr
+      <a href="https://github.com/crystal-ameba/ameba/blob/9dfbb63/src/ameba/rule/style/call_parentheses.cr#L35" target="_blank">
+        ameba/rule/style/call_parentheses.cr
       </a>
     
     <br/>
@@ -1234,7 +1233,7 @@
   <dl>
     
       <dt class="entry-const" id="MSG">
-        <strong>MSG</strong> = <code><span class="s">&quot;Empty `ensure` block detected&quot;</span></code>
+        <strong>MSG</strong> = <code><span class="s">&quot;Missing parentheses in method call&quot;</span></code>
       </dt>
       
     
@@ -1261,7 +1260,7 @@
       <li class="entry-summary">
         <a href="#new%28config%3Dnil%29-class-method" class="signature"><strong>.new</strong>(config = <span class="n">nil</span>)</a>
         
-          <div class="summary"><p>A rule that disallows empty <code>ensure</code> statement.</p></div>
+          <div class="summary"><p>A rule that enforces usage of parentheses in method or macro calls.</p></div>
         
       </li>
     
@@ -1340,12 +1339,52 @@
       </li>
     
       <li class="entry-summary">
+        <a href="#exclude_heredocs%3D%28exclude_heredocs%3ABool%29-instance-method" class="signature"><strong>#exclude_heredocs=</strong>(exclude_heredocs : Bool)</a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#exclude_heredocs%3F%3ABool-instance-method" class="signature"><strong>#exclude_heredocs?</strong> : Bool</a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#exclude_type_declarations%3D%28exclude_type_declarations%3ABool%29-instance-method" class="signature"><strong>#exclude_type_declarations=</strong>(exclude_type_declarations : Bool)</a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#exclude_type_declarations%3F%3ABool-instance-method" class="signature"><strong>#exclude_type_declarations?</strong> : Bool</a>
+        
+      </li>
+    
+      <li class="entry-summary">
         <a href="#excluded%3ASet%28String%29%7CNil-instance-method" class="signature"><strong>#excluded</strong> : Set(String) | Nil</a>
         
       </li>
     
       <li class="entry-summary">
         <a href="#excluded%3D%28excluded%3ASet%28String%29%7CNil%29-instance-method" class="signature"><strong>#excluded=</strong>(excluded : Set(String) | Nil)</a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#excluded_call_names%3AArray%28String%29-instance-method" class="signature"><strong>#excluded_call_names</strong> : Array(String)</a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#excluded_call_names%3D%28excluded_call_names%3AArray%28String%29%29-instance-method" class="signature"><strong>#excluded_call_names=</strong>(excluded_call_names : Array(String))</a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#excluded_toplevel_call_names%3AArray%28String%29-instance-method" class="signature"><strong>#excluded_toplevel_call_names</strong> : Array(String)</a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#excluded_toplevel_call_names%3D%28excluded_toplevel_call_names%3AArray%28String%29%29-instance-method" class="signature"><strong>#excluded_toplevel_call_names=</strong>(excluded_toplevel_call_names : Array(String))</a>
         
       </li>
     
@@ -1370,7 +1409,14 @@
       </li>
     
       <li class="entry-summary">
-        <a href="#test%28source%2Cnode%3ACrystal%3A%3AExceptionHandler%29-instance-method" class="signature"><strong>#test</strong>(source, node : Crystal::ExceptionHandler)</a>
+        <a href="#test%28source%2Cnode%3ACrystal%3A%3ACall%29-instance-method" class="signature"><strong>#test</strong>(source, node : Crystal::Call)</a>
+        
+          <div class="summary"><p>ameba:disable Metrics/CyclomaticComplexity</p></div>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#test%28source%29-instance-method" class="signature"><strong>#test</strong>(source)</a>
         
       </li>
     
@@ -1379,6 +1425,158 @@
 
 
   <div class="methods-inherited">
+    
+      
+
+  <h3>Instance methods inherited from module <code><a href="../../../Ameba/AST/Util.html">Ameba::AST::Util</a></code></h3>
+  
+  
+    <a href="../../../Ameba/AST/Util.html#abort%3F%28node%29-instance-method" class="tooltip">
+      <span>abort?(node)</span>
+    abort?</a>, 
+    
+  
+    <a href="../../../Ameba/AST/Util.html#control_exp_code%28node%3ACrystal%3A%3AControlExpression%2Ccode_lines%29-instance-method" class="tooltip">
+      <span>control_exp_code(node : Crystal::ControlExpression, code_lines)</span>
+    control_exp_code</a>, 
+    
+  
+    <a href="../../../Ameba/AST/Util.html#dynamic_literal%3F%28node%29%3ABool-instance-method" class="tooltip">
+      <span>dynamic_literal?(node) : Bool</span>
+    dynamic_literal?</a>, 
+    
+  
+    <a href="../../../Ameba/AST/Util.html#exit%3F%28node%29-instance-method" class="tooltip">
+      <span>exit?(node)</span>
+    exit?</a>, 
+    
+  
+    <a href="../../../Ameba/AST/Util.html#flow_command%3F%28node%2Cin_loop%29-instance-method" class="tooltip">
+      <span>flow_command?(node, in_loop)</span>
+    flow_command?</a>, 
+    
+  
+    <a href="../../../Ameba/AST/Util.html#flow_expression%3F%28node%2Cin_loop%3Dfalse%29-instance-method" class="tooltip">
+      <span>flow_expression?(node, in_loop = <span class="n">false</span>)</span>
+    flow_expression?</a>, 
+    
+  
+    <a href="../../../Ameba/AST/Util.html#has_arguments%3F%28node%29%3ABool-instance-method" class="tooltip">
+      <span>has_arguments?(node) : Bool</span>
+    has_arguments?</a>, 
+    
+  
+    <a href="../../../Ameba/AST/Util.html#has_block%3F%28node%29%3ABool-instance-method" class="tooltip">
+      <span>has_block?(node) : Bool</span>
+    has_block?</a>, 
+    
+  
+    <a href="../../../Ameba/AST/Util.html#has_short_block%3F%28node%2Ccode_lines%29-instance-method" class="tooltip">
+      <span>has_short_block?(node, code_lines)</span>
+    has_short_block?</a>, 
+    
+  
+    <a href="../../../Ameba/AST/Util.html#heredoc%3F%28node%2Csource%3ASource%29-instance-method" class="tooltip">
+      <span>heredoc?(node, source : Source)</span>
+    heredoc?</a>, 
+    
+  
+    <a href="../../../Ameba/AST/Util.html#literal%3F%28node%29%3ABool-instance-method" class="tooltip">
+      <span>literal?(node) : Bool</span>
+    literal?</a>, 
+    
+  
+    <a href="../../../Ameba/AST/Util.html#loop%3F%28node%29-instance-method" class="tooltip">
+      <span>loop?(node)</span>
+    loop?</a>, 
+    
+  
+    <a href="../../../Ameba/AST/Util.html#name_end_location%28node%29-instance-method" class="tooltip">
+      <span>name_end_location(node)</span>
+    name_end_location</a>, 
+    
+  
+    <a href="../../../Ameba/AST/Util.html#name_location%28node%29-instance-method" class="tooltip">
+      <span>name_location(node)</span>
+    name_location</a>, 
+    
+  
+    <a href="../../../Ameba/AST/Util.html#name_location_or%28token%3ACrystal%3A%3AToken%2Cname%2C%2A%2Cadjust_location_column_number%3Dnil%29-instance-method" class="tooltip">
+      <span>name_location_or(token : Crystal::Token, name, *, adjust_location_column_number = <span class="n">nil</span>)<br/>name_location_or(node : Crystal::ASTNode, *, adjust_location_column_number = <span class="n">nil</span>)</span>
+    name_location_or</a>, 
+    
+  
+    <a href="../../../Ameba/AST/Util.html#name_size%28node%29-instance-method" class="tooltip">
+      <span>name_size(node)</span>
+    name_size</a>, 
+    
+  
+    <a href="../../../Ameba/AST/Util.html#node_source%28node%2Ccode_lines%29-instance-method" class="tooltip">
+      <span>node_source(node, code_lines)</span>
+    node_source</a>, 
+    
+  
+    <a href="../../../Ameba/AST/Util.html#nodoc%3F%28node%29-instance-method" class="tooltip">
+      <span>nodoc?(node)</span>
+    nodoc?</a>, 
+    
+  
+    <a href="../../../Ameba/AST/Util.html#operator_method%3F%28node%29-instance-method" class="tooltip">
+      <span>operator_method?(node)</span>
+    operator_method?</a>, 
+    
+  
+    <a href="../../../Ameba/AST/Util.html#operator_method_name%3F%28name%3AString%29-instance-method" class="tooltip">
+      <span>operator_method_name?(name : String)</span>
+    operator_method_name?</a>, 
+    
+  
+    <a href="../../../Ameba/AST/Util.html#path_named%3F%28node%2C%2Anames%3AString%29%3ABool-instance-method" class="tooltip">
+      <span>path_named?(node, *names : String) : Bool</span>
+    path_named?</a>, 
+    
+  
+    <a href="../../../Ameba/AST/Util.html#raise%3F%28node%29-instance-method" class="tooltip">
+      <span>raise?(node)</span>
+    raise?</a>, 
+    
+  
+    <a href="../../../Ameba/AST/Util.html#short_block%3F%28node%2Ccode_lines%29-instance-method" class="tooltip">
+      <span>short_block?(node, code_lines)</span>
+    short_block?</a>, 
+    
+  
+    <a href="../../../Ameba/AST/Util.html#source_between%28loc%2Cend_loc%2Ccode_lines%29%3AString%7CNil-instance-method" class="tooltip">
+      <span>source_between(loc, end_loc, code_lines) : String | Nil</span>
+    source_between</a>, 
+    
+  
+    <a href="../../../Ameba/AST/Util.html#static_literal%3F%28node%29%3ABool-instance-method" class="tooltip">
+      <span>static_literal?(node) : Bool</span>
+    static_literal?</a>, 
+    
+  
+    <a href="../../../Ameba/AST/Util.html#suffix%3F%28node%29-instance-method" class="tooltip">
+      <span>suffix?(node)</span>
+    suffix?</a>, 
+    
+  
+    <a href="../../../Ameba/AST/Util.html#takes_arguments%3F%28node%29%3ABool-instance-method" class="tooltip">
+      <span>takes_arguments?(node) : Bool</span>
+    takes_arguments?</a>
+    
+  
+
+
+      
+
+
+      
+
+
+      
+
+
     
       
 
@@ -1575,38 +1773,35 @@
       
         <div class="doc">
           
-          <p>A rule that disallows empty <code>ensure</code> statement.</p>
-<p>For example, this is considered invalid:</p>
-<pre><code class="language-crystal"><span class="k">def</span> <span class="m">some_method</span>
-  do_some_stuff
-<span class="k">ensure</span>
-<span class="k">end</span>
-
-<span class="k">begin</span>
-  do_some_stuff
-<span class="k">ensure</span>
-<span class="k">end</span></code></pre>
-<p>And it should be written as this:</p>
-<pre><code class="language-crystal"><span class="k">def</span> <span class="m">some_method</span>
-  do_some_stuff
-<span class="k">ensure</span>
-  do_something_else
-<span class="k">end</span>
-
-<span class="k">begin</span>
-  do_some_stuff
-<span class="k">ensure</span>
-  do_something_else
-<span class="k">end</span></code></pre>
+          <p>A rule that enforces usage of parentheses in method or macro calls.</p>
+<p>For example, this (and all of its variants) is considered invalid:</p>
+<pre><code class="language-crystal">user.update name: <span class="s">&quot;John&quot;</span>, age: <span class="n">30</span></code></pre>
+<p>And should be replaced by the following:</p>
+<pre><code class="language-crystal">user.update(name: <span class="s">&quot;John&quot;</span>, age: <span class="n">30</span>)</code></pre>
+<h3><a id="options" class="anchor" href="#options">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>Options</h3>
+<ul>
+<li><code>ExcludeTypeDeclarations</code> — controls whether calls with type declarations should be checked.</li>
+<li><code>ExcludeHeredocs</code> — controls whether calls with heredoc arguments should be checked.</li>
+<li><code>ExcludedToplevelCallNames</code> — contains a list of top-level method names that should not be checked.</li>
+<li><code>ExcludedCallNames</code> — contains a list of non-top-level method names that should not be checked.</li>
+</ul>
 <p>YAML configuration example:</p>
-<pre><code class="language-crystal"><span class="t">Lint</span><span class="o">/</span><span class="t">EmptyEnsure</span>:
-  <span class="t">Enabled</span>: <span class="n">true</span></code></pre>
+<pre><code class="language-crystal"><span class="t">Style</span><span class="o">/</span><span class="t">CallParentheses</span>:
+  <span class="t">Enabled</span>: <span class="n">true</span>
+  <span class="t">ExcludeTypeDeclarations</span>: <span class="n">true</span>
+  <span class="t">ExcludeHeredocs</span>: <span class="n">false</span>
+  <span class="t">ExcludedToplevelCallNames</span>: [spawn, raise, <span class="k">super</span>, previous_def, exit, abort, sleep, print, printf, puts, p, p!, pp, pp!, record, class_getter, class_getter?, class_getter!, class_property, class_property?, class_property!, class_setter, getter, getter?, getter!, property, property?, property!, setter, def_equals_and_hash, def_equals, def_hash, delegate, forward_missing_to, describe, context, it, pending, fail, use_json_discriminator]
+  <span class="t">ExcludedCallNames</span>: [should, should_not]</code></pre>
         </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/9dfbb63/src/ameba/rule/lint/empty_ensure.cr#L40" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/9dfbb63/src/ameba/rule/style/call_parentheses.cr#L35" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1698,7 +1893,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/9dfbb63/src/ameba/rule/lint/empty_ensure.cr#L41" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/9dfbb63/src/ameba/rule/style/call_parentheses.cr#L38" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1773,6 +1968,62 @@
       </div>
     </div>
   
+    <div class="entry-detail" id="exclude_heredocs=(exclude_heredocs:Bool)-instance-method">
+      <div class="signature">
+        
+        def <strong>exclude_heredocs=</strong>(exclude_heredocs : Bool)
+
+        <a class="method-permalink" href="#exclude_heredocs%3D%28exclude_heredocs%3ABool%29-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="exclude_heredocs?:Bool-instance-method">
+      <div class="signature">
+        
+        def <strong>exclude_heredocs?</strong> : Bool
+
+        <a class="method-permalink" href="#exclude_heredocs%3F%3ABool-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="exclude_type_declarations=(exclude_type_declarations:Bool)-instance-method">
+      <div class="signature">
+        
+        def <strong>exclude_type_declarations=</strong>(exclude_type_declarations : Bool)
+
+        <a class="method-permalink" href="#exclude_type_declarations%3D%28exclude_type_declarations%3ABool%29-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="exclude_type_declarations?:Bool-instance-method">
+      <div class="signature">
+        
+        def <strong>exclude_type_declarations?</strong> : Bool
+
+        <a class="method-permalink" href="#exclude_type_declarations%3F%3ABool-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+      </div>
+    </div>
+  
     <div class="entry-detail" id="excluded:Set(String)|Nil-instance-method">
       <div class="signature">
         
@@ -1793,6 +2044,62 @@
         def <strong>excluded=</strong>(excluded : Set(String) | Nil)
 
         <a class="method-permalink" href="#excluded%3D%28excluded%3ASet%28String%29%7CNil%29-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="excluded_call_names:Array(String)-instance-method">
+      <div class="signature">
+        
+        def <strong>excluded_call_names</strong> : Array(String)
+
+        <a class="method-permalink" href="#excluded_call_names%3AArray%28String%29-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="excluded_call_names=(excluded_call_names:Array(String))-instance-method">
+      <div class="signature">
+        
+        def <strong>excluded_call_names=</strong>(excluded_call_names : Array(String))
+
+        <a class="method-permalink" href="#excluded_call_names%3D%28excluded_call_names%3AArray%28String%29%29-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="excluded_toplevel_call_names:Array(String)-instance-method">
+      <div class="signature">
+        
+        def <strong>excluded_toplevel_call_names</strong> : Array(String)
+
+        <a class="method-permalink" href="#excluded_toplevel_call_names%3AArray%28String%29-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="excluded_toplevel_call_names=(excluded_toplevel_call_names:Array(String))-instance-method">
+      <div class="signature">
+        
+        def <strong>excluded_toplevel_call_names=</strong>(excluded_toplevel_call_names : Array(String))
+
+        <a class="method-permalink" href="#excluded_toplevel_call_names%3D%28excluded_toplevel_call_names%3AArray%28String%29%29-instance-method">#</a>
       </div>
       
       <br/>
@@ -1840,7 +2147,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/9dfbb63/src/ameba/rule/lint/empty_ensure.cr#L41" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/9dfbb63/src/ameba/rule/style/call_parentheses.cr#L38" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1859,18 +2166,39 @@
       </div>
     </div>
   
-    <div class="entry-detail" id="test(source,node:Crystal::ExceptionHandler)-instance-method">
+    <div class="entry-detail" id="test(source,node:Crystal::Call)-instance-method">
       <div class="signature">
         
-        def <strong>test</strong>(source, node : Crystal::ExceptionHandler)
+        def <strong>test</strong>(source, node : Crystal::Call)
 
-        <a class="method-permalink" href="#test%28source%2Cnode%3ACrystal%3A%3AExceptionHandler%29-instance-method">#</a>
+        <a class="method-permalink" href="#test%28source%2Cnode%3ACrystal%3A%3ACall%29-instance-method">#</a>
+      </div>
+      
+        <div class="doc">
+          
+          <p>ameba:disable Metrics/CyclomaticComplexity</p>
+        </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/crystal-ameba/ameba/blob/9dfbb63/src/ameba/rule/style/call_parentheses.cr#L66" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="test(source)-instance-method">
+      <div class="signature">
+        
+        def <strong>test</strong>(source)
+
+        <a class="method-permalink" href="#test%28source%29-instance-method">#</a>
       </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/9dfbb63/src/ameba/rule/lint/empty_ensure.cr#L48" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/9dfbb63/src/ameba/rule/style/call_parentheses.cr#L61" target="_blank">View source</a>]
         
       </div>
     </div>
