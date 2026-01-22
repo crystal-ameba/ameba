@@ -66,33 +66,18 @@ module Ameba::Rule::Style
         CRYSTAL
     end
 
-    {% if compare_versions(Crystal::VERSION, "1.19.0-dev") >= 0 %}
-      it "reports if there is a verbose nil type (generics + nested unions)" do
-        source = expect_issue subject, <<-CRYSTAL
-          foo : (Array(String | Nil) | Nil) | Foo
-              # ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ error: Prefer `?` instead of `| Nil` in unions
-              # ^^^^^^^^^^^^^^^^^^^^^^^^^^^ error: Prefer `?` instead of `| Nil` in unions
-                     # ^^^^^^^^^^^^ error: Prefer `?` instead of `| Nil` in unions
-          CRYSTAL
+    it "reports if there is a verbose nil type (generics + nested unions)" do
+      source = expect_issue subject, <<-CRYSTAL
+        foo : (Array(String | Nil) | Nil) | Foo
+            # ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ error: Prefer `?` instead of `| Nil` in unions
+            # ^^^^^^^^^^^^^^^^^^^^^^^^^^^ error: Prefer `?` instead of `| Nil` in unions
+                   # ^^^^^^^^^^^^ error: Prefer `?` instead of `| Nil` in unions
+        CRYSTAL
 
-        expect_correction source, <<-CRYSTAL
-          foo : (Array(String?) | Nil) | Foo
-          CRYSTAL
-      end
-    {% else %}
-      it "reports if there is a verbose nil type (generics + nested unions)" do
-        source = expect_issue subject, <<-CRYSTAL
-          foo : (Array(String | Nil) | Nil) | Foo
-               # ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ error: Prefer `?` instead of `| Nil` in unions
-               # ^^^^^^^^^^^^^^^^^^^^^^^^^ error: Prefer `?` instead of `| Nil` in unions
-                     # ^^^^^^^^^^^^ error: Prefer `?` instead of `| Nil` in unions
-          CRYSTAL
-
-        expect_correction source, <<-CRYSTAL
-          foo : (Array(String?) | Nil) | Foo
-          CRYSTAL
-      end
-    {% end %}
+      expect_correction source, <<-CRYSTAL
+        foo : (Array(String?) | Nil) | Foo
+        CRYSTAL
+    end
 
     it "reports if there is a verbose nil type (generics)" do
       source = expect_issue subject, <<-CRYSTAL
@@ -105,33 +90,18 @@ module Ameba::Rule::Style
         CRYSTAL
     end
 
-    {% if compare_versions(Crystal::VERSION, "1.19.0-dev") >= 0 %}
-      it "corrects the parenthesized single type unions" do
-        source = expect_issue subject, <<-CRYSTAL
-          foo : (Nil | (Symbol | Nil)) | Foo
-              # ^^^^^^^^^^^^^^^^^^^^^^^^^^^^ error: Prefer `?` instead of `| Nil` in unions
-              # ^^^^^^^^^^^^^^^^^^^^^^ error: Prefer `?` instead of `| Nil` in unions
-                     # ^^^^^^^^^^^^^^ error: Prefer `?` instead of `| Nil` in unions
-          CRYSTAL
+    it "corrects the parenthesized single type unions" do
+      source = expect_issue subject, <<-CRYSTAL
+        foo : (Nil | (Symbol | Nil)) | Foo
+            # ^^^^^^^^^^^^^^^^^^^^^^^^^^^^ error: Prefer `?` instead of `| Nil` in unions
+            # ^^^^^^^^^^^^^^^^^^^^^^ error: Prefer `?` instead of `| Nil` in unions
+                   # ^^^^^^^^^^^^^^ error: Prefer `?` instead of `| Nil` in unions
+        CRYSTAL
 
-        expect_correction source, <<-CRYSTAL
-          foo : Symbol | Foo?
-          CRYSTAL
-      end
-    {% else %}
-      it "corrects the parenthesized single type unions" do
-        source = expect_issue subject, <<-CRYSTAL
-          foo : (Nil | (Symbol | Nil)) | Foo
-               # ^^^^^^^^^^^^^^^^^^^^^^^^^^^ error: Prefer `?` instead of `| Nil` in unions
-               # ^^^^^^^^^^^^^^^^^^^ error: Prefer `?` instead of `| Nil` in unions
-                      # ^^^^^^^^^^^^ error: Prefer `?` instead of `| Nil` in unions
-          CRYSTAL
-
-        expect_correction source, <<-CRYSTAL
-          foo : (Symbol) | Foo?
-          CRYSTAL
-      end
-    {% end %}
+      expect_correction source, <<-CRYSTAL
+        foo : Symbol | Foo?
+        CRYSTAL
+    end
 
     context "properties" do
       it "#explicit_nil" do
