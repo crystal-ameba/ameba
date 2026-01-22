@@ -59,7 +59,7 @@ module Ameba::Formatter
               start_line: start_location.line_number,
               start_column: start_location.column_number,
               end_line: end_location.line_number,
-              end_column: end_location.line_number,
+              end_column: end_location.column_number,
               snippet: context_snippet,
               source_language: source.ecr? ? "ECR" : "Crystal",
             )
@@ -68,10 +68,10 @@ module Ameba::Formatter
           sarif_run.results << AsSARIF::RunResult.new(
             message: issue.message,
             rule_id: issue.rule.name,
-            rule_index: sarif_rules.index! { |rule| rule.name == issue.rule.name },
+            rule_index: sarif_rules.index!(&.name.== issue.rule.name),
             level: AsSARIF::Level.from_severity(issue.rule.severity),
             locations: [AsSARIF::Location.new(
-              uri: "file://#{source.fullpath}",
+              uri: Path[source.path].to_posix.to_s,
               context_region: context_region,
               start_location: start_location,
               end_location: end_location
@@ -92,7 +92,7 @@ module Ameba::Formatter
       include JSON::Serializable
 
       @[JSON::Field(key: "$schema")]
-      property schema = "https://www.schemastore.org/sarif-2.1.0.json"
+      property schema = "https://www.schemastore.org/schemas/json/sarif-2.1.0-rtm.6.json"
       property version = "2.1.0"
       property runs = [] of Run
 
