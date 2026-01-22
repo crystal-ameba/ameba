@@ -1,0 +1,306 @@
+require "../../spec_helper"
+
+private def get_sarif_result(sources = [Ameba::Source.new])
+  output = IO::Memory.new
+  formatter = Ameba::Formatter::SARIFFormatter.new output
+
+  formatter.started sources
+  sources.each { |source| formatter.source_finished source }
+  formatter.finished sources
+
+  JSON.parse(output.to_s)
+end
+
+module Ameba::Formatter
+  describe SARIFFormatter do
+    context "SARIF structure" do
+      it "includes correct schema" do
+        result = get_sarif_result
+        result["$schema"].should eq "https://www.schemastore.org/schemas/json/sarif-2.1.0-rtm.6.json"
+      end
+
+      it "includes correct version" do
+        result = get_sarif_result
+        result["version"].should eq "2.1.0"
+      end
+
+      it "includes runs array" do
+        result = get_sarif_result
+        result["runs"].as_a.should_not be_nil
+      end
+    end
+
+    context "tool information" do
+      it "includes tool name" do
+        result = get_sarif_result
+        result["runs"][0]["tool"]["driver"]["name"].should eq "ameba"
+      end
+
+      it "includes ameba version" do
+        result = get_sarif_result
+        result["runs"][0]["tool"]["driver"]["version"].should eq Ameba::VERSION
+      end
+
+      it "includes information URI" do
+        result = get_sarif_result
+        result["runs"][0]["tool"]["driver"]["informationUri"].should eq "https://crystal-ameba.github.io/"
+      end
+
+      it "includes rules array" do
+        result = get_sarif_result
+        rules = result["runs"][0]["tool"]["driver"]["rules"].as_a
+        rules.should_not be_empty
+      end
+
+      it "includes rule descriptors" do
+        result = get_sarif_result
+        rule = result["runs"][0]["tool"]["driver"]["rules"][0]
+        rule["id"].should_not be_nil
+        rule["name"].should_not be_nil
+        rule["shortDescription"].should_not be_nil
+        rule["fullDescription"].should_not be_nil
+        rule["defaultConfiguration"].should_not be_nil
+        rule["helpUri"].should_not be_nil
+      end
+
+      it "includes rule short description with text and markdown" do
+        result = get_sarif_result
+        rule = result["runs"][0]["tool"]["driver"]["rules"][0]
+        rule["shortDescription"]["text"].should_not be_nil
+        rule["shortDescription"]["markdown"].should_not be_nil
+      end
+
+      it "includes rule default configuration" do
+        result = get_sarif_result
+        rule = result["runs"][0]["tool"]["driver"]["rules"][0]
+        config = rule["defaultConfiguration"]
+        config["level"].should_not be_nil
+        config["parameters"].should_not be_nil
+      end
+    end
+
+    context "results" do
+      it "doesn't include results when no issues" do
+        result = get_sarif_result [Source.new path: "source.cr"]
+        result["runs"][0]["results"].as_a.should be_empty
+      end
+
+      it "includes issue message" do
+        source = Source.new path: "source.cr"
+        source.add_issue DummyRule.new, {1, 2}, "Test message"
+
+        result = get_sarif_result [source]
+        issue = result["runs"][0]["results"][0]
+        issue["message"]["text"].should eq "Test message"
+        issue["message"]["markdown"].should eq "Test message"
+      end
+
+      it "includes rule id" do
+        source = Source.new path: "source.cr"
+        source.add_issue DummyRule.new, {1, 2}, "message"
+
+        result = get_sarif_result [source]
+        issue = result["runs"][0]["results"][0]
+        issue["ruleId"].should eq DummyRule.rule_name
+      end
+
+      it "includes rule index" do
+        source = Source.new path: "source.cr"
+        source.add_issue DummyRule.new, {1, 2}, "message"
+
+        result = get_sarif_result [source]
+        issue = result["runs"][0]["results"][0]
+        issue["ruleIndex"].as_i64.should be >= 0
+      end
+
+      it "includes level from severity" do
+        source = Source.new path: "source.cr"
+        source.add_issue DummyRule.new, {1, 2}, "message"
+
+        result = get_sarif_result [source]
+        issue = result["runs"][0]["results"][0]
+        issue["level"].should eq "note"
+      end
+
+      it "doesn't include disabled issues" do
+        source = Source.new path: "source.cr"
+        source.add_issue DummyRule.new, {1, 2}, "message", status: :disabled
+        source.add_issue NamedRule.new, {1, 3}, "enabled message"
+
+        result = get_sarif_result [source]
+        results = result["runs"][0]["results"].as_a
+        results.size.should eq 1
+        results[0]["message"]["text"].should eq "enabled message"
+      end
+    end
+
+    context "locations" do
+      it "includes URI" do
+        source = Source.new path: "source.cr"
+        source.add_issue DummyRule.new, {1, 2}, "message"
+
+        result = get_sarif_result [source]
+        location = result["runs"][0]["results"][0]["locations"][0]["physicalLocation"]
+        location["artifactLocation"]["uri"].should eq "source.cr"
+      end
+
+      it "includes start location" do
+        source = Source.new <<-CRYSTAL, "source.cr"
+          a = 1
+          b = 2
+          c = 3
+          CRYSTAL
+        source.add_issue DummyRule.new, {3, 5}, "message"
+
+        result = get_sarif_result [source]
+        region = result["runs"][0]["results"][0]["locations"][0]["physicalLocation"]["region"]
+        region["startLine"].should eq 3
+        region["startColumn"].should eq 5
+      end
+
+      it "includes end location" do
+        source = Source.new <<-CRYSTAL
+          a = 1
+          b = 2
+          c = 3
+          CRYSTAL
+        source.add_issue DummyRule.new,
+          Crystal::Location.new("path", 2, 3),
+          Crystal::Location.new("path", 3, 4),
+          "message"
+
+        result = get_sarif_result [source]
+        region = result["runs"][0]["results"][0]["locations"][0]["physicalLocation"]["region"]
+        region["startLine"].should eq 2
+        region["startColumn"].should eq 3
+        region["endLine"].should eq 3
+        region["endColumn"].should eq 4
+      end
+    end
+
+    context "context region" do
+      it "includes context region with snippet" do
+        source = Source.new <<-CRYSTAL
+          a = 1
+          b = 2
+          c = 3
+          CRYSTAL
+        source.add_issue DummyRule.new, {2, 3}, "message"
+
+        result = get_sarif_result [source]
+        context_region = result["runs"][0]["results"][0]["locations"][0]["physicalLocation"]["contextRegion"]
+        context_region.should_not be_nil
+        context_region["snippet"]["text"].as_s.should contain "b = 2"
+      end
+
+      it "includes context region coordinates" do
+        source = Source.new <<-CRYSTAL
+          a = 1
+          b = 2
+          c = 3
+          CRYSTAL
+        source.add_issue DummyRule.new,
+          Crystal::Location.new("path", 1, 1),
+          Crystal::Location.new("path", 2, 5),
+          "message"
+
+        result = get_sarif_result [source]
+        context_region = result["runs"][0]["results"][0]["locations"][0]["physicalLocation"]["contextRegion"]
+        context_region["startLine"].should eq 1
+        context_region["startColumn"].should eq 1
+        context_region["endLine"].should eq 2
+        context_region["endColumn"].should eq 5
+      end
+
+      it "sets source language to Crystal by default" do
+        source = Source.new <<-CRYSTAL, "source.cr"
+          a = 1
+          CRYSTAL
+        source.add_issue DummyRule.new, {1, 1}, "message"
+
+        result = get_sarif_result [source]
+        context_region = result["runs"][0]["results"][0]["locations"][0]["physicalLocation"]["contextRegion"]
+        context_region["sourceLanguage"].should eq "Crystal"
+      end
+
+      it "sets source language to ECR for ECR files" do
+        source = Source.new <<-CRYSTAL, "template.ecr"
+          <p>Hello</p>
+          CRYSTAL
+        source.add_issue DummyRule.new, {1, 1}, "message"
+
+        result = get_sarif_result [source]
+        context_region = result["runs"][0]["results"][0]["locations"][0]["physicalLocation"]["contextRegion"]
+        context_region["sourceLanguage"].should eq "ECR"
+      end
+
+      it "includes multi-line snippets" do
+        source = Source.new <<-CRYSTAL
+          def method
+            a = 1
+            b = 2
+          end
+          CRYSTAL
+        source.add_issue DummyRule.new,
+          Crystal::Location.new("path", 2, 1),
+          Crystal::Location.new("path", 3, 10),
+          "message"
+
+        result = get_sarif_result [source]
+        context_region = result["runs"][0]["results"][0]["locations"][0]["physicalLocation"]["contextRegion"]
+        snippet = context_region["snippet"]["text"].as_s
+        snippet.should contain "a = 1"
+        snippet.should contain "b = 2"
+      end
+    end
+
+    context "severity mapping" do
+      it "maps error severity to error level" do
+        source = Source.new path: "source.cr"
+        source.add_issue TestErrorRule.new, {1, 1}, "message"
+
+        result = get_sarif_result [source]
+        result["runs"][0]["results"][0]["level"].should eq "error"
+      end
+
+      it "maps warning severity to warning level" do
+        source = Source.new path: "source.cr"
+        source.add_issue TestWarningRule.new, {1, 1}, "message"
+
+        result = get_sarif_result [source]
+        result["runs"][0]["results"][0]["level"].should eq "warning"
+      end
+
+      it "maps convention severity to note level" do
+        source = Source.new path: "source.cr"
+        source.add_issue DummyRule.new, {1, 1}, "message"
+
+        result = get_sarif_result [source]
+        result["runs"][0]["results"][0]["level"].should eq "note"
+      end
+    end
+
+    context "multiple sources" do
+      it "includes issues from multiple sources" do
+        source1 = Source.new path: "source1.cr"
+        source1.add_issue DummyRule.new, {1, 1}, "message 1"
+
+        source2 = Source.new path: "source2.cr"
+        source2.add_issue NamedRule.new, {2, 2}, "message 2"
+
+        result = get_sarif_result [source1, source2]
+        results = result["runs"][0]["results"].as_a
+        results.size.should eq 2
+      end
+
+      it "formats paths correctly" do
+        source = Source.new path: "src/foo/bar.cr"
+        source.add_issue DummyRule.new, {1, 1}, "message"
+
+        result = get_sarif_result [source]
+        uri = result["runs"][0]["results"][0]["locations"][0]["physicalLocation"]["artifactLocation"]["uri"]
+        uri.should eq "src/foo/bar.cr"
+      end
+    end
+  end
+end
