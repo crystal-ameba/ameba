@@ -24,19 +24,17 @@ module Ameba::Rule::Lint
   # ```
   # Lint/UselessAssign:
   #   Enabled: true
-  #   ExcludeTypeDeclarations: false
   # ```
   class UselessAssign < Base
     properties do
       since_version "0.6.0"
       description "Disallows useless variable assignments"
-      exclude_type_declarations false
     end
 
     MSG = "Useless assignment to variable `%s`"
 
     def test(source)
-      AST::ScopeVisitor.new self, source
+      UselessAssignScopeVisitor.new self, source
     end
 
     def test(source, node, scope : AST::Scope)
@@ -44,7 +42,6 @@ module Ameba::Rule::Lint
 
       scope.variables.each do |var|
         next if var.ignored? || var.used_in_macro? || var.captured_by_block?
-        next if exclude_type_declarations? && scope.assigns_type_dec?(var.name)
 
         var.assignments.each do |assign|
           check_assignment(source, assign, var)
@@ -61,6 +58,42 @@ module Ameba::Rule::Lint
       else
         issue_for target_node, MSG % var.name
       end
+    end
+  end
+
+  private class UselessAssignScopeVisitor < AST::ScopeVisitor
+    getter? in_call_args = false
+
+    private def in_call_args(&)
+      if in_call_args?
+        yield
+      else
+        @in_call_args = true
+        yield
+        @in_call_args = false
+      end
+    end
+
+    def visit(node : Crystal::Call)
+      return false unless super
+
+      node.obj.try &.accept(self)
+      in_call_args do
+        node.args.each &.accept(self)
+        node.named_args.try &.each &.accept(self)
+      end
+      node.block_arg.try &.accept(self)
+      node.block.try &.accept(self)
+
+      false
+    end
+
+    def visit(node : Crystal::TypeDeclaration)
+      super unless in_call_args?
+    end
+
+    private def on_assign_end(target, node)
+      super unless in_call_args?
     end
   end
 end

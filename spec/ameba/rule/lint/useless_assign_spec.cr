@@ -3,7 +3,6 @@ require "../../../spec_helper"
 module Ameba::Rule::Lint
   describe UselessAssign do
     subject = UselessAssign.new
-    subject.exclude_type_declarations = false
 
     it "does not report used assignments" do
       expect_no_issues subject, <<-CRYSTAL
@@ -521,12 +520,16 @@ module Ameba::Rule::Lint
           CRYSTAL
       end
 
-      pending "doesn't report type declaration as a call argument" do
+      it "doesn't report type declaration as a call argument" do
         expect_no_issues subject, <<-CRYSTAL
           foo Foo(T), foo : T
           foo Foo, foo : Nil
           foo foo : String
           foo foo : String, bar : Int32?, baz : Bool
+          foo bar : String = ""
+          foo bar : String = baz
+          foo bar = baz
+          foo bar = ""
           CRYSTAL
       end
 
@@ -1233,27 +1236,6 @@ module Ameba::Rule::Lint
             a
           end
           CRYSTAL
-      end
-    end
-
-    context "#properties" do
-      context "#exclude_type_declarations" do
-        it "doesn't report type declarations if enabled" do
-          rule = UselessAssign.new
-          rule.exclude_type_declarations = true
-
-          expect_no_issues rule, <<-CRYSTAL
-            a : String?
-
-            class Foo
-              b : String?
-            end
-
-            def foo
-              c : String?
-            end
-            CRYSTAL
-        end
       end
     end
 
