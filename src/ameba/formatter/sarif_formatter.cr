@@ -41,16 +41,12 @@ module Ameba::Formatter
         tool: sarif_tool
       )
 
-      # Add invocations with rule configuration overrides
-      if configured_rules = @rules
-        overrides = build_configuration_overrides(configured_rules, sarif_rules)
-        unless overrides.empty?
-          invocation = AsSARIF::Invocation.new(
-            rule_configuration_overrides: overrides
-          )
-          sarif_run.invocations = [invocation]
-        end
-      end
+      # Execution fails if any source has syntax errors
+      execution_successful = sources.none? { |src| src.issues.any?(&.rule.is_a?(Rule::Lint::Syntax)) }
+      overrides = @rules.try { |rules| build_configuration_overrides(rules, sarif_rules) } ||
+                  Array(AsSARIF::ConfigurationOverride).new
+
+      sarif_run.invocations = [AsSARIF::Invocation.new(execution_successful, overrides)]
 
       sources.each do |source|
         source.issues.each do |issue|
