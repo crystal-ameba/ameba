@@ -1103,10 +1103,6 @@
           "type": "string",
           "default": "0.6.0"
         },
-        "ExcludeTypeDeclarations": {
-          "type": "boolean",
-          "default": false
-        },
         "Severity": {
           "$ref": "#/$defs/Severity",
           "default": "Warning"
