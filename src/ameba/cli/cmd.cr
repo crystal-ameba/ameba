@@ -322,7 +322,7 @@ module Ameba::CLI
   private def parse_explain_location(arg)
     Crystal::Location.parse(arg)
   rescue
-    raise "location should have PATH:line:column format"
+    raise "location should have PATH:line:column format (e.g., src/file.cr:10:5)"
   end
 
   private def print_version(output)
