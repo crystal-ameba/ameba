@@ -122,11 +122,11 @@ module Ameba::Rule::Style
           end
         when heredoc_arg
           if arg_location = heredoc_arg.location
-            if line = source_lines[arg_location.line_number - 1]?
-              if line.rstrip.ends_with?(',')
+            if arg_line = source_lines[arg_location.line_number - 1]?
+              if arg_line.rstrip.ends_with?(',')
                 node.end_location
               else
-                arg_location.with(column_number: line.size)
+                arg_location.with(column_number: arg_line.size)
               end
             end
           end
