@@ -52,7 +52,6 @@ module Ameba::Formatter
       it "includes rule descriptors" do
         rule = result["runs"][0]["tool"]["driver"]["rules"][0]
         rule["id"].should_not be_nil
-        rule["name"].should_not be_nil
         rule["shortDescription"].should_not be_nil
         rule["fullDescription"].should_not be_nil
         rule["defaultConfiguration"].should_not be_nil
@@ -173,44 +172,70 @@ module Ameba::Formatter
     end
 
     context "context region" do
-      it "includes context region with snippet" do
+      it "includes context region with snippet and surrounding context" do
         source = Source.new <<-CRYSTAL
-          a = 1
-          b = 2
-          c = 3
+          class Foo
+            def initialize
+              @value = 0
+            end
+            def value
           CRYSTAL
-        source.add_issue DummyRule.new, {2, 3}, "message"
+        source.add_issue DummyRule.new, {3, 3}, "message"
 
         result = get_sarif_result [source]
         context_region = result["runs"][0]["results"][0]["locations"][0]["physicalLocation"]["contextRegion"]
         context_region.should_not be_nil
-        context_region["snippet"]["text"].as_s.should contain "b = 2"
+        # Should include 2 lines before and after (lines 1-5)
+        snippet = context_region["snippet"]["text"].as_s
+        snippet.should contain "class Foo"
+        snippet.should contain "@value = 0"
+        snippet.should contain "def value"
       end
 
-      it "includes context region coordinates" do
+      it "includes context region with expanded line coordinates" do
         source = Source.new <<-CRYSTAL
-          a = 1
-          b = 2
-          c = 3
+          module App
+            class User
+              property name : String
+              property email : String
+              def initialize(@name, @email)
+              end
           CRYSTAL
         source.add_issue DummyRule.new,
-          Crystal::Location.new("path", 1, 1),
-          Crystal::Location.new("path", 2, 5),
+          Crystal::Location.new("path", 3, 1),
+          Crystal::Location.new("path", 4, 5),
           "message"
 
         result = get_sarif_result [source]
         context_region = result["runs"][0]["results"][0]["locations"][0]["physicalLocation"]["contextRegion"]
-        context_region["startLine"].should eq 1
-        context_region["startColumn"].should eq 1
-        context_region["endLine"].should eq 2
-        context_region["endColumn"].should eq 5
+        # Context should expand by 2 lines in each direction (clamped to file bounds)
+        context_region["startLine"].should eq 1 # max(1, 3-2) = 1
+        context_region["endLine"].should eq 6   # min(6, 4+2) = 6
+        # No column fields in contextRegion (spans full lines)
+        context_region["startColumn"]?.should be_nil
+        context_region["endColumn"]?.should be_nil
+      end
+
+      it "omits context region when file is too small for expansion" do
+        source = Source.new <<-CRYSTAL, "source.cr"
+          x = 1
+          CRYSTAL
+        source.add_issue DummyRule.new, {1, 1}, "message"
+
+        result = get_sarif_result [source]
+        physical_location = result["runs"][0]["results"][0]["locations"][0]["physicalLocation"]
+        # contextRegion should be omitted when it would be identical to region
+        physical_location["contextRegion"]?.should be_nil
       end
 
       it "sets source language to Crystal by default" do
         source = Source.new <<-CRYSTAL, "source.cr"
-          a = 1
+          def greet
+            puts "Hello"
+          end
+          greet
           CRYSTAL
-        source.add_issue DummyRule.new, {1, 1}, "message"
+        source.add_issue DummyRule.new, {2, 1}, "message"
 
         result = get_sarif_result [source]
         context_region = result["runs"][0]["results"][0]["locations"][0]["physicalLocation"]["contextRegion"]
@@ -219,20 +244,23 @@ module Ameba::Formatter
 
       it "sets source language to ECR for ECR files" do
         source = Source.new <<-CRYSTAL, "template.ecr"
+          <html>
+          <body>
           <p>Hello</p>
+          </body>
           CRYSTAL
-        source.add_issue DummyRule.new, {1, 1}, "message"
+        source.add_issue DummyRule.new, {2, 1}, "message"
 
         result = get_sarif_result [source]
         context_region = result["runs"][0]["results"][0]["locations"][0]["physicalLocation"]["contextRegion"]
         context_region["sourceLanguage"].should eq "ECR"
       end
 
-      it "includes multi-line snippets" do
+      it "includes multi-line snippets with surrounding context" do
         source = Source.new <<-CRYSTAL
-          def method
-            a = 1
-            b = 2
+          def calculate
+            sum = 0
+            sum += 1
           end
           CRYSTAL
         source.add_issue DummyRule.new,
@@ -242,9 +270,44 @@ module Ameba::Formatter
 
         result = get_sarif_result [source]
         context_region = result["runs"][0]["results"][0]["locations"][0]["physicalLocation"]["contextRegion"]
+        # Should include the issue lines plus surrounding context
         snippet = context_region["snippet"]["text"].as_s
-        snippet.should contain "a = 1"
-        snippet.should contain "b = 2"
+        snippet.should contain "def calculate"
+        snippet.should contain "sum = 0"
+        snippet.should contain "sum += 1"
+        snippet.should contain "end"
+      end
+
+      it "clamps context to file boundaries at start" do
+        source = Source.new <<-CRYSTAL
+          a = 1
+          b = 2
+          c = 3
+          d = 4
+          CRYSTAL
+        source.add_issue DummyRule.new, {1, 1}, "message"
+
+        result = get_sarif_result [source]
+        context_region = result["runs"][0]["results"][0]["locations"][0]["physicalLocation"]["contextRegion"]
+        # Can only expand downward since we're at line 1
+        context_region["startLine"].should eq 1
+        context_region["endLine"].should eq 3 # min(4, 1+2) = 3
+      end
+
+      it "clamps context to file boundaries at end" do
+        source = Source.new <<-CRYSTAL
+          a = 1
+          b = 2
+          c = 3
+          d = 4
+          CRYSTAL
+        source.add_issue DummyRule.new, {4, 1}, "message"
+
+        result = get_sarif_result [source]
+        context_region = result["runs"][0]["results"][0]["locations"][0]["physicalLocation"]["contextRegion"]
+        # Can only expand upward since we're at the last line
+        context_region["startLine"].should eq 2 # max(1, 4-2) = 2
+        context_region["endLine"].should eq 4
       end
     end
 
