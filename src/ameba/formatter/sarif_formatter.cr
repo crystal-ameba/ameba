@@ -12,11 +12,14 @@ module Ameba::Formatter
     def finished(sources) : Nil
       sarif_rules = Rule.rules.map do |rule_class|
         rule = rule_class.new
+        full_description = rule.class.parsed_doc || ""
+        help_text = full_description.empty? ? rule.description : full_description
 
         AsSARIF::ReportingDescriptor.new(
           id: rule.name,
           short_description: rule.description,
-          full_description: rule.class.parsed_doc || "",
+          full_description: full_description,
+          help: help_text,
           help_uri: rule.class.documentation_url,
           default_configuration: AsSARIF::ReportingConfiguration.new(
             enabled: rule.enabled?,
@@ -277,10 +280,11 @@ module Ameba::Formatter
       getter id : String
       getter short_description : String
       getter full_description : String
+      getter help : String
       getter default_configuration : ReportingConfiguration
       getter help_uri : String
 
-      def initialize(@id, @short_description, @full_description, @default_configuration, @help_uri)
+      def initialize(@id, @short_description, @full_description, @help, @default_configuration, @help_uri)
       end
 
       def to_json(json)
@@ -293,6 +297,10 @@ module Ameba::Formatter
           fullDescription: {
             text:     full_description,
             markdown: full_description,
+          },
+          help: {
+            text:     help,
+            markdown: help,
           },
           defaultConfiguration: default_configuration,
           helpUri:              help_uri,
