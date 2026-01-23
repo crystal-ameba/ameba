@@ -42,7 +42,7 @@ module Ameba::CLI
       Colorize.enabled = opts.colors?
 
       if (location_to_explain = opts.location_to_explain) && opts.autocorrect?
-        raise "Invalid usage: Cannot explain an issue and autocorrect at the same time."
+        raise "Invalid usage: Cannot explain an issue and autocorrect at the same time. Use either --explain or --fix, but not both."
       end
 
       if opts.stdin_filename && opts.autocorrect?
