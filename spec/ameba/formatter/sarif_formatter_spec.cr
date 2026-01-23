@@ -296,5 +296,103 @@ module Ameba::Formatter
         uri.should eq "src/foo/bar.cr"
       end
     end
+
+    context "rule configuration overrides" do
+      it "doesn't include invocations when no rules are overridden" do
+        source = Source.new path: "source.cr"
+        output = IO::Memory.new
+        formatter = Ameba::Formatter::SARIFFormatter.new output
+
+        # Set rules with default configuration
+        formatter.rules = [DummyRule.new] of Rule::Base
+
+        formatter.started [source]
+        formatter.source_finished source
+        formatter.finished [source]
+
+        result = JSON.parse(output.to_s)
+        result["runs"][0]["invocations"]?.should be_nil
+      end
+
+      it "includes invocations when rule is disabled" do
+        source = Source.new path: "source.cr"
+        output = IO::Memory.new
+        formatter = Ameba::Formatter::SARIFFormatter.new output
+
+        rule = DummyRule.new
+        rule.enabled = false
+        formatter.rules = [rule] of Rule::Base
+
+        formatter.started [source]
+        formatter.source_finished source
+        formatter.finished [source]
+
+        result = JSON.parse(output.to_s)
+        invocations = result["runs"][0]["invocations"].as_a
+        invocations.size.should eq 1
+
+        overrides = invocations[0]["ruleConfigurationOverrides"].as_a
+        overrides.size.should be >= 1
+
+        override = overrides.find { |override_item| override_item["descriptor"]["id"] == DummyRule.rule_name }
+        if config = override
+          config["configuration"]["enabled"].should be_false
+        end
+      end
+
+      it "includes invocations when rule severity is changed" do
+        source = Source.new path: "source.cr"
+        output = IO::Memory.new
+        formatter = Ameba::Formatter::SARIFFormatter.new output
+
+        rule = DummyRule.new
+        rule.severity = Severity::Error # Default is Convention
+        formatter.rules = [rule] of Rule::Base
+
+        formatter.started [source]
+        formatter.source_finished source
+        formatter.finished [source]
+
+        result = JSON.parse(output.to_s)
+        invocations = result["runs"][0]["invocations"].as_a
+        overrides = invocations[0]["ruleConfigurationOverrides"].as_a
+
+        override = overrides.find { |override_item| override_item["descriptor"]["id"] == DummyRule.rule_name }
+        if config = override
+          config["configuration"]["level"].should eq "error"
+        end
+      end
+
+      it "includes descriptor index in overrides" do
+        source = Source.new path: "source.cr"
+        output = IO::Memory.new
+        formatter = Ameba::Formatter::SARIFFormatter.new output
+
+        rule = DummyRule.new
+        rule.enabled = false
+        formatter.rules = [rule] of Rule::Base
+
+        formatter.started [source]
+        formatter.source_finished source
+        formatter.finished [source]
+
+        result = JSON.parse(output.to_s)
+        overrides = result["runs"][0]["invocations"][0]["ruleConfigurationOverrides"].as_a
+
+        override = overrides.find { |override_item| override_item["descriptor"]["id"] == DummyRule.rule_name }
+        if config = override
+          config["descriptor"]["index"].as_i64.should be >= 0
+        end
+      end
+
+      it "works without rules being set" do
+        source = Source.new path: "source.cr"
+        source.add_issue DummyRule.new, {1, 1}, "message"
+
+        result = get_sarif_result [source]
+        # Should not crash even without rules being set
+        result["runs"][0]["invocations"]?.should be_nil
+      end
+    end
   end
 end
