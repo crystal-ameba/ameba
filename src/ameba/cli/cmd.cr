@@ -46,7 +46,7 @@ module Ameba::CLI
       end
 
       if opts.stdin_filename && opts.autocorrect?
-        raise "Invalid usage: Cannot autocorrect from stdin. Save the code to a file first and run ameba with --fix on that file."
+        raise "Invalid usage: Cannot autocorrect from stdin."
       end
 
       config = config_from_opts(opts)
