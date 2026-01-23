@@ -15,7 +15,6 @@ module Ameba::Formatter
 
         AsSARIF::ReportingDescriptor.new(
           id: rule.name,
-          name: rule.name,
           short_description: rule.description,
           full_description: rule.class.parsed_doc || "",
           help_uri: rule.class.documentation_url,
@@ -70,7 +69,7 @@ module Ameba::Formatter
           sarif_run.results << AsSARIF::RunResult.new(
             message: issue.message,
             rule_id: issue.rule.name,
-            rule_index: sarif_rules.index!(&.name.== issue.rule.name),
+            rule_index: sarif_rules.index!(&.id.== issue.rule.name),
             level: AsSARIF::Level.from_severity(issue.rule.severity),
             locations: [AsSARIF::Location.new(
               uri: Path[source.path].to_posix.to_s,
@@ -270,19 +269,17 @@ module Ameba::Formatter
 
     struct ReportingDescriptor
       getter id : String
-      getter name : String
       getter short_description : String
       getter full_description : String
       getter default_configuration : ReportingConfiguration
       getter help_uri : String
 
-      def initialize(@id, @name, @short_description, @full_description, @default_configuration, @help_uri)
+      def initialize(@id, @short_description, @full_description, @default_configuration, @help_uri)
       end
 
       def to_json(json)
         {
           id:               id,
-          name:             name,
           shortDescription: {
             text:     short_description,
             markdown: short_description,
