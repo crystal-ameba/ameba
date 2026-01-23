@@ -297,13 +297,30 @@ module Ameba::Formatter
       end
     end
 
-    context "rule configuration overrides" do
-      it "doesn't include invocations when no rules are overridden" do
+    context "invocations" do
+      it "includes executionSuccessful true when no syntax errors" do
+        source = Source.new path: "source.cr"
+        source.add_issue DummyRule.new, {1, 1}, "message"
+
+        result = get_sarif_result [source]
+        invocations = result["runs"][0]["invocations"].as_a
+        invocations[0]["executionSuccessful"].should be_true
+      end
+
+      it "includes executionSuccessful false when syntax errors exist" do
+        source = Source.new "def foo", "source.cr"
+        source.add_issue Rule::Lint::Syntax.new, {1, 1}, "unexpected token: EOF"
+
+        result = get_sarif_result [source]
+        invocations = result["runs"][0]["invocations"].as_a
+        invocations[0]["executionSuccessful"].should be_false
+      end
+
+      it "includes empty ruleConfigurationOverrides when no rules are overridden" do
         source = Source.new path: "source.cr"
         output = IO::Memory.new
         formatter = Ameba::Formatter::SARIFFormatter.new output
 
-        # Set rules with default configuration
         formatter.rules = [DummyRule.new] of Rule::Base
 
         formatter.started [source]
@@ -311,7 +328,8 @@ module Ameba::Formatter
         formatter.finished [source]
 
         result = JSON.parse(output.to_s)
-        result["runs"][0]["invocations"]?.should be_nil
+        invocations = result["runs"][0]["invocations"].as_a
+        invocations[0]["ruleConfigurationOverrides"].as_a.should be_empty
       end
 
       it "includes invocations when rule is disabled" do
@@ -390,8 +408,10 @@ module Ameba::Formatter
         source.add_issue DummyRule.new, {1, 1}, "message"
 
         result = get_sarif_result [source]
-        # Should not crash even without rules being set
-        result["runs"][0]["invocations"]?.should be_nil
+        # Should include invocations with execution status even without rules being set
+        invocations = result["runs"][0]["invocations"].as_a
+        invocations[0]["executionSuccessful"].should be_true
+        invocations[0]["ruleConfigurationOverrides"].as_a.should be_empty
       end
     end
   end
