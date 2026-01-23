@@ -14,46 +14,42 @@ end
 module Ameba::Formatter
   describe SARIFFormatter do
     context "SARIF structure" do
+      result = get_sarif_result
+
       it "includes correct schema" do
-        result = get_sarif_result
         result["$schema"].should eq "https://www.schemastore.org/schemas/json/sarif-2.1.0-rtm.6.json"
       end
 
       it "includes correct version" do
-        result = get_sarif_result
         result["version"].should eq "2.1.0"
       end
 
       it "includes runs array" do
-        result = get_sarif_result
         result["runs"].as_a.should_not be_nil
       end
     end
 
     context "tool information" do
+      result = get_sarif_result
+
       it "includes tool name" do
-        result = get_sarif_result
         result["runs"][0]["tool"]["driver"]["name"].should eq "ameba"
       end
 
       it "includes ameba version" do
-        result = get_sarif_result
         result["runs"][0]["tool"]["driver"]["version"].should eq Ameba::VERSION
       end
 
       it "includes information URI" do
-        result = get_sarif_result
         result["runs"][0]["tool"]["driver"]["informationUri"].should eq "https://crystal-ameba.github.io/"
       end
 
       it "includes rules array" do
-        result = get_sarif_result
         rules = result["runs"][0]["tool"]["driver"]["rules"].as_a
         rules.should_not be_empty
       end
 
       it "includes rule descriptors" do
-        result = get_sarif_result
         rule = result["runs"][0]["tool"]["driver"]["rules"][0]
         rule["id"].should_not be_nil
         rule["name"].should_not be_nil
@@ -64,14 +60,12 @@ module Ameba::Formatter
       end
 
       it "includes rule short description with text and markdown" do
-        result = get_sarif_result
         rule = result["runs"][0]["tool"]["driver"]["rules"][0]
         rule["shortDescription"]["text"].should_not be_nil
         rule["shortDescription"]["markdown"].should_not be_nil
       end
 
       it "includes rule default configuration" do
-        result = get_sarif_result
         rule = result["runs"][0]["tool"]["driver"]["rules"][0]
         config = rule["defaultConfiguration"]
         config["level"].should_not be_nil

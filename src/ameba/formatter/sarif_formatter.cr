@@ -48,22 +48,20 @@ module Ameba::Formatter
         source.issues.each do |issue|
           next if issue.disabled?
 
-          start_location = issue.location || issue.end_location
-          end_location = issue.end_location || issue.location
+          start_location = issue.location || issue.end_location || Crystal::Location.new(source.path, 1, 1)
+          end_location = issue.end_location || start_location
 
-          if start_location && end_location
-            context_snippet =
-              source.lines[(start_location.line_number - 1)...end_location.line_number].join('\n')
+          context_snippet =
+            source.lines[(start_location.line_number - 1)...end_location.line_number].join('\n')
 
-            context_region = AsSARIF::ContextRegion.new(
-              start_line: start_location.line_number,
-              start_column: start_location.column_number,
-              end_line: end_location.line_number,
-              end_column: end_location.column_number,
-              snippet: context_snippet,
-              source_language: source.ecr? ? "ECR" : "Crystal",
-            )
-          end
+          context_region = AsSARIF::ContextRegion.new(
+            start_line: start_location.line_number,
+            start_column: start_location.column_number,
+            end_line: end_location.line_number,
+            end_column: end_location.column_number,
+            snippet: context_snippet,
+            source_language: source.ecr? ? "ECR" : "Crystal",
+          )
 
           sarif_run.results << AsSARIF::RunResult.new(
             message: issue.message,
@@ -134,19 +132,7 @@ module Ameba::Formatter
       end
     end
 
-    # "locations": [
-    #   {
-    #     "physicalLocation": {
-    #       "uri": "file:///C:/Code/a.js",
-    #       "region": {
-    #         "startLine": "6",
-    #         "startColumn": "10"
-    #       }
-    #     }
-    #   }
-    # ],
     struct Location
-      # TODO(margret): use relative references
       property uri : String
       property start_location : Crystal::Location?
       property end_location : Crystal::Location?
