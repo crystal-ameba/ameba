@@ -84,7 +84,7 @@ module Ameba::Rule::Style
         if body_auto_dedent?
           body_dedent =
             source_lines[1...-1]
-              .reject!(&.empty?)
+              .reject(&.empty?)
               .min_of?(&.each_char.take_while(&.whitespace?).size)
         end
         body_dedent ||= heredoc_indent
