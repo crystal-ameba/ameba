@@ -145,8 +145,21 @@ module Ameba::Rule::Style
     end
 
     private def find_heredoc_arg(node : Crystal::Call, source)
-      node.named_args.try &.reverse_each.find { |arg| find_heredoc_arg(arg.value, source) } ||
-        node.args.reverse_each.find { |arg| find_heredoc_arg(arg, source) }
+      if named_args = node.named_args
+        named_args.reverse_each do |arg|
+          if result = find_heredoc_arg(arg.value, source)
+            return result
+          end
+        end
+      end
+
+      node.args.reverse_each do |arg|
+        if result = find_heredoc_arg(arg, source)
+          return result
+        end
+      end
+
+      nil
     end
 
     private def find_heredoc_arg(node, source)
