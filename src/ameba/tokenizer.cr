@@ -82,7 +82,7 @@ module Ameba
 
     private def run_array_state(lexer, token, &block : Crystal::Token -> _)
       loop do
-        lexer.next_string_array_token
+        token = lexer.next_string_array_token
         block.call token
 
         case token.type
