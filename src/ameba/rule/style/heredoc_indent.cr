@@ -99,7 +99,7 @@ module Ameba::Rule::Style
 
             "#{" " * correct_indent}#{line[dedent..]}"
           end
-          .join('\n')
+          .join("\n")
 
         corrector.replace(node, corrected_code)
       end
