@@ -71,7 +71,7 @@ module Ameba::AST
     def visit(node : Crystal::EnumDef) : Bool
       report_implicit_return(node)
 
-      node.members.each &.accept(self)
+      incr_stack { node.members.each &.accept(self) }
 
       false
     end
