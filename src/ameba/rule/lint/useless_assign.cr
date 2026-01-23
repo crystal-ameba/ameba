@@ -64,6 +64,14 @@ module Ameba::Rule::Lint
   private class UselessAssignScopeVisitor < AST::ScopeVisitor
     getter? in_call_args = false
 
+    # Executes the given block with `@in_call_args` set to `true`.
+    #
+    # If the visitor is already traversing call arguments (`in_call_args?` is `true`),
+    # the flag is left unchanged and the block is simply yielded to. Otherwise the
+    # previous state is saved, `@in_call_args` is set to `true` for the duration of
+    # the block, and then restored afterwards. This allows other callbacks such as
+    # `visit(Crystal::TypeDeclaration)` and `on_assign_end` to detect whether a node
+    # appears inside call arguments and adjust their behavior accordingly.
     private def in_call_args(&)
       if in_call_args?
         yield
