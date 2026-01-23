@@ -54,8 +54,15 @@ module Ameba::Formatter
         rule["id"].should_not be_nil
         rule["shortDescription"].should_not be_nil
         rule["fullDescription"].should_not be_nil
+        rule["help"].should_not be_nil
         rule["defaultConfiguration"].should_not be_nil
         rule["helpUri"].should_not be_nil
+      end
+
+      it "includes rule help with text and markdown" do
+        rule = result["runs"][0]["tool"]["driver"]["rules"][0]
+        rule["help"]["text"].should_not be_nil
+        rule["help"]["markdown"].should_not be_nil
       end
 
       it "includes rule short description with text and markdown" do
