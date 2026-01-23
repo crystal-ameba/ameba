@@ -92,6 +92,10 @@ module Ameba::Rule::Lint
       super unless in_call_args?
     end
 
+    # Called when finishing processing an assignment to +target+ in +node+.
+    # When inside call arguments (+in_call_args?+ is true), the useless
+    # assignment checks from the superclass are skipped; otherwise, the
+    # superclass implementation is invoked.
     private def on_assign_end(target, node)
       super unless in_call_args?
     end
