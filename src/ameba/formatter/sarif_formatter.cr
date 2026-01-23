@@ -269,7 +269,7 @@ module Ameba::Formatter
       def to_json(json)
         json.object do
           if !enabled?
-            json.field("enabled", enabled?)
+            json.field("enabled", false)
           end
 
           json.field("level", level)
