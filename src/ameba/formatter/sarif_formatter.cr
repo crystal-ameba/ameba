@@ -54,17 +54,21 @@ module Ameba::Formatter
           start_location = issue.location || issue.end_location || Crystal::Location.new(source.path, 1, 1)
           end_location = issue.end_location || start_location
 
-          context_snippet =
-            source.lines[(start_location.line_number - 1)...end_location.line_number].join('\n')
+          # Calculate context bounds (2 lines before/after, clamped to file)
+          context_start_line = {1, start_location.line_number - 2}.max
+          context_end_line = {source.lines.size, end_location.line_number + 2}.min
 
-          context_region = AsSARIF::ContextRegion.new(
-            start_line: start_location.line_number,
-            start_column: start_location.column_number,
-            end_line: end_location.line_number,
-            end_column: end_location.column_number,
-            snippet: context_snippet,
-            source_language: source.ecr? ? "ECR" : "Crystal",
-          )
+          # Only create contextRegion if it's a proper superset of region
+          if context_start_line < start_location.line_number ||
+             context_end_line > end_location.line_number
+            context_snippet = source.lines[(context_start_line - 1)...context_end_line].join('\n')
+            context_region = AsSARIF::ContextRegion.new(
+              start_line: context_start_line,
+              end_line: context_end_line,
+              snippet: context_snippet,
+              source_language: source.ecr? ? "ECR" : "Crystal",
+            )
+          end
 
           sarif_run.results << AsSARIF::RunResult.new(
             message: issue.message,
@@ -195,35 +199,37 @@ module Ameba::Formatter
           region_data["endColumn"] = end_loc.column_number
         end
 
-        {
-          physicalLocation: {
-            artifactLocation: {
-              uri: uri,
-            },
-            region:        region_data,
-            contextRegion: context_region,
-          },
-        }.to_json(json)
+        json.object do
+          json.field "physicalLocation" do
+            json.object do
+              json.field "artifactLocation" do
+                json.object do
+                  json.field "uri", uri
+                end
+              end
+              json.field "region", region_data
+              if ctx = context_region
+                json.field "contextRegion", ctx
+              end
+            end
+          end
+        end
       end
     end
 
     struct ContextRegion
       getter start_line : Int32
-      getter start_column : Int32
       getter end_line : Int32
-      getter end_column : Int32
       getter snippet : String
       getter source_language : String
 
-      def initialize(@start_line, @start_column, @end_line, @end_column, @snippet, @source_language)
+      def initialize(@start_line, @end_line, @snippet, @source_language)
       end
 
       def to_json(json)
         {
           startLine:      start_line,
-          startColumn:    start_column,
           endLine:        end_line,
-          endColumn:      end_column,
           snippet:        {text: snippet},
           sourceLanguage: source_language,
         }.to_json(json)
