@@ -1,4 +1,6 @@
 .*
+!LICENSE
+!Dockerfile
 !Makefile
 !shard.yml
 !src
