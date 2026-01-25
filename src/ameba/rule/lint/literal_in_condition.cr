@@ -43,7 +43,9 @@ module Ameba::Rule::Lint
     end
 
     def test(source, node : Crystal::While)
-      return unless literal?(cond = node.cond)
+      return unless cond = node.cond
+      return unless literal?(cond)
+
       # allow `while true`
       return if cond.is_a?(Crystal::BoolLiteral) && cond.value
 
