@@ -40,7 +40,7 @@ class Ameba::Config
   getter rules : Array(Rule::Base)
 
   # Returns minimum reported severity.
-  property severity = Severity::Convention
+  property severity : Severity = :convention
 
   # Returns a root directory to be used by `Ameba::Runner`.
   property root : Path { Path[Dir.current] }

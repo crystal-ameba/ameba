@@ -156,7 +156,6 @@ module Ameba::AST
     # :nodoc:
     def visit(node : Crystal::Var)
       variable = @current_scope.find_variable(node.name)
-
       case
       when @current_scope.arg?(node) # node is an argument
         @current_scope.add_argument(node)
