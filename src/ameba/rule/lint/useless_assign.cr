@@ -64,14 +64,32 @@ module Ameba::Rule::Lint
   private class UselessAssignScopeVisitor < AST::ScopeVisitor
     getter? in_call_args = false
 
-    private def in_call_args(&)
-      if in_call_args?
+    private def in_call_args(value = true, &)
+      prev_value = @in_call_args
+      begin
+        @in_call_args = value
         yield
-      else
-        @in_call_args = true
-        yield
-        @in_call_args = false
+      ensure
+        @in_call_args = prev_value
       end
+    end
+
+    def visit(node : Crystal::Def)
+      return super unless node.name == "->"
+
+      in_call_args(false) do
+        node.accept_children(self)
+      end
+      false
+    end
+
+    def visit(node : Crystal::Block)
+      super
+
+      in_call_args(false) do
+        node.accept_children(self)
+      end
+      false
     end
 
     def visit(node : Crystal::Call)

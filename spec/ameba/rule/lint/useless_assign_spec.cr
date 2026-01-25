@@ -31,6 +31,46 @@ module Ameba::Rule::Lint
         CRYSTAL
     end
 
+    it "reports a useless assignment in a proc passed as an argument to a call" do
+      expect_issue subject, <<-CRYSTAL
+        foo -> {
+          bar = 1
+        # ^^^ error: Useless assignment to variable `bar`
+        }
+        CRYSTAL
+    end
+
+    it "reports a useless assignment in a proc passed as a named argument to a call" do
+      expect_issue subject, <<-CRYSTAL
+        foo bar: -> {
+          baz = 1
+        # ^^^ error: Useless assignment to variable `baz`
+        }
+        CRYSTAL
+    end
+
+    it "reports a useless assignment nested within an argument to a call" do
+      expect_issue subject, <<-CRYSTAL
+        foo Proc(Nil).new do
+          bar %w[foo bar].map do |v|
+            baz = 1
+          # ^^^ error: Useless assignment to variable `baz`
+          end
+        end
+        CRYSTAL
+    end
+
+    it "reports a useless assignment nested within an argument to a call (2)" do
+      expect_issue subject, <<-CRYSTAL
+        foo Proc(Nil).new do
+          bar(%w[foo bar].map do |v|
+            baz = 1
+          # ^^^ error: Useless assignment to variable `baz`
+          end)
+        end
+        CRYSTAL
+    end
+
     it "reports a useless assignment in a block" do
       expect_issue subject, <<-CRYSTAL
         def method
