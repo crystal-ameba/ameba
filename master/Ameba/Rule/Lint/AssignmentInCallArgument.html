@@ -16,7 +16,7 @@
 <script type="text/javascript" src="../../../js/doc.js"></script>
 
   <meta name="repository-name" content="ameba">
-  <title>Ameba::Rule::Style::MultilineStringLiteral - ameba master</title>
+  <title>Ameba::Rule::Lint::AssignmentInCallArgument - ameba master</title>
   <script type="text/javascript">
     CrystalDocs.base_path = "../../../";
   </script>
@@ -419,7 +419,7 @@
       
     </li>
   
-  <li class="parent " data-id="ameba/Ameba/Rule/Lint" data-name="ameba::rule::lint">
+  <li class="parent open current" data-id="ameba/Ameba/Rule/Lint" data-name="ameba::rule::lint">
       <a href="../../../Ameba/Rule/Lint.html">Lint</a>
       
         <ul>
@@ -429,7 +429,7 @@
       
     </li>
   
-  <li class=" " data-id="ameba/Ameba/Rule/Lint/AssignmentInCallArgument" data-name="ameba::rule::lint::assignmentincallargument">
+  <li class=" current" data-id="ameba/Ameba/Rule/Lint/AssignmentInCallArgument" data-name="ameba::rule::lint::assignmentincallargument">
       <a href="../../../Ameba/Rule/Lint/AssignmentInCallArgument.html">AssignmentInCallArgument</a>
       
     </li>
@@ -859,7 +859,7 @@
       
     </li>
   
-  <li class="parent open current" data-id="ameba/Ameba/Rule/Style" data-name="ameba::rule::style">
+  <li class="parent " data-id="ameba/Ameba/Rule/Style" data-name="ameba::rule::style">
       <a href="../../../Ameba/Rule/Style.html">Style</a>
       
         <ul>
@@ -919,7 +919,7 @@
       
     </li>
   
-  <li class=" current" data-id="ameba/Ameba/Rule/Style/MultilineStringLiteral" data-name="ameba::rule::style::multilinestringliteral">
+  <li class=" " data-id="ameba/Ameba/Rule/Style/MultilineStringLiteral" data-name="ameba::rule::style::multilinestringliteral">
       <a href="../../../Ameba/Rule/Style/MultilineStringLiteral.html">MultilineStringLiteral</a>
       
     </li>
@@ -1130,12 +1130,12 @@
 
   <span class="kind">
     class
-  </span> Ameba::<wbr>Rule::<wbr>Style::<wbr>MultilineStringLiteral
+  </span> Ameba::<wbr>Rule::<wbr>Lint::<wbr>AssignmentInCallArgument
 
 </h1>
 
 
-  <ul class="superclass-hierarchy"><li class="superclass"><a href="../../../Ameba/Rule/Style/MultilineStringLiteral.html">Ameba::Rule::Style::MultilineStringLiteral</a></li><li class="superclass"><a href="../../../Ameba/Rule/Base.html">Ameba::Rule::Base</a></li><li class="superclass">Reference</li><li class="superclass">Object</li></ul>
+  <ul class="superclass-hierarchy"><li class="superclass"><a href="../../../Ameba/Rule/Lint/AssignmentInCallArgument.html">Ameba::Rule::Lint::AssignmentInCallArgument</a></li><li class="superclass"><a href="../../../Ameba/Rule/Base.html">Ameba::Rule::Base</a></li><li class="superclass">Reference</li><li class="superclass">Object</li></ul>
 
 
 
@@ -1149,22 +1149,16 @@
     Overview
   </h2>
 
-  <p>A rule that disallows multiline string literals not using
-<code>&lt;&lt;-HEREDOC</code> markers.</p>
+  <p>A rule that disallows assignments in call arguments.</p>
 <p>For example, this is considered invalid:</p>
-<pre><code class="language-crystal"><span class="s">%(
-  foo
-  bar
-)</span></code></pre>
-<p>And should be rewritten to the following:</p>
-<pre><code class="language-crystal"><span class="s">&lt;&lt;-HEREDOC</span>
-<span class="s">  foo
-  bar
-HEREDOC</span></code></pre>
+<pre><code class="language-crystal">foo a <span class="o">=</span> <span class="n">1</span></code></pre>
+<p>And has to be written as the following:</p>
+<pre><code class="language-crystal">a <span class="o">=</span> <span class="n">1</span>
+
+foo a</code></pre>
 <p>YAML configuration example:</p>
-<pre><code class="language-crystal"><span class="t">Style</span><span class="o">/</span><span class="t">MultilineStringLiteral</span>:
-  <span class="t">Enabled</span>: <span class="n">true</span>
-  <span class="t">AllowBackslashSplitStrings</span>: <span class="n">true</span></code></pre>
+<pre><code class="language-crystal"><span class="t">Lint</span><span class="o">/</span><span class="t">AssignmentInCallArgument</span>:
+  <span class="t">Enabled</span>: <span class="n">true</span></code></pre>
 
 
 
@@ -1207,8 +1201,8 @@ HEREDOC</span></code></pre>
   </h2>
   
     
-      <a href="https://github.com/crystal-ameba/ameba/blob/b2bcec3/src/ameba/rule/style/multiline_string_literal.cr#L30" target="_blank">
-        ameba/rule/style/multiline_string_literal.cr
+      <a href="https://github.com/crystal-ameba/ameba/blob/b2bcec3/src/ameba/rule/lint/assignment_in_call_argument.cr#L24" target="_blank">
+        ameba/rule/lint/assignment_in_call_argument.cr
       </a>
     
     <br/>
@@ -1229,7 +1223,7 @@ HEREDOC</span></code></pre>
   <dl>
     
       <dt class="entry-const" id="MSG">
-        <strong>MSG</strong> = <code><span class="s">&quot;Use `&lt;&lt;-HEREDOC` markers for multiline strings&quot;</span></code>
+        <strong>MSG</strong> = <code><span class="s">&quot;Assignment within a call argument detected&quot;</span></code>
       </dt>
       
     
@@ -1256,7 +1250,7 @@ HEREDOC</span></code></pre>
       <li class="entry-summary">
         <a href="#new%28config%3Dnil%29-class-method" class="signature"><strong>.new</strong>(config = <span class="n">nil</span>)</a>
         
-          <div class="summary"><p>A rule that disallows multiline string literals not using <code>&lt;&lt;-HEREDOC</code> markers.</p></div>
+          <div class="summary"><p>A rule that disallows assignments in call arguments.</p></div>
         
       </li>
     
@@ -1315,16 +1309,6 @@ HEREDOC</span></code></pre>
   <ul class="list-summary">
     
       <li class="entry-summary">
-        <a href="#allow_backslash_split_strings%3D%28allow_backslash_split_strings%3ABool%29-instance-method" class="signature"><strong>#allow_backslash_split_strings=</strong>(allow_backslash_split_strings : Bool)</a>
-        
-      </li>
-    
-      <li class="entry-summary">
-        <a href="#allow_backslash_split_strings%3F%3ABool-instance-method" class="signature"><strong>#allow_backslash_split_strings?</strong> : Bool</a>
-        
-      </li>
-    
-      <li class="entry-summary">
         <a href="#description%3AString-instance-method" class="signature"><strong>#description</strong> : String</a>
         
       </li>
@@ -1375,7 +1359,7 @@ HEREDOC</span></code></pre>
       </li>
     
       <li class="entry-summary">
-        <a href="#test%28source%2Cnode%3ACrystal%3A%3AStringLiteral%7CCrystal%3A%3AStringInterpolation%29-instance-method" class="signature"><strong>#test</strong>(source, node : Crystal::StringLiteral | Crystal::StringInterpolation)</a>
+        <a href="#test%28source%29-instance-method" class="signature"><strong>#test</strong>(source)</a>
         
       </li>
     
@@ -1580,28 +1564,22 @@ HEREDOC</span></code></pre>
       
         <div class="doc">
           
-          <p>A rule that disallows multiline string literals not using
-<code>&lt;&lt;-HEREDOC</code> markers.</p>
+          <p>A rule that disallows assignments in call arguments.</p>
 <p>For example, this is considered invalid:</p>
-<pre><code class="language-crystal"><span class="s">%(
-  foo
-  bar
-)</span></code></pre>
-<p>And should be rewritten to the following:</p>
-<pre><code class="language-crystal"><span class="s">&lt;&lt;-HEREDOC</span>
-<span class="s">  foo
-  bar
-HEREDOC</span></code></pre>
+<pre><code class="language-crystal">foo a <span class="o">=</span> <span class="n">1</span></code></pre>
+<p>And has to be written as the following:</p>
+<pre><code class="language-crystal">a <span class="o">=</span> <span class="n">1</span>
+
+foo a</code></pre>
 <p>YAML configuration example:</p>
-<pre><code class="language-crystal"><span class="t">Style</span><span class="o">/</span><span class="t">MultilineStringLiteral</span>:
-  <span class="t">Enabled</span>: <span class="n">true</span>
-  <span class="t">AllowBackslashSplitStrings</span>: <span class="n">true</span></code></pre>
+<pre><code class="language-crystal"><span class="t">Lint</span><span class="o">/</span><span class="t">AssignmentInCallArgument</span>:
+  <span class="t">Enabled</span>: <span class="n">true</span></code></pre>
         </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/b2bcec3/src/ameba/rule/style/multiline_string_literal.cr#L30" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/b2bcec3/src/ameba/rule/lint/assignment_in_call_argument.cr#L24" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1693,7 +1671,7 @@ HEREDOC</span></code></pre>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/b2bcec3/src/ameba/rule/style/multiline_string_literal.cr#L31" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/b2bcec3/src/ameba/rule/lint/assignment_in_call_argument.cr#L25" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1711,34 +1689,6 @@ HEREDOC</span></code></pre>
 </a>
     Instance Method Detail
   </h2>
-  
-    <div class="entry-detail" id="allow_backslash_split_strings=(allow_backslash_split_strings:Bool)-instance-method">
-      <div class="signature">
-        
-        def <strong>allow_backslash_split_strings=</strong>(allow_backslash_split_strings : Bool)
-
-        <a class="method-permalink" href="#allow_backslash_split_strings%3D%28allow_backslash_split_strings%3ABool%29-instance-method">#</a>
-      </div>
-      
-      <br/>
-      <div>
-        
-      </div>
-    </div>
-  
-    <div class="entry-detail" id="allow_backslash_split_strings?:Bool-instance-method">
-      <div class="signature">
-        
-        def <strong>allow_backslash_split_strings?</strong> : Bool
-
-        <a class="method-permalink" href="#allow_backslash_split_strings%3F%3ABool-instance-method">#</a>
-      </div>
-      
-      <br/>
-      <div>
-        
-      </div>
-    </div>
   
     <div class="entry-detail" id="description:String-instance-method">
       <div class="signature">
@@ -1863,7 +1813,7 @@ HEREDOC</span></code></pre>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/b2bcec3/src/ameba/rule/style/multiline_string_literal.cr#L31" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/b2bcec3/src/ameba/rule/lint/assignment_in_call_argument.cr#L25" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1882,18 +1832,18 @@ HEREDOC</span></code></pre>
       </div>
     </div>
   
-    <div class="entry-detail" id="test(source,node:Crystal::StringLiteral|Crystal::StringInterpolation)-instance-method">
+    <div class="entry-detail" id="test(source)-instance-method">
       <div class="signature">
         
-        def <strong>test</strong>(source, node : Crystal::StringLiteral | Crystal::StringInterpolation)
+        def <strong>test</strong>(source)
 
-        <a class="method-permalink" href="#test%28source%2Cnode%3ACrystal%3A%3AStringLiteral%7CCrystal%3A%3AStringInterpolation%29-instance-method">#</a>
+        <a class="method-permalink" href="#test%28source%29-instance-method">#</a>
       </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/b2bcec3/src/ameba/rule/style/multiline_string_literal.cr#L39" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/b2bcec3/src/ameba/rule/lint/assignment_in_call_argument.cr#L32" target="_blank">View source</a>]
         
       </div>
     </div>
