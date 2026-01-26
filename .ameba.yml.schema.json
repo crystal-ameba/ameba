@@ -230,6 +230,22 @@
         }
       }
     },
+    "Lint/AssignmentInCallArgument": {
+      "$ref": "#/$defs/BaseRule",
+      "$comment": "https://crystal-ameba.github.io/ameba/master/Ameba/Rule/Lint/AssignmentInCallArgument.html",
+      "title": "Lint/AssignmentInCallArgument",
+      "description": "Disallows variable assignment in call arguments",
+      "properties": {
+        "SinceVersion": {
+          "type": "string",
+          "default": "1.7.0"
+        },
+        "Severity": {
+          "$ref": "#/$defs/Severity",
+          "default": "Warning"
+        }
+      }
+    },
     "Lint/BadDirective": {
       "$ref": "#/$defs/BaseRule",
       "$comment": "https://crystal-ameba.github.io/ameba/master/Ameba/Rule/Lint/BadDirective.html",
