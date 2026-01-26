@@ -57,11 +57,13 @@ module Ameba::Rule::Lint
     end
 
     protected def self.typos_from(bin_path : String, source : Source) : Array(Typo)?
+      input, output =
+        IO::Memory.new(source.code), IO::Memory.new
+
       result = @@mutex.synchronize do
-        status =
-          Process.run bin_path, args: %w[--format json -],
-            input: IO::Memory.new(source.code),
-            output: output = IO::Memory.new
+        status = Process.run bin_path, args: %w[--format json -],
+          input: input,
+          output: output
 
         output.to_s.presence unless status.success?
       end
