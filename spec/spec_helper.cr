@@ -118,6 +118,23 @@ module Ameba
     end
   end
 
+  class ImplicitReturnRule < Rule::Base
+    @[YAML::Field(ignore: true)]
+    getter unused_expressions = [] of Crystal::ASTNode
+
+    @[YAML::Field(ignore: true)]
+    getter macro_flags = [] of Bool
+
+    properties do
+      description "Internal rule to test implicit returns"
+    end
+
+    def test(source, node, in_macro : Bool)
+      @unused_expressions << node
+      @macro_flags << in_macro
+    end
+  end
+
   # A rule that always raises an error
   class RaiseRule < Rule::Base
     property? should_raise = false
