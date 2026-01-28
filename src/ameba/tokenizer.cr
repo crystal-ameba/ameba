@@ -82,6 +82,9 @@ module Ameba
 
     private def run_array_state(lexer, token, &block : Crystal::Token -> _)
       loop do
+        # NOTE: Crystal::Token is a class and the lexer modifies @token in place,
+        # so the assignment here is for clarity/consistency with run_delimiter_state,
+        # not for correctness (the behavior is identical without the assignment).
         token = lexer.next_string_array_token
         block.call token
 
