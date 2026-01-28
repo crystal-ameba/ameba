@@ -1,0 +1,35 @@
+name: Compare rules reference
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+    paths:
+      - ".github/workflows/compare-rules-reference.yml"
+      - "**/*.cr"
+
+permissions:
+  contents: read
+
+jobs:
+  check-for-changes:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Set timezone to UTC
+        uses: szenius/set-timezone@v2.0
+
+      - name: Install Crystal
+        uses: crystal-lang/install-crystal@v1
+
+      - name: Download source
+        uses: actions/checkout@v6
+
+      - name: Install dependencies
+        run: shards install
+
+      - name: Run rules reference builder
+        run: shards run rules-reference-builder
+
+      - name: Check for changes
+        run: git diff --color --exit-code
+        continue-on-error: true
