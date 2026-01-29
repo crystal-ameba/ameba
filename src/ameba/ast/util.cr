@@ -235,6 +235,20 @@ module Ameba::AST::Util
     operator_method_name?(name)
   end
 
+  # Returns `true` if *name* represents setter method.
+  def setter_method_name?(name : String)
+    name == "[]=" ||
+      !name.empty? && name[0].letter? && name.ends_with?('=')
+  end
+
+  # Returns `true` if *node* represents setter method.
+  def setter_method?(node)
+    return false unless node.responds_to?(:name)
+    return false unless name = node.name.try(&.to_s.presence)
+
+    setter_method_name?(name)
+  end
+
   # Returns `true` if *node* is a suffix node (`if` / `unless` / `rescue` / `ensure`).
   def suffix?(node)
     case node

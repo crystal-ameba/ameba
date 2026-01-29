@@ -610,6 +610,53 @@ module Ameba::AST
       end
     end
 
+    describe "#setter_method_name?" do
+      it "returns true for setter method names" do
+        %w[foo= []=].each do |op|
+          subject.setter_method_name?(op).should be_true
+        end
+      end
+
+      it "returns false for operator method names" do
+        %w[== !=].each do |op|
+          subject.setter_method_name?(op).should be_false
+        end
+      end
+
+      it "returns false for non-operator method names" do
+        %w[foo foo? foo!].each do |op|
+          subject.setter_method_name?(op).should be_false
+        end
+      end
+    end
+
+    describe "#setter_method?" do
+      it "returns true for setter method definitions" do
+        node = as_node "def foo=(@foo); end"
+        subject.setter_method?(node).should be_true
+      end
+
+      it "returns false for other method definitions" do
+        node = as_node "def foo; end"
+        subject.setter_method?(node).should be_false
+      end
+
+      it "returns true for setter method calls" do
+        node = as_node "foo.bar = 123"
+        subject.setter_method?(node).should be_true
+      end
+
+      it "returns false for regular method calls" do
+        node = as_node "obj.method"
+        subject.setter_method?(node).should be_false
+      end
+
+      it "returns false for procs" do
+        node = as_node "-> { nil }"
+        subject.setter_method?(node).should be_false
+      end
+    end
+
     describe "#nodoc?" do
       it "returns true if a node has a single `:nodoc:` annotation" do
         node = as_node <<-CRYSTAL, wants_doc: true
