@@ -1150,7 +1150,7 @@
   </h2>
 
   <p>Represents a base of all rules. In other words, all rules
-inherits from this struct:</p>
+inherits from this class:</p>
 <pre><code class="language-crystal"><span class="k">class</span> <span class="t">Ameba</span><span class="t">::</span><span class="t">Rule</span><span class="t">::</span><span class="t">MyRule</span> <span class="o">&lt;</span> <span class="t">Ameba</span><span class="t">::</span><span class="t">Rule</span><span class="t">::</span><span class="t">Base</span>
   <span class="k">def</span> <span class="m">test</span>(source)
     <span class="k">if</span> invalid?(source)
@@ -1421,7 +1421,7 @@ that are tested by this rule, it should add an issue.</p>
   </h2>
   
     
-      <a href="https://github.com/crystal-ameba/ameba/blob/209e022/src/ameba/rule/base.cr#L29" target="_blank">
+      <a href="https://github.com/crystal-ameba/ameba/blob/ef087fb/src/ameba/rule/base.cr#L29" target="_blank">
         ameba/rule/base.cr
       </a>
     
@@ -1523,9 +1523,9 @@ that are tested by this rule, it should add an issue.</p>
   <ul class="list-summary">
     
       <li class="entry-summary">
-        <a href="#%3D%3D%28other%29-instance-method" class="signature"><strong>#==</strong>(other)</a>
+        <a href="#%3D%3D%28other%3Aself%29-instance-method" class="signature"><strong>#==</strong>(other : <span class="k">self</span>)</a>
         
-          <div class="summary"><p>Returns <code>false</code> (other can only be a <code>Value</code> here).</p></div>
+          <div class="summary"><p>Returns <code>true</code> if this reference is the same as <em>other</em>.</p></div>
         
       </li>
     
@@ -1684,7 +1684,7 @@ that are tested by this rule, it should add an issue.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/209e022/src/ameba/rule/base.cr#L139" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/ef087fb/src/ameba/rule/base.cr#L135" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1706,7 +1706,7 @@ that are tested by this rule, it should add an issue.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/209e022/src/ameba/rule/base.cr#L130" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/ef087fb/src/ameba/rule/base.cr#L126" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1739,7 +1739,7 @@ that are tested by this rule, it should add an issue.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/209e022/src/ameba/rule/base.cr#L121" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/ef087fb/src/ameba/rule/base.cr#L117" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1756,12 +1756,12 @@ that are tested by this rule, it should add an issue.</p>
     Instance Method Detail
   </h2>
   
-    <div class="entry-detail" id="==(other)-instance-method">
+    <div class="entry-detail" id="==(other:self)-instance-method">
       <div class="signature">
         
-        def <strong>==</strong>(other)
+        def <strong>==</strong>(other : <span class="k">self</span>)
 
-        <a class="method-permalink" href="#%3D%3D%28other%29-instance-method">#</a>
+        <a class="method-permalink" href="#%3D%3D%28other%3Aself%29-instance-method">#</a>
       </div>
       
         <div class="doc">
@@ -1770,13 +1770,11 @@ that are tested by this rule, it should add an issue.</p>
               Description copied from class Reference
             </div>
           
-          <p>Returns <code>false</code> (other can only be a <code>Value</code> here).</p>
+          <p>Returns <code>true</code> if this reference is the same as <em>other</em>. Invokes <code>same?</code>.</p>
         </div>
       
       <br/>
       <div>
-        
-          [<a href="https://github.com/crystal-ameba/ameba/blob/209e022/src/ameba/rule/base.cr#L114" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1800,7 +1798,7 @@ source.valid?</code></pre>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/209e022/src/ameba/rule/base.cr#L53" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/ef087fb/src/ameba/rule/base.cr#L53" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1824,7 +1822,7 @@ the one of the given source.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/209e022/src/ameba/rule/base.cr#L95" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/ef087fb/src/ameba/rule/base.cr#L95" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1852,7 +1850,7 @@ the one of the given source.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/209e022/src/ameba/rule/base.cr#L84" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/ef087fb/src/ameba/rule/base.cr#L84" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1876,8 +1874,6 @@ the one of the given source.</p>
       
       <br/>
       <div>
-        
-          [<a href="https://github.com/crystal-ameba/ameba/blob/209e022/src/ameba/rule/base.cr#L118" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1906,7 +1902,7 @@ the one of the given source.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/209e022/src/ameba/rule/base.cr#L69" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/ef087fb/src/ameba/rule/base.cr#L69" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1929,7 +1925,7 @@ usual rules.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/209e022/src/ameba/rule/base.cr#L110" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/ef087fb/src/ameba/rule/base.cr#L110" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1950,7 +1946,7 @@ usual rules.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/209e022/src/ameba/rule/base.cr#L43" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/ef087fb/src/ameba/rule/base.cr#L43" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1974,7 +1970,7 @@ that are tested by this rule, it should add an issue.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/209e022/src/ameba/rule/base.cr#L38" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/ef087fb/src/ameba/rule/base.cr#L38" target="_blank">View source</a>]
         
       </div>
     </div>

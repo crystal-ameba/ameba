@@ -1203,7 +1203,7 @@ to disable a rule that even doesn't exist:</p>
   </h2>
   
     
-      <a href="https://github.com/crystal-ameba/ameba/blob/209e022/src/ameba/rule/lint/bad_directive.cr#L20" target="_blank">
+      <a href="https://github.com/crystal-ameba/ameba/blob/ef087fb/src/ameba/rule/lint/bad_directive.cr#L20" target="_blank">
         ameba/rule/lint/bad_directive.cr
       </a>
     
@@ -1235,7 +1235,9 @@ to disable a rule that even doesn't exist:</p>
       
     
       <dt class="entry-const" id="AVAILABLE_ACTIONS">
-        <strong>AVAILABLE_ACTIONS</strong> = <code><span class="t">InlineComments</span><span class="t">::</span><span class="t">Action</span>.names.map(<span class="o">&amp;</span>.downcase)</code>
+        <strong>AVAILABLE_ACTIONS</strong> = <code><span class="t">InlineComments</span><span class="t">::</span><span class="t">Action</span>
+  .names
+  .map!() <span class="k">do</span> <span class="o">|</span>__arg0<span class="o">|</span> __arg0.underscore.gsub(<span class="s">&#39;_&#39;</span>, <span class="s">&#39;-&#39;</span>) <span class="k">end</span></code>
       </dt>
       
     
@@ -1506,6 +1508,16 @@ to disable a rule that even doesn't exist:</p>
     raise?</a>, 
     
   
+    <a href="../../../Ameba/AST/Util.html#setter_method%3F%28node%29-instance-method" class="tooltip">
+      <span>setter_method?(node)</span>
+    setter_method?</a>, 
+    
+  
+    <a href="../../../Ameba/AST/Util.html#setter_method_name%3F%28name%3AString%29-instance-method" class="tooltip">
+      <span>setter_method_name?(name : String)</span>
+    setter_method_name?</a>, 
+    
+  
     <a href="../../../Ameba/AST/Util.html#short_block%3F%28node%2Ccode_lines%29-instance-method" class="tooltip">
       <span>short_block?(node, code_lines)</span>
     short_block?</a>, 
@@ -1574,8 +1586,8 @@ to disable a rule that even doesn't exist:</p>
   <h3>Instance methods inherited from class <code><a href="../../../Ameba/Rule/Base.html">Ameba::Rule::Base</a></code></h3>
   
   
-    <a href="../../../Ameba/Rule/Base.html#%3D%3D%28other%29-instance-method" class="tooltip">
-      <span>==(other)</span>
+    <a href="../../../Ameba/Rule/Base.html#%3D%3D%28other%3Aself%29-instance-method" class="tooltip">
+      <span>==(other : <span class="k">self</span>)</span>
     ==</a>, 
     
   
@@ -1753,7 +1765,7 @@ to disable a rule that even doesn't exist:</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/209e022/src/ameba/rule/lint/bad_directive.cr#L20" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/ef087fb/src/ameba/rule/lint/bad_directive.cr#L20" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1845,7 +1857,7 @@ to disable a rule that even doesn't exist:</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/209e022/src/ameba/rule/lint/bad_directive.cr#L23" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/ef087fb/src/ameba/rule/lint/bad_directive.cr#L23" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1987,7 +1999,7 @@ to disable a rule that even doesn't exist:</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/209e022/src/ameba/rule/lint/bad_directive.cr#L23" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/ef087fb/src/ameba/rule/lint/bad_directive.cr#L23" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2017,7 +2029,7 @@ to disable a rule that even doesn't exist:</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/209e022/src/ameba/rule/lint/bad_directive.cr#L35" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/ef087fb/src/ameba/rule/lint/bad_directive.cr#L38" target="_blank">View source</a>]
         
       </div>
     </div>
