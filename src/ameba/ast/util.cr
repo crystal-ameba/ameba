@@ -224,7 +224,7 @@ module Ameba::AST::Util
   # Returns `true` if *name* represents operator method.
   def operator_method_name?(name : String)
     name != "->" &&
-      name.chars.none?(&.alphanumeric?)
+      name.each_char.none?(&.alphanumeric?)
   end
 
   # Returns `true` if *node* represents operator method.
