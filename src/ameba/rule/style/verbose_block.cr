@@ -87,7 +87,7 @@ module Ameba::Rule::Style
       return if exclude_multiple_line_blocks? && !same_location_lines?(call, body)
       return if exclude_prefix_operators? && prefix_operator?(body)
       return if exclude_operators? && operator_method?(body)
-      return if exclude_setters? && setter?(body.name)
+      return if exclude_setters? && setter_method?(body)
 
       call_code =
         call_code(source, call, body)
@@ -189,10 +189,6 @@ module Ameba::Rule::Style
 
     private def prefix_operator?(node)
       node.name.in?(PREFIX_OPERATORS) && !has_arguments?(node)
-    end
-
-    private def setter?(name)
-      !name.empty? && name[0].letter? && name.ends_with?('=')
     end
 
     private def valid_length?(code)

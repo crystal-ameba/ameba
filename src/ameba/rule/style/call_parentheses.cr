@@ -66,8 +66,9 @@ module Ameba::Rule::Style
     def test(source, node : Crystal::Call)
       return if node.args_in_brackets? ||
                 node.has_parentheses? ||
-                node.expansion? ||
-                node.name.ends_with?('=') ||
+                node.expansion?
+
+      return if setter_method?(node) ||
                 operator_method?(node)
 
       return if exclude_type_declarations? &&
