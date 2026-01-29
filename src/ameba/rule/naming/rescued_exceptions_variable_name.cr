@@ -36,17 +36,15 @@ module Ameba::Rule::Naming
     MSG          = "Disallowed variable name, use one of these instead: %s"
     MSG_SINGULAR = "Disallowed variable name, use %s instead"
 
-    def test(source, node : Crystal::ExceptionHandler)
-      node.rescues.try &.each do |rescue_node|
-        next unless name = rescue_node.name
-        next if name.in?(allowed_names)
+    def test(source, node : Crystal::Rescue)
+      return unless name = node.name
+      return if name.in?(allowed_names)
 
-        message =
-          allowed_names.size == 1 ? MSG_SINGULAR : MSG
+      message =
+        allowed_names.size == 1 ? MSG_SINGULAR : MSG
 
-        issue_for name_location_or(rescue_node, adjust_location_column_number: {{ "rescue ".size }}),
-          message % allowed_names.map { |val| "`#{val}`" }.join(", ")
-      end
+      issue_for name_location_or(node, adjust_location_column_number: {{ "rescue ".size }}),
+        message % allowed_names.map { |val| "`#{val}`" }.join(", ")
     end
   end
 end

@@ -74,8 +74,7 @@ module Ameba::Rule::Lint
     end
 
     def visit(node : Crystal::Call)
-      return false if node.name.ends_with?('=')
-      return false if operator_method?(node)
+      return false if setter_method?(node) || operator_method?(node)
       return false unless super
 
       node.obj.try &.accept(self)

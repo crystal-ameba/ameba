@@ -106,10 +106,7 @@ module Ameba::Rule::Style
     end
 
     private def line_indent(source, location) : Int32
-      line_location = location.with(column_number: 1)
-      line_location_pos = source.pos(line_location)
-      line = source.code[line_location_pos..(line_location_pos + location.column_number)]
-
+      line = source.lines[location.line_number - 1]
       line.size - line.lstrip.size
     end
   end

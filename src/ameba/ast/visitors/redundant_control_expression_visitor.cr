@@ -56,6 +56,7 @@ module Ameba::AST
     private def traverse_exception_handler(node)
       traverse_node node.body
       traverse_node node.else
+
       node.rescues.try &.each do |rescue_node|
         traverse_node rescue_node.body
       end

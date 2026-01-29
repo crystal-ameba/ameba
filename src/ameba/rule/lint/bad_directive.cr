@@ -28,9 +28,12 @@ module Ameba::Rule::Lint
     MSG_INVALID_ACTION    = "Bad action in comment directive: `%s`. Possible values: %s"
     MSG_NONEXISTENT_RULES = "Such rules do not exist: %s"
 
-    AVAILABLE_ACTIONS = InlineComments::Action.names.map(&.downcase)
-    ALL_RULE_NAMES    = Rule.rules.map(&.rule_name)
-    ALL_GROUP_NAMES   = Rule.rules.map(&.group_name).uniq!
+    AVAILABLE_ACTIONS = InlineComments::Action
+      .names
+      .map!(&.underscore.gsub('_', '-'))
+
+    ALL_RULE_NAMES  = Rule.rules.map(&.rule_name)
+    ALL_GROUP_NAMES = Rule.rules.map(&.group_name).uniq!
 
     def test(source)
       Tokenizer.new(source).run do |token|
@@ -58,7 +61,7 @@ module Ameba::Rule::Lint
       return if bad_names.empty?
 
       issue_for name_location_or(token, token.value),
-        MSG_NONEXISTENT_RULES % bad_names.join(", ")
+        MSG_NONEXISTENT_RULES % bad_names.map { |name| "`#{name}`" }.join(", ")
     end
   end
 end

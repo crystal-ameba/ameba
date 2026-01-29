@@ -7,7 +7,7 @@ module Ameba::Rule
   }
 
   # Represents a base of all rules. In other words, all rules
-  # inherits from this struct:
+  # inherits from this class:
   #
   # ```
   # class Ameba::Rule::MyRule < Ameba::Rule::Base
@@ -111,11 +111,7 @@ module Ameba::Rule
       name.in?(SPECIAL)
     end
 
-    def ==(other)
-      name == other.try(&.name)
-    end
-
-    def_hash group, name
+    def_equals_and_hash name
 
     # Adds an issue to the *source*
     macro issue_for(*args, **kwargs, &block)

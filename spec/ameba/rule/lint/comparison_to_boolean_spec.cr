@@ -21,9 +21,7 @@ module Ameba::Rule::Lint
         end
 
         :ok if a
-
         :ok if a != 1
-
         :ok if a == "true"
 
         case a

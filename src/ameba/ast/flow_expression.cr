@@ -24,9 +24,8 @@ module Ameba::AST
     # The actual node of the flow expression.
     getter node : Crystal::ASTNode
 
-    delegate to_s, to: @node
-    delegate location, to: @node
-    delegate end_location, to: @node
+    delegate location, end_location, to_s,
+      to: @node
 
     # Creates a new flow expression.
     #

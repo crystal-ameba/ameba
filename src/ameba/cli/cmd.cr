@@ -63,7 +63,7 @@ module Ameba::CLI
 
       if describe_rule_name = opts.describe_rule
         unless rule = config.rules.find(&.name.== describe_rule_name)
-          raise "Unknown rule"
+          raise "Rule `#{describe_rule_name}` does not exist"
         end
         describe_rule(rule, output)
         return true

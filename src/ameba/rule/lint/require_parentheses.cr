@@ -38,9 +38,9 @@ module Ameba::Rule::Lint
     ALLOWED_CALL_NAMES = %w[[]? []]
 
     def test(source, node : Crystal::Call)
-      return if !has_arguments?(node) ||
-                node.has_parentheses? ||
-                node.name.ends_with?('=') ||
+      return if node.has_parentheses? ||
+                !has_arguments?(node) ||
+                setter_method?(node) ||
                 node.name.in?(ALLOWED_CALL_NAMES)
 
       node.args.each do |arg|
