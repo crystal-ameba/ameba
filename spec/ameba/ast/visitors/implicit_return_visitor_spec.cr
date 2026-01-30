@@ -37,18 +37,6 @@ module Ameba::AST
         has_unused_expression?(rule, "baz").should be_false
       end
 
-      it "does not report last expression when captured as return" do
-        rule = implicit_return_visit(<<-CRYSTAL)
-          def method
-            foo
-            bar
-          end
-          CRYSTAL
-
-        has_unused_expression?(rule, "foo").should be_true
-        has_unused_expression?(rule, "bar").should be_false
-      end
-
       it "reports non-last expression even when parent captures result" do
         rule = implicit_return_visit(<<-CRYSTAL)
           x = begin
@@ -59,6 +47,7 @@ module Ameba::AST
 
         has_unused_expression?(rule, "foo").should be_true
         has_unused_expression?(rule, "bar").should be_false
+        has_unused_expression?(rule, "x").should be_false
       end
 
       it "stops processing after control expressions" do
@@ -69,6 +58,7 @@ module Ameba::AST
           CRYSTAL
 
         has_unused_expression?(rule, "foo").should be_true
+        has_unused_expression?(rule, "bar").should be_false
         has_unused_expression?(rule, "baz").should be_false
       end
 
@@ -97,6 +87,7 @@ module Ameba::AST
 
         has_unused_expression?(rule, "foo").should be_true
         has_unused_expression?(rule, "bar").should be_false
+        has_unused_expression?(rule, "x").should be_false
       end
 
       it "reports assignments when not captured" do
