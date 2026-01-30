@@ -1,17 +1,19 @@
 require "../../../spec_helper"
 
-private macro implicit_return_visit(code)
-  rule = ImplicitReturnRule.new
-  ImplicitReturnVisitor.new rule, Source.new({{ code }})
-  rule
+private def implicit_return_visit(code)
+  Ameba::ImplicitReturnRule.new.tap do |rule|
+    Ameba::AST::ImplicitReturnVisitor.new rule, Ameba::Source.new(code)
+  end
 end
 
-private macro has_unused?(rule, str)
-  {{ rule }}.unused_expressions.any? { |node| node.to_s == {{ str }} }
+private def has_unused?(rule, str)
+  rule.unused_expressions.any?(&.to_s.== str)
 end
 
-private macro has_unused_call?(rule, name)
-  {{ rule }}.unused_expressions.any? { |node| node.is_a?(Crystal::Call) && node.name == {{ name }} }
+private def has_unused_call?(rule, name)
+  rule.unused_expressions.any? do |node|
+    node.is_a?(Crystal::Call) && node.name == name
+  end
 end
 
 module Ameba::AST
