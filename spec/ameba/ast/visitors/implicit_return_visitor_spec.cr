@@ -6,8 +6,12 @@ private def implicit_return_visit(code)
   end
 end
 
-private def has_unused?(rule, str)
+private def has_unused_expression?(rule, str)
   rule.unused_expressions.any?(&.to_s.== str)
+end
+
+private def has_unused_expression?(rule, node_type : Crystal::ASTNode.class)
+  rule.unused_expressions.any?(node_type)
 end
 
 private def has_unused_call?(rule, name)
@@ -28,9 +32,9 @@ module Ameba::AST
           end
           CRYSTAL
 
-        has_unused?(rule, "foo").should be_true
-        has_unused?(rule, "bar").should be_true
-        has_unused?(rule, "baz").should be_false
+        has_unused_expression?(rule, "foo").should be_true
+        has_unused_expression?(rule, "bar").should be_true
+        has_unused_expression?(rule, "baz").should be_false
       end
 
       it "does not report last expression when captured as return" do
@@ -41,8 +45,8 @@ module Ameba::AST
           end
           CRYSTAL
 
-        has_unused?(rule, "foo").should be_true
-        has_unused?(rule, "bar").should be_false
+        has_unused_expression?(rule, "foo").should be_true
+        has_unused_expression?(rule, "bar").should be_false
       end
 
       it "reports non-last expression even when parent captures result" do
@@ -53,8 +57,8 @@ module Ameba::AST
           end
           CRYSTAL
 
-        has_unused?(rule, "foo").should be_true
-        has_unused?(rule, "bar").should be_false
+        has_unused_expression?(rule, "foo").should be_true
+        has_unused_expression?(rule, "bar").should be_false
       end
 
       it "stops processing after control expressions" do
@@ -64,8 +68,8 @@ module Ameba::AST
           baz
           CRYSTAL
 
-        has_unused?(rule, "foo").should be_true
-        has_unused?(rule, "baz").should be_false
+        has_unused_expression?(rule, "foo").should be_true
+        has_unused_expression?(rule, "baz").should be_false
       end
 
       it "handles nested expressions correctly" do
@@ -79,8 +83,8 @@ module Ameba::AST
           end
           CRYSTAL
 
-        has_unused?(rule, "foo").should be_true
-        has_unused?(rule, "bar").should be_true
+        has_unused_expression?(rule, "foo").should be_true
+        has_unused_expression?(rule, "bar").should be_true
       end
     end
 
@@ -91,8 +95,8 @@ module Ameba::AST
           x = bar
           CRYSTAL
 
-        has_unused?(rule, "foo").should be_true
-        has_unused?(rule, "bar").should be_false
+        has_unused_expression?(rule, "foo").should be_true
+        has_unused_expression?(rule, "bar").should be_false
       end
 
       it "reports assignments when not captured" do
@@ -115,7 +119,7 @@ module Ameba::AST
           bar
           CRYSTAL
 
-        has_unused?(rule, "foo").should be_false
+        has_unused_expression?(rule, "foo").should be_false
       end
 
       it "marks multi-assigned values as captured" do
@@ -124,8 +128,8 @@ module Ameba::AST
           baz
           CRYSTAL
 
-        has_unused?(rule, "foo").should be_false
-        has_unused?(rule, "bar").should be_false
+        has_unused_expression?(rule, "foo").should be_false
+        has_unused_expression?(rule, "bar").should be_false
       end
     end
 
@@ -136,8 +140,8 @@ module Ameba::AST
           qux
           CRYSTAL
 
-        has_unused?(rule, "bar").should be_false
-        has_unused?(rule, "baz").should be_false
+        has_unused_expression?(rule, "bar").should be_false
+        has_unused_expression?(rule, "baz").should be_false
       end
 
       it "reports the call itself when not captured" do
@@ -147,7 +151,7 @@ module Ameba::AST
           CRYSTAL
 
         has_unused_call?(rule, "foo").should be_true
-        has_unused?(rule, "bar").should be_true
+        has_unused_expression?(rule, "bar").should be_true
       end
 
       it "handles method calls with blocks" do
@@ -157,7 +161,7 @@ module Ameba::AST
           CRYSTAL
 
         has_unused_call?(rule, "map").should be_true
-        has_unused?(rule, "bar").should be_true
+        has_unused_expression?(rule, "bar").should be_true
       end
     end
 
@@ -171,9 +175,9 @@ module Ameba::AST
           end
           CRYSTAL
 
-        has_unused?(rule, "foo").should be_false
-        has_unused?(rule, "bar").should be_true
-        has_unused?(rule, "baz").should be_true
+        has_unused_expression?(rule, "foo").should be_false
+        has_unused_expression?(rule, "bar").should be_true
+        has_unused_expression?(rule, "baz").should be_true
       end
 
       it "reports if statement when not captured" do
@@ -184,9 +188,9 @@ module Ameba::AST
           2
           CRYSTAL
 
-        rule.unused_expressions.any?(Crystal::If).should be_true
-        has_unused?(rule, "1").should be_true
-        has_unused?(rule, "2").should be_true
+        has_unused_expression?(rule, Crystal::If).should be_true
+        has_unused_expression?(rule, "1").should be_true
+        has_unused_expression?(rule, "2").should be_true
       end
 
       it "captures last line of branches when if is captured" do
@@ -199,9 +203,9 @@ module Ameba::AST
           end
           CRYSTAL
 
-        has_unused?(rule, "bar").should be_true
-        has_unused?(rule, "baz").should be_false
-        has_unused?(rule, "qux").should be_false
+        has_unused_expression?(rule, "bar").should be_true
+        has_unused_expression?(rule, "baz").should be_false
+        has_unused_expression?(rule, "qux").should be_false
       end
     end
 
@@ -213,8 +217,8 @@ module Ameba::AST
           end
           CRYSTAL
 
-        has_unused?(rule, "foo").should be_false
-        has_unused?(rule, "bar").should be_true
+        has_unused_expression?(rule, "foo").should be_false
+        has_unused_expression?(rule, "bar").should be_true
       end
 
       it "does not capture loop body by default" do
@@ -225,8 +229,8 @@ module Ameba::AST
           end
           CRYSTAL
 
-        has_unused?(rule, "foo").should be_true
-        has_unused?(rule, "bar").should be_true
+        has_unused_expression?(rule, "foo").should be_true
+        has_unused_expression?(rule, "bar").should be_true
       end
     end
 
@@ -239,7 +243,7 @@ module Ameba::AST
           end
           CRYSTAL
 
-        has_unused?(rule, "foo").should be_false
+        has_unused_expression?(rule, "foo").should be_false
       end
 
       it "marks when conditions as captured" do
@@ -250,8 +254,8 @@ module Ameba::AST
           end
           CRYSTAL
 
-        has_unused?(rule, "foo").should be_false
-        has_unused?(rule, "bar").should be_false
+        has_unused_expression?(rule, "foo").should be_false
+        has_unused_expression?(rule, "bar").should be_false
       end
 
       it "inherits parent capture state for when bodies" do
@@ -265,7 +269,7 @@ module Ameba::AST
           end
           CRYSTAL
 
-        has_unused?(rule, "foo").should be_true
+        has_unused_expression?(rule, "foo").should be_true
       end
     end
 
@@ -276,7 +280,7 @@ module Ameba::AST
           end
           CRYSTAL
 
-        has_unused?(rule, "foo").should be_false
+        has_unused_expression?(rule, "foo").should be_false
       end
 
       it "captures method body last line by default" do
@@ -287,8 +291,8 @@ module Ameba::AST
           end
           CRYSTAL
 
-        has_unused?(rule, "foo").should be_true
-        has_unused?(rule, "bar").should be_false
+        has_unused_expression?(rule, "foo").should be_true
+        has_unused_expression?(rule, "bar").should be_false
       end
 
       it "does not capture body when return type is Nil" do
@@ -299,8 +303,8 @@ module Ameba::AST
           end
           CRYSTAL
 
-        has_unused?(rule, "foo").should be_true
-        has_unused?(rule, "bar").should be_true
+        has_unused_expression?(rule, "foo").should be_true
+        has_unused_expression?(rule, "bar").should be_true
       end
 
       it "does not capture body in initialize methods" do
@@ -313,8 +317,8 @@ module Ameba::AST
           end
           CRYSTAL
 
-        has_unused?(rule, "foo").should be_true
-        has_unused?(rule, "bar").should be_true
+        has_unused_expression?(rule, "foo").should be_true
+        has_unused_expression?(rule, "bar").should be_true
       end
 
       it "handles method with complex body" do
@@ -328,9 +332,9 @@ module Ameba::AST
           end
           CRYSTAL
 
-        has_unused?(rule, "foo").should be_true
-        has_unused?(rule, "bar").should be_true
-        has_unused?(rule, "baz").should be_false
+        has_unused_expression?(rule, "foo").should be_true
+        has_unused_expression?(rule, "bar").should be_true
+        has_unused_expression?(rule, "baz").should be_false
       end
     end
 
@@ -340,8 +344,8 @@ module Ameba::AST
           [foo, bar]
           CRYSTAL
 
-        has_unused?(rule, "foo").should be_false
-        has_unused?(rule, "bar").should be_false
+        has_unused_expression?(rule, "foo").should be_false
+        has_unused_expression?(rule, "bar").should be_false
       end
 
       it "marks hash values as captured" do
@@ -349,8 +353,8 @@ module Ameba::AST
           {a: foo, b: bar}
           CRYSTAL
 
-        has_unused?(rule, "foo").should be_false
-        has_unused?(rule, "bar").should be_false
+        has_unused_expression?(rule, "foo").should be_false
+        has_unused_expression?(rule, "bar").should be_false
       end
 
       it "marks range bounds as captured" do
@@ -358,8 +362,8 @@ module Ameba::AST
           foo..bar
           CRYSTAL
 
-        has_unused?(rule, "foo").should be_false
-        has_unused?(rule, "bar").should be_false
+        has_unused_expression?(rule, "foo").should be_false
+        has_unused_expression?(rule, "bar").should be_false
       end
 
       it "marks string interpolation expressions as captured" do
@@ -367,7 +371,7 @@ module Ameba::AST
           "hello #{foo} world"
           CRYSTAL
 
-        has_unused?(rule, "foo").should be_false
+        has_unused_expression?(rule, "foo").should be_false
       end
 
       it "marks regex contents as captured" do
@@ -375,7 +379,7 @@ module Ameba::AST
           /#{foo}/
           CRYSTAL
 
-        has_unused?(rule, "foo").should be_false
+        has_unused_expression?(rule, "foo").should be_false
       end
     end
 
@@ -385,7 +389,7 @@ module Ameba::AST
           foo + bar()
           CRYSTAL
 
-        has_unused?(rule, "foo").should be_false
+        has_unused_expression?(rule, "foo").should be_false
       end
 
       it "marks left side as captured when right is ControlExpression" do
@@ -393,7 +397,7 @@ module Ameba::AST
           foo || return bar
           CRYSTAL
 
-        has_unused?(rule, "foo").should be_false
+        has_unused_expression?(rule, "foo").should be_false
       end
 
       it "does not mark left side as captured for simple ops" do
@@ -401,7 +405,7 @@ module Ameba::AST
           foo + bar
           CRYSTAL
 
-        has_unused?(rule, "foo + bar").should be_true
+        has_unused_expression?(rule, "foo + bar").should be_true
       end
     end
 
@@ -411,7 +415,7 @@ module Ameba::AST
           foo.as(Bar)
           CRYSTAL
 
-        has_unused?(rule, "foo").should be_false
+        has_unused_expression?(rule, "foo").should be_false
       end
 
       it "marks tested object as captured" do
@@ -420,8 +424,8 @@ module Ameba::AST
           baz.responds_to?(:method)
           CRYSTAL
 
-        has_unused?(rule, "foo").should be_false
-        has_unused?(rule, "baz").should be_false
+        has_unused_expression?(rule, "foo").should be_false
+        has_unused_expression?(rule, "baz").should be_false
       end
 
       it "marks typeof argument as captured" do
@@ -429,7 +433,7 @@ module Ameba::AST
           typeof(foo)
           CRYSTAL
 
-        has_unused?(rule, "foo").should be_false
+        has_unused_expression?(rule, "foo").should be_false
       end
 
       it "marks declared value as captured" do
@@ -437,7 +441,7 @@ module Ameba::AST
           x : Int32 = foo
           CRYSTAL
 
-        has_unused?(rule, "foo").should be_false
+        has_unused_expression?(rule, "foo").should be_false
       end
     end
 
@@ -454,7 +458,7 @@ module Ameba::AST
           end
           CRYSTAL
 
-        has_unused?(rule, "bar").should be_true
+        has_unused_expression?(rule, "bar").should be_true
       end
 
       it "captures body last line when no else is present" do
@@ -467,9 +471,9 @@ module Ameba::AST
           end
           CRYSTAL
 
-        has_unused?(rule, "foo").should be_true
-        has_unused?(rule, "bar").should be_false
-        has_unused?(rule, "baz").should be_false
+        has_unused_expression?(rule, "foo").should be_true
+        has_unused_expression?(rule, "bar").should be_false
+        has_unused_expression?(rule, "baz").should be_false
       end
 
       it "does not capture ensure block" do
@@ -482,8 +486,8 @@ module Ameba::AST
           end
           CRYSTAL
 
-        has_unused?(rule, "bar").should be_true
-        has_unused?(rule, "baz").should be_true
+        has_unused_expression?(rule, "bar").should be_true
+        has_unused_expression?(rule, "baz").should be_true
       end
 
       it "inherits capture state for rescue bodies" do
@@ -496,8 +500,8 @@ module Ameba::AST
           end
           CRYSTAL
 
-        has_unused?(rule, "bar").should be_true
-        has_unused?(rule, "baz").should be_false
+        has_unused_expression?(rule, "bar").should be_true
+        has_unused_expression?(rule, "baz").should be_false
       end
     end
 
@@ -510,7 +514,7 @@ module Ameba::AST
           end
           CRYSTAL
 
-        has_unused?(rule, "foo").should be_true
+        has_unused_expression?(rule, "foo").should be_true
       end
 
       it "processes block when block itself is unused" do
@@ -522,9 +526,9 @@ module Ameba::AST
           baz
           CRYSTAL
 
-        has_unused?(rule, "foo").should be_true
-        has_unused?(rule, "bar").should be_false
-        has_unused?(rule, "baz").should be_true
+        has_unused_expression?(rule, "foo").should be_true
+        has_unused_expression?(rule, "bar").should be_false
+        has_unused_expression?(rule, "baz").should be_true
       end
     end
 
@@ -534,7 +538,7 @@ module Ameba::AST
           return foo
           CRYSTAL
 
-        has_unused?(rule, "foo").should be_false
+        has_unused_expression?(rule, "foo").should be_false
       end
 
       it "reports the control expression itself" do
@@ -544,7 +548,7 @@ module Ameba::AST
           end
           CRYSTAL
 
-        rule.unused_expressions.any?(Crystal::Return).should be_true
+        has_unused_expression?(rule, Crystal::Return).should be_true
       end
 
       it "handles break with value" do
@@ -554,7 +558,7 @@ module Ameba::AST
           end
           CRYSTAL
 
-        has_unused?(rule, "foo").should be_false
+        has_unused_expression?(rule, "foo").should be_false
       end
 
       it "handles next with value" do
@@ -565,7 +569,7 @@ module Ameba::AST
           end
           CRYSTAL
 
-        has_unused?(rule, "foo").should be_false
+        has_unused_expression?(rule, "foo").should be_false
       end
     end
 
@@ -576,7 +580,7 @@ module Ameba::AST
           end
           CRYSTAL
 
-        has_unused?(rule, "foo").should be_false
+        has_unused_expression?(rule, "foo").should be_false
       end
 
       it "captures macro body" do
@@ -587,8 +591,8 @@ module Ameba::AST
           end
           CRYSTAL
 
-        has_unused?(rule, "foo").should be_false
-        has_unused?(rule, "bar").should be_false
+        has_unused_expression?(rule, "foo").should be_false
+        has_unused_expression?(rule, "bar").should be_false
       end
 
       it "sets in_macro flag for macro body" do
@@ -600,7 +604,7 @@ module Ameba::AST
 
         # ameba:disable Performance/AnyInsteadOfPresent
         rule.macro_flags.any?.should be_true
-        has_unused?(rule, "foo").should be_true
+        has_unused_expression?(rule, "foo").should be_true
       end
 
       it "captures output macro expressions" do
@@ -608,7 +612,7 @@ module Ameba::AST
           {{ foo }}
           CRYSTAL
 
-        has_unused?(rule, "foo").should be_false
+        has_unused_expression?(rule, "foo").should be_false
       end
 
       it "does not capture non-output macro expressions" do
@@ -616,7 +620,7 @@ module Ameba::AST
           {% foo %}
           CRYSTAL
 
-        has_unused?(rule, "foo").should be_true
+        has_unused_expression?(rule, "foo").should be_true
       end
 
       it "sets in_macro flag for macro expression" do
@@ -634,7 +638,7 @@ module Ameba::AST
           {% end %}
           CRYSTAL
 
-        has_unused?(rule, "foo").should be_false
+        has_unused_expression?(rule, "foo").should be_false
       end
 
       it "does not capture macro if branches" do
@@ -646,8 +650,8 @@ module Ameba::AST
           {% end %}
           CRYSTAL
 
-        has_unused?(rule, "foo").should be_false
-        has_unused?(rule, "bar").should be_false
+        has_unused_expression?(rule, "foo").should be_false
+        has_unused_expression?(rule, "bar").should be_false
       end
 
       it "does not capture macro for body" do
@@ -657,7 +661,7 @@ module Ameba::AST
           {% end %}
           CRYSTAL
 
-        has_unused?(rule, "foo").should be_false
+        has_unused_expression?(rule, "foo").should be_false
       end
     end
 
@@ -671,9 +675,9 @@ module Ameba::AST
           end
           CRYSTAL
 
-        has_unused?(rule, "Red").should be_false
-        has_unused?(rule, "Green").should be_false
-        has_unused?(rule, "Blue").should be_false
+        has_unused_expression?(rule, "Red").should be_false
+        has_unused_expression?(rule, "Green").should be_false
+        has_unused_expression?(rule, "Blue").should be_false
       end
 
       it "visits class and module bodies" do
@@ -684,8 +688,8 @@ module Ameba::AST
           end
           CRYSTAL
 
-        has_unused?(rule, "foo").should be_true
-        has_unused?(rule, "bar").should be_true
+        has_unused_expression?(rule, "foo").should be_true
+        has_unused_expression?(rule, "bar").should be_true
       end
 
       it "marks function body as captured" do
@@ -695,7 +699,7 @@ module Ameba::AST
           end
           CRYSTAL
 
-        rule.unused_expressions.any?(Crystal::FunDef).should be_true
+        has_unused_expression?(rule, Crystal::FunDef).should be_true
       end
 
       it "marks unary operand as captured" do
@@ -703,8 +707,8 @@ module Ameba::AST
           !foo
           CRYSTAL
 
-        has_unused?(rule, "foo").should be_false
-        has_unused?(rule, "!foo").should be_true
+        has_unused_expression?(rule, "foo").should be_false
+        has_unused_expression?(rule, "!foo").should be_true
       end
 
       it "marks yielded values as captured" do
@@ -712,8 +716,8 @@ module Ameba::AST
           yield foo, bar
           CRYSTAL
 
-        has_unused?(rule, "foo").should be_false
-        has_unused?(rule, "bar").should be_false
+        has_unused_expression?(rule, "foo").should be_false
+        has_unused_expression?(rule, "bar").should be_false
       end
 
       it "marks default argument value as captured" do
@@ -722,7 +726,7 @@ module Ameba::AST
           end
           CRYSTAL
 
-        has_unused?(rule, "foo").should be_false
+        has_unused_expression?(rule, "foo").should be_false
       end
 
       it "marks annotation arguments as captured" do
@@ -732,7 +736,7 @@ module Ameba::AST
           end
           CRYSTAL
 
-        has_unused?(rule, "bar").should be_false
+        has_unused_expression?(rule, "bar").should be_false
       end
 
       it "visits select whens" do
@@ -743,8 +747,8 @@ module Ameba::AST
           end
           CRYSTAL
 
-        rule.unused_expressions.any?(Crystal::Select).should be_true
-        has_unused?(rule, "bar").should be_true
+        has_unused_expression?(rule, Crystal::Select).should be_true
+        has_unused_expression?(rule, "bar").should be_true
       end
     end
 
@@ -763,8 +767,8 @@ module Ameba::AST
           end
           CRYSTAL
 
-        has_unused?(rule, "foo").should be_true
-        has_unused?(rule, "bar").should be_false
+        has_unused_expression?(rule, "foo").should be_true
+        has_unused_expression?(rule, "bar").should be_false
       end
 
       it "handles control expressions in method body" do
@@ -775,8 +779,8 @@ module Ameba::AST
           end
           CRYSTAL
 
-        has_unused?(rule, "foo").should be_false
-        has_unused?(rule, "bar").should be_false
+        has_unused_expression?(rule, "foo").should be_false
+        has_unused_expression?(rule, "bar").should be_false
       end
 
       it "handles multiple assignment targets" do
@@ -784,9 +788,9 @@ module Ameba::AST
           a, b, c = foo, bar, baz
           CRYSTAL
 
-        has_unused?(rule, "foo").should be_false
-        has_unused?(rule, "bar").should be_false
-        has_unused?(rule, "baz").should be_false
+        has_unused_expression?(rule, "foo").should be_false
+        has_unused_expression?(rule, "bar").should be_false
+        has_unused_expression?(rule, "baz").should be_false
       end
 
       it "handles nested exception handlers" do
@@ -802,9 +806,9 @@ module Ameba::AST
           end
           CRYSTAL
 
-        has_unused?(rule, "foo").should be_true
-        has_unused?(rule, "bar").should be_true
-        has_unused?(rule, "baz").should be_true
+        has_unused_expression?(rule, "foo").should be_true
+        has_unused_expression?(rule, "bar").should be_true
+        has_unused_expression?(rule, "baz").should be_true
       end
 
       it "handles case with multiple when conditions" do
@@ -815,9 +819,9 @@ module Ameba::AST
           end
           CRYSTAL
 
-        has_unused?(rule, "foo").should be_false
-        has_unused?(rule, "bar").should be_false
-        has_unused?(rule, "baz").should be_false
+        has_unused_expression?(rule, "foo").should be_false
+        has_unused_expression?(rule, "bar").should be_false
+        has_unused_expression?(rule, "baz").should be_false
       end
 
       it "handles trailing control expressions" do
@@ -829,8 +833,8 @@ module Ameba::AST
           end
           CRYSTAL
 
-        has_unused?(rule, "foo").should be_true
-        has_unused?(rule, "bar").should be_true
+        has_unused_expression?(rule, "foo").should be_true
+        has_unused_expression?(rule, "bar").should be_true
       end
     end
 
