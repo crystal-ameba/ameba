@@ -82,6 +82,8 @@ module Ameba
         rules.select(&->rule_runnable?(Rule::Base))
       @unneeded_disable_directive_rule =
         rules.find &.class.==(Rule::Lint::UnneededDisableDirective)
+
+      @formatter.rules = rules
     end
 
     protected def rule_runnable?(rule)

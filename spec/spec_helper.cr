@@ -24,6 +24,26 @@ module Ameba
     end
   end
 
+  class TestErrorRule < Rule::Base
+    properties do
+      severity :error
+      description "Test rule with error severity"
+    end
+
+    def test(source)
+    end
+  end
+
+  class TestWarningRule < Rule::Base
+    properties do
+      severity :warning
+      description "Test rule with warning severity"
+    end
+
+    def test(source)
+    end
+  end
+
   class VersionedRule < Rule::Base
     properties do
       since_version "1.5.0"
