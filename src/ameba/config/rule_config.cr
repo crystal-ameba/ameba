@@ -213,7 +213,7 @@ class Ameba::Config
 
         def self.new(config = nil)
           if (raw = config.try &.raw).is_a?(Hash)
-            yaml = raw[rule_name]?.try &.to_yaml
+            yaml = raw[YAML::Any.new(rule_name)]?.try &.to_yaml
           end
           from_yaml yaml || "{}"
         end
