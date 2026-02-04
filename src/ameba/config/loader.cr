@@ -43,16 +43,90 @@ class Ameba::Config
       config.raw.is_a?(Hash) ||
         raise "Invalid config file format"
 
-      rules = Rule.rules.map &.new(config).as(Rule::Base)
+      instance =
+        build_config_from_extends(config, root)
+
+      instance.tap do
+        if version = load_string_key(config, "Version")
+          instance.version = version
+        end
+        if formatter = load_string_key(config, "Formatter", "Name")
+          instance.formatter = formatter
+        end
+
+        # TODO: impl. merge strategy
+        instance.globs.concat(
+          load_array_section(config, "Globs", DEFAULT_GLOBS.dup)
+        )
+        # TODO: impl. merge strategy
+        instance.excluded.concat(
+          load_array_section(config, "Excluded", DEFAULT_EXCLUDED.dup)
+        )
+        instance.root = root if root
+      end
+    end
+
+    protected def build_config_from_extends(config, root)
+      rule_configs = {} of Rule::Base.class => YAML::Any
+      version = formatter = nil
+
+      globs = Set(String).new
+      excluded = Set(String).new
+
+      base = root || Dir.current
+
+      # FIXME: figure out a good property name
+      extends = load_array_section(config, "inherit_from")
+      extends.each do |inherit_from|
+        inherit_from =
+          Path[inherit_from].expand(base, home: true)
+
+        yaml =
+          YAML.parse(Config.read_config(path: inherit_from))
+
+        scan_rule_configs(yaml, rule_configs)
+
+        inherited =
+          Config.from_yaml(yaml, root)
+
+        version = inherited.version || version
+        formatter = inherited.@formatter || formatter
+
+        # TODO: impl. merge strategy
+        globs.concat(inherited.globs)
+        excluded.concat(inherited.excluded)
+      end
+
+      scan_rule_configs(config, rule_configs)
+
+      rules =
+        rules_from_configs(rule_configs)
 
       new(
         rules: rules,
-        root: root,
-        excluded: load_array_section(config, "Excluded", DEFAULT_EXCLUDED.dup).to_set,
-        globs: load_array_section(config, "Globs", DEFAULT_GLOBS.dup).to_set,
-        version: load_string_key(config, "Version"),
-        formatter: load_string_key(config, "Formatter", "Name"),
+        version: version,
+        formatter: formatter,
+        globs: globs,
+        excluded: excluded,
       )
+    end
+
+    protected def scan_rule_configs(config, rule_configs)
+      Rule.rules.each_with_object(rule_configs) do |rule, configs|
+        if rule_config = config[rule.rule_name]?
+          # TODO: impl. merge strategy
+          configs[rule] = rule_config
+        end
+      end
+    end
+
+    protected def rules_from_configs(rule_configs)
+      Rule.rules.map do |rule|
+        yaml =
+          rule_configs[rule]?.try(&.to_yaml) || "{}"
+
+        rule.from_yaml(yaml).as(Rule::Base)
+      end
     end
 
     # Loads YAML configuration file by `path`.

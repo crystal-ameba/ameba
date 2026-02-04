@@ -108,6 +108,33 @@ module Ameba::JSONSchema::Builder
 
         builder.string("properties")
         builder.object do
+          builder.string("inherit_from")
+          builder.object do
+            builder.string("type")
+            builder.array do
+              builder.string("string")
+              builder.string("array")
+            end
+            builder.field("description", "The path to a config file to inherit from")
+
+            builder.string("items")
+            builder.object do
+              builder.field("type", "string")
+
+              builder.string("examples")
+              builder.array do
+                builder.string("ameba.todo.yml")
+                builder.string("ameba.common.yml")
+              end
+            end
+
+            builder.string("examples")
+            builder.array do
+              builder.string("ameba.todo.yml")
+              builder.string("ameba.common.yml")
+            end
+          end
+
           builder.string("Version")
           builder.object do
             builder.field("type", "string")
