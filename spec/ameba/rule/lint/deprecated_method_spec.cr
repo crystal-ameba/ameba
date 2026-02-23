@@ -1,7 +1,7 @@
 require "../../spec_helper"
 
-describe Ameba::Rule::Lint::DeprecatedMethods do
-  subject = Ameba::Rule::Lint::DeprecatedMethods.new
+describe Ameba::Rule::Lint::DeprecatedMethod do
+  subject = Ameba::Rule::Lint::DeprecatedMethod.new
 
   it "detects deprecated File.readable?" do
     expect_issue subject, <<-CRYSTAL
@@ -56,11 +56,19 @@ describe Ameba::Rule::Lint::DeprecatedMethods do
     CRYSTAL
   end
 
+  it "detects deprecated URI.escape" do
+    expect_issue subject, <<-CRYSTAL
+      URI.escape("string")
+      # ^^^^^^^^^^^^^^^^^ error: Call to deprecated method `URI.escape` detected: Use URI.encode_www_form or URI.encode_path instead
+    CRYSTAL
+  end
+
   it "does not flag non-deprecated methods" do
     expect_no_issues subject, <<-CRYSTAL
       File.open("path")
       Time.local
       Time.utc
+      URI.encode_www_form("string")
     CRYSTAL
   end
 end

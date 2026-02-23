@@ -7,16 +7,16 @@ module Ameba::Rule::Lint
   # YAML configuration example:
   #
   # ```
-  # Lint/DeprecatedMethods:
+  # Lint/DeprecatedMethod:
   #   Enabled: true
   # ```
-  class DeprecatedMethods < Base
+  class DeprecatedMethod < Base
     properties do
       since_version "1.7.0"
       description "Detects calls to deprecated methods"
     end
 
-    MSG = "Call to deprecated method `%s` detected"
+    MSG = "Call to deprecated method `%s` detected: %s"
 
     # List of known deprecated methods in Crystal stdlib
     # This can be expanded as more methods are deprecated
@@ -30,8 +30,12 @@ module Ameba::Rule::Lint
       "Time.now" => "Use Time.local or Time.utc instead",
       "Time.new" => "Use Time.local or Time.utc instead",
       
-      # String deprecations
-      "String#size" => "Use String#bytesize for byte size or String#chars for character count",
+      # URI deprecations
+      "URI.escape" => "Use URI.encode_www_form or URI.encode_path instead",
+      "URI.unescape" => "Use URI.decode_www_form or URI.decode_path instead",
+      
+      # Random deprecations
+      "Random.new" => "Use Random.new or Random::DEFAULT instead",
     }
 
     # Simple replacements that can be autocorrected
@@ -59,11 +63,11 @@ module Ameba::Rule::Lint
       if message = DEPRECATED_METHODS[full_name]?
         # Check if we can autocorrect this
         if replacement = AUTOCORRECT[full_name]?
-          issue_for node, "#{MSG % full_name}: #{message}" do |corrector|
+          issue_for node, MSG % {full_name, message} do |corrector|
             corrector.replace(node, replacement)
           end
         else
-          issue_for node, "#{MSG % full_name}: #{message}"
+          issue_for node, MSG % {full_name, message}
         end
       end
     end
