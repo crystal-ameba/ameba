@@ -6,14 +6,26 @@ module Ameba::Rule::Lint
 
     it "fails if there is a debug call" do
       subject.method_names.each do |name|
-        source = expect_issue subject, <<-CRYSTAL, name: name
+        expect_issue subject, <<-CRYSTAL, name: name
           a = 2
           %{name} a
           # ^{name} error: Possibly forgotten debug-related `%{name}` call detected
           a = a + 1
           CRYSTAL
+      end
+    end
 
-        expect_no_corrections source
+    it "autocorrects by removing debug calls" do
+      subject.method_names.each do |name|
+        expect_correction subject, <<-CRYSTAL, name: name
+          a = 2
+          %{name} a
+          # ^{name}
+          a = a + 1
+          CRYSTAL
+          a = 2
+          a = a + 1
+        CRYSTAL
       end
     end
 
