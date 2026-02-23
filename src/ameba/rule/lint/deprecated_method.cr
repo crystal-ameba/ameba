@@ -36,6 +36,9 @@ module Ameba::Rule::Lint
       
       # Random deprecations
       "Random.new" => "Use Random.new or Random::DEFAULT instead",
+      
+      # Process deprecations
+      "Process.fork" => "Fork is no longer supported",
     }
 
     # Simple replacements that can be autocorrected

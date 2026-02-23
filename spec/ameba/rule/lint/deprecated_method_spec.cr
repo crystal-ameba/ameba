@@ -1,4 +1,4 @@
-require "../../spec_helper"
+require "../../../spec_helper"
 
 describe Ameba::Rule::Lint::DeprecatedMethod do
   subject = Ameba::Rule::Lint::DeprecatedMethod.new
