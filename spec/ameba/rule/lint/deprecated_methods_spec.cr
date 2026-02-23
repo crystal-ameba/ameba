@@ -31,6 +31,31 @@ describe Ameba::Rule::Lint::DeprecatedMethods do
     CRYSTAL
   end
 
+  it "autocorrects Time.now to Time.local" do
+    expect_correction subject, <<-CRYSTAL
+      Time.now
+      # ^^^^^^
+    CRYSTAL
+      Time.local
+    CRYSTAL
+  end
+
+  it "detects deprecated Time.new" do
+    expect_issue subject, <<-CRYSTAL
+      Time.new
+      # ^^^^^^ error: Call to deprecated method `Time.new` detected: Use Time.local or Time.utc instead
+    CRYSTAL
+  end
+
+  it "autocorrects Time.new to Time.local" do
+    expect_correction subject, <<-CRYSTAL
+      Time.new
+      # ^^^^^^
+    CRYSTAL
+      Time.local
+    CRYSTAL
+  end
+
   it "does not flag non-deprecated methods" do
     expect_no_issues subject, <<-CRYSTAL
       File.open("path")

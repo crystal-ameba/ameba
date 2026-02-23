@@ -34,6 +34,13 @@ module Ameba::Rule::Lint
       "String#size" => "Use String#bytesize for byte size or String#chars for character count",
     }
 
+    # Simple replacements that can be autocorrected
+    # Maps deprecated method => replacement
+    AUTOCORRECT = {
+      "Time.now" => "Time.local",
+      "Time.new" => "Time.local",
+    }
+
     def test(source, node : Crystal::Call)
       method_name = node.name
       obj = node.obj
@@ -50,7 +57,14 @@ module Ameba::Rule::Lint
 
       # Check if this method is in our deprecated list
       if message = DEPRECATED_METHODS[full_name]?
-        issue_for node, "#{MSG % full_name}: #{message}"
+        # Check if we can autocorrect this
+        if replacement = AUTOCORRECT[full_name]?
+          issue_for node, "#{MSG % full_name}: #{message}" do |corrector|
+            corrector.replace(node, replacement)
+          end
+        else
+          issue_for node, "#{MSG % full_name}: #{message}"
+        end
       end
     end
   end
