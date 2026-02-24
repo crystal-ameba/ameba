@@ -31,7 +31,7 @@ module Ameba
     # Returns `false` if no issues were corrected.
     def correct!
       corrector = Corrector.new(code)
-      issues.each(&.correct(corrector))
+      issues.each { |issue| issue.correct(corrector) if issue.enabled? }
 
       corrected_code = corrector.process
       return false if code == corrected_code
