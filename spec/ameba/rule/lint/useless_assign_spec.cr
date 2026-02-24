@@ -433,6 +433,60 @@ module Ameba::Rule::Lint
             end
             CRYSTAL
         end
+
+        it "does not report inner variable used within initializer" do
+          expect_no_issues subject, <<-CRYSTAL
+            BAR = begin
+              x = 2
+              x + 1
+            end
+            CRYSTAL
+        end
+
+        it "path in class body" do
+          expect_issue subject, <<-CRYSTAL
+            class Foo
+              x = 1
+
+              BAR = begin
+                x = 2
+              # ^ error: Useless assignment to variable `x`
+              end
+
+              puts x
+            end
+            CRYSTAL
+        end
+
+        it "does not report unrelated variables" do
+          expect_issue subject, <<-CRYSTAL
+            x = 1
+            y = 2
+
+            BAR = begin
+              x = 3
+            # ^ error: Useless assignment to variable `x`
+            end
+
+            puts x
+            puts y
+            CRYSTAL
+        end
+
+        it "cvar op-assign" do
+          expect_issue subject, <<-CRYSTAL
+            class Foo
+              x = 1
+
+              @@bar ||= begin
+                x = 2
+              # ^ error: Useless assignment to variable `x`
+              end
+
+              puts x
+            end
+            CRYSTAL
+        end
       end
     end
 

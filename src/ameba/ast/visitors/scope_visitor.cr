@@ -99,7 +99,7 @@ module Ameba::AST
     end
 
     # :nodoc:
-    def visit(node : Crystal::Assign)
+    def visit(node : Crystal::Assign | Crystal::OpAssign)
       target = node.target
       if isolated_assign_target?(target)
         @current_assign = node
@@ -113,7 +113,7 @@ module Ameba::AST
     end
 
     # :nodoc:
-    def visit(node : Crystal::OpAssign | Crystal::MultiAssign | Crystal::UninitializedVar)
+    def visit(node : Crystal::MultiAssign | Crystal::UninitializedVar)
       @current_assign = node
       true
     end
