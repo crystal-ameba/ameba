@@ -77,25 +77,6 @@ module Ameba::AST
       reference(node, scope)
     end
 
-    # Reference variable's assignments.
-    #
-    # ```
-    # variable = Variable.new(node, scope)
-    # variable.assign(assign_node)
-    # variable.reference_assignments!
-    # ```
-    def reference_assignments!
-      consumed_branches = Set(Branch).new
-
-      assignments.reverse_each do |assignment|
-        next if assignment.branch.in?(consumed_branches)
-        assignment.referenced = true
-
-        break unless branch = assignment.branch
-        consumed_branches << branch
-      end
-    end
-
     # Returns `true` if the current var is referenced in
     # in the block. For example this variable is captured
     # by block:

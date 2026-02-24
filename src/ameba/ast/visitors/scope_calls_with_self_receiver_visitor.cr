@@ -115,10 +115,7 @@ module Ameba::AST
       when variable.nil? && @current_assign # node is a variable
         scope.add_variable(node)
       when variable # node is a reference
-        reference = variable.reference(node, scope)
-        if @current_assign.is_a?(Crystal::OpAssign) || !reference.target_of?(@current_assign)
-          variable.reference_assignments!
-        end
+        variable.reference(node, scope)
       end
       true
     end

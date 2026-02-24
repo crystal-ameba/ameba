@@ -40,18 +40,23 @@ module Ameba::Rule::Lint
     def test(source, node, scope : AST::Scope)
       return if scope.lib_def?(check_outer_scopes: true)
 
-      scope.variables.each do |var|
-        next if var.ignored? || var.used_in_macro? || var.captured_by_block?
+      analyzer = AST::LivenessAnalyzer.new(scope)
+      dead_stores = analyzer.dead_stores
 
-        var.assignments.each do |assign|
-          check_assignment(source, assign, var)
-        end
+      dead_stores.each do |assign|
+        var = assign.variable
+        next if var.special? || var.ignored? || var.used_in_macro? || var.captured_by_block?
+        next if referenced_in_inner_scope?(scope, var)
+
+        report_issue(source, assign, var)
       end
     end
 
-    private def check_assignment(source, assign, var)
-      return if assign.referenced?
+    private def referenced_in_inner_scope?(scope, var)
+      scope.inner_scopes.any?(&.references?(var))
+    end
 
+    private def report_issue(source, assign, var)
       case target_node = assign.target_node
       when Crystal::TypeDeclaration
         issue_for target_node.var, MSG % var.name

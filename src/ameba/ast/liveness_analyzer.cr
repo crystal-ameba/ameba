@@ -1,0 +1,420 @@
+module Ameba::AST
+  # Performs backward dataflow liveness analysis on a scope's AST to detect
+  # dead stores (assignments whose values are never read before being
+  # overwritten or the scope ends).
+  #
+  # The algorithm walks the AST in reverse execution order, maintaining a
+  # set of variable names that are currently "live" (will be read in the
+  # future). When an assignment is encountered and its target variable is
+  # not in the live set, the assignment is marked as a dead store.
+  class LivenessAnalyzer
+    alias LiveSet = Set(String)
+
+    # Maximum iterations for fixed-point convergence in loops.
+    # In practice, convergence happens in 2-3 iterations since the live set
+    # can only grow monotonically and is bounded by the number of variables.
+    MAX_FIXED_POINT_ITERATIONS = 100
+
+    @dead_stores = [] of Assignment
+    @var_names : Set(String)
+    @assignment_map : Hash(String, Array(Assignment))
+    @inner_scope_nodes : Set(UInt64)
+
+    # Live sets for loop flow control: `break` exits to post-loop,
+    # `next` jumps to loop condition. Without these, assignments
+    # before break/next would be incorrectly marked as dead.
+    @break_live : LiveSet?
+    @next_live : LiveSet?
+
+    def initialize(@scope : Scope)
+      @var_names = @scope.variables.map(&.name).to_set
+      @assignment_map = build_assignment_map
+      @inner_scope_nodes = @scope.inner_scopes.map(&.node.object_id).to_set
+    end
+
+    # Returns assignments where the value is never read before being
+    # overwritten or the scope ends.
+    def dead_stores : Array(Assignment)
+      @dead_stores.clear
+      body = scope_body(@scope.node)
+      propagate_through(body, LiveSet.new) if body
+      @dead_stores
+    end
+
+    private def build_assignment_map
+      map = Hash(String, Array(Assignment)).new
+      @scope.variables.each do |var|
+        var.assignments.each do |assign|
+          key = assignment_key(assign.node, var.name)
+          (map[key] ||= [] of Assignment) << assign
+        end
+      end
+      map
+    end
+
+    private def assignment_key(node, var_name)
+      loc = node.location
+      "#{var_name}:#{node.class}:#{loc.try(&.line_number)}:#{loc.try(&.column_number)}"
+    end
+
+    # ameba:disable Metrics/CyclomaticComplexity
+    private def scope_body(node)
+      case node
+      when Crystal::Def               then node.body
+      when Crystal::FunDef            then node.body
+      when Crystal::Block             then node.body
+      when Crystal::ProcLiteral       then node.def.body
+      when Crystal::ClassDef          then node.body
+      when Crystal::ModuleDef         then node.body
+      when Crystal::EnumDef           then Crystal::Expressions.from(node.members)
+      when Crystal::LibDef            then node.body
+      when Crystal::CStructOrUnionDef then node.body
+      when Crystal::TypeOf            then Crystal::Expressions.from(node.expressions)
+      when Crystal::Assign            then node.value
+      when Crystal::OpAssign          then node.value
+      when Crystal::Expressions       then node
+      else                                 node
+      end
+    end
+
+    private def inner_scope_node?(node)
+      @inner_scope_nodes.includes?(node.object_id)
+    end
+
+    private def find_assignment(node, var_name) : Assignment?
+      key = assignment_key(node, var_name)
+      @assignment_map[key]?.try(&.first?)
+    end
+
+    private def mark_dead_store(assign_node, var_name, live)
+      return if live.includes?(var_name)
+      if assign = find_assignment(assign_node, var_name)
+        @dead_stores << assign
+      end
+    end
+
+    # Returns the live set BEFORE the node (propagating backward).
+    # When `mark` is false, dead stores are not recorded (used during
+    # fixed-point iteration for loops).
+    # ameba:disable Metrics/CyclomaticComplexity
+    private def propagate_through(node : Crystal::ASTNode, live : LiveSet, mark = true) : LiveSet
+      case node
+      when Crystal::Nop
+        live
+      when Crystal::Expressions
+        propagate_through_expressions(node, live, mark)
+      when Crystal::Assign
+        propagate_through_assign(node, live, mark)
+      when Crystal::OpAssign
+        propagate_through_op_assign(node, live, mark)
+      when Crystal::MultiAssign
+        propagate_through_multi_assign(node, live, mark)
+      when Crystal::UninitializedVar
+        propagate_through_uninitialized(node, live, mark)
+      when Crystal::TypeDeclaration
+        propagate_through_type_declaration(node, live, mark)
+      when Crystal::Var
+        propagate_through_var(node, live)
+      when Crystal::If, Crystal::Unless
+        propagate_through_if(node.cond, node.then, node.else, live, mark)
+      when Crystal::While
+        propagate_through_loop(node.cond, node.body, live, mark)
+      when Crystal::Until
+        propagate_through_loop(node.cond, node.body, live, mark)
+      when Crystal::Case
+        propagate_through_case(node, live, mark)
+      when Crystal::Select
+        propagate_through_select(node, live, mark)
+      when Crystal::ExceptionHandler
+        propagate_through_exception_handler(node, live, mark)
+      when Crystal::BinaryOp
+        propagate_through_binary_op(node, live, mark)
+      when Crystal::Call
+        propagate_through_call(node, live, mark)
+      when Crystal::Return, Crystal::Break, Crystal::Next
+        propagate_through_flow_control(node, live, mark)
+      when Crystal::Yield
+        propagate_through_children(node, live, mark)
+      when Crystal::Block, Crystal::Def, Crystal::ProcLiteral,
+           Crystal::ClassDef, Crystal::ModuleDef, Crystal::EnumDef,
+           Crystal::LibDef, Crystal::FunDef, Crystal::TypeDef,
+           Crystal::CStructOrUnionDef, Crystal::TypeOf,
+           Crystal::Macro, Crystal::MacroIf, Crystal::MacroFor
+        live # Don't descend into inner scopes
+      else
+        propagate_through_children(node, live, mark)
+      end
+    end
+
+    private def propagate_through_expressions(node : Crystal::Expressions, live : LiveSet, mark) : LiveSet
+      node.expressions.reverse_each do |exp|
+        live = propagate_through(exp, live, mark)
+      end
+      live
+    end
+
+    private def propagate_through_assign(node : Crystal::Assign, live : LiveSet, mark) : LiveSet
+      return live if inner_scope_node?(node)
+
+      target = node.target
+      if target.is_a?(Crystal::Var) && @var_names.includes?(target.name)
+        var_name = target.name
+        # Only kill the variable if this assignment is tracked in the scope.
+        # Untracked assignments (e.g. inside record/accessor macro args) are transparent.
+        if find_assignment(node, var_name)
+          mark_dead_store(node, var_name, live) if mark
+          live = live.dup
+          live.delete(var_name)
+        end
+        propagate_through(node.value, live, mark)
+      else
+        live = propagate_through(node.value, live, mark)
+        propagate_through(target, live, mark)
+      end
+    end
+
+    private def propagate_through_op_assign(node : Crystal::OpAssign, live : LiveSet, mark) : LiveSet
+      return live if inner_scope_node?(node)
+
+      target = node.target
+      if target.is_a?(Crystal::Var) && @var_names.includes?(target.name)
+        var_name = target.name
+        mark_dead_store(node, var_name, live) if mark
+        # OpAssign reads AND writes: x += 1 means x = x + 1
+        live = live.dup
+        live.delete(var_name)
+        live.add(var_name) # target is also read
+        propagate_through(node.value, live, mark)
+      else
+        live = propagate_through(node.value, live, mark)
+        propagate_through(target, live, mark)
+      end
+    end
+
+    private def propagate_through_multi_assign(node : Crystal::MultiAssign, live : LiveSet, mark) : LiveSet
+      node.targets.reverse_each do |target|
+        if target.is_a?(Crystal::Var) && @var_names.includes?(target.name)
+          mark_dead_store(node, target.name, live) if mark
+          live = live.dup
+          live.delete(target.name)
+        end
+      end
+      node.values.reverse_each do |value|
+        live = propagate_through(value, live, mark)
+      end
+      live
+    end
+
+    private def propagate_through_uninitialized(node : Crystal::UninitializedVar, live : LiveSet, mark) : LiveSet
+      var = node.var
+      if var.is_a?(Crystal::Var) && @var_names.includes?(var.name)
+        mark_dead_store(node, var.name, live) if mark
+        live = live.dup
+        live.delete(var.name)
+      end
+      live
+    end
+
+    private def propagate_through_type_declaration(node : Crystal::TypeDeclaration, live : LiveSet, mark) : LiveSet
+      var = node.var
+      if var.is_a?(Crystal::Var) && @var_names.includes?(var.name)
+        mark_dead_store(node, var.name, live) if mark
+        live = live.dup
+        live.delete(var.name)
+        if value = node.value
+          live = propagate_through(value, live, mark)
+        end
+      end
+      live
+    end
+
+    private def propagate_through_var(node : Crystal::Var, live : LiveSet) : LiveSet
+      if @var_names.includes?(node.name)
+        live = live.dup
+        live.add(node.name)
+      end
+      live
+    end
+
+    private def propagate_through_if(cond, then_branch, else_branch, live : LiveSet, mark) : LiveSet
+      then_live = propagate_through(then_branch, live, mark)
+      else_live = propagate_through(else_branch, live, mark)
+      merged = then_live | else_live
+      propagate_through(cond, merged, mark)
+    end
+
+    private def propagate_through_loop(cond, body, live : LiveSet, mark) : LiveSet
+      outer_break = @break_live
+      outer_next = @next_live
+
+      # `break` exits to post-loop code, `next` jumps to loop condition.
+      @break_live = live
+
+      # Fixed-point iteration: the loop may execute 0+ times.
+      # We iterate until the entry live set stabilizes.
+      entry_live = live.dup
+
+      MAX_FIXED_POINT_ITERATIONS.times do
+        @next_live = entry_live
+        cond_live = propagate_through(cond, entry_live, false)
+        body_live = propagate_through(body, cond_live, false)
+        new_entry = body_live | live
+        break if new_entry == entry_live
+        entry_live = new_entry
+      end
+
+      # Final pass with marking enabled using the converged live set
+      @next_live = entry_live
+      cond_live = propagate_through(cond, entry_live, mark)
+      propagate_through(body, cond_live, mark)
+
+      @break_live = outer_break
+      @next_live = outer_next
+
+      propagate_through(cond, entry_live, false)
+    end
+
+    private def propagate_through_case(node : Crystal::Case, live : LiveSet, mark) : LiveSet
+      branch_lives = LiveSet.new
+
+      node.whens.each do |when_node|
+        when_live = propagate_through(when_node.body, live, mark)
+        when_node.conds.reverse_each do |cond|
+          when_live = propagate_through(cond, when_live, mark)
+        end
+        branch_lives = branch_lives | when_live
+      end
+
+      if else_body = node.else
+        branch_lives = branch_lives | propagate_through(else_body, live, mark)
+      else
+        branch_lives = branch_lives | live
+      end
+
+      if cond = node.cond
+        branch_lives = propagate_through(cond, branch_lives, mark)
+      end
+
+      branch_lives
+    end
+
+    private def propagate_through_select(node : Crystal::Select, live : LiveSet, mark) : LiveSet
+      branch_lives = LiveSet.new
+
+      node.whens.each do |when_node|
+        when_live = propagate_through(when_node.body, live, mark)
+        when_node.conds.reverse_each do |cond|
+          when_live = propagate_through(cond, when_live, mark)
+        end
+        branch_lives = branch_lives | when_live
+      end
+
+      if else_body = node.else
+        branch_lives = branch_lives | propagate_through(else_body, live, mark)
+      else
+        branch_lives = branch_lives | live
+      end
+
+      branch_lives
+    end
+
+    private def propagate_through_exception_handler(node : Crystal::ExceptionHandler, live : LiveSet, mark) : LiveSet
+      # Ensure clause always runs
+      ensure_entry_live = live
+      if ensure_body = node.ensure
+        ensure_entry_live = propagate_through(ensure_body, live, mark)
+      end
+
+      # Rescue branches: body can throw at any point, so rescue sees
+      # the union of ensure entry live and all rescue needs
+      rescue_live = ensure_entry_live
+      if rescues = node.rescues
+        rescues.each do |rescue_node|
+          rescue_result = propagate_through(rescue_node.body, ensure_entry_live, mark)
+          rescue_live = rescue_live | rescue_result
+        end
+      end
+
+      # Else clause runs when no exception occurs
+      body_exit_live = if else_body = node.else
+                         propagate_through(else_body, ensure_entry_live, mark)
+                       else
+                         ensure_entry_live
+                       end
+
+      # Body: can throw at any point, so any variable live in rescue
+      # must also be considered live throughout the body
+      body_combined_live = body_exit_live | rescue_live
+      propagate_through(node.body, body_combined_live, mark)
+    end
+
+    private def propagate_through_binary_op(node : Crystal::BinaryOp, live : LiveSet, mark) : LiveSet
+      # Right side is conditional, so union with entry state
+      right_live = propagate_through(node.right, live, mark)
+      merged = right_live | live
+      propagate_through(node.left, merged, mark)
+    end
+
+    private def propagate_through_call(node : Crystal::Call, live : LiveSet, mark) : LiveSet
+      # Process block_arg
+      if block_arg = node.block_arg
+        live = propagate_through(block_arg, live, mark)
+      end
+
+      # Process named args in reverse
+      if named_args = node.named_args
+        named_args.reverse_each do |named_arg|
+          live = propagate_through(named_arg.value, live, mark)
+        end
+      end
+
+      # Process args in reverse
+      node.args.reverse_each do |arg|
+        live = propagate_through(arg, live, mark)
+      end
+
+      # Process receiver
+      if obj = node.obj
+        live = propagate_through(obj, live, mark)
+      end
+
+      live
+    end
+
+    private def propagate_through_flow_control(node : Crystal::Return | Crystal::Break | Crystal::Next, live : LiveSet, mark) : LiveSet
+      # Each flow command jumps to a different target:
+      # - `return` exits the method entirely (empty live set)
+      # - `break` exits the enclosing loop (post-loop live set)
+      # - `next` continues to the next loop iteration (loop entry live set)
+      target_live = case node
+                    when Crystal::Break then @break_live || LiveSet.new
+                    when Crystal::Next  then @next_live || LiveSet.new
+                    else                     LiveSet.new
+                    end
+      if exp = node.exp
+        target_live = propagate_through(exp, target_live, mark)
+      end
+      target_live
+    end
+
+    # Generic child propagation for nodes not specifically handled
+    private def propagate_through_children(node : Crystal::ASTNode, live : LiveSet, mark) : LiveSet
+      children = [] of Crystal::ASTNode
+      node.accept_children(ChildCollector.new(children))
+      children.reverse_each do |child|
+        live = propagate_through(child, live, mark)
+      end
+      live
+    end
+
+    private class ChildCollector < Crystal::Visitor
+      def initialize(@children : Array(Crystal::ASTNode))
+      end
+
+      def visit(node : Crystal::ASTNode)
+        @children << node
+        false
+      end
+    end
+  end
+end
