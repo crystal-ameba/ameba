@@ -346,7 +346,17 @@ module Ameba::Rule::Lint
           CRYSTAL
       end
 
-      pending "assigns" do
+      context "assigns" do
+        it "does not report outer variable used after const initializer (#632)" do
+          expect_no_issues subject, <<-CRYSTAL
+            x = 1
+            BAR = begin
+              42
+            end
+            puts x
+            CRYSTAL
+        end
+
         it "path" do
           expect_issue subject, <<-CRYSTAL
             x = 1
@@ -380,7 +390,7 @@ module Ameba::Rule::Lint
             class Foo
               def foo
                 x = 1
-                # ^ error: Useless assignment to variable `x`
+              # ^ error: Useless assignment to variable `x`
 
                 @bar = begin
                   x = 2
@@ -412,7 +422,7 @@ module Ameba::Rule::Lint
             class Foo
               def foo
                 x = 1
-                # ^ error: Useless assignment to variable `x`
+              # ^ error: Useless assignment to variable `x`
 
                 @@bar = begin
                   x = 2
