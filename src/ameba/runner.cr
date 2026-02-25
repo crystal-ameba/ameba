@@ -47,7 +47,7 @@ module Ameba
     @syntax_rule = Rule::Lint::Syntax.new
 
     # Checks for unneeded disable directives. Always inspects a source last
-    @unneeded_disable_directive_rule : Rule::Base?
+    @unneeded_disable_directive_rule : Rule::Lint::UnneededDisableDirective?
 
     # Returns `true` if correctable issues should be autocorrected.
     private getter? autocorrect : Bool
@@ -81,7 +81,8 @@ module Ameba
       @rules =
         rules.select(&->rule_runnable?(Rule::Base))
       @unneeded_disable_directive_rule =
-        rules.find &.class.==(Rule::Lint::UnneededDisableDirective)
+        rules.find(&.class.==(Rule::Lint::UnneededDisableDirective))
+          .as?(Rule::Lint::UnneededDisableDirective)
     end
 
     protected def rule_runnable?(rule)
@@ -151,14 +152,16 @@ module Ameba
         @syntax_rule.test(source)
         break unless source.valid?
 
+        excluded_rules = Set(String).new
+
         @rules.each do |rule|
           if rule.excluded?(source, root)
-            source.excluded_rules << rule.name
+            excluded_rules << rule.name
             next
           end
           rule.test(source)
         end
-        check_unneeded_directives(source)
+        check_unneeded_directives(source, excluded_rules)
         break unless autocorrect? && source.correct!
 
         # The issues that couldn't be corrected will be found again so we
@@ -248,12 +251,12 @@ module Ameba
       processed_sources << checksum
     end
 
-    private def check_unneeded_directives(source)
+    private def check_unneeded_directives(source, excluded_rules = Set(String).new)
       return unless rule = @unneeded_disable_directive_rule
       return unless rule.enabled?
       return if rule.excluded?(source, root)
 
-      rule.test(source)
+      rule.test(source, excluded_rules)
     end
   end
 end

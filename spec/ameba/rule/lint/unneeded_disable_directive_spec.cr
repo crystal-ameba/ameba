@@ -73,8 +73,8 @@ module Ameba::Rule::Lint
       source = Source.new <<-CRYSTAL
         a = 1 # ameba:disable #{NamedRule.name}
         CRYSTAL
-      source.excluded_rules << NamedRule.name
-      subject.catch(source).should be_valid
+      subject.test(source, Set{NamedRule.name})
+      source.should be_valid
     end
 
     it "fails if there is disabled UnneededDisableDirective" do

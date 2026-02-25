@@ -16,9 +16,6 @@ module Ameba
     # Crystal code (content of a source file).
     getter code : String
 
-    # Names of the rules that were excluded for this source.
-    getter excluded_rules = Set(String).new
-
     # Creates a new source by `code` and `path`.
     #
     # For example:

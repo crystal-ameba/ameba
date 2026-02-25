@@ -35,10 +35,14 @@ module Ameba::Rule::Lint
     MSG = "Unnecessary disabling of %s"
 
     def test(source)
+      test(source, Set(String).new)
+    end
+
+    def test(source, excluded_rules : Set(String))
       Tokenizer.new(source).run do |token|
         next unless token.type.comment?
         next unless directive = source.parse_inline_directive(token.value.to_s)
-        next unless names = unneeded_disables(source, directive, token.location)
+        next unless names = unneeded_disables(source, directive, token.location, excluded_rules)
         next if names.empty?
 
         issue_for name_location_or(token, token.value),
@@ -46,12 +50,12 @@ module Ameba::Rule::Lint
       end
     end
 
-    private def unneeded_disables(source, directive, location)
+    private def unneeded_disables(source, directive, location, excluded_rules)
       return unless directive[:action] == "disable"
 
       directive[:rules].reject do |rule_name|
         next if rule_name == name
-        next true if source.excluded_rules.includes?(rule_name)
+        next true if rule_name.in?(excluded_rules)
         source.issues.any? do |issue|
           issue.rule.name == rule_name &&
             issue.disabled? &&
