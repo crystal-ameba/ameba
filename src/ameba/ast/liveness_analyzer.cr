@@ -187,7 +187,9 @@ module Ameba::AST
       var = node.var
       if var.is_a?(Crystal::Var) && @var_names.includes?(var.name)
         live = remove_from_live_set(node, var.name, live, mark)
-        live = node.value.try { |value| propagate_through(value, live, mark) } || live
+        if value = node.value
+          live = propagate_through(value, live, mark)
+        end
       end
       live
     end
@@ -222,8 +224,8 @@ module Ameba::AST
     {% end %}
 
     private def propagate_through(node : Crystal::ExceptionHandler, live : LiveSet, mark = true) : LiveSet
-      post_ensure = node.ensure.try { |body| propagate_through(body, live, mark) } || live
-      after_body = node.else.try { |body| propagate_through(body, post_ensure, mark) } || post_ensure
+      post_ensure = (body = node.ensure) ? propagate_through(body, live, mark) : live
+      after_body = (body = node.else) ? propagate_through(body, post_ensure, mark) : post_ensure
 
       # Rescue branches handle exceptions thrown at any point in the body,
       # so collect all variables they need.
@@ -333,7 +335,8 @@ module Ameba::AST
         branch_lives.concat(when_live)
       end
 
-      branch_lives.concat(node.else.try { |body| propagate_through(body, live, mark) } || live)
+      else_live = (body = node.else) ? propagate_through(body, live, mark) : live
+      branch_lives.concat(else_live)
 
       node.as?(Crystal::Case).try(&.cond).try do |cond|
         branch_lives = propagate_through(cond, branch_lives, mark)
