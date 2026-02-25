@@ -7,8 +7,26 @@ module Ameba::CLI
   describe "Cmd" do
     describe ".run" do
       it "runs ameba" do
-        r = CLI.run %w[-f silent file.cr]
+        r = CLI.run ["-f", "silent", "--only", "Lint/ComparisonToBoolean", __FILE__]
         r.should be_true
+      end
+
+      it "raises when a non-existent file is provided" do
+        expect_raises(Exception, "No files found matching `not_there.cr`") do
+          CLI.run %w[-f silent not_there.cr]
+        end
+      end
+
+      it "raises when a glob matches no files" do
+        expect_raises(Exception, "No files found matching") do
+          CLI.run %w[-f silent nonexistent_dir/**/*.cr]
+        end
+      end
+
+      it "does not raise when reading from STDIN" do
+        # STDIN mode should bypass glob validation
+        opts = CLI.parse_args %w[--stdin-filename foo.cr]
+        opts.stdin_filename.should_not be_nil
       end
     end
 
