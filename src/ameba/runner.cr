@@ -152,7 +152,10 @@ module Ameba
         break unless source.valid?
 
         @rules.each do |rule|
-          next if rule.excluded?(source, root)
+          if rule.excluded?(source, root)
+            source.excluded_rules << rule.name
+            next
+          end
           rule.test(source)
         end
         check_unneeded_directives(source)
@@ -248,6 +251,7 @@ module Ameba
     private def check_unneeded_directives(source)
       return unless rule = @unneeded_disable_directive_rule
       return unless rule.enabled?
+      return if rule.excluded?(source, root)
 
       rule.test(source)
     end
