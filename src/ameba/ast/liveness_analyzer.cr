@@ -131,10 +131,8 @@ module Ameba::AST
         propagate_through_loop(node.cond, node.body, live, mark)
       when Crystal::Until
         propagate_through_loop(node.cond, node.body, live, mark)
-      when Crystal::Case
+      when Crystal::Case, Crystal::Select
         propagate_through_case(node, live, mark)
-      when Crystal::Select
-        propagate_through_select(node, live, mark)
       when Crystal::ExceptionHandler
         propagate_through_exception_handler(node, live, mark)
       when Crystal::BinaryOp
@@ -279,7 +277,7 @@ module Ameba::AST
       propagate_through(cond, entry_live, false)
     end
 
-    private def propagate_through_case(node : Crystal::Case, live : LiveSet, mark) : LiveSet
+    private def propagate_through_case(node : Crystal::Case | Crystal::Select, live : LiveSet, mark) : LiveSet
       branch_lives = LiveSet.new
 
       node.whens.each do |when_node|
@@ -296,28 +294,8 @@ module Ameba::AST
         branch_lives.concat(live)
       end
 
-      if cond = node.cond
+      if node.is_a?(Crystal::Case) && (cond = node.cond)
         branch_lives = propagate_through(cond, branch_lives, mark)
-      end
-
-      branch_lives
-    end
-
-    private def propagate_through_select(node : Crystal::Select, live : LiveSet, mark) : LiveSet
-      branch_lives = LiveSet.new
-
-      node.whens.each do |when_node|
-        when_live = propagate_through(when_node.body, live, mark)
-        when_node.conds.reverse_each do |cond|
-          when_live = propagate_through(cond, when_live, mark)
-        end
-        branch_lives.concat(when_live)
-      end
-
-      if else_body = node.else
-        branch_lives.concat(propagate_through(else_body, live, mark))
-      else
-        branch_lives.concat(live)
       end
 
       branch_lives
