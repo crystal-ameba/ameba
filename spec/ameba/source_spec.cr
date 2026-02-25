@@ -59,6 +59,37 @@ module Ameba
       end
     end
 
+    describe "#correct!" do
+      it "skips disabled issues" do
+        source = Source.new <<-CRYSTAL
+          foo.match("bar").not_nil! # ameba:disable Lint/NotNilAfterNoBang
+          CRYSTAL
+
+        rule = Rule::Lint::NotNilAfterNoBang.new
+        rule.catch(source)
+
+        source.issues.size.should eq 1
+        source.issues.first.disabled?.should be_true
+        source.correct!.should be_false
+        source.code.should contain ".not_nil!"
+      end
+
+      it "corrects enabled issues" do
+        source = Source.new <<-CRYSTAL
+          foo.match("bar").not_nil!
+          CRYSTAL
+
+        rule = Rule::Lint::NotNilAfterNoBang.new
+        rule.catch(source)
+
+        source.issues.size.should eq 1
+        source.issues.first.enabled?.should be_true
+        source.correct!.should be_true
+        source.code.should contain ".match!"
+        source.code.should_not contain ".not_nil!"
+      end
+    end
+
     describe "#ast" do
       it "parses an ECR file" do
         source = Source.new <<-ECR, "filename.ecr"
