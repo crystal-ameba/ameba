@@ -196,7 +196,7 @@ module Ameba::AST
     end
 
     def inherited?
-      !(node.is_a?(Crystal::Def) || node.is_a?(Crystal::FunDef))
+      !(node.is_a?(Crystal::Def) || node.is_a?(Crystal::FunDef) || node.is_a?(Crystal::Assign) || node.is_a?(Crystal::OpAssign))
     end
 
     def inherited?(&)

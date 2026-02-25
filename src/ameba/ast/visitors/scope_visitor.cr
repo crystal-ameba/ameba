@@ -99,13 +99,28 @@ module Ameba::AST
     end
 
     # :nodoc:
-    def visit(node : Crystal::Assign | Crystal::OpAssign | Crystal::MultiAssign | Crystal::UninitializedVar)
+    def visit(node : Crystal::Assign | Crystal::OpAssign)
+      target = node.target
+      if isolated_assign_target?(target)
+        @current_assign = node
+        target.accept(self)
+        on_scope_enter(node)
+        node.value.accept(self)
+        return false
+      end
+      @current_assign = node
+      true
+    end
+
+    # :nodoc:
+    def visit(node : Crystal::MultiAssign | Crystal::UninitializedVar)
       @current_assign = node
       true
     end
 
     # :nodoc:
     def end_visit(node : Crystal::Assign | Crystal::OpAssign)
+      on_scope_end(node) if @current_scope.eql?(node)
       on_assign_end(node.target, node)
       @current_assign = nil
     end
@@ -201,6 +216,17 @@ module Ameba::AST
       case node.args.first?
       when Crystal::Path, Crystal::Generic
         true
+      else
+        false
+      end
+    end
+
+    private def isolated_assign_target?(target)
+      case target
+      when Crystal::Path
+        true
+      when Crystal::InstanceVar, Crystal::ClassVar
+        @current_scope.type_definition?
       else
         false
       end
