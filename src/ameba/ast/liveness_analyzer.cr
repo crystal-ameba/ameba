@@ -287,13 +287,13 @@ module Ameba::AST
         when_node.conds.reverse_each do |cond|
           when_live = propagate_through(cond, when_live, mark)
         end
-        branch_lives = branch_lives | when_live
+        branch_lives.concat(when_live)
       end
 
       if else_body = node.else
-        branch_lives = branch_lives | propagate_through(else_body, live, mark)
+        branch_lives.concat(propagate_through(else_body, live, mark))
       else
-        branch_lives = branch_lives | live
+        branch_lives.concat(live)
       end
 
       if cond = node.cond
@@ -311,13 +311,13 @@ module Ameba::AST
         when_node.conds.reverse_each do |cond|
           when_live = propagate_through(cond, when_live, mark)
         end
-        branch_lives = branch_lives | when_live
+        branch_lives.concat(when_live)
       end
 
       if else_body = node.else
-        branch_lives = branch_lives | propagate_through(else_body, live, mark)
+        branch_lives.concat(propagate_through(else_body, live, mark))
       else
-        branch_lives = branch_lives | live
+        branch_lives.concat(live)
       end
 
       branch_lives
