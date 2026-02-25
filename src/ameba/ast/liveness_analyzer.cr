@@ -86,14 +86,18 @@ module Ameba::AST
       @assignment_map[key]?.try(&.first?)
     end
 
+    # Records a dead store if the variable is not in the live set.
+    private def mark_dead_store(assign_node, var_name, live : LiveSet) : Nil
+      return if live.includes?(var_name)
+      if assign = find_assignment(assign_node, var_name)
+        @dead_stores << assign
+      end
+    end
+
     # Removes `var_name` from the live set. When `mark` is true,
     # records a dead store if the variable was not live at this point.
     private def remove_from_live_set(assign_node, var_name, live : LiveSet, mark) : LiveSet
-      if mark && !live.includes?(var_name)
-        if assign = find_assignment(assign_node, var_name)
-          @dead_stores << assign
-        end
-      end
+      mark_dead_store(assign_node, var_name, live) if mark
       live = live.dup
       live.delete(var_name)
       live
@@ -183,9 +187,14 @@ module Ameba::AST
       target = node.target
       if target.is_a?(Crystal::Var) && @var_names.includes?(target.name)
         var_name = target.name
-        # OpAssign reads AND writes: x += 1 means x = x + 1
-        live = remove_from_live_set(node, var_name, live, mark)
-        live.add(var_name) # target is also read
+        # OpAssign both writes and reads the variable (x += 1 means x = x + 1).
+        # Mark the dead store if the result is never read, then ensure the
+        # variable is live (since the op-assign reads the current value).
+        mark_dead_store(node, var_name, live) if mark
+        unless live.includes?(var_name)
+          live = live.dup
+          live.add(var_name)
+        end
         propagate_through(node.value, live, mark)
       else
         live = propagate_through(node.value, live, mark)
