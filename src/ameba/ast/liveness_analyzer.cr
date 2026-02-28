@@ -338,7 +338,7 @@ module Ameba::AST
       else_live = (body = node.else) ? propagate_through(body, live, mark) : live
       branch_lives.concat(else_live)
 
-      node.as?(Crystal::Case).try(&.cond).try do |cond|
+      if node.is_a?(Crystal::Case) && (cond = node.cond)
         branch_lives = propagate_through(cond, branch_lives, mark)
       end
 
