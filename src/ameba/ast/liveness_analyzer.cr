@@ -26,7 +26,7 @@ module Ameba::AST
 
     @dead_stores = [] of Assignment
     @var_names : Set(String)
-    @assignment_map : Hash(String, Array(Assignment))
+    @assignment_map : Hash(Tuple(String, UInt64), Array(Assignment))
     @inner_scope_nodes : Set(UInt64)
 
     # Live sets for loop flow control: `break` exits to post-loop,
@@ -51,19 +51,14 @@ module Ameba::AST
     end
 
     private def build_assignment_map
-      map = Hash(String, Array(Assignment)).new
+      map = Hash(Tuple(String, UInt64), Array(Assignment)).new
       @scope.variables.each do |var|
         var.assignments.each do |assign|
-          key = assignment_key(assign.node, var.name)
+          key = {var.name, assign.node.object_id}
           (map[key] ||= [] of Assignment) << assign
         end
       end
       map
-    end
-
-    private def assignment_key(node, var_name)
-      loc = node.location
-      "#{var_name}:#{node.class}:#{loc.try(&.line_number)}:#{loc.try(&.column_number)}"
     end
 
     # ameba:disable Metrics/CyclomaticComplexity
@@ -91,8 +86,7 @@ module Ameba::AST
     end
 
     private def find_assignment(node, var_name) : Assignment?
-      key = assignment_key(node, var_name)
-      @assignment_map[key]?.try(&.first?)
+      @assignment_map[{var_name, node.object_id}]?.try(&.first?)
     end
 
     # Records a dead store if the variable is not in the live set.
@@ -107,8 +101,10 @@ module Ameba::AST
     # records a dead store if the variable was not live at this point.
     private def remove_from_live_set(assign_node, var_name, live : LiveSet, mark) : LiveSet
       mark_dead_store(assign_node, var_name, live) if mark
-      live = live.dup
-      live.delete(var_name)
+      if live.includes?(var_name)
+        live = live.dup
+        live.delete(var_name)
+      end
       live
     end
 
@@ -195,7 +191,7 @@ module Ameba::AST
     end
 
     private def propagate_through(node : Crystal::Var, live : LiveSet, mark = true) : LiveSet
-      if @var_names.includes?(node.name)
+      if @var_names.includes?(node.name) && !live.includes?(node.name)
         live = live.dup
         live.add(node.name)
       end
@@ -297,17 +293,19 @@ module Ameba::AST
     end
 
     private def propagate_through_loop(cond, body, live : LiveSet, mark) : LiveSet
-      # `break` exits to post-loop code, `next` jumps to loop condition.
-      @break_live = live
-
+      # Save outer loop context before overwriting
       outer_break = @break_live
       outer_next = @next_live
+
+      # `break` exits to post-loop code, `next` jumps to loop condition.
+      @break_live = live
       entry_live = live.dup
 
+      converged_cond_live = entry_live
       MAX_FIXED_POINT_ITERATIONS.times do
         @next_live = entry_live
-        cond_live = propagate_through(cond, entry_live, false)
-        body_live = propagate_through(body, cond_live, false)
+        converged_cond_live = propagate_through(cond, entry_live, false)
+        body_live = propagate_through(body, converged_cond_live, false)
         new_entry = body_live | live
         break if new_entry == entry_live
         entry_live = new_entry
@@ -321,7 +319,7 @@ module Ameba::AST
       @break_live = outer_break
       @next_live = outer_next
 
-      propagate_through(cond, entry_live, false)
+      converged_cond_live
     end
 
     private def propagate_through_case(node : Crystal::Case | Crystal::Select, live : LiveSet, mark) : LiveSet

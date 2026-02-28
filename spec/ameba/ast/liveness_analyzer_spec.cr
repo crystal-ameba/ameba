@@ -399,6 +399,24 @@ module Ameba::AST
         dead_store_names(scope).should be_empty
       end
 
+      it "does not report assignment used after break in nested loops" do
+        scope = def_scope <<-CRYSTAL
+          def foo
+            found = false
+            while outer_cond
+              while inner_cond
+                if something
+                  found = true
+                  break
+                end
+              end
+            end
+            found
+          end
+          CRYSTAL
+        dead_store_names(scope).should be_empty
+      end
+
       it "does not report assignment inside conditional break" do
         scope = def_scope <<-CRYSTAL
           def foo
