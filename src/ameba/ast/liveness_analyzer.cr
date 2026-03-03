@@ -227,7 +227,7 @@ module Ameba::AST
       # so collect all variables they need.
       after_rescue = post_ensure
       node.rescues.try &.each do |rescue_node|
-        after_rescue = after_rescue | propagate_through(rescue_node.body, post_ensure, mark)
+        after_rescue.concat(propagate_through(rescue_node.body, post_ensure, mark))
       end
 
       # Body can throw at any point, so variables live in any rescue
