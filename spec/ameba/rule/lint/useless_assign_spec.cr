@@ -637,6 +637,27 @@ module Ameba::Rule::Lint
           CRYSTAL
       end
 
+      it "doesn't report if variable is used inside an array literal in a call" do
+        expect_no_issues subject, <<-CRYSTAL
+          def method
+            source = get_source
+            run([source])
+          end
+          CRYSTAL
+      end
+
+      it "doesn't report special variables like $~" do
+        expect_no_issues subject, <<-CRYSTAL
+          class Regex
+            def ===(other)
+              value = self === other.raw
+              $~ = $~
+              value
+            end
+          end
+          CRYSTAL
+      end
+
       it "doesn't report accessor declarations" do
         accessor_macros = %w[setter class_setter]
         %w[getter class_getter property class_property].each do |name|
@@ -701,10 +722,11 @@ module Ameba::Rule::Lint
 
     context "branching" do
       context "if-then-else" do
-        it "doesn't report if assignment is consumed by branches" do
-          expect_no_issues subject, <<-CRYSTAL
+        it "reports initial assignment as dead when overwritten in all branches" do
+          expect_issue subject, <<-CRYSTAL
             def method
               a = 0
+            # ^ error: Useless assignment to variable `a`
               if something
                 a = 1
               else
@@ -791,10 +813,11 @@ module Ameba::Rule::Lint
             CRYSTAL
         end
 
-        it "does not report referenced assignments in inner branches" do
-          expect_no_issues subject, <<-CRYSTAL
+        it "reports initial assignment as dead when overwritten in all branches" do
+          expect_issue subject, <<-CRYSTAL
             def method
               has_newline = false
+            # ^^^^^^^^^^^ error: Useless assignment to variable `has_newline`
 
               if something
                 do_something unless false
@@ -811,10 +834,11 @@ module Ameba::Rule::Lint
       end
 
       context "unless-then-else" do
-        it "doesn't report if assignment is consumed by branches" do
-          expect_no_issues subject, <<-CRYSTAL
+        it "reports initial assignment as dead when overwritten in all branches" do
+          expect_issue subject, <<-CRYSTAL
             def method
               a = 0
+            # ^ error: Useless assignment to variable `a`
               unless something
                 a = 1
               else
@@ -829,6 +853,7 @@ module Ameba::Rule::Lint
           expect_issue subject, <<-CRYSTAL
             def method
               a = 0
+            # ^ error: Useless assignment to variable `a`
               unless something
                 a = 1
               # ^ error: Useless assignment to variable `a`
@@ -1044,6 +1069,37 @@ module Ameba::Rule::Lint
                 end
                 count += 1
               end
+            end
+            CRYSTAL
+        end
+
+        it "does not report if assignment is used after break" do
+          expect_no_issues subject, <<-CRYSTAL
+            def method
+              found = false
+              while true
+                if something
+                  found = true
+                  break
+                end
+              end
+              found
+            end
+            CRYSTAL
+        end
+
+        it "does not report if assignment before next is used in next iteration" do
+          expect_no_issues subject, <<-CRYSTAL
+            def method
+              atomic = parse_atomic
+              while true
+                if @token.instance_var?
+                  atomic = parse_ivar(atomic)
+                  next
+                end
+                break
+              end
+              atomic
             end
             CRYSTAL
         end

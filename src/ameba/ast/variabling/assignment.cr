@@ -5,8 +5,6 @@ module Ameba::AST
   # Represents the assignment to the variable.
   # Holds the assign node and the variable.
   class Assignment
-    property? referenced = false
-
     # The actual assignment node.
     getter node : Crystal::ASTNode
 
@@ -31,11 +29,6 @@ module Ameba::AST
       return unless scope = @variable.scope
 
       @branch = Branch.of(@node, scope)
-      @referenced = true if @variable.special? || referenced_in_loop?
-    end
-
-    def referenced_in_loop?
-      @variable.referenced? && !!@branch.try(&.in_loop?)
     end
 
     # Returns `true` if this assignment is an op assign, `false` if not.
