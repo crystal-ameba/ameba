@@ -16,7 +16,7 @@
 <script type="text/javascript" src="../../js/doc.js"></script>
 
   <meta name="repository-name" content="ameba">
-  <title>Ameba::AST::Util - ameba master</title>
+  <title>Ameba::AST::LivenessAnalyzer - ameba master</title>
   <script type="text/javascript">
     CrystalDocs.base_path = "../../";
   </script>
@@ -129,7 +129,7 @@
       
     </li>
   
-  <li class="parent " data-id="ameba/Ameba/AST/LivenessAnalyzer" data-name="ameba::ast::livenessanalyzer">
+  <li class="parent open current" data-id="ameba/Ameba/AST/LivenessAnalyzer" data-name="ameba::ast::livenessanalyzer">
       <a href="../../Ameba/AST/LivenessAnalyzer.html">LivenessAnalyzer</a>
       
         <ul>
@@ -194,7 +194,7 @@
       
     </li>
   
-  <li class=" current" data-id="ameba/Ameba/AST/Util" data-name="ameba::ast::util">
+  <li class=" " data-id="ameba/Ameba/AST/Util" data-name="ameba::ast::util">
       <a href="../../Ameba/AST/Util.html">Util</a>
       
     </li>
@@ -1144,11 +1144,13 @@
 <h1 class="type-name">
 
   <span class="kind">
-    module
-  </span> Ameba::<wbr>AST::<wbr>Util
+    class
+  </span> Ameba::<wbr>AST::<wbr>LivenessAnalyzer
 
 </h1>
 
+
+  <ul class="superclass-hierarchy"><li class="superclass"><a href="../../Ameba/AST/LivenessAnalyzer.html">Ameba::AST::LivenessAnalyzer</a></li><li class="superclass">Reference</li><li class="superclass">Object</li></ul>
 
 
 
@@ -1162,7 +1164,13 @@
     Overview
   </h2>
 
-  <p>Utility module for Ameba's rules.</p>
+  <p>Performs backward dataflow liveness analysis on a scope's AST to detect
+dead stores (assignments whose values are never read before being
+overwritten or the scope ends).</p>
+<p>The algorithm walks the AST in reverse execution order, maintaining a
+set of variable names that are currently &quot;live&quot; (will be read in the
+future). When an assignment is encountered and its target variable is
+not in the live set, the assignment is marked as a dead store.</p>
 
 
 
@@ -1172,159 +1180,9 @@
 
 
 
-  <h2>
-    <a id="extended-modules" class="anchor" href="#extended-modules">
-  <svg class="octicon-link" aria-hidden="true">
-    <use href="#octicon-link"/>
-  </svg>
-</a>
-    Extended Modules
-  </h2>
-  <ul class="other-types-list">
-    
-      <li class="other-type"><a href="../../Ameba/AST/Util.html">Ameba::AST::Util</a></li>
-    
-  </ul>
 
 
 
-
-
-  <h2>
-    <a id="direct-including-types" class="anchor" href="#direct-including-types">
-  <svg class="octicon-link" aria-hidden="true">
-    <use href="#octicon-link"/>
-  </svg>
-</a>
-    Direct including types
-  </h2>
-  <ul class="other-types-list">
-    
-      <li class="other-type"><a href="../../Ameba/AST/Branchable.html">Ameba::AST::Branchable</a></li>
-    
-      <li class="other-type"><a href="../../Ameba/AST/ElseIfAwareNodeVisitor.html">Ameba::AST::ElseIfAwareNodeVisitor</a></li>
-    
-      <li class="other-type"><a href="../../Ameba/AST/FlowExpression.html">Ameba::AST::FlowExpression</a></li>
-    
-      <li class="other-type"><a href="../../Ameba/AST/FlowExpressionVisitor.html">Ameba::AST::FlowExpressionVisitor</a></li>
-    
-      <li class="other-type"><a href="../../Ameba/Reportable.html">Ameba::Reportable</a></li>
-    
-      <li class="other-type"><a href="../../Ameba/Rule/Documentation/Admonition.html">Ameba::Rule::Documentation::Admonition</a></li>
-    
-      <li class="other-type"><a href="../../Ameba/Rule/Lint/AmbiguousAssignment.html">Ameba::Rule::Lint::AmbiguousAssignment</a></li>
-    
-      <li class="other-type"><a href="../../Ameba/Rule/Lint/BadDirective.html">Ameba::Rule::Lint::BadDirective</a></li>
-    
-      <li class="other-type"><a href="../../Ameba/Rule/Lint/ComparisonToBoolean.html">Ameba::Rule::Lint::ComparisonToBoolean</a></li>
-    
-      <li class="other-type"><a href="../../Ameba/Rule/Lint/DebuggerStatement.html">Ameba::Rule::Lint::DebuggerStatement</a></li>
-    
-      <li class="other-type"><a href="../../Ameba/Rule/Lint/DuplicateBranch.html">Ameba::Rule::Lint::DuplicateBranch</a></li>
-    
-      <li class="other-type"><a href="../../Ameba/Rule/Lint/EmptyLoop.html">Ameba::Rule::Lint::EmptyLoop</a></li>
-    
-      <li class="other-type"><a href="../../Ameba/Rule/Lint/LiteralAssignmentsInExpressions.html">Ameba::Rule::Lint::LiteralAssignmentsInExpressions</a></li>
-    
-      <li class="other-type"><a href="../../Ameba/Rule/Lint/LiteralInCondition.html">Ameba::Rule::Lint::LiteralInCondition</a></li>
-    
-      <li class="other-type"><a href="../../Ameba/Rule/Lint/LiteralInInterpolation.html">Ameba::Rule::Lint::LiteralInInterpolation</a></li>
-    
-      <li class="other-type"><a href="../../Ameba/Rule/Lint/LiteralsComparison.html">Ameba::Rule::Lint::LiteralsComparison</a></li>
-    
-      <li class="other-type"><a href="../../Ameba/Rule/Lint/NotNil.html">Ameba::Rule::Lint::NotNil</a></li>
-    
-      <li class="other-type"><a href="../../Ameba/Rule/Lint/NotNilAfterNoBang.html">Ameba::Rule::Lint::NotNilAfterNoBang</a></li>
-    
-      <li class="other-type"><a href="../../Ameba/Rule/Lint/RedundantStringCoercion.html">Ameba::Rule::Lint::RedundantStringCoercion</a></li>
-    
-      <li class="other-type"><a href="../../Ameba/Rule/Lint/RequireParentheses.html">Ameba::Rule::Lint::RequireParentheses</a></li>
-    
-      <li class="other-type"><a href="../../Ameba/Rule/Lint/SignalTrap.html">Ameba::Rule::Lint::SignalTrap</a></li>
-    
-      <li class="other-type"><a href="../../Ameba/Rule/Lint/SpecEqWithBoolOrNilLiteral.html">Ameba::Rule::Lint::SpecEqWithBoolOrNilLiteral</a></li>
-    
-      <li class="other-type"><a href="../../Ameba/Rule/Lint/SpecFocus.html">Ameba::Rule::Lint::SpecFocus</a></li>
-    
-      <li class="other-type"><a href="../../Ameba/Rule/Lint/TopLevelOperatorDefinition.html">Ameba::Rule::Lint::TopLevelOperatorDefinition</a></li>
-    
-      <li class="other-type"><a href="../../Ameba/Rule/Lint/UnneededDisableDirective.html">Ameba::Rule::Lint::UnneededDisableDirective</a></li>
-    
-      <li class="other-type"><a href="../../Ameba/Rule/Lint/UnusedBlockArgument.html">Ameba::Rule::Lint::UnusedBlockArgument</a></li>
-    
-      <li class="other-type"><a href="../../Ameba/Rule/Lint/UnusedRescueVariable.html">Ameba::Rule::Lint::UnusedRescueVariable</a></li>
-    
-      <li class="other-type"><a href="../../Ameba/Rule/Lint/VoidOutsideLib.html">Ameba::Rule::Lint::VoidOutsideLib</a></li>
-    
-      <li class="other-type"><a href="../../Ameba/Rule/Lint/WhitespaceAroundMacroExpression.html">Ameba::Rule::Lint::WhitespaceAroundMacroExpression</a></li>
-    
-      <li class="other-type"><a href="../../Ameba/Rule/Naming/AccessorMethodName.html">Ameba::Rule::Naming::AccessorMethodName</a></li>
-    
-      <li class="other-type"><a href="../../Ameba/Rule/Naming/BinaryOperatorParameterName.html">Ameba::Rule::Naming::BinaryOperatorParameterName</a></li>
-    
-      <li class="other-type"><a href="../../Ameba/Rule/Naming/QueryBoolMethods.html">Ameba::Rule::Naming::QueryBoolMethods</a></li>
-    
-      <li class="other-type"><a href="../../Ameba/Rule/Naming/RescuedExceptionsVariableName.html">Ameba::Rule::Naming::RescuedExceptionsVariableName</a></li>
-    
-      <li class="other-type"><a href="../../Ameba/Rule/Performance/AnyAfterFilter.html">Ameba::Rule::Performance::AnyAfterFilter</a></li>
-    
-      <li class="other-type"><a href="../../Ameba/Rule/Performance/AnyInsteadOfPresent.html">Ameba::Rule::Performance::AnyInsteadOfPresent</a></li>
-    
-      <li class="other-type"><a href="../../Ameba/Rule/Performance/ChainedCallWithNoBang.html">Ameba::Rule::Performance::ChainedCallWithNoBang</a></li>
-    
-      <li class="other-type"><a href="../../Ameba/Rule/Performance/CompactAfterMap.html">Ameba::Rule::Performance::CompactAfterMap</a></li>
-    
-      <li class="other-type"><a href="../../Ameba/Rule/Performance/ExcessiveAllocations.html">Ameba::Rule::Performance::ExcessiveAllocations</a></li>
-    
-      <li class="other-type"><a href="../../Ameba/Rule/Performance/FirstLastAfterFilter.html">Ameba::Rule::Performance::FirstLastAfterFilter</a></li>
-    
-      <li class="other-type"><a href="../../Ameba/Rule/Performance/FlattenAfterMap.html">Ameba::Rule::Performance::FlattenAfterMap</a></li>
-    
-      <li class="other-type"><a href="../../Ameba/Rule/Performance/MapInsteadOfBlock.html">Ameba::Rule::Performance::MapInsteadOfBlock</a></li>
-    
-      <li class="other-type"><a href="../../Ameba/Rule/Performance/MinMaxAfterMap.html">Ameba::Rule::Performance::MinMaxAfterMap</a></li>
-    
-      <li class="other-type"><a href="../../Ameba/Rule/Performance/SizeAfterFilter.html">Ameba::Rule::Performance::SizeAfterFilter</a></li>
-    
-      <li class="other-type"><a href="../../Ameba/Rule/Performance/TimesMap.html">Ameba::Rule::Performance::TimesMap</a></li>
-    
-      <li class="other-type"><a href="../../Ameba/Rule/Style/CallParentheses.html">Ameba::Rule::Style::CallParentheses</a></li>
-    
-      <li class="other-type"><a href="../../Ameba/Rule/Style/GuardClause.html">Ameba::Rule::Style::GuardClause</a></li>
-    
-      <li class="other-type"><a href="../../Ameba/Rule/Style/HeredocEscape.html">Ameba::Rule::Style::HeredocEscape</a></li>
-    
-      <li class="other-type"><a href="../../Ameba/Rule/Style/HeredocIndent.html">Ameba::Rule::Style::HeredocIndent</a></li>
-    
-      <li class="other-type"><a href="../../Ameba/Rule/Style/IsAFilter.html">Ameba::Rule::Style::IsAFilter</a></li>
-    
-      <li class="other-type"><a href="../../Ameba/Rule/Style/IsANil.html">Ameba::Rule::Style::IsANil</a></li>
-    
-      <li class="other-type"><a href="../../Ameba/Rule/Style/LargeNumbers.html">Ameba::Rule::Style::LargeNumbers</a></li>
-    
-      <li class="other-type"><a href="../../Ameba/Rule/Style/MultilineCurlyBlock.html">Ameba::Rule::Style::MultilineCurlyBlock</a></li>
-    
-      <li class="other-type"><a href="../../Ameba/Rule/Style/ParenthesesAroundCondition.html">Ameba::Rule::Style::ParenthesesAroundCondition</a></li>
-    
-      <li class="other-type"><a href="../../Ameba/Rule/Style/RedundantBegin.html">Ameba::Rule::Style::RedundantBegin</a></li>
-    
-      <li class="other-type"><a href="../../Ameba/Rule/Style/RedundantNext.html">Ameba::Rule::Style::RedundantNext</a></li>
-    
-      <li class="other-type"><a href="../../Ameba/Rule/Style/RedundantNilInControlExpression.html">Ameba::Rule::Style::RedundantNilInControlExpression</a></li>
-    
-      <li class="other-type"><a href="../../Ameba/Rule/Style/RedundantReturn.html">Ameba::Rule::Style::RedundantReturn</a></li>
-    
-      <li class="other-type"><a href="../../Ameba/Rule/Style/RedundantSelf.html">Ameba::Rule::Style::RedundantSelf</a></li>
-    
-      <li class="other-type"><a href="../../Ameba/Rule/Style/VerboseBlock.html">Ameba::Rule::Style::VerboseBlock</a></li>
-    
-      <li class="other-type"><a href="../../Ameba/Rule/Style/VerboseNilType.html">Ameba::Rule::Style::VerboseNilType</a></li>
-    
-      <li class="other-type"><a href="../../Ameba/Rule/Typing/MethodParameterTypeRestriction.html">Ameba::Rule::Typing::MethodParameterTypeRestriction</a></li>
-    
-      <li class="other-type"><a href="../../Ameba/Rule/Typing/MethodReturnTypeRestriction.html">Ameba::Rule::Typing::MethodReturnTypeRestriction</a></li>
-    
-  </ul>
 
 
 
@@ -1339,8 +1197,8 @@
   </h2>
   
     
-      <a href="https://github.com/crystal-ameba/ameba/blob/313f54c/src/ameba/ast/util.cr#L2" target="_blank">
-        ameba/ast/util.cr
+      <a href="https://github.com/crystal-ameba/ameba/blob/313f54c/src/ameba/ast/liveness_analyzer.cr#L10" target="_blank">
+        ameba/ast/liveness_analyzer.cr
       </a>
     
     <br/>
@@ -1348,9 +1206,71 @@
 
 
 
+  
+    <h2>
+      <a id="constant-summary" class="anchor" href="#constant-summary">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>
+      Constant Summary
+    </h2>
+  
+  <dl>
+    
+      <dt class="entry-const" id="BRANCH_NODES">
+        <strong>BRANCH_NODES</strong> = <code>[<span class="s">&quot;If&quot;</span>, <span class="s">&quot;Unless&quot;</span>] <span class="k">of</span> <span class="t">::</span><span class="t">String</span></code>
+      </dt>
+      
+    
+      <dt class="entry-const" id="CASE_NODES">
+        <strong>CASE_NODES</strong> = <code>[<span class="s">&quot;Case&quot;</span>, <span class="s">&quot;Select&quot;</span>] <span class="k">of</span> <span class="t">::</span><span class="t">String</span></code>
+      </dt>
+      
+    
+      <dt class="entry-const" id="INNER_SCOPE_NODES">
+        <strong>INNER_SCOPE_NODES</strong> = <code>[<span class="s">&quot;Block&quot;</span>, <span class="s">&quot;Def&quot;</span>, <span class="s">&quot;ProcLiteral&quot;</span>, <span class="s">&quot;ClassDef&quot;</span>, <span class="s">&quot;ModuleDef&quot;</span>, <span class="s">&quot;EnumDef&quot;</span>, <span class="s">&quot;LibDef&quot;</span>, <span class="s">&quot;FunDef&quot;</span>, <span class="s">&quot;TypeDef&quot;</span>, <span class="s">&quot;CStructOrUnionDef&quot;</span>, <span class="s">&quot;TypeOf&quot;</span>, <span class="s">&quot;Macro&quot;</span>, <span class="s">&quot;MacroIf&quot;</span>, <span class="s">&quot;MacroFor&quot;</span>] <span class="k">of</span> <span class="t">::</span><span class="t">String</span></code>
+      </dt>
+      
+    
+      <dt class="entry-const" id="LOOP_NODES">
+        <strong>LOOP_NODES</strong> = <code>[<span class="s">&quot;While&quot;</span>, <span class="s">&quot;Until&quot;</span>] <span class="k">of</span> <span class="t">::</span><span class="t">String</span></code>
+      </dt>
+      
+    
+      <dt class="entry-const" id="MAX_FIXED_POINT_ITERATIONS">
+        <strong>MAX_FIXED_POINT_ITERATIONS</strong> = <code><span class="n">100</span></code>
+      </dt>
+      
+      <dd class="entry-const-doc">
+        <p>Maximum iterations for fixed-point convergence in loops.
+In practice, convergence happens in 2-3 iterations since the live set
+can only grow monotonically and is bounded by the number of variables.</p>
+      </dd>
+      
+    
+  </dl>
+
 
 
   
+  <h2>
+    <a id="constructors" class="anchor" href="#constructors">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>
+    Constructors
+  </h2>
+  <ul class="list-summary">
+    
+      <li class="entry-summary">
+        <a href="#new%28scope%3AScope%29-class-method" class="signature"><strong>.new</strong>(scope : Scope)</a>
+        
+      </li>
+    
+  </ul>
+
 
   
 
@@ -1368,208 +1288,9 @@
   <ul class="list-summary">
     
       <li class="entry-summary">
-        <a href="#abort%3F%28node%29-instance-method" class="signature"><strong>#abort?</strong>(node)</a>
+        <a href="#dead_stores%3AArray%28Assignment%29-instance-method" class="signature"><strong>#dead_stores</strong> : Array(Assignment)</a>
         
-          <div class="summary"><p>Returns <code>true</code> if node represents <code>abort</code> method call.</p></div>
-        
-      </li>
-    
-      <li class="entry-summary">
-        <a href="#control_exp_code%28node%3ACrystal%3A%3AControlExpression%2Ccode_lines%29-instance-method" class="signature"><strong>#control_exp_code</strong>(node : Crystal::ControlExpression, code_lines)</a>
-        
-          <div class="summary"><p>Returns the exp code of a control expression.</p></div>
-        
-      </li>
-    
-      <li class="entry-summary">
-        <a href="#dynamic_literal%3F%28node%29%3ABool-instance-method" class="signature"><strong>#dynamic_literal?</strong>(node) : Bool</a>
-        
-          <div class="summary"><p>Returns <code>true</code> if current <code>node</code> is a dynamic literal, <code>false</code> otherwise.</p></div>
-        
-      </li>
-    
-      <li class="entry-summary">
-        <a href="#exit%3F%28node%29-instance-method" class="signature"><strong>#exit?</strong>(node)</a>
-        
-          <div class="summary"><p>Returns <code>true</code> if node represents <code>exit</code> method call.</p></div>
-        
-      </li>
-    
-      <li class="entry-summary">
-        <a href="#flow_command%3F%28node%2Cin_loop%29-instance-method" class="signature"><strong>#flow_command?</strong>(node, in_loop)</a>
-        
-          <div class="summary"><p>Returns <code>true</code> if node is a flow command, <code>false</code> otherwise.</p></div>
-        
-      </li>
-    
-      <li class="entry-summary">
-        <a href="#flow_expression%3F%28node%2Cin_loop%3Dfalse%29-instance-method" class="signature"><strong>#flow_expression?</strong>(node, in_loop = <span class="n">false</span>)</a>
-        
-          <div class="summary"><p>Returns <code>true</code> if node is a flow expression, <code>false</code> if not.</p></div>
-        
-      </li>
-    
-      <li class="entry-summary">
-        <a href="#has_arguments%3F%28node%29%3ABool-instance-method" class="signature"><strong>#has_arguments?</strong>(node) : Bool</a>
-        
-          <div class="summary"><p>Returns <code>true</code> if the <em>node</em> is a <code>Crystal::Call</code> with either <code>node.block</code> or <code>node.block_arg</code> set, <code>false</code> otherwise.</p></div>
-        
-      </li>
-    
-      <li class="entry-summary">
-        <a href="#has_block%3F%28node%29%3ABool-instance-method" class="signature"><strong>#has_block?</strong>(node) : Bool</a>
-        
-          <div class="summary"><p>Returns <code>true</code> if the <em>node</em> is a <code>Crystal::Call</code> with either <code>node.block</code> or <code>node.block_arg</code> set, <code>false</code> otherwise.</p></div>
-        
-      </li>
-    
-      <li class="entry-summary">
-        <a href="#has_short_block%3F%28node%2Ccode_lines%29-instance-method" class="signature"><strong>#has_short_block?</strong>(node, code_lines)</a>
-        
-          <div class="summary"><p>Returns <code>true</code> if <em>node</em> is a call with a short block version (<code>&amp;.foo?</code>).</p></div>
-        
-      </li>
-    
-      <li class="entry-summary">
-        <a href="#heredoc%3F%28node%2Csource%3ASource%29-instance-method" class="signature"><strong>#heredoc?</strong>(node, source : Source)</a>
-        
-          <div class="summary"><p>Returns <code>true</code> if node is a <em>heredoc</em>, <code>false</code> otherwise.</p></div>
-        
-      </li>
-    
-      <li class="entry-summary">
-        <a href="#literal%3F%28node%29%3ABool-instance-method" class="signature"><strong>#literal?</strong>(node) : Bool</a>
-        
-          <div class="summary"><p>Returns <code>true</code> if current <code>node</code> is a literal, <code>false</code> otherwise.</p></div>
-        
-      </li>
-    
-      <li class="entry-summary">
-        <a href="#loop%3F%28node%29-instance-method" class="signature"><strong>#loop?</strong>(node)</a>
-        
-          <div class="summary"><p>Returns <code>true</code> if node represents a loop.</p></div>
-        
-      </li>
-    
-      <li class="entry-summary">
-        <a href="#name_end_location%28node%29-instance-method" class="signature"><strong>#name_end_location</strong>(node)</a>
-        
-          <div class="summary"><p>Returns <code>nil</code> if <em>node</em> does not contain a name.</p></div>
-        
-      </li>
-    
-      <li class="entry-summary">
-        <a href="#name_location%28node%29-instance-method" class="signature"><strong>#name_location</strong>(node)</a>
-        
-          <div class="summary"><p>Returns <code>nil</code> if <em>node</em> does not contain a name.</p></div>
-        
-      </li>
-    
-      <li class="entry-summary">
-        <a href="#name_location_or%28token%3ACrystal%3A%3AToken%2Cname%2C%2A%2Cadjust_location_column_number%3Dnil%29-instance-method" class="signature"><strong>#name_location_or</strong>(token : Crystal::Token, name, *, adjust_location_column_number = <span class="n">nil</span>)</a>
-        
-      </li>
-    
-      <li class="entry-summary">
-        <a href="#name_location_or%28node%3ACrystal%3A%3AASTNode%2C%2A%2Cadjust_location_column_number%3Dnil%29-instance-method" class="signature"><strong>#name_location_or</strong>(node : Crystal::ASTNode, *, adjust_location_column_number = <span class="n">nil</span>)</a>
-        
-      </li>
-    
-      <li class="entry-summary">
-        <a href="#name_size%28node%29-instance-method" class="signature"><strong>#name_size</strong>(node)</a>
-        
-          <div class="summary"><p>Returns zero if <em>node</em> does not contain a name.</p></div>
-        
-      </li>
-    
-      <li class="entry-summary">
-        <a href="#node_source%28node%2Ccode_lines%29-instance-method" class="signature"><strong>#node_source</strong>(node, code_lines)</a>
-        
-          <div class="summary"><p>Returns a source code for the current node.</p></div>
-        
-      </li>
-    
-      <li class="entry-summary">
-        <a href="#nodoc%3F%28node%29-instance-method" class="signature"><strong>#nodoc?</strong>(node)</a>
-        
-          <div class="summary"><p>Returns <code>true</code> if node has a <code>:nodoc:</code> annotation as the first line.</p></div>
-        
-      </li>
-    
-      <li class="entry-summary">
-        <a href="#operator_method%3F%28node%29-instance-method" class="signature"><strong>#operator_method?</strong>(node)</a>
-        
-          <div class="summary"><p>Returns <code>true</code> if <em>node</em> represents operator method.</p></div>
-        
-      </li>
-    
-      <li class="entry-summary">
-        <a href="#operator_method_name%3F%28name%3AString%29-instance-method" class="signature"><strong>#operator_method_name?</strong>(name : String)</a>
-        
-          <div class="summary"><p>Returns <code>true</code> if <em>name</em> represents operator method.</p></div>
-        
-      </li>
-    
-      <li class="entry-summary">
-        <a href="#path_named%3F%28node%2C%2Anames%3AString%29%3ABool-instance-method" class="signature"><strong>#path_named?</strong>(node, *names : String) : Bool</a>
-        
-          <div class="summary"><p>Returns <code>true</code> if current <code>node</code> is a <code>Crystal::Path</code> matching given <em>name</em>, <code>false</code> otherwise.</p></div>
-        
-      </li>
-    
-      <li class="entry-summary">
-        <a href="#raise%3F%28node%29-instance-method" class="signature"><strong>#raise?</strong>(node)</a>
-        
-          <div class="summary"><p>Returns <code>true</code> if node represents <code>raise</code> method call.</p></div>
-        
-      </li>
-    
-      <li class="entry-summary">
-        <a href="#setter_method%3F%28node%29-instance-method" class="signature"><strong>#setter_method?</strong>(node)</a>
-        
-          <div class="summary"><p>Returns <code>true</code> if <em>node</em> represents setter method.</p></div>
-        
-      </li>
-    
-      <li class="entry-summary">
-        <a href="#setter_method_name%3F%28name%3AString%29-instance-method" class="signature"><strong>#setter_method_name?</strong>(name : String)</a>
-        
-          <div class="summary"><p>Returns <code>true</code> if <em>name</em> represents setter method.</p></div>
-        
-      </li>
-    
-      <li class="entry-summary">
-        <a href="#short_block%3F%28node%2Ccode_lines%29-instance-method" class="signature"><strong>#short_block?</strong>(node, code_lines)</a>
-        
-          <div class="summary"><p>Returns <code>true</code> if <em>node</em> represents a short block version (<code>&amp;.foo?</code>).</p></div>
-        
-      </li>
-    
-      <li class="entry-summary">
-        <a href="#source_between%28loc%2Cend_loc%2Ccode_lines%29%3AString%7CNil-instance-method" class="signature"><strong>#source_between</strong>(loc, end_loc, code_lines) : String | Nil</a>
-        
-          <div class="summary"><p>Returns the source code from <em>loc</em> to <em>end_loc</em> (inclusive).</p></div>
-        
-      </li>
-    
-      <li class="entry-summary">
-        <a href="#static_literal%3F%28node%29%3ABool-instance-method" class="signature"><strong>#static_literal?</strong>(node) : Bool</a>
-        
-          <div class="summary"><p>Returns <code>true</code> if current <code>node</code> is a static literal, <code>false</code> otherwise.</p></div>
-        
-      </li>
-    
-      <li class="entry-summary">
-        <a href="#suffix%3F%28node%29-instance-method" class="signature"><strong>#suffix?</strong>(node)</a>
-        
-          <div class="summary"><p>Returns <code>true</code> if <em>node</em> is a suffix node (<code>if</code> / <code>unless</code> / <code>rescue</code> / <code>ensure</code>).</p></div>
-        
-      </li>
-    
-      <li class="entry-summary">
-        <a href="#takes_arguments%3F%28node%29%3ABool-instance-method" class="signature"><strong>#takes_arguments?</strong>(node) : Bool</a>
-        
-          <div class="summary"><p>Returns <code>true</code> if the <em>node</em> is a <code>Crystal::Def</code> with either <code>args</code>, <code>splat_index</code>, or <code>double_splat</code> set, <code>false</code> otherwise.</p></div>
+          <div class="summary"><p>Returns assignments where the value is never read before being overwritten or the scope ends.</p></div>
         
       </li>
     
@@ -1579,9 +1300,61 @@
 
   <div class="methods-inherited">
     
+      
+
+
+      
+
+
+      
+
+
+      
+
+
+    
+      
+
+
+      
+
+
+      
+
+
+      
+
+
+    
   </div>
 
   
+  <h2>
+    <a id="constructor-detail" class="anchor" href="#constructor-detail">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>
+    Constructor Detail
+  </h2>
+  
+    <div class="entry-detail" id="new(scope:Scope)-class-method">
+      <div class="signature">
+        
+        def self.<strong>new</strong>(scope : <a href="../../Ameba/AST/Scope.html">Scope</a>)
+
+        <a class="method-permalink" href="#new%28scope%3AScope%29-class-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/crystal-ameba/ameba/blob/313f54c/src/ameba/ast/liveness_analyzer.cr#L38" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+
 
   
 
@@ -1597,649 +1370,24 @@
     Instance Method Detail
   </h2>
   
-    <div class="entry-detail" id="abort?(node)-instance-method">
+    <div class="entry-detail" id="dead_stores:Array(Assignment)-instance-method">
       <div class="signature">
         
-        def <strong>abort?</strong>(node)
+        def <strong>dead_stores</strong> : Array(<a href="../../Ameba/AST/Assignment.html">Assignment</a>)
 
-        <a class="method-permalink" href="#abort%3F%28node%29-instance-method">#</a>
+        <a class="method-permalink" href="#dead_stores%3AArray%28Assignment%29-instance-method">#</a>
       </div>
       
         <div class="doc">
           
-          <p>Returns <code>true</code> if node represents <code>abort</code> method call.</p>
+          <p>Returns assignments where the value is never read before being
+overwritten or the scope ends.</p>
         </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/313f54c/src/ameba/ast/util.cr#L207" target="_blank">View source</a>]
-        
-      </div>
-    </div>
-  
-    <div class="entry-detail" id="control_exp_code(node:Crystal::ControlExpression,code_lines)-instance-method">
-      <div class="signature">
-        
-        def <strong>control_exp_code</strong>(node : Crystal::ControlExpression, code_lines)
-
-        <a class="method-permalink" href="#control_exp_code%28node%3ACrystal%3A%3AControlExpression%2Ccode_lines%29-instance-method">#</a>
-      </div>
-      
-        <div class="doc">
-          
-          <p>Returns the exp code of a control expression.
-Wraps implicit tuple literal with curly brackets (e.g. multi-return).</p>
-        </div>
-      
-      <br/>
-      <div>
-        
-          [<a href="https://github.com/crystal-ameba/ameba/blob/313f54c/src/ameba/ast/util.cr#L300" target="_blank">View source</a>]
-        
-      </div>
-    </div>
-  
-    <div class="entry-detail" id="dynamic_literal?(node):Bool-instance-method">
-      <div class="signature">
-        
-        def <strong>dynamic_literal?</strong>(node) : Bool
-
-        <a class="method-permalink" href="#dynamic_literal%3F%28node%29%3ABool-instance-method">#</a>
-      </div>
-      
-        <div class="doc">
-          
-          <p>Returns <code>true</code> if current <code>node</code> is a dynamic literal, <code>false</code> otherwise.</p>
-        </div>
-      
-      <br/>
-      <div>
-        
-          [<a href="https://github.com/crystal-ameba/ameba/blob/313f54c/src/ameba/ast/util.cr#L55" target="_blank">View source</a>]
-        
-      </div>
-    </div>
-  
-    <div class="entry-detail" id="exit?(node)-instance-method">
-      <div class="signature">
-        
-        def <strong>exit?</strong>(node)
-
-        <a class="method-permalink" href="#exit%3F%28node%29-instance-method">#</a>
-      </div>
-      
-        <div class="doc">
-          
-          <p>Returns <code>true</code> if node represents <code>exit</code> method call.</p>
-        </div>
-      
-      <br/>
-      <div>
-        
-          [<a href="https://github.com/crystal-ameba/ameba/blob/313f54c/src/ameba/ast/util.cr#L201" target="_blank">View source</a>]
-        
-      </div>
-    </div>
-  
-    <div class="entry-detail" id="flow_command?(node,in_loop)-instance-method">
-      <div class="signature">
-        
-        def <strong>flow_command?</strong>(node, in_loop)
-
-        <a class="method-permalink" href="#flow_command%3F%28node%2Cin_loop%29-instance-method">#</a>
-      </div>
-      
-        <div class="doc">
-          
-          <p>Returns <code>true</code> if node is a flow command, <code>false</code> otherwise.
-Node represents a flow command if it is a control expression,
-or special call node that interrupts execution (i.e. raise, exit, abort).</p>
-        </div>
-      
-      <br/>
-      <div>
-        
-          [<a href="https://github.com/crystal-ameba/ameba/blob/313f54c/src/ameba/ast/util.cr#L131" target="_blank">View source</a>]
-        
-      </div>
-    </div>
-  
-    <div class="entry-detail" id="flow_expression?(node,in_loop=false)-instance-method">
-      <div class="signature">
-        
-        def <strong>flow_expression?</strong>(node, in_loop = <span class="n">false</span>)
-
-        <a class="method-permalink" href="#flow_expression%3F%28node%2Cin_loop%3Dfalse%29-instance-method">#</a>
-      </div>
-      
-        <div class="doc">
-          
-          <p>Returns <code>true</code> if node is a flow expression, <code>false</code> if not.
-Node represents a flow expression if it is full-filled by a flow command.</p>
-<p>For example, this node is a flow expression, because each branch contains
-a flow command <code>return</code>:</p>
-<pre><code class="language-crystal"><span class="k">if</span> a <span class="o">&gt;</span> <span class="n">0</span>
-  <span class="k">return</span> <span class="n">:positive</span>
-<span class="k">elsif</span> a <span class="o">&lt;</span> <span class="n">0</span>
-  <span class="k">return</span> <span class="n">:negative</span>
-<span class="k">else</span>
-  <span class="k">return</span> <span class="n">:zero</span>
-<span class="k">end</span></code></pre>
-<p>This node is a not a flow expression:</p>
-<pre><code class="language-crystal"><span class="k">if</span> a <span class="o">&gt;</span> <span class="n">0</span>
-  <span class="k">return</span> <span class="n">:positive</span>
-<span class="k">end</span></code></pre>
-<p>That's because not all branches return(i.e. <code>else</code> is missing).</p>
-        </div>
-      
-      <br/>
-      <div>
-        
-          [<a href="https://github.com/crystal-ameba/ameba/blob/313f54c/src/ameba/ast/util.cr#L169" target="_blank">View source</a>]
-        
-      </div>
-    </div>
-  
-    <div class="entry-detail" id="has_arguments?(node):Bool-instance-method">
-      <div class="signature">
-        
-        def <strong>has_arguments?</strong>(node) : Bool
-
-        <a class="method-permalink" href="#has_arguments%3F%28node%29%3ABool-instance-method">#</a>
-      </div>
-      
-        <div class="doc">
-          
-          <p>Returns <code>true</code> if the <em>node</em> is a <code>Crystal::Call</code>
-with either <code>node.block</code> or <code>node.block_arg</code> set, <code>false</code> otherwise.</p>
-        </div>
-      
-      <br/>
-      <div>
-        
-          [<a href="https://github.com/crystal-ameba/ameba/blob/313f54c/src/ameba/ast/util.cr#L82" target="_blank">View source</a>]
-        
-      </div>
-    </div>
-  
-    <div class="entry-detail" id="has_block?(node):Bool-instance-method">
-      <div class="signature">
-        
-        def <strong>has_block?</strong>(node) : Bool
-
-        <a class="method-permalink" href="#has_block%3F%28node%29%3ABool-instance-method">#</a>
-      </div>
-      
-        <div class="doc">
-          
-          <p>Returns <code>true</code> if the <em>node</em> is a <code>Crystal::Call</code>
-with either <code>node.block</code> or <code>node.block_arg</code> set, <code>false</code> otherwise.</p>
-        </div>
-      
-      <br/>
-      <div>
-        
-          [<a href="https://github.com/crystal-ameba/ameba/blob/313f54c/src/ameba/ast/util.cr#L75" target="_blank">View source</a>]
-        
-      </div>
-    </div>
-  
-    <div class="entry-detail" id="has_short_block?(node,code_lines)-instance-method">
-      <div class="signature">
-        
-        def <strong>has_short_block?</strong>(node, code_lines)
-
-        <a class="method-permalink" href="#has_short_block%3F%28node%2Ccode_lines%29-instance-method">#</a>
-      </div>
-      
-        <div class="doc">
-          
-          <p>Returns <code>true</code> if <em>node</em> is a call with a short block version (<code>&amp;.foo?</code>).</p>
-        </div>
-      
-      <br/>
-      <div>
-        
-          [<a href="https://github.com/crystal-ameba/ameba/blob/313f54c/src/ameba/ast/util.cr#L275" target="_blank">View source</a>]
-        
-      </div>
-    </div>
-  
-    <div class="entry-detail" id="heredoc?(node,source:Source)-instance-method">
-      <div class="signature">
-        
-        def <strong>heredoc?</strong>(node, source : <a href="../../Ameba/Source.html">Source</a>)
-
-        <a class="method-permalink" href="#heredoc%3F%28node%2Csource%3ASource%29-instance-method">#</a>
-      </div>
-      
-        <div class="doc">
-          
-          <p>Returns <code>true</code> if node is a <em>heredoc</em>, <code>false</code> otherwise.</p>
-        </div>
-      
-      <br/>
-      <div>
-        
-          [<a href="https://github.com/crystal-ameba/ameba/blob/313f54c/src/ameba/ast/util.cr#L289" target="_blank">View source</a>]
-        
-      </div>
-    </div>
-  
-    <div class="entry-detail" id="literal?(node):Bool-instance-method">
-      <div class="signature">
-        
-        def <strong>literal?</strong>(node) : Bool
-
-        <a class="method-permalink" href="#literal%3F%28node%29%3ABool-instance-method">#</a>
-      </div>
-      
-        <div class="doc">
-          
-          <p>Returns <code>true</code> if current <code>node</code> is a literal, <code>false</code> otherwise.</p>
-        </div>
-      
-      <br/>
-      <div>
-        
-          [<a href="https://github.com/crystal-ameba/ameba/blob/313f54c/src/ameba/ast/util.cr#L61" target="_blank">View source</a>]
-        
-      </div>
-    </div>
-  
-    <div class="entry-detail" id="loop?(node)-instance-method">
-      <div class="signature">
-        
-        def <strong>loop?</strong>(node)
-
-        <a class="method-permalink" href="#loop%3F%28node%29-instance-method">#</a>
-      </div>
-      
-        <div class="doc">
-          
-          <p>Returns <code>true</code> if node represents a loop.</p>
-        </div>
-      
-      <br/>
-      <div>
-        
-          [<a href="https://github.com/crystal-ameba/ameba/blob/313f54c/src/ameba/ast/util.cr#L213" target="_blank">View source</a>]
-        
-      </div>
-    </div>
-  
-    <div class="entry-detail" id="name_end_location(node)-instance-method">
-      <div class="signature">
-        
-        def <strong>name_end_location</strong>(node)
-
-        <a class="method-permalink" href="#name_end_location%28node%29-instance-method">#</a>
-      </div>
-      
-        <div class="doc">
-          
-          <p>Returns <code>nil</code> if <em>node</em> does not contain a name.</p>
-<p><span class="flag purple">NOTE</span>  Use this instead of <code>Crystal::Call#name_end_location</code> to avoid an
-off-by-one error.</p>
-        </div>
-      
-      <br/>
-      <div>
-        
-          [<a href="https://github.com/crystal-ameba/ameba/blob/313f54c/src/ameba/ast/util.cr#L370" target="_blank">View source</a>]
-        
-      </div>
-    </div>
-  
-    <div class="entry-detail" id="name_location(node)-instance-method">
-      <div class="signature">
-        
-        def <strong>name_location</strong>(node)
-
-        <a class="method-permalink" href="#name_location%28node%29-instance-method">#</a>
-      </div>
-      
-        <div class="doc">
-          
-          <p>Returns <code>nil</code> if <em>node</em> does not contain a name.</p>
-        </div>
-      
-      <br/>
-      <div>
-        
-          [<a href="https://github.com/crystal-ameba/ameba/blob/313f54c/src/ameba/ast/util.cr#L338" target="_blank">View source</a>]
-        
-      </div>
-    </div>
-  
-    <div class="entry-detail" id="name_location_or(token:Crystal::Token,name,*,adjust_location_column_number=nil)-instance-method">
-      <div class="signature">
-        
-        def <strong>name_location_or</strong>(token : Crystal::Token, name, *, adjust_location_column_number = <span class="n">nil</span>)
-
-        <a class="method-permalink" href="#name_location_or%28token%3ACrystal%3A%3AToken%2Cname%2C%2A%2Cadjust_location_column_number%3Dnil%29-instance-method">#</a>
-      </div>
-      
-      <br/>
-      <div>
-        
-          [<a href="https://github.com/crystal-ameba/ameba/blob/313f54c/src/ameba/ast/util.cr#L325" target="_blank">View source</a>]
-        
-      </div>
-    </div>
-  
-    <div class="entry-detail" id="name_location_or(node:Crystal::ASTNode,*,adjust_location_column_number=nil)-instance-method">
-      <div class="signature">
-        
-        def <strong>name_location_or</strong>(node : Crystal::ASTNode, *, adjust_location_column_number = <span class="n">nil</span>)
-
-        <a class="method-permalink" href="#name_location_or%28node%3ACrystal%3A%3AASTNode%2C%2A%2Cadjust_location_column_number%3Dnil%29-instance-method">#</a>
-      </div>
-      
-      <br/>
-      <div>
-        
-          [<a href="https://github.com/crystal-ameba/ameba/blob/313f54c/src/ameba/ast/util.cr#L310" target="_blank">View source</a>]
-        
-      </div>
-    </div>
-  
-    <div class="entry-detail" id="name_size(node)-instance-method">
-      <div class="signature">
-        
-        def <strong>name_size</strong>(node)
-
-        <a class="method-permalink" href="#name_size%28node%29-instance-method">#</a>
-      </div>
-      
-        <div class="doc">
-          
-          <p>Returns zero if <em>node</em> does not contain a name.</p>
-        </div>
-      
-      <br/>
-      <div>
-        
-          [<a href="https://github.com/crystal-ameba/ameba/blob/313f54c/src/ameba/ast/util.cr#L352" target="_blank">View source</a>]
-        
-      </div>
-    </div>
-  
-    <div class="entry-detail" id="node_source(node,code_lines)-instance-method">
-      <div class="signature">
-        
-        def <strong>node_source</strong>(node, code_lines)
-
-        <a class="method-permalink" href="#node_source%28node%2Ccode_lines%29-instance-method">#</a>
-      </div>
-      
-        <div class="doc">
-          
-          <p>Returns a source code for the current node.
-This method uses <code>node.location</code> and <code>node.end_location</code>
-to determine and cut a piece of source of the node.</p>
-        </div>
-      
-      <br/>
-      <div>
-        
-          [<a href="https://github.com/crystal-ameba/ameba/blob/313f54c/src/ameba/ast/util.cr#L98" target="_blank">View source</a>]
-        
-      </div>
-    </div>
-  
-    <div class="entry-detail" id="nodoc?(node)-instance-method">
-      <div class="signature">
-        
-        def <strong>nodoc?</strong>(node)
-
-        <a class="method-permalink" href="#nodoc%3F%28node%29-instance-method">#</a>
-      </div>
-      
-        <div class="doc">
-          
-          <p>Returns <code>true</code> if node has a <code>:nodoc:</code> annotation as the first line.</p>
-        </div>
-      
-      <br/>
-      <div>
-        
-          [<a href="https://github.com/crystal-ameba/ameba/blob/313f54c/src/ameba/ast/util.cr#L281" target="_blank">View source</a>]
-        
-      </div>
-    </div>
-  
-    <div class="entry-detail" id="operator_method?(node)-instance-method">
-      <div class="signature">
-        
-        def <strong>operator_method?</strong>(node)
-
-        <a class="method-permalink" href="#operator_method%3F%28node%29-instance-method">#</a>
-      </div>
-      
-        <div class="doc">
-          
-          <p>Returns <code>true</code> if <em>node</em> represents operator method.</p>
-        </div>
-      
-      <br/>
-      <div>
-        
-          [<a href="https://github.com/crystal-ameba/ameba/blob/313f54c/src/ameba/ast/util.cr#L231" target="_blank">View source</a>]
-        
-      </div>
-    </div>
-  
-    <div class="entry-detail" id="operator_method_name?(name:String)-instance-method">
-      <div class="signature">
-        
-        def <strong>operator_method_name?</strong>(name : String)
-
-        <a class="method-permalink" href="#operator_method_name%3F%28name%3AString%29-instance-method">#</a>
-      </div>
-      
-        <div class="doc">
-          
-          <p>Returns <code>true</code> if <em>name</em> represents operator method.</p>
-        </div>
-      
-      <br/>
-      <div>
-        
-          [<a href="https://github.com/crystal-ameba/ameba/blob/313f54c/src/ameba/ast/util.cr#L225" target="_blank">View source</a>]
-        
-      </div>
-    </div>
-  
-    <div class="entry-detail" id="path_named?(node,*names:String):Bool-instance-method">
-      <div class="signature">
-        
-        def <strong>path_named?</strong>(node, *names : String) : Bool
-
-        <a class="method-permalink" href="#path_named%3F%28node%2C%2Anames%3AString%29%3ABool-instance-method">#</a>
-      </div>
-      
-        <div class="doc">
-          
-          <p>Returns <code>true</code> if current <code>node</code> is a <code>Crystal::Path</code>
-matching given <em>name</em>, <code>false</code> otherwise.</p>
-        </div>
-      
-      <br/>
-      <div>
-        
-          [<a href="https://github.com/crystal-ameba/ameba/blob/313f54c/src/ameba/ast/util.cr#L68" target="_blank">View source</a>]
-        
-      </div>
-    </div>
-  
-    <div class="entry-detail" id="raise?(node)-instance-method">
-      <div class="signature">
-        
-        def <strong>raise?</strong>(node)
-
-        <a class="method-permalink" href="#raise%3F%28node%29-instance-method">#</a>
-      </div>
-      
-        <div class="doc">
-          
-          <p>Returns <code>true</code> if node represents <code>raise</code> method call.</p>
-        </div>
-      
-      <br/>
-      <div>
-        
-          [<a href="https://github.com/crystal-ameba/ameba/blob/313f54c/src/ameba/ast/util.cr#L195" target="_blank">View source</a>]
-        
-      </div>
-    </div>
-  
-    <div class="entry-detail" id="setter_method?(node)-instance-method">
-      <div class="signature">
-        
-        def <strong>setter_method?</strong>(node)
-
-        <a class="method-permalink" href="#setter_method%3F%28node%29-instance-method">#</a>
-      </div>
-      
-        <div class="doc">
-          
-          <p>Returns <code>true</code> if <em>node</em> represents setter method.</p>
-        </div>
-      
-      <br/>
-      <div>
-        
-          [<a href="https://github.com/crystal-ameba/ameba/blob/313f54c/src/ameba/ast/util.cr#L245" target="_blank">View source</a>]
-        
-      </div>
-    </div>
-  
-    <div class="entry-detail" id="setter_method_name?(name:String)-instance-method">
-      <div class="signature">
-        
-        def <strong>setter_method_name?</strong>(name : String)
-
-        <a class="method-permalink" href="#setter_method_name%3F%28name%3AString%29-instance-method">#</a>
-      </div>
-      
-        <div class="doc">
-          
-          <p>Returns <code>true</code> if <em>name</em> represents setter method.</p>
-        </div>
-      
-      <br/>
-      <div>
-        
-          [<a href="https://github.com/crystal-ameba/ameba/blob/313f54c/src/ameba/ast/util.cr#L239" target="_blank">View source</a>]
-        
-      </div>
-    </div>
-  
-    <div class="entry-detail" id="short_block?(node,code_lines)-instance-method">
-      <div class="signature">
-        
-        def <strong>short_block?</strong>(node, code_lines)
-
-        <a class="method-permalink" href="#short_block%3F%28node%2Ccode_lines%29-instance-method">#</a>
-      </div>
-      
-        <div class="doc">
-          
-          <p>Returns <code>true</code> if <em>node</em> represents a short block version (<code>&amp;.foo?</code>).</p>
-        </div>
-      
-      <br/>
-      <div>
-        
-          [<a href="https://github.com/crystal-ameba/ameba/blob/313f54c/src/ameba/ast/util.cr#L265" target="_blank">View source</a>]
-        
-      </div>
-    </div>
-  
-    <div class="entry-detail" id="source_between(loc,end_loc,code_lines):String|Nil-instance-method">
-      <div class="signature">
-        
-        def <strong>source_between</strong>(loc, end_loc, code_lines) : String | Nil
-
-        <a class="method-permalink" href="#source_between%28loc%2Cend_loc%2Ccode_lines%29%3AString%7CNil-instance-method">#</a>
-      </div>
-      
-        <div class="doc">
-          
-          <p>Returns the source code from <em>loc</em> to <em>end_loc</em> (inclusive).</p>
-        </div>
-      
-      <br/>
-      <div>
-        
-          [<a href="https://github.com/crystal-ameba/ameba/blob/313f54c/src/ameba/ast/util.cr#L106" target="_blank">View source</a>]
-        
-      </div>
-    </div>
-  
-    <div class="entry-detail" id="static_literal?(node):Bool-instance-method">
-      <div class="signature">
-        
-        def <strong>static_literal?</strong>(node) : Bool
-
-        <a class="method-permalink" href="#static_literal%3F%28node%29%3ABool-instance-method">#</a>
-      </div>
-      
-        <div class="doc">
-          
-          <p>Returns <code>true</code> if current <code>node</code> is a static literal, <code>false</code> otherwise.</p>
-        </div>
-      
-      <br/>
-      <div>
-        
-          [<a href="https://github.com/crystal-ameba/ameba/blob/313f54c/src/ameba/ast/util.cr#L49" target="_blank">View source</a>]
-        
-      </div>
-    </div>
-  
-    <div class="entry-detail" id="suffix?(node)-instance-method">
-      <div class="signature">
-        
-        def <strong>suffix?</strong>(node)
-
-        <a class="method-permalink" href="#suffix%3F%28node%29-instance-method">#</a>
-      </div>
-      
-        <div class="doc">
-          
-          <p>Returns <code>true</code> if <em>node</em> is a suffix node (<code>if</code> / <code>unless</code> / <code>rescue</code> / <code>ensure</code>).</p>
-        </div>
-      
-      <br/>
-      <div>
-        
-          [<a href="https://github.com/crystal-ameba/ameba/blob/313f54c/src/ameba/ast/util.cr#L253" target="_blank">View source</a>]
-        
-      </div>
-    </div>
-  
-    <div class="entry-detail" id="takes_arguments?(node):Bool-instance-method">
-      <div class="signature">
-        
-        def <strong>takes_arguments?</strong>(node) : Bool
-
-        <a class="method-permalink" href="#takes_arguments%3F%28node%29%3ABool-instance-method">#</a>
-      </div>
-      
-        <div class="doc">
-          
-          <p>Returns <code>true</code> if the <em>node</em> is a <code>Crystal::Def</code>
-with either <code>args</code>, <code>splat_index</code>, or <code>double_splat</code> set,
-<code>false</code> otherwise.</p>
-        </div>
-      
-      <br/>
-      <div>
-        
-          [<a href="https://github.com/crystal-ameba/ameba/blob/313f54c/src/ameba/ast/util.cr#L90" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/313f54c/src/ameba/ast/liveness_analyzer.cr#L46" target="_blank">View source</a>]
         
       </div>
     </div>
