@@ -48,10 +48,25 @@ module Ameba::Rule::Lint
     end
 
     def test(source, node, scope : AST::Scope)
-      scope.arguments.each do |arg|
-        next unless assign = arg.variable.assign_before_reference
+      return unless scope.def? || scope.block?
 
-        issue_for assign, MSG % arg.name
+      args = scope.arguments.reject(&.ignored?)
+      return if args.empty?
+
+      analyzer = AST::LivenessAnalyzer.new(scope)
+      entry_live = analyzer.entry_live_set
+      dead_store_ids = analyzer.dead_stores.map(&.node.object_id).to_set
+
+      args.each do |arg|
+        next if entry_live.includes?(arg.name)
+
+        assigns = arg.variable.assignments
+        # Prefer the first non-dead-store assignment (the one whose value
+        # actually gets used), falling back to the first assignment.
+        target = assigns.find { |a| !dead_store_ids.includes?(a.node.object_id) } || assigns.first?
+        next unless target
+
+        issue_for target.node, MSG % arg.name
       end
     end
   end

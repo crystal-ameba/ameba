@@ -50,6 +50,8 @@ module Ameba::Rule::Lint
   #   Enabled: true
   # ```
   class SharedVarInFiber < Base
+    include AST::Util
+
     properties do
       since_version "0.12.0"
       description "Disallows shared variables in fibers"
@@ -74,13 +76,66 @@ module Ameba::Rule::Lint
 
     # Variable is mutated in loop if it was declared above the loop and assigned inside.
     private def mutated_in_loop?(variable)
-      declared_in = variable.assignments.first?.try &.branch
+      first_assign_node = variable.assignments.first?.try(&.node)
 
       variable.assignments.any? do |assign|
-        !assign.scope.spawn_block? &&
-          assign.branch.try(&.in_loop?) &&
-          assign.branch != declared_in
+        next if assign.scope.spawn_block?
+        next if assign.node == first_assign_node
+
+        in_loop?(assign.node, variable.scope.node)
       end
+    end
+
+    # Returns `true` if *node* is inside a loop within *boundary*.
+    private def in_loop?(node, boundary)
+      LoopAncestorVisitor.new(node, boundary).in_loop?
+    end
+
+    private class LoopAncestorVisitor < Crystal::Visitor
+      include AST::Util
+
+      getter? in_loop = false
+
+      def initialize(@target : Crystal::ASTNode, boundary : Crystal::ASTNode)
+        boundary.accept(self)
+      end
+
+      def visit(node : Crystal::ASTNode)
+        return false if @in_loop
+
+        if node.location == @target.location && node.class == @target.class
+          @in_loop = @inside_loop
+          return false
+        end
+
+        true
+      end
+
+      def visit(node : Crystal::While | Crystal::Until)
+        return false if @in_loop
+
+        prev = @inside_loop
+        @inside_loop = true
+        node.accept_children(self)
+        @inside_loop = prev unless @in_loop
+        false
+      end
+
+      def visit(node : Crystal::Call)
+        return false if @in_loop
+
+        if loop?(node) && (block = node.block)
+          prev = @inside_loop
+          @inside_loop = true
+          block.body.accept(self)
+          @inside_loop = prev unless @in_loop
+        else
+          node.accept_children(self)
+        end
+        false
+      end
+
+      @inside_loop = false
     end
   end
 end

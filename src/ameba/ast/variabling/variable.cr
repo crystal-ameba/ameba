@@ -14,9 +14,6 @@ module Ameba::AST
     # Scope of this variable.
     getter scope : Scope
 
-    # Node of the first assignment which can be available before any reference.
-    getter assign_before_reference : Crystal::ASTNode?
-
     delegate location, end_location, name, to_s,
       to: @node
 
@@ -44,8 +41,6 @@ module Ameba::AST
     # ```
     def assign(node, scope)
       assignments << Assignment.new(node, self, scope)
-
-      update_assign_reference!
     end
 
     # Returns `true` if variable has any reference.
@@ -185,16 +180,6 @@ module Ameba::AST
       def visit(node : Crystal::ASTNode)
         true
       end
-    end
-
-    private def update_assign_reference!
-      return if @assign_before_reference
-      return if references.size > assignments.size
-      return if assignments.any?(&.op_assign?)
-
-      @assign_before_reference = assignments
-        .find(&.in_branch?.!)
-        .try(&.node)
     end
   end
 end

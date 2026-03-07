@@ -50,6 +50,14 @@ module Ameba::AST
       @dead_stores
     end
 
+    # Returns the set of variable names that are live at scope entry.
+    # A variable live at entry means its value (e.g. from a method argument)
+    # will be read before being overwritten.
+    def entry_live_set : LiveSet
+      body = scope_body(@scope.node)
+      body ? propagate_through(body, LiveSet.new, mark: false) : LiveSet.new
+    end
+
     private def build_assignment_map
       map = Hash(Tuple(String, UInt64), Array(Assignment)).new
       @scope.variables.each do |var|
