@@ -69,6 +69,8 @@ module Ameba::CLI
         return true
       end
 
+      validate_globs(opts, config.root)
+
       runner = Ameba.run(config)
 
       if location_to_explain
@@ -306,6 +308,16 @@ module Ameba::CLI
   private def configure_describe_opts(rule_name, opts) : Nil
     opts.describe_rule = rule_name.presence
     opts.formatter = :silent
+  end
+
+  private def validate_globs(opts, root) : Nil
+    return if opts.stdin_filename
+    return unless globs = opts.globs
+
+    globs.each do |glob|
+      next unless GlobUtils.expand({glob}, root).empty?
+      raise "No files found matching `#{Path[glob].relative_to(Dir.current)}`"
+    end
   end
 
   private def configure_explain_opts(loc, opts) : Nil
