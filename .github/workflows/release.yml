@@ -5,10 +5,11 @@ on:
     tags:
       - "v*.*.*"
 
-env:
-  GH_TOKEN: ${{ github.token }}
 permissions:
   contents: write
+
+env:
+  GH_TOKEN: ${{ github.token }}
 
 jobs:
   draft:
