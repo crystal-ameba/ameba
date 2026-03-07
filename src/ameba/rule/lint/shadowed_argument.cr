@@ -59,6 +59,9 @@ module Ameba::Rule::Lint
 
       args.each do |arg|
         next if entry_live.includes?(arg.name)
+        next if arg.variable.captured_by_block?
+        next if arg.variable.used_in_macro?
+        next if scope.inner_scopes.any?(&.references?(arg.variable))
 
         assigns = arg.variable.assignments
         # Prefer the first non-dead-store assignment (the one whose value
