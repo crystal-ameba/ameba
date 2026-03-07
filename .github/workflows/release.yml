@@ -14,19 +14,19 @@ jobs:
   draft:
     runs-on: ubuntu-latest
     steps:
-      - run: gh release -R ${{github.repository}} create ${{github.ref_name}} --draft --generate-notes
+      - run: gh release -R ${{ github.repository }} create ${{ github.ref_name }} --draft --generate-notes
 
   linux-musl:
     strategy:
       fail-fast: false
       matrix:
         os: [ubuntu-24.04, ubuntu-24.04-arm]
-    runs-on: ${{matrix.os}}
+    runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v6
       - run: docker run --rm -v $PWD:/mnt -w /mnt crystallang/crystal:1-alpine shards build ameba --static -Dpreview_mt --release
-      - run: tar zcf ameba-${{github.ref_name}}-$(uname -m)-linux-musl.tar.gz -C bin ameba
-      - run: gh release -R ${{github.repository}} upload ${{github.ref_name}} ameba-${{github.ref_name}}-$(uname -m)-linux-musl.tar.gz
+      - run: tar zcf ameba-${{ github.ref_name }}-$(uname -m)-linux-musl.tar.gz -C bin ameba
+      - run: gh release -R ${{ github.repository }} upload ${{ github.ref_name }} ameba-${{ github.ref_name }}-$(uname -m)-linux-musl.tar.gz
 
   darwin:
     strategy:
@@ -35,13 +35,13 @@ jobs:
         include:
           - {os: macos-15, arch: aarch64}
           - {os: macos-15-intel, arch: x86_64}
-    runs-on: ${{matrix.os}}
+    runs-on: ${{ matrix.os }}
     steps:
       - uses: crystal-lang/install-crystal@v1
       - uses: actions/checkout@v6
       - run: shards build ameba -Dpreview_mt --release
-      - run: tar zcf ameba-${{github.ref_name}}-${{matrix.arch}}-darwin.tar.gz -C bin ameba ameba.dwarf
-      - run: gh release -R ${{github.repository}} upload ${{github.ref_name}} ameba-${{github.ref_name}}-${{matrix.arch}}-darwin.tar.gz
+      - run: tar zcf ameba-${{ github.ref_name }}-${{ matrix.arch }}-darwin.tar.gz -C bin ameba ameba.dwarf
+      - run: gh release -R ${{ github.repository }} upload ${{ github.ref_name }} ameba-${{ github.ref_name }}-${{ matrix.arch }}-darwin.tar.gz
 
   x86_64-windows-msvc:
     runs-on: windows-2025
@@ -49,6 +49,6 @@ jobs:
       - uses: crystal-lang/install-crystal@v1
       - uses: actions/checkout@v6
       - run: shards build ameba --static -Dpreview_mt --release
-      - run: cd bin; 7z a ../ameba-${{github.ref_name}}-x86_64-windows-msvc.zip ameba.exe ameba.pdb
-      - run: gh release -R ${{github.repository}} upload ${{github.ref_name}} ameba-${{github.ref_name}}-x86_64-windows-msvc.zip
+      - run: cd bin; 7z a ../ameba-${{ github.ref_name }}-x86_64-windows-msvc.zip ameba.exe ameba.pdb
+      - run: gh release -R ${{ github.repository }} upload ${{ github.ref_name }} ameba-${{ github.ref_name }}-x86_64-windows-msvc.zip
 
