@@ -78,33 +78,35 @@ module Ameba::Rule::Lint
     private def mutated_in_loop?(variable)
       first_assign_node = variable.assignments.first?.try(&.node)
 
-      variable.assignments.any? do |assign|
+      targets = Set(UInt64).new
+      variable.assignments.each do |assign|
         next if assign.scope.spawn_block?
         next if assign.node == first_assign_node
-
-        in_loop?(assign.node, variable.scope.node)
+        targets << assign.node.object_id
       end
+
+      return false if targets.empty?
+
+      LoopAncestorVisitor.new(targets, variable.scope.node).any_in_loop?
     end
 
-    # Returns `true` if *node* is inside a loop within *boundary*.
-    private def in_loop?(node, boundary)
-      LoopAncestorVisitor.new(node, boundary).in_loop?
-    end
-
+    # Checks whether any of the target nodes are inside a loop within the boundary.
+    # Single traversal for all targets instead of one traversal per target.
     private class LoopAncestorVisitor < Crystal::Visitor
       include AST::Util
 
-      getter? in_loop = false
+      getter? any_in_loop = false
 
-      def initialize(@target : Crystal::ASTNode, boundary : Crystal::ASTNode)
+      def initialize(@targets : Set(UInt64), boundary : Crystal::ASTNode)
+        @inside_loop = false
         boundary.accept(self)
       end
 
       def visit(node : Crystal::ASTNode)
-        return false if @in_loop
+        return false if @any_in_loop
 
-        if node.location == @target.location && node.class == @target.class
-          @in_loop = @inside_loop
+        if @targets.includes?(node.object_id)
+          @any_in_loop = @inside_loop
           return false
         end
 
@@ -112,30 +114,28 @@ module Ameba::Rule::Lint
       end
 
       def visit(node : Crystal::While | Crystal::Until)
-        return false if @in_loop
+        return false if @any_in_loop
 
         prev = @inside_loop
         @inside_loop = true
         node.accept_children(self)
-        @inside_loop = prev unless @in_loop
+        @inside_loop = prev unless @any_in_loop
         false
       end
 
       def visit(node : Crystal::Call)
-        return false if @in_loop
+        return false if @any_in_loop
 
         if loop?(node) && (block = node.block)
           prev = @inside_loop
           @inside_loop = true
           block.body.accept(self)
-          @inside_loop = prev unless @in_loop
+          @inside_loop = prev unless @any_in_loop
         else
           node.accept_children(self)
         end
         false
       end
-
-      @inside_loop = false
     end
   end
 end

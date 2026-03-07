@@ -44,19 +44,26 @@ module Ameba::AST
     # Returns assignments where the value is never read before being
     # overwritten or the scope ends.
     def dead_stores : Array(Assignment)
-      @dead_stores.clear
-      body = scope_body(@scope.node)
-      propagate_through(body, LiveSet.new) if body
-      @dead_stores
+      analyze.dead_stores
     end
 
     # Returns the set of variable names that are live at scope entry.
     # A variable live at entry means its value (e.g. from a method argument)
     # will be read before being overwritten.
     def entry_live_set : LiveSet
-      body = scope_body(@scope.node)
-      body ? propagate_through(body, LiveSet.new, mark: false) : LiveSet.new
+      analyze.entry_live_set
     end
+
+    # Performs liveness analysis in a single pass, returning both the dead
+    # stores and the entry live set.
+    def analyze : Result
+      @dead_stores.clear
+      body = scope_body(@scope.node)
+      entry_live = body ? propagate_through(body, LiveSet.new) : LiveSet.new
+      Result.new(@dead_stores, entry_live)
+    end
+
+    record Result, dead_stores : Array(Assignment), entry_live_set : LiveSet
 
     private def build_assignment_map
       map = Hash(Tuple(String, UInt64), Array(Assignment)).new
