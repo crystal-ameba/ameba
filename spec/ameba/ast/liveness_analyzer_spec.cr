@@ -734,5 +734,44 @@ module Ameba::AST
         dead_store_names(scope).should be_empty
       end
     end
+    context "super and previous_def" do
+      it "treats bare super as reading all arguments" do
+        scope = def_scope <<-CRYSTAL
+          def foo(a, b)
+            a = super
+            a
+          end
+          CRYSTAL
+        dead_store_names(scope).should be_empty
+      end
+
+      it "treats bare previous_def as reading all arguments" do
+        scope = def_scope <<-CRYSTAL
+          def foo(a)
+            a = previous_def
+            a
+          end
+          CRYSTAL
+        dead_store_names(scope).should be_empty
+      end
+
+      it "does not treat super() with parens as reading arguments" do
+        scope = def_scope <<-CRYSTAL
+          def foo(a)
+            b = super()
+          end
+          CRYSTAL
+        dead_store_names(scope).should eq ["b"]
+      end
+
+      it "does not treat super with explicit args as reading all arguments" do
+        scope = def_scope <<-CRYSTAL
+          def foo(a)
+            b = super(1)
+          end
+          CRYSTAL
+        dead_store_names(scope).should eq ["b"]
+      end
+    end
   end
 end

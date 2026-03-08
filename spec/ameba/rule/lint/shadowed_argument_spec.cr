@@ -95,6 +95,24 @@ module Ameba::Rule::Lint
         CRYSTAL
     end
 
+    it "doesn't report if the argument is reassigned from super result" do
+      expect_no_issues subject, <<-CRYSTAL
+        def foo(bar)
+          bar = super
+          bar
+        end
+        CRYSTAL
+    end
+
+    it "doesn't report if the argument is reassigned from previous_def result" do
+      expect_no_issues subject, <<-CRYSTAL
+        def foo(bar)
+          bar = previous_def
+          bar
+        end
+        CRYSTAL
+    end
+
     it "reports if the argument is shadowed before super" do
       expect_issue subject, <<-CRYSTAL
         def foo(bar)
