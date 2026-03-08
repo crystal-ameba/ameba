@@ -95,6 +95,24 @@ module Ameba::Rule::Lint
         CRYSTAL
     end
 
+    it "doesn't report if the argument is reassigned from super result" do
+      expect_no_issues subject, <<-CRYSTAL
+        def foo(bar)
+          bar = super
+          bar
+        end
+        CRYSTAL
+    end
+
+    it "doesn't report if the argument is reassigned from previous_def result" do
+      expect_no_issues subject, <<-CRYSTAL
+        def foo(bar)
+          bar = previous_def
+          bar
+        end
+        CRYSTAL
+    end
+
     it "reports if the argument is shadowed before super" do
       expect_issue subject, <<-CRYSTAL
         def foo(bar)
@@ -135,6 +153,53 @@ module Ameba::Rule::Lint
               bar ||= 22
             end
             bar
+          end
+          CRYSTAL
+      end
+    end
+
+    context "inner scopes" do
+      it "doesn't report if the argument is used in an inner block" do
+        expect_no_issues subject, <<-CRYSTAL
+          def foo(catch_all = false)
+            items.each do |item|
+              if catch_all
+                do_something
+              end
+              catch_all = true
+            end
+          end
+          CRYSTAL
+      end
+
+      it "doesn't report if the argument is captured by a block" do
+        expect_no_issues subject, <<-CRYSTAL
+          def foo(token)
+            loop do
+              token = next_token(token.state)
+              process(token)
+              break if token.eof?
+            end
+          end
+          CRYSTAL
+      end
+
+      it "doesn't report if the argument is referenced in an inner scope" do
+        expect_no_issues subject, <<-CRYSTAL
+          def foo(x)
+            x = 1
+            3.times { puts x }
+          end
+          CRYSTAL
+      end
+
+      it "doesn't report if the argument is used in a macro" do
+        expect_no_issues subject, <<-CRYSTAL
+          def foo(bar)
+            bar = 1
+            {% if flag?(:release) %}
+              use(bar)
+            {% end %}
           end
           CRYSTAL
       end

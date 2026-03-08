@@ -113,6 +113,34 @@ module Ameba::Rule::Lint
         CRYSTAL
     end
 
+    it "does not report if variable is used by bare super" do
+      expect_no_issues subject, <<-CRYSTAL
+        def foo(bar)
+          bar = super
+          bar
+        end
+        CRYSTAL
+    end
+
+    it "does not report if variable is used by bare previous_def" do
+      expect_no_issues subject, <<-CRYSTAL
+        def foo(bar)
+          bar = previous_def
+          bar
+        end
+        CRYSTAL
+    end
+
+    it "reports useless assignment before super with explicit args" do
+      expect_issue subject, <<-CRYSTAL
+        def foo(bar)
+          baz = 1
+        # ^^^ error: Useless assignment to variable `baz`
+          super(42)
+        end
+        CRYSTAL
+    end
+
     it "does not report useless assignment of instance var" do
       expect_no_issues subject, <<-CRYSTAL
         class Cls

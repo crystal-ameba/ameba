@@ -44,11 +44,26 @@ module Ameba::AST
     # Returns assignments where the value is never read before being
     # overwritten or the scope ends.
     def dead_stores : Array(Assignment)
+      analyze.dead_stores
+    end
+
+    # Returns the set of variable names that are live at scope entry.
+    # A variable live at entry means its value (e.g. from a method argument)
+    # will be read before being overwritten.
+    def entry_live_set : LiveSet
+      analyze.entry_live_set
+    end
+
+    # Performs liveness analysis in a single pass, returning both the dead
+    # stores and the entry live set.
+    def analyze : Result
       @dead_stores.clear
       body = scope_body(@scope.node)
-      propagate_through(body, LiveSet.new) if body
-      @dead_stores
+      entry_live = body ? propagate_through(body, LiveSet.new) : LiveSet.new
+      Result.new(@dead_stores, entry_live)
     end
+
+    record Result, dead_stores : Array(Assignment), entry_live_set : LiveSet
 
     private def build_assignment_map
       map = Hash(Tuple(String, UInt64), Array(Assignment)).new
@@ -243,6 +258,19 @@ module Ameba::AST
     end
 
     private def propagate_through(node : Crystal::Call, live : LiveSet, mark = true) : LiveSet
+      # Bare `super` and `previous_def` (without parentheses) implicitly
+      # forward all method arguments, making each argument live.
+      if node.name.in?("super", "previous_def") && !node.has_parentheses? && node.args.empty?
+        @scope.arguments.each do |arg|
+          name = arg.name
+          if @var_names.includes?(name) && !live.includes?(name)
+            live = live.dup
+            live.add(name)
+          end
+        end
+        return live
+      end
+
       node.block_arg.try { |arg| live = propagate_through(arg, live, mark) }
 
       node.named_args.try &.reverse_each do |named_arg|
