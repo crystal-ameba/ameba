@@ -89,16 +89,6 @@
       
     </li>
   
-  <li class=" " data-id="ameba/Ameba/AST/Branch" data-name="ameba::ast::branch">
-      <a href="../../Ameba/AST/Branch.html">Branch</a>
-      
-    </li>
-  
-  <li class=" " data-id="ameba/Ameba/AST/Branchable" data-name="ameba::ast::branchable">
-      <a href="../../Ameba/AST/Branchable.html">Branchable</a>
-      
-    </li>
-  
   <li class=" " data-id="ameba/Ameba/AST/CountingVisitor" data-name="ameba::ast::countingvisitor">
       <a href="../../Ameba/AST/CountingVisitor.html">CountingVisitor</a>
       
@@ -136,6 +126,11 @@
   
   <li class=" " data-id="ameba/Ameba/AST/LivenessAnalyzer/LiveSet" data-name="ameba::ast::livenessanalyzer::liveset">
       <a href="../../Ameba/AST/LivenessAnalyzer/LiveSet.html">LiveSet</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/AST/LivenessAnalyzer/Result" data-name="ameba::ast::livenessanalyzer::result">
+      <a href="../../Ameba/AST/LivenessAnalyzer/Result.html">Result</a>
       
     </li>
   
@@ -1197,7 +1192,7 @@ not in the live set, the assignment is marked as a dead store.</p>
   </h2>
   
     
-      <a href="https://github.com/crystal-ameba/ameba/blob/c31130a/src/ameba/ast/liveness_analyzer.cr#L10" target="_blank">
+      <a href="https://github.com/crystal-ameba/ameba/blob/29c934e/src/ameba/ast/liveness_analyzer.cr#L10" target="_blank">
         ameba/ast/liveness_analyzer.cr
       </a>
     
@@ -1288,9 +1283,23 @@ can only grow monotonically and is bounded by the number of variables.</p>
   <ul class="list-summary">
     
       <li class="entry-summary">
+        <a href="#analyze%3AResult-instance-method" class="signature"><strong>#analyze</strong> : Result</a>
+        
+          <div class="summary"><p>Performs liveness analysis in a single pass, returning both the dead stores and the entry live set.</p></div>
+        
+      </li>
+    
+      <li class="entry-summary">
         <a href="#dead_stores%3AArray%28Assignment%29-instance-method" class="signature"><strong>#dead_stores</strong> : Array(Assignment)</a>
         
           <div class="summary"><p>Returns assignments where the value is never read before being overwritten or the scope ends.</p></div>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#entry_live_set%3ALiveSet-instance-method" class="signature"><strong>#entry_live_set</strong> : LiveSet</a>
+        
+          <div class="summary"><p>Returns the set of variable names that are live at scope entry.</p></div>
         
       </li>
     
@@ -1349,7 +1358,7 @@ can only grow monotonically and is bounded by the number of variables.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/c31130a/src/ameba/ast/liveness_analyzer.cr#L38" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/29c934e/src/ameba/ast/liveness_analyzer.cr#L38" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1370,6 +1379,28 @@ can only grow monotonically and is bounded by the number of variables.</p>
     Instance Method Detail
   </h2>
   
+    <div class="entry-detail" id="analyze:Result-instance-method">
+      <div class="signature">
+        
+        def <strong>analyze</strong> : <a href="../../Ameba/AST/LivenessAnalyzer/Result.html">Result</a>
+
+        <a class="method-permalink" href="#analyze%3AResult-instance-method">#</a>
+      </div>
+      
+        <div class="doc">
+          
+          <p>Performs liveness analysis in a single pass, returning both the dead
+stores and the entry live set.</p>
+        </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/crystal-ameba/ameba/blob/29c934e/src/ameba/ast/liveness_analyzer.cr#L59" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
     <div class="entry-detail" id="dead_stores:Array(Assignment)-instance-method">
       <div class="signature">
         
@@ -1387,7 +1418,30 @@ overwritten or the scope ends.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/c31130a/src/ameba/ast/liveness_analyzer.cr#L46" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/29c934e/src/ameba/ast/liveness_analyzer.cr#L46" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="entry_live_set:LiveSet-instance-method">
+      <div class="signature">
+        
+        def <strong>entry_live_set</strong> : <a href="../../Ameba/AST/LivenessAnalyzer/LiveSet.html">LiveSet</a>
+
+        <a class="method-permalink" href="#entry_live_set%3ALiveSet-instance-method">#</a>
+      </div>
+      
+        <div class="doc">
+          
+          <p>Returns the set of variable names that are live at scope entry.
+A variable live at entry means its value (e.g. from a method argument)
+will be read before being overwritten.</p>
+        </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/crystal-ameba/ameba/blob/29c934e/src/ameba/ast/liveness_analyzer.cr#L53" target="_blank">View source</a>]
         
       </div>
     </div>

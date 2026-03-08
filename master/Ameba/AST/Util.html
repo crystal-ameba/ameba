@@ -89,16 +89,6 @@
       
     </li>
   
-  <li class=" " data-id="ameba/Ameba/AST/Branch" data-name="ameba::ast::branch">
-      <a href="../../Ameba/AST/Branch.html">Branch</a>
-      
-    </li>
-  
-  <li class=" " data-id="ameba/Ameba/AST/Branchable" data-name="ameba::ast::branchable">
-      <a href="../../Ameba/AST/Branchable.html">Branchable</a>
-      
-    </li>
-  
   <li class=" " data-id="ameba/Ameba/AST/CountingVisitor" data-name="ameba::ast::countingvisitor">
       <a href="../../Ameba/AST/CountingVisitor.html">CountingVisitor</a>
       
@@ -136,6 +126,11 @@
   
   <li class=" " data-id="ameba/Ameba/AST/LivenessAnalyzer/LiveSet" data-name="ameba::ast::livenessanalyzer::liveset">
       <a href="../../Ameba/AST/LivenessAnalyzer/LiveSet.html">LiveSet</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/AST/LivenessAnalyzer/Result" data-name="ameba::ast::livenessanalyzer::result">
+      <a href="../../Ameba/AST/LivenessAnalyzer/Result.html">Result</a>
       
     </li>
   
@@ -1200,8 +1195,6 @@
   </h2>
   <ul class="other-types-list">
     
-      <li class="other-type"><a href="../../Ameba/AST/Branchable.html">Ameba::AST::Branchable</a></li>
-    
       <li class="other-type"><a href="../../Ameba/AST/ElseIfAwareNodeVisitor.html">Ameba::AST::ElseIfAwareNodeVisitor</a></li>
     
       <li class="other-type"><a href="../../Ameba/AST/FlowExpression.html">Ameba::AST::FlowExpression</a></li>
@@ -1239,6 +1232,8 @@
       <li class="other-type"><a href="../../Ameba/Rule/Lint/RedundantStringCoercion.html">Ameba::Rule::Lint::RedundantStringCoercion</a></li>
     
       <li class="other-type"><a href="../../Ameba/Rule/Lint/RequireParentheses.html">Ameba::Rule::Lint::RequireParentheses</a></li>
+    
+      <li class="other-type"><a href="../../Ameba/Rule/Lint/SharedVarInFiber.html">Ameba::Rule::Lint::SharedVarInFiber</a></li>
     
       <li class="other-type"><a href="../../Ameba/Rule/Lint/SignalTrap.html">Ameba::Rule::Lint::SignalTrap</a></li>
     
@@ -1339,7 +1334,7 @@
   </h2>
   
     
-      <a href="https://github.com/crystal-ameba/ameba/blob/c31130a/src/ameba/ast/util.cr#L2" target="_blank">
+      <a href="https://github.com/crystal-ameba/ameba/blob/29c934e/src/ameba/ast/util.cr#L2" target="_blank">
         ameba/ast/util.cr
       </a>
     
@@ -1613,7 +1608,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/c31130a/src/ameba/ast/util.cr#L207" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/29c934e/src/ameba/ast/util.cr#L207" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1635,7 +1630,7 @@ Wraps implicit tuple literal with curly brackets (e.g. multi-return).</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/c31130a/src/ameba/ast/util.cr#L300" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/29c934e/src/ameba/ast/util.cr#L300" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1656,7 +1651,7 @@ Wraps implicit tuple literal with curly brackets (e.g. multi-return).</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/c31130a/src/ameba/ast/util.cr#L55" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/29c934e/src/ameba/ast/util.cr#L55" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1677,7 +1672,7 @@ Wraps implicit tuple literal with curly brackets (e.g. multi-return).</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/c31130a/src/ameba/ast/util.cr#L201" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/29c934e/src/ameba/ast/util.cr#L201" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1700,7 +1695,7 @@ or special call node that interrupts execution (i.e. raise, exit, abort).</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/c31130a/src/ameba/ast/util.cr#L131" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/29c934e/src/ameba/ast/util.cr#L131" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1736,7 +1731,7 @@ a flow command <code>return</code>:</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/c31130a/src/ameba/ast/util.cr#L169" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/29c934e/src/ameba/ast/util.cr#L169" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1758,7 +1753,7 @@ with either <code>node.block</code> or <code>node.block_arg</code> set, <code>fa
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/c31130a/src/ameba/ast/util.cr#L82" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/29c934e/src/ameba/ast/util.cr#L82" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1780,7 +1775,7 @@ with either <code>node.block</code> or <code>node.block_arg</code> set, <code>fa
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/c31130a/src/ameba/ast/util.cr#L75" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/29c934e/src/ameba/ast/util.cr#L75" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1801,7 +1796,7 @@ with either <code>node.block</code> or <code>node.block_arg</code> set, <code>fa
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/c31130a/src/ameba/ast/util.cr#L275" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/29c934e/src/ameba/ast/util.cr#L275" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1822,7 +1817,7 @@ with either <code>node.block</code> or <code>node.block_arg</code> set, <code>fa
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/c31130a/src/ameba/ast/util.cr#L289" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/29c934e/src/ameba/ast/util.cr#L289" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1843,7 +1838,7 @@ with either <code>node.block</code> or <code>node.block_arg</code> set, <code>fa
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/c31130a/src/ameba/ast/util.cr#L61" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/29c934e/src/ameba/ast/util.cr#L61" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1864,7 +1859,7 @@ with either <code>node.block</code> or <code>node.block_arg</code> set, <code>fa
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/c31130a/src/ameba/ast/util.cr#L213" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/29c934e/src/ameba/ast/util.cr#L213" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1887,7 +1882,7 @@ off-by-one error.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/c31130a/src/ameba/ast/util.cr#L370" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/29c934e/src/ameba/ast/util.cr#L370" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1908,7 +1903,7 @@ off-by-one error.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/c31130a/src/ameba/ast/util.cr#L338" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/29c934e/src/ameba/ast/util.cr#L338" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1924,7 +1919,7 @@ off-by-one error.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/c31130a/src/ameba/ast/util.cr#L325" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/29c934e/src/ameba/ast/util.cr#L325" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1940,7 +1935,7 @@ off-by-one error.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/c31130a/src/ameba/ast/util.cr#L310" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/29c934e/src/ameba/ast/util.cr#L310" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1961,7 +1956,7 @@ off-by-one error.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/c31130a/src/ameba/ast/util.cr#L352" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/29c934e/src/ameba/ast/util.cr#L352" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1984,7 +1979,7 @@ to determine and cut a piece of source of the node.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/c31130a/src/ameba/ast/util.cr#L98" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/29c934e/src/ameba/ast/util.cr#L98" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2005,7 +2000,7 @@ to determine and cut a piece of source of the node.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/c31130a/src/ameba/ast/util.cr#L281" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/29c934e/src/ameba/ast/util.cr#L281" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2026,7 +2021,7 @@ to determine and cut a piece of source of the node.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/c31130a/src/ameba/ast/util.cr#L231" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/29c934e/src/ameba/ast/util.cr#L231" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2047,7 +2042,7 @@ to determine and cut a piece of source of the node.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/c31130a/src/ameba/ast/util.cr#L225" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/29c934e/src/ameba/ast/util.cr#L225" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2069,7 +2064,7 @@ matching given <em>name</em>, <code>false</code> otherwise.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/c31130a/src/ameba/ast/util.cr#L68" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/29c934e/src/ameba/ast/util.cr#L68" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2090,7 +2085,7 @@ matching given <em>name</em>, <code>false</code> otherwise.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/c31130a/src/ameba/ast/util.cr#L195" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/29c934e/src/ameba/ast/util.cr#L195" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2111,7 +2106,7 @@ matching given <em>name</em>, <code>false</code> otherwise.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/c31130a/src/ameba/ast/util.cr#L245" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/29c934e/src/ameba/ast/util.cr#L245" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2132,7 +2127,7 @@ matching given <em>name</em>, <code>false</code> otherwise.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/c31130a/src/ameba/ast/util.cr#L239" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/29c934e/src/ameba/ast/util.cr#L239" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2153,7 +2148,7 @@ matching given <em>name</em>, <code>false</code> otherwise.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/c31130a/src/ameba/ast/util.cr#L265" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/29c934e/src/ameba/ast/util.cr#L265" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2174,7 +2169,7 @@ matching given <em>name</em>, <code>false</code> otherwise.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/c31130a/src/ameba/ast/util.cr#L106" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/29c934e/src/ameba/ast/util.cr#L106" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2195,7 +2190,7 @@ matching given <em>name</em>, <code>false</code> otherwise.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/c31130a/src/ameba/ast/util.cr#L49" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/29c934e/src/ameba/ast/util.cr#L49" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2216,7 +2211,7 @@ matching given <em>name</em>, <code>false</code> otherwise.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/c31130a/src/ameba/ast/util.cr#L253" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/29c934e/src/ameba/ast/util.cr#L253" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2239,7 +2234,7 @@ with either <code>args</code>, <code>splat_index</code>, or <code>double_splat</
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/c31130a/src/ameba/ast/util.cr#L90" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/29c934e/src/ameba/ast/util.cr#L90" target="_blank">View source</a>]
         
       </div>
     </div>
