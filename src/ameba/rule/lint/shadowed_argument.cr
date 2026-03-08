@@ -66,7 +66,10 @@ module Ameba::Rule::Lint
         # Prefer the first non-dead-store assignment (the one whose value
         # actually gets used), falling back to the first assignment.
         dead_store_ids ||= result.dead_stores.map(&.node.object_id).to_set
-        target = assigns.find { |a| !dead_store_ids.includes?(a.node.object_id) } || assigns.first?
+
+        target =
+          assigns.find { |a| !a.node.object_id.in?(dead_store_ids) } ||
+            assigns.first?
         next unless target
 
         issue_for target.node, MSG % arg.name

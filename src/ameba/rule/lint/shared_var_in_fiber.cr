@@ -85,9 +85,8 @@ module Ameba::Rule::Lint
         targets << assign.node.object_id
       end
 
-      return false if targets.empty?
-
-      LoopAncestorVisitor.new(targets, variable.scope.node).any_in_loop?
+      targets.present? &&
+        LoopAncestorVisitor.new(targets, variable.scope.node).any_in_loop?
     end
 
     # Checks whether any of the target nodes are inside a loop within the boundary.
@@ -103,7 +102,7 @@ module Ameba::Rule::Lint
       end
 
       def visit(node : Crystal::ASTNode)
-        return false if @any_in_loop
+        return false if any_in_loop?
 
         if @targets.includes?(node.object_id)
           @any_in_loop = @inside_loop
@@ -114,23 +113,23 @@ module Ameba::Rule::Lint
       end
 
       def visit(node : Crystal::While | Crystal::Until)
-        return false if @any_in_loop
+        return false if any_in_loop?
 
         prev = @inside_loop
         @inside_loop = true
         node.accept_children(self)
-        @inside_loop = prev unless @any_in_loop
+        @inside_loop = prev unless any_in_loop?
         false
       end
 
       def visit(node : Crystal::Call)
-        return false if @any_in_loop
+        return false if any_in_loop?
 
         if loop?(node) && (block = node.block)
           prev = @inside_loop
           @inside_loop = true
           block.body.accept(self)
-          @inside_loop = prev unless @any_in_loop
+          @inside_loop = prev unless any_in_loop?
         else
           node.accept_children(self)
         end
