@@ -53,6 +53,9 @@ module Ameba::Rule::Lint
       args = scope.arguments.reject(&.ignored?)
       return if args.empty?
 
+      # Skip liveness analysis if no argument is ever reassigned
+      return unless args.any?(&.variable.assignments.present?)
+
       result = AST::LivenessAnalyzer.new(scope).analyze
       dead_store_ids = nil
 
