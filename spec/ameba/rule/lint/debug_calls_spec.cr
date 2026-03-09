@@ -13,7 +13,11 @@ module Ameba::Rule::Lint
           a = a + 1
           CRYSTAL
 
-        expect_no_corrections source
+        expect_correction source, <<-CRYSTAL
+          a = 2
+
+          a = a + 1
+          CRYSTAL
       end
     end
 

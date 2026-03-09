@@ -49,7 +49,16 @@ module Ameba::Rule::Lint
       node_ensure = node.ensure
       return if node_ensure.nil? || !node_ensure.nop?
 
-      issue_for node.ensure_location, node.end_location, MSG
+      ensure_location = node.ensure_location
+      end_location = node.end_location
+      return unless ensure_location && end_location
+
+      issue_for ensure_location, end_location, MSG do |corrector|
+        corrector.remove(
+          ensure_location,
+          end_location.adjust(column_number: -{{ "end".size }})
+        )
+      end
     end
   end
 end
