@@ -27,7 +27,9 @@ module Ameba::Rule::Lint
     def test(source, node : Crystal::Call)
       return unless node.name.in?(method_names) && node.obj.nil?
 
-      issue_for node, MSG % node.name
+      issue_for node, MSG % node.name do |corrector|
+        corrector.remove(node)
+      end
     end
   end
 end
