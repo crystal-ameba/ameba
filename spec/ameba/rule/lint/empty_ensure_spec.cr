@@ -27,17 +27,23 @@ module Ameba::Rule::Lint
     end
 
     it "fails if there is an empty ensure in method" do
-      expect_issue subject, <<-CRYSTAL
+      source = expect_issue subject, <<-CRYSTAL
         def method
           do_some_stuff
         ensure
         # ^^^^ error: Empty `ensure` block detected
         end
         CRYSTAL
+
+      expect_correction source, <<-CRYSTAL
+        def method
+          do_some_stuff
+        end
+        CRYSTAL
     end
 
     it "fails if there is an empty ensure in a block" do
-      expect_issue subject, <<-CRYSTAL
+      source = expect_issue subject, <<-CRYSTAL
         begin
           do_some_stuff
         rescue
@@ -45,6 +51,14 @@ module Ameba::Rule::Lint
         ensure
         # ^^^^ error: Empty `ensure` block detected
           # nothing here
+        end
+        CRYSTAL
+
+      expect_correction source, <<-CRYSTAL
+        begin
+          do_some_stuff
+        rescue
+          do_some_other_stuff
         end
         CRYSTAL
     end
