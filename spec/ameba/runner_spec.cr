@@ -167,6 +167,32 @@ module Ameba
           source.should_not be_valid
           source.issues.first.rule.should be_a Rule::Lint::UnneededDisableDirective
         end
+
+        it "does not report if the disabled rule is excluded for the source" do
+          path = "source.cr"
+          error_rule = ErrorRule.new
+          error_rule.excluded = Set{path}
+          rules = [error_rule, Rule::Lint::UnneededDisableDirective.new] of Rule::Base
+          source = Source.new <<-CRYSTAL, path
+            a = 1 # ameba:disable #{ErrorRule.rule_name}
+            CRYSTAL
+
+          Runner.new(rules, [source], formatter, default_severity).run
+          source.should be_valid
+        end
+
+        it "respects Excluded config of UnneededDisableDirective" do
+          path = "source.cr"
+          udd_rule = Rule::Lint::UnneededDisableDirective.new
+          udd_rule.excluded = Set{path}
+          rules = [udd_rule] of Rule::Base
+          source = Source.new <<-CRYSTAL, path
+            a = 1 # ameba:disable LineLength
+            CRYSTAL
+
+          Runner.new(rules, [source], formatter, default_severity).run
+          source.should be_valid
+        end
       end
 
       pending "handles rules with incompatible autocorrect" do
