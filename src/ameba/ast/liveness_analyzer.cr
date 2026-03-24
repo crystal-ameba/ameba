@@ -197,8 +197,8 @@ module Ameba::AST
     private def propagate_through(node : Crystal::TypeDeclaration, live : LiveSet, mark = true) : LiveSet
       var = node.var
       if var.is_a?(Crystal::Var) && @var_names.includes?(var.name)
-        live = remove_from_live_set(node, var.name, live, mark)
         if value = node.value
+          live = remove_from_live_set(node, var.name, live, mark)
           live = propagate_through(value, live, mark)
         end
       end

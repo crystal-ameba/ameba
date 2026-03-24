@@ -694,10 +694,19 @@ module Ameba::AST
     end
 
     context "type declarations" do
-      it "reports unused type declaration" do
+      it "does not report unused type declaration without value" do
         scope = def_scope <<-CRYSTAL
           def foo
             a : String?
+          end
+          CRYSTAL
+        dead_store_names(scope).should be_empty
+      end
+
+      it "reports unused type declaration with value" do
+        scope = def_scope <<-CRYSTAL
+          def foo
+            a : String? = "foo"
           end
           CRYSTAL
         dead_store_names(scope).should eq ["a"]

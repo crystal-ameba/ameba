@@ -1370,39 +1370,34 @@ module Ameba::Rule::Lint
     end
 
     context "type declaration" do
-      it "reports if it's not referenced at a top level" do
-        expect_issue subject, <<-CRYSTAL
+      it "doesn't report if it's not referenced at a top level" do
+        expect_no_issues subject, <<-CRYSTAL
           a : String?
-          # ^{} error: Useless assignment to variable `a`
           CRYSTAL
       end
 
-      it "reports if it's not referenced at a top level + in a method" do
-        expect_issue subject, <<-CRYSTAL
+      it "doesn't report if it's not referenced at a top level + in a method" do
+        expect_no_issues subject, <<-CRYSTAL
           a : String?
-          # ^{} error: Useless assignment to variable `a`
 
           def foo
             b : String?
-          # ^ error: Useless assignment to variable `b`
           end
           CRYSTAL
       end
 
-      it "reports if it's not referenced in a method" do
-        expect_issue subject, <<-CRYSTAL
+      it "doesn't report if it's not referenced in a method" do
+        expect_no_issues subject, <<-CRYSTAL
           def foo
             a : String?
-          # ^ error: Useless assignment to variable `a`
           end
           CRYSTAL
       end
 
-      it "reports if it's not referenced in a class" do
-        expect_issue subject, <<-CRYSTAL
+      it "doesn't report if it's not referenced in a class" do
+        expect_no_issues subject, <<-CRYSTAL
           class Foo
             a : String?
-          # ^ error: Useless assignment to variable `a`
           end
           CRYSTAL
       end
@@ -1422,6 +1417,31 @@ module Ameba::Rule::Lint
           def foo
             a : String?
             a
+          end
+          CRYSTAL
+      end
+
+      it "doesn't report if it's used after conditional assignment" do
+        expect_no_issues subject, <<-CRYSTAL
+          def foo
+            a : Foo?
+
+            if bar?
+              a = Foo.new
+            else
+              a = nil
+            end
+
+            puts a
+          end
+          CRYSTAL
+      end
+
+      it "reports if type declaration with value is not referenced" do
+        expect_issue subject, <<-CRYSTAL
+          def foo
+            a : String? = "foo"
+          # ^ error: Useless assignment to variable `a`
           end
           CRYSTAL
       end
