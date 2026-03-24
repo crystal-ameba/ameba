@@ -200,6 +200,12 @@ module Ameba::AST
         if value = node.value
           live = remove_from_live_set(node, var.name, live, mark)
           live = propagate_through(value, live, mark)
+        else
+          # Type declarations without a value are type restrictions, not
+          # assignments — don't mark as dead. Since Crystal requires the
+          # variable to be previously undefined, kill it from the live set
+          # as no prior references can exist.
+          live = remove_from_live_set(node, var.name, live, mark: false)
         end
       end
       live
