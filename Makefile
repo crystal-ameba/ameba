@@ -77,6 +77,16 @@ install: $(BUILD_TARGET)
 	mkdir -p "$(BINDIR)"
 	$(INSTALL_BIN) -m 0755 "$(BUILD_TARGET)" "$(BINDIR)/ameba"
 
+type_safe_equality_check: ## Checks for type-safe equalities
+type_safe_equality_check:
+	crystal build src/cli.cr \
+	  -Dtype_safe_equality_check \
+	  --no-codegen --no-debug \
+	  --error-on-warnings \
+	  --exclude-warnings=lib \
+	  --exclude-warnings=src/type_safe_equality.cr \
+	  --exclude-warnings="$(shell crystal env CRYSTAL_PATH | cut -d':' -f2)"
+
 .PHONY: help
 help: ## Show this help
 	@printf '\033[34mtargets:\033[0m\n'

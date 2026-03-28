@@ -110,8 +110,8 @@ module Ameba::Rule::Style
         end
 
         def correct_delimiters?
-          start_token.delimiter_state.nest == opening_delimiter &&
-            start_token.delimiter_state.end == closing_delimiter
+          start_token.delimiter_state.nest.as(Char) == opening_delimiter &&
+            start_token.delimiter_state.end.as(Char) == closing_delimiter
         end
 
         def location
