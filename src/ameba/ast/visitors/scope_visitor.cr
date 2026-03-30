@@ -215,7 +215,7 @@ module Ameba::AST
 
     private def in_type_definition?(scope)
       return true if scope.type_definition?
-      scope.outer_scope.try { |s| in_type_definition?(s) } || false
+      scope.outer_scope.try { |outer| in_type_definition?(outer) } || false
     end
 
     private def record_macro?(node)
