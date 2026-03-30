@@ -706,8 +706,8 @@ module Ameba::Rule::Lint
       it "doesn't report type declarations in macro call arguments" do
         expect_no_issues subject, <<-CRYSTAL
           class Foo < BinData
-            field message_id : UInt16
-            field token : Bytes, length: -> { 4 }
+            field message_id : UInt16 = 0
+            field token : Bytes = Bytes.new(0), length: -> { 4 }
           end
           CRYSTAL
       end
