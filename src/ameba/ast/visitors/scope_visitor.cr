@@ -188,7 +188,7 @@ module Ameba::AST
       case
       when (scope.top_level? || scope.type_definition?) && record_macro?(node)
         return false
-      when scope.type_definition?(check_outer_scopes: true) && type_dec_macro?(node)
+      when type_dec_macro?(node) && scope.type_definition?(check_outer_scopes: true)
         return false
       when scope.type_definition? && accessor_macro?(node)
         return false
