@@ -188,9 +188,9 @@ module Ameba::AST
       case
       when (scope.top_level? || scope.type_definition?) && record_macro?(node)
         return false
-      when scope.type_definition? && accessor_macro?(node)
+      when scope.type_definition?(check_outer_scopes: true) && type_dec_macro?(node)
         return false
-      when in_type_definition?(scope) && type_dec_macro?(node)
+      when scope.type_definition? && accessor_macro?(node)
         return false
       when scope.def? && special_node?(node)
         scope.arguments.each do |arg|
@@ -211,11 +211,6 @@ module Ameba::AST
 
     private def type_dec_macro?(node)
       node.args.any?(Crystal::TypeDeclaration)
-    end
-
-    private def in_type_definition?(scope)
-      return true if scope.type_definition?
-      scope.outer_scope.try { |outer| in_type_definition?(outer) } || false
     end
 
     private def record_macro?(node)

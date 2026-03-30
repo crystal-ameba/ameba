@@ -150,14 +150,16 @@ module Ameba::AST
 
     # Returns `true` if and only if current scope represents some
     # type definition, for example a class.
-    def type_definition?
+    def type_definition?(*, check_outer_scopes = false)
       node.is_a?(Crystal::ClassDef) ||
         node.is_a?(Crystal::ModuleDef) ||
         node.is_a?(Crystal::EnumDef) ||
         node.is_a?(Crystal::LibDef) ||
         node.is_a?(Crystal::FunDef) ||
         node.is_a?(Crystal::TypeDef) ||
-        node.is_a?(Crystal::CStructOrUnionDef)
+        node.is_a?(Crystal::CStructOrUnionDef) ||
+        !!(check_outer_scopes &&
+          outer_scope.try(&.type_definition?(check_outer_scopes: true)))
     end
 
     # Returns `true` if current scope (or any of inner scopes) references variable,
