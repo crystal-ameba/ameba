@@ -190,6 +190,8 @@ module Ameba::AST
         return false
       when scope.type_definition? && accessor_macro?(node)
         return false
+      when in_type_definition?(scope) && type_dec_macro?(node)
+        return false
       when scope.def? && special_node?(node)
         scope.arguments.each do |arg|
           ref = arg.variable.reference(scope)
@@ -205,6 +207,15 @@ module Ameba::AST
 
     private def accessor_macro?(node)
       node.name.matches? /^(class_)?(getter[?!]?|setter|property[?!]?)$/
+    end
+
+    private def type_dec_macro?(node)
+      node.args.any?(Crystal::TypeDeclaration)
+    end
+
+    private def in_type_definition?(scope)
+      return true if scope.type_definition?
+      scope.outer_scope.try { |s| in_type_definition?(s) } || false
     end
 
     private def record_macro?(node)

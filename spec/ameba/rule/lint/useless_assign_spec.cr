@@ -703,6 +703,25 @@ module Ameba::Rule::Lint
         end
       end
 
+      it "doesn't report type declarations in macro call arguments" do
+        expect_no_issues subject, <<-CRYSTAL
+          class Foo < BinData
+            field message_id : UInt16
+            field token : Bytes, length: -> { 4 }
+          end
+          CRYSTAL
+      end
+
+      it "doesn't report type declarations in macro call arguments inside blocks" do
+        expect_no_issues subject, <<-CRYSTAL
+          class Foo < BinData
+            bit_field do
+              bits 2, type : UInt8 = 0
+            end
+          end
+          CRYSTAL
+      end
+
       it "does not report if assignment is referenced after the record declaration" do
         expect_no_issues subject, <<-CRYSTAL
           foo = 2
