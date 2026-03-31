@@ -53,13 +53,14 @@ module Ameba::Rule::Lint
     private def unneeded_disables(source, directive, location, excluded_rules)
       return unless directive[:action] == "disable"
 
-      directive[:rules].reject do |rule_name|
-        next if rule_name == name
-        next true if rule_name.in?(excluded_rules)
-        # skip non-existent rules
-        next true unless Rule.rules.any?(&.rule_name.== rule_name)
+      directive[:rules].select do |rule_name|
+        next true if rule_name == name
 
-        source.issues.any? do |issue|
+        next if rule_name.in?(excluded_rules)
+        # skip non-existent rules
+        next if Rule.rules.none?(&.rule_name.== rule_name)
+
+        source.issues.none? do |issue|
           issue.rule.name == rule_name &&
             issue.disabled? &&
             issue_at_location?(source, issue, location)

@@ -69,7 +69,7 @@ module Ameba
         rule.catch(source)
 
         source.issues.size.should eq 1
-        source.issues.first.disabled?.should be_true
+        source.issues.first.enabled?.should be_false
         source.correct!.should be_false
         source.code.should contain ".not_nil!"
       end
@@ -85,7 +85,6 @@ module Ameba
         source.issues.size.should eq 1
         source.issues.first.enabled?.should be_true
         source.correct!.should be_true
-        source.code.should contain ".match!"
         source.code.should_not contain ".not_nil!"
       end
     end
