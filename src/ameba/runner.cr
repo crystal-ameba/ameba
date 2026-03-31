@@ -1,5 +1,5 @@
 module Ameba
-  # Represents a runner for inspecting sources files.
+  # Represents a runner for inspecting source files.
   # Holds a list of rules to do inspection based on,
   # list of sources to run inspection on and a formatter
   # to prepare a report.
@@ -52,7 +52,7 @@ module Ameba
     # Returns `true` if correctable issues should be autocorrected.
     private getter? autocorrect : Bool
 
-    # Returns an ameba version up to which the rules should be ran.
+    # Returns an ameba version up to which the rules should be run.
     property version : SemanticVersion?
 
     # Instantiates a runner using a `config`.
@@ -100,7 +100,7 @@ module Ameba
         since_version <= version
     end
 
-    # Performs the inspection. Iterates through all sources and test it using
+    # Performs the inspection. Iterates through all sources and tests them using
     # list of rules. If a specific rule fails on a specific source, it adds
     # an issue to that source.
     #

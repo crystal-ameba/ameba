@@ -13,7 +13,7 @@ module Ameba::AST
     # Link to local variables
     getter variables = [] of Variable
 
-    # Link to all variable references in currency scope
+    # Link to all variable references in current scope
     getter references = [] of Reference
 
     # Link to the arguments in current scope
