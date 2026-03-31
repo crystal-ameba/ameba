@@ -56,5 +56,5 @@ jobs:
       - uses: crystal-lang/install-crystal@v1
       - uses: actions/checkout@v6
       - run: shards build ameba -Dpreview_mt --release --static
-      - run: cd bin; 7z a ../ameba-${{ github.ref_name }}-x86_64-windows-msvc.zip ameba.exe ameba.pdb
+      - run: cd bin; 7z a -tzip ../ameba-${{ github.ref_name }}-x86_64-windows-msvc.zip ameba.exe ameba.pdb
       - run: gh release -R ${{ github.repository }} upload ${{ github.ref_name }} ameba-${{ github.ref_name }}-x86_64-windows-msvc.zip
