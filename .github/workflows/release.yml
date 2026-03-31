@@ -27,7 +27,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v6
-      - run: docker run --rm -v $PWD:/mnt -w /mnt crystallang/crystal:latest-alpine shards build ameba --static -Dpreview_mt --release
+      - run: docker run --rm -v $PWD:/mnt -w /mnt crystallang/crystal:latest-alpine shards build ameba -Dpreview_mt --release --static
       - run: tar zcf ameba-${{ github.ref_name }}-$(uname -m)-linux-musl.tar.gz -C bin ameba
       - run: gh release -R ${{ github.repository }} upload ${{ github.ref_name }} ameba-${{ github.ref_name }}-$(uname -m)-linux-musl.tar.gz
 
@@ -38,8 +38,8 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - {os: macos-15, arch: aarch64}
-          - {os: macos-15-intel, arch: x86_64}
+          - { os: macos-15, arch: aarch64 }
+          - { os: macos-15-intel, arch: x86_64 }
     runs-on: ${{ matrix.os }}
     steps:
       - uses: crystal-lang/install-crystal@v1
@@ -55,7 +55,6 @@ jobs:
     steps:
       - uses: crystal-lang/install-crystal@v1
       - uses: actions/checkout@v6
-      - run: shards build ameba --static -Dpreview_mt --release
+      - run: shards build ameba -Dpreview_mt --release --static
       - run: cd bin; 7z a ../ameba-${{ github.ref_name }}-x86_64-windows-msvc.zip ameba.exe ameba.pdb
       - run: gh release -R ${{ github.repository }} upload ${{ github.ref_name }} ameba-${{ github.ref_name }}-x86_64-windows-msvc.zip
-
