@@ -12,12 +12,14 @@ env:
   GH_TOKEN: ${{ github.token }}
 
 jobs:
-  draft:
+  gh-release-draft:
     runs-on: ubuntu-latest
     steps:
       - run: gh release -R ${{ github.repository }} create ${{ github.ref_name }} --draft --generate-notes
 
   linux-musl:
+    needs:
+      - gh-release-draft
     strategy:
       fail-fast: false
       matrix:
@@ -30,6 +32,8 @@ jobs:
       - run: gh release -R ${{ github.repository }} upload ${{ github.ref_name }} ameba-${{ github.ref_name }}-$(uname -m)-linux-musl.tar.gz
 
   darwin:
+    needs:
+      - gh-release-draft
     strategy:
       fail-fast: false
       matrix:
@@ -45,6 +49,8 @@ jobs:
       - run: gh release -R ${{ github.repository }} upload ${{ github.ref_name }} ameba-${{ github.ref_name }}-${{ matrix.arch }}-darwin.tar.gz
 
   x86_64-windows-msvc:
+    needs:
+      - gh-release-draft
     runs-on: windows-2025
     steps:
       - uses: crystal-lang/install-crystal@v1
