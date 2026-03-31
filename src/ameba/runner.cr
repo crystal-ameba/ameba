@@ -161,6 +161,7 @@ module Ameba
           end
           rule.test(source)
         end
+
         check_unneeded_directives(source, excluded_rules)
         break unless autocorrect? && source.correct!
 

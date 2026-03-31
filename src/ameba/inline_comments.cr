@@ -81,7 +81,7 @@ module Ameba
     end
 
     private def comment?(line : String)
-      line.lstrip.starts_with? '#'
+      line.lstrip.starts_with?('#')
     end
 
     private def line_disabled?(line, rule)
