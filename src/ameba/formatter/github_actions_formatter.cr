@@ -7,12 +7,12 @@ module Ameba::Formatter
   class GitHubActionsFormatter < BaseFormatter
     include Util
 
-    @started_at : Time::Span?
+    @started_at : Time::Instant?
     @mutex = Mutex.new
 
     # Reports a message when inspection is started.
     def started(sources) : Nil
-      @started_at = Time.monotonic
+      @started_at = Time.instant
     end
 
     # Reports a result of the inspection of a corresponding source.
@@ -52,7 +52,7 @@ module Ameba::Formatter
       return unless step_summary_file = ENV["GITHUB_STEP_SUMMARY"]?
 
       if started_at = @started_at
-        time_elapsed = Time.monotonic - started_at
+        time_elapsed = Time.instant - started_at
       end
 
       File.write(step_summary_file, summary(sources, time_elapsed))

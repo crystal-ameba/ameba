@@ -6,12 +6,12 @@ module Ameba::Formatter
   class DotFormatter < BaseFormatter
     include Util
 
-    @started_at : Time::Span?
+    @started_at : Time::Instant?
     @mutex = Mutex.new
 
     # Reports a message when inspection is started.
     def started(sources) : Nil
-      @started_at = Time.monotonic
+      @started_at = Time.instant
 
       output.puts started_message(sources.size)
       output.puts
@@ -59,7 +59,7 @@ module Ameba::Formatter
         end
       end
 
-      output.puts finished_in_message(@started_at, Time.monotonic)
+      output.puts finished_in_message(@started_at, Time.instant)
       output.puts final_message(sources, failed_sources)
     end
 
