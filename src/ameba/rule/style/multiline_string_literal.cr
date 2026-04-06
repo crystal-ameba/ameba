@@ -45,6 +45,9 @@ module Ameba::Rule::Style
       # ignore command and regex literals
       return if source.code[location_pos]?.in?('`', '/')
 
+      # ignore regex literals
+      return if source.code[location_pos..(location_pos + 1)]? == "%r"
+
       # ignore heredoc string literals
       return if source.code[location_pos..(location_pos + 2)]? == "<<-"
 

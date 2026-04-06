@@ -70,6 +70,14 @@ module Ameba::Rule::Style
           CRYSTAL
       end
 
+      it "doesn't report multiline regex literals" do
+        expect_no_issues subject, <<-'CRYSTAL'
+          %r{
+            \A#{foo}\Z
+          }x
+          CRYSTAL
+      end
+
       it "doesn't report command literals" do
         expect_no_issues subject, <<-'CRYSTAL'
           `#{foo}`
