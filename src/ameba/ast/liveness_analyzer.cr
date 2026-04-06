@@ -13,12 +13,12 @@ module Ameba::AST
     # Maximum iterations for fixed-point convergence in loops.
     # In practice, convergence happens in 2-3 iterations since the live set
     # can only grow monotonically and is bounded by the number of variables.
-    MAX_FIXED_POINT_ITERATIONS = 100
+    private MAX_FIXED_POINT_ITERATIONS = 100
 
-    BRANCH_NODES      = %w[If Unless]
-    LOOP_NODES        = %w[While Until]
-    CASE_NODES        = %w[Case Select]
-    INNER_SCOPE_NODES = %w[
+    private BRANCH_NODES      = %w[If Unless]
+    private LOOP_NODES        = %w[While Until]
+    private CASE_NODES        = %w[Case Select]
+    private INNER_SCOPE_NODES = %w[
       Block Def ProcLiteral ClassDef ModuleDef EnumDef
       LibDef FunDef TypeDef CStructOrUnionDef TypeOf
       Macro MacroIf MacroFor
