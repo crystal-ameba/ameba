@@ -1,7 +1,11 @@
 module Ameba
   VERSION = detect_version
 
-  # Detects Ameba version from several sources.
+  # Detects Ameba version from:
+  #
+  # - Environment variable `AMEBA_BUILD_VERSION`
+  # - File `VERSION` in the root directory
+  # - Output of `shards version` command
   private macro detect_version
     {%
       version =
@@ -23,9 +27,8 @@ module Ameba
     # Cached version object.
     INSTANCE = begin
       version = SemanticVersion.parse(VERSION)
-      unless version.build
-        version = version.copy_with \
-          build: GIT_SHA.try { |commit| "git.commit.#{commit}" }
+      if !version.build && GIT_SHA
+        version = version.copy_with(build: "git.commit.#{GIT_SHA}")
       end
       new(version)
     end
@@ -48,7 +51,7 @@ module Ameba
 
     # Returns the `version` without prerelease and build metadata.
     def for_docs : String
-      dev? ? "master" : for_production
+      production? ? for_production : "master"
     end
 
     # Returns `true` if the current `version` is a development version.
