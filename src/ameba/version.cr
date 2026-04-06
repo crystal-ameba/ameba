@@ -60,5 +60,10 @@ module Ameba
     def release_candidate? : Bool
       version.prerelease.identifiers.any?(/^rc-?(\d+)?$/)
     end
+
+    # Returns `true` if the current `version` is a production version.
+    def production? : Bool
+      version.prerelease.identifiers.empty?
+    end
   end
 end
