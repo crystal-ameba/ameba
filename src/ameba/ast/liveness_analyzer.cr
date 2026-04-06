@@ -246,14 +246,16 @@ module Ameba::AST
 
       # Rescue branches handle exceptions thrown at any point in the body,
       # so collect all variables they need.
-      after_rescue = post_ensure
+      rescue_live = LiveSet.new
       node.rescues.try &.each do |rescue_node|
-        after_rescue.concat(propagate_through(rescue_node.body, post_ensure, mark))
+        rescue_live.concat(propagate_through(rescue_node.body, post_ensure, mark))
       end
 
       # Body can throw at any point, so variables live in any rescue
       # branch must also be considered live throughout the body.
-      propagate_through(node.body, after_body | after_rescue, mark)
+      # Union rescue_live because rescue-needed variables are live before the entire handler.
+      body_live = propagate_through(node.body, after_body | rescue_live, mark)
+      body_live | rescue_live
     end
 
     private def propagate_through(node : Crystal::BinaryOp, live : LiveSet, mark = true) : LiveSet
