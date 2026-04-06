@@ -38,6 +38,22 @@ module Ameba::AST
       rule.scopes.size.should eq 2
     end
 
+    it "correctly resets location-less node scope" do
+      rule = ScopeRule.new
+      ScopeVisitor.new rule, Source.new <<-CRYSTAL
+        class Foo       # Scope #1
+          def foo?      # Scope #2
+            {% begin %} # Scope #3
+              # `Crystal::MacroFor` doesn't have location information
+              {% for method in @type.ancestors %} # Scope #4
+              {% end %}
+            {% end %}
+          end
+        end
+        CRYSTAL
+      rule.scopes.size.should eq 4
+    end
+
     context "inner scopes" do
       it "creates scope for block inside def" do
         rule = ScopeRule.new
