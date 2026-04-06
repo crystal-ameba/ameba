@@ -78,6 +78,14 @@ module Ameba::Rule::Style
           CRYSTAL
       end
 
+      it "doesn't report multiline command literals" do
+        expect_no_issues subject, <<-'CRYSTAL'
+          %x{
+            echo "#{foo}"
+          }
+          CRYSTAL
+      end
+
       it "doesn't report command literals" do
         expect_no_issues subject, <<-'CRYSTAL'
           `#{foo}`
