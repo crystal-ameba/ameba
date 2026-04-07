@@ -225,7 +225,6 @@ module Ameba::AST
     # the same Crystal node as `@node`.
     def eql?(node)
       node == @node &&
-        node.location &&
         node.location == @node.location
     end
   end
