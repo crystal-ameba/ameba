@@ -1198,6 +1198,20 @@ module Ameba::Rule::Lint
             end
             CRYSTAL
         end
+
+        it "does not report if variable is referenced in rescue with break in body" do
+          expect_no_issues subject, <<-'CRYSTAL'
+            3.times do
+              start = Time.instant
+              begin
+                perform_foo
+                break
+              rescue IO::TimeoutError
+                puts "Timeout [#{start.elapsed.to_i}s]"
+              end
+            end
+            CRYSTAL
+        end
       end
     end
 

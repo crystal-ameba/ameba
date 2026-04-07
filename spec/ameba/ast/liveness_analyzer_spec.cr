@@ -15,6 +15,10 @@ private def top_scope(code)
   scopes_for(code).find! { |scope| scope.node.is_a?(Crystal::Expressions) }
 end
 
+private def block_scope(code)
+  scopes_for(code).find! { |scope| scope.node.is_a?(Crystal::Block) }
+end
+
 private def dead_store_names(scope)
   Ameba::AST::LivenessAnalyzer.new(scope).dead_stores.map(&.variable.name)
 end
@@ -503,6 +507,51 @@ module Ameba::AST
           end
           CRYSTAL
         dead_store_names(scope).should eq ["a"]
+      end
+
+      it "does not report assignment used in rescue when body has break" do
+        scope = block_scope <<-CRYSTAL
+          3.times do
+            start = 1
+            begin
+              perform_foo
+              break
+            rescue
+              start
+            end
+          end
+          CRYSTAL
+        dead_store_names(scope).should be_empty
+      end
+
+      it "does not report assignment used in rescue when body has return" do
+        scope = def_scope <<-CRYSTAL
+          def foo
+            start = 1
+            begin
+              perform_foo
+              return
+            rescue
+              start
+            end
+          end
+          CRYSTAL
+        dead_store_names(scope).should be_empty
+      end
+
+      it "does not report assignment used in rescue when body has next" do
+        scope = block_scope <<-CRYSTAL
+          3.times do
+            start = 1
+            begin
+              perform_foo
+              next
+            rescue
+              start
+            end
+          end
+          CRYSTAL
+        dead_store_names(scope).should be_empty
       end
     end
 
