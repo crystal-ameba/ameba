@@ -54,7 +54,7 @@ Inspecting 107 files
 src/ameba/formatter/flycheck_formatter.cr:6:37
 [W] Lint/UnusedArgument: Unused argument `location`. If it's necessary, use `_` as an argument name to indicate that it won't be used.
 > source.issues.each do |issue, location|
-                                ^
+                                ^------^
 
 src/ameba/formatter/base_formatter.cr:16:14
 [W] Lint/UselessAssign: Useless assignment to variable `s`
