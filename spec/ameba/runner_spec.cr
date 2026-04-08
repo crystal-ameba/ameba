@@ -158,9 +158,12 @@ module Ameba
 
       context "unneeded disables" do
         it "reports an issue if such disable exists" do
-          rules = [Rule::Lint::UnneededDisableDirective.new] of Rule::Base
+          rules = [
+            Rule::Lint::UnneededDisableDirective.new,
+            Rule::Lint::NotNil.new,
+          ] of Rule::Base
           source = Source.new <<-CRYSTAL
-            a = 1 # ameba:disable LineLength
+            a = 1 # ameba:disable Lint/NotNil
             CRYSTAL
 
           Runner.new(rules, [source], formatter, default_severity).run

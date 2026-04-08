@@ -56,6 +56,9 @@ module Ameba::Rule::Lint
       directive[:rules].reject do |rule_name|
         next if rule_name == name
         next true if rule_name.in?(excluded_rules)
+        # skip non-existent rules
+        next true unless Rule.rules.any?(&.rule_name.== rule_name)
+
         source.issues.any? do |issue|
           issue.rule.name == rule_name &&
             issue.disabled? &&

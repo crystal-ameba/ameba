@@ -60,12 +60,10 @@ module Ameba::Rule::Lint
         CRYSTAL
     end
 
-    it "detects mixed inline directives" do
-      expect_issue subject, <<-CRYSTAL
+    it "ignores non-existent rules" do
+      expect_no_issues subject, <<-CRYSTAL
         # ameba:disable Rule1, Rule2
-        # ^^^^^^^^^^^^^^^^^^^^^^^^^^ error: Unnecessary disabling of `Rule1`, `Rule2`
         a = 1 # ameba:disable Rule3
-            # ^^^^^^^^^^^^^^^^^^^^^ error: Unnecessary disabling of `Rule3`
         CRYSTAL
     end
 
