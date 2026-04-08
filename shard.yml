@@ -11,9 +11,6 @@ targets:
   json-schema-builder:
     main: src/json-schema-builder.cr
 
-executables:
-  - ameba.cr
-
 crystal: ~> 1.19
 
 license: MIT

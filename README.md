@@ -126,7 +126,7 @@ target to the `shard.yml` file:
 ```yaml
 targets:
   ameba:
-    main: bin/ameba.cr
+    main: lib/ameba/bin/ameba.cr
 ```
 
 And then run:
@@ -138,16 +138,16 @@ $ shards build ameba -Dpreview_mt
 Alternatively, skip adding `ameba` target and use `crystal build` command directly:
 
 ```sh
-$ crystal build -Dpreview_mt -o bin/ameba bin/ameba.cr
+$ crystal build -Dpreview_mt -o bin/ameba lib/ameba/bin/ameba.cr
 ```
 
 Both of these will result in a compiled binary placed under `bin/ameba` path.
 
-You can also just run the `bin/ameba.cr` file, compiling it on the fly,
+You can also just run the `lib/ameba/bin/ameba.cr` file, compiling it on the fly,
 which is the slowest option:
 
 ```sh
-$ bin/ameba.cr
+$ lib/ameba/bin/ameba.cr
 ```
 
 ### OS X
