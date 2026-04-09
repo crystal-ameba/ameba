@@ -26,7 +26,7 @@ module Ameba::AST
 
     @dead_stores = [] of Assignment
     @var_names : Set(String)
-    @assignment_map : Hash(Tuple(String, UInt64), Array(Assignment))
+    @assignment_map : Hash(Tuple(String, UInt64), Assignment)
     @inner_scope_nodes : Set(UInt64)
 
     # Live sets for loop flow control: `break` exits to post-loop,
@@ -66,11 +66,11 @@ module Ameba::AST
     record Result, dead_stores : Array(Assignment), entry_live_set : LiveSet
 
     private def build_assignment_map
-      map = Hash(Tuple(String, UInt64), Array(Assignment)).new
+      map = Hash(Tuple(String, UInt64), Assignment).new
       @scope.variables.each do |var|
         var.assignments.each do |assign|
           key = {var.name, assign.node.object_id}
-          (map[key] ||= [] of Assignment) << assign
+          map[key] ||= assign
         end
       end
       map
@@ -101,7 +101,7 @@ module Ameba::AST
     end
 
     private def find_assignment(node, var_name) : Assignment?
-      @assignment_map[{var_name, node.object_id}]?.try(&.first?)
+      @assignment_map[{var_name, node.object_id}]?
     end
 
     # Records a dead store if the variable is not in the live set.
