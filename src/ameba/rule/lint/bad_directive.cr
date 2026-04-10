@@ -41,8 +41,9 @@ module Ameba::Rule::Lint
       return if InlineComments::Action.parse?(action)
 
       # See `InlineComments::COMMENT_DIRECTIVE_REGEX`
+      prefix_size = {{ "# ameba:".size }}
 
-      issue_for name_location_or(token, action, adjust_location_column_number: {{ "# ameba:".size }}),
+      issue_for name_location_or(token, action, adjust_location_column_number: prefix_size),
         MSG % {action, AVAILABLE_ACTIONS.map { |name| "`#{name}`" }.join(", ")}
     end
   end
