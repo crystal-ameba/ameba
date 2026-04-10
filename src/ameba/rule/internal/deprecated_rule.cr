@@ -1,4 +1,4 @@
-module Ameba::Rule::Lint
+module Ameba::Rule::Internal
   # A rule that reports deprecated rules in comment directives.
   #
   # ```
@@ -11,7 +11,7 @@ module Ameba::Rule::Lint
   # YAML configuration example:
   #
   # ```
-  # Lint/DeprecatedRule:
+  # Internal/DeprecatedRule:
   #   Enabled: true
   # ```
   class DeprecatedRule < Base
