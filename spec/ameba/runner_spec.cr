@@ -159,7 +159,7 @@ module Ameba
       context "unneeded disables" do
         it "reports an issue if such disable exists" do
           rules = [
-            Rule::Lint::UnneededDisableDirective.new,
+            Rule::Internal::UnneededDisableDirective.new,
             Rule::Lint::NotNil.new,
           ] of Rule::Base
           source = Source.new <<-CRYSTAL
@@ -168,14 +168,14 @@ module Ameba
 
           Runner.new(rules, [source], formatter, default_severity).run
           source.should_not be_valid
-          source.issues.first.rule.should be_a Rule::Lint::UnneededDisableDirective
+          source.issues.first.rule.should be_a Rule::Internal::UnneededDisableDirective
         end
 
         it "does not report if the disabled rule is excluded for the source" do
           path = "source.cr"
           error_rule = ErrorRule.new
           error_rule.excluded = Set{path}
-          rules = [error_rule, Rule::Lint::UnneededDisableDirective.new] of Rule::Base
+          rules = [error_rule, Rule::Internal::UnneededDisableDirective.new] of Rule::Base
           source = Source.new <<-CRYSTAL, path
             a = 1 # ameba:disable #{ErrorRule.rule_name}
             CRYSTAL
@@ -186,7 +186,7 @@ module Ameba
 
         it "respects Excluded config of UnneededDisableDirective" do
           path = "source.cr"
-          udd_rule = Rule::Lint::UnneededDisableDirective.new
+          udd_rule = Rule::Internal::UnneededDisableDirective.new
           udd_rule.excluded = Set{path}
           rules = [udd_rule] of Rule::Base
           source = Source.new <<-CRYSTAL, path

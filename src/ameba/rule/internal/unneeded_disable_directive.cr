@@ -1,4 +1,4 @@
-module Ameba::Rule::Lint
+module Ameba::Rule::Internal
   # A rule that reports unneeded disable directives.
   # For example, this is considered invalid:
   #
@@ -21,7 +21,7 @@ module Ameba::Rule::Lint
   # YAML configuration example:
   #
   # ```
-  # Lint/UnneededDisableDirective:
+  # Internal/UnneededDisableDirective:
   #   Enabled: true
   # ```
   class UnneededDisableDirective < Base

@@ -1,12 +1,12 @@
 require "../../../spec_helper"
 
-module Ameba::Rule::Lint
+module Ameba::Rule::Internal
   describe NonExistentRule do
     subject = NonExistentRule.new
 
     it "does not report if the rule name is correct" do
       expect_no_issues subject, <<-CRYSTAL
-        # ameba:disable Lint/NonExistentRule
+        # ameba:disable Internal/NonExistentRule
         CRYSTAL
     end
 

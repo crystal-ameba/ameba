@@ -15,6 +15,7 @@ module Ameba::Rule
         Rule.rules.map(&.group_name).uniq!.reject!(&.empty?).sort.should eq %w[
           Ameba
           Documentation
+          Internal
           Layout
           Lint
           Metrics
