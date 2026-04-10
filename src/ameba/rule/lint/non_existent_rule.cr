@@ -35,15 +35,19 @@ module Ameba::Rule::Lint
         next unless token.type.comment?
         next unless directive = source.parse_inline_directive(token.value.to_s)
 
-        check_rules source, token, directive[:rules]
+        check_rules source, token, directive[:action], directive[:rules]
       end
     end
 
-    private def check_rules(source, token, rules)
+    private def check_rules(source, token, action, rules)
       bad_names = rules - ALL_RULE_NAMES - ALL_GROUP_NAMES
       return if bad_names.empty?
 
-      issue_for name_location_or(token, token.value),
+      # See `InlineComments::COMMENT_DIRECTIVE_REGEX`
+      prefix_size = "# ameba:#{action} ".size
+      token_value = token.value.to_s[prefix_size - 1...-1]?
+
+      issue_for name_location_or(token, token_value, adjust_location_column_number: prefix_size),
         MSG % bad_names.map { |name| "`#{name}`" }.join(", ")
     end
   end

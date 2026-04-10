@@ -13,7 +13,7 @@ module Ameba::Rule::Lint
     it "reports if there are incorrect rule names" do
       expect_issue subject, <<-CRYSTAL
         # ameba:disable BadRule1, BadRule2
-        # ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ error: Such rules do not exist: `BadRule1`, `BadRule2`
+                      # ^^^^^^^^^^^^^^^^^^ error: Such rules do not exist: `BadRule1`, `BadRule2`
         CRYSTAL
     end
 
