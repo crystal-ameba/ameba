@@ -158,6 +158,10 @@ module Ameba::Formatter
           end_column = end_location.column_number
 
           if end_lineno == lineno && end_column > column
+            if column < max_length
+              end_column = {end_column, max_length}.min
+            end
+
             length = end_column - column
             length -= 1
 
