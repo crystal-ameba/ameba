@@ -145,6 +145,40 @@ module Ameba::Formatter
           .should eq "> a = 1\n  ^\n"
       end
 
+      context "trimming" do
+        max_length = 33
+
+        code = <<-CRYSTAL
+          FOO = "#{"foo" * 111}"
+          CRYSTAL
+
+        it "trims the affected line to `max_length` if location is within the trimmed line" do
+          location = Crystal::Location.new("filename", 1, max_length - 10)
+          end_location = Crystal::Location.new("filename", 1, max_length + 10)
+
+          affected_code = subject.affected_code(code, location, end_location, max_length: max_length)
+          affected_code = subject.deansify(affected_code).should_not be_nil
+
+          affected_code.should start_with "> %s\n" % subject.trim(code, max_length)
+          affected_code.should end_with "^%s^\n" % {
+            "-" * (max_length - location.column_number - 1),
+          }
+        end
+
+        it "does not trim the affected line if location is not within the `max_length`" do
+          location = Crystal::Location.new("filename", 1, max_length + 10)
+          end_location = Crystal::Location.new("filename", 1, max_length + 30)
+
+          affected_code = subject.affected_code(code, location, end_location, max_length: max_length)
+          affected_code = subject.deansify(affected_code).should_not be_nil
+
+          affected_code.should start_with "> %s\n" % code
+          affected_code.should end_with "^%s^\n" % {
+            "-" * (end_location.column_number - location.column_number - 1),
+          }
+        end
+      end
+
       it "returns correct line if it is found" do
         code = <<-CRYSTAL
           a = 1
@@ -154,7 +188,7 @@ module Ameba::Formatter
           .should eq "> a = 1\n  ^\n"
       end
 
-      it "returns correct line if it is found" do
+      it "returns correct line if it is found (2)" do
         code = <<-CRYSTAL
           # pre:1
             # pre:2
