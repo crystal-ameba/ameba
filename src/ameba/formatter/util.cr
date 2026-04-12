@@ -158,10 +158,14 @@ module Ameba::Formatter
           end_column = end_location.column_number
 
           if end_lineno == lineno && end_column > column
-            end_position = end_column - column
-            end_position -= 1
+            if column < max_length
+              end_column = {end_column, max_length}.min
+            end
 
-            str << ("-" * end_position).colorize(:dark_gray)
+            length = end_column - column
+            length -= 1
+
+            str << ("-" * length).colorize(:dark_gray)
             str << "^".colorize(:yellow)
           end
         end
