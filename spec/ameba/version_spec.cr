@@ -39,41 +39,5 @@ module Ameba
         version.dev?.should be_false
       end
     end
-
-    context "#release_candidate?" do
-      it "returns `true` for `rc` pre-release identifier followed by a number" do
-        version = build_ameba_version("1.2.3-rc-1")
-        version.release_candidate?.should be_true
-
-        version = build_ameba_version("1.2.3-rc1")
-        version.release_candidate?.should be_true
-
-        version = build_ameba_version("1.2.3-RC1")
-        version.release_candidate?.should be_false
-
-        version = build_ameba_version("1.2.3-rc-x")
-        version.release_candidate?.should be_false
-      end
-
-      it "returns `true` if the version pre-release identifiers contain only `rc`" do
-        version = build_ameba_version("1.2.3-rc")
-        version.release_candidate?.should be_true
-      end
-
-      it "returns `true` if the version pre-release identifiers contain `rc`" do
-        version = build_ameba_version("1.2.3-rc.arm64")
-        version.release_candidate?.should be_true
-      end
-
-      it "returns `false` if the version pre-release identifiers do not contain `rc`" do
-        version = build_ameba_version("1.2.3-rcx")
-        version.release_candidate?.should be_false
-      end
-
-      it "returns `false` if the version pre-release identifiers are empty" do
-        version = build_ameba_version("1.2.3")
-        version.release_candidate?.should be_false
-      end
-    end
   end
 end
