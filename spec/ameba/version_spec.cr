@@ -7,16 +7,9 @@ end
 module Ameba
   describe Version do
     context "#to_s" do
-      it "outputs the `version` string" do
-        version = build_ameba_version("1.2.3")
-        version.to_s.should eq version.version.to_s
-      end
-    end
-
-    context "#version" do
-      it "matches the version format" do
-        version = build_ameba_version("1.2.3")
-        version.version.to_s.should match /^\d+\.\d+\.\d+/
+      it "outputs version string" do
+        version = build_ameba_version("1.2.3-dev+foo")
+        version.to_s.should eq "1.2.3-dev+foo"
       end
     end
 
@@ -37,6 +30,23 @@ module Ameba
 
         version = build_ameba_version("1.2.3-devo")
         version.dev?.should be_false
+      end
+    end
+
+    context "#production?" do
+      it "returns `true` if the version does not contain pre-release identifiers" do
+        version = build_ameba_version("1.2.3")
+        version.production?.should be_true
+      end
+
+      it "ignores build metadata" do
+        version = build_ameba_version("1.2.3+foo")
+        version.production?.should be_true
+      end
+
+      it "returns `false` if the version contains pre-release identifiers" do
+        version = build_ameba_version("1.2.3-foo")
+        version.production?.should be_false
       end
     end
   end
