@@ -21,7 +21,7 @@ module Ameba::Rule::Naming
         def foo
           raise "foo"
         rescue wtf : ArgumentError
-             # ^^^ error: Disallowed variable name, use one of these instead: `e`, `ex`, `exception`, `error`
+             # ^^^ error: Disallowed variable name, use one of these instead: `e`, `ex`, `exception`, `err`, `error`
           nil
         end
         CRYSTAL
@@ -31,7 +31,7 @@ module Ameba::Rule::Naming
       context "#allowed_names" do
         it "returns sensible defaults" do
           rule = RescuedExceptionsVariableName.new
-          rule.allowed_names.should eq %w[e ex exception error]
+          rule.allowed_names.should eq %w[e ex exception err error]
         end
 
         it "allows setting custom names" do

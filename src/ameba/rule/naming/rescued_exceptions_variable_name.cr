@@ -22,7 +22,7 @@ module Ameba::Rule::Naming
   # ```
   # Naming/RescuedExceptionsVariableName:
   #   Enabled: true
-  #   AllowedNames: [e, ex, exception, error]
+  #   AllowedNames: [e, ex, exception, err, error]
   # ```
   class RescuedExceptionsVariableName < Base
     include AST::Util
@@ -30,7 +30,7 @@ module Ameba::Rule::Naming
     properties do
       since_version "1.6.0"
       description "Makes sure that rescued exceptions variables are named as expected"
-      allowed_names %w[e ex exception error]
+      allowed_names %w[e ex exception err error]
     end
 
     MSG          = "Disallowed variable name, use one of these instead: %s"
