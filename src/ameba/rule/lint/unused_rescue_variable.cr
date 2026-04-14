@@ -57,7 +57,7 @@ module Ameba::Rule::Lint
     end
 
     def visit(node : Crystal::Var)
-      @referenced = true if node.name == variable_name
+      @referenced ||= true if node.name == variable_name
       true
     end
 
