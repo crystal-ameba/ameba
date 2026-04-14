@@ -35,6 +35,30 @@ module Ameba::Rule::Lint
         CRYSTAL
     end
 
+    it "passes if rescue variable is within `MacroIf`" do
+      expect_no_issues subject, <<-'CRYSTAL'
+        begin
+          raise MyException.new("OH NO!")
+        rescue ex : MyException
+          {% if flag?(:debug) %}
+            STDERR.puts "Error: #{ex.message}"
+          {% end %}
+        end
+        CRYSTAL
+    end
+
+    it "passes if rescue variable is within `MacroFor`" do
+      expect_no_issues subject, <<-'CRYSTAL'
+        begin
+          raise MyException.new("OH NO!")
+        rescue ex : MyException
+          {% for key in %w[foo bar] %}
+            STDERR.puts "{{ key.id }}: #{ex.message}"
+          {% end %}
+        end
+        CRYSTAL
+    end
+
     it "fails if rescue variable is not used" do
       expect_issue subject, <<-CRYSTAL
         begin

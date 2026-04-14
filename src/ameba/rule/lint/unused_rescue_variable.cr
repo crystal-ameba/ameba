@@ -61,6 +61,13 @@ module Ameba::Rule::Lint
       true
     end
 
+    def visit(node : Crystal::MacroIf | Crystal::MacroFor)
+      if AST::MacroReferenceFinder.new(node, variable_name).references?
+        @referenced ||= true
+      end
+      false
+    end
+
     # Shadowed variable usage check
     def visit(node : Crystal::Block)
       node.args.all? { |arg| should_visit?(arg) }
