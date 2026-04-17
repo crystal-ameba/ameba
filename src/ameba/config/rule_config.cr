@@ -198,6 +198,7 @@ class Ameba::Config
 
     macro included
       GROUP_SEVERITY = {
+        Internal:    Ameba::Severity::Warning,
         Lint:        Ameba::Severity::Warning,
         Metrics:     Ameba::Severity::Warning,
         Performance: Ameba::Severity::Warning,

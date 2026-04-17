@@ -3,7 +3,7 @@ module Ameba::Rule
   # behave differently than usual rules.
   SPECIAL = {
     Lint::Syntax.rule_name,
-    Lint::UnneededDisableDirective.rule_name,
+    Internal::UnneededDisableDirective.rule_name,
   }
 
   # Represents a base of all rules. In other words, all rules
