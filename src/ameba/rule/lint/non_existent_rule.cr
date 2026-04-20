@@ -21,7 +21,7 @@ module Ameba::Rule::Lint
     include AST::Util
 
     properties do
-      since_version "1.7.0"
+      since_version "0.13.0"
       description "Reports non-existent rules in comment directives"
     end
 
