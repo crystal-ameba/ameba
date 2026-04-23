@@ -30,7 +30,7 @@ module Ameba::Rule::Lint
   # while n < 3
   #   n = n + 1
   #   m = n
-  #   spawn do { channel.send m }
+  #   spawn { channel.send m }
   # end
   #
   # 3.times { puts channel.receive } # => # 1, 2, 3

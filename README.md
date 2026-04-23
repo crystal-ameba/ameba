@@ -54,7 +54,7 @@ Inspecting 107 files
 src/ameba/formatter/flycheck_formatter.cr:6:37
 [W] Lint/UnusedArgument: Unused argument `location`. If it's necessary, use `_` as an argument name to indicate that it won't be used.
 > source.issues.each do |issue, location|
-                                ^
+                                ^------^
 
 src/ameba/formatter/base_formatter.cr:16:14
 [W] Lint/UselessAssign: Useless assignment to variable `s`
@@ -267,6 +267,8 @@ time = Time.epoch(1483859302) # ameba:disable Style, Lint
 - [Dogma](https://github.com/lpil/dogma)
 
 ## Contributors
+
+![Repobeats](https://repobeats.axiom.co/api/embed/2e7de7b39a950b7d4a1c5c006b6679b7578eee0a.svg "Repobeats analytics image")
 
 - [veelenga](https://github.com/veelenga) Vitalii Elenhaupt - creator, maintainer
 - [Sija](https://github.com/Sija) Sijawusz Pur Rahnama - contributor, maintainer

@@ -7,16 +7,16 @@ private def scopes_for(code)
   rule.scopes
 end
 
-private def def_scope(code)
-  scopes_for(code).find! { |scope| scope.node.is_a?(Crystal::Def) }
+private def top_scope(code)
+  scopes_for(code).find!(&.node.is_a?(Crystal::Expressions))
 end
 
-private def top_scope(code)
-  scopes_for(code).find! { |scope| scope.node.is_a?(Crystal::Expressions) }
+private def def_scope(code)
+  scopes_for(code).find!(&.node.is_a?(Crystal::Def))
 end
 
 private def block_scope(code)
-  scopes_for(code).find! { |scope| scope.node.is_a?(Crystal::Block) }
+  scopes_for(code).find!(&.node.is_a?(Crystal::Block))
 end
 
 private def dead_store_names(scope)
@@ -509,13 +509,13 @@ module Ameba::AST
         dead_store_names(scope).should eq ["a"]
       end
 
-      it "does not report assignment used in rescue when body has break" do
-        scope = block_scope <<-CRYSTAL
-          3.times do
+      it "does not report assignment used in rescue when body has return" do
+        scope = def_scope <<-CRYSTAL
+          def foo
             start = 1
             begin
               perform_foo
-              break
+              return
             rescue
               start
             end
@@ -524,13 +524,13 @@ module Ameba::AST
         dead_store_names(scope).should be_empty
       end
 
-      it "does not report assignment used in rescue when body has return" do
-        scope = def_scope <<-CRYSTAL
-          def foo
+      it "does not report assignment used in rescue when body has break" do
+        scope = block_scope <<-CRYSTAL
+          3.times do
             start = 1
             begin
               perform_foo
-              return
+              break
             rescue
               start
             end

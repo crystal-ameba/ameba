@@ -101,13 +101,17 @@ module Ameba::AST
     # :nodoc:
     def visit(node : Crystal::Assign | Crystal::OpAssign)
       target = node.target
+
       if isolated_assign_target?(target)
         @current_assign = node
+
         target.accept(self)
         on_scope_enter(node)
         node.value.accept(self)
+
         return false
       end
+
       @current_assign = node
       true
     end
