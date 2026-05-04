@@ -14,7 +14,7 @@ module Ameba::Rule::Style
       source = expect_issue subject, <<-CRYSTAL
         block do |v|
           next v + 1
-        # ^^^^^^^^^^ error: Redundant `next` detected
+        # ^^^^ error: Redundant `next` detected
         end
         CRYSTAL
 
@@ -30,7 +30,7 @@ module Ameba::Rule::Style
         source = expect_issue subject, <<-CRYSTAL
           block do |v|
             next v if v > 10
-          # ^^^^^^ error: Redundant `next` detected
+          # ^^^^ error: Redundant `next` detected
           end
           CRYSTAL
 
@@ -46,10 +46,10 @@ module Ameba::Rule::Style
           block do |a|
             if a > 0
               next a + 1
-            # ^^^^^^^^^^ error: Redundant `next` detected
+            # ^^^^ error: Redundant `next` detected
             else
               next a + 2
-            # ^^^^^^^^^^ error: Redundant `next` detected
+            # ^^^^ error: Redundant `next` detected
             end
           end
           CRYSTAL
@@ -71,7 +71,7 @@ module Ameba::Rule::Style
         source = expect_issue subject, <<-CRYSTAL
           block do |v|
             next v unless v > 10
-          # ^^^^^^ error: Redundant `next` detected
+          # ^^^^ error: Redundant `next` detected
           end
           CRYSTAL
 
@@ -87,10 +87,10 @@ module Ameba::Rule::Style
           block do |a|
             unless a > 0
               next a + 1
-            # ^^^^^^^^^^ error: Redundant `next` detected
+            # ^^^^ error: Redundant `next` detected
             else
               next a + 2
-            # ^^^^^^^^^^ error: Redundant `next` detected
+            # ^^^^ error: Redundant `next` detected
             end
           end
           CRYSTAL
@@ -122,7 +122,7 @@ module Ameba::Rule::Style
           block do |a|
             a = 1
             next a
-          # ^^^^^^ error: Redundant `next` detected
+          # ^^^^ error: Redundant `next` detected
           end
           CRYSTAL
 
@@ -148,7 +148,7 @@ module Ameba::Rule::Style
         source = expect_issue subject, <<-CRYSTAL
           block do |a|
             a && next a
-               # ^^^^^^ error: Redundant `next` detected
+               # ^^^^ error: Redundant `next` detected
           end
           CRYSTAL
 
@@ -167,7 +167,7 @@ module Ameba::Rule::Style
             v + 1
           rescue
             next v if v > 0
-          # ^^^^^^ error: Redundant `next` detected
+          # ^^^^ error: Redundant `next` detected
           end
           CRYSTAL
 
@@ -184,14 +184,14 @@ module Ameba::Rule::Style
         source = expect_issue subject, <<-CRYSTAL
           block do |a|
             next a + 1
-          # ^^^^^^^^^^ error: Redundant `next` detected
+          # ^^^^ error: Redundant `next` detected
           rescue ArgumentError
             next a + 2
-          # ^^^^^^^^^^ error: Redundant `next` detected
+          # ^^^^ error: Redundant `next` detected
           rescue Exception
             a + 2
             next a
-          # ^^^^^^ error: Redundant `next` detected
+          # ^^^^ error: Redundant `next` detected
           end
           CRYSTAL
 
@@ -224,7 +224,7 @@ module Ameba::Rule::Style
           source = expect_issue rule, <<-CRYSTAL
             block do |a, b|
               next a, b
-            # ^^^^^^^^^ error: Redundant `next` detected
+            # ^^^^ error: Redundant `next` detected
             end
             CRYSTAL
 

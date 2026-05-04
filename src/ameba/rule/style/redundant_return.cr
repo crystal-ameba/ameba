@@ -114,12 +114,15 @@ module Ameba::Rule::Style
       return if allow_multi_return? && node.exp.is_a?(Crystal::TupleLiteral)
       return if allow_empty_return? && (node.exp.nil? || node.exp.try(&.nop?))
 
+      location = node.location
+      end_location = location.try(&.adjust(column_number: {{ "return".size - 1 }}))
+
       if exp_code = control_exp_code(node, source.lines)
-        issue_for node, MSG do |corrector|
+        issue_for location, end_location, MSG do |corrector|
           corrector.replace(node, exp_code)
         end
       else
-        issue_for node, MSG
+        issue_for location, end_location, MSG
       end
     end
   end

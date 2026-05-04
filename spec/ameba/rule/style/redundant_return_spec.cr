@@ -16,7 +16,7 @@ module Ameba::Rule::Style
       source = expect_issue subject, <<-CRYSTAL
         def inc(a)
           return a + 1
-        # ^^^^^^^^^^^^ error: Redundant `return` detected
+        # ^^^^^^ error: Redundant `return` detected
         end
         CRYSTAL
 
@@ -54,7 +54,7 @@ module Ameba::Rule::Style
         source = expect_issue subject, <<-CRYSTAL
           def inc(a)
             return a + 1 if a > 0
-          # ^^^^^^^^^^^^ error: Redundant `return` detected
+          # ^^^^^^ error: Redundant `return` detected
           end
           CRYSTAL
 
@@ -71,10 +71,10 @@ module Ameba::Rule::Style
             do_something(a)
             if a > 0
               return :positive
-            # ^^^^^^^^^^^^^^^^ error: Redundant `return` detected
+            # ^^^^^^ error: Redundant `return` detected
             else
               return :negative
-            # ^^^^^^^^^^^^^^^^ error: Redundant `return` detected
+            # ^^^^^^ error: Redundant `return` detected
             end
           end
           CRYSTAL
@@ -97,7 +97,7 @@ module Ameba::Rule::Style
         source = expect_issue subject, <<-CRYSTAL
           def inc(a)
             return a + 1 unless a > 0
-          # ^^^^^^^^^^^^ error: Redundant `return` detected
+          # ^^^^^^ error: Redundant `return` detected
           end
           CRYSTAL
 
@@ -114,10 +114,10 @@ module Ameba::Rule::Style
             do_something(a)
             unless a < 0
               return :positive
-            # ^^^^^^^^^^^^^^^^ error: Redundant `return` detected
+            # ^^^^^^ error: Redundant `return` detected
             else
               return :negative
-            # ^^^^^^^^^^^^^^^^ error: Redundant `return` detected
+            # ^^^^^^ error: Redundant `return` detected
             end
           end
           CRYSTAL
@@ -148,7 +148,7 @@ module Ameba::Rule::Style
         source = expect_issue subject, <<-CRYSTAL
           def can_create?(a)
             valid? && return a > 0
-                    # ^^^^^^^^^^^^ error: Redundant `return` detected
+                    # ^^^^^^ error: Redundant `return` detected
           end
           CRYSTAL
 
@@ -168,10 +168,10 @@ module Ameba::Rule::Style
             when .nil?
               puts "blah"
               return nil
-            # ^^^^^^^^^^ error: Redundant `return` detected
+            # ^^^^^^ error: Redundant `return` detected
             when .blank?
               return ""
-            # ^^^^^^^^^ error: Redundant `return` detected
+            # ^^^^^^ error: Redundant `return` detected
             when true
               true
             end
@@ -203,7 +203,7 @@ module Ameba::Rule::Style
               true
             else
               return false
-            # ^^^^^^^^^^^^ error: Redundant `return` detected
+            # ^^^^^^ error: Redundant `return` detected
             end
           end
           CRYSTAL
@@ -228,7 +228,7 @@ module Ameba::Rule::Style
         source = expect_issue subject, <<-CRYSTAL
           def foo(a)
             return true
-          # ^^^^^^^^^^^ error: Redundant `return` detected
+          # ^^^^^^ error: Redundant `return` detected
           rescue
             false
           end
@@ -249,12 +249,12 @@ module Ameba::Rule::Style
             true
           rescue ArgumentError
             return false
-          # ^^^^^^^^^^^^ error: Redundant `return` detected
+          # ^^^^^^ error: Redundant `return` detected
           rescue RuntimeError
             ""
           rescue Exception
             return nil
-          # ^^^^^^^^^^ error: Redundant `return` detected
+          # ^^^^^^ error: Redundant `return` detected
           end
           CRYSTAL
 
@@ -280,7 +280,7 @@ module Ameba::Rule::Style
           else
             puts "else branch"
             return :bar
-          # ^^^^^^^^^^^ error: Redundant `return` detected
+          # ^^^^^^ error: Redundant `return` detected
           end
           CRYSTAL
 
@@ -313,7 +313,7 @@ module Ameba::Rule::Style
           source = expect_issue rule, <<-CRYSTAL
             def method(a, b)
               return a, b
-            # ^^^^^^^^^^^ error: Redundant `return` detected
+            # ^^^^^^ error: Redundant `return` detected
             end
             CRYSTAL
 
