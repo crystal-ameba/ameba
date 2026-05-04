@@ -36,8 +36,6 @@ module Ameba::AST
     end
 
     private def traverse_condition(node)
-      return if node.else.nil? || node.else.nop?
-
       traverse_node(node.then)
       traverse_node(node.else)
     end

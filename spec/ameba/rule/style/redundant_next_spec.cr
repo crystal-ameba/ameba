@@ -26,10 +26,17 @@ module Ameba::Rule::Style
     end
 
     context "if" do
-      it "doesn't report if there is not redundant next in if branch" do
-        expect_no_issues subject, <<-CRYSTAL
+      it "reports if there is redundant next in if branch" do
+        source = expect_issue subject, <<-CRYSTAL
           block do |v|
-            next if v > 10
+            next v if v > 10
+          # ^^^^^^ error: Redundant `next` detected
+          end
+          CRYSTAL
+
+        expect_correction source, <<-CRYSTAL
+          block do |v|
+            v if v > 10
           end
           CRYSTAL
       end
@@ -60,10 +67,17 @@ module Ameba::Rule::Style
     end
 
     context "unless" do
-      it "doesn't report if there is no redundant next in unless branch" do
-        expect_no_issues subject, <<-CRYSTAL
+      it "reports if there is redundant next in unless branch" do
+        source = expect_issue subject, <<-CRYSTAL
           block do |v|
-            next unless v > 10
+            next v unless v > 10
+          # ^^^^^^ error: Redundant `next` detected
+          end
+          CRYSTAL
+
+        expect_correction source, <<-CRYSTAL
+          block do |v|
+            v unless v > 10
           end
           CRYSTAL
       end
@@ -147,12 +161,21 @@ module Ameba::Rule::Style
     end
 
     context "exception handler" do
-      it "doesn't report if there is no redundant next in exception handler" do
-        expect_no_issues subject, <<-CRYSTAL
+      it "reports if there is redundant next in exception handler" do
+        source = expect_issue subject, <<-CRYSTAL
           block do |v|
             v + 1
           rescue
             next v if v > 0
+          # ^^^^^^ error: Redundant `next` detected
+          end
+          CRYSTAL
+
+        expect_correction source, <<-CRYSTAL
+          block do |v|
+            v + 1
+          rescue
+            v if v > 0
           end
           CRYSTAL
       end
