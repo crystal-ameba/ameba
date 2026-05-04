@@ -88,7 +88,7 @@ class Ameba::Config
       path = root ? root / FILENAME : DEFAULT_PATH
 
       if config_path = find_config_path(path)
-        return File.read(config_path)
+        File.read(config_path)
       end
     end
 
