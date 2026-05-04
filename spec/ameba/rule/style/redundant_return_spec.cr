@@ -39,7 +39,7 @@ module Ameba::Rule::Style
       expect_no_issues subject, <<-CRYSTAL
         def method(a)
           case a
-          when true then return true
+          when true  then return true
           when .nil? then return :nil
           end
           false
