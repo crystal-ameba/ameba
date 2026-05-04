@@ -39,7 +39,7 @@ module Ameba::Rule::Style
       expect_no_issues subject, <<-CRYSTAL
         def method(a)
           case a
-          when true then return true
+          when true  then return true
           when .nil? then return :nil
           end
           false
@@ -50,10 +50,17 @@ module Ameba::Rule::Style
     end
 
     context "if" do
-      it "doesn't report if there is return in if branch" do
-        expect_no_issues subject, <<-CRYSTAL
+      it "reports if there is return in if branch" do
+        source = expect_issue subject, <<-CRYSTAL
           def inc(a)
             return a + 1 if a > 0
+          # ^^^^^^^^^^^^ error: Redundant `return` detected
+          end
+          CRYSTAL
+
+        expect_correction source, <<-CRYSTAL
+          def inc(a)
+            a + 1 if a > 0
           end
           CRYSTAL
       end
@@ -86,10 +93,17 @@ module Ameba::Rule::Style
     end
 
     context "unless" do
-      it "doesn't report if there is return in unless branch" do
-        expect_no_issues subject, <<-CRYSTAL
+      it "reports if there is return in unless branch" do
+        source = expect_issue subject, <<-CRYSTAL
           def inc(a)
             return a + 1 unless a > 0
+          # ^^^^^^^^^^^^ error: Redundant `return` detected
+          end
+          CRYSTAL
+
+        expect_correction source, <<-CRYSTAL
+          def inc(a)
+            a + 1 unless a > 0
           end
           CRYSTAL
       end
