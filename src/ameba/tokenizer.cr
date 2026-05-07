@@ -85,8 +85,14 @@ module Ameba
         # NOTE: Crystal::Token is a class and the lexer modifies @token in place,
         # so the assignment here is for clarity/consistency with run_delimiter_state,
         # not for correctness (the behavior is identical without the assignment).
-        token = lexer.next_string_array_token
-        block.call token
+        token = if lexer.responds_to?(:next_string_array_token)
+                  # Branch targeting Crystal < 1.21
+                  # TODO: Remove when Crystal < 1.21 is no longer supported
+                  lexer.next_string_array_token
+                else
+                  lexer.next_string_token(token.delimiter_state)
+                end
+        block.call token unless token.type.space?
 
         case token.type
         when .string_array_end?, .eof?
