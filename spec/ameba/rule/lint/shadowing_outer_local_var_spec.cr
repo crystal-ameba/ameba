@@ -194,6 +194,182 @@ module Ameba::Rule::Lint
         CRYSTAL
     end
 
+    # https://github.com/crystal-ameba/ameba/issues/819
+    context "mutually exclusive branches" do
+      it "does not report when assignment and block argument live in opposite if/else branches" do
+        expect_no_issues subject, <<-CRYSTAL
+          if rand > 0.5
+            x = 1
+          else
+            [1, 2].each { |x| puts x }
+          end
+          CRYSTAL
+      end
+
+      it "does not report when assignment is in if-then and block is in elsif" do
+        expect_no_issues subject, <<-CRYSTAL
+          if a
+            x = 1
+          elsif b
+            [1, 2].each { |x| puts x }
+          end
+          CRYSTAL
+      end
+
+      it "does not report when assignment and block are in different unless branches" do
+        expect_no_issues subject, <<-CRYSTAL
+          unless cond
+            x = 1
+          else
+            [1, 2].each { |x| puts x }
+          end
+          CRYSTAL
+      end
+
+      it "does not report when assignment and block are in different case whens" do
+        expect_no_issues subject, <<-CRYSTAL
+          case value
+          when 1
+            x = 1
+          when 2
+            [1, 2].each { |x| puts x }
+          end
+          CRYSTAL
+      end
+
+      it "does not report when assignment is in case-when and block is in case-else" do
+        expect_no_issues subject, <<-CRYSTAL
+          case value
+          when 1
+            x = 1
+          else
+            [1, 2].each { |x| puts x }
+          end
+          CRYSTAL
+      end
+
+      it "does not report when branches are nested and still mutually exclusive" do
+        expect_no_issues subject, <<-CRYSTAL
+          if outer
+            if inner
+              x = 1
+            else
+              [1, 2].each { |x| puts x }
+            end
+          end
+          CRYSTAL
+      end
+
+      it "reports when assignment dominates the block (no mutual exclusion)" do
+        expect_issue subject, <<-CRYSTAL
+          x = 1
+          if cond
+            [1, 2].each do |x|
+                          # ^ error: Shadowing outer local variable `x`
+              puts x
+            end
+          end
+          CRYSTAL
+      end
+
+      it "reports when assignment is in same branch as block" do
+        expect_issue subject, <<-CRYSTAL
+          if cond
+            x = 1
+            [1, 2].each do |x|
+                          # ^ error: Shadowing outer local variable `x`
+              puts x
+            end
+          end
+          CRYSTAL
+      end
+
+      it "reports when assignment is in if-condition (runs regardless of branch)" do
+        expect_issue subject, <<-CRYSTAL
+          if x = compute
+            puts x
+          else
+            [1, 2].each do |x|
+                          # ^ error: Shadowing outer local variable `x`
+              puts x
+            end
+          end
+          CRYSTAL
+      end
+
+      it "reports when any assignment can reach the block argument" do
+        expect_issue subject, <<-CRYSTAL
+          x = 1
+          if cond
+            x = 2
+          else
+            [1, 2].each do |x|
+                          # ^ error: Shadowing outer local variable `x`
+              puts x
+            end
+          end
+          CRYSTAL
+      end
+
+      it "does not report when assignment and block live in different rescue branches" do
+        expect_no_issues subject, <<-CRYSTAL
+          begin
+            raise "x"
+          rescue ArgumentError
+            x = 1
+          rescue
+            [1, 2].each { |x| puts x }
+          end
+          CRYSTAL
+      end
+
+      it "does not report when assignment is in a rescue and block is in the else branch" do
+        expect_no_issues subject, <<-CRYSTAL
+          begin
+            raise "x"
+          rescue
+            x = 1
+          else
+            [1, 2].each { |x| puts x }
+          end
+          CRYSTAL
+      end
+
+      it "reports when assignment in body can reach a rescue's block argument" do
+        expect_issue subject, <<-CRYSTAL
+          begin
+            x = 1
+          rescue
+            [1, 2].each do |x|
+                          # ^ error: Shadowing outer local variable `x`
+              puts x
+            end
+          end
+          CRYSTAL
+      end
+
+      it "does not report when assignment and block live in different select whens" do
+        expect_no_issues subject, <<-CRYSTAL
+          select
+          when v = ch1.receive
+            x = v
+          when ch2.receive
+            [1, 2].each { |x| puts x }
+          end
+          CRYSTAL
+      end
+
+      it "does not report when proc argument is in a mutually exclusive branch" do
+        expect_no_issues subject, <<-CRYSTAL
+          if rand > 0.5
+            x = 1
+          else
+            -> (x : Int32) { x + 1 }
+          end
+          CRYSTAL
+      end
+    end
+
     context "macro" do
       it "does not report shadowed vars in outer scope" do
         expect_no_issues subject, <<-CRYSTAL
