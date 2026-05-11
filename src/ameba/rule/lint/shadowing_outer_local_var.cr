@@ -92,7 +92,7 @@ module Ameba::Rule::Lint
         ancestor2, branch2 = path2[i]
 
         return false unless ancestor1.same?(ancestor2)
-        return true if branch1 != branch2
+        return true unless branch1 == branch2
       end
 
       false
@@ -119,11 +119,7 @@ module Ameba::Rule::Lint
         true
       end
 
-      def visit(node : Crystal::If)
-        visit_conditional(node, node.cond, node.then, node.else)
-      end
-
-      def visit(node : Crystal::Unless)
+      def visit(node : Crystal::If | Crystal::Unless)
         visit_conditional(node, node.cond, node.then, node.else)
       end
 

@@ -194,13 +194,12 @@ module Ameba::Rule::Lint
         CRYSTAL
     end
 
+    # https://github.com/crystal-ameba/ameba/issues/819
     context "mutually exclusive branches" do
-      # https://github.com/crystal-ameba/ameba/issues/819
       it "does not report when assignment and block argument live in opposite if/else branches" do
         expect_no_issues subject, <<-CRYSTAL
           if rand > 0.5
             x = 1
-            puts x
           else
             [1, 2].each { |x| puts x }
           end
@@ -211,7 +210,6 @@ module Ameba::Rule::Lint
         expect_no_issues subject, <<-CRYSTAL
           if a
             x = 1
-            puts x
           elsif b
             [1, 2].each { |x| puts x }
           end
@@ -222,7 +220,6 @@ module Ameba::Rule::Lint
         expect_no_issues subject, <<-CRYSTAL
           unless cond
             x = 1
-            puts x
           else
             [1, 2].each { |x| puts x }
           end
@@ -234,7 +231,6 @@ module Ameba::Rule::Lint
           case value
           when 1
             x = 1
-            puts x
           when 2
             [1, 2].each { |x| puts x }
           end
@@ -246,7 +242,6 @@ module Ameba::Rule::Lint
           case value
           when 1
             x = 1
-            puts x
           else
             [1, 2].each { |x| puts x }
           end
@@ -258,7 +253,6 @@ module Ameba::Rule::Lint
           if outer
             if inner
               x = 1
-              puts x
             else
               [1, 2].each { |x| puts x }
             end
@@ -292,7 +286,7 @@ module Ameba::Rule::Lint
 
       it "reports when assignment is in if-condition (runs regardless of branch)" do
         expect_issue subject, <<-CRYSTAL
-          if (x = compute)
+          if x = compute
             puts x
           else
             [1, 2].each do |x|
@@ -308,7 +302,6 @@ module Ameba::Rule::Lint
           x = 1
           if cond
             x = 2
-            puts x
           else
             [1, 2].each do |x|
                           # ^ error: Shadowing outer local variable `x`
@@ -324,7 +317,6 @@ module Ameba::Rule::Lint
             raise "x"
           rescue ArgumentError
             x = 1
-            puts x
           rescue
             [1, 2].each { |x| puts x }
           end
@@ -337,7 +329,6 @@ module Ameba::Rule::Lint
             raise "x"
           rescue
             x = 1
-            puts x
           else
             [1, 2].each { |x| puts x }
           end
@@ -348,7 +339,6 @@ module Ameba::Rule::Lint
         expect_issue subject, <<-CRYSTAL
           begin
             x = 1
-            puts x
           rescue
             [1, 2].each do |x|
                           # ^ error: Shadowing outer local variable `x`
@@ -363,7 +353,6 @@ module Ameba::Rule::Lint
           select
           when v = ch1.receive
             x = v
-            puts x
           when ch2.receive
             [1, 2].each { |x| puts x }
           end
@@ -374,7 +363,6 @@ module Ameba::Rule::Lint
         expect_no_issues subject, <<-CRYSTAL
           if rand > 0.5
             x = 1
-            puts x
           else
             -> (x : Int32) { x + 1 }
           end
