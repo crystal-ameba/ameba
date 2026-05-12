@@ -136,14 +136,24 @@ module Ameba::AST
     end
 
     # Returns `true` if the variable is declared before the `node`.
+    #
+    # A local variable is considered declared once its first assignment
+    # finishes evaluating; a parameter is declared at the point it's
+    # introduced. This is distinct from the variable's lexical `location`:
+    # in `x = foo { |x| }` the outer `x` appears at column 1, but is only
+    # declared after the block runs.
     def declared_before?(node)
-      var_location, node_location = location, node.location
+      var_location, node_location = declaration_location, node.location
 
       return unless var_location && node_location
 
       (var_location.line_number < node_location.line_number) ||
         (var_location.line_number == node_location.line_number &&
           var_location.column_number < node_location.column_number)
+    end
+
+    private def declaration_location
+      assignments.first?.try(&.end_location) || location
     end
   end
 end
