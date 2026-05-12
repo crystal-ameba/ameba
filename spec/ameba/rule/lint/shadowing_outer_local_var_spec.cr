@@ -198,7 +198,6 @@ module Ameba::Rule::Lint
       it "does not report when block argument shares a name with the outer assignment target" do
         expect_no_issues subject, <<-CRYSTAL
           x = foo { |x| x + 1 }
-          unit = units.find! { |unit| unit.name == name }
           CRYSTAL
       end
 
