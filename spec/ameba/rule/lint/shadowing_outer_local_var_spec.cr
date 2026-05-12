@@ -194,6 +194,41 @@ module Ameba::Rule::Lint
         CRYSTAL
     end
 
+    context "block argument inside the introducing assignment" do
+      it "does not report when block argument shares a name with the outer assignment target" do
+        expect_no_issues subject, <<-CRYSTAL
+          x = foo { |x| x + 1 }
+          unit = units.find! { |unit| unit.name == name }
+          CRYSTAL
+      end
+
+      it "does not report when the block is nested inside the assignment value" do
+        expect_no_issues subject, <<-CRYSTAL
+          x = if cond
+                1
+              else
+                foo { |x| x + 1 }
+              end
+          CRYSTAL
+      end
+
+      it "reports when the outer variable is already declared before the assignment" do
+        expect_issue subject, <<-CRYSTAL
+          x = 1
+          x = foo { |x| x + 1 }
+                   # ^ error: Shadowing outer local variable `x`
+          CRYSTAL
+      end
+
+      it "reports when the outer variable is declared on a sibling statement" do
+        expect_issue subject, <<-CRYSTAL
+          x = 1
+          foo { |x| x + 1 }
+               # ^ error: Shadowing outer local variable `x`
+          CRYSTAL
+      end
+    end
+
     # https://github.com/crystal-ameba/ameba/issues/819
     context "mutually exclusive branches" do
       it "does not report when assignment and block argument live in opposite if/else branches" do

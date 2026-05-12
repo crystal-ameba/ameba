@@ -214,9 +214,23 @@ module Ameba::AST
         Variable.new(var1, scope).declared_before?(var2).should be_false
       end
 
-      it "is false is the node is the same var" do
+      it "is false if the node is the same var" do
         var = Crystal::Var.new("foo").at(Crystal::Location.new(nil, 2, 2))
         Variable.new(var, scope).declared_before?(var).should be_false
+      end
+
+      it "uses the first assignment's end location, not the target's location" do
+        target = Crystal::Var.new("x")
+        variable = Variable.new(target, scope)
+        assign = Crystal::Assign.new(target, Crystal::NilLiteral.new)
+          .at_end(Crystal::Location.new(nil, 1, 15))
+        variable.assignments << Assignment.new(assign, variable, scope)
+
+        inside_value = Crystal::Var.new("x").at(Crystal::Location.new(nil, 1, 12))
+        after_value = Crystal::Var.new("x").at(Crystal::Location.new(nil, 2, 1))
+
+        variable.declared_before?(inside_value).should be_false
+        variable.declared_before?(after_value).should be_true
       end
     end
   end
