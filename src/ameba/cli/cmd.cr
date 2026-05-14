@@ -24,6 +24,7 @@ module Ameba::CLI
     property? all = false
     property? colors = true
     property? without_affected_code = false
+    property? ignore_unmatched_paths = false
     property? autocorrect = false
   end
 
@@ -188,6 +189,11 @@ module Ameba::CLI
         opts.without_affected_code = true
       end
 
+      parser.on("--ignore-unmatched-paths",
+        "Do not report unmatched path patterns") do
+        opts.ignore_unmatched_paths = true
+      end
+
       parser.on("--no-color", "Disable colors") do
         opts.colors = false
       end
@@ -311,6 +317,7 @@ module Ameba::CLI
   end
 
   private def validate_globs(opts, root) : Nil
+    return if opts.ignore_unmatched_paths?
     return if opts.stdin_filename
     return unless globs = opts.globs
 
