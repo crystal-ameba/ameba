@@ -79,10 +79,16 @@ module Ameba::CLI
       it "accepts --only flag" do
         opts = CLI.parse_args ["--only", "RULE1,RULE2"]
         opts.only.should eq Set{"RULE1", "RULE2"}
+
+        opts = CLI.parse_args ["--only", "RULE1, RULE2"]
+        opts.only.should eq Set{"RULE1", "RULE2"}
       end
 
       it "accepts --except flag" do
         opts = CLI.parse_args ["--except", "RULE1,RULE2"]
+        opts.except.should eq Set{"RULE1", "RULE2"}
+
+        opts = CLI.parse_args ["--except", "RULE1, RULE2"]
         opts.except.should eq Set{"RULE1", "RULE2"}
       end
 
