@@ -37,7 +37,7 @@ module Ameba::AST
     # variable = Variable.new(node, scope)
     # variable.assign(node1)
     # variable.assign(node2)
-    # variable.assignment.size # => 2
+    # variable.assignments.size # => 2
     # ```
     def assign(node, scope)
       assignments << Assignment.new(node, self, scope)
@@ -72,7 +72,7 @@ module Ameba::AST
       reference(node, scope)
     end
 
-    # Returns `true` if the current var is referenced in
+    # Returns `true` if the current var is referenced
     # in the block. For example this variable is captured
     # by block:
     #
