@@ -7,8 +7,38 @@ module Ameba::CLI
   describe "Cmd" do
     describe ".run" do
       it "runs ameba" do
-        r = CLI.run %w[-f silent file.cr]
+        r = CLI.run ["-f", "silent", "--only", "Lint/ComparisonToBoolean", __FILE__]
         r.should be_true
+      end
+
+      it "raises when a non-existent file is provided" do
+        expect_raises(Exception, "No files found matching `not_there.cr`") do
+          CLI.run %w[-f silent not_there.cr]
+        end
+      end
+
+      it "raises when a glob matches no files" do
+        expect_raises(Exception, "No files found matching `#{Path["nonexistent_dir", "**", "*.cr"].relative_to(Dir.current)}`") do
+          CLI.run %w[-f silent nonexistent_dir/**/*.cr]
+        end
+      end
+
+      context "with `--ignore-unmatched-paths` flag" do
+        it "does not raise when a non-existent file is provided" do
+          r = CLI.run %w[-f silent --ignore-unmatched-paths not_there.cr]
+          r.should be_true
+        end
+
+        it "does not raise when a non-matching glob is provided" do
+          r = CLI.run %w[-f silent --ignore-unmatched-paths nonexistent_dir/**/*.cr]
+          r.should be_true
+        end
+      end
+
+      it "does not raise when reading from STDIN" do
+        # STDIN mode should bypass glob validation
+        opts = CLI.parse_args %w[--stdin-filename foo.cr]
+        opts.stdin_filename.should_not be_nil
       end
     end
 
@@ -89,6 +119,11 @@ module Ameba::CLI
       it "accepts --no-color flag" do
         opts = CLI.parse_args %w[--no-color]
         opts.colors?.should be_false
+      end
+
+      it "accepts --ignore-unmatched-paths flag" do
+        opts = CLI.parse_args %w[--ignore-unmatched-paths]
+        opts.ignore_unmatched_paths?.should be_true
       end
 
       it "accepts --without-affected-code flag" do

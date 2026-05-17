@@ -24,6 +24,7 @@ module Ameba::CLI
     property? all = false
     property? colors = true
     property? without_affected_code = false
+    property? ignore_unmatched_paths = false
     property? autocorrect = false
   end
 
@@ -68,6 +69,8 @@ module Ameba::CLI
         describe_rule(rule, output)
         return true
       end
+
+      validate_globs(opts, config.root)
 
       runner = Ameba.run(config)
 
@@ -184,6 +187,11 @@ module Ameba::CLI
       parser.on("--without-affected-code",
         "Stop showing affected code while using a default formatter") do
         opts.without_affected_code = true
+      end
+
+      parser.on("--ignore-unmatched-paths",
+        "Do not report unmatched path patterns") do
+        opts.ignore_unmatched_paths = true
       end
 
       parser.on("--no-color", "Disable colors") do
@@ -306,6 +314,17 @@ module Ameba::CLI
   private def configure_describe_opts(rule_name, opts) : Nil
     opts.describe_rule = rule_name.presence
     opts.formatter = :silent
+  end
+
+  private def validate_globs(opts, root) : Nil
+    return if opts.ignore_unmatched_paths?
+    return if opts.stdin_filename
+    return unless globs = opts.globs
+
+    globs.each do |glob|
+      next unless GlobUtils.expand({glob}, root).empty?
+      raise "No files found matching `#{Path[glob].relative_to(Dir.current)}`"
+    end
   end
 
   private def configure_explain_opts(loc, opts) : Nil
