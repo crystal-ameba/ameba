@@ -13,7 +13,7 @@ module Ameba::Formatter
       sarif_rules = Rule.rules.map do |rule_class|
         rule = rule_class.new
         full_description = rule.class.parsed_doc || ""
-        help_text = full_description.empty? ? rule.description : full_description
+        help_text = full_description.presence || rule.description
 
         AsSARIF::ReportingDescriptor.new(
           id: rule.name,
@@ -34,7 +34,6 @@ module Ameba::Formatter
           name: "ameba",
           version: Ameba::VERSION,
           rules: sarif_rules,
-          # TODO(margret): Better version-specific link
           information_uri: "https://crystal-ameba.github.io/",
         )
       )
@@ -44,7 +43,7 @@ module Ameba::Formatter
       )
 
       # Execution fails if any source has syntax errors
-      execution_successful = sources.none? { |src| src.issues.any?(&.rule.is_a?(Rule::Lint::Syntax)) }
+      execution_successful = sources.none?(&.issues.any?(&.syntax?))
       overrides = @rules.try { |rules| build_configuration_overrides(rules, sarif_rules) } ||
                   Array(AsSARIF::ConfigurationOverride).new
 
@@ -94,10 +93,7 @@ module Ameba::Formatter
       sarif_result.to_json(@output)
     end
 
-    private def build_configuration_overrides(
-      configured_rules : Array(Rule::Base),
-      sarif_rules : Array(AsSARIF::ReportingDescriptor),
-    ) : Array(AsSARIF::ConfigurationOverride)
+    private def build_configuration_overrides(configured_rules, sarif_rules) : Array(AsSARIF::ConfigurationOverride)
       overrides = [] of AsSARIF::ConfigurationOverride
 
       configured_rules.each do |configured_rule|
@@ -109,7 +105,7 @@ module Ameba::Formatter
 
         if enabled_differs || severity_differs
           # Find the rule index in sarif_rules array
-          rule_index = sarif_rules.index! { |rule| rule.id == configured_rule.name }
+          rule_index = sarif_rules.index!(&.id.== configured_rule.name)
 
           overrides << AsSARIF::ConfigurationOverride.new(
             descriptor: AsSARIF::ReportingDescriptorReference.new(
@@ -318,10 +314,7 @@ module Ameba::Formatter
 
       def to_json(json)
         json.object do
-          if !enabled?
-            json.field("enabled", false)
-          end
-
+          json.field("enabled", false) unless enabled?
           json.field("level", level)
           json.field("parameters") do
             rule_class.to_sarif(json)
