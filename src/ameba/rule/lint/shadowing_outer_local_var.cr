@@ -63,7 +63,7 @@ module Ameba::Rule::Lint
 
         next if variable.nil? || !variable.declared_before?(arg)
         next if outer_scope.assigns_ivar?(name)
-        next if outer_scope.assigns_type_dec?(name)
+        next if outer_scope.assigns_type_dec_variable?(name)
         next if mutually_exclusive_branches?(branch_visitors, variable, arg)
 
         issue_for arg.node, MSG % name, prefer_name_location: true
