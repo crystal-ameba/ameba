@@ -143,9 +143,9 @@ module Ameba::AST
     end
 
     # Returns `true` if type declaration variable is assigned in this scope.
-    def assigns_type_dec?(name)
+    def assigns_type_dec_variable?(name)
       type_dec_variables.any?(&.name.== name) ||
-        !!inherited? { outer_scope.try(&.assigns_type_dec?(name)) }
+        !!inherited? { outer_scope.try(&.assigns_type_dec_variable?(name)) }
     end
 
     # Returns `true` if and only if current scope represents some

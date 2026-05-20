@@ -96,6 +96,30 @@ module Ameba::AST
       end
     end
 
+    describe "#path_name" do
+      it "returns path name of the node" do
+        path = Crystal::Path.new(%w[Foo Bar])
+        subject.path_name(path).should eq "Foo::Bar"
+      end
+
+      it "returns global path name of the node including global prefix by default" do
+        path = Crystal::Path.new(%w[Foo Bar], global: true)
+        subject.path_name(path).should eq "::Foo::Bar"
+      end
+
+      it "returns global path name of the node including global prefix when requested" do
+        path = Crystal::Path.new(%w[Foo Bar], global: true)
+
+        subject.path_name(path, include_global: true).should eq "::Foo::Bar"
+        subject.path_name(path, include_global: false).should eq "Foo::Bar"
+      end
+
+      it "returns `nil` for non-path nodes" do
+        subject.path_name(Crystal::Global.new("foo")).should be_nil
+        subject.path_name(Crystal::Var.new("foo")).should be_nil
+      end
+    end
+
     describe "#node_source" do
       it "returns original source of the node" do
         s = <<-CRYSTAL

@@ -12,6 +12,8 @@ module Ameba::AST
       case var = @node.var
       when Crystal::Var, Crystal::InstanceVar, Crystal::ClassVar, Crystal::Global
         var.name
+      when Crystal::Path
+        Util.path_name(var)
       else
         raise "Unsupported var node type: #{var.class}"
       end

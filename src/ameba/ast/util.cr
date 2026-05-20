@@ -92,6 +92,20 @@ module Ameba::AST::Util
       !!(node.args.present? || node.splat_index || node.double_splat)
   end
 
+  # Returns the path name of the *path*.
+  #
+  # If *include_global* is `true` (default), the global prefix `::` is included.
+  def path_name(node : Crystal::Path, *, include_global = true) : String
+    name = node.names.join("::")
+    name = "::#{name}" if node.global? && include_global
+    name
+  end
+
+  # :nodoc:
+  def path_name(node, **opts) : Nil
+    nil
+  end
+
   # Returns a source code for the current node.
   # This method uses `node.location` and `node.end_location`
   # to determine and cut a piece of source of the node.

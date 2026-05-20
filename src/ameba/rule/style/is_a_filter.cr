@@ -64,8 +64,7 @@ module Ameba::Rule::Style
       return unless (path = body.const).is_a?(Crystal::Path)
       return unless body.obj.is_a?(Crystal::Var)
 
-      name = path.names.join("::")
-      name = "::#{name}" if path.global? && !body.nil_check?
+      name = path_name(path, include_global: !body.nil_check?)
 
       old = OLD % node.name
       new = NEW % {node.name, name}
