@@ -122,12 +122,14 @@ class Ameba::Source
 
     protected def combine(begin_pos, end_pos, **attributes)
       check_range_validity(begin_pos, end_pos)
+
       action = Rewriter::Action.new(begin_pos, end_pos, **attributes)
       @action_root = @action_root.combine(action)
     end
 
     private def check_range_validity(begin_pos, end_pos)
       return unless begin_pos < 0 || end_pos > code.size
+
       raise IndexError.new(
         "The range #{begin_pos}...#{end_pos} is outside the bounds of " \
         "the source (0...#{code.size})"

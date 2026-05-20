@@ -13,7 +13,7 @@
 # config.formatter = formatter
 # config.files = file_paths
 #
-# Ameba.run config
+# Ameba.run(config)
 # ```
 module Ameba
   extend self
@@ -30,7 +30,7 @@ module Ameba
   #
   # ```
   # Ameba.run
-  # Ameba.run config
+  # Ameba.run(config)
   # ```
   def run(config = Config.load)
     Runner.new(config).run

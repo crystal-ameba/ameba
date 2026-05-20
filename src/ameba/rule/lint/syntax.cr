@@ -6,7 +6,7 @@ module Ameba::Rule::Lint
   # ```
   # def hello
   #   do_something
-  # rescue Exception => e
+  # rescue Exception => ex
   # end
   # ```
   #

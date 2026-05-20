@@ -101,7 +101,7 @@ module Ameba::Rule
         path = Path.posix(path).to_native.expand(root)
 
         source.fullpath == path.to_s ||
-          Dir.glob(path.to_posix).includes?(source.fullpath)
+          Dir[path.to_posix].includes?(source.fullpath)
       end
     end
 
@@ -157,7 +157,7 @@ module Ameba::Rule
     private macro read_type_doc(filepath = __FILE__)
       {{ run("../../contrib/read_type_doc",
            @type.name.split("::").last,
-           filepath
+           filepath,
          ).chomp.stringify }}.presence
     end
 

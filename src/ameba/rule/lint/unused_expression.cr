@@ -69,11 +69,10 @@ module Ameba::Rule::Lint
     end
 
     def test(source, node : Crystal::Call, in_macro : Bool)
-      if node.name.in?(COMPARISON_OPERATORS) && node.args.size == 1
+      case
+      when node.name.in?(COMPARISON_OPERATORS) && node.args.size == 1
         issue_for node, MSG_COMPARISON
-      end
-
-      if path_or_generic_union?(node)
+      when path_or_generic_union?(node)
         issue_for node, MSG_UNION
       end
     end

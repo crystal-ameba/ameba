@@ -45,6 +45,7 @@ module Ameba::Rule::Lint
 
       dead_stores.each do |assign|
         var = assign.variable
+
         next if var.special? || var.ignored? || var.used_in_macro? || var.captured_by_block?
         next if referenced_in_inner_scope?(scope, var)
 

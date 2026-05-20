@@ -29,14 +29,10 @@ module Ameba::Rule::Lint
       name = path_.stem
       path = path_.to_s
 
-      # check only files within spec/ directory
       return unless path.starts_with?("spec/")
-      # check only files with `.cr` extension
       return unless path.ends_with?(".cr")
-      # ignore files having `_spec` suffix
       return if name.ends_with?("_spec")
 
-      # ignore known false-positives
       ignored_dirs.each do |substr|
         return if path.starts_with?("#{substr}/")
       end

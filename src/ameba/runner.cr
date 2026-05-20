@@ -6,7 +6,7 @@ module Ameba
   #
   # ```
   # config = Ameba::Config.load
-  # runner = Ameba::Runner.new config
+  # runner = Ameba::Runner.new(config)
   # runner.run.success? # => true or false
   # ```
   class Runner
@@ -62,7 +62,7 @@ module Ameba
     # config.files = files
     # config.formatter = formatter
     #
-    # Ameba::Runner.new config
+    # runner = Ameba::Runner.new(config)
     # ```
     def initialize(config : Config)
       initialize(
@@ -108,7 +108,7 @@ module Ameba
     # and when a specific source started/finished to be inspected.
     #
     # ```
-    # runner = Ameba::Runner.new config
+    # runner = Ameba::Runner.new(config)
     # runner.run # => returns runner again
     # ```
     def run
@@ -192,7 +192,7 @@ module Ameba
     # This is necessary to be able to find the issue at a specified location.
     #
     # ```
-    # runner = Ameba::Runner.new config
+    # runner = Ameba::Runner.new(config)
     # runner.run
     # runner.explain(Crystal::Location.new(file, line, column))
     # ```
@@ -204,7 +204,7 @@ module Ameba
     # It returns `true` if no issues are found, `false` otherwise.
     #
     # ```
-    # runner = Ameba::Runner.new config
+    # runner = Ameba::Runner.new(config)
     # runner.run
     # runner.success? # => true or false
     # ```
@@ -245,7 +245,7 @@ module Ameba
         raise InfiniteCorrectionLoopError.new(
           source.path,
           corrected_issues,
-          loop_start: loop_start
+          loop_start: loop_start,
         )
       end
 

@@ -82,7 +82,7 @@ module Ameba::Formatter
           issue.rule.severity.to_s,
           issue.location,
           issue.end_location,
-          issue.message
+          issue.message,
         )
       end
 

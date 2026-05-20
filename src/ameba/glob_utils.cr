@@ -35,7 +35,7 @@ module Ameba
           Dir[glob]
         end
         .uniq!
-        .select! { |path| File.file?(path) }
+        .select!(&->File.file?(String))
     end
 
     private def rejected_globs(globs, root = Dir.current)

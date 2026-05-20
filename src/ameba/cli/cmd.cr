@@ -141,7 +141,7 @@ module Ameba::CLI
       end
 
       parser.on("-f", "--format FORMATTER",
-        "Choose an output formatter: #{Config.formatter_names}") do |formatter|
+        "Choose an output formatter: %s" % Config.formatter_names) do |formatter|
         opts.formatter = formatter if formatter.presence
       end
 
@@ -170,7 +170,7 @@ module Ameba::CLI
       end
 
       parser.on("--min-severity SEVERITY",
-        "Minimum severity of issues to report (default: #{Rule::Base.default_severity})") do |level|
+        "Minimum severity of issues to report (default: %s)" % Rule::Base.default_severity) do |level|
         opts.severity = Severity.parse(level) if level.presence
       end
 
@@ -251,6 +251,7 @@ module Ameba::CLI
         .map! { |path| path_to_glob(path) }
         .to_set
     end
+
     if excluded.present?
       opts.excluded = excluded
         .map! { |path| path_to_glob(path.lchop) }

@@ -359,6 +359,7 @@ module Ameba::AST::Util
 
     return node.var.location if node.is_a?(Crystal::TypeDeclaration) ||
                                 node.is_a?(Crystal::UninitializedVar)
+
     return unless node.responds_to?(:name) && (name = node.name)
     return unless name.is_a?(Crystal::ASTNode)
 

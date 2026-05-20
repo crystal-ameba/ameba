@@ -34,7 +34,10 @@ class Ameba::Spec::AnnotatedSource
         lines << code_line
       end
     end
-    annotations.map! { |_, prefix, message| {1, prefix, message} } if lines.empty?
+
+    if lines.empty?
+      annotations.map! { |_, prefix, message| {1, prefix, message} }
+    end
     new(lines, annotations)
   end
 
@@ -67,6 +70,7 @@ class Ameba::Spec::AnnotatedSource
     annotations.zip(other.annotations) do |(actual_line, actual_prefix, actual_message), (expected_line, expected_prefix, expected_message)|
       return false unless actual_line == expected_line
       return false unless expected_prefix.empty? || actual_prefix == expected_prefix
+
       next if actual_message == expected_message
       return false unless expected_message.includes?(ABBREV)
 
@@ -124,19 +128,22 @@ class Ameba::Spec::AnnotatedSource
   private def issues_to_annotations(issues)
     issues.map do |issue|
       line, column, end_line, end_column = validate_location(issue)
+
       indent_count = column - 3
-      indent = if indent_count < 0
-                 ""
-               else
+      indent = if indent_count.positive?
                  " " * indent_count
-               end
-      caret_count = column_length(line, column, end_line, end_column)
-      caret_count += indent_count if indent_count < 0
-      carets = if caret_count <= 0
-                 "^{}"
                else
-                 "^" * caret_count
+                 ""
                end
+
+      caret_count = column_length(line, column, end_line, end_column)
+      caret_count += indent_count if indent_count.negative?
+      carets = if caret_count.positive?
+                 "^" * caret_count
+               else
+                 "^{}"
+               end
+
       {line, "#{indent}# #{carets} error: ", issue.message}
     end
   end
@@ -160,7 +167,6 @@ class Ameba::Spec::AnnotatedSource
       end
 
       end_line, end_column = end_loc.line_number, end_loc.column_number
-
       if end_line > lines.size || end_line < 1 || end_column < 1
         raise "Invalid issue end location: #{end_loc}"
       end

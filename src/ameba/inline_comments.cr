@@ -89,7 +89,9 @@ module Ameba
       return false unless Action.parse?(directive[:action]).try(&.disable?)
 
       rules = directive[:rules]
-      rules.includes?(rule.name) || rules.includes?(rule.group)
+
+      rules.includes?(rule.name) ||
+        rules.includes?(rule.group)
     end
 
     private def commented_out?(line)

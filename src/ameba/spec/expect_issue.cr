@@ -103,6 +103,7 @@ module Ameba::Spec::ExpectIssue
                    **replacements)
     annotated_code = format_issue(annotated_code, **replacements)
     expected_annotations = AnnotatedSource.parse(annotated_code)
+
     lines = expected_annotations.lines
     code = lines.join('\n')
 

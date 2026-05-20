@@ -32,7 +32,7 @@ module Ameba::Rule::Lint
 
     it "does not report if there are group names in the directive" do
       expect_no_issues subject, <<-CRYSTAL
-        # ameba:disable Style Performance
+        # ameba:disable Style, Performance
         CRYSTAL
     end
   end
