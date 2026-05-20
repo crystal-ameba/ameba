@@ -56,8 +56,9 @@ class Ameba::Spec::AnnotatedSource
     end
   end
 
-  def ==(other)
-    other.is_a?(AnnotatedSource) && other.lines == lines && match_annotations?(other)
+  def ==(other : self)
+    other.lines == lines &&
+      match_annotations?(other)
   end
 
   private def match_annotations?(other)
