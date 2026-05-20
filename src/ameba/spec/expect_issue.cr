@@ -94,8 +94,6 @@ require "./util"
 #       puts 1
 #       CRYSTAL
 module Ameba::Spec::ExpectIssue
-  include Spec::Util
-
   def expect_issue(rules : Rule::Base | Enumerable(Rule::Base),
                    annotated_code : String,
                    path = "",
