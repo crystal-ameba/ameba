@@ -15,10 +15,11 @@ module Ameba::Presenter
         output.puts "— %s" % group.colorize(:light_blue).underline
         output.puts
         group_rules.each do |name, rule|
-          output.puts "  %s  [%s]    %s    %s" % {
+          output.puts "  %s  [%s]    %s    %s%s" % {
             rule.enabled? ? ENABLED_MARK : DISABLED_MARK,
             rule.severity.symbol.to_s.colorize(:green),
             name.ljust(longest_name),
+            rule.class.deprecated? ? "[DEPRECATED] ".colorize(:red) : nil,
             rule.description.colorize(:dark_gray),
           }
         end
