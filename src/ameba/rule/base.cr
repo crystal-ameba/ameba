@@ -1,4 +1,8 @@
 module Ameba::Rule
+  # Marks a rule as deprecated, with an optional reason.
+  annotation Deprecated
+  end
+
   # List of names of the special rules, which
   # behave differently than usual rules.
   SPECIAL = {
@@ -164,7 +168,7 @@ module Ameba::Rule
       # Returns the deprecation reason for this rule, if there is any.
       class_getter deprecation_reason : String?
 
-      {% if ann = @type.annotation(Deprecated) %}
+      {% if ann = @type.annotation(::Ameba::Rule::Deprecated) %}
         @@deprecated = true
         @@deprecation_reason = {{ ann.args[0] }}.presence
       {% end %}
