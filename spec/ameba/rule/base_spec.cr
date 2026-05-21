@@ -8,6 +8,26 @@ module Ameba
       end
     end
 
+    describe ".deprecated?" do
+      it "returns false if the rule is not deprecated" do
+        DummyRule.deprecated?.should be_false
+      end
+
+      it "returns true if the rule is deprecated" do
+        DeprecatedRule.deprecated?.should be_true
+      end
+    end
+
+    describe ".deprecation_reason" do
+      it "returns nil if the rule is not deprecated" do
+        DummyRule.deprecation_reason.should be_nil
+      end
+
+      it "returns the deprecation reason if the rule is deprecated" do
+        DeprecatedRule.deprecation_reason.should eq "This rule is deprecated"
+      end
+    end
+
     describe "#catch" do
       it "accepts and returns source" do
         source = Source.new

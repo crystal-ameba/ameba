@@ -158,6 +158,17 @@ module Ameba::Rule
     end
 
     macro inherited
+      # Returns `true` if this rule is deprecated, `false` otherwise.
+      class_getter? deprecated = false
+
+      # Returns the deprecation reason for this rule, if there is any.
+      class_getter deprecation_reason : String?
+
+      {% if ann = @type.annotation(Deprecated) %}
+        @@deprecated = true
+        @@deprecation_reason = {{ ann.args[0] }}.presence
+      {% end %}
+
       # Returns the documentation URL for this rule.
       #
       # ```

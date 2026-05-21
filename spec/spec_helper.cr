@@ -14,6 +14,13 @@ module Ameba
     end
   end
 
+  @[Deprecated("This rule is deprecated")]
+  class DeprecatedRule < Rule::Base
+    properties do
+      description "Deprecated rule"
+    end
+  end
+
   class NamedRule < Rule::Base
     properties do
       description "A rule with a custom name"
