@@ -68,7 +68,7 @@ class Ameba::Config
 
       {% unless properties["enabled".id] %}
         @[YAML::Field(key: "Enabled")]
-        property? enabled = true
+        property? enabled = !deprecated?
       {% end %}
 
       {% unless properties["severity".id] %}
