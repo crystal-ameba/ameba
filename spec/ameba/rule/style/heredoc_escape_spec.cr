@@ -45,18 +45,30 @@ module Ameba::Rule::Style
     end
 
     it "fails if a heredoc contains escaped interpolation" do
-      expect_issue subject, <<-'CRYSTAL'
+      source = expect_issue subject, <<-'CRYSTAL'
         <<-HEREDOC
         # ^^^^^^^^ error: Use an escaped heredoc marker: `<<-'HEREDOC'`
+          foo \#{:bar}
+          HEREDOC
+        CRYSTAL
+
+      expect_correction source, <<-'CRYSTAL'
+        <<-'HEREDOC'
           foo \#{:bar}
           HEREDOC
         CRYSTAL
     end
 
     it "fails if a heredoc contains escaped interpolation and escaped escape sequences" do
-      expect_issue subject, <<-'CRYSTAL'
+      source = expect_issue subject, <<-'CRYSTAL'
         <<-HEREDOC
         # ^^^^^^^^ error: Use an escaped heredoc marker: `<<-'HEREDOC'`
+          foo \\t \#{:bar}
+          HEREDOC
+        CRYSTAL
+
+      expect_correction source, <<-'CRYSTAL'
+        <<-'HEREDOC'
           foo \\t \#{:bar}
           HEREDOC
         CRYSTAL
@@ -71,9 +83,15 @@ module Ameba::Rule::Style
     end
 
     it "fails if a heredoc contains escaped escape sequences" do
-      expect_issue subject, <<-'CRYSTAL'
+      source = expect_issue subject, <<-'CRYSTAL'
         <<-HEREDOC
         # ^^^^^^^^ error: Use an escaped heredoc marker: `<<-'HEREDOC'`
+          \\t \\n
+          HEREDOC
+        CRYSTAL
+
+      expect_correction source, <<-'CRYSTAL'
+        <<-'HEREDOC'
           \\t \\n
           HEREDOC
         CRYSTAL
@@ -123,9 +141,15 @@ module Ameba::Rule::Style
     end
 
     it "fails if an escaped heredoc doesn't contain interpolation" do
-      expect_issue subject, <<-CRYSTAL
+      source = expect_issue subject, <<-CRYSTAL
         <<-'HEREDOC'
         # ^^^^^^^^^^ error: Use an unescaped heredoc marker: `<<-HEREDOC`
+          foo
+          HEREDOC
+        CRYSTAL
+
+      expect_correction source, <<-CRYSTAL
+        <<-HEREDOC
           foo
           HEREDOC
         CRYSTAL

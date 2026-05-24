@@ -48,21 +48,27 @@ module Ameba::Rule::Style
       return unless code = node_source(node, source.lines)
       return unless code.starts_with?("<<-")
 
-      body = code.lines[1..-2].join('\n')
+      lines = code.lines
+      body = lines[1..-2].join('\n')
 
       if code.starts_with?("<<-'")
         return if has_escape_sequence?(expr.value) || has_escaped_escape_sequence?(body)
 
         marker = code.lchop("<<-'").match!(/^(\w+)/)[1]
         msg = MSG_ESCAPE_NOT_NEEDED % marker
+        corrected_marker = "<<-#{marker}"
       else
         return if !has_escape_sequence?(expr.value) || has_escape_sequence?(body)
 
         marker = code.lchop("<<-").match!(/^(\w+)/)[1]
         msg = MSG_ESCAPE_NEEDED % marker
+        corrected_marker = "<<-'#{marker}'"
       end
 
-      issue_for node, msg
+      issue_for node, msg do |corrector|
+        lines[0] = lines[0].sub(/^<<-'?#{marker}'?/, corrected_marker)
+        corrector.replace(node, lines.join('\n'))
+      end
     end
 
     private def has_escape_sequence?(value : String)
