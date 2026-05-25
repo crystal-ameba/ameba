@@ -30,12 +30,15 @@ module Ameba::Rule::Lint
         CRYSTAL
     end
 
-    it "does not raise IndexError when source has no trailing newline" do
-      source = Ameba::Source.new("# foo", "test.cr")
-      subject.test(source)
-      source.issues.empty?.should be_false
-      source.correct!
-      source.code.should eq "# foo\n"
+    it "successfully formats source with no trailing newline" do
+      source = expect_issue subject, <<-CRYSTAL
+        # foo
+        # ^{} error: Use built-in formatter to format this source
+        CRYSTAL
+
+      expect_correction source, <<-CRYSTAL
+        # foo\n
+        CRYSTAL
     end
 
     context "properties" do
