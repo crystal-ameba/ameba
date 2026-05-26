@@ -208,6 +208,8 @@ module Ameba::CLI
       end
     end
 
+    configure_root(opts)
+
     opts
   end
 
@@ -239,13 +241,18 @@ module Ameba::CLI
     config
   end
 
-  private def configure_globs(args, opts) : Nil
-    excluded, globs =
-      args.partition(&.starts_with?('!'))
+  private def configure_root(opts) : Nil
+    return unless globs = opts.globs
 
     if root = root_path_from_globs(globs)
       opts.root = root
     end
+  end
+
+  private def configure_globs(args, opts) : Nil
+    excluded, globs =
+      args.partition(&.starts_with?('!'))
+
     if globs.present?
       opts.globs = globs
         .map! { |path| path_to_glob(path) }
