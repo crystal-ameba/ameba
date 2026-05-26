@@ -30,6 +30,17 @@ module Ameba::Rule::Lint
         CRYSTAL
     end
 
+    it "successfully formats source with no trailing newline" do
+      source = expect_issue subject, <<-CRYSTAL
+        # foo
+        # ^{} error: Use built-in formatter to format this source
+        CRYSTAL
+
+      expect_correction source, <<-CRYSTAL
+        # foo\n
+        CRYSTAL
+    end
+
     context "properties" do
       context "#fail_on_error" do
         it "passes on formatter errors by default" do
