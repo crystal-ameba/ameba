@@ -240,6 +240,34 @@ module Ameba::Rule::Style
     end
 
     context "properties" do
+      context "#exclude_multiline_calls" do
+        it "ignores multiline calls when enabled" do
+          rule = CallParentheses.new
+          rule.exclude_multiline_calls = true
+
+          expect_no_issues rule, <<-CRYSTAL
+            foo 42,
+              bar: "baz"
+            CRYSTAL
+        end
+
+        it "reports multiline calls when disabled" do
+          rule = CallParentheses.new
+          rule.exclude_multiline_calls = false
+
+          source = expect_issue rule, <<-CRYSTAL
+            foo 42,
+            # ^^^^^ error: Missing parentheses in method call
+              bar: "baz"
+            CRYSTAL
+
+          expect_correction source, <<-CRYSTAL
+            foo(42,
+              bar: "baz")
+            CRYSTAL
+        end
+      end
+
       context "#exclude_type_declarations" do
         it "ignores type declarations when enabled" do
           rule = CallParentheses.new

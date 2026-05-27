@@ -15,6 +15,7 @@ module Ameba::Rule::Style
   #
   # ### Options
   #
+  # - `ExcludeMultilineCalls` — controls whether multiline calls should be checked.
   # - `ExcludeTypeDeclarations` — controls whether calls with type declarations should be checked.
   # - `ExcludeHeredocs` — controls whether calls with heredoc arguments should be checked.
   # - `ExcludedToplevelCallNames` — contains a list of top-level method names that should not be checked.
@@ -25,6 +26,7 @@ module Ameba::Rule::Style
   # ```
   # Style/CallParentheses:
   #   Enabled: true
+  #   ExcludeMultilineCalls: false
   #   ExcludeTypeDeclarations: true
   #   ExcludeHeredocs: false
   #   ExcludedToplevelCallNames: [spawn, raise, super, previous_def, exit, abort, sleep, print, printf, puts, p, p!, pp, pp!, record, class_getter, class_getter?, class_getter!, class_property, class_property?, class_property!, class_setter, getter, getter?, getter!, property, property?, property!, setter, def_equals_and_hash, def_equals, def_hash, delegate, forward_missing_to, describe, context, it, pending, fail, use_json_discriminator]
@@ -37,6 +39,7 @@ module Ameba::Rule::Style
       since_version "1.7.0"
       description "Enforces usage of parentheses in method calls"
       enabled false
+      exclude_multiline_calls false
       exclude_type_declarations true
       exclude_heredocs false
       excluded_toplevel_call_names %w[
@@ -86,6 +89,9 @@ module Ameba::Rule::Style
         replacement_locations(node, heredoc_arg, source.lines)
 
       if location && end_location
+        return if exclude_multiline_calls? &&
+                  !location.same_line?(end_location)
+
         line = source.lines[location.line_number - 1]
         rest = line[(location.column_number - 1)..-1]
 
