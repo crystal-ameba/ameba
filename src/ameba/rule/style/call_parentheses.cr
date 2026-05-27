@@ -144,7 +144,7 @@ module Ameba::Rule::Style
     end
 
     private def find_heredoc_arg(node : Crystal::Call, source)
-      node.named_args.try &.reverse_each.find { |arg| find_heredoc_arg(arg.value, source) } ||
+      node.named_args.try &.reverse_each.find { |arg| find_heredoc_arg(arg, source) } ||
         node.args.reverse_each.find { |arg| find_heredoc_arg(arg, source) }
     end
 
