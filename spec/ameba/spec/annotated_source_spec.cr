@@ -14,7 +14,7 @@ private def dummy_issue(code,
     rule: Ameba::DummyRule.new,
     location: location,
     end_location: end_location,
-    message: message
+    message: message,
   )
 end
 
@@ -27,7 +27,7 @@ private def expect_invalid_location(code,
   expect_raises Exception, exception_message, file, line do
     Ameba::Spec::AnnotatedSource.new(
       lines: code.lines,
-      issues: [dummy_issue(code, "Message", position, end_position, "path")]
+      issues: [dummy_issue(code, "Message", position, end_position, "path")],
     )
   end
 end

@@ -73,7 +73,7 @@ module Ameba
             ex.message,
             ex.line_number,
             ex.column_number,
-            path
+            path,
           )
         end
       end
