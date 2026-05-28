@@ -1180,6 +1180,7 @@
   </svg>
 </a>Options</h3>
 <ul>
+<li><code>ExcludeMultilineCalls</code> — controls whether multiline calls should be checked.</li>
 <li><code>ExcludeTypeDeclarations</code> — controls whether calls with type declarations should be checked.</li>
 <li><code>ExcludeHeredocs</code> — controls whether calls with heredoc arguments should be checked.</li>
 <li><code>ExcludedToplevelCallNames</code> — contains a list of top-level method names that should not be checked.</li>
@@ -1188,6 +1189,7 @@
 <p>YAML configuration example:</p>
 <pre><code class="language-crystal"><span class="t">Style</span><span class="o">/</span><span class="t">CallParentheses</span>:
   <span class="t">Enabled</span>: <span class="n">true</span>
+  <span class="t">ExcludeMultilineCalls</span>: <span class="n">false</span>
   <span class="t">ExcludeTypeDeclarations</span>: <span class="n">true</span>
   <span class="t">ExcludeHeredocs</span>: <span class="n">false</span>
   <span class="t">ExcludedToplevelCallNames</span>: [spawn, raise, <span class="k">super</span>, previous_def, exit, abort, sleep, print, printf, puts, p, p!, pp, pp!, record, class_getter, class_getter?, class_getter!, class_property, class_property?, class_property!, class_setter, getter, getter?, getter!, property, property?, property!, setter, def_equals_and_hash, def_equals, def_hash, delegate, forward_missing_to, describe, context, it, pending, fail, use_json_discriminator]
@@ -1236,7 +1238,7 @@
   </h2>
   
     
-      <a href="https://github.com/crystal-ameba/ameba/blob/cb5bbb2/src/ameba/rule/style/call_parentheses.cr#L33" target="_blank">
+      <a href="https://github.com/crystal-ameba/ameba/blob/9f217cd/src/ameba/rule/style/call_parentheses.cr#L35" target="_blank">
         ameba/rule/style/call_parentheses.cr
       </a>
     
@@ -1370,6 +1372,16 @@
     
       <li class="entry-summary">
         <a href="#exclude_heredocs%3F%3ABool-instance-method" class="signature"><strong>#exclude_heredocs?</strong> : Bool</a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#exclude_multiline_calls%3D%28exclude_multiline_calls%3ABool%29-instance-method" class="signature"><strong>#exclude_multiline_calls=</strong>(exclude_multiline_calls : Bool)</a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#exclude_multiline_calls%3F%3ABool-instance-method" class="signature"><strong>#exclude_multiline_calls?</strong> : Bool</a>
         
       </li>
     
@@ -1824,6 +1836,7 @@
   </svg>
 </a>Options</h3>
 <ul>
+<li><code>ExcludeMultilineCalls</code> — controls whether multiline calls should be checked.</li>
 <li><code>ExcludeTypeDeclarations</code> — controls whether calls with type declarations should be checked.</li>
 <li><code>ExcludeHeredocs</code> — controls whether calls with heredoc arguments should be checked.</li>
 <li><code>ExcludedToplevelCallNames</code> — contains a list of top-level method names that should not be checked.</li>
@@ -1832,6 +1845,7 @@
 <p>YAML configuration example:</p>
 <pre><code class="language-crystal"><span class="t">Style</span><span class="o">/</span><span class="t">CallParentheses</span>:
   <span class="t">Enabled</span>: <span class="n">true</span>
+  <span class="t">ExcludeMultilineCalls</span>: <span class="n">false</span>
   <span class="t">ExcludeTypeDeclarations</span>: <span class="n">true</span>
   <span class="t">ExcludeHeredocs</span>: <span class="n">false</span>
   <span class="t">ExcludedToplevelCallNames</span>: [spawn, raise, <span class="k">super</span>, previous_def, exit, abort, sleep, print, printf, puts, p, p!, pp, pp!, record, class_getter, class_getter?, class_getter!, class_property, class_property?, class_property!, class_setter, getter, getter?, getter!, property, property?, property!, setter, def_equals_and_hash, def_equals, def_hash, delegate, forward_missing_to, describe, context, it, pending, fail, use_json_discriminator]
@@ -1841,7 +1855,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/cb5bbb2/src/ameba/rule/style/call_parentheses.cr#L33" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/9f217cd/src/ameba/rule/style/call_parentheses.cr#L35" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1933,7 +1947,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/cb5bbb2/src/ameba/rule/style/call_parentheses.cr#L36" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/9f217cd/src/ameba/rule/style/call_parentheses.cr#L38" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2028,6 +2042,34 @@
         def <strong>exclude_heredocs?</strong> : Bool
 
         <a class="method-permalink" href="#exclude_heredocs%3F%3ABool-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="exclude_multiline_calls=(exclude_multiline_calls:Bool)-instance-method">
+      <div class="signature">
+        
+        def <strong>exclude_multiline_calls=</strong>(exclude_multiline_calls : Bool)
+
+        <a class="method-permalink" href="#exclude_multiline_calls%3D%28exclude_multiline_calls%3ABool%29-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="exclude_multiline_calls?:Bool-instance-method">
+      <div class="signature">
+        
+        def <strong>exclude_multiline_calls?</strong> : Bool
+
+        <a class="method-permalink" href="#exclude_multiline_calls%3F%3ABool-instance-method">#</a>
       </div>
       
       <br/>
@@ -2187,7 +2229,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/cb5bbb2/src/ameba/rule/style/call_parentheses.cr#L36" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/9f217cd/src/ameba/rule/style/call_parentheses.cr#L38" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2222,7 +2264,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/cb5bbb2/src/ameba/rule/style/call_parentheses.cr#L64" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/9f217cd/src/ameba/rule/style/call_parentheses.cr#L67" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2238,7 +2280,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/cb5bbb2/src/ameba/rule/style/call_parentheses.cr#L59" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/9f217cd/src/ameba/rule/style/call_parentheses.cr#L62" target="_blank">View source</a>]
         
       </div>
     </div>
