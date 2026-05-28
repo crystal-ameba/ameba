@@ -1726,6 +1726,10 @@
           "type": "boolean",
           "default": false
         },
+        "ExcludeMultilineCalls": {
+          "type": "boolean",
+          "default": false
+        },
         "ExcludeTypeDeclarations": {
           "type": "boolean",
           "default": true
