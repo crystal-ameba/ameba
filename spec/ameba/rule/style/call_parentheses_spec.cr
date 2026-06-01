@@ -117,6 +117,59 @@ module Ameba::Rule::Style
         CRYSTAL
     end
 
+    # https://github.com/crystal-lang/crystal/pull/17039
+    pending "fails for method call with block (short) + inner setter" do
+      source = expect_issue subject, <<-CRYSTAL
+        foo &.bar = baz
+        # ^^^^^^^^^^^^^ error: Missing parentheses in method call
+        CRYSTAL
+
+      expect_correction source, <<-CRYSTAL
+        foo(&.bar = baz)
+        CRYSTAL
+    end
+
+    pending "fails for method call with block (short) + inner setter with heredoc argument" do
+      source = expect_issue subject, <<-CRYSTAL
+        foo &.bar = <<-FOO
+        # ^^^^^^^^^^^^^^^^ error: Missing parentheses in method call
+          fox
+          FOO
+        CRYSTAL
+
+      expect_correction source, <<-CRYSTAL
+        foo(&.bar = <<-FOO)
+          fox
+          FOO
+        CRYSTAL
+    end
+
+    pending "fails for method call with block (short) + inner bracket setter" do
+      source = expect_issue subject, <<-CRYSTAL
+        foo &.[bar] = baz
+        # ^^^^^^^^^^^^^^^ error: Missing parentheses in method call
+        CRYSTAL
+
+      expect_correction source, <<-CRYSTAL
+        foo(&.[bar] = baz)
+        CRYSTAL
+    end
+
+    pending "fails for method call with block (short) + inner bracket setter with heredoc argument" do
+      source = expect_issue subject, <<-CRYSTAL
+        foo &.[bar] = <<-FOO
+        # ^^^^^^^^^^^^^^^^^^ error: Missing parentheses in method call
+          fox
+          FOO
+        CRYSTAL
+
+      expect_correction source, <<-CRYSTAL
+        foo(&.[bar] = <<-FOO)
+          fox
+          FOO
+        CRYSTAL
+    end
+
     it "fails for method call with block" do
       source = expect_issue subject, <<-CRYSTAL
         foo bar: 1 do |x, y|
