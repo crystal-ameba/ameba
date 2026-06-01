@@ -120,7 +120,7 @@ module Ameba::Rule::Style
     it "fails for method call with block" do
       source = expect_issue subject, <<-CRYSTAL
         foo bar: 1 do |x, y|
-        # ^^^^^^^^^^^^^^^^^^ error: Missing parentheses in method call
+        # ^^^^^^^^ error: Missing parentheses in method call
           baz(x, y)
         end
         CRYSTAL
@@ -135,7 +135,7 @@ module Ameba::Rule::Style
     it "fails for method call with block (single line)" do
       source = expect_issue subject, <<-CRYSTAL
         foo bar: 1 { |x, y| baz(x, y) }
-        # ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ error: Missing parentheses in method call
+        # ^^^^^^^^ error: Missing parentheses in method call
         CRYSTAL
 
       expect_correction source, <<-CRYSTAL
