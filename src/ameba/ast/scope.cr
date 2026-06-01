@@ -34,6 +34,8 @@ module Ameba::AST
     # The actual AST node that represents a current scope.
     getter node : Crystal::ASTNode
 
+    @reaching_definitions : Hash(UInt64, Set(String))?
+
     delegate location, end_location, to_s,
       to: @node
 
@@ -108,6 +110,37 @@ module Ameba::AST
     # ```
     def assign_variable(name, node)
       find_variable(name).try &.assign(node, self)
+    end
+
+    # Returns `true` if a local variable named *name* has a definition that
+    # reaches the program point where *node* (an inner scope's node) is
+    # introduced.
+    #
+    # ```
+    # scope.declared_at?("foo", block_node)
+    # ```
+    def declared_at?(name : String, node) : Bool
+      reaching_definitions[node.object_id]?.try(&.includes?(name)) || false
+    end
+
+    # Reaching definitions snapshotted at each inner scope's node. Computed
+    # lazily and memoized, since several inner scopes share the same outer one.
+    protected def reaching_definitions : Hash(UInt64, Set(String))
+      @reaching_definitions ||=
+        ReachingDefinitionAnalyzer.new(self, entry_definitions).inner_scope_definitions
+    end
+
+    # The set of variable names already defined when this scope is entered:
+    # its own arguments plus any captured definitions from the outer scope.
+    protected def entry_definitions : Set(String)
+      defined = Set(String).new
+      arguments.each { |argument| defined << argument.name }
+
+      if inherited? && (outer = outer_scope)
+        outer.reaching_definitions[node.object_id]?.try { |defs| defined.concat(defs) }
+      end
+
+      defined
     end
 
     # Returns `true` if current scope represents a block (or proc),
