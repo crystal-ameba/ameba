@@ -636,7 +636,7 @@ module Ameba::AST
 
     describe "#setter_method_name?" do
       it "returns true for setter method names" do
-        %w[foo= []=].each do |op|
+        %w[__foo= foo= []=].each do |op|
           subject.setter_method_name?(op).should be_true
         end
       end
