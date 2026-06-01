@@ -148,18 +148,11 @@ module Ameba::Rule::Style
                            end
                          end
                        end
-      end_location ||= node.named_args.try(&.last?)
-      end_location ||= node.args.last?
       end_location ||= node
 
       unless end_location.is_a?(Crystal::Location)
         end_location = end_location.end_location
       end
-
-      # TODO: verify whether it's rly needed
-      return unless end_location
-      return unless end_location.line_number.positive? &&
-                    end_location.column_number.positive?
 
       end_location
     end
