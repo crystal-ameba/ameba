@@ -128,10 +128,17 @@ module Ameba::Rule::Style
       {location, end_location}
     end
 
-    private def call_end_location(node, heredoc_arg, source)
+    # ameba:disable Metrics/CyclomaticComplexity
+    private def call_end_location(node, heredoc_arg, source, *, ends_with_block = false)
+      return node.end_location if node.has_parentheses? ||
+                                  node.name.in?("[]", "[]?")
+
       end_location = if block = node.block
-                       if short_block?(block, source.lines)
+                       case
+                       when short_block?(block, source.lines)
                          block.body
+                       when ends_with_block
+                         block
                        else
                          block.location.try(&.adjust(column_number: -2))
                        end
@@ -157,8 +164,9 @@ module Ameba::Rule::Style
         node.end_location
       when Crystal::Call
         # Traverse nested calls to find the end location
-        call_end_location(end_location,
-          find_heredoc_arg(end_location, source), source)
+        call_end_location end_location,
+          find_heredoc_arg(end_location, source), source,
+          ends_with_block: true
       when Crystal::Location
         end_location
       when Crystal::ASTNode
