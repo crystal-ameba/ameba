@@ -152,20 +152,18 @@ module Ameba::Rule::Style
       end_location ||= node.named_args.try(&.last?.try(&.value))
       end_location ||= node.args.last?
 
-      # Traverse nested calls to find the end location
-      unless end_location == node
-        if end_location.is_a?(Crystal::Call)
-          end_location =
-            call_end_location(end_location, find_heredoc_arg(end_location, source), source)
-        end
+      case end_location
+      when nil, node
+        node.end_location
+      when Crystal::Call
+        # Traverse nested calls to find the end location
+        call_end_location(end_location,
+          find_heredoc_arg(end_location, source), source)
+      when Crystal::Location
+        end_location
+      when Crystal::ASTNode
+        end_location.end_location
       end
-      end_location ||= node
-
-      unless end_location.is_a?(Crystal::Location)
-        end_location = end_location.end_location
-      end
-
-      end_location
     end
 
     private def find_heredoc_arg(node : Crystal::Call, source)
