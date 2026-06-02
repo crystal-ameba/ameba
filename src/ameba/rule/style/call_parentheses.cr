@@ -131,11 +131,7 @@ module Ameba::Rule::Style
     private def call_end_location(node, heredoc_arg, source)
       end_location = if block = node.block
                        if short_block?(block, source.lines)
-                         if (body = block.body).is_a?(Crystal::Call)
-                           call_end_location(body, find_heredoc_arg(body, source), source)
-                         else
-                           body
-                         end
+                         block.body
                        else
                          block.location.try(&.adjust(column_number: -2))
                        end
@@ -155,6 +151,14 @@ module Ameba::Rule::Style
 
       end_location ||= node.named_args.try(&.last?.try(&.value))
       end_location ||= node.args.last?
+
+      # Traverse nested calls to find the end location
+      unless end_location == node
+        if end_location.is_a?(Crystal::Call)
+          end_location =
+            call_end_location(end_location, find_heredoc_arg(end_location, source), source)
+        end
+      end
       end_location ||= node
 
       unless end_location.is_a?(Crystal::Location)
