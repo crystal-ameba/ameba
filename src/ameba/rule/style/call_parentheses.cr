@@ -131,17 +131,11 @@ module Ameba::Rule::Style
     private def call_end_location(node, heredoc_arg, source)
       end_location = if block = node.block
                        if short_block?(block, source.lines)
-                         # Fix for setter calls bug, see:
-                         # https://github.com/crystal-lang/crystal/pull/17039
-                         {% if compare_versions(Crystal::VERSION, "1.21.0") < 0 %}
-                           if (body = block.body).is_a?(Crystal::Call) && setter_method?(body)
-                             call_end_location(body, find_heredoc_arg(body, source), source)
-                           else
-                             body
-                           end
-                         {% else %}
-                           block.body
-                         {% end %}
+                         if (body = block.body).is_a?(Crystal::Call)
+                           call_end_location(body, find_heredoc_arg(body, source), source)
+                         else
+                           body
+                         end
                        else
                          block.location.try(&.adjust(column_number: -2))
                        end
