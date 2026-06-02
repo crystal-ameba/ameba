@@ -128,7 +128,6 @@ module Ameba::Rule::Style
       {location, end_location}
     end
 
-    # ameba:disable Metrics/CyclomaticComplexity
     private def call_end_location(node, heredoc_arg, source, *, ends_with_block = false)
       return node.end_location if node.has_parentheses? ||
                                   node.name.in?("[]", "[]?")
@@ -144,18 +143,7 @@ module Ameba::Rule::Style
                        end
                      end
       end_location ||= node.block_arg
-      end_location ||= if heredoc_arg
-                         if arg_location = heredoc_arg.location
-                           if line = source.lines[arg_location.line_number - 1]?
-                             if line.rstrip.ends_with?(',')
-                               node
-                             else
-                               arg_location.with(column_number: line.size)
-                             end
-                           end
-                         end
-                       end
-
+      end_location ||= heredoc_end_location(heredoc_arg, source) if heredoc_arg
       end_location ||= node.named_args.try(&.last?.try(&.value))
       end_location ||= node.args.last?
 
@@ -171,6 +159,15 @@ module Ameba::Rule::Style
         end_location
       when Crystal::ASTNode
         end_location.end_location
+      end
+    end
+
+    private def heredoc_end_location(node, source)
+      return unless location = node.location
+      return unless line = source.lines[location.line_number - 1]?
+
+      unless line.rstrip.ends_with?(',')
+        location.with(column_number: line.size)
       end
     end
 
