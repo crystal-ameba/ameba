@@ -87,7 +87,7 @@ module Ameba::Rule::Style
 
       issue_location = {
         node.location,
-        call_end_location(node, heredoc_arg, source.lines),
+        call_end_location(node, heredoc_arg, source),
       }
 
       location, end_location =
@@ -128,10 +128,20 @@ module Ameba::Rule::Style
       {location, end_location}
     end
 
-    private def call_end_location(node, heredoc_arg, source_lines)
+    private def call_end_location(node, heredoc_arg, source)
       end_location = if block = node.block
-                       if short_block?(block, source_lines)
-                         block.body
+                       if short_block?(block, source.lines)
+                         # Fix for setter calls bug, see:
+                         # https://github.com/crystal-lang/crystal/pull/17039
+                         {% if compare_versions(Crystal::VERSION, "1.21.0") < 0 %}
+                           if (body = block.body).is_a?(Crystal::Call) && setter_method?(body)
+                             call_end_location(body, find_heredoc_arg(body, source), source)
+                           else
+                             body
+                           end
+                         {% else %}
+                           block.body
+                         {% end %}
                        else
                          block.location.try(&.adjust(column_number: -2))
                        end
@@ -139,7 +149,7 @@ module Ameba::Rule::Style
       end_location ||= node.block_arg
       end_location ||= if heredoc_arg
                          if arg_location = heredoc_arg.location
-                           if line = source_lines[arg_location.line_number - 1]?
+                           if line = source.lines[arg_location.line_number - 1]?
                              if line.rstrip.ends_with?(',')
                                node
                              else
@@ -148,6 +158,9 @@ module Ameba::Rule::Style
                            end
                          end
                        end
+
+      end_location ||= node.named_args.try(&.last?.try(&.value))
+      end_location ||= node.args.last?
       end_location ||= node
 
       unless end_location.is_a?(Crystal::Location)
