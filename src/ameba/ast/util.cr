@@ -251,8 +251,11 @@ module Ameba::AST::Util
 
   # Returns `true` if *name* represents setter method.
   def setter_method_name?(name : String)
-    name == "[]=" ||
-      !name.empty? && name[0].letter? && name.ends_with?('=')
+    return true if name == "[]="
+
+    name.size >= 2 &&
+      name.ends_with?('=') &&
+      (name[0].letter? || name[0] == '_')
   end
 
   # Returns `true` if *node* represents setter method.

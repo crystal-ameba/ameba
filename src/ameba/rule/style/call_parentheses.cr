@@ -85,8 +85,13 @@ module Ameba::Rule::Style
                     has_arguments?(node) ||
                     has_short_block?(node, source.lines)
 
+      issue_location = {
+        node.location,
+        call_end_location(node, heredoc_arg, source),
+      }
+
       location, end_location =
-        replacement_locations(node, heredoc_arg, source.lines)
+        replacement_locations(node, issue_location.last)
 
       if location && end_location
         return if exclude_multiline_calls? &&
@@ -98,12 +103,12 @@ module Ameba::Rule::Style
         location_end = location
         location_end = location.with(column_number: line.size) if rest.strip == "\\"
 
-        issue_for node, MSG do |corrector|
+        issue_for *issue_location, MSG do |corrector|
           corrector.replace(location, location_end, "(")
           corrector.insert_before(end_location, ")")
         end
       else
-        issue_for node, MSG
+        issue_for *issue_location, MSG
       end
     end
 
@@ -114,39 +119,51 @@ module Ameba::Rule::Style
     #       # ...
     #     end
     #
-    private def replacement_locations(node, heredoc_arg, source_lines)
+    private def replacement_locations(node, end_location)
       location = name_end_location(node)
-
-      end_location =
-        case
-        when block = node.block
-          if short_block?(block, source_lines)
-            block.body.end_location
-          else
-            block.location.try(&.adjust(column_number: -2))
-          end
-        when heredoc_arg
-          if arg_location = heredoc_arg.location
-            if line = source_lines[arg_location.line_number - 1]?
-              if line.rstrip.ends_with?(',')
-                node.end_location
-              else
-                arg_location.with(column_number: line.size)
-              end
-            end
-          end
-        else
-          if node_end_location = node.end_location
-            # handle edge-cases in which the end location is not valid
-            node_end_location if node_end_location.line_number.positive? &&
-                                 node_end_location.column_number.positive?
-          end
-        end
 
       location &&= location.adjust(column_number: 1)
       end_location &&= end_location.adjust(column_number: 1)
 
       {location, end_location}
+    end
+
+    private def call_end_location(node, heredoc_arg, source)
+      end_location = if block = node.block
+                       if short_block?(block, source.lines)
+                         block.body
+                       else
+                         block.location.try(&.adjust(column_number: -2))
+                       end
+                     end
+      end_location ||= node.block_arg
+      end_location ||= if heredoc_arg
+                         if arg_location = heredoc_arg.location
+                           if line = source.lines[arg_location.line_number - 1]?
+                             if line.rstrip.ends_with?(',')
+                               node
+                             else
+                               arg_location.with(column_number: line.size)
+                             end
+                           end
+                         end
+                       end
+
+      end_location ||= node.named_args.try(&.last?.try(&.value))
+      end_location ||= node.args.last?
+
+      case end_location
+      when nil, node
+        node.end_location
+      when Crystal::Call
+        # Traverse nested calls to find the end location
+        call_end_location(end_location,
+          find_heredoc_arg(end_location, source), source)
+      when Crystal::Location
+        end_location
+      when Crystal::ASTNode
+        end_location.end_location
+      end
     end
 
     private def find_heredoc_arg(node : Crystal::Call, source)
