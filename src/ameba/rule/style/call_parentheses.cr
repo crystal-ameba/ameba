@@ -177,7 +177,7 @@ module Ameba::Rule::Style
     end
 
     private def find_heredoc_arg(node, source)
-      heredoc?(node, source)
+      node if heredoc?(node, source)
     end
   end
 end
