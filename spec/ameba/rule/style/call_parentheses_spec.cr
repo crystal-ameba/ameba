@@ -117,6 +117,66 @@ module Ameba::Rule::Style
         CRYSTAL
     end
 
+    it "fails for method call with block (short)" do
+      source = expect_issue subject, <<-CRYSTAL
+        foo &.[baz]?
+        # ^^^^^^^^^^ error: Missing parentheses in method call
+        foo &.[baz]
+        # ^^^^^^^^^ error: Missing parentheses in method call
+        CRYSTAL
+
+      expect_correction source, <<-CRYSTAL
+        foo(&.[baz]?)
+        foo(&.[baz])
+        CRYSTAL
+    end
+
+    it "fails for method call with square bracket call as argument" do
+      source = expect_issue subject, <<-CRYSTAL
+        io.write prefix[0, total.clamp(..prefix.bytesize)]
+        # ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ error: Missing parentheses in method call
+        CRYSTAL
+
+      expect_correction source, <<-CRYSTAL
+        io.write(prefix[0, total.clamp(..prefix.bytesize)])
+        CRYSTAL
+    end
+
+    it "fails for method call with block (short) + parenthesized inner call with named arguments" do
+      source = expect_issue subject, <<-CRYSTAL
+        Log.debug &.emit("Fox",
+        # ^^^^^^^^^^^^^^^^^^^^^ error: Missing parentheses in method call
+          foo: "foo",
+          bar: "bar",
+        )
+        CRYSTAL
+
+      expect_correction source, <<-CRYSTAL
+        Log.debug(&.emit("Fox",
+          foo: "foo",
+          bar: "bar",
+        ))
+        CRYSTAL
+    end
+
+    it "fails for method call with block (short) + inner call with block" do
+      source = expect_issue subject, <<-CRYSTAL
+        foo &.map { |x| x }
+        # ^^^^^^^^^^^^^^^^^ error: Missing parentheses in method call
+        foo &.map do |x|
+        # ^^^^^^^^^^^^^^ error: Missing parentheses in method call
+          x
+        end
+        CRYSTAL
+
+      expect_correction source, <<-CRYSTAL
+        foo(&.map { |x| x })
+        foo(&.map do |x|
+          x
+        end)
+        CRYSTAL
+    end
+
     it "fails for method call with block (short) + inner call with heredoc argument" do
       source = expect_issue subject, <<-CRYSTAL
         foo &.bar <<-FOO
