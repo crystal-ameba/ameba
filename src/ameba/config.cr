@@ -172,13 +172,13 @@ class Ameba::Config
   # config = Ameba::Config.load
   # config.update_rule "MyRuleName", enabled: false
   # ```
-  def update_rule(name, enabled = true, excluded = nil)
+  def update_rule(name, *, enabled, excluded = nil)
     rule = @rules.find(&.name.==(name))
     raise ArgumentError.new("Rule `#{name}` does not exist") unless rule
 
+    rule.enabled = enabled
+    rule.excluded = excluded.to_set if excluded
     rule
-      .tap(&.enabled = enabled)
-      .tap(&.excluded = excluded.try &.to_set)
   end
 
   # Updates rules properties.
@@ -193,17 +193,16 @@ class Ameba::Config
   # ```
   # config.update_rules %w[Group1 Group2], enabled: true
   # ```
-  def update_rules(names : Enumerable(String), enabled = true, excluded = nil)
+  def update_rules(names : Enumerable(String), *, enabled, excluded = nil)
     excluded = excluded.try &.to_set
 
     names.each do |name|
       if rules = @rule_groups[name]?
         rules.each do |rule|
-          rule.enabled = enabled
-          rule.excluded = excluded
+          update_rule rule.name, enabled: enabled, excluded: excluded
         end
       else
-        update_rule name, enabled, excluded
+        update_rule name, enabled: enabled, excluded: excluded
       end
     end
   end

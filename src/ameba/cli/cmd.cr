@@ -194,6 +194,11 @@ module Ameba::CLI
         opts.ignore_unmatched_paths = true
       end
 
+      parser.on("--ignore-config-file",
+        "Ignore the '%s' config file" % Config::Loader::FILENAME) do
+        opts.skip_reading_config = true
+      end
+
       parser.on("--no-color", "Disable colors") do
         opts.colors = false
       end
