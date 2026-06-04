@@ -86,6 +86,11 @@ module Ameba::CLI
         opts.except.should eq Set{"RULE1", "RULE2"}
       end
 
+      it "accepts --ignore-config-file flag" do
+        opts = CLI.parse_args %w[--ignore-config-file]
+        opts.skip_reading_config?.should be_true
+      end
+
       it "defaults rules? flag to false" do
         opts = CLI.parse_args %w[file.cr]
         opts.rules?.should be_false
