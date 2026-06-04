@@ -2,6 +2,12 @@ require "../../spec_helper"
 
 module Ameba
   describe Rule::Base do
+    describe ".from_yaml" do
+      it "ignores unknown attributes" do
+        DummyRule.from_yaml("{ not: there }").should be_a(DummyRule)
+      end
+    end
+
     describe "#catch" do
       it "accepts and returns source" do
         source = Source.new

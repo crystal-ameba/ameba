@@ -209,7 +209,6 @@ class Ameba::Config
 
       macro inherited
         include YAML::Serializable
-        include YAML::Serializable::Strict
 
         def self.new(config = nil)
           if (raw = config.try &.raw).is_a?(Hash)
