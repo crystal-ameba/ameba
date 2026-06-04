@@ -218,9 +218,12 @@ module Ameba
 
       it "updates enabled property" do
         name = DummyRule.rule_name
-        config.update_rule name, enabled: false
         rule = config.rules.find!(&.name.== name)
+        rule.excluded = excluded = Set{"spec/source.cr"}
+
+        config.update_rule name, enabled: false
         rule.enabled?.should be_false
+        rule.excluded.should eq excluded
       end
 
       it "updates excluded property" do
@@ -237,9 +240,12 @@ module Ameba
 
       it "updates multiple rules by enabled property" do
         name = DummyRule.rule_name
-        config.update_rules [name], enabled: false
         rule = config.rules.find!(&.name.== name)
+        rule.excluded = excluded = Set{"spec/source.cr"}
+
+        config.update_rules [name], enabled: false
         rule.enabled?.should be_false
+        rule.excluded.should eq excluded
       end
 
       it "updates multiple rules by excluded property" do
