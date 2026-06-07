@@ -396,6 +396,96 @@ module Ameba::Rule::Style
         end
       end
 
+      context "#excluded_dsl_call_names" do
+        it "passes for given call paths (at toplevel namespace)" do
+          rule = CallParentheses.new
+          rule.excluded_dsl_call_names = [
+            "foo > *",
+            "foo > fox > *",
+            "bat > **",
+          ]
+          expect_no_issues rule, <<-CRYSTAL
+            foo { bar 369 }
+            foo do
+              bar 369.times { |i| bat i }
+              baz :qux
+              fox do
+                name "Fawny Fox"
+                home "Dry Den"
+              end
+            end
+            bat do
+              qux 123 do
+                bar :bar
+              end
+            end
+            CRYSTAL
+        end
+
+        it "passes for given call paths (within a class)" do
+          rule = CallParentheses.new
+          rule.excluded_dsl_call_names = [
+            "Foo > foo > *",
+            "Foo > foo > fox > *",
+            "Foo > bat > **",
+          ]
+          expect_no_issues rule, <<-CRYSTAL
+            class Foo
+              foo { bar 369 }
+              foo do
+                bar 369.times { |i| bat i }
+                baz :qux
+                fox do
+                  name "Fawny Fox"
+                  home "Dry Den"
+                end
+              end
+              bat do
+                qux 123 do
+                  bar :bar
+                end
+              end
+            end
+            CRYSTAL
+        end
+
+        it "reports outer calls regardless of dsl calls (within a class)" do
+          rule = CallParentheses.new
+          rule.excluded_dsl_call_names = [
+            "Foo > foo > *",
+          ]
+          source = expect_issue rule, <<-CRYSTAL
+            class Foo
+              foo bar 369
+            # ^^^^^^^^^^^ error: Missing parentheses in method call
+                # ^^^^^^^ error: Missing parentheses in method call
+            end
+            CRYSTAL
+
+          expect_correction source, <<-CRYSTAL
+            class Foo
+              foo(bar(369))
+            end
+            CRYSTAL
+        end
+
+        it "reports outer calls regardless of dsl calls (at toplevel namespace)" do
+          rule = CallParentheses.new
+          rule.excluded_dsl_call_names = [
+            "foo > *",
+          ]
+          source = expect_issue rule, <<-CRYSTAL
+            foo bar 369
+            # ^^^^^^^^^ error: Missing parentheses in method call
+              # ^^^^^^^ error: Missing parentheses in method call
+            CRYSTAL
+
+          expect_correction source, <<-CRYSTAL
+            foo(bar(369))
+            CRYSTAL
+        end
+      end
+
       context "#exclude_type_declarations" do
         it "ignores type declarations when enabled" do
           rule = CallParentheses.new
@@ -436,13 +526,13 @@ module Ameba::Rule::Style
           rule.exclude_heredocs = false
 
           source = expect_issue rule, <<-CRYSTAL
-            foo.should eq <<-HEREDOC
-                     # ^^^^^^^^^^^^^ error: Missing parentheses in method call
+            foo.bar <<-HEREDOC
+            # ^^^^^^^^^^^^^^^^ error: Missing parentheses in method call
               HEREDOC
             CRYSTAL
 
           expect_correction source, <<-CRYSTAL
-            foo.should eq(<<-HEREDOC)
+            foo.bar(<<-HEREDOC)
               HEREDOC
             CRYSTAL
         end

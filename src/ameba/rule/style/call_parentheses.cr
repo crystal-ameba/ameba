@@ -20,6 +20,30 @@ module Ameba::Rule::Style
   # - `ExcludeHeredocs` — controls whether calls with heredoc arguments should be checked.
   # - `ExcludedToplevelCallNames` — contains a list of top-level method names that should not be checked.
   # - `ExcludedCallNames` — contains a list of non-top-level method names that should not be checked.
+  # - `ExcludedDslCallNames` — contains a list of DSL method names that should not be checked.
+  #
+  #     Each entry should contain a full call chain path, with method names separated by ` > `,
+  #     e.g. `properties > where`, or `builder > properties > query`.
+  #
+  #     Only calls with a block and no receiver are taken into account, e.g.:
+  #
+  #         class UserQuery
+  #           builder do
+  #             scope :default do
+  #               where { deleted_at.nil? } # UserQuery > builder > scope > where
+  #             end
+  #
+  #             organizations.each do |org|
+  #               scope "org_#{org.name.camelcase}" do
+  #                 where { id == org.id } # UserQuery > builder > scope > where
+  #               end
+  #             end
+  #           end
+  #         end
+  #
+  #     You can use `*` as a wildcard to match any method name and
+  #     `**` to match any method name at any depth,
+  #     e.g. `** > where`, or `** > where > *`.
   #
   # YAML configuration example:
   #
@@ -31,6 +55,7 @@ module Ameba::Rule::Style
   #   ExcludeHeredocs: false
   #   ExcludedToplevelCallNames: [spawn, raise, super, previous_def, exit, abort, sleep, print, printf, puts, p, p!, pp, pp!, record, class_getter, class_getter?, class_getter!, class_property, class_property?, class_property!, class_setter, getter, getter?, getter!, property, property?, property!, setter, def_equals_and_hash, def_equals, def_hash, delegate, forward_missing_to, describe, context, it, pending, fail, use_json_discriminator]
   #   ExcludedCallNames: [should, should_not]
+  #   ExcludedDslCallNames: []
   # ```
   class CallParentheses < Base
     include AST::Util
@@ -55,22 +80,32 @@ module Ameba::Rule::Style
         use_json_discriminator
       ]
       excluded_call_names %w[should should_not]
+      excluded_dsl_call_names %w[]
     end
 
     MSG = "Missing parentheses in method call"
 
+    CALL_NAMES_SEPARATOR = " > "
+
     def test(source)
-      super unless source.ecr?
+      return if source.ecr?
+
+      CallInBlockVisitor.new(source) do |node, visitor|
+        check_for_issues(source, node, visitor)
+      end
     end
 
     # ameba:disable Metrics/CyclomaticComplexity
-    def test(source, node : Crystal::Call)
+    private def check_for_issues(source, node : Crystal::Call, visitor)
       return if node.args_in_brackets? ||
                 node.has_parentheses? ||
                 node.expansion?
 
       return if setter_method?(node) ||
                 operator_method?(node)
+
+      return if visitor.type_definition != false &&
+                excluded_dsl_call_names_match?(node, visitor)
 
       return if exclude_type_declarations? &&
                 node.args.any?(Crystal::TypeDeclaration)
@@ -110,6 +145,39 @@ module Ameba::Rule::Style
       else
         issue_for *issue_location, MSG
       end
+    end
+
+    private def excluded_dsl_call_names_match?(node, visitor)
+      return false if excluded_dsl_call_names.empty?
+
+      call_chain = visitor.outer_calls
+        .reject(&.obj) # 3.times { ... }
+        .map(&.name)
+        .push(node.name)
+
+      case typedef = visitor.type_definition
+      when Crystal::ClassDef, Crystal::ModuleDef
+        call_chain.unshift(typedef.name.to_s)
+      end
+
+      call_chain = call_chain.join('~')
+
+      dsl_call_patterns =
+        excluded_dsl_call_names.map do |name|
+          pattern = name
+            .split(CALL_NAMES_SEPARATOR)
+            .map! do |path|
+              case path
+              when "*"  then "([^~]+)"
+              when "**" then "(.+)"
+              else
+                Regex.escape(path)
+              end
+            end
+          /^#{pattern.join('~')}$/
+        end
+
+      dsl_call_patterns.any?(&.matches?(call_chain))
     end
 
     # Returns the replacement start and end locations for the call *node*.
@@ -178,6 +246,69 @@ module Ameba::Rule::Style
 
     private def find_heredoc_arg(node, source)
       node if heredoc?(node, source)
+    end
+
+    private class CallInBlockVisitor < Crystal::Visitor
+      include AST::Util
+
+      getter outer_calls = [] of Crystal::Call
+      getter type_definition : Crystal::ClassDef | Crystal::ModuleDef | Bool?
+
+      def initialize(source, &@on_call : Crystal::Call, self ->)
+        source.ast.accept self
+      end
+
+      private def outer_call(value, &)
+        @outer_calls.push(value)
+        begin
+          yield
+        ensure
+          @outer_calls.pop
+        end
+      end
+
+      private def in_type_definition(value, &)
+        prev_value = @type_definition
+        begin
+          @type_definition = value
+          yield
+        ensure
+          @type_definition = prev_value
+        end
+      end
+
+      def visit(node : Crystal::ClassDef | Crystal::ModuleDef)
+        in_type_definition(node) do
+          node.accept_children(self)
+        end
+        false
+      end
+
+      def visit(node : Crystal::Def)
+        return true unless node.name == "->"
+
+        in_type_definition(false) do
+          node.accept_children(self)
+        end
+        false
+      end
+
+      def visit(node : Crystal::Call)
+        @on_call.call(node, self)
+
+        node.obj.try &.accept(self)
+        node.args.each &.accept(self)
+        node.named_args.try &.each &.accept(self)
+        node.block_arg.try &.accept(self)
+        outer_call(node) do
+          node.block.try &.accept(self)
+        end
+        false
+      end
+
+      def visit(node : Crystal::ASTNode)
+        true
+      end
     end
   end
 end
