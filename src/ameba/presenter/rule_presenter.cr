@@ -19,6 +19,16 @@ module Ameba::Presenter
         (rule.since_version.try(&.to_s) || "N/A").colorize(:white),
       }
 
+      if rule.class.deprecated?
+        output_title "Deprecated"
+
+        if deprecation_reason = rule.class.deprecation_reason
+          output_paragraph colorize_markdown(deprecation_reason)
+        else
+          output_paragraph "This rule has been deprecated"
+        end
+      end
+
       if rule_description = rule.description
         output_title "Description"
         output_paragraph colorize_markdown(rule_description)
