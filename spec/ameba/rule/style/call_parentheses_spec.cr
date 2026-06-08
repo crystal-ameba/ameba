@@ -3,6 +3,9 @@ require "../../../spec_helper"
 module Ameba::Rule::Style
   describe CallParentheses do
     subject = CallParentheses.new
+    subject.exclude_multiline_calls = false
+    subject.exclude_type_declarations = false
+    subject.exclude_heredocs = false
 
     it "ignores ECR files" do
       expect_no_issues subject, <<-ECR, path: "foo.ecr"

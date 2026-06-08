@@ -50,9 +50,9 @@ module Ameba::Rule::Style
   # ```
   # Style/CallParentheses:
   #   Enabled: true
-  #   ExcludeMultilineCalls: false
+  #   ExcludeMultilineCalls: true
   #   ExcludeTypeDeclarations: true
-  #   ExcludeHeredocs: false
+  #   ExcludeHeredocs: true
   #   ExcludedToplevelCallNames: [spawn, raise, super, previous_def, exit, abort, sleep, print, printf, puts, p, p!, pp, pp!, record, class_getter, class_getter?, class_getter!, class_property, class_property?, class_property!, class_setter, getter, getter?, getter!, property, property?, property!, setter, def_equals_and_hash, def_equals, def_hash, delegate, forward_missing_to, describe, context, it, pending, fail, use_json_discriminator]
   #   ExcludedCallNames: [should, should_not]
   #   ExcludedDslCallNames: []
@@ -64,9 +64,9 @@ module Ameba::Rule::Style
       since_version "1.7.0"
       description "Enforces usage of parentheses in method calls"
       enabled false
-      exclude_multiline_calls false
+      exclude_multiline_calls true
       exclude_type_declarations true
-      exclude_heredocs false
+      exclude_heredocs true
       excluded_toplevel_call_names %w[
         spawn raise super previous_def exit abort sleep
         print printf puts p p! pp pp! record
@@ -77,9 +77,13 @@ module Ameba::Rule::Style
         def_equals_and_hash def_equals def_hash
         delegate forward_missing_to
         describe context it pending fail
+        eq be be_a be_close contain start_with end_with match
         use_json_discriminator
       ]
-      excluded_call_names %w[should should_not]
+      excluded_call_names %w[
+        print printf puts
+        should should_not
+      ]
       excluded_dsl_call_names %w[]
     end
 
