@@ -1180,11 +1180,43 @@
   </svg>
 </a>Options</h3>
 <ul>
-<li><code>ExcludeMultilineCalls</code> — controls whether multiline calls should be checked.</li>
-<li><code>ExcludeTypeDeclarations</code> — controls whether calls with type declarations should be checked.</li>
-<li><code>ExcludeHeredocs</code> — controls whether calls with heredoc arguments should be checked.</li>
-<li><code>ExcludedToplevelCallNames</code> — contains a list of top-level method names that should not be checked.</li>
-<li><code>ExcludedCallNames</code> — contains a list of non-top-level method names that should not be checked.</li>
+<li>
+<p><code>ExcludeMultilineCalls</code> — controls whether multiline calls should be checked.</p>
+</li>
+<li>
+<p><code>ExcludeTypeDeclarations</code> — controls whether calls with type declarations should be checked.</p>
+</li>
+<li>
+<p><code>ExcludeHeredocs</code> — controls whether calls with heredoc arguments should be checked.</p>
+</li>
+<li>
+<p><code>ExcludedToplevelCallNames</code> — contains a list of top-level method names that should not be checked.</p>
+</li>
+<li>
+<p><code>ExcludedCallNames</code> — contains a list of non-top-level method names that should not be checked.</p>
+</li>
+<li>
+<p><code>ExcludedDslCallNames</code> — contains a list of DSL method names that should not be checked.</p>
+<p>Each entry should contain a full call chain path, with method names separated by <code>&gt;</code>,
+e.g. <code>properties &gt; where</code>, or <code>builder &gt; properties &gt; query</code>.</p>
+<p>Only calls with a block and no receiver are taken into account, e.g.:</p>
+<pre><code class="language-crystal">  <span class="k">class</span> <span class="t">UserQuery</span>
+    builder <span class="k">do</span>
+      scope <span class="n">:default</span> <span class="k">do</span>
+        where { deleted_at.<span class="k">nil?</span> } <span class="c"># UserQuery &gt; builder &gt; scope &gt; where</span>
+      <span class="k">end</span>
+
+      organizations.each <span class="k">do</span> <span class="o">|</span>org<span class="o">|</span>
+        scope <span class="s">&quot;org_</span><span class="i">#{</span>org.name.camelcase<span class="i">}</span><span class="s">&quot;</span> <span class="k">do</span>
+          where { id <span class="o">==</span> org.id } <span class="c"># UserQuery &gt; builder &gt; scope &gt; where</span>
+        <span class="k">end</span>
+      <span class="k">end</span>
+    <span class="k">end</span>
+  <span class="k">end</span></code></pre>
+<p>You can use <code>*</code> as a wildcard to match any method name and
+<code>**</code> to match any method name at any depth,
+e.g. <code>** &gt; where</code>, or <code>** &gt; where &gt; *</code>.</p>
+</li>
 </ul>
 <p>YAML configuration example:</p>
 <pre><code class="language-crystal"><span class="t">Style</span><span class="o">/</span><span class="t">CallParentheses</span>:
@@ -1193,7 +1225,8 @@
   <span class="t">ExcludeTypeDeclarations</span>: <span class="n">true</span>
   <span class="t">ExcludeHeredocs</span>: <span class="n">false</span>
   <span class="t">ExcludedToplevelCallNames</span>: [spawn, raise, <span class="k">super</span>, previous_def, exit, abort, sleep, print, printf, puts, p, p!, pp, pp!, record, class_getter, class_getter?, class_getter!, class_property, class_property?, class_property!, class_setter, getter, getter?, getter!, property, property?, property!, setter, def_equals_and_hash, def_equals, def_hash, delegate, forward_missing_to, describe, context, it, pending, fail, use_json_discriminator]
-  <span class="t">ExcludedCallNames</span>: [should, should_not]</code></pre>
+  <span class="t">ExcludedCallNames</span>: [should, should_not]
+  <span class="t">ExcludedDslCallNames</span>: <span class="o">[]</span></code></pre>
 
 
 
@@ -1236,7 +1269,7 @@
   </h2>
   
     
-      <a href="https://github.com/crystal-ameba/ameba/blob/db6d928/src/ameba/rule/style/call_parentheses.cr#L35" target="_blank">
+      <a href="https://github.com/crystal-ameba/ameba/blob/ed3fcf9/src/ameba/rule/style/call_parentheses.cr#L60" target="_blank">
         ameba/rule/style/call_parentheses.cr
       </a>
     
@@ -1256,6 +1289,11 @@
     </h2>
   
   <dl>
+    
+      <dt class="entry-const" id="CALL_NAMES_SEPARATOR">
+        <strong>CALL_NAMES_SEPARATOR</strong> = <code><span class="s">&quot; &gt; &quot;</span></code>
+      </dt>
+      
     
       <dt class="entry-const" id="MSG">
         <strong>MSG</strong> = <code><span class="s">&quot;Missing parentheses in method call&quot;</span></code>
@@ -1414,6 +1452,16 @@
       </li>
     
       <li class="entry-summary">
+        <a href="#excluded_dsl_call_names%3AArray%28String%29-instance-method" class="signature"><strong>#excluded_dsl_call_names</strong> : Array(String)</a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#excluded_dsl_call_names%3D%28excluded_dsl_call_names%3AArray%28String%29%29-instance-method" class="signature"><strong>#excluded_dsl_call_names=</strong>(excluded_dsl_call_names : Array(String))</a>
+        
+      </li>
+    
+      <li class="entry-summary">
         <a href="#excluded_toplevel_call_names%3AArray%28String%29-instance-method" class="signature"><strong>#excluded_toplevel_call_names</strong> : Array(String)</a>
         
       </li>
@@ -1440,13 +1488,6 @@
     
       <li class="entry-summary">
         <a href="#since_version%3D%28since_version%3AString%29-instance-method" class="signature"><strong>#since_version=</strong>(since_version : String)</a>
-        
-      </li>
-    
-      <li class="entry-summary">
-        <a href="#test%28source%2Cnode%3ACrystal%3A%3ACall%29-instance-method" class="signature"><strong>#test</strong>(source, node : Crystal::Call)</a>
-        
-          <div class="summary"><p>ameba:disable Metrics/CyclomaticComplexity</p></div>
         
       </li>
     
@@ -1821,11 +1862,43 @@
   </svg>
 </a>Options</h3>
 <ul>
-<li><code>ExcludeMultilineCalls</code> — controls whether multiline calls should be checked.</li>
-<li><code>ExcludeTypeDeclarations</code> — controls whether calls with type declarations should be checked.</li>
-<li><code>ExcludeHeredocs</code> — controls whether calls with heredoc arguments should be checked.</li>
-<li><code>ExcludedToplevelCallNames</code> — contains a list of top-level method names that should not be checked.</li>
-<li><code>ExcludedCallNames</code> — contains a list of non-top-level method names that should not be checked.</li>
+<li>
+<p><code>ExcludeMultilineCalls</code> — controls whether multiline calls should be checked.</p>
+</li>
+<li>
+<p><code>ExcludeTypeDeclarations</code> — controls whether calls with type declarations should be checked.</p>
+</li>
+<li>
+<p><code>ExcludeHeredocs</code> — controls whether calls with heredoc arguments should be checked.</p>
+</li>
+<li>
+<p><code>ExcludedToplevelCallNames</code> — contains a list of top-level method names that should not be checked.</p>
+</li>
+<li>
+<p><code>ExcludedCallNames</code> — contains a list of non-top-level method names that should not be checked.</p>
+</li>
+<li>
+<p><code>ExcludedDslCallNames</code> — contains a list of DSL method names that should not be checked.</p>
+<p>Each entry should contain a full call chain path, with method names separated by <code>&gt;</code>,
+e.g. <code>properties &gt; where</code>, or <code>builder &gt; properties &gt; query</code>.</p>
+<p>Only calls with a block and no receiver are taken into account, e.g.:</p>
+<pre><code class="language-crystal">  <span class="k">class</span> <span class="t">UserQuery</span>
+    builder <span class="k">do</span>
+      scope <span class="n">:default</span> <span class="k">do</span>
+        where { deleted_at.<span class="k">nil?</span> } <span class="c"># UserQuery &gt; builder &gt; scope &gt; where</span>
+      <span class="k">end</span>
+
+      organizations.each <span class="k">do</span> <span class="o">|</span>org<span class="o">|</span>
+        scope <span class="s">&quot;org_</span><span class="i">#{</span>org.name.camelcase<span class="i">}</span><span class="s">&quot;</span> <span class="k">do</span>
+          where { id <span class="o">==</span> org.id } <span class="c"># UserQuery &gt; builder &gt; scope &gt; where</span>
+        <span class="k">end</span>
+      <span class="k">end</span>
+    <span class="k">end</span>
+  <span class="k">end</span></code></pre>
+<p>You can use <code>*</code> as a wildcard to match any method name and
+<code>**</code> to match any method name at any depth,
+e.g. <code>** &gt; where</code>, or <code>** &gt; where &gt; *</code>.</p>
+</li>
 </ul>
 <p>YAML configuration example:</p>
 <pre><code class="language-crystal"><span class="t">Style</span><span class="o">/</span><span class="t">CallParentheses</span>:
@@ -1834,13 +1907,14 @@
   <span class="t">ExcludeTypeDeclarations</span>: <span class="n">true</span>
   <span class="t">ExcludeHeredocs</span>: <span class="n">false</span>
   <span class="t">ExcludedToplevelCallNames</span>: [spawn, raise, <span class="k">super</span>, previous_def, exit, abort, sleep, print, printf, puts, p, p!, pp, pp!, record, class_getter, class_getter?, class_getter!, class_property, class_property?, class_property!, class_setter, getter, getter?, getter!, property, property?, property!, setter, def_equals_and_hash, def_equals, def_hash, delegate, forward_missing_to, describe, context, it, pending, fail, use_json_discriminator]
-  <span class="t">ExcludedCallNames</span>: [should, should_not]</code></pre>
+  <span class="t">ExcludedCallNames</span>: [should, should_not]
+  <span class="t">ExcludedDslCallNames</span>: <span class="o">[]</span></code></pre>
         </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/db6d928/src/ameba/rule/style/call_parentheses.cr#L35" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/ed3fcf9/src/ameba/rule/style/call_parentheses.cr#L60" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1932,7 +2006,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/db6d928/src/ameba/rule/style/call_parentheses.cr#L38" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/ed3fcf9/src/ameba/rule/style/call_parentheses.cr#L63" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2147,6 +2221,34 @@
       </div>
     </div>
   
+    <div class="entry-detail" id="excluded_dsl_call_names:Array(String)-instance-method">
+      <div class="signature">
+        
+        def <strong>excluded_dsl_call_names</strong> : Array(String)
+
+        <a class="method-permalink" href="#excluded_dsl_call_names%3AArray%28String%29-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="excluded_dsl_call_names=(excluded_dsl_call_names:Array(String))-instance-method">
+      <div class="signature">
+        
+        def <strong>excluded_dsl_call_names=</strong>(excluded_dsl_call_names : Array(String))
+
+        <a class="method-permalink" href="#excluded_dsl_call_names%3D%28excluded_dsl_call_names%3AArray%28String%29%29-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+      </div>
+    </div>
+  
     <div class="entry-detail" id="excluded_toplevel_call_names:Array(String)-instance-method">
       <div class="signature">
         
@@ -2214,7 +2316,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/db6d928/src/ameba/rule/style/call_parentheses.cr#L38" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/ed3fcf9/src/ameba/rule/style/call_parentheses.cr#L63" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2233,27 +2335,6 @@
       </div>
     </div>
   
-    <div class="entry-detail" id="test(source,node:Crystal::Call)-instance-method">
-      <div class="signature">
-        
-        def <strong>test</strong>(source, node : Crystal::Call)
-
-        <a class="method-permalink" href="#test%28source%2Cnode%3ACrystal%3A%3ACall%29-instance-method">#</a>
-      </div>
-      
-        <div class="doc">
-          
-          <p>ameba:disable Metrics/CyclomaticComplexity</p>
-        </div>
-      
-      <br/>
-      <div>
-        
-          [<a href="https://github.com/crystal-ameba/ameba/blob/db6d928/src/ameba/rule/style/call_parentheses.cr#L67" target="_blank">View source</a>]
-        
-      </div>
-    </div>
-  
     <div class="entry-detail" id="test(source)-instance-method">
       <div class="signature">
         
@@ -2265,7 +2346,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/db6d928/src/ameba/rule/style/call_parentheses.cr#L62" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/ed3fcf9/src/ameba/rule/style/call_parentheses.cr#L90" target="_blank">View source</a>]
         
       </div>
     </div>
