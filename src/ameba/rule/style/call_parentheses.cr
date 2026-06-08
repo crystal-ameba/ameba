@@ -77,9 +77,13 @@ module Ameba::Rule::Style
         def_equals_and_hash def_equals def_hash
         delegate forward_missing_to
         describe context it pending fail
+        eq be be_a be_close contain start_with end_with match
         use_json_discriminator
       ]
-      excluded_call_names %w[should should_not]
+      excluded_call_names %w[
+        print printf puts
+        should should_not
+      ]
       excluded_dsl_call_names %w[]
     end
 
