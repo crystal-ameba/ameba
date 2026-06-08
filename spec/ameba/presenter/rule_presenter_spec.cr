@@ -2,7 +2,7 @@ require "../../spec_helper"
 
 module Ameba
   private def rule_presenter_each_rule(&)
-    rules = Config.load.rules
+    rules = Config.load(skip_reading_config: true).rules
 
     rules.each do |rule|
       with_presenter(Presenter::RulePresenter, rule) do |presenter, output|

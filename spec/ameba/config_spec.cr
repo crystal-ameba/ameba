@@ -109,8 +109,7 @@ module Ameba
       end
 
       it "loads default config" do
-        config = Config.load
-        config.should_not be_nil
+        config = Config.load(skip_reading_config: true)
         config.version.should be_nil
         config.globs.should_not be_nil
         config.formatter.should_not be_nil
