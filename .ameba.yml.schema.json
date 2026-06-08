@@ -1728,7 +1728,7 @@
         },
         "ExcludeMultilineCalls": {
           "type": "boolean",
-          "default": false
+          "default": true
         },
         "ExcludeTypeDeclarations": {
           "type": "boolean",
@@ -1736,7 +1736,7 @@
         },
         "ExcludeHeredocs": {
           "type": "boolean",
-          "default": false
+          "default": true
         },
         "ExcludedToplevelCallNames": {
           "type": "array",
@@ -1783,6 +1783,14 @@
             "it",
             "pending",
             "fail",
+            "eq",
+            "be",
+            "be_a",
+            "be_close",
+            "contain",
+            "start_with",
+            "end_with",
+            "match",
             "use_json_discriminator"
           ]
         },
@@ -1792,6 +1800,9 @@
             "type": "string"
           },
           "default": [
+            "print",
+            "printf",
+            "puts",
             "should",
             "should_not"
           ]
