@@ -64,7 +64,7 @@ module Ameba::Formatter
     end
 
     def deansify(message : String?) : String?
-      message.try &.gsub(/\x1b[^m]*m/, "").presence
+      message.try(&.gsub(/\x1b[^m]*m/, "").presence)
     end
 
     def trim(str, max_length = 120, ellipsis = " ...")

@@ -18,7 +18,7 @@ module Ameba
     # Ameba::Tokenizer.new(source)
     # ```
     def initialize(source)
-      @lexer = Crystal::Lexer.new source.code
+      @lexer = Crystal::Lexer.new(source.code)
       @lexer.count_whitespace = true
       @lexer.comments_enabled = true
       @lexer.wants_raw = true
@@ -42,7 +42,7 @@ module Ameba
     # end
     # ```
     def run(&block : Crystal::Token -> _)
-      run_normal_state @lexer, &block
+      run_normal_state(@lexer, &block)
       true
     rescue Crystal::SyntaxException
       false
@@ -51,13 +51,13 @@ module Ameba
     private def run_normal_state(lexer, break_on_rcurly = false, &block : Crystal::Token -> _)
       loop do
         token = @lexer.next_token
-        block.call token
+        block.call(token)
 
         case token.type
         when .delimiter_start?
-          run_delimiter_state lexer, token, &block
+          run_delimiter_state(lexer, token, &block)
         when .string_array_start?, .symbol_array_start?
-          run_array_state lexer, token, &block
+          run_array_state(lexer, token, &block)
         when .eof?
           break
         when .op_rcurly?
@@ -69,11 +69,11 @@ module Ameba
     private def run_delimiter_state(lexer, token, &block : Crystal::Token -> _)
       loop do
         token = @lexer.next_string_token(token.delimiter_state)
-        block.call token
+        block.call(token)
 
         case token.type
         when .interpolation_start?
-          run_normal_state lexer, break_on_rcurly: true, &block
+          run_normal_state(lexer, break_on_rcurly: true, &block)
         when .delimiter_end?, .eof?
           break
         end
@@ -92,7 +92,7 @@ module Ameba
                 else
                   lexer.next_string_token(token.delimiter_state)
                 end
-        block.call token unless token.type.space?
+        block.call(token) unless token.type.space?
 
         case token.type
         when .string_array_end?, .eof?

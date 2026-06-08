@@ -40,7 +40,7 @@ module Ameba::Rule::Performance
     CALL_NAMES = %w[first last first? last?]
 
     def test(source)
-      AST::NodeVisitor.new self, source, skip: :macro
+      AST::NodeVisitor.new(self, source, skip: :macro)
     end
 
     def test(source, node : Crystal::Call)

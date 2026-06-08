@@ -29,7 +29,7 @@ module Ameba::Rule::Layout
 
     context "when unnecessary blank line has been detected" do
       it "reports rule, pos and message" do
-        source = Source.new "a = 1\n\n", "source.cr", normalize: false
+        source = Source.new("a = 1\n\n", "source.cr", normalize: false)
         subject.catch(source).should_not be_valid
 
         issue = source.issues.first
@@ -42,7 +42,7 @@ module Ameba::Rule::Layout
 
     context "when final line has been missed" do
       it "reports rule, pos and message" do
-        source = Source.new "a = 1", "source.cr", normalize: false
+        source = Source.new("a = 1", "source.cr", normalize: false)
         subject.catch(source).should_not be_valid
 
         issue = source.issues.first

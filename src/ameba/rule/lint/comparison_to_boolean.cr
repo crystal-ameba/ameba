@@ -54,7 +54,7 @@ module Ameba::Rule::Lint
 
       exp_code = "!#{exp_code}" if not
 
-      issue_for node, MSG do |corrector|
+      issue_for(node, MSG) do |corrector|
         corrector.replace(node, exp_code)
       end
     end

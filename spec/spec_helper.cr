@@ -169,7 +169,7 @@ module Ameba
       return unless name = node_source(node.name, source.lines)
       return unless name.includes?("A")
 
-      issue_for node.name, message: "A to AA" do |corrector|
+      issue_for(node.name, message: "A to AA") do |corrector|
         corrector.replace(node.name, name.sub("A", "AA"))
       end
     end
@@ -186,7 +186,7 @@ module Ameba
       return unless name = node_source(node.name, source.lines)
       return unless name.includes?("A")
 
-      issue_for node.name, message: "A to B" do |corrector|
+      issue_for(node.name, message: "A to B") do |corrector|
         corrector.replace(node.name, name.tr("A", "B"))
       end
     end
@@ -203,7 +203,7 @@ module Ameba
       return unless name = node_source(node.name, source.lines)
       return unless name.includes?("B")
 
-      issue_for node.name, message: "B to A" do |corrector|
+      issue_for(node.name, message: "B to A") do |corrector|
         corrector.replace(node.name, name.tr("B", "A"))
       end
     end
@@ -220,7 +220,7 @@ module Ameba
       return unless name = node_source(node.name, source.lines)
       return unless name.includes?("B")
 
-      issue_for node.name, message: "B to C" do |corrector|
+      issue_for(node.name, message: "B to C") do |corrector|
         corrector.replace(node.name, name.tr("B", "C"))
       end
     end
@@ -237,7 +237,7 @@ module Ameba
       return unless name = node_source(node.name, source.lines)
       return unless name.includes?("C")
 
-      issue_for node.name, message: "C to A" do |corrector|
+      issue_for(node.name, message: "C to A") do |corrector|
         corrector.replace(node.name, name.tr("C", "A"))
       end
     end
@@ -255,7 +255,7 @@ module Ameba
 
       end_location = location.adjust(column_number: {{ "class".size - 1 }})
 
-      issue_for location, end_location, message: "class to module" do |corrector|
+      issue_for(location, end_location, message: "class to module") do |corrector|
         corrector.replace(location, end_location, "module")
       end
     end
@@ -273,7 +273,7 @@ module Ameba
 
       end_location = location.adjust(column_number: {{ "module".size - 1 }})
 
-      issue_for location, end_location, message: "module to class" do |corrector|
+      issue_for(location, end_location, message: "module to class") do |corrector|
         corrector.replace(location, end_location, "class")
       end
     end
@@ -321,7 +321,7 @@ module Ameba
     }
 
     def initialize(node)
-      node.accept self
+      node.accept(self)
     end
 
     def visit(node : Crystal::ASTNode)

@@ -93,18 +93,18 @@ module Ameba::Formatter
 
     private def exclude_paths(issues)
       issues
-        .compact_map(&.location.try &.filename.try &.to_s)
+        .compact_map(&.location.try(&.filename.try(&.to_s)))
         .to_set
         .map { |path| Path[path].to_posix.to_s }
     end
 
     private def rule_to_yaml(yaml, rule, issues)
-      yaml.scalar rule.name
+      yaml.scalar(rule.name)
       yaml.mapping do
-        yaml.scalar "Excluded"
+        yaml.scalar("Excluded")
         yaml.sequence do
           exclude_paths(issues).each do |path|
-            yaml.scalar path
+            yaml.scalar(path)
           end
         end
       end

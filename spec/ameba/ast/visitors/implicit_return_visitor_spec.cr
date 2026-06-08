@@ -2,7 +2,7 @@ require "../../../spec_helper"
 
 private def implicit_return_visit(code)
   Ameba::ImplicitReturnRule.new.tap do |rule|
-    Ameba::AST::ImplicitReturnVisitor.new rule, Ameba::Source.new(code)
+    Ameba::AST::ImplicitReturnVisitor.new(rule, Ameba::Source.new(code))
   end
 end
 

@@ -36,14 +36,14 @@ module Ameba::Rule::Lint
     MSG = "Avoid using `not_nil!`"
 
     def test(source)
-      AST::NodeVisitor.new self, source, skip: :macro
+      AST::NodeVisitor.new(self, source, skip: :macro)
     end
 
     def test(source, node : Crystal::Call)
       return unless node.name == "not_nil!" && node.obj
       return if has_arguments?(node)
 
-      issue_for node, MSG, prefer_name_location: true
+      issue_for(node, MSG, prefer_name_location: true)
     end
   end
 end

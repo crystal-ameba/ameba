@@ -44,9 +44,9 @@ module Ameba::Rule::Lint
 
       case node.name
       when "with_index"
-        report source, node, MSG_WITH_INDEX
+        report(source, node, MSG_WITH_INDEX)
       when "each_with_index"
-        report source, node, MSG_EACH_WITH_INDEX
+        report(source, node, MSG_EACH_WITH_INDEX)
       end
     end
 
@@ -55,7 +55,7 @@ module Ameba::Rule::Lint
     end
 
     private def report(source, node, msg)
-      issue_for node, msg, prefer_name_location: true
+      issue_for(node, msg, prefer_name_location: true)
     end
   end
 end

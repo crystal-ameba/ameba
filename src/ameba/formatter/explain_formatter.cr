@@ -39,31 +39,31 @@ module Ameba::Formatter
       return unless location = issue.location
 
       output << '\n'
-      output_title "Issue info"
+      output_title("Issue info")
       output_paragraph [
         issue.message.colorize(:red),
         location.to_s.colorize(:cyan),
       ]
 
       if affected_code = affected_code(issue, context_lines: 3)
-        output_title "Affected code"
-        output_paragraph affected_code
+        output_title("Affected code")
+        output_paragraph(affected_code)
       end
 
       rule = issue.rule
 
-      output_title "Rule info"
+      output_title("Rule info")
       output_paragraph "%s of a %s severity" % {
         rule.name.colorize(:magenta),
         rule.severity.to_s.colorize(rule.severity.color),
       }
       if rule_description = rule.description
-        output_paragraph colorize_markdown(rule_description)
+        output_paragraph(colorize_markdown(rule_description))
       end
 
       if rule_doc = rule.class.parsed_doc
-        output_title "Detailed description"
-        output_paragraph colorize_markdown(rule_doc)
+        output_title("Detailed description")
+        output_paragraph(colorize_markdown(rule_doc))
       end
     end
 

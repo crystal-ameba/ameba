@@ -13,7 +13,7 @@ module Ameba::AST
     getter node : Crystal::ASTNode
 
     def initialize(@rule, @source, @node)
-      traverse_node node
+      traverse_node(node)
     end
 
     private def traverse_control_expression(node)
@@ -22,17 +22,17 @@ module Ameba::AST
 
     private def traverse_node(node)
       case node
-      when Crystal::ControlExpression     then traverse_control_expression node
-      when Crystal::Expressions           then traverse_expressions node
-      when Crystal::If, Crystal::Unless   then traverse_condition node
-      when Crystal::Case, Crystal::Select then traverse_case node
-      when Crystal::BinaryOp              then traverse_binary_op node
-      when Crystal::ExceptionHandler      then traverse_exception_handler node
+      when Crystal::ControlExpression     then traverse_control_expression(node)
+      when Crystal::Expressions           then traverse_expressions(node)
+      when Crystal::If, Crystal::Unless   then traverse_condition(node)
+      when Crystal::Case, Crystal::Select then traverse_case(node)
+      when Crystal::BinaryOp              then traverse_binary_op(node)
+      when Crystal::ExceptionHandler      then traverse_exception_handler(node)
       end
     end
 
     private def traverse_expressions(node)
-      traverse_node node.expressions.last?
+      traverse_node(node.expressions.last?)
     end
 
     private def traverse_condition(node)
@@ -42,7 +42,7 @@ module Ameba::AST
 
     private def traverse_case(node)
       node.whens.each do |when_node|
-        traverse_node when_node.body
+        traverse_node(when_node.body)
       end
       traverse_node(node.else)
     end
@@ -52,11 +52,11 @@ module Ameba::AST
     end
 
     private def traverse_exception_handler(node)
-      traverse_node node.body
-      traverse_node node.else
+      traverse_node(node.body)
+      traverse_node(node.else)
 
       node.rescues.try &.each do |rescue_node|
-        traverse_node rescue_node.body
+        traverse_node(rescue_node.body)
       end
     end
   end

@@ -29,13 +29,13 @@ module Ameba::Rule::Style
     MSG = "Use `Array(%s).new` for creating an empty array"
 
     def test(source)
-      AST::NodeVisitor.new self, source, skip: :macro
+      AST::NodeVisitor.new(self, source, skip: :macro)
     end
 
     def test(source, node : Crystal::ArrayLiteral)
       return unless node.elements.empty? && (array_type = node.of)
 
-      issue_for node, MSG % array_type do |corrector|
+      issue_for(node, MSG % array_type) do |corrector|
         corrector.replace(node, "Array(#{array_type}).new")
       end
     end

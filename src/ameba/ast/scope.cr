@@ -45,7 +45,7 @@ module Ameba::AST
     # scope = Scope.new(class_node, nil)
     # ```
     def initialize(@node, @outer_scope = nil)
-      @outer_scope.try &.inner_scopes.<< self
+      @outer_scope.try(&.inner_scopes.<< self)
     end
 
     # Creates a new variable in the current scope.
@@ -65,7 +65,7 @@ module Ameba::AST
     # scope.add_argument(arg_node)
     # ```
     def add_argument(node)
-      add_variable Crystal::Var.new(node.name).at(node)
+      add_variable(Crystal::Var.new(node.name).at(node))
       arguments << Argument.new(node, variables.last)
     end
 
@@ -97,7 +97,7 @@ module Ameba::AST
     # ```
     def find_variable(name : String)
       variables.find(&.name.==(name)) ||
-        inherited? { outer_scope.try &.find_variable(name) }
+        inherited? { outer_scope.try(&.find_variable(name)) }
     end
 
     # Creates a new assignment for the variable.
@@ -107,7 +107,7 @@ module Ameba::AST
     # scope.assign_variable(var_name, assign_node)
     # ```
     def assign_variable(name, node)
-      find_variable(name).try &.assign(node, self)
+      find_variable(name).try(&.assign(node, self))
     end
 
     # Returns `true` if current scope represents a block (or proc),

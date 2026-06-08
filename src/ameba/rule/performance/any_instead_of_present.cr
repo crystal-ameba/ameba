@@ -38,14 +38,14 @@ module Ameba::Rule::Performance
     MSG = "Use `{...}.present?` instead of `{...}.any?`"
 
     def test(source)
-      AST::NodeVisitor.new self, source, skip: :macro
+      AST::NodeVisitor.new(self, source, skip: :macro)
     end
 
     def test(source, node : Crystal::Call)
       return unless node.name == "any?" && (obj = node.obj)
       return if has_arguments?(node) || has_block?(node)
 
-      issue_for node, MSG, prefer_name_location: true do |corrector|
+      issue_for(node, MSG, prefer_name_location: true) do |corrector|
         obj_code =
           node_source(obj, source.lines)
 

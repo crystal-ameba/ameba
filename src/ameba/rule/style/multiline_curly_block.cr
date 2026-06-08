@@ -39,7 +39,7 @@ module Ameba::Rule::Style
       return if location.same_line?(node.end_location)
       return unless source.code[source.pos(location)]? == '{'
 
-      issue_for node, MSG
+      issue_for(node, MSG)
     end
   end
 end

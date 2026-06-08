@@ -36,7 +36,7 @@ module Ameba::Rule
     #
     # NOTE: Must be overridden for other type of rules.
     def test(source : Source)
-      AST::NodeVisitor.new self, source
+      AST::NodeVisitor.new(self, source)
     end
 
     # NOTE: Can't be abstract
@@ -51,7 +51,7 @@ module Ameba::Rule
     # source.valid?
     # ```
     def catch(source : Source)
-      source.tap { test source }
+      source.tap { test(source) }
     end
 
     # Returns a name of this rule, which is basically a class name.

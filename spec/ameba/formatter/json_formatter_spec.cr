@@ -2,11 +2,11 @@ require "../../spec_helper"
 
 private def get_result(sources = [Ameba::Source.new])
   output = IO::Memory.new
-  formatter = Ameba::Formatter::JSONFormatter.new output
+  formatter = Ameba::Formatter::JSONFormatter.new(output)
 
-  formatter.started sources
-  sources.each { |source| formatter.source_finished source }
-  formatter.finished sources
+  formatter.started(sources)
+  sources.each { |source| formatter.source_finished(source) }
+  formatter.finished(sources)
 
   JSON.parse(output.to_s)
 end
@@ -25,47 +25,47 @@ module Ameba::Formatter
 
     context "sources" do
       it "doesn't add empty sources" do
-        result = get_result [Source.new path: "source.cr"]
+        result = get_result([Source.new(path: "source.cr")])
         result["sources"].as_a.should be_empty
       end
 
       it "shows path to the source" do
-        source = Source.new path: "source.cr"
-        source.add_issue DummyRule.new, {1, 2}, "message"
+        source = Source.new(path: "source.cr")
+        source.add_issue(DummyRule.new, {1, 2}, "message")
 
-        result = get_result [source]
+        result = get_result([source])
         result["sources"][0]["path"].should eq "source.cr"
       end
 
       it "shows rule name" do
         source = Source.new
-        source.add_issue DummyRule.new, {1, 2}, "message"
+        source.add_issue(DummyRule.new, {1, 2}, "message")
 
-        result = get_result [source]
+        result = get_result([source])
         result["sources"][0]["issues"][0]["rule_name"].should eq DummyRule.rule_name
       end
 
       it "shows severity" do
         source = Source.new
-        source.add_issue DummyRule.new, {1, 2}, "message"
+        source.add_issue(DummyRule.new, {1, 2}, "message")
 
-        result = get_result [source]
+        result = get_result([source])
         result["sources"][0]["issues"][0]["severity"].should eq "Convention"
       end
 
       it "shows a message" do
         source = Source.new
-        source.add_issue DummyRule.new, {1, 2}, "message"
+        source.add_issue(DummyRule.new, {1, 2}, "message")
 
-        result = get_result [source]
+        result = get_result([source])
         result["sources"][0]["issues"][0]["message"].should eq "message"
       end
 
       it "shows issue location" do
         source = Source.new
-        source.add_issue DummyRule.new, {1, 2}, "message"
+        source.add_issue(DummyRule.new, {1, 2}, "message")
 
-        result = get_result [source]
+        result = get_result([source])
         location = result["sources"][0]["issues"][0]["location"]
         location["line"].should eq 1
         location["column"].should eq 2
@@ -78,7 +78,7 @@ module Ameba::Formatter
           Crystal::Location.new("path", 5, 4),
           "message"
 
-        result = get_result [source]
+        result = get_result([source])
         end_location = result["sources"][0]["issues"][0]["end_location"]
         end_location["line"].should eq 5
         end_location["column"].should eq 4
@@ -87,19 +87,19 @@ module Ameba::Formatter
 
     context "summary" do
       it "shows a target sources count" do
-        result = get_result [Source.new, Source.new]
+        result = get_result([Source.new, Source.new])
         result["summary"]["target_sources_count"].should eq 2
       end
 
       it "shows issues count" do
         s1 = Source.new
-        s1.add_issue DummyRule.new, {1, 2}, "message1"
-        s1.add_issue DummyRule.new, {1, 2}, "message2"
+        s1.add_issue(DummyRule.new, {1, 2}, "message1")
+        s1.add_issue(DummyRule.new, {1, 2}, "message2")
 
         s2 = Source.new
-        s2.add_issue DummyRule.new, {1, 2}, "message3"
+        s2.add_issue(DummyRule.new, {1, 2}, "message3")
 
-        result = get_result [s1, s2]
+        result = get_result([s1, s2])
         result["summary"]["issues_count"].should eq 3
       end
     end

@@ -32,14 +32,14 @@ module Ameba::Rule::Lint
     MSG = "Literal value found in conditional"
 
     def test(source, node : Crystal::If | Crystal::Unless | Crystal::Until)
-      issue_for node.cond, MSG if literal?(node.cond)
+      issue_for(node.cond, MSG) if literal?(node.cond)
     end
 
     def test(source, node : Crystal::Case)
       return unless cond = node.cond
       return unless static_literal?(cond)
 
-      issue_for cond, MSG
+      issue_for(cond, MSG)
     end
 
     def test(source, node : Crystal::While)
@@ -49,7 +49,7 @@ module Ameba::Rule::Lint
       # allow `while true`
       return if cond.is_a?(Crystal::BoolLiteral) && cond.value
 
-      issue_for cond, MSG
+      issue_for(cond, MSG)
     end
   end
 end

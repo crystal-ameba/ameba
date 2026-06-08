@@ -104,9 +104,9 @@ module Ameba::AST
           end
           CRYSTAL
         rule.scopes.size.should eq 3
-        rule.scopes.each &.visibility.should eq Crystal::Visibility::Private
+        rule.scopes.each(&.visibility.should eq Crystal::Visibility::Private)
         rule.scopes.last.node.visibility.should eq Crystal::Visibility::Private
-        rule.scopes[0...-1].each &.node.visibility.should eq Crystal::Visibility::Public
+        rule.scopes[0...-1].each(&.node.visibility.should eq Crystal::Visibility::Public)
       end
     end
   end

@@ -35,7 +35,7 @@ module Ameba::Rule::Lint
       return unless code = node_source(node, source.lines)
       return if code.starts_with?("{{ ") && code.ends_with?(" }}")
 
-      issue_for node, MSG do |corrector|
+      issue_for(node, MSG) do |corrector|
         corrected_code =
           "{{ #{code[2...-2].strip} }}"
 

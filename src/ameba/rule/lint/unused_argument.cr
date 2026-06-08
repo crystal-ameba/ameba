@@ -39,7 +39,7 @@ module Ameba::Rule::Lint
           "as an argument name to indicate that it won't be used."
 
     def test(source)
-      AST::ScopeVisitor.new self, source
+      AST::ScopeVisitor.new(self, source)
     end
 
     def test(source, node : Crystal::ProcLiteral, scope : AST::Scope)
@@ -72,7 +72,7 @@ module Ameba::Rule::Lint
         node = argument.node
 
         location = node.location
-        name_end_location = location.try &.adjust(column_number: argument.name.size - 1)
+        name_end_location = location.try(&.adjust(column_number: argument.name.size - 1))
 
         if node.responds_to?(:restriction)
           end_location = node.restriction.try(&.end_location)
@@ -80,11 +80,11 @@ module Ameba::Rule::Lint
         end_location ||= name_end_location
 
         if location && name_end_location && end_location
-          issue_for location, end_location, message do |corrector|
+          issue_for(location, end_location, message) do |corrector|
             corrector.replace(location, name_end_location, name_suggestion)
           end
         else
-          issue_for node, message
+          issue_for(node, message)
         end
       end
     end

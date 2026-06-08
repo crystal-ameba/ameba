@@ -37,7 +37,7 @@ module Ameba::AST
 
     # Returns `true` if the `name` starts with '_', `false` otherwise.
     def ignored?
-      name.starts_with? '_'
+      name.starts_with?('_')
     end
 
     # Name of the argument.
@@ -46,7 +46,7 @@ module Ameba::AST
       when Crystal::Var, Crystal::Arg
         current_node.name
       else
-        raise ArgumentError.new "Invalid node"
+        raise ArgumentError.new("Invalid node")
       end
     end
   end

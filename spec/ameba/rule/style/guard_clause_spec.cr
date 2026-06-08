@@ -87,7 +87,7 @@ private def it_reports_control_expression(kw, *, file = __FILE__, line = __LINE_
       end
       CRYSTAL
 
-    expect_no_corrections source, file: file, line: line
+    expect_no_corrections(source, file: file, line: line)
   end
 
   it "reports an issue with #{kw} in the else branch", file, line do
@@ -102,7 +102,7 @@ private def it_reports_control_expression(kw, *, file = __FILE__, line = __LINE_
       end
       CRYSTAL
 
-    expect_no_corrections source, file: file, line: line
+    expect_no_corrections(source, file: file, line: line)
   end
 
   it "doesn't report an issue if condition has multiple lines", file, line do
@@ -171,7 +171,7 @@ private def it_reports_control_expression(kw, *, file = __FILE__, line = __LINE_
       end
       CRYSTAL
 
-    expect_no_corrections source, file: file, line: line
+    expect_no_corrections(source, file: file, line: line)
   end
 end
 

@@ -60,7 +60,7 @@ module Ameba::Rule::Lint
     MSG = "Duplicate branch body detected"
 
     def test(source)
-      AST::ElseIfAwareNodeVisitor.new self, source, skip: :macro
+      AST::ElseIfAwareNodeVisitor.new(self, source, skip: :macro)
     end
 
     def test(
@@ -75,7 +75,7 @@ module Ameba::Rule::Lint
         next if ignore_constant_branches? && body_node.is_a?(Crystal::Path)
         next if found_bodies.add?(body_node.to_s)
 
-        issue_for body_node, MSG
+        issue_for(body_node, MSG)
       end
     end
 

@@ -24,7 +24,7 @@ private def expect_invalid_location(code,
                                     message exception_message,
                                     file = __FILE__,
                                     line = __LINE__)
-  expect_raises Exception, exception_message, file, line do
+  expect_raises(Exception, exception_message, file, line) do
     Ameba::Spec::AnnotatedSource.new(
       lines: code.lines,
       issues: [dummy_issue(code, "Message", position, end_position, "path")]

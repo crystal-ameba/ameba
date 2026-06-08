@@ -69,7 +69,7 @@ module Ameba::Rule::Style
     CRYSTAL_KEYWORDS = Crystal::Keyword.values.map(&.to_s)
 
     def test(source)
-      AST::ScopeCallsWithSelfReceiverVisitor.new self, source
+      AST::ScopeCallsWithSelfReceiverVisitor.new(self, source)
     end
 
     def test(source, node : Crystal::Call, scope : AST::Scope)
@@ -104,7 +104,7 @@ module Ameba::Rule::Style
       return if name.in?(vars)
       return unless node_source = node_source(node, source.lines)
 
-      issue_for obj, MSG do |corrector|
+      issue_for(obj, MSG) do |corrector|
         corrector.replace(node, node_source.sub(/\Aself\s*\./, ""))
       end
     end

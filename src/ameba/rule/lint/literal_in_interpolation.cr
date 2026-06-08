@@ -29,7 +29,7 @@ module Ameba::Rule::Lint
 
     def test(source, node : Crystal::StringInterpolation)
       each_literal_node(source, node) do |exp|
-        issue_for exp, MSG
+        issue_for(exp, MSG)
       end
     end
 

@@ -56,7 +56,7 @@ module Ameba::Rule::Lint
         end
       return unless replacement
 
-      issue_for matcher, MSG % {replacement, matcher.to_s} do |corrector|
+      issue_for(matcher, MSG % {replacement, matcher.to_s}) do |corrector|
         corrector.replace(matcher, replacement)
       end
     end

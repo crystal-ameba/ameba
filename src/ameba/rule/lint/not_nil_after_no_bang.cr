@@ -34,7 +34,7 @@ module Ameba::Rule::Lint
     CALL_NAMES       = %w[index rindex match]
 
     def test(source)
-      AST::NodeVisitor.new self, source, skip: :macro
+      AST::NodeVisitor.new(self, source, skip: :macro)
     end
 
     def test(source, node : Crystal::Call)
@@ -50,7 +50,7 @@ module Ameba::Rule::Lint
 
       msg = MSG % {obj.name, obj.name}
 
-      issue_for name_location, end_location, msg do |corrector|
+      issue_for(name_location, end_location, msg) do |corrector|
         corrector.insert_after(name_location_end, '!')
         corrector.remove_trailing(node, {{ ".not_nil!".size }})
       end

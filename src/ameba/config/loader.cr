@@ -43,7 +43,7 @@ class Ameba::Config
       config.raw.is_a?(Hash) ||
         raise "Invalid config file format"
 
-      rules = Rule.rules.map &.new(config).as(Rule::Base)
+      rules = Rule.rules.map(&.new(config).as(Rule::Base))
 
       new(
         rules: rules,
@@ -72,7 +72,7 @@ class Ameba::Config
       end
       content ||= "{}"
 
-      from_yaml YAML.parse(content), root
+      from_yaml(YAML.parse(content), root)
     rescue ex
       raise "Unable to load config file: #{ex.message}"
     end

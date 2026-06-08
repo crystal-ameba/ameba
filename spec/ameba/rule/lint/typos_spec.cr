@@ -2,7 +2,7 @@ require "../../../spec_helper"
 
 private def check_typos_bin!
   unless Ameba::Rule::Lint::Typos::BIN_PATH
-    pending! "`typos` executable is not available"
+    pending!("`typos` executable is not available")
   end
 end
 

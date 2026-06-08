@@ -46,9 +46,9 @@ module Ameba::Rule::Style
 
       # `return(nil)`
       if node_code.includes?('(')
-        issue_for exp, MSG
+        issue_for(exp, MSG)
       else
-        issue_for exp, MSG do |corrector|
+        issue_for(exp, MSG) do |corrector|
           corrector.replace(node, node_code.sub(/\s*\(?nil\)?$/, ""))
         end
       end

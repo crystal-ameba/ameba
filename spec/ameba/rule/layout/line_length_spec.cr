@@ -18,12 +18,12 @@ module Ameba::Rule::Layout
     end
 
     it "fails if there is at least one line longer than MaxLength symbols" do
-      source = Source.new long_line
+      source = Source.new(long_line)
       subject.catch(source).should_not be_valid
     end
 
     it "reports rule, pos and message" do
-      source = Source.new long_line, "source.cr"
+      source = Source.new(long_line, "source.cr")
       subject.catch(source).should_not be_valid
 
       issue = source.issues.first

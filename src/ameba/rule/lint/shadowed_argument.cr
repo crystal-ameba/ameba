@@ -44,7 +44,7 @@ module Ameba::Rule::Lint
     MSG = "Argument `%s` is assigned before it is used"
 
     def test(source)
-      AST::ScopeVisitor.new self, source
+      AST::ScopeVisitor.new(self, source)
     end
 
     def test(source, node, scope : AST::Scope)
@@ -75,7 +75,7 @@ module Ameba::Rule::Lint
             assigns.first?
         next unless target
 
-        issue_for target.node, MSG % arg.name
+        issue_for(target.node, MSG % arg.name)
       end
     end
   end

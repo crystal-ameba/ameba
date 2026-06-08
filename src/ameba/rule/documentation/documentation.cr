@@ -41,7 +41,7 @@ module Ameba::Rule::Documentation
     ]
 
     def test(source)
-      AST::ScopeVisitor.new self, source
+      AST::ScopeVisitor.new(self, source)
     end
 
     def test(source, node : Crystal::ClassDef, scope : AST::Scope)
@@ -76,9 +76,9 @@ module Ameba::Rule::Documentation
       return if (visibility = scope.visibility) && !visibility.public?
 
       if doc = node.doc.presence
-        issue_for node, MSG_EXAMPLE unless valid_example?(doc)
+        issue_for(node, MSG_EXAMPLE) unless valid_example?(doc)
       else
-        issue_for node, MSG
+        issue_for(node, MSG)
       end
     end
 

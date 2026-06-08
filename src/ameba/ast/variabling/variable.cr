@@ -124,7 +124,7 @@ module Ameba::AST
 
     # Returns `true` if the name starts with '_', `false` if not.
     def ignored?
-      name.starts_with? '_'
+      name.starts_with?('_')
     end
 
     # Returns `true` if the `node` represents exactly

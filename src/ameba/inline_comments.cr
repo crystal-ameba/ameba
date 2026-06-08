@@ -39,7 +39,7 @@ module Ameba
     # ```
     def location_disabled?(location : Crystal::Location?, rule)
       return false if rule.name.in?(Rule::SPECIAL)
-      return false unless line_number = location.try &.line_number.try &.- 1
+      return false unless line_number = location.try(&.line_number.try(&.- 1))
       return false unless line = lines[line_number]?
 
       line_disabled?(line, rule) ||
@@ -81,7 +81,7 @@ module Ameba
     end
 
     private def comment?(line : String)
-      line.lstrip.starts_with? '#'
+      line.lstrip.starts_with?('#')
     end
 
     private def line_disabled?(line, rule)

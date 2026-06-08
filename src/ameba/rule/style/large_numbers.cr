@@ -44,10 +44,10 @@ module Ameba::Rule::Style
 
         parsed = parse_number(token.raw)
 
-        if allowed?(*parsed) && (expected = underscored *parsed) != token.raw
+        if allowed?(*parsed) && (expected = underscored(*parsed)) != token.raw
           location = name_location_or(token, token.raw)
 
-          issue_for *location, MSG % expected do |corrector|
+          issue_for(*location, MSG % expected) do |corrector|
             corrector.replace(*location, expected)
           end
         end

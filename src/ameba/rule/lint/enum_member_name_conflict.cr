@@ -37,7 +37,7 @@ module Ameba::Rule::Lint
         next unless member.is_a?(Crystal::Arg)
         next if found_names.add?(member.name.camelcase.downcase)
 
-        issue_for member, MSG, prefer_name_location: true
+        issue_for(member, MSG, prefer_name_location: true)
       end
     end
   end

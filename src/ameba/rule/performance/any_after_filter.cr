@@ -44,7 +44,7 @@ module Ameba::Rule::Performance
       return unless obj.is_a?(Crystal::Call) && has_block?(obj)
       return unless obj.name.in?(filter_names)
 
-      issue_for name_location(obj), name_end_location(node), MSG % obj.name
+      issue_for(name_location(obj), name_end_location(node), MSG % obj.name)
     end
   end
 end

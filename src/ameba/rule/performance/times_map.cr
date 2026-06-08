@@ -32,7 +32,7 @@ module Ameba::Rule::Performance
     MSG = "Use `Array.new(%1$s) {...}` instead of `%1$s.times.map {...}.to_a`"
 
     def test(source)
-      AST::NodeVisitor.new self, source, skip: :macro
+      AST::NodeVisitor.new(self, source, skip: :macro)
     end
 
     # ameba:disable Metrics/CyclomaticComplexity
@@ -49,7 +49,7 @@ module Ameba::Rule::Performance
       return unless location = obj3.location
       return unless end_location = name_end_location(node)
 
-      issue_for location, end_location, MSG % obj3 do |corrector|
+      issue_for(location, end_location, MSG % obj3) do |corrector|
         corrected_code =
           case
           when block = obj.block

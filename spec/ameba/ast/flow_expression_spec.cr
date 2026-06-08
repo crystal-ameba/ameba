@@ -5,7 +5,7 @@ module Ameba::AST
     describe "#initialize" do
       it "creates a new flow expression" do
         node = as_node("return 22")
-        flow_expression = FlowExpression.new node, false
+        flow_expression = FlowExpression.new(node, false)
         flow_expression.node.should_not be_nil
         flow_expression.in_loop?.should be_false
       end
@@ -13,13 +13,13 @@ module Ameba::AST
       describe "#delegation" do
         it "delegates to_s to @node" do
           node = as_node("return 22")
-          flow_expression = FlowExpression.new node, false
+          flow_expression = FlowExpression.new(node, false)
           flow_expression.to_s.should eq node.to_s
         end
 
         it "delegates locations to @node" do
           node = as_node("break if true")
-          flow_expression = FlowExpression.new node, false
+          flow_expression = FlowExpression.new(node, false)
           flow_expression.location.should eq node.location
           flow_expression.end_location.should eq node.end_location
         end
@@ -35,7 +35,7 @@ module Ameba::AST
             end
             CRYSTAL
           node = nodes.expressions_nodes.first
-          flow_expression = FlowExpression.new node, false
+          flow_expression = FlowExpression.new(node, false)
           flow_expression.unreachable_nodes.should eq nodes.assign_nodes
         end
 
@@ -51,7 +51,7 @@ module Ameba::AST
             end
             CRYSTAL
           node = nodes.expressions_nodes.first
-          flow_expression = FlowExpression.new node, false
+          flow_expression = FlowExpression.new(node, false)
           flow_expression.unreachable_nodes.empty?.should be_true
         end
 
@@ -63,7 +63,7 @@ module Ameba::AST
             end
             CRYSTAL
           node = nodes.expressions_nodes.first
-          flow_expression = FlowExpression.new node, false
+          flow_expression = FlowExpression.new(node, false)
           flow_expression.unreachable_nodes.empty?.should be_true
         end
       end
