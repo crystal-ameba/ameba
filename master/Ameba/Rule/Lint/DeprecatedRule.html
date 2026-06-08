@@ -16,7 +16,7 @@
 <script type="text/javascript" src="../../../js/doc.js"></script>
 
   <meta name="repository-name" content="ameba">
-  <title>Ameba::Rule::Naming::ConstantNames - ameba master</title>
+  <title>Ameba::Rule::Lint::DeprecatedRule - ameba master</title>
   <script type="text/javascript">
     CrystalDocs.base_path = "../../../";
   </script>
@@ -439,7 +439,7 @@
       
     </li>
   
-  <li class="parent " data-id="ameba/Ameba/Rule/Lint" data-name="ameba::rule::lint">
+  <li class="parent open current" data-id="ameba/Ameba/Rule/Lint" data-name="ameba::rule::lint">
       <a href="../../../Ameba/Rule/Lint.html">Lint</a>
       
         <ul>
@@ -474,7 +474,7 @@
       
     </li>
   
-  <li class=" " data-id="ameba/Ameba/Rule/Lint/DeprecatedRule" data-name="ameba::rule::lint::deprecatedrule">
+  <li class=" current" data-id="ameba/Ameba/Rule/Lint/DeprecatedRule" data-name="ameba::rule::lint::deprecatedrule">
       <a href="../../../Ameba/Rule/Lint/DeprecatedRule.html">DeprecatedRule</a>
       
     </li>
@@ -749,7 +749,7 @@
       
     </li>
   
-  <li class="parent open current" data-id="ameba/Ameba/Rule/Naming" data-name="ameba::rule::naming">
+  <li class="parent " data-id="ameba/Ameba/Rule/Naming" data-name="ameba::rule::naming">
       <a href="../../../Ameba/Rule/Naming.html">Naming</a>
       
         <ul>
@@ -774,7 +774,7 @@
       
     </li>
   
-  <li class=" current" data-id="ameba/Ameba/Rule/Naming/ConstantNames" data-name="ameba::rule::naming::constantnames">
+  <li class=" " data-id="ameba/Ameba/Rule/Naming/ConstantNames" data-name="ameba::rule::naming::constantnames">
       <a href="../../../Ameba/Rule/Naming/ConstantNames.html">ConstantNames</a>
       
     </li>
@@ -1160,12 +1160,12 @@
 
   <span class="kind">
     class
-  </span> Ameba::<wbr>Rule::<wbr>Naming::<wbr>ConstantNames
+  </span> Ameba::<wbr>Rule::<wbr>Lint::<wbr>DeprecatedRule
 
 </h1>
 
 
-  <ul class="superclass-hierarchy"><li class="superclass"><a href="../../../Ameba/Rule/Naming/ConstantNames.html">Ameba::Rule::Naming::ConstantNames</a></li><li class="superclass"><a href="../../../Ameba/Rule/Base.html">Ameba::Rule::Base</a></li><li class="superclass">Reference</li><li class="superclass">Object</li></ul>
+  <ul class="superclass-hierarchy"><li class="superclass"><a href="../../../Ameba/Rule/Lint/DeprecatedRule.html">Ameba::Rule::Lint::DeprecatedRule</a></li><li class="superclass"><a href="../../../Ameba/Rule/Base.html">Ameba::Rule::Base</a></li><li class="superclass">Reference</li><li class="superclass">Object</li></ul>
 
 
 
@@ -1179,15 +1179,13 @@
     Overview
   </h2>
 
-  <p>A rule that enforces constant names to be in screaming case.</p>
-<p>For example, these constant names are considered valid:</p>
-<pre><code class="language-crystal"><span class="t">LUCKY_NUMBERS</span>     <span class="o">=</span> [<span class="n">3</span>, <span class="n">7</span>, <span class="n">11</span>]
-<span class="t">DOCUMENTATION_URL</span> <span class="o">=</span> <span class="s">&quot;http://crystal-lang.org/docs&quot;</span></code></pre>
-<p>And these are invalid names:</p>
-<pre><code class="language-crystal">myBadConstant <span class="o">=</span> <span class="n">1</span>
-<span class="t">Wrong_NAME</span> <span class="o">=</span> <span class="n">2</span></code></pre>
+  <p>A rule that reports deprecated rules in comment directives.</p>
+<pre><code class="language-crystal"><span class="c"># ameba:disable DeprecatedRuleName</span>
+<span class="k">def</span> <span class="m">foo</span>
+  <span class="n">:bar</span>
+<span class="k">end</span></code></pre>
 <p>YAML configuration example:</p>
-<pre><code class="language-crystal"><span class="t">Naming</span><span class="o">/</span><span class="t">ConstantNames</span>:
+<pre><code class="language-crystal"><span class="t">Lint</span><span class="o">/</span><span class="t">DeprecatedRule</span>:
   <span class="t">Enabled</span>: <span class="n">true</span></code></pre>
 
 
@@ -1205,6 +1203,8 @@
     Included Modules
   </h2>
   <ul class="other-types-list">
+    
+      <li class="other-type"><a href="../../../Ameba/AST/Util.html">Ameba::AST::Util</a></li>
     
       <li class="other-type">YAML::Serializable</li>
     
@@ -1229,8 +1229,8 @@
   </h2>
   
     
-      <a href="https://github.com/crystal-ameba/ameba/blob/5210e05/src/ameba/rule/naming/constant_names.cr#L24" target="_blank">
-        ameba/rule/naming/constant_names.cr
+      <a href="https://github.com/crystal-ameba/ameba/blob/5210e05/src/ameba/rule/lint/deprecated_rule.cr#L17" target="_blank">
+        ameba/rule/lint/deprecated_rule.cr
       </a>
     
     <br/>
@@ -1250,8 +1250,18 @@
   
   <dl>
     
-      <dt class="entry-const" id="MSG">
-        <strong>MSG</strong> = <code><span class="s">&quot;Constant name should be screaming-cased: `%s`, not `%s`&quot;</span></code>
+      <dt class="entry-const" id="ALL_DEPRECATED_RULES">
+        <strong>ALL_DEPRECATED_RULES</strong> = <code><span class="t">Rule</span>.rules.<span class="k">select</span>(<span class="o">&amp;</span>.deprecated?)</code>
+      </dt>
+      
+    
+      <dt class="entry-const" id="MSG_MANY">
+        <strong>MSG_MANY</strong> = <code><span class="s">&quot;Deprecated rules: %s&quot;</span></code>
+      </dt>
+      
+    
+      <dt class="entry-const" id="MSG_ONE">
+        <strong>MSG_ONE</strong> = <code><span class="s">&quot;Deprecated rule: %s&quot;</span></code>
       </dt>
       
     
@@ -1278,7 +1288,7 @@
       <li class="entry-summary">
         <a href="#new%28config%3Dnil%29-class-method" class="signature"><strong>.new</strong>(config = <span class="n">nil</span>)</a>
         
-          <div class="summary"><p>A rule that enforces constant names to be in screaming case.</p></div>
+          <div class="summary"><p>A rule that reports deprecated rules in comment directives.</p></div>
         
       </li>
     
@@ -1401,7 +1411,7 @@
       </li>
     
       <li class="entry-summary">
-        <a href="#test%28source%2Cnode%3ACrystal%3A%3AAssign%29-instance-method" class="signature"><strong>#test</strong>(source, node : Crystal::Assign)</a>
+        <a href="#test%28source%29-instance-method" class="signature"><strong>#test</strong>(source)</a>
         
       </li>
     
@@ -1410,6 +1420,173 @@
 
 
   <div class="methods-inherited">
+    
+      
+
+  <h3>Instance methods inherited from module <code><a href="../../../Ameba/AST/Util.html">Ameba::AST::Util</a></code></h3>
+  
+  
+    <a href="../../../Ameba/AST/Util.html#abort%3F%28node%29-instance-method" class="tooltip">
+      <span>abort?(node)</span>
+    abort?</a>, 
+    
+  
+    <a href="../../../Ameba/AST/Util.html#control_exp_code%28node%3ACrystal%3A%3AControlExpression%2Ccode_lines%29-instance-method" class="tooltip">
+      <span>control_exp_code(node : Crystal::ControlExpression, code_lines)</span>
+    control_exp_code</a>, 
+    
+  
+    <a href="../../../Ameba/AST/Util.html#dynamic_literal%3F%28node%29%3ABool-instance-method" class="tooltip">
+      <span>dynamic_literal?(node) : Bool</span>
+    dynamic_literal?</a>, 
+    
+  
+    <a href="../../../Ameba/AST/Util.html#exit%3F%28node%29-instance-method" class="tooltip">
+      <span>exit?(node)</span>
+    exit?</a>, 
+    
+  
+    <a href="../../../Ameba/AST/Util.html#flow_command%3F%28node%2Cin_loop%29-instance-method" class="tooltip">
+      <span>flow_command?(node, in_loop)</span>
+    flow_command?</a>, 
+    
+  
+    <a href="../../../Ameba/AST/Util.html#flow_expression%3F%28node%2Cin_loop%3Dfalse%29-instance-method" class="tooltip">
+      <span>flow_expression?(node, in_loop = <span class="n">false</span>)</span>
+    flow_expression?</a>, 
+    
+  
+    <a href="../../../Ameba/AST/Util.html#has_arguments%3F%28node%29%3ABool-instance-method" class="tooltip">
+      <span>has_arguments?(node) : Bool</span>
+    has_arguments?</a>, 
+    
+  
+    <a href="../../../Ameba/AST/Util.html#has_block%3F%28node%29%3ABool-instance-method" class="tooltip">
+      <span>has_block?(node) : Bool</span>
+    has_block?</a>, 
+    
+  
+    <a href="../../../Ameba/AST/Util.html#has_short_block%3F%28node%2Ccode_lines%29-instance-method" class="tooltip">
+      <span>has_short_block?(node, code_lines)</span>
+    has_short_block?</a>, 
+    
+  
+    <a href="../../../Ameba/AST/Util.html#heredoc%3F%28node%2Csource%3ASource%29-instance-method" class="tooltip">
+      <span>heredoc?(node, source : Source)</span>
+    heredoc?</a>, 
+    
+  
+    <a href="../../../Ameba/AST/Util.html#literal%3F%28node%29%3ABool-instance-method" class="tooltip">
+      <span>literal?(node) : Bool</span>
+    literal?</a>, 
+    
+  
+    <a href="../../../Ameba/AST/Util.html#loop%3F%28node%29-instance-method" class="tooltip">
+      <span>loop?(node)</span>
+    loop?</a>, 
+    
+  
+    <a href="../../../Ameba/AST/Util.html#name_end_location%28node%29-instance-method" class="tooltip">
+      <span>name_end_location(node)</span>
+    name_end_location</a>, 
+    
+  
+    <a href="../../../Ameba/AST/Util.html#name_location%28node%29-instance-method" class="tooltip">
+      <span>name_location(node)</span>
+    name_location</a>, 
+    
+  
+    <a href="../../../Ameba/AST/Util.html#name_location_or%28token%3ACrystal%3A%3AToken%2Cname%2C%2A%2Cadjust_location_column_number%3Dnil%29-instance-method" class="tooltip">
+      <span>name_location_or(token : Crystal::Token, name, *, adjust_location_column_number = <span class="n">nil</span>)<br/>name_location_or(node : Crystal::ASTNode, *, adjust_location_column_number = <span class="n">nil</span>)</span>
+    name_location_or</a>, 
+    
+  
+    <a href="../../../Ameba/AST/Util.html#name_size%28node%29-instance-method" class="tooltip">
+      <span>name_size(node)</span>
+    name_size</a>, 
+    
+  
+    <a href="../../../Ameba/AST/Util.html#node_source%28node%2Ccode_lines%29-instance-method" class="tooltip">
+      <span>node_source(node, code_lines)</span>
+    node_source</a>, 
+    
+  
+    <a href="../../../Ameba/AST/Util.html#nodoc%3F%28node%29-instance-method" class="tooltip">
+      <span>nodoc?(node)</span>
+    nodoc?</a>, 
+    
+  
+    <a href="../../../Ameba/AST/Util.html#operator_method%3F%28node%29-instance-method" class="tooltip">
+      <span>operator_method?(node)</span>
+    operator_method?</a>, 
+    
+  
+    <a href="../../../Ameba/AST/Util.html#operator_method_name%3F%28name%3AString%29-instance-method" class="tooltip">
+      <span>operator_method_name?(name : String)</span>
+    operator_method_name?</a>, 
+    
+  
+    <a href="../../../Ameba/AST/Util.html#path_name%28node%3ACrystal%3A%3APath%2C%2A%2Cinclude_global%3Dtrue%29%3AString-instance-method" class="tooltip">
+      <span>path_name(node : Crystal::Path, *, include_global = <span class="n">true</span>) : String</span>
+    path_name</a>, 
+    
+  
+    <a href="../../../Ameba/AST/Util.html#path_named%3F%28node%2C%2Anames%3AString%29%3ABool-instance-method" class="tooltip">
+      <span>path_named?(node, *names : String) : Bool</span>
+    path_named?</a>, 
+    
+  
+    <a href="../../../Ameba/AST/Util.html#raise%3F%28node%29-instance-method" class="tooltip">
+      <span>raise?(node)</span>
+    raise?</a>, 
+    
+  
+    <a href="../../../Ameba/AST/Util.html#setter_method%3F%28node%29-instance-method" class="tooltip">
+      <span>setter_method?(node)</span>
+    setter_method?</a>, 
+    
+  
+    <a href="../../../Ameba/AST/Util.html#setter_method_name%3F%28name%3AString%29-instance-method" class="tooltip">
+      <span>setter_method_name?(name : String)</span>
+    setter_method_name?</a>, 
+    
+  
+    <a href="../../../Ameba/AST/Util.html#short_block%3F%28node%2Ccode_lines%29-instance-method" class="tooltip">
+      <span>short_block?(node, code_lines)</span>
+    short_block?</a>, 
+    
+  
+    <a href="../../../Ameba/AST/Util.html#source_between%28loc%2Cend_loc%2Ccode_lines%29%3AString%7CNil-instance-method" class="tooltip">
+      <span>source_between(loc, end_loc, code_lines) : String | Nil</span>
+    source_between</a>, 
+    
+  
+    <a href="../../../Ameba/AST/Util.html#static_literal%3F%28node%29%3ABool-instance-method" class="tooltip">
+      <span>static_literal?(node) : Bool</span>
+    static_literal?</a>, 
+    
+  
+    <a href="../../../Ameba/AST/Util.html#suffix%3F%28node%29-instance-method" class="tooltip">
+      <span>suffix?(node)</span>
+    suffix?</a>, 
+    
+  
+    <a href="../../../Ameba/AST/Util.html#takes_arguments%3F%28node%29%3ABool-instance-method" class="tooltip">
+      <span>takes_arguments?(node) : Bool</span>
+    takes_arguments?</a>
+    
+  
+
+
+      
+
+
+      
+
+
+      
+
+
     
       
 
@@ -1593,22 +1770,20 @@
       
         <div class="doc">
           
-          <p>A rule that enforces constant names to be in screaming case.</p>
-<p>For example, these constant names are considered valid:</p>
-<pre><code class="language-crystal"><span class="t">LUCKY_NUMBERS</span>     <span class="o">=</span> [<span class="n">3</span>, <span class="n">7</span>, <span class="n">11</span>]
-<span class="t">DOCUMENTATION_URL</span> <span class="o">=</span> <span class="s">&quot;http://crystal-lang.org/docs&quot;</span></code></pre>
-<p>And these are invalid names:</p>
-<pre><code class="language-crystal">myBadConstant <span class="o">=</span> <span class="n">1</span>
-<span class="t">Wrong_NAME</span> <span class="o">=</span> <span class="n">2</span></code></pre>
+          <p>A rule that reports deprecated rules in comment directives.</p>
+<pre><code class="language-crystal"><span class="c"># ameba:disable DeprecatedRuleName</span>
+<span class="k">def</span> <span class="m">foo</span>
+  <span class="n">:bar</span>
+<span class="k">end</span></code></pre>
 <p>YAML configuration example:</p>
-<pre><code class="language-crystal"><span class="t">Naming</span><span class="o">/</span><span class="t">ConstantNames</span>:
+<pre><code class="language-crystal"><span class="t">Lint</span><span class="o">/</span><span class="t">DeprecatedRule</span>:
   <span class="t">Enabled</span>: <span class="n">true</span></code></pre>
         </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/5210e05/src/ameba/rule/naming/constant_names.cr#L24" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/5210e05/src/ameba/rule/lint/deprecated_rule.cr#L17" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1738,7 +1913,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/5210e05/src/ameba/rule/naming/constant_names.cr#L25" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/5210e05/src/ameba/rule/lint/deprecated_rule.cr#L20" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1880,7 +2055,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/5210e05/src/ameba/rule/naming/constant_names.cr#L25" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/5210e05/src/ameba/rule/lint/deprecated_rule.cr#L20" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1899,18 +2074,18 @@
       </div>
     </div>
   
-    <div class="entry-detail" id="test(source,node:Crystal::Assign)-instance-method">
+    <div class="entry-detail" id="test(source)-instance-method">
       <div class="signature">
         
-        def <strong>test</strong>(source, node : Crystal::Assign)
+        def <strong>test</strong>(source)
 
-        <a class="method-permalink" href="#test%28source%2Cnode%3ACrystal%3A%3AAssign%29-instance-method">#</a>
+        <a class="method-permalink" href="#test%28source%29-instance-method">#</a>
       </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/5210e05/src/ameba/rule/naming/constant_names.cr#L32" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/5210e05/src/ameba/rule/lint/deprecated_rule.cr#L30" target="_blank">View source</a>]
         
       </div>
     </div>

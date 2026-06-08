@@ -389,6 +389,11 @@
       
     </li>
   
+  <li class=" " data-id="ameba/Ameba/Rule/Deprecated" data-name="ameba::rule::deprecated">
+      <a href="../../../Ameba/Rule/Deprecated.html">Deprecated</a>
+      
+    </li>
+  
   <li class="parent " data-id="ameba/Ameba/Rule/Documentation" data-name="ameba::rule::documentation">
       <a href="../../../Ameba/Rule/Documentation.html">Documentation</a>
       
@@ -466,6 +471,11 @@
   
   <li class=" " data-id="ameba/Ameba/Rule/Lint/DebuggerStatement" data-name="ameba::rule::lint::debuggerstatement">
       <a href="../../../Ameba/Rule/Lint/DebuggerStatement.html">DebuggerStatement</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/Rule/Lint/DeprecatedRule" data-name="ameba::rule::lint::deprecatedrule">
+      <a href="../../../Ameba/Rule/Lint/DeprecatedRule.html">DeprecatedRule</a>
       
     </li>
   
@@ -1228,7 +1238,7 @@ for block or proc arguments.</p>
   </h2>
   
     
-      <a href="https://github.com/crystal-ameba/ameba/blob/fbd27a4/src/ameba/rule/lint/shadowing_outer_local_var.cr#L33" target="_blank">
+      <a href="https://github.com/crystal-ameba/ameba/blob/5210e05/src/ameba/rule/lint/shadowing_outer_local_var.cr#L33" target="_blank">
         ameba/rule/lint/shadowing_outer_local_var.cr
       </a>
     
@@ -1299,6 +1309,20 @@ for block or proc arguments.</p>
     Class Method Summary
   </h2>
   <ul class="list-summary">
+    
+      <li class="entry-summary">
+        <a href="#deprecated%3F-class-method" class="signature"><strong>.deprecated?</strong></a>
+        
+          <div class="summary"><p>Returns <code>true</code> if this rule is deprecated, <code>false</code> otherwise.</p></div>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#deprecation_reason%3AString%7CNil-class-method" class="signature"><strong>.deprecation_reason</strong> : String | Nil</a>
+        
+          <div class="summary"><p>Returns the deprecation reason for this rule, if there is any.</p></div>
+        
+      </li>
     
       <li class="entry-summary">
         <a href="#documentation_url%3AString-class-method" class="signature"><strong>.documentation_url</strong> : String</a>
@@ -1607,7 +1631,7 @@ for block or proc arguments.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/fbd27a4/src/ameba/rule/lint/shadowing_outer_local_var.cr#L33" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/5210e05/src/ameba/rule/lint/shadowing_outer_local_var.cr#L33" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1637,6 +1661,44 @@ for block or proc arguments.</p>
 </a>
     Class Method Detail
   </h2>
+  
+    <div class="entry-detail" id="deprecated?-class-method">
+      <div class="signature">
+        
+        def self.<strong>deprecated?</strong>
+
+        <a class="method-permalink" href="#deprecated%3F-class-method">#</a>
+      </div>
+      
+        <div class="doc">
+          
+          <p>Returns <code>true</code> if this rule is deprecated, <code>false</code> otherwise.</p>
+        </div>
+      
+      <br/>
+      <div>
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="deprecation_reason:String|Nil-class-method">
+      <div class="signature">
+        
+        def self.<strong>deprecation_reason</strong> : String | Nil
+
+        <a class="method-permalink" href="#deprecation_reason%3AString%7CNil-class-method">#</a>
+      </div>
+      
+        <div class="doc">
+          
+          <p>Returns the deprecation reason for this rule, if there is any.</p>
+        </div>
+      
+      <br/>
+      <div>
+        
+      </div>
+    </div>
   
     <div class="entry-detail" id="documentation_url:String-class-method">
       <div class="signature">
@@ -1699,7 +1761,7 @@ for block or proc arguments.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/fbd27a4/src/ameba/rule/lint/shadowing_outer_local_var.cr#L34" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/5210e05/src/ameba/rule/lint/shadowing_outer_local_var.cr#L34" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1841,7 +1903,7 @@ for block or proc arguments.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/fbd27a4/src/ameba/rule/lint/shadowing_outer_local_var.cr#L34" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/5210e05/src/ameba/rule/lint/shadowing_outer_local_var.cr#L34" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1871,7 +1933,7 @@ for block or proc arguments.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/fbd27a4/src/ameba/rule/lint/shadowing_outer_local_var.cr#L49" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/5210e05/src/ameba/rule/lint/shadowing_outer_local_var.cr#L49" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1887,7 +1949,7 @@ for block or proc arguments.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/fbd27a4/src/ameba/rule/lint/shadowing_outer_local_var.cr#L42" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/5210e05/src/ameba/rule/lint/shadowing_outer_local_var.cr#L42" target="_blank">View source</a>]
         
       </div>
     </div>

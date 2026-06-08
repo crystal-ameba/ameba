@@ -389,6 +389,11 @@
       
     </li>
   
+  <li class=" " data-id="ameba/Ameba/Rule/Deprecated" data-name="ameba::rule::deprecated">
+      <a href="../../../Ameba/Rule/Deprecated.html">Deprecated</a>
+      
+    </li>
+  
   <li class="parent " data-id="ameba/Ameba/Rule/Documentation" data-name="ameba::rule::documentation">
       <a href="../../../Ameba/Rule/Documentation.html">Documentation</a>
       
@@ -466,6 +471,11 @@
   
   <li class=" " data-id="ameba/Ameba/Rule/Lint/DebuggerStatement" data-name="ameba::rule::lint::debuggerstatement">
       <a href="../../../Ameba/Rule/Lint/DebuggerStatement.html">DebuggerStatement</a>
+      
+    </li>
+  
+  <li class=" " data-id="ameba/Ameba/Rule/Lint/DeprecatedRule" data-name="ameba::rule::lint::deprecatedrule">
+      <a href="../../../Ameba/Rule/Lint/DeprecatedRule.html">DeprecatedRule</a>
       
     </li>
   
@@ -1223,7 +1233,7 @@
   </h2>
   
     
-      <a href="https://github.com/crystal-ameba/ameba/blob/fbd27a4/src/ameba/rule/performance/first_last_after_filter.cr#L28" target="_blank">
+      <a href="https://github.com/crystal-ameba/ameba/blob/5210e05/src/ameba/rule/performance/first_last_after_filter.cr#L28" target="_blank">
         ameba/rule/performance/first_last_after_filter.cr
       </a>
     
@@ -1306,6 +1316,20 @@
     Class Method Summary
   </h2>
   <ul class="list-summary">
+    
+      <li class="entry-summary">
+        <a href="#deprecated%3F-class-method" class="signature"><strong>.deprecated?</strong></a>
+        
+          <div class="summary"><p>Returns <code>true</code> if this rule is deprecated, <code>false</code> otherwise.</p></div>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#deprecation_reason%3AString%7CNil-class-method" class="signature"><strong>.deprecation_reason</strong> : String | Nil</a>
+        
+          <div class="summary"><p>Returns the deprecation reason for this rule, if there is any.</p></div>
+        
+      </li>
     
       <li class="entry-summary">
         <a href="#documentation_url%3AString-class-method" class="signature"><strong>.documentation_url</strong> : String</a>
@@ -1627,6 +1651,16 @@
   <h3>Class methods inherited from class <code><a href="../../../Ameba/Rule/Performance/Base.html">Ameba::Rule::Performance::Base</a></code></h3>
   
   
+    <a href="../../../Ameba/Rule/Performance/Base.html#deprecated%3F-class-method" class="tooltip">
+      <span>deprecated?</span>
+    deprecated?</a>, 
+    
+  
+    <a href="../../../Ameba/Rule/Performance/Base.html#deprecation_reason%3AString%7CNil-class-method" class="tooltip">
+      <span>deprecation_reason : String | Nil</span>
+    deprecation_reason</a>, 
+    
+  
     <a href="../../../Ameba/Rule/Performance/Base.html#documentation_url%3AString-class-method" class="tooltip">
       <span>documentation_url : String</span>
     documentation_url</a>, 
@@ -1858,7 +1892,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/fbd27a4/src/ameba/rule/performance/first_last_after_filter.cr#L28" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/5210e05/src/ameba/rule/performance/first_last_after_filter.cr#L28" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1888,6 +1922,44 @@
 </a>
     Class Method Detail
   </h2>
+  
+    <div class="entry-detail" id="deprecated?-class-method">
+      <div class="signature">
+        
+        def self.<strong>deprecated?</strong>
+
+        <a class="method-permalink" href="#deprecated%3F-class-method">#</a>
+      </div>
+      
+        <div class="doc">
+          
+          <p>Returns <code>true</code> if this rule is deprecated, <code>false</code> otherwise.</p>
+        </div>
+      
+      <br/>
+      <div>
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="deprecation_reason:String|Nil-class-method">
+      <div class="signature">
+        
+        def self.<strong>deprecation_reason</strong> : String | Nil
+
+        <a class="method-permalink" href="#deprecation_reason%3AString%7CNil-class-method">#</a>
+      </div>
+      
+        <div class="doc">
+          
+          <p>Returns the deprecation reason for this rule, if there is any.</p>
+        </div>
+      
+      <br/>
+      <div>
+        
+      </div>
+    </div>
   
     <div class="entry-detail" id="documentation_url:String-class-method">
       <div class="signature">
@@ -1950,7 +2022,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/fbd27a4/src/ameba/rule/performance/first_last_after_filter.cr#L31" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/5210e05/src/ameba/rule/performance/first_last_after_filter.cr#L31" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2120,7 +2192,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/fbd27a4/src/ameba/rule/performance/first_last_after_filter.cr#L31" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/5210e05/src/ameba/rule/performance/first_last_after_filter.cr#L31" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2150,7 +2222,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/fbd27a4/src/ameba/rule/performance/first_last_after_filter.cr#L46" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/5210e05/src/ameba/rule/performance/first_last_after_filter.cr#L46" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2166,7 +2238,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/fbd27a4/src/ameba/rule/performance/first_last_after_filter.cr#L42" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/5210e05/src/ameba/rule/performance/first_last_after_filter.cr#L42" target="_blank">View source</a>]
         
       </div>
     </div>
