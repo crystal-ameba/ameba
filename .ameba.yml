@@ -3,5 +3,28 @@ Lint/Typos:
   Excluded:
     - spec/ameba/rule/lint/typos_spec.cr
 
+Style/CallParentheses:
+  Enabled: true
+  ExcludedDslCallNames:
+    # Ameba rule properties
+    - "* > properties > *"
+
+    # Spec assertions
+    - "** > it > expect_issue"
+    - "** > it > expect_no_issues"
+    - "** > it > expect_correction"
+    - "** > it > expect_no_corrections"
+
+    # Spec helpers
+    - "** > describe > it_tokenizes"
+    - "** > describe > it_transforms"
+    - "** > describe > it_detects_empty_expression"
+    - "** > describe > it_reports_constant"
+    - "** > describe > it_reports_control_expression"
+    - "** > describe > it_reports_body"
+    - "** > describe > it_reports_var_name"
+    - "** > describe > it_reports_name"
+    - "** > describe > it_reports_method_name"
+
 Style/Elsif:
   Enabled: true
