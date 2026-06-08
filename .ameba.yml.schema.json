@@ -1795,6 +1795,13 @@
             "should",
             "should_not"
           ]
+        },
+        "ExcludedDslCallNames": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": []
         }
       }
     },
