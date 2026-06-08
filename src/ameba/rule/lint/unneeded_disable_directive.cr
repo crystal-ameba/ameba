@@ -39,21 +39,19 @@ module Ameba::Rule::Lint
     end
 
     def test(source, excluded_rules : Set(String))
-      Tokenizer.new(source).run do |token|
-        next unless token.type.comment?
-        next unless directive = source.parse_inline_directive(token.value.to_s)
-        next unless names = unneeded_disables(source, directive, token.location, excluded_rules)
-        next if names.empty?
+      each_inline_directive(source) do |token, action, rules|
+        next unless action == "disable"
+
+        next unless names = unneeded_disables(source, rules, token.location, excluded_rules)
+        next unless names.present?
 
         issue_for name_location_or(token, token.value),
           MSG % names.map { |name| "`#{name}`" }.join(", ")
       end
     end
 
-    private def unneeded_disables(source, directive, location, excluded_rules)
-      return unless directive[:action] == "disable"
-
-      directive[:rules].select do |rule_name|
+    private def unneeded_disables(source, rules, location, excluded_rules)
+      rules.select do |rule_name|
         next true if rule_name == name
 
         next if rule_name.in?(excluded_rules)

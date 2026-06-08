@@ -29,11 +29,8 @@ module Ameba::Rule::Lint
       .map!(&.underscore.gsub('_', '-'))
 
     def test(source)
-      Tokenizer.new(source).run do |token|
-        next unless token.type.comment?
-        next unless directive = source.parse_inline_directive(token.value.to_s)
-
-        check_action source, token, directive[:action]
+      each_inline_directive(source) do |token, action|
+        check_action source, token, action
       end
     end
 

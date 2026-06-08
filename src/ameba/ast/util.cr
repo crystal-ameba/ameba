@@ -2,6 +2,16 @@
 module Ameba::AST::Util
   extend self
 
+  # Yields each inline directive found in the source.
+  def each_inline_directive(source, &block : Crystal::Token, String, Array(String) -> _)
+    Tokenizer.new(source).run do |token|
+      next unless token.type.comment?
+      next unless directive = source.parse_inline_directive(token.value.to_s)
+
+      block.call(token, directive[:action], directive[:rules])
+    end
+  end
+
   # Returns tuple with two bool flags:
   #
   # 1. is *node* a literal?
