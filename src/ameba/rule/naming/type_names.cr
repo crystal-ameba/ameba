@@ -64,7 +64,7 @@ module Ameba::Rule::Naming
 
       return if (expected = name.camelcase) == name
 
-      issue_for node.name, MSG % {expected, name}
+      issue_for(node.name, MSG % {expected, name})
     end
   end
 end

@@ -2,8 +2,8 @@ require "../../../spec_helper"
 
 module Ameba::AST
   describe Argument do
-    arg = Crystal::Arg.new "a"
-    scope = Scope.new as_node "foo = 1"
+    arg = Crystal::Arg.new("a")
+    scope = Scope.new(as_node("foo = 1"))
     variable = Variable.new(Crystal::Var.new("foo"), scope)
 
     describe "#initialize" do

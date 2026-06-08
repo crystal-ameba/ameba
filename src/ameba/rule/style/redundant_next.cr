@@ -121,11 +121,11 @@ module Ameba::Rule::Style
       end_location = location.try(&.adjust(column_number: {{ "next".size - 1 }}))
 
       if exp_code = control_exp_code(node, source.lines)
-        issue_for location, end_location, MSG do |corrector|
+        issue_for(location, end_location, MSG) do |corrector|
           corrector.replace(node, exp_code)
         end
       else
-        issue_for location, end_location, MSG
+        issue_for(location, end_location, MSG)
       end
     end
   end

@@ -84,7 +84,7 @@ module Ameba::Rule::Style
       begin_end_loc = begin_loc.adjust(column_number: {{ "begin".size - 1 }})
       end_end_loc = end_loc.adjust(column_number: {{ "end".size - 1 }})
 
-      issue_for begin_loc, begin_end_loc, MSG do |corrector|
+      issue_for(begin_loc, begin_end_loc, MSG) do |corrector|
         corrector.remove(begin_loc, begin_end_loc)
         corrector.remove(end_loc, end_end_loc)
       end
@@ -106,7 +106,7 @@ module Ameba::Rule::Style
     private def def_redundant_begin_range(source, node)
       return unless code = node_source(node, source.lines)
 
-      lexer = Crystal::Lexer.new code
+      lexer = Crystal::Lexer.new(code)
       return unless begin_loc = def_redundant_begin_loc(lexer)
       return unless end_loc = def_redundant_end_loc(lexer)
 

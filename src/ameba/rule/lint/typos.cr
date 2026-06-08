@@ -89,11 +89,11 @@ module Ameba::Rule::Lint
           typo.typo, corrections.map { |correction| "`#{correction}`" }.join(" | "),
         }
         if corrections.size == 1
-          issue_for typo.location, typo.end_location, message do |corrector|
+          issue_for(typo.location, typo.end_location, message) do |corrector|
             corrector.replace(typo.location, typo.end_location, corrections.first)
           end
         else
-          issue_for typo.location, typo.end_location, message
+          issue_for(typo.location, typo.end_location, message)
         end
       end
     rescue ex
@@ -105,7 +105,7 @@ module Ameba::Rule::Lint
         return Typos.typos_from(bin_path, source)
       end
       if fail_on_missing_bin?
-        raise RuntimeError.new "Could not find `typos` executable"
+        raise RuntimeError.new("Could not find `typos` executable")
       end
     end
   end

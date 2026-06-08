@@ -47,7 +47,7 @@ module Ameba::Rule::Lint
     end
 
     def test(source, node : Crystal::ProcLiteral | Crystal::Block, scope : AST::Scope)
-      find_shadowing source, scope
+      find_shadowing(source, scope)
     end
 
     private def find_shadowing(source, scope)
@@ -66,7 +66,7 @@ module Ameba::Rule::Lint
         next if outer_scope.assigns_type_dec_variable?(name)
         next if mutually_exclusive_branches?(branch_visitors, variable, arg)
 
-        issue_for arg.node, MSG % name, prefer_name_location: true
+        issue_for(arg.node, MSG % name, prefer_name_location: true)
       end
     end
 
@@ -125,7 +125,7 @@ module Ameba::Rule::Lint
 
       def visit(node : Crystal::Case)
         record(node)
-        node.cond.try &.accept(self)
+        node.cond.try(&.accept(self))
         visit_when_branches(node, node.whens, node.else)
       end
 
@@ -143,7 +143,7 @@ module Ameba::Rule::Lint
         if else_node = node.else
           enter(node, :else) { else_node.accept(self) }
         end
-        node.ensure.try &.accept(self)
+        node.ensure.try(&.accept(self))
         false
       end
 
@@ -157,7 +157,7 @@ module Ameba::Rule::Lint
 
       private def visit_when_branches(node, whens, else_node)
         whens.each_with_index do |when_node, index|
-          when_node.conds.each &.accept(self)
+          when_node.conds.each(&.accept(self))
           enter(node, index) { when_node.body.accept(self) }
         end
         if else_node

@@ -4,7 +4,7 @@ module Ameba
   describe Source do
     describe ".new" do
       it "allows to create a source by code and path" do
-        source = Source.new "code", "path"
+        source = Source.new("code", "path")
         source.path.should eq "path"
         source.code.should eq "code"
         source.lines.should eq ["code"]
@@ -13,7 +13,7 @@ module Ameba
 
     describe "#fullpath" do
       it "returns a relative path of the source" do
-        source = Source.new path: "./source_spec.cr"
+        source = Source.new(path: "./source_spec.cr")
         source.fullpath.should contain "source_spec.cr"
       end
 
@@ -25,12 +25,12 @@ module Ameba
 
     describe "#spec?" do
       it "returns true if the source is a spec file" do
-        source = Source.new path: "./source_spec.cr"
+        source = Source.new(path: "./source_spec.cr")
         source.spec?.should be_true
       end
 
       it "returns false if the source is not a spec file" do
-        source = Source.new path: "./source.cr"
+        source = Source.new(path: "./source.cr")
         source.spec?.should be_false
       end
     end

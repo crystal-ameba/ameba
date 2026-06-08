@@ -36,7 +36,7 @@ module Ameba::Rule::Lint
                     (arg = node.args.first).is_a?(Crystal::NumberLiteral) &&
                     arg.value.in?("0", "1")
 
-      issue_for node, MSG % node
+      issue_for(node, MSG % node)
     end
   end
 end

@@ -50,12 +50,12 @@ module Ameba::Rule::Lint
     MSG = "Unreachable code detected"
 
     def test(source)
-      AST::FlowExpressionVisitor.new self, source
+      AST::FlowExpressionVisitor.new(self, source)
     end
 
     def test(source, node, flow_expression : AST::FlowExpression)
       return unless unreachable_node = flow_expression.unreachable_nodes.first?
-      issue_for unreachable_node, MSG
+      issue_for(unreachable_node, MSG)
     end
   end
 end

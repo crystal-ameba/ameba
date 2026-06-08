@@ -47,7 +47,7 @@ module Ameba::Rule::Typing
     MSG = "Method should have a return type restriction"
 
     def test(source, node : Crystal::Def)
-      issue_for node, MSG unless valid_return_type?(node)
+      issue_for(node, MSG) unless valid_return_type?(node)
     end
 
     private def valid_return_type?(node : Crystal::ASTNode) : Bool

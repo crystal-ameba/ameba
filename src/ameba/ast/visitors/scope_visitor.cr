@@ -30,15 +30,15 @@ module Ameba::AST
 
     def initialize(@rule, @source, skip = nil)
       @current_scope = Scope.new(@source.ast) # top level scope
-      @skip = skip.try &.map(&.as(Crystal::ASTNode.class))
+      @skip = skip.try(&.map(&.as(Crystal::ASTNode.class)))
 
       super @rule, @source
 
       if @scope_queue.empty?
-        @rule.test @source, @current_scope.node, @current_scope
+        @rule.test(@source, @current_scope.node, @current_scope)
       else
         @scope_queue.each do |scope|
-          @rule.test @source, scope.node, scope
+          @rule.test(@source, scope.node, scope)
         end
       end
     end
@@ -204,7 +204,7 @@ module Ameba::AST
     end
 
     private def accessor_macro?(node)
-      node.name.matches? /^(class_)?(getter[?!]?|setter|property[?!]?)$/
+      node.name.matches?(/^(class_)?(getter[?!]?|setter|property[?!]?)$/)
     end
 
     private def record_macro?(node)

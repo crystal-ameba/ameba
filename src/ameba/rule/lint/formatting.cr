@@ -44,7 +44,7 @@ module Ameba::Rule::Lint
       result = Crystal.format(source_code, source.path)
       return if result == source_code
 
-      issue_for LOCATION, MSG do |corrector|
+      issue_for(LOCATION, MSG) do |corrector|
         corrector.replace(0...source_code.size, result)
       end
     rescue ex : Crystal::SyntaxException

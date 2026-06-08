@@ -16,7 +16,7 @@ module Ameba::AST
     # visitor = Ameba::AST::NodeVisitor.new(rule, source)
     # ```
     def initialize(@rule, @source)
-      @source.ast.accept self
+      @source.ast.accept(self)
     end
 
     # A main visit method that accepts `Crystal::ASTNode`.

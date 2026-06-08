@@ -33,7 +33,7 @@ module Ameba::Rule::Lint
         next unless token.type.comment?
         next unless directive = source.parse_inline_directive(token.value.to_s)
 
-        check_action source, token, directive[:action]
+        check_action(source, token, directive[:action])
       end
     end
 

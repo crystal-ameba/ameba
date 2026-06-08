@@ -73,10 +73,10 @@ module Ameba::Rule::Naming
       case node.name
       when /^get_([a-z]\w*)$/
         return if node.block_arg || takes_arguments?(node)
-        issue_for node, MSG % {$1, node.name}, prefer_name_location: true
+        issue_for(node, MSG % {$1, node.name}, prefer_name_location: true)
       when /^set_([a-z]\w*)$/
         return unless node.args.size == 1
-        issue_for node, MSG % {"#{$1}=", node.name}, prefer_name_location: true
+        issue_for(node, MSG % {"#{$1}=", node.name}, prefer_name_location: true)
       end
     end
   end

@@ -5,15 +5,15 @@ module Ameba::AST
     describe "#visit" do
       it "allow to visit ASTNode" do
         node = Crystal::Parser.new("").parse
-        visitor = CountingVisitor.new node
-        node.accept visitor
+        visitor = CountingVisitor.new(node)
+        node.accept(visitor)
       end
     end
 
     describe "#count" do
       it "is 1 for an empty method" do
         node = Crystal::Parser.new("def hello; end").parse
-        visitor = CountingVisitor.new node
+        visitor = CountingVisitor.new(node)
 
         visitor.count.should eq 1
       end
@@ -27,7 +27,7 @@ module Ameba::AST
           end
           CRYSTAL
         node = Crystal::Parser.new(code).parse
-        visitor = CountingVisitor.new node
+        visitor = CountingVisitor.new(node)
         visitor.count.should eq 1
       end
 
@@ -40,7 +40,7 @@ module Ameba::AST
           end
           CRYSTAL
         node = Crystal::Parser.new(code).parse
-        visitor = CountingVisitor.new node
+        visitor = CountingVisitor.new(node)
         visitor.count.should eq 1
       end
 
@@ -56,7 +56,7 @@ module Ameba::AST
           end
           CRYSTAL
         node = Crystal::Parser.new(code).parse
-        visitor = CountingVisitor.new node
+        visitor = CountingVisitor.new(node)
         visitor.count.should eq 2
       end
 

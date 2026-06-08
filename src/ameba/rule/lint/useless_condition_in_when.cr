@@ -45,11 +45,11 @@ module Ameba::Rule::Lint
       return unless cond_s = cond.to_s.presence
       return if when_node.conds.none?(&.to_s.==(cond_s))
 
-      issue_for cond, MSG
+      issue_for(cond, MSG)
     end
 
     def test(source, node : Crystal::When)
-      ConditionInWhenVisitor.new self, source, node
+      ConditionInWhenVisitor.new(self, source, node)
     end
 
     private class ConditionInWhenVisitor < Crystal::Visitor
@@ -58,7 +58,7 @@ module Ameba::Rule::Lint
       @parent : Crystal::When
 
       def initialize(@rule, @source, @parent)
-        @parent.accept self
+        @parent.accept(self)
       end
 
       def visit(node : Crystal::If | Crystal::Unless)

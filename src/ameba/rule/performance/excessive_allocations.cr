@@ -49,7 +49,7 @@ module Ameba::Rule::Performance
     MSG = "Use `%s {...}` instead of `%s.each {...}` to avoid excessive allocation"
 
     def test(source)
-      AST::NodeVisitor.new self, source, skip: :macro
+      AST::NodeVisitor.new(self, source, skip: :macro)
     end
 
     def test(source, node : Crystal::Call)
@@ -66,7 +66,7 @@ module Ameba::Rule::Performance
 
       msg = MSG % {method, obj.name}
 
-      issue_for name_location, end_location, msg do |corrector|
+      issue_for(name_location, end_location, msg) do |corrector|
         corrector.replace(name_location, end_location, method)
       end
     end

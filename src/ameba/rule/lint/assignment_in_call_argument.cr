@@ -31,7 +31,7 @@ module Ameba::Rule::Lint
 
     def test(source)
       AssignmentInCallArgumentVisitor.new(self, source) do |node|
-        issue_for node, MSG
+        issue_for(node, MSG)
       end
     end
   end
@@ -77,13 +77,13 @@ module Ameba::Rule::Lint
       return false if setter_method?(node) || operator_method?(node)
       return false unless super
 
-      node.obj.try &.accept(self)
+      node.obj.try(&.accept(self))
       in_call_args do
-        node.args.each &.accept(self)
-        node.named_args.try &.each &.accept(self)
+        node.args.each(&.accept(self))
+        node.named_args.try(&.each(&.accept(self)))
       end
-      node.block_arg.try &.accept(self)
-      node.block.try &.accept(self)
+      node.block_arg.try(&.accept(self))
+      node.block.try(&.accept(self))
 
       false
     end

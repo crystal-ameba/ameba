@@ -48,7 +48,7 @@ module Ameba::Rule::Lint
         next unless (right = arg.right).is_a?(Crystal::Call)
         next unless has_arguments?(right)
 
-        issue_for node, MSG
+        issue_for(node, MSG)
       end
     end
   end

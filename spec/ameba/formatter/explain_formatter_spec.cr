@@ -34,7 +34,7 @@ module Ameba::Formatter
 
     describe "#finished" do
       it "writes issue info" do
-        source = Source.new "a = 42", "source.cr"
+        source = Source.new("a = 42", "source.cr")
         output = explanation(source)
         output.should contain "ISSUE INFO"
         output.should contain "This rule always adds an error"
@@ -42,14 +42,14 @@ module Ameba::Formatter
       end
 
       it "writes affected code" do
-        source = Source.new "a = 42", "source.cr"
+        source = Source.new("a = 42", "source.cr")
         output = explanation(source)
         output.should contain "AFFECTED CODE"
         output.should contain "a = 42"
       end
 
       it "writes rule info" do
-        source = Source.new "a = 42", "source.cr"
+        source = Source.new("a = 42", "source.cr")
         output = explanation(source)
         output.should contain "RULE INFO"
         output.should contain "Convention"
@@ -58,14 +58,14 @@ module Ameba::Formatter
       end
 
       it "writes detailed description" do
-        source = Source.new "a = 42", "source.cr"
+        source = Source.new("a = 42", "source.cr")
         output = explanation(source)
         output.should contain "DETAILED DESCRIPTION"
         output.should contain "Rule extended description"
       end
 
       it "writes nothing if location not found" do
-        source = Source.new "a = 42", "another_source.cr"
+        source = Source.new("a = 42", "another_source.cr")
         explanation(source).should be_empty
       end
     end

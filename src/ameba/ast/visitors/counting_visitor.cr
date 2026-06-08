@@ -11,7 +11,7 @@ module Ameba::AST
 
     # Creates a new counting visitor
     def initialize(node : Crystal::ASTNode)
-      node.accept self
+      node.accept(self)
     end
 
     # :nodoc:

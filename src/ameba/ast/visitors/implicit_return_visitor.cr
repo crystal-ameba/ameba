@@ -63,7 +63,7 @@ module Ameba::AST
     def visit(node : Crystal::Arg) : Bool
       report_implicit_return(node)
 
-      incr_stack { node.default_value.try &.accept(self) }
+      incr_stack { node.default_value.try(&.accept(self)) }
 
       false
     end
@@ -71,7 +71,7 @@ module Ameba::AST
     def visit(node : Crystal::EnumDef) : Bool
       report_implicit_return(node)
 
-      incr_stack { node.members.each &.accept(self) }
+      incr_stack { node.members.each(&.accept(self)) }
 
       false
     end
@@ -87,7 +87,7 @@ module Ameba::AST
     def visit(node : Crystal::MultiAssign) : Bool
       report_implicit_return(node)
 
-      incr_stack { node.values.each &.accept(self) }
+      incr_stack { node.values.each(&.accept(self)) }
 
       false
     end
@@ -115,9 +115,9 @@ module Ameba::AST
       report_implicit_return(node)
 
       incr_stack do
-        node.args.each &.accept(self)
-        node.double_splat.try &.accept(self)
-        node.block_arg.try &.accept(self)
+        node.args.each(&.accept(self))
+        node.double_splat.try(&.accept(self))
+        node.block_arg.try(&.accept(self))
       end
 
       if node.name == "initialize" || Util.path_named?(node.return_type, "Nil")
@@ -136,9 +136,9 @@ module Ameba::AST
       report_implicit_return(node)
 
       incr_stack do
-        node.args.each &.accept(self)
-        node.double_splat.try &.accept(self)
-        node.block_arg.try &.accept(self)
+        node.args.each(&.accept(self))
+        node.double_splat.try(&.accept(self))
+        node.block_arg.try(&.accept(self))
       end
 
       swap_stack do
@@ -199,7 +199,7 @@ module Ameba::AST
     def visit(node : Crystal::TypeDeclaration) : Bool
       report_implicit_return(node)
 
-      incr_stack { node.value.try &.accept(self) }
+      incr_stack { node.value.try(&.accept(self)) }
 
       false
     end
@@ -207,7 +207,7 @@ module Ameba::AST
     def visit(node : Crystal::ArrayLiteral | Crystal::TupleLiteral) : Bool
       report_implicit_return(node)
 
-      incr_stack { node.elements.each &.accept(self) }
+      incr_stack { node.elements.each(&.accept(self)) }
 
       false
     end
@@ -223,7 +223,7 @@ module Ameba::AST
     def visit(node : Crystal::HashLiteral | Crystal::NamedTupleLiteral) : Bool
       report_implicit_return(node)
 
-      incr_stack { node.entries.each &.value.accept(self) }
+      incr_stack { node.entries.each(&.value.accept(self)) }
 
       false
     end
@@ -231,9 +231,9 @@ module Ameba::AST
     def visit(node : Crystal::Case) : Bool
       report_implicit_return(node)
 
-      incr_stack { node.cond.try &.accept(self) }
-      node.whens.each &.accept(self)
-      node.else.try &.accept(self)
+      incr_stack { node.cond.try(&.accept(self)) }
+      node.whens.each(&.accept(self))
+      node.else.try(&.accept(self))
 
       false
     end
@@ -249,7 +249,7 @@ module Ameba::AST
     def visit(node : Crystal::When) : Bool
       report_implicit_return(node)
 
-      incr_stack { node.conds.each &.accept(self) }
+      incr_stack { node.conds.each(&.accept(self)) }
       node.body.accept(self)
 
       false
@@ -268,16 +268,16 @@ module Ameba::AST
 
       if node.else
         # Last line of body isn't implicitly returned if there's an else
-        swap_stack { node.body.try &.accept(self) }
+        swap_stack { node.body.try(&.accept(self)) }
       else
         node.body.accept(self)
       end
 
-      node.rescues.try &.each &.accept(self)
-      node.else.try &.accept(self)
+      node.rescues.try(&.each(&.accept(self)))
+      node.else.try(&.accept(self))
 
       # Last line of ensure isn't implicitly returned
-      swap_stack { node.ensure.try &.accept(self) }
+      swap_stack { node.ensure.try(&.accept(self)) }
 
       false
     end
@@ -319,7 +319,7 @@ module Ameba::AST
     def visit(node : Crystal::Yield) : Bool
       report_implicit_return(node)
 
-      incr_stack { node.exps.each &.accept(self) }
+      incr_stack { node.exps.each(&.accept(self)) }
 
       false
     end

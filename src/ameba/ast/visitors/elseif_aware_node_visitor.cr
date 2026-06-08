@@ -67,16 +67,16 @@ module Ameba::AST
 
         ifs << if_node
 
-        if_node.cond.accept self
-        if_node.then.accept self
+        if_node.cond.accept(self)
+        if_node.then.accept(self)
 
         unless (if_node = if_node.else).is_a?(Crystal::If)
-          if_node.accept self
+          if_node.accept(self)
           break
         end
       end
 
-      @rule.test @source, node, (ifs if ifs.size > 1)
+      @rule.test(@source, node, (ifs if ifs.size > 1))
       false
     end
   end

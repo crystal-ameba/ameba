@@ -47,11 +47,11 @@ module Ameba::Rule::Lint
       return unless receiver.name == "self"
 
       if (location = receiver.location) && (end_location = receiver.end_location)
-        issue_for node, MSG do |corrector|
+        issue_for(node, MSG) do |corrector|
           corrector.remove(location, end_location.adjust(column_number: 1))
         end
       else
-        issue_for node, MSG
+        issue_for(node, MSG)
       end
     end
   end

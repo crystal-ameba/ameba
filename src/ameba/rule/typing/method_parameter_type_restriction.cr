@@ -77,11 +77,11 @@ module Ameba::Rule::Typing
         next if arg.restriction || arg.name.empty?
         next if !default_value? && arg.default_value
 
-        issue_for arg, MSG, prefer_name_location: true
+        issue_for(arg, MSG, prefer_name_location: true)
       end
 
       if block_parameters? && (block_arg = node.block_arg) && !block_arg.restriction
-        issue_for block_arg, MSG, prefer_name_location: true
+        issue_for(block_arg, MSG, prefer_name_location: true)
       end
     end
 

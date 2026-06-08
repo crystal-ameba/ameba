@@ -142,12 +142,12 @@ module Ameba::Rule::Style
         location_end = location
         location_end = location.with(column_number: line.size) if rest.strip == "\\"
 
-        issue_for *issue_location, MSG do |corrector|
+        issue_for(*issue_location, MSG) do |corrector|
           corrector.replace(location, location_end, "(")
           corrector.insert_before(end_location, ")")
         end
       else
-        issue_for *issue_location, MSG
+        issue_for(*issue_location, MSG)
       end
     end
 
@@ -244,7 +244,7 @@ module Ameba::Rule::Style
     end
 
     private def find_heredoc_arg(node : Crystal::Call, source)
-      node.named_args.try &.reverse_each.find { |arg| find_heredoc_arg(arg.value, source) } ||
+      node.named_args.try(&.reverse_each.find { |arg| find_heredoc_arg(arg.value, source) }) ||
         node.args.reverse_each.find { |arg| find_heredoc_arg(arg, source) }
     end
 
@@ -259,7 +259,7 @@ module Ameba::Rule::Style
       getter type_definition : Crystal::ClassDef | Crystal::ModuleDef | Bool?
 
       def initialize(source, &@on_call : Crystal::Call, self ->)
-        source.ast.accept self
+        source.ast.accept(self)
       end
 
       private def outer_call(value, &)
@@ -300,12 +300,12 @@ module Ameba::Rule::Style
       def visit(node : Crystal::Call)
         @on_call.call(node, self)
 
-        node.obj.try &.accept(self)
-        node.args.each &.accept(self)
-        node.named_args.try &.each &.accept(self)
-        node.block_arg.try &.accept(self)
+        node.obj.try(&.accept(self))
+        node.args.each(&.accept(self))
+        node.named_args.try(&.each(&.accept(self)))
+        node.block_arg.try(&.accept(self))
         outer_call(node) do
-          node.block.try &.accept(self)
+          node.block.try(&.accept(self))
         end
         false
       end
