@@ -1,10 +1,10 @@
 require "../../spec_helper"
 require "../../../src/ameba/cli/cmd"
 
-module Ameba::CLI
+module Ameba
   root = Path[__DIR__, "..", "..", "fixtures"].expand
 
-  describe "Cmd" do
+  describe CLI do
     describe ".run" do
       it "runs ameba" do
         r = CLI.run ["-f", "silent", "--only", "Lint/ComparisonToBoolean", __FILE__]
