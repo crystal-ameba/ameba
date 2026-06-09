@@ -70,7 +70,7 @@ module Ameba::CLI
         return true
       end
 
-      validate_globs(opts, config.root)
+      validate_globs(opts)
 
       runner = Ameba.run(config)
 
@@ -329,14 +329,14 @@ module Ameba::CLI
     opts.formatter = :silent
   end
 
-  private def validate_globs(opts, root) : Nil
+  private def validate_globs(opts) : Nil
     return if opts.ignore_unmatched_paths?
     return if opts.stdin_filename
-    return unless globs = opts.globs
 
-    globs.each do |glob|
-      next unless GlobUtils.expand({glob}, root).empty?
-      raise "No files found matching `#{Path[glob].relative_to(Dir.current)}`"
+    opts.globs.try &.each do |glob|
+      if GlobUtils.expand({glob}).empty?
+        raise "No files found matching `%s`" % Path[glob].relative_to(Dir.current)
+      end
     end
   end
 
