@@ -269,6 +269,7 @@ module Ameba::CLI
   private def path_to_glob(path : String) : String
     Path[path]
       .expand(home: true)
+      .normalize
       .to_posix
       .to_s
   end
