@@ -84,7 +84,7 @@ module Ameba::Formatter
         # one by one as the reported problems are removed from the code base.
         #
         # For more details on any individual rule, run
-        # `ameba --ignore-config-file --only RuleName`.
+        # `ameba --ignore-config --only RuleName`.
 
         Version: "#{Ameba.version.for_production}"
 
