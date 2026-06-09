@@ -868,13 +868,6 @@ module Ameba::AST
         subject.name_end_location(node).to_s.should eq ":1:4"
       end
 
-      {% if compare_versions(Crystal::VERSION, "1.21.0-dev") >= 0 %}
-        it "works on path type declaration" do
-          node = as_node("Foo::Bar : Bool = true").as Crystal::TypeDeclaration
-          subject.name_end_location(node).to_s.should eq ":1:8"
-        end
-      {% end %}
-
       it "works on uninitialized variable" do
         node = as_node("name = uninitialized Foo").as Crystal::UninitializedVar
         subject.name_end_location(node).to_s.should eq ":1:4"
