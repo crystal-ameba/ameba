@@ -1498,6 +1498,22 @@
         }
       }
     },
+    "Performance/AnyInsteadOfEmpty": {
+      "$ref": "#/$defs/BaseRule",
+      "$comment": "https://crystal-ameba.github.io/ameba/master/Ameba/Rule/Performance/AnyInsteadOfEmpty.html",
+      "title": "Performance/AnyInsteadOfEmpty",
+      "description": "Identifies usage of arg-less `any?` calls",
+      "properties": {
+        "SinceVersion": {
+          "type": "string",
+          "default": "0.14.0"
+        },
+        "Severity": {
+          "$ref": "#/$defs/Severity",
+          "default": "Warning"
+        }
+      }
+    },
     "Performance/AnyInsteadOfPresent": {
       "$ref": "#/$defs/BaseRule",
       "$comment": "https://crystal-ameba.github.io/ameba/master/Ameba/Rule/Performance/AnyInsteadOfPresent.html",
