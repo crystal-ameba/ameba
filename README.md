@@ -19,9 +19,10 @@
   - [Watch a tutorial](#watch-a-tutorial)
   - [Autocorrection](#autocorrection)
   - [Explain issues](#explain-issues)
+  - [Describe rules](#describe-rules)
   - [Run in parallel](#run-in-parallel)
 - [Installation](#installation)
-  - [As a project dependency:](#as-a-project-dependency)
+  - [As a project dependency](#as-a-project-dependency)
   - [OS X](#os-x)
   - [Docker](#docker)
   - [From sources](#from-sources)
@@ -36,10 +37,9 @@
 ## About
 
 Ameba is a static code analysis tool for the Crystal language.
-It enforces a consistent [Crystal code style](https://crystal-lang.org/reference/conventions/coding_style.html),
-also catches code smells and wrong code constructions.
+It enforces a consistent [Crystal code style](https://crystal-lang.org/reference/conventions/coding_style.html), also catches code smells and wrong code constructions.
 
-See also [Roadmap](https://github.com/crystal-ameba/ameba/wiki).
+See also [Roadmap](https://github.com/crystal-ameba/ameba/wiki#roadmap).
 
 ## Usage
 
@@ -57,14 +57,14 @@ src/ameba/formatter/flycheck_formatter.cr:6:37
                                 ^------^
 
 src/ameba/formatter/base_formatter.cr:16:14
-[W] Lint/UselessAssign: Useless assignment to variable `s`
-> return s += issues.size
-         ^
+[W] Lint/UselessAssign: Useless assignment to variable `size`
+> return size += issues.size
+         ^--^
 
 src/ameba/formatter/base_formatter.cr:16:7 [Correctable]
 [C] Style/RedundantReturn: Redundant `return` detected
-> return s += issues.size
-  ^---------------------^
+> return size += issues.size
+  ^------------------------^
 
 Finished in 389.45 milliseconds
 107 inspected, 3 failures
@@ -95,6 +95,14 @@ report and paste behind the `ameba` command to check it out.
 ```sh
 $ ameba crystal/command/format.cr:26:83           # show explanation for the issue
 $ ameba --explain crystal/command/format.cr:26:83 # same thing
+```
+
+### Describe rules
+
+You can use `--describe` flag to get a detailed description of a rule:
+
+```sh
+$ ameba --describe Lint/UselessAssign
 ```
 
 ### Run in parallel
