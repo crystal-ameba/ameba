@@ -91,6 +91,43 @@ module Ameba
           Config.from_yaml(yaml)
         end
       end
+
+      context "inheritance" do
+        it "extends another config file (string)" do
+          yaml = YAML.parse <<-YAML
+            ---
+            inherit_from: spec/fixtures/.ameba.yml
+            YAML
+          config = Config.from_yaml(yaml, root)
+          config.version.to_s.should eq "1.5.0"
+          config.formatter.should be_a Formatter::FlycheckFormatter
+
+          rule = config.rules
+            .find(&.name.== "Layout/LineLength")
+            .should be_a Rule::Layout::LineLength
+
+          rule.max_length.should eq 111
+        end
+
+        it "extends another config file (array)" do
+          yaml = YAML.parse <<-YAML
+            ---
+            inherit_from:
+              - spec/fixtures/.ameba.yml
+              - spec/fixtures/.ameba.foo.yml
+              - spec/fixtures/.ameba.bar.yml
+            YAML
+          config = Config.from_yaml(yaml, root)
+          config.version.to_s.should eq "1.7.0"
+          config.formatter.should be_a Formatter::FlycheckFormatter
+
+          rule = config.rules
+            .find(&.name.== "Layout/LineLength")
+            .should be_a Rule::Layout::LineLength
+
+          rule.max_length.should eq 88
+        end
+      end
     end
 
     describe ".load" do
