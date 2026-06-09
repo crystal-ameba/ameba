@@ -50,7 +50,7 @@ module Ameba
         range = Range.new(
           source.pos(location),
           source.pos(end_location, end: true),
-          exclusive: true
+          exclusive: true,
         )
         source.code[range].should eq <<-CRYSTAL
           bar

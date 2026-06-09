@@ -56,7 +56,7 @@ module Ameba::Rule::Lint
       issue_for ensure_location, end_location, MSG do |corrector|
         corrector.remove(
           ensure_location,
-          end_location.adjust(column_number: -{{ "end".size }})
+          end_location.adjust(column_number: -{{ "end".size }}),
         )
       end
     end

@@ -715,6 +715,23 @@ module Ameba::AST
     end
 
     describe "#heredoc?" do
+      it "returns true if a Crystal::NamedArgument node is a heredoc string" do
+        source = Source.new <<-CRYSTAL
+          foo(bar: <<-FOO)
+            baz
+            FOO
+          CRYSTAL
+
+        node = source.ast
+          .should be_a(Crystal::Call)
+
+        named_arg = node.named_args.try(&.last?)
+          .should_not be_nil
+
+        subject.heredoc?(named_arg, source)
+          .should be_true
+      end
+
       it "returns true if a node is a heredoc string" do
         source = Source.new <<-CRYSTAL
           <<-FOO

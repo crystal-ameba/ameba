@@ -244,7 +244,7 @@ module Ameba
         raise InfiniteCorrectionLoopError.new(
           source.path,
           corrected_issues,
-          loop_start: loop_start
+          loop_start: loop_start,
         )
       end
 

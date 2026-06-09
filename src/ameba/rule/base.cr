@@ -157,7 +157,7 @@ module Ameba::Rule
     private macro read_type_doc(filepath = __FILE__)
       {{ run("../../contrib/read_type_doc",
            @type.name.split("::").last,
-           filepath
+           filepath,
          ).chomp.stringify }}.presence
     end
 

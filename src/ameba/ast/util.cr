@@ -302,10 +302,13 @@ module Ameba::AST::Util
     doc.lines.first?.try(&.strip) == ":nodoc:"
   end
 
+  # :nodoc:
+  def heredoc?(node : Crystal::NamedArgument, source : Source)
+    heredoc?(node.value, source)
+  end
+
   # Returns `true` if node is a _heredoc_, `false` otherwise.
-  def heredoc?(node, source : Source)
-    return false unless node.is_a?(Crystal::StringInterpolation) ||
-                        node.is_a?(Crystal::StringLiteral)
+  def heredoc?(node : Crystal::ASTNode, source : Source)
     return false unless location = node.location
     return false unless location_pos = source.pos(location)
 
