@@ -20,10 +20,10 @@ module Ameba::AST
       end
 
       it "raises if type declaration is incorrect" do
-        type_dec = Crystal::TypeDeclaration.new(declared_type, declared_type)
+        invalid_type_dec = Crystal::TypeDeclaration.new(declared_type, declared_type)
 
         expect_raises(Exception, "Unsupported var node type: Crystal::Path") do
-          TypeDecVariable.new(type_dec).name
+          TypeDecVariable.new(invalid_type_dec).name
         end
       end
     end

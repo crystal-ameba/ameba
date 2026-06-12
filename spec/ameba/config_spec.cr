@@ -1,11 +1,17 @@
 require "../spec_helper"
 
+private AMEBA_ROOT =
+  Path[__DIR__, "..", ".."].expand
+
+private CONFIG_SAMPLE =
+  Path[__DIR__, "..", "fixtures", ".ameba.yml"].to_s
+
+private def load_config(path = CONFIG_SAMPLE, *args, **kwargs)
+  Ameba::Config.load(path, *args, **kwargs)
+end
+
 module Ameba
-  root = Path[__DIR__, "..", ".."].expand
-
   describe Config do
-    config_sample = Path[__DIR__, "..", "fixtures", ".ameba.yml"].to_s
-
     it "should have a list of available formatters" do
       Config::AVAILABLE_FORMATTERS.should_not be_nil
     end
@@ -95,7 +101,7 @@ module Ameba
 
     describe ".load" do
       it "loads custom config" do
-        config = Config.load config_sample
+        config = load_config
         config.should_not be_nil
         config.version.should_not be_nil
         config.globs.should_not be_nil
@@ -109,7 +115,7 @@ module Ameba
       end
 
       it "loads default config" do
-        config = Config.load(skip_reading_config: true)
+        config = load_config skip_reading_config: true
         config.version.should be_nil
         config.globs.should_not be_nil
         config.formatter.should_not be_nil
@@ -117,33 +123,37 @@ module Ameba
     end
 
     describe "#globs, #globs=" do
-      config = Config.load config_sample
-
       it "holds source globs" do
+        config = load_config
         config.globs.should eq Config::DEFAULT_GLOBS
       end
 
       it "allows to set globs" do
+        config = load_config
         config.globs = Set{"src/**/*.cr"}
         config.globs.should eq Set{"src/**/*.cr"}
       end
     end
 
     describe "#excluded, #excluded=" do
-      config = Config.load config_sample
-
       it "defaults to `lib`" do
+        config = load_config
         config.excluded.should eq Set{"lib"}
       end
 
       it "allows to set excluded" do
+        config = load_config
         config.excluded = Set{"spec"}
         config.excluded.should eq Set{"spec"}
       end
     end
 
     describe "#sources" do
-      config = Config.load config_sample, root: root
+      config = load_config root: AMEBA_ROOT
+
+      after_each do
+        config = load_config root: AMEBA_ROOT
+      end
 
       it "returns list of sources" do
         config.sources.size.should be > 0
@@ -163,8 +173,12 @@ module Ameba
     end
 
     describe "#formatter, formatter=" do
-      config = Config.load config_sample
       formatter = DummyFormatter.new
+      config = load_config
+
+      after_each do
+        config = load_config
+      end
 
       it "contains default formatter" do
         config.formatter.should_not be_nil
@@ -188,8 +202,12 @@ module Ameba
     end
 
     describe "#version, version=" do
-      config = Config.load config_sample
       version = SemanticVersion.parse("1.5.0")
+      config = load_config
+
+      after_each do
+        config = load_config
+      end
 
       it "contains default version" do
         config.version.should_not be_nil
@@ -213,7 +231,11 @@ module Ameba
     end
 
     describe "#update_rule" do
-      config = Config.load config_sample
+      config = load_config
+
+      after_each do
+        config = load_config
+      end
 
       it "updates enabled property" do
         name = DummyRule.rule_name
@@ -235,7 +257,11 @@ module Ameba
     end
 
     describe "#update_rules" do
-      config = Config.load config_sample
+      config = load_config
+
+      after_each do
+        config = load_config
+      end
 
       it "updates multiple rules by enabled property" do
         name = DummyRule.rule_name
