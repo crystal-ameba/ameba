@@ -51,7 +51,7 @@ docs: $(SRC_SOURCES)
 .PHONY: spec
 spec: ## Run the spec suite
 spec:
-	$(CRYSTAL_BIN) spec
+	$(CRYSTAL_BIN) spec --order random
 
 .PHONY: schema
 schema: ## Build the latest schema
