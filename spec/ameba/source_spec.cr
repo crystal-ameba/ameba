@@ -6,6 +6,7 @@ module Ameba
       it "allows to create a source by code and path" do
         source = Source.new("code", "path")
         source.path.should eq "path"
+        source.project_path.should eq "path"
         source.code.should eq "code"
         source.lines.should eq ["code"]
       end
