@@ -47,7 +47,7 @@ module Ameba::Rule::Lint
           end
         when .string_array_end?
           if (_start = start_token) && (_issue = issue)
-            issue_for _start.location, _start.location.adjust(column_number: 1), _issue
+            issue_for(_start.location, _start.location.adjust(column_number: 1), _issue)
           end
           issue = start_token = nil
         end
@@ -56,10 +56,10 @@ module Ameba::Rule::Lint
 
     private def array_entry_invalid?(entry, array_type)
       case array_type
-      when .starts_with? "%w"
-        check_array_entry entry, string_array_unwanted_symbols, "%w"
-      when .starts_with? "%i"
-        check_array_entry entry, symbol_array_unwanted_symbols, "%i"
+      when .starts_with?("%w")
+        check_array_entry(entry, string_array_unwanted_symbols, "%w")
+      when .starts_with?("%i")
+        check_array_entry(entry, symbol_array_unwanted_symbols, "%i")
       end
     end
 

@@ -40,7 +40,7 @@ module Ameba
     end
 
     def correct(corrector)
-      @block.try &.call(corrector)
+      @block.try(&.call(corrector))
     end
   end
 end

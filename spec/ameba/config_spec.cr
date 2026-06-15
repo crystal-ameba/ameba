@@ -18,14 +18,14 @@ module Ameba
 
     describe ".new" do
       it "raises when the config is not a Hash" do
-        yaml = YAML.parse "[]"
+        yaml = YAML.parse("[]")
         expect_raises(Exception, "Invalid config file format") do
           Config.from_yaml(yaml)
         end
       end
 
       it "loads default globs when config is empty" do
-        yaml = YAML.parse "{}"
+        yaml = YAML.parse("{}")
         config = Config.from_yaml(yaml)
         config.globs.should eq Config::DEFAULT_GLOBS
       end
@@ -110,12 +110,12 @@ module Ameba
 
       it "raises when custom config file doesn't exist" do
         expect_raises(Exception, %(Unable to load config file: Config file "foo.yml" does not exist)) do
-          Config.load "foo.yml"
+          Config.load("foo.yml")
         end
       end
 
       it "loads default config" do
-        config = load_config skip_reading_config: true
+        config = load_config(skip_reading_config: true)
         config.version.should be_nil
         config.globs.should_not be_nil
         config.formatter.should_not be_nil
@@ -149,10 +149,10 @@ module Ameba
     end
 
     describe "#sources" do
-      config = load_config root: AMEBA_ROOT
+      config = load_config(root: AMEBA_ROOT)
 
       after_each do
-        config = load_config root: AMEBA_ROOT
+        config = load_config(root: AMEBA_ROOT)
       end
 
       it "returns list of sources" do
@@ -242,7 +242,7 @@ module Ameba
         rule = config.rules.find!(&.name.== name)
         rule.excluded = excluded = Set{"spec/source.cr"}
 
-        config.update_rule name, enabled: false
+        config.update_rule(name, enabled: false)
         rule.enabled?.should be_false
         rule.excluded.should eq excluded
       end
@@ -250,7 +250,7 @@ module Ameba
       it "updates excluded property" do
         name = DummyRule.rule_name
         excluded = Set{"spec/source.cr"}
-        config.update_rule name, enabled: true, excluded: excluded
+        config.update_rule(name, enabled: true, excluded: excluded)
         rule = config.rules.find!(&.name.== name)
         rule.excluded.should eq excluded
       end
@@ -268,7 +268,7 @@ module Ameba
         rule = config.rules.find!(&.name.== name)
         rule.excluded = excluded = Set{"spec/source.cr"}
 
-        config.update_rules [name], enabled: false
+        config.update_rules([name], enabled: false)
         rule.enabled?.should be_false
         rule.excluded.should eq excluded
       end
@@ -276,14 +276,14 @@ module Ameba
       it "updates multiple rules by excluded property" do
         name = DummyRule.rule_name
         excluded = Set{"spec/source.cr"}
-        config.update_rules [name], enabled: true, excluded: excluded
+        config.update_rules([name], enabled: true, excluded: excluded)
         rule = config.rules.find!(&.name.== name)
         rule.excluded.should eq excluded
       end
 
       it "updates a group of rules by enabled property" do
         group = DummyRule.group_name
-        config.update_rules [group], enabled: false
+        config.update_rules([group], enabled: false)
         rule = config.rules.find!(&.name.== DummyRule.rule_name)
         rule.enabled?.should be_false
       end
@@ -291,7 +291,7 @@ module Ameba
       it "updates a group by excluded property" do
         name = DummyRule.group_name
         excluded = Set{"spec/source.cr"}
-        config.update_rules [name], enabled: true, excluded: excluded
+        config.update_rules([name], enabled: true, excluded: excluded)
         rule = config.rules.find!(&.name.== DummyRule.rule_name)
         rule.excluded.should eq excluded
       end

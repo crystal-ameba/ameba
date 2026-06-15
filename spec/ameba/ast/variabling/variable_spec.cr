@@ -3,7 +3,7 @@ require "../../../spec_helper"
 module Ameba::AST
   describe Variable do
     var_node = Crystal::Var.new("foo")
-    scope = Scope.new as_node "foo = 1"
+    scope = Scope.new(as_node("foo = 1"))
 
     describe "#initialize" do
       it "creates a new variable" do
@@ -32,12 +32,12 @@ module Ameba::AST
 
     describe "#special?" do
       it "returns truthy if it is a special `$?` var" do
-        variable = Variable.new Crystal::Var.new("$?"), scope
+        variable = Variable.new(Crystal::Var.new("$?"), scope)
         variable.special?.should be_truthy
       end
 
       it "returns falsey otherwise" do
-        variable = Variable.new Crystal::Var.new("a"), scope
+        variable = Variable.new(Crystal::Var.new("a"), scope)
         variable.special?.should be_falsey
       end
     end
@@ -68,7 +68,7 @@ module Ameba::AST
       end
 
       it "adds a reference to the scope" do
-        scope = Scope.new as_node "foo = 1"
+        scope = Scope.new(as_node("foo = 1"))
         variable = Variable.new(var_node, scope)
         variable.assign(as_node("foo=1"), scope)
         variable.reference(var_node, scope)
@@ -105,7 +105,7 @@ module Ameba::AST
           end
           CRYSTAL
 
-        scope.add_variable(Crystal::Var.new "a")
+        scope.add_variable(Crystal::Var.new("a"))
         variable = scope.variables.first
 
         variable.captured_by_block?.should be_falsey
@@ -115,13 +115,13 @@ module Ameba::AST
     describe "#target_of?" do
       it "returns true if the variable is a target of Crystal::Assign node" do
         assign_node = as_nodes("foo=1").assign_nodes.last
-        variable = Variable.new assign_node.target.as(Crystal::Var), scope
+        variable = Variable.new(assign_node.target.as(Crystal::Var), scope)
         variable.target_of?(assign_node).should be_true
       end
 
       it "returns true if the variable is a target of Crystal::OpAssign node" do
         assign_node = as_nodes("foo=1;foo+=1").op_assign_nodes.last
-        variable = Variable.new assign_node.target.as(Crystal::Var), scope
+        variable = Variable.new(assign_node.target.as(Crystal::Var), scope)
         variable.target_of?(assign_node).should be_true
       end
 
@@ -129,14 +129,14 @@ module Ameba::AST
         assign_node = as_nodes("a,b,c={1,2,3}").multi_assign_nodes.last
         assign_node.targets.size.should_not eq 0
         assign_node.targets.each do |target|
-          variable = Variable.new target.as(Crystal::Var), scope
+          variable = Variable.new(target.as(Crystal::Var), scope)
           variable.target_of?(assign_node).should be_true
         end
       end
 
       it "returns false if the node is not assign" do
         variable = Variable.new(Crystal::Var.new("v"), scope)
-        variable.target_of?(as_node "nil").should be_false
+        variable.target_of?(as_node("nil")).should be_false
       end
 
       it "returns false if the variable is not a target of the assign" do
@@ -164,18 +164,18 @@ module Ameba::AST
 
     describe "#eql?" do
       var = Crystal::Var.new("foo").at(Crystal::Location.new(nil, 1, 2))
-      variable = Variable.new var, scope
+      variable = Variable.new(var, scope)
 
       it "is false if node is not a Crystal::Var" do
         variable.eql?(as_node("nil")).should be_false
       end
 
       it "is false if node name is different" do
-        variable.eql?(Crystal::Var.new "bar").should be_false
+        variable.eql?(Crystal::Var.new("bar")).should be_false
       end
 
       it "is false if node has a different location" do
-        variable.eql?(Crystal::Var.new "foo").should be_false
+        variable.eql?(Crystal::Var.new("foo")).should be_false
       end
 
       it "is true otherwise" do

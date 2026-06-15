@@ -47,7 +47,7 @@ module Ameba::Rule::Lint
                     (resc = rescues.first?) &&
                     resc.body.is_a?(Crystal::Path)
 
-      issue_for resc.body, MSG, prefer_name_location: true
+      issue_for(resc.body, MSG, prefer_name_location: true)
     end
   end
 end

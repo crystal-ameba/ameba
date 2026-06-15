@@ -28,7 +28,7 @@ module Ameba::Rule::Lint
       nodes.each do |node|
         next if found_requires.add?(node.string)
 
-        issue_for node, MSG % node.string
+        issue_for(node, MSG % node.string)
       end
     end
   end

@@ -78,11 +78,11 @@ module Ameba::Rule::Naming
     end
 
     private def check_issue(source, location, end_location, name)
-      issue_for location, end_location, MSG unless name.to_s.ascii_only?
+      issue_for(location, end_location, MSG) unless name.to_s.ascii_only?
     end
 
     private def check_issue(source, node, name = node.name, *, prefer_name_location = false)
-      issue_for node, MSG, prefer_name_location: prefer_name_location unless name.to_s.ascii_only?
+      issue_for(node, MSG, prefer_name_location: prefer_name_location) unless name.to_s.ascii_only?
     end
   end
 end

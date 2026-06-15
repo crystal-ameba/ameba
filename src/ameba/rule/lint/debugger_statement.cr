@@ -24,7 +24,7 @@ module Ameba::Rule::Lint
       return unless node.name == "debugger" && node.obj.nil?
       return if has_arguments?(node)
 
-      issue_for node, MSG do |corrector|
+      issue_for(node, MSG) do |corrector|
         corrector.remove(node)
       end
     end

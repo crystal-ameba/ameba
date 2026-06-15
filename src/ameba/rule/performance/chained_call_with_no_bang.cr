@@ -61,7 +61,7 @@ module Ameba::Rule::Performance
     ]
 
     def test(source)
-      AST::NodeVisitor.new self, source, skip: :macro
+      AST::NodeVisitor.new(self, source, skip: :macro)
     end
 
     def test(source, node : Crystal::Call)
@@ -70,11 +70,11 @@ module Ameba::Rule::Performance
       return unless obj.name.in?(call_names) || obj.name.in?(ALLOCATING_METHOD_NAMES)
 
       if end_location = name_end_location(node)
-        issue_for node, MSG % {node.name, obj.name}, prefer_name_location: true do |corrector|
+        issue_for(node, MSG % {node.name, obj.name}, prefer_name_location: true) do |corrector|
           corrector.insert_after(end_location, '!')
         end
       else
-        issue_for node, MSG % {node.name, obj.name}, prefer_name_location: true
+        issue_for(node, MSG % {node.name, obj.name}, prefer_name_location: true)
       end
     end
   end

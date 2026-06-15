@@ -53,7 +53,7 @@ module Ameba::Rule::Lint
       end_location = node.end_location
       return unless ensure_location && end_location
 
-      issue_for ensure_location, end_location, MSG do |corrector|
+      issue_for(ensure_location, end_location, MSG) do |corrector|
         corrector.remove(
           ensure_location,
           end_location.adjust(column_number: -{{ "end".size }})

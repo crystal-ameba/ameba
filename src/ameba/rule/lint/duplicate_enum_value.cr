@@ -32,7 +32,7 @@ module Ameba::Rule::Lint
         next unless value = member.default_value
         next if found_values.add?(value.to_s)
 
-        issue_for value, MSG
+        issue_for(value, MSG)
       end
     end
   end

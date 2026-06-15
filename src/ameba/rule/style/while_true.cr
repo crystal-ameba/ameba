@@ -39,7 +39,7 @@ module Ameba::Rule::Style
       return unless location = node.location
       return unless end_location = node.cond.end_location
 
-      issue_for node, MSG do |corrector|
+      issue_for(node, MSG) do |corrector|
         corrector.replace(location, end_location, "loop do")
       end
     end

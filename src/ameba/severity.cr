@@ -60,7 +60,7 @@ module Ameba
     end
 
     def self.to_yaml(value : Severity, yaml : YAML::Nodes::Builder)
-      yaml.scalar value
+      yaml.scalar(value)
     end
   end
 end

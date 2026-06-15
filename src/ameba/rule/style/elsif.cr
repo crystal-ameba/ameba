@@ -59,7 +59,7 @@ module Ameba::Rule::Style
 
     def test(source, node : Crystal::If, ifs : Enumerable(Crystal::If))
       return if valid_branches_amount?(ifs)
-      issue_for node, MSG
+      issue_for(node, MSG)
     end
 
     private def valid_branches_amount?(ifs)

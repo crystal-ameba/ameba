@@ -2,7 +2,7 @@ require "../../../spec_helper"
 
 private def it_detects_empty_expression(code, *, file = __FILE__, line = __LINE__)
   it "detects empty expression #{code.inspect}", file, line do
-    source = Ameba::Source.new code
+    source = Ameba::Source.new(code)
     rule = Ameba::Rule::Lint::EmptyExpression.new
     rule.catch(source).should_not be_valid, file: file, line: line
   end

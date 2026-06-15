@@ -45,7 +45,7 @@ module Ameba::Rule::Lint
     def test(source, node : Crystal::Def)
       return if node.receiver || !operator_method?(node)
 
-      issue_for node, MSG
+      issue_for(node, MSG)
     end
   end
 end

@@ -43,7 +43,7 @@ module Ameba::Rule::Lint
       node.whens.each &.conds.each do |cond|
         next if found_conditions.add?(cond.to_s)
 
-        issue_for cond, MSG
+        issue_for(cond, MSG)
       end
     end
   end

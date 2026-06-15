@@ -79,7 +79,7 @@ module Ameba::Rule::Style
 
       return if heredoc_indent == correct_indent
 
-      issue_for node, MSG % indent_by do |corrector|
+      issue_for(node, MSG % indent_by) do |corrector|
         source_lines = node_source.lines
         if body_auto_dedent?
           body_dedent =

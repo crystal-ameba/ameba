@@ -112,7 +112,7 @@ module Ameba
     # runner.run # => returns runner again
     # ```
     def run
-      @formatter.started @sources
+      @formatter.started(@sources)
 
       channels = @sources.map { Channel(Exception?).new }
       @sources.zip(channels).each do |source, channel|
@@ -131,11 +131,11 @@ module Ameba
 
       self
     ensure
-      @formatter.finished @sources
+      @formatter.finished(@sources)
     end
 
     private def run_source(source) : Nil
-      @formatter.source_started source
+      @formatter.source_started(source)
 
       # This variable is a 2D array used to track corrected issues after each
       # inspection iteration. This is used to output meaningful infinite loop
@@ -183,7 +183,7 @@ module Ameba
           issue.location.try(&.column_number) || 0,
         }
       end
-      @formatter.source_finished source
+      @formatter.source_finished(source)
     end
 
     # Explains an issue at a specified *location*.
@@ -197,7 +197,7 @@ module Ameba
     # runner.explain(Crystal::Location.new(file, line, column))
     # ```
     def explain(location, output = STDOUT)
-      Formatter::ExplainFormatter.new(output, location).finished @sources
+      Formatter::ExplainFormatter.new(output, location).finished(@sources)
     end
 
     # Indicates whether the last inspection successful or not.
@@ -209,7 +209,7 @@ module Ameba
     # runner.success? # => true or false
     # ```
     def success?
-      @sources.all? &.issues.none? &.enabled?
+      @sources.all?(&.issues.none?(&.enabled?))
     end
 
     private MAX_ITERATIONS = 200

@@ -23,7 +23,7 @@ module Ameba::Rule::Naming
 
       return if (expected = name.underscore) == name
 
-      issue_for LOCATION, MSG % {expected, name}
+      issue_for(LOCATION, MSG % {expected, name})
     end
   end
 end

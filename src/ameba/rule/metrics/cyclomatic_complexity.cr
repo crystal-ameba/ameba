@@ -21,7 +21,7 @@ module Ameba::Rule::Metrics
       complexity = AST::CountingVisitor.new(node).count
       return unless complexity > max_complexity
 
-      issue_for node, MSG % {complexity, max_complexity}, prefer_name_location: true
+      issue_for(node, MSG % {complexity, max_complexity}, prefer_name_location: true)
     end
   end
 end

@@ -29,13 +29,13 @@ module Ameba::Rule::Lint
           "name to indicate yielding method."
 
     def test(source)
-      AST::ScopeVisitor.new self, source
+      AST::ScopeVisitor.new(self, source)
     end
 
     def test(source, node : Crystal::Def, scope : AST::Scope)
       return if !scope.yields? || node.block_arg
 
-      issue_for node, MSG, prefer_name_location: true
+      issue_for(node, MSG, prefer_name_location: true)
     end
   end
 end

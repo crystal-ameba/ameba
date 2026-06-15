@@ -124,7 +124,7 @@ class Ameba::Config
     version = nil,
     formatter = nil,
   )
-    @rule_groups = @rules.group_by &.group
+    @rule_groups = @rules.group_by(&.group)
 
     if version
       self.version = version
@@ -194,15 +194,15 @@ class Ameba::Config
   # config.update_rules %w[Group1 Group2], enabled: true
   # ```
   def update_rules(names : Enumerable(String), *, enabled, excluded = nil)
-    excluded = excluded.try &.to_set
+    excluded = excluded.try(&.to_set)
 
     names.each do |name|
       if rules = @rule_groups[name]?
         rules.each do |rule|
-          update_rule rule.name, enabled: enabled, excluded: excluded
+          update_rule(rule.name, enabled: enabled, excluded: excluded)
         end
       else
-        update_rule name, enabled: enabled, excluded: excluded
+        update_rule(name, enabled: enabled, excluded: excluded)
       end
     end
   end

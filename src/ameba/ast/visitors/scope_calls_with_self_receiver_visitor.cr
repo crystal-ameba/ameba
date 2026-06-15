@@ -8,11 +8,11 @@ module Ameba::AST
     def initialize(rule, source)
       @current_scope = AST::Scope.new(source.ast) # top level scope
 
-      source.ast.accept self
+      source.ast.accept(self)
 
       scope_call_queue.each do |scope, calls|
         calls.each do |call|
-          rule.test source, call, scope
+          rule.test(source, call, scope)
         end
       end
     end

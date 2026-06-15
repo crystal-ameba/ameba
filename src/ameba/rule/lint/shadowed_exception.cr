@@ -45,7 +45,7 @@ module Ameba::Rule::Lint
       return unless rescues = node.rescues
 
       shadowed(rescues).each do |path|
-        issue_for path, MSG % path.names.join("::")
+        issue_for(path, MSG % path.names.join("::"))
       end
     end
 
@@ -69,7 +69,7 @@ module Ameba::Rule::Lint
     end
 
     private def filter_rescues(rescues)
-      rescues.compact_map(&.types.try &.select(Crystal::Path))
+      rescues.compact_map(&.types.try(&.select(Crystal::Path)))
     end
 
     private def traverse(path, traversed_types)

@@ -44,7 +44,7 @@ module Ameba::Rule::Performance
     MSG = "Use `count {...}` instead of `%s {...}.size`"
 
     def test(source)
-      AST::NodeVisitor.new self, source, skip: :macro
+      AST::NodeVisitor.new(self, source, skip: :macro)
     end
 
     def test(source, node : Crystal::Call)
@@ -52,7 +52,7 @@ module Ameba::Rule::Performance
       return unless obj.is_a?(Crystal::Call) && has_block?(obj)
       return unless obj.name.in?(filter_names)
 
-      issue_for name_location(obj), name_end_location(node), MSG % obj.name
+      issue_for(name_location(obj), name_end_location(node), MSG % obj.name)
     end
   end
 end

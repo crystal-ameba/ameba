@@ -39,7 +39,7 @@ module Ameba::Rule::Lint
       return unless node.expressions.size == 1 &&
                     node.expressions.first.nop?
 
-      issue_for node, MSG
+      issue_for(node, MSG)
     end
   end
 end

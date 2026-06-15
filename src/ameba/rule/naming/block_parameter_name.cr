@@ -39,7 +39,7 @@ module Ameba::Rule::Naming
       node.try(&.block).try(&.args).try &.each do |arg|
         next if valid_name?(arg.name)
 
-        issue_for arg, MSG, prefer_name_location: true
+        issue_for(arg, MSG, prefer_name_location: true)
       end
     end
 

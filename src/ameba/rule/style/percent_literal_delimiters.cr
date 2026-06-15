@@ -45,7 +45,7 @@ module Ameba::Rule::Style
         x = state.start_token.location.adjust(column_number: state.literal.size)
         y = state.end_token.location
 
-        issue_for state.location, state.end_location, msg do |corrector|
+        issue_for(state.location, state.end_location, msg) do |corrector|
           corrector.replace(x, x, state.opening_delimiter)
           corrector.replace(y, y, state.closing_delimiter)
         end
@@ -85,7 +85,7 @@ module Ameba::Rule::Style
       end
 
       private def extract_percent_literal(string)
-        string.match(/^(%\w*)\W/).try &.[1]
+        string.match(/^(%\w*)\W/).try(&.[1])
       end
 
       private def delimiters_for_literal(literal)

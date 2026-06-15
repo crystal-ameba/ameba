@@ -32,7 +32,7 @@ module Ameba::Rule::Lint
 
     def test(source, node : Crystal::StringInterpolation)
       each_string_coercion_node(node) do |expr|
-        issue_for name_location(expr), expr.end_location, MSG
+        issue_for(name_location(expr), expr.end_location, MSG)
       end
     end
 

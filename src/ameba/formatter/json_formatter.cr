@@ -95,7 +95,7 @@ module Ameba::Formatter
     end
 
     def finished(sources) : Nil
-      @result.to_pretty_json @output
+      @result.to_pretty_json(@output)
     end
   end
 
@@ -125,12 +125,12 @@ module Ameba::Formatter
           severity:  severity,
           message:   message,
           location:  {
-            line:   location.try &.line_number,
-            column: location.try &.column_number,
+            line:   location.try(&.line_number),
+            column: location.try(&.column_number),
           },
           end_location: {
-            line:   end_location.try &.line_number,
-            column: end_location.try &.column_number,
+            line:   end_location.try(&.line_number),
+            column: end_location.try(&.column_number),
           },
         }.to_json(json)
       end

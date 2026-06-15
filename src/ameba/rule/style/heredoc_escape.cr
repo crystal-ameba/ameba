@@ -62,7 +62,7 @@ module Ameba::Rule::Style
         msg = MSG_ESCAPE_NEEDED % marker
       end
 
-      issue_for node, msg
+      issue_for(node, msg)
     end
 
     private def has_escape_sequence?(value : String)

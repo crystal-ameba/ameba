@@ -48,7 +48,7 @@ module Ameba::Rule::Style
       if explicit_nil?
         return unless node_source.ends_with?('?')
 
-        issue_for node, MSG_SHORT do |corrector|
+        issue_for(node, MSG_SHORT) do |corrector|
           corrector.replace(node, "%s | Nil" % node_source.rstrip('?'))
         end
         return
@@ -67,11 +67,11 @@ module Ameba::Rule::Style
       # simple find-and-replace might change the type of the union -
       # and that's why we skip the auto-correction of those.
       if has_generic?(node)
-        issue_for node, MSG_VERBOSE
+        issue_for(node, MSG_VERBOSE)
         return
       end
 
-      issue_for node, MSG_VERBOSE do |corrector|
+      issue_for(node, MSG_VERBOSE) do |corrector|
         corrected_code = "%s?" % node_source
           .gsub(NIL_TYPE_PATTERN, "")
           .gsub('?', "")

@@ -20,11 +20,11 @@ Benchmark.ips do |x|
     config.formatter = Ameba::Formatter::BaseFormatter.new
     config.globs = get_files(n)
     s = n == 1 ? "" : "s"
-    x.report("#{n} source#{s}") { Ameba.run config }
+    x.report("#{n} source#{s}") { Ameba.run(config) }
   end
 end
 
 puts "== Measure:"
 config = Ameba::Config.load
 config.formatter = Ameba::Formatter::BaseFormatter.new
-puts Benchmark.measure { Ameba.run config }
+puts Benchmark.measure { Ameba.run(config) }

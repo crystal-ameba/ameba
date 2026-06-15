@@ -3,7 +3,7 @@ require "../../spec_helper"
 module Ameba::Formatter
   describe DisabledFormatter do
     output = IO::Memory.new
-    subject = DisabledFormatter.new output
+    subject = DisabledFormatter.new(output)
 
     before_each do
       output.clear
@@ -11,7 +11,7 @@ module Ameba::Formatter
 
     describe "#finished" do
       it "writes a final message" do
-        subject.finished [Source.new]
+        subject.finished([Source.new])
         output.to_s.should contain "Disabled rules using inline directives:"
       end
 
@@ -22,7 +22,7 @@ module Ameba::Formatter
         source.add_issue(ErrorRule.new, {1, 2}, message: "ErrorRule", status: :disabled)
         source.add_issue(NamedRule.new, location: {2, 2}, message: "NamedRule", status: :disabled)
 
-        subject.finished [source]
+        subject.finished([source])
         log = output.to_s
         log = Util.deansify(log).should_not be_nil
         log.should contain "#{path}:1 #{ErrorRule.rule_name}"
@@ -35,7 +35,7 @@ module Ameba::Formatter
         source.add_issue(NamedRule.new, location: {2, 2},
           message: "NamedRule", status: :disabled)
 
-        subject.finished [source]
+        subject.finished([source])
         output.to_s.should_not contain ErrorRule.rule_name
       end
     end

@@ -44,7 +44,7 @@ module Ameba::Rule::Lint
       return unless op_text
       return unless suggestion = MISTAKES[op_text]?
 
-      issue_for op_location, op_end_location, MSG % suggestion
+      issue_for(op_location, op_end_location, MSG % suggestion)
     end
   end
 end

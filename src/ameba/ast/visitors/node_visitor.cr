@@ -69,7 +69,7 @@ module Ameba::AST
     end
 
     def initialize(@rule, @source, *, skip : Array? = nil)
-      @skip = skip.try &.map(&.as(Crystal::ASTNode.class))
+      @skip = skip.try(&.map(&.as(Crystal::ASTNode.class)))
       super @rule, @source
     end
 

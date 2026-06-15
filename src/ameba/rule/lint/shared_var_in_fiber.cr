@@ -60,7 +60,7 @@ module Ameba::Rule::Lint
     MSG = "Shared variable `%s` is used in fiber"
 
     def test(source)
-      AST::ScopeVisitor.new self, source
+      AST::ScopeVisitor.new(self, source)
     end
 
     def test(source, node, scope : AST::Scope)
@@ -70,7 +70,7 @@ module Ameba::Rule::Lint
         next if (variable = scope.find_variable(ref.name)).nil?
         next if variable.scope == scope || !mutated_in_loop?(variable)
 
-        issue_for ref.node, MSG % variable.name
+        issue_for(ref.node, MSG % variable.name)
       end
     end
 

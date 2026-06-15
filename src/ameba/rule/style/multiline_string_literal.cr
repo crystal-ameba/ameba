@@ -53,7 +53,7 @@ module Ameba::Rule::Style
       return if allow_backslash_split_strings? &&
                 source.code.lines[location.line_number - 1].ends_with?('\\')
 
-      issue_for node, MSG
+      issue_for(node, MSG)
     end
   end
 end

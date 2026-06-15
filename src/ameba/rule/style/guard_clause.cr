@@ -119,14 +119,14 @@ module Ameba::Rule::Style
 
         end_loc = end_end_loc.adjust(column_number: {{ 1 - "end".size }})
 
-        issue_for keyword_loc, keyword_end_loc, MSG % example do |corrector|
+        issue_for(keyword_loc, keyword_end_loc, MSG % example) do |corrector|
           replacement = "#{scope_exiting_keyword} #{conditional_keyword}"
 
           corrector.replace(keyword_loc, keyword_end_loc, replacement)
           corrector.remove(end_loc, end_end_loc)
         end
       else
-        issue_for keyword_loc, keyword_end_loc, MSG % example
+        issue_for(keyword_loc, keyword_end_loc, MSG % example)
       end
     end
 

@@ -38,7 +38,7 @@ module Ameba::Rule::Lint
       return unless (cond = node.cond).is_a?(Crystal::Assign)
       return unless literal?(cond.value)
 
-      issue_for cond, MSG
+      issue_for(cond, MSG)
     end
   end
 end
