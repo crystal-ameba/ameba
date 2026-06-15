@@ -21,7 +21,7 @@ module Ameba::AST
     # already defined when the scope is entered (its arguments plus any
     # captured outer definitions).
     def initialize(@scope : Scope, @entry : DefinedSet)
-      @inner_scope_nodes = @scope.inner_scopes.map(&.node.object_id).to_set
+      @inner_scope_nodes = @scope.inner_scopes.to_set(&.node.object_id)
     end
 
     # Returns a mapping of each inner-scope node's `object_id` to the set of
@@ -143,18 +143,24 @@ module Ameba::AST
     private def transfer(node : Crystal::ASTNode, defined : DefinedSet) : DefinedSet
       children = [] of Crystal::ASTNode
       node.accept_children(ChildCollector.new(children))
+
       children.each do |child|
         defined = propagate(child, defined)
       end
       defined
     end
 
-    private def define(target, defined : DefinedSet) : DefinedSet
-      target = target.exp if target.is_a?(Crystal::Splat)
-      return defined unless target.is_a?(Crystal::Var)
-      return defined if defined.includes?(target.name)
-
+    private def define(target : Crystal::Var, defined : DefinedSet) : DefinedSet
+      return defined if target.name.in?(defined)
       defined.dup << target.name
+    end
+
+    private def define(target : Crystal::Splat, defined : DefinedSet) : DefinedSet
+      define(target.exp, defined)
+    end
+
+    private def define(target, defined : DefinedSet) : DefinedSet
+      defined
     end
 
     private def merge_branches(base : DefinedSet, branches) : DefinedSet

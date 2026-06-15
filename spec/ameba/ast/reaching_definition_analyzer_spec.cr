@@ -2,8 +2,7 @@ require "../../spec_helper"
 
 private def scopes_for(code)
   rule = Ameba::ScopeRule.new
-  source = Ameba::Source.new(code)
-  Ameba::AST::ScopeVisitor.new(rule, source)
+  Ameba::AST::ScopeVisitor.new(rule, Ameba::Source.new(code))
   rule.scopes
 end
 

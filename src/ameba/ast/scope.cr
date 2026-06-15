@@ -120,7 +120,7 @@ module Ameba::AST
     # scope.declared_at?("foo", block_node)
     # ```
     def declared_at?(name : String, node) : Bool
-      reaching_definitions[node.object_id]?.try(&.includes?(name)) || false
+      !!reaching_definitions[node.object_id]?.try(&.includes?(name))
     end
 
     # Reaching definitions snapshotted at each inner scope's node. Computed
@@ -133,8 +133,7 @@ module Ameba::AST
     # The set of variable names already defined when this scope is entered:
     # its own arguments plus any captured definitions from the outer scope.
     protected def entry_definitions : Set(String)
-      defined = Set(String).new
-      arguments.each { |argument| defined << argument.name }
+      defined = arguments.to_set(&.name)
 
       if inherited? && (outer = outer_scope)
         outer.reaching_definitions[node.object_id]?.try { |defs| defined.concat(defs) }
