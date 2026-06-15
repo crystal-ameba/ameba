@@ -34,8 +34,6 @@ module Ameba::AST
     # The actual AST node that represents a current scope.
     getter node : Crystal::ASTNode
 
-    @reaching_definitions : Hash(UInt64, Set(String))?
-
     delegate location, end_location, to_s,
       to: @node
 
@@ -125,9 +123,8 @@ module Ameba::AST
 
     # Reaching definitions snapshotted at each inner scope's node. Computed
     # lazily and memoized, since several inner scopes share the same outer one.
-    protected def reaching_definitions : Hash(UInt64, Set(String))
-      @reaching_definitions ||=
-        ReachingDefinitionAnalyzer.new(self, entry_definitions).inner_scope_definitions
+    protected getter reaching_definitions : Hash(UInt64, Set(String)) do
+      ReachingDefinitionAnalyzer.new(self, entry_definitions).inner_scope_definitions
     end
 
     # The set of variable names already defined when this scope is entered:
@@ -136,7 +133,9 @@ module Ameba::AST
       defined = arguments.to_set(&.name)
 
       if inherited? && (outer = outer_scope)
-        outer.reaching_definitions[node.object_id]?.try { |defs| defined.concat(defs) }
+        outer.reaching_definitions[node.object_id]?.try do |defs|
+          defined.concat(defs)
+        end
       end
 
       defined

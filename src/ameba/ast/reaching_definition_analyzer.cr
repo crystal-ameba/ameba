@@ -68,20 +68,28 @@ module Ameba::AST
     end
 
     private def transfer(node : Crystal::TypeDeclaration, defined : DefinedSet) : DefinedSet
-      node.value.try { |value| defined = propagate(value, defined) }
+      node.value.try do |value|
+        defined = propagate(value, defined)
+      end
       define(node.var, defined)
     end
 
     private def transfer(node : Crystal::Call, defined : DefinedSet) : DefinedSet
-      node.obj.try { |obj| defined = propagate(obj, defined) }
+      node.obj.try do |obj|
+        defined = propagate(obj, defined)
+      end
       node.args.each do |arg|
         defined = propagate(arg, defined)
       end
       node.named_args.try &.each do |named_arg|
         defined = propagate(named_arg.value, defined)
       end
-      node.block_arg.try { |arg| defined = propagate(arg, defined) }
-      node.block.try { |block| defined = propagate(block, defined) }
+      node.block_arg.try do |arg|
+        defined = propagate(arg, defined)
+      end
+      node.block.try do |block|
+        defined = propagate(block, defined)
+      end
       defined
     end
 
