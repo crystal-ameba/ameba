@@ -28,11 +28,8 @@ module Ameba::Rule::Lint
     ALL_DEPRECATED_RULES = Rule.rules.select(&.deprecated?)
 
     def test(source)
-      Tokenizer.new(source).run do |token|
-        next unless token.type.comment?
-        next unless directive = source.parse_inline_directive(token.value.to_s)
-
-        check_rules source, token, directive[:action], directive[:rules]
+      each_inline_directive(source) do |token, action, rules|
+        check_rules source, token, action, rules
       end
     end
 

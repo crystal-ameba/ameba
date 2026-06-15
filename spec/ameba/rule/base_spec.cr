@@ -31,7 +31,7 @@ module Ameba
     describe "#catch" do
       it "accepts and returns source" do
         source = Source.new
-        DummyRule.new.catch(source).should eq source
+        DummyRule.new.catch(source).should be source
       end
     end
 

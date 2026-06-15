@@ -39,9 +39,8 @@ module Ameba
     # Severity.parse("foo-bar")    # => Exception: Incorrect severity name
     # ```
     def self.parse(name : String)
-      super name
-    rescue ArgumentError
-      raise "Incorrect severity name #{name}. Try one of: #{values.join(", ")}"
+      parse?(name) ||
+        raise "Incorrect severity name #{name}. Try one of: #{values.join(", ")}"
     end
   end
 

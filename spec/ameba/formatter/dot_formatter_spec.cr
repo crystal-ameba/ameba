@@ -38,6 +38,7 @@ module Ameba::Formatter
       end
 
       it "writes the elapsed time" do
+        subject.started [Source.new]
         subject.finished [Source.new]
         output.to_s.should contain "Finished in"
       end

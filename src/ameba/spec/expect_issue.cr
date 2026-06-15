@@ -94,8 +94,6 @@ require "./util"
 #       puts 1
 #       CRYSTAL
 module Ameba::Spec::ExpectIssue
-  include Spec::Util
-
   def expect_issue(rules : Rule::Base | Enumerable(Rule::Base),
                    annotated_code : String,
                    path = "",
@@ -105,6 +103,7 @@ module Ameba::Spec::ExpectIssue
                    **replacements)
     annotated_code = format_issue(annotated_code, **replacements)
     expected_annotations = AnnotatedSource.parse(annotated_code)
+
     lines = expected_annotations.lines
     code = lines.join('\n')
 

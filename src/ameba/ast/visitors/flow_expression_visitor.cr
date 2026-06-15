@@ -47,7 +47,7 @@ module Ameba::AST
     end
 
     private def in_loop?
-      !@loop_stack.empty?
+      @loop_stack.present?
     end
   end
 end

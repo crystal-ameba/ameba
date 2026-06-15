@@ -86,13 +86,13 @@ module Ameba::AST
           end
           CRYSTAL
 
-        var_node = nodes.var_nodes.first
+        first_var_node = nodes.var_nodes.first
 
         scope = Scope.new(nodes.def_nodes.first)
-        scope.add_variable(var_node)
+        scope.add_variable(first_var_node)
         scope.inner_scopes << Scope.new(nodes.block_nodes.first, scope)
 
-        variable = Variable.new(var_node, scope)
+        variable = Variable.new(first_var_node, scope)
         variable.reference(nodes.var_nodes.last, scope.inner_scopes.last)
 
         variable.captured_by_block?.should be_truthy

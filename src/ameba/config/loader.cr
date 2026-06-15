@@ -62,13 +62,12 @@ class Ameba::Config
     # ```
     def load(path : Path | String? = nil, root : Path? = nil, skip_reading_config : Bool = false)
       unless skip_reading_config
-        content = begin
+        content =
           if path
             read_config(path: path)
           else
             read_config(root: root)
           end
-        end
       end
       content ||= "{}"
 

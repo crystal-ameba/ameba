@@ -24,18 +24,24 @@ module Ameba
     def expand(globs, root = Dir.current)
       globs
         .flat_map do |glob|
-          glob = Path[glob].expand(root).relative_to(Dir.current).to_posix
+          glob = Path[glob]
+            .expand(root)
+            .relative_to(Dir.current)
+            .normalize
 
           if File.directory?(glob)
             glob = glob / "**" / "*.{cr,ecr}"
           end
 
-          glob = glob.to_s.lchop("./")
+          glob = glob
+            .to_posix
+            .to_s
+            .lchop("./")
 
           Dir[glob]
         end
         .uniq!
-        .select! { |path| File.file?(path) }
+        .select!(&->File.file?(String))
     end
 
     private def rejected_globs(globs, root = Dir.current)

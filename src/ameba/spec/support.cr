@@ -6,10 +6,9 @@ require "./util"
 
 module Ameba
   class Source
-    include Spec::Util
-
-    def initialize(code : String, @path = "", normalize = true)
-      @code = normalize ? normalize_code(code) : code
+    def self.new(code : String, *args, normalize = true, **opts)
+      code = normalize ? Spec::Util.normalize_code(code) : code
+      new(code, *args, **opts)
     end
   end
 end

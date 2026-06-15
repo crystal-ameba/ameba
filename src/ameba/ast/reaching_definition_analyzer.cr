@@ -33,6 +33,17 @@ module Ameba::AST
       @definitions
     end
 
+    private def propagate(nodes : Enumerable, defined : DefinedSet) : DefinedSet
+      nodes.each do |node|
+        defined = propagate(node, defined)
+      end
+      defined
+    end
+
+    private def propagate(node : Crystal::Nop?, defined : DefinedSet) : DefinedSet
+      defined
+    end
+
     private def propagate(node : Crystal::ASTNode, defined : DefinedSet) : DefinedSet
       if @inner_scope_nodes.includes?(node.object_id)
         @definitions[node.object_id] = defined.dup
@@ -42,10 +53,7 @@ module Ameba::AST
     end
 
     private def transfer(node : Crystal::Expressions, defined : DefinedSet) : DefinedSet
-      node.expressions.each do |exp|
-        defined = propagate(exp, defined)
-      end
-      defined
+      propagate(node.expressions, defined)
     end
 
     private def transfer(node : Crystal::Assign | Crystal::OpAssign, defined : DefinedSet) : DefinedSet
@@ -54,9 +62,7 @@ module Ameba::AST
     end
 
     private def transfer(node : Crystal::MultiAssign, defined : DefinedSet) : DefinedSet
-      node.values.each do |value|
-        defined = propagate(value, defined)
-      end
+      defined = propagate(node.values, defined)
       node.targets.each do |target|
         defined = define(target, defined)
       end
@@ -68,28 +74,16 @@ module Ameba::AST
     end
 
     private def transfer(node : Crystal::TypeDeclaration, defined : DefinedSet) : DefinedSet
-      node.value.try do |value|
-        defined = propagate(value, defined)
-      end
+      defined = propagate(node.value, defined)
       define(node.var, defined)
     end
 
     private def transfer(node : Crystal::Call, defined : DefinedSet) : DefinedSet
-      node.obj.try do |obj|
-        defined = propagate(obj, defined)
-      end
-      node.args.each do |arg|
-        defined = propagate(arg, defined)
-      end
-      node.named_args.try &.each do |named_arg|
-        defined = propagate(named_arg.value, defined)
-      end
-      node.block_arg.try do |arg|
-        defined = propagate(arg, defined)
-      end
-      node.block.try do |block|
-        defined = propagate(block, defined)
-      end
+      defined = propagate(node.obj, defined)
+      defined = propagate(node.args, defined)
+      defined = propagate(node.named_args, defined)
+      defined = propagate(node.block_arg, defined)
+      defined = propagate(node.block, defined)
       defined
     end
 
@@ -139,7 +133,7 @@ module Ameba::AST
       end
 
       merged ||= body_defined
-      (ensure_node = node.ensure) ? propagate(ensure_node, merged) : merged
+      propagate(node.ensure, merged)
     end
 
     {% for type in INNER_SCOPE_NODES %}
@@ -152,10 +146,7 @@ module Ameba::AST
       children = [] of Crystal::ASTNode
       node.accept_children(ChildCollector.new(children))
 
-      children.each do |child|
-        defined = propagate(child, defined)
-      end
-      defined
+      propagate(children, defined)
     end
 
     private def define(target : Crystal::Var, defined : DefinedSet) : DefinedSet
@@ -188,10 +179,7 @@ module Ameba::AST
 
       merged = nil
       node.whens.each do |when_node|
-        when_defined = base
-        when_node.conds.each do |when_cond|
-          when_defined = propagate(when_cond, when_defined)
-        end
+        when_defined = propagate(when_node.conds, base)
         when_defined = propagate(when_node.body, when_defined)
         merged = collect(merged, when_defined) unless terminates?(when_node.body)
       end

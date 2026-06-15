@@ -2,7 +2,7 @@ require "../../spec_helper"
 
 module Ameba
   private def with_rule_collection_presenter(&)
-    rules = Config.load.rules
+    rules = Config.load(skip_reading_config: true).rules
 
     with_presenter(Presenter::RuleCollectionPresenter, rules) do |presenter, output|
       yield rules, output, presenter

@@ -1,12 +1,12 @@
 module Ameba
-  # Represents a runner for inspecting sources files.
+  # Represents a runner for inspecting source files.
   # Holds a list of rules to do inspection based on,
   # list of sources to run inspection on and a formatter
   # to prepare a report.
   #
   # ```
   # config = Ameba::Config.load
-  # runner = Ameba::Runner.new config
+  # runner = Ameba::Runner.new(config)
   # runner.run.success? # => true or false
   # ```
   class Runner
@@ -52,7 +52,7 @@ module Ameba
     # Returns `true` if correctable issues should be autocorrected.
     private getter? autocorrect : Bool
 
-    # Returns an ameba version up to which the rules should be ran.
+    # Returns an ameba version up to which the rules should be run.
     property version : SemanticVersion?
 
     # Instantiates a runner using a `config`.
@@ -62,7 +62,7 @@ module Ameba
     # config.files = files
     # config.formatter = formatter
     #
-    # Ameba::Runner.new config
+    # runner = Ameba::Runner.new(config)
     # ```
     def initialize(config : Config)
       initialize(
@@ -100,7 +100,7 @@ module Ameba
         since_version <= version
     end
 
-    # Performs the inspection. Iterates through all sources and test it using
+    # Performs the inspection. Iterates through all sources and tests them using
     # list of rules. If a specific rule fails on a specific source, it adds
     # an issue to that source.
     #
@@ -108,7 +108,7 @@ module Ameba
     # and when a specific source started/finished to be inspected.
     #
     # ```
-    # runner = Ameba::Runner.new config
+    # runner = Ameba::Runner.new(config)
     # runner.run # => returns runner again
     # ```
     def run
@@ -161,6 +161,7 @@ module Ameba
           end
           rule.test(source)
         end
+
         check_unneeded_directives(source, excluded_rules)
         break unless autocorrect? && source.correct!
 
@@ -191,7 +192,7 @@ module Ameba
     # This is necessary to be able to find the issue at a specified location.
     #
     # ```
-    # runner = Ameba::Runner.new config
+    # runner = Ameba::Runner.new(config)
     # runner.run
     # runner.explain(Crystal::Location.new(file, line, column))
     # ```
@@ -203,7 +204,7 @@ module Ameba
     # It returns `true` if no issues are found, `false` otherwise.
     #
     # ```
-    # runner = Ameba::Runner.new config
+    # runner = Ameba::Runner.new(config)
     # runner.run
     # runner.success? # => true or false
     # ```
@@ -244,7 +245,7 @@ module Ameba
         raise InfiniteCorrectionLoopError.new(
           source.path,
           corrected_issues,
-          loop_start: loop_start
+          loop_start: loop_start,
         )
       end
 

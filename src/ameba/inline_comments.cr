@@ -81,7 +81,7 @@ module Ameba
     end
 
     private def comment?(line : String)
-      line.lstrip.starts_with? '#'
+      line.lstrip.starts_with?('#')
     end
 
     private def line_disabled?(line, rule)
@@ -89,7 +89,9 @@ module Ameba
       return false unless Action.parse?(directive[:action]).try(&.disable?)
 
       rules = directive[:rules]
-      rules.includes?(rule.name) || rules.includes?(rule.group)
+
+      rules.includes?(rule.name) ||
+        rules.includes?(rule.group)
     end
 
     private def commented_out?(line)

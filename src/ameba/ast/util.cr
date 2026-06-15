@@ -2,6 +2,16 @@
 module Ameba::AST::Util
   extend self
 
+  # Yields each inline directive found in the source.
+  def each_inline_directive(source, &block : Crystal::Token, String, Array(String) -> _)
+    Tokenizer.new(source).run do |token|
+      next unless token.type.comment?
+      next unless directive = source.parse_inline_directive(token.value.to_s)
+
+      block.call(token, directive[:action], directive[:rules])
+    end
+  end
+
   # Returns tuple with two bool flags:
   #
   # 1. is *node* a literal?
@@ -302,10 +312,13 @@ module Ameba::AST::Util
     doc.lines.first?.try(&.strip) == ":nodoc:"
   end
 
+  # :nodoc:
+  def heredoc?(node : Crystal::NamedArgument, source : Source)
+    heredoc?(node.value, source)
+  end
+
   # Returns `true` if node is a _heredoc_, `false` otherwise.
-  def heredoc?(node, source : Source)
-    return false unless node.is_a?(Crystal::StringInterpolation) ||
-                        node.is_a?(Crystal::StringLiteral)
+  def heredoc?(node : Crystal::ASTNode, source : Source)
     return false unless location = node.location
     return false unless location_pos = source.pos(location)
 
@@ -359,6 +372,7 @@ module Ameba::AST::Util
 
     return node.var.location if node.is_a?(Crystal::TypeDeclaration) ||
                                 node.is_a?(Crystal::UninitializedVar)
+
     return unless node.responds_to?(:name) && (name = node.name)
     return unless name.is_a?(Crystal::ASTNode)
 

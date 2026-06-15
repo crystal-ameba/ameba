@@ -70,7 +70,7 @@ module Ameba::CLI
         return true
       end
 
-      validate_globs(opts, config.root)
+      validate_globs(opts)
 
       runner = Ameba.run(config)
 
@@ -141,18 +141,18 @@ module Ameba::CLI
       end
 
       parser.on("-f", "--format FORMATTER",
-        "Choose an output formatter: #{Config.formatter_names}") do |formatter|
+        "Choose an output formatter: %s" % Config.formatter_names) do |formatter|
         opts.formatter = formatter if formatter.presence
       end
 
       parser.on("--only RULE1,RULE2,...",
         "Run only given rules (or groups)") do |rules|
-        opts.only = rules.split(',').to_set if rules.presence
+        opts.only = rules.split(',').map!(&.strip).to_set if rules.presence
       end
 
       parser.on("--except RULE1,RULE2,...",
         "Disable the given rules (or groups)") do |rules|
-        opts.except = rules.split(',').to_set if rules.presence
+        opts.except = rules.split(',').map!(&.strip).to_set if rules.presence
       end
 
       parser.on("--all", "Enable all available rules") do
@@ -170,7 +170,7 @@ module Ameba::CLI
       end
 
       parser.on("--min-severity SEVERITY",
-        "Minimum severity of issues to report (default: #{Rule::Base.default_severity})") do |level|
+        "Minimum severity of issues to report (default: %s)" % Rule::Base.default_severity) do |level|
         opts.severity = Severity.parse(level) if level.presence
       end
 
@@ -208,6 +208,8 @@ module Ameba::CLI
       end
     end
 
+    configure_root(opts)
+
     opts
   end
 
@@ -239,18 +241,24 @@ module Ameba::CLI
     config
   end
 
-  private def configure_globs(args, opts) : Nil
-    excluded, globs =
-      args.partition(&.starts_with?('!'))
+  private def configure_root(opts) : Nil
+    return unless globs = opts.globs
 
     if root = root_path_from_globs(globs)
       opts.root = root
     end
+  end
+
+  private def configure_globs(args, opts) : Nil
+    excluded, globs =
+      args.partition(&.starts_with?('!'))
+
     if globs.present?
       opts.globs = globs
         .map! { |path| path_to_glob(path) }
         .to_set
     end
+
     if excluded.present?
       opts.excluded = excluded
         .map! { |path| path_to_glob(path.lchop) }
@@ -261,6 +269,7 @@ module Ameba::CLI
   private def path_to_glob(path : String) : String
     Path[path]
       .expand(home: true)
+      .normalize
       .to_posix
       .to_s
   end
@@ -321,14 +330,14 @@ module Ameba::CLI
     opts.formatter = :silent
   end
 
-  private def validate_globs(opts, root) : Nil
+  private def validate_globs(opts) : Nil
     return if opts.ignore_unmatched_paths?
     return if opts.stdin_filename
-    return unless globs = opts.globs
 
-    globs.each do |glob|
-      next unless GlobUtils.expand({glob}, root).empty?
-      raise "No files found matching `#{Path[glob].relative_to(Dir.current)}`"
+    opts.globs.try &.each do |glob|
+      if GlobUtils.expand({glob}).empty?
+        raise "No files found matching `%s`" % Path[glob].relative_to(Dir.current)
+      end
     end
   end
 
