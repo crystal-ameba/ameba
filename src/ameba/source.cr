@@ -21,7 +21,7 @@ module Ameba
     # For example:
     #
     # ```
-    # path = "./src/source.cr"
+    # path = "src/source.cr"
     # Ameba::Source.new(File.read(path), path)
     # ```
     def initialize(@code = "", @path = "")
@@ -73,7 +73,7 @@ module Ameba
             ex.message,
             ex.line_number,
             ex.column_number,
-            path
+            path,
           )
         end
       end

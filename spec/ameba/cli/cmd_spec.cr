@@ -1,10 +1,10 @@
 require "../../spec_helper"
 require "../../../src/ameba/cli/cmd"
 
-module Ameba::CLI
+module Ameba
   root = Path[__DIR__, "..", "..", "fixtures"].expand
 
-  describe "Cmd" do
+  describe CLI do
     describe ".run" do
       it "runs ameba" do
         r = CLI.run ["-f", "silent", "--only", "Lint/ComparisonToBoolean", __FILE__]
@@ -79,10 +79,16 @@ module Ameba::CLI
       it "accepts --only flag" do
         opts = CLI.parse_args ["--only", "RULE1,RULE2"]
         opts.only.should eq Set{"RULE1", "RULE2"}
+
+        opts = CLI.parse_args ["--only", "RULE1, RULE2"]
+        opts.only.should eq Set{"RULE1", "RULE2"}
       end
 
       it "accepts --except flag" do
         opts = CLI.parse_args ["--except", "RULE1,RULE2"]
+        opts.except.should eq Set{"RULE1", "RULE2"}
+
+        opts = CLI.parse_args ["--except", "RULE1, RULE2"]
         opts.except.should eq Set{"RULE1", "RULE2"}
       end
 

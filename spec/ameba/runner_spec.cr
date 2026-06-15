@@ -2,7 +2,7 @@ require "../spec_helper"
 
 module Ameba
   private def runner(files = [__FILE__], formatter = DummyFormatter.new)
-    config = Config.load
+    config = Config.load(skip_reading_config: true)
     config.formatter = formatter
     config.globs = files.to_set
 

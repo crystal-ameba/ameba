@@ -1,7 +1,11 @@
 module Ameba
   VERSION = detect_version
 
-  # Detects Ameba version from several sources.
+  # Detects Ameba version from:
+  #
+  # - Environment variable `AMEBA_BUILD_VERSION`
+  # - File `VERSION` in the root directory
+  # - Output of `shards version` command
   private macro detect_version
     {%
       version =
@@ -23,9 +27,8 @@ module Ameba
     # Cached version object.
     INSTANCE = begin
       version = SemanticVersion.parse(VERSION)
-      unless version.build
-        version = version.copy_with \
-          build: GIT_SHA.try { |commit| "git.commit.#{commit}" }
+      if !version.build && GIT_SHA
+        version = version.copy_with(build: "git.commit.#{GIT_SHA}")
       end
       new(version)
     end
@@ -36,29 +39,29 @@ module Ameba
     def initialize(@version)
     end
 
-    # Appends the version string to the given *io*.
-    def to_s(io : IO) : Nil
-      version.to_s(io)
-    end
-
-    # Returns the `version` without prerelease and build metadata.
-    def for_production : String
-      version.copy_with(prerelease: nil, build: nil).to_s
-    end
-
-    # Returns the `version` without prerelease and build metadata.
-    def for_docs : String
-      dev? ? "master" : for_production
-    end
-
     # Returns `true` if the current `version` is a development version.
     def dev? : Bool
       version.prerelease.identifiers.any?("dev")
     end
 
-    # # Returns `true` if the current `version` is a release candidate version.
-    def release_candidate? : Bool
-      version.prerelease.identifiers.any?(/^rc-?(\d+)?$/)
+    # Returns `true` if the current `version` is a production version.
+    def production? : Bool
+      version.prerelease.identifiers.empty?
+    end
+
+    # Appends the version string to the given *io*.
+    def to_s(io : IO) : Nil
+      version.to_s(io)
+    end
+
+    # Returns the `version` as a string without prerelease and build metadata.
+    def for_production : String
+      version.copy_with(prerelease: nil, build: nil).to_s
+    end
+
+    # Returns the version string used for rule documentation URLs.
+    def for_docs : String
+      production? ? for_production : "master"
     end
   end
 end

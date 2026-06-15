@@ -37,7 +37,7 @@ module Ameba::Rule::Lint
     def test(source, node : Crystal::ClassDef | Crystal::ModuleDef, scope : AST::Scope)
       found_defs = Set(String).new
 
-      each_def_node(node) do |def_node|
+      each_def_node(node.body) do |def_node|
         def_node_to_s = def_node.to_s
 
         next if def_node_to_s.matches?(/\Wprevious_def\W/)
@@ -47,18 +47,15 @@ module Ameba::Rule::Lint
       end
     end
 
-    private def each_def_node(node, &)
-      case body = node.body
+    private def each_def_node(node, &block : Crystal::ASTNode ->)
+      case node
       when Crystal::Def
-        yield body
+        yield node
       when Crystal::VisibilityModifier
-        yield body.exp
+        yield node.exp
       when Crystal::Expressions
-        body.expressions.each do |exp|
-          case exp
-          when Crystal::Def                then yield exp
-          when Crystal::VisibilityModifier then yield exp.exp
-          end
+        node.expressions.each do |exp|
+          each_def_node(exp, &block)
         end
       end
     end

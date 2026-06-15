@@ -2,7 +2,7 @@ require "./util"
 
 module Ameba::AST
   # Represents a flow expression in Crystal code.
-  # For example,
+  # For example:
   #
   # ```
   # def foobar
@@ -40,10 +40,9 @@ module Ameba::AST
     #
     # ```
     # def foobar
-    #   a = 1
+    #   a = 3
     #   return 42
-    #
-    #   a + 2 # => unreachable assign node
+    #   a + 1 # => unreachable node
     # end
     # ```
     def unreachable_nodes

@@ -106,9 +106,14 @@ class Ameba::Source::Rewriter
     protected def fuse_deletions(action, fusible, other_siblings)
       without_fusible = self.with(children: other_siblings)
       fusible = [action] + fusible
+
       fused_begin_pos = fusible.min_of(&.begin_pos)
       fused_end_pos = fusible.max_of(&.end_pos)
-      fused_deletion = action.with(begin_pos: fused_begin_pos, end_pos: fused_end_pos)
+
+      fused_deletion = action.with(
+        begin_pos: fused_begin_pos,
+        end_pos: fused_end_pos,
+      )
       without_fusible.combine(fused_deletion)
     end
 
@@ -133,14 +138,14 @@ class Ameba::Source::Rewriter
       left_index = bsearch_child_index do |child|
         child.end_pos > action.begin_pos
       end
+
       # right_index is the index of the first child that is completely on the right of action
       start = left_index == 0 ? 0 : left_index - 1 # See "corner case" below for reason of -1
       right_index = bsearch_child_index(start) do |child|
         child.begin_pos >= action.end_pos
       end
-      center = right_index - left_index
 
-      case center
+      case center = right_index - left_index
       when 0
         # All children are disjoint from action, nothing else to do
       when -1
@@ -150,6 +155,7 @@ class Ameba::Source::Rewriter
         # Since ranges are equal, we return it as parent
         left_index -= 1  # Fix indices, as otherwise this child would be
         right_index += 1 # considered as a sibling (both left and right!)
+
         parent = @children[left_index]
       else
         overlap_left = @children[left_index].begin_pos <=> action.begin_pos
@@ -164,6 +170,7 @@ class Ameba::Source::Rewriter
         else
           # Otherwise consider all non disjoint elements (center) to be contained...
           contained = @children[left_index...right_index]
+
           fusible = [] of Action
           fusible << contained.shift if overlap_left < 0 # ... but check first and last one
           fusible << contained.pop if overlap_right > 0  # ... for overlaps
