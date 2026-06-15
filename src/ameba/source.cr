@@ -8,6 +8,9 @@ module Ameba
     # Path to the source file.
     getter path : String
 
+    # Path to the source file relative to the project root.
+    getter project_path : String
+
     # Absolute path to the source file.
     getter fullpath : String do
       File.expand_path(path)
@@ -24,7 +27,7 @@ module Ameba
     # path = "src/source.cr"
     # Ameba::Source.new(File.read(path), path)
     # ```
-    def initialize(@code = "", @path = "")
+    def initialize(@code = "", @path = "", @project_path = path)
     end
 
     # Corrects any correctable issues and updates `code`.
