@@ -51,7 +51,7 @@ module Ameba::Rule::Naming
       opts =
         allowed_names.map { |val| "`#{val}`" }.join(" or ")
 
-      issue_for arg, MSG % {name, opts}, prefer_name_location: true
+      issue_for(arg, MSG % {name, opts}, prefer_name_location: true)
     end
   end
 end

@@ -3,7 +3,7 @@ module Ameba::Presenter
     include Formatter::Util
 
     def run(rule) : Nil
-      output_title "Rule info"
+      output_title("Rule info")
 
       info = <<-INFO
         Name:           %s
@@ -20,23 +20,23 @@ module Ameba::Presenter
       }
 
       if rule.class.deprecated?
-        output_title "Deprecated"
+        output_title("Deprecated")
 
         if deprecation_reason = rule.class.deprecation_reason
-          output_paragraph colorize_markdown(deprecation_reason)
+          output_paragraph(colorize_markdown(deprecation_reason))
         else
-          output_paragraph "This rule has been deprecated"
+          output_paragraph("This rule has been deprecated")
         end
       end
 
       if rule_description = rule.description
-        output_title "Description"
-        output_paragraph colorize_markdown(rule_description)
+        output_title("Description")
+        output_paragraph(colorize_markdown(rule_description))
       end
 
       if rule_doc = rule.class.parsed_doc
-        output_title "Detailed description"
-        output_paragraph colorize_markdown(rule_doc)
+        output_title("Detailed description")
+        output_paragraph(colorize_markdown(rule_doc))
       end
     end
 

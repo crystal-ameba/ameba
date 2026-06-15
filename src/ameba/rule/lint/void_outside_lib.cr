@@ -33,13 +33,13 @@ module Ameba::Rule::Lint
     MSG = "`Void` is not allowed in this context"
 
     def test(source)
-      PathGenericUnionVisitor.new self, source, skip: [Crystal::LibDef]
+      PathGenericUnionVisitor.new(self, source, skip: [Crystal::LibDef])
     end
 
     def test(source, node : Crystal::Path)
       return unless path_named?(node, "Void")
 
-      issue_for node, MSG
+      issue_for(node, MSG)
     end
 
     def test(source, node : Crystal::Generic)
@@ -49,7 +49,7 @@ module Ameba::Rule::Lint
                 path_named?(node.type_vars.first, "Void")
 
       if path_named?(node.name, "Void")
-        issue_for node, MSG, prefer_name_location: true
+        issue_for(node, MSG, prefer_name_location: true)
       end
 
       node.type_vars.each do |type_var|
@@ -67,7 +67,7 @@ module Ameba::Rule::Lint
       def visit(node : Crystal::Generic | Crystal::Path | Crystal::Union)
         return false if skip?(node)
 
-        @rule.test @source, node
+        @rule.test(@source, node)
         false
       end
     end

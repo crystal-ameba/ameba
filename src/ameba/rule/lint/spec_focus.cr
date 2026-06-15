@@ -64,12 +64,12 @@ module Ameba::Rule::Lint
       return unless node.name.in?(SPEC_ITEM_NAMES)
       return unless has_block?(node)
 
-      arg = node.named_args.try &.find(&.name.== "focus")
+      arg = node.named_args.try(&.find(&.name.== "focus"))
       return if arg.nil? ||
                 arg.value.is_a?(Crystal::Call) ||
                 arg.value.is_a?(Crystal::Var)
 
-      issue_for arg, MSG
+      issue_for(arg, MSG)
     end
   end
 end

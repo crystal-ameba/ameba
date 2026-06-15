@@ -47,7 +47,7 @@ module Ameba::Rule::Lint
     end
 
     def test(source, node : Crystal::ProcLiteral | Crystal::Block, scope : AST::Scope)
-      find_shadowing source, scope
+      find_shadowing(source, scope)
     end
 
     private def find_shadowing(source, scope)
@@ -62,7 +62,7 @@ module Ameba::Rule::Lint
         next if outer_scope.assigns_ivar?(name)
         next if outer_scope.assigns_type_dec_variable?(name)
 
-        issue_for arg.node, MSG % name, prefer_name_location: true
+        issue_for(arg.node, MSG % name, prefer_name_location: true)
       end
     end
 

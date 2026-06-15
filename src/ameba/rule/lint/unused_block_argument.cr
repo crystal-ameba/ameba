@@ -44,7 +44,7 @@ module Ameba::Rule::Lint
     MSG_YIELDED = "Use `&` as an argument name to indicate that it won't be referenced"
 
     def test(source)
-      AST::ScopeVisitor.new self, source
+      AST::ScopeVisitor.new(self, source)
     end
 
     def test(source, node : Crystal::Def, scope : AST::Scope)
@@ -62,20 +62,20 @@ module Ameba::Rule::Lint
       when scope.yields?
         case location
         when Tuple
-          issue_for *location, MSG_YIELDED do |corrector|
+          issue_for(*location, MSG_YIELDED) do |corrector|
             corrector.remove(*location)
           end
         else
-          issue_for location, MSG_YIELDED
+          issue_for(location, MSG_YIELDED)
         end
       when !block_arg.ignored?
         case location
         when Tuple
-          issue_for *location, MSG_UNUSED % block_arg.name do |corrector|
+          issue_for(*location, MSG_UNUSED % block_arg.name) do |corrector|
             corrector.insert_before(location[0], '_')
           end
         else
-          issue_for location, MSG_UNUSED % block_arg.name
+          issue_for(location, MSG_UNUSED % block_arg.name)
         end
       end
     end

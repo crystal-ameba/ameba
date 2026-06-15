@@ -53,14 +53,14 @@ module Ameba::Rule::Lint
       if node.responds_to?(:else_location) &&
          (else_location = node.else_location) &&
          (end_location = node.end_location)
-        issue_for node_else, MSG do |corrector|
+        issue_for(node_else, MSG) do |corrector|
           corrector.remove(
             else_location,
             end_location.adjust(column_number: -{{ "end".size }})
           )
         end
       else
-        issue_for node_else, MSG
+        issue_for(node_else, MSG)
       end
     end
   end

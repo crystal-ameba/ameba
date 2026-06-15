@@ -41,7 +41,7 @@ module Ameba::Rule::Lint
                 !(block = node.block) ||
                 with_index_arg?(block)
 
-      issue_for node, MSG, prefer_name_location: true
+      issue_for(node, MSG, prefer_name_location: true)
     end
 
     private def with_index_arg?(block : Crystal::Block)

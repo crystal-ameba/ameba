@@ -3,7 +3,7 @@ module Ameba::AST
     property? references = false
 
     def initialize(node, @reference : String)
-      node.accept self
+      node.accept(self)
     end
 
     @[AlwaysInline]

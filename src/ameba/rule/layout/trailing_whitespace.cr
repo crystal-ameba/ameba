@@ -22,7 +22,7 @@ module Ameba::Rule::Layout
         location = {index + 1, ws_index + 1}
         end_location = {index + 1, line.size}
 
-        issue_for location, end_location, MSG do |corrector|
+        issue_for(location, end_location, MSG) do |corrector|
           corrector.remove(location, end_location)
         end
       end

@@ -61,7 +61,7 @@ module Ameba::Rule::Lint
 
       return unless body.nil? || body.nop?
 
-      issue_for node, MSG
+      issue_for(node, MSG)
     end
   end
 end

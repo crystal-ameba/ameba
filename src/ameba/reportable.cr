@@ -30,7 +30,7 @@ module Ameba
                   message : String,
                   status : Issue::Status? = nil,
                   &block : Source::Corrector ->) : Issue
-      add_issue rule, location, end_location, message, status, block
+      add_issue(rule, location, end_location, message, status, block)
     end
 
     # Adds a new issue for *location* defined by line and column numbers.
@@ -39,7 +39,7 @@ module Ameba
                   message : String,
                   status : Issue::Status? = nil,
                   block : (Source::Corrector ->)? = nil) : Issue
-      add_issue rule, *location, message, status, block
+      add_issue(rule, *location, message, status, block)
     end
 
     # Adds a new issue for Crystal AST *node*.
@@ -63,7 +63,7 @@ module Ameba
       location ||= node.location
       end_location ||= node.end_location
 
-      add_issue rule, location, end_location, message, status, block
+      add_issue(rule, location, end_location, message, status, block)
     end
 
     # :ditto:
@@ -74,7 +74,7 @@ module Ameba
                   *,
                   prefer_name_location = false,
                   &block : Source::Corrector ->) : Issue
-      add_issue rule, node, message, status, block, prefer_name_location: prefer_name_location
+      add_issue(rule, node, message, status, block, prefer_name_location: prefer_name_location)
     end
 
     # Adds a new issue for Crystal *token*.
@@ -83,7 +83,7 @@ module Ameba
                   message : String,
                   status : Issue::Status? = nil,
                   block : (Source::Corrector ->)? = nil) : Issue
-      add_issue rule, token.location, nil, message, status, block
+      add_issue(rule, token.location, nil, message, status, block)
     end
 
     # :ditto:
@@ -92,7 +92,7 @@ module Ameba
                   message : String,
                   status : Issue::Status? = nil,
                   &block : Source::Corrector ->) : Issue
-      add_issue rule, token, message, status, block
+      add_issue(rule, token, message, status, block)
     end
 
     # Adds a new issue for *location* defined by line and column numbers.
@@ -104,7 +104,7 @@ module Ameba
       location =
         Crystal::Location.new(path, *location)
 
-      add_issue rule, location, nil, message, status, block
+      add_issue(rule, location, nil, message, status, block)
     end
 
     # :ditto:
@@ -113,7 +113,7 @@ module Ameba
                   message : String,
                   status : Issue::Status? = nil,
                   &block : Source::Corrector ->) : Issue
-      add_issue rule, location, message, status, block
+      add_issue(rule, location, message, status, block)
     end
 
     # Adds a new issue for *location* and *end_location* defined by line and column numbers.
@@ -128,7 +128,7 @@ module Ameba
       end_location =
         Crystal::Location.new(path, *end_location)
 
-      add_issue rule, location, end_location, message, status, block
+      add_issue(rule, location, end_location, message, status, block)
     end
 
     # :ditto:
@@ -138,7 +138,7 @@ module Ameba
                   message : String,
                   status : Issue::Status? = nil,
                   &block : Source::Corrector ->) : Issue
-      add_issue rule, location, end_location, message, status, block
+      add_issue(rule, location, end_location, message, status, block)
     end
 
     # Returns `true` if the list of not disabled issues is empty, `false` otherwise.

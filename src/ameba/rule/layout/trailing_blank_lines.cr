@@ -31,9 +31,9 @@ module Ameba::Rule::Layout
       location = {source_lines_size, 1}
 
       if last_line_empty
-        issue_for location, MSG
+        issue_for(location, MSG)
       else
-        issue_for location, MSG_FINAL_NEWLINE do |corrector|
+        issue_for(location, MSG_FINAL_NEWLINE) do |corrector|
           corrector.insert_before({source_lines_size + 1, 1}, '\n')
         end
       end

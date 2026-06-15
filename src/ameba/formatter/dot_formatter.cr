@@ -29,7 +29,7 @@ module Ameba::Formatter
       output << "\n\n"
 
       show_affected_code = !config[:without_affected_code]?
-      failed_sources = sources.reject &.valid?
+      failed_sources = sources.reject(&.valid?)
 
       failed_sources.each do |source|
         source.issues.each do |issue|

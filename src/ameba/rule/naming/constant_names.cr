@@ -37,7 +37,7 @@ module Ameba::Rule::Naming
 
       return if name.in?(expected, name.camelcase)
 
-      issue_for target, MSG % {expected, name}
+      issue_for(target, MSG % {expected, name})
     end
   end
 end

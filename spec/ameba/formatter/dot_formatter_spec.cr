@@ -3,7 +3,7 @@ require "../../spec_helper"
 module Ameba::Formatter
   describe DotFormatter do
     output = IO::Memory.new
-    subject = DotFormatter.new output
+    subject = DotFormatter.new(output)
 
     before_each do
       output.clear
@@ -11,35 +11,35 @@ module Ameba::Formatter
 
     describe "#started" do
       it "writes started message" do
-        subject.started [Source.new]
+        subject.started([Source.new])
         output.to_s.should eq "Inspecting 1 file\n\n"
       end
     end
 
     describe "#source_finished" do
       it "writes valid source" do
-        subject.source_finished Source.new
+        subject.source_finished(Source.new)
         output.to_s.should contain "."
       end
 
       it "writes invalid source" do
         source = Source.new
-        source.add_issue DummyRule.new, Crystal::Nop.new, "message"
+        source.add_issue(DummyRule.new, Crystal::Nop.new, "message")
 
-        subject.source_finished source
+        subject.source_finished(source)
         output.to_s.should contain "F"
       end
     end
 
     describe "#finished" do
       it "writes a final message" do
-        subject.finished [Source.new]
+        subject.finished([Source.new])
         output.to_s.should contain "1 inspected, 0 failures"
       end
 
       it "writes the elapsed time" do
-        subject.started [Source.new]
-        subject.finished [Source.new]
+        subject.started([Source.new])
+        subject.finished([Source.new])
         output.to_s.should contain "Finished in"
       end
 
@@ -49,7 +49,7 @@ module Ameba::Formatter
           source.add_issue(DummyRule.new, {1, 1}, "DummyRuleError")
           source.add_issue(NamedRule.new, {1, 2}, "NamedRuleError")
 
-          subject.finished [source]
+          subject.finished([source])
           log = output.to_s
           log.should contain "1 inspected, 2 failures"
           log.should contain "DummyRuleError"
@@ -63,7 +63,7 @@ module Ameba::Formatter
             CRYSTAL
           source.add_issue(DummyRule.new, {1, 5}, "DummyRuleError")
 
-          subject.finished [source]
+          subject.finished([source])
           log = output.to_s
           log = subject.deansify(log).should_not be_nil
           log.should contain "> a = 22"
@@ -77,7 +77,7 @@ module Ameba::Formatter
             CRYSTAL
           source.add_issue(DummyRule.new, {1, 5}, "DummyRuleError")
 
-          subject.finished [source]
+          subject.finished([source])
           log = output.to_s
           log.should contain "[C]"
         end
@@ -89,9 +89,9 @@ module Ameba::Formatter
             CRYSTAL
           source.add_issue(DummyRule.new, {1, 5}, "DummyRuleError")
 
-          formatter = DotFormatter.new output
+          formatter = DotFormatter.new(output)
           formatter.config[:without_affected_code] = true
-          formatter.finished [source]
+          formatter.finished([source])
 
           log = output.to_s
           log = formatter.deansify(log).should_not be_nil
@@ -104,7 +104,7 @@ module Ameba::Formatter
           source.add_issue(DummyRule.new, {1, 1}, "DummyRuleError", status: :disabled)
           source.add_issue(NamedRule.new, {1, 2}, "NamedRuleError")
 
-          subject.finished [source]
+          subject.finished([source])
           log = output.to_s
           log.should_not contain "DummyRuleError"
           log.should contain "1 inspected, 1 failure"

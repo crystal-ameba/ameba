@@ -14,8 +14,8 @@ module Ameba
 
   private def create_todo
     with_formatter do |formatter|
-      source = Source.new "a = 1", "source.cr"
-      source.add_issue DummyRule.new, {1, 2}, "message"
+      source = Source.new("a = 1", "source.cr")
+      source.add_issue(DummyRule.new, {1, 2}, "message")
 
       formatter.finished([source])
 
@@ -31,14 +31,14 @@ module Ameba
     context "problems not found" do
       it "does not create file" do
         with_formatter do |formatter|
-          file = formatter.finished [Source.new]
+          file = formatter.finished([Source.new])
           file.should be_nil
         end
       end
 
       it "reports a message saying file is not created" do
         with_formatter do |formatter, io|
-          formatter.finished [Source.new]
+          formatter.finished([Source.new])
           io.to_s.should contain "No issues found. File is not generated"
         end
       end
@@ -47,8 +47,8 @@ module Ameba
     context "problems found" do
       it "prints a message saying file is created" do
         with_formatter do |formatter, io|
-          source = Source.new "a = 1", "source.cr"
-          source.add_issue DummyRule.new, {1, 2}, "message"
+          source = Source.new("a = 1", "source.cr")
+          source.add_issue(DummyRule.new, {1, 2}, "message")
           formatter.finished([source])
           io.to_s.should contain "Created #{CONFIG_PATH}"
         end
@@ -81,12 +81,12 @@ module Ameba
       context "with multiple issues" do
         it "does generate todo file" do
           with_formatter do |formatter|
-            s1 = Source.new "a = 1", "source1.cr"
-            s2 = Source.new "a = 1", "source2.cr"
-            s1.add_issue DummyRule.new, {1, 2}, "message1"
-            s1.add_issue NamedRule.new, {1, 2}, "message1"
-            s1.add_issue DummyRule.new, {2, 2}, "message1"
-            s2.add_issue DummyRule.new, {2, 2}, "message2"
+            s1 = Source.new("a = 1", "source1.cr")
+            s2 = Source.new("a = 1", "source2.cr")
+            s1.add_issue(DummyRule.new, {1, 2}, "message1")
+            s1.add_issue(NamedRule.new, {1, 2}, "message1")
+            s1.add_issue(DummyRule.new, {2, 2}, "message1")
+            s2.add_issue(DummyRule.new, {2, 2}, "message2")
 
             formatter.finished([s1, s2])
 
@@ -105,9 +105,9 @@ module Ameba
         with_formatter do |formatter|
           s1 = Source.new(path: "source1.cr")
           s2 = Source.new(path: "source2.cr")
-          s1.add_issue NamedRule.new, {1, 1}, ""
-          s2.add_issue DummyRule.new, {2, 2}, ""
-          s1.add_issue DummyRule.new, {3, 3}, ""
+          s1.add_issue(NamedRule.new, {1, 1}, "")
+          s2.add_issue(DummyRule.new, {2, 2}, "")
+          s1.add_issue(DummyRule.new, {3, 3}, "")
 
           formatter.finished([s1, s2])
 
@@ -129,9 +129,9 @@ module Ameba
         with_formatter do |formatter|
           s1 = Source.new(path: Path["foo", "bar", "source1.cr"].to_s)
           s2 = Source.new(path: Path["foo", "bar", "source2.cr"].to_s)
-          s1.add_issue NamedRule.new, {1, 1}, ""
-          s2.add_issue DummyRule.new, {2, 2}, ""
-          s1.add_issue DummyRule.new, {3, 3}, ""
+          s1.add_issue(NamedRule.new, {1, 1}, "")
+          s2.add_issue(DummyRule.new, {2, 2}, "")
+          s1.add_issue(DummyRule.new, {3, 3}, "")
 
           formatter.finished([s1, s2])
 
@@ -152,20 +152,20 @@ module Ameba
       context "when invalid syntax" do
         it "does generate todo file" do
           with_formatter do |formatter|
-            source = Source.new "def invalid_syntax"
-            source.add_issue Rule::Lint::Syntax.new, {1, 2}, "message"
+            source = Source.new("def invalid_syntax")
+            source.add_issue(Rule::Lint::Syntax.new, {1, 2}, "message")
 
-            file = formatter.finished [source]
+            file = formatter.finished([source])
             file.should be_nil
           end
         end
 
         it "prints an error message" do
           with_formatter do |formatter, io|
-            source = Source.new "def invalid_syntax"
-            source.add_issue Rule::Lint::Syntax.new, {1, 2}, "message"
+            source = Source.new("def invalid_syntax")
+            source.add_issue(Rule::Lint::Syntax.new, {1, 2}, "message")
 
-            formatter.finished [source]
+            formatter.finished([source])
             io.to_s.should contain "Unable to generate TODO file"
             io.to_s.should contain "Please fix syntax issues"
           end

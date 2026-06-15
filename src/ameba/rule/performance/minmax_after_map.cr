@@ -37,7 +37,7 @@ module Ameba::Rule::Performance
     CALL_NAMES = %w[min min? max max? minmax minmax?]
 
     def test(source)
-      AST::NodeVisitor.new self, source, skip: :macro
+      AST::NodeVisitor.new(self, source, skip: :macro)
     end
 
     def test(source, node : Crystal::Call)
@@ -54,7 +54,7 @@ module Ameba::Rule::Performance
       of_name = node.name.sub(/(.+?)(\?)?$/, "\\1_of\\2")
       message = MSG % {of_name, node.name}
 
-      issue_for name_location, end_location, message do |corrector|
+      issue_for(name_location, end_location, message) do |corrector|
         next unless node_name_location = name_location(node)
 
         # TODO: switching the order of the below calls breaks the corrector

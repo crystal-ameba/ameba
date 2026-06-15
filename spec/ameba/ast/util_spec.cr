@@ -126,7 +126,7 @@ module Ameba::AST
           a = 1
           CRYSTAL
         node = Crystal::Parser.new(s).parse
-        source = subject.node_source node, s.split("\n")
+        source = subject.node_source(node, s.split("\n"))
         source.should eq "a = 1"
       end
 
@@ -137,7 +137,7 @@ module Ameba::AST
           end
           CRYSTAL
         node = Crystal::Parser.new(s).parse
-        source = subject.node_source node, s.split("\n")
+        source = subject.node_source(node, s.split("\n"))
         source.should eq <<-CRYSTAL
           if ()
             :ok
@@ -159,7 +159,7 @@ module Ameba::AST
           end
           CRYSTAL
         node = as_nodes(s).nil_literal_nodes.first
-        source = subject.node_source node, s.split("\n")
+        source = subject.node_source(node, s.split("\n"))
         source.should eq "nil"
       end
     end
@@ -405,25 +405,25 @@ module Ameba::AST
 
     describe "#has_short_block?" do
       it "returns true if the node has a short block variant" do
-        source = Source.new "foo :bar, &.baz"
+        source = Source.new("foo :bar, &.baz")
         node = as_node(source.code)
         subject.has_short_block?(node, source.lines).should be_true
       end
 
       it "returns false if the node has a one line block" do
-        source = Source.new "foo :bar { |x| x.baz? }"
+        source = Source.new("foo :bar { |x| x.baz? }")
         node = as_node(source.code)
         subject.has_short_block?(node, source.lines).should be_false
       end
 
       it "returns false if the node does not have a short block variant" do
-        source = Source.new "foo :bar { |x| x.baz? }"
+        source = Source.new("foo :bar { |x| x.baz? }")
         node = as_node(source.code)
         subject.has_short_block?(node, source.lines).should be_false
       end
 
       it "returns false if the node does not have a block" do
-        source = Source.new "foo :bar"
+        source = Source.new("foo :bar")
         node = as_node(source.code)
         subject.has_short_block?(node, source.lines).should be_false
       end
@@ -512,83 +512,83 @@ module Ameba::AST
 
     describe "#raise?" do
       it "returns true if this is a raise method call" do
-        node = as_node "raise e"
+        node = as_node("raise e")
         subject.raise?(node).should be_true
       end
 
       it "returns false if it has a receiver" do
-        node = as_node "obj.raise e"
+        node = as_node("obj.raise e")
         subject.raise?(node).should be_false
       end
 
       it "returns false if size of the arguments doesn't match" do
-        node = as_node "raise"
+        node = as_node("raise")
         subject.raise?(node).should be_false
       end
     end
 
     describe "#exit?" do
       it "returns true if this is a exit method call" do
-        node = as_node "exit"
+        node = as_node("exit")
         subject.exit?(node).should be_true
       end
 
       it "returns true if this is a exit method call with one argument" do
-        node = as_node "exit 1"
+        node = as_node("exit 1")
         subject.exit?(node).should be_true
       end
 
       it "returns false if it has a receiver" do
-        node = as_node "obj.exit"
+        node = as_node("obj.exit")
         subject.exit?(node).should be_false
       end
 
       it "returns false if size of the arguments doesn't match" do
-        node = as_node "exit 1, 1"
+        node = as_node("exit 1, 1")
         subject.exit?(node).should be_false
       end
     end
 
     describe "#abort?" do
       it "returns true if this is an abort method call" do
-        node = as_node "abort"
+        node = as_node("abort")
         subject.abort?(node).should be_true
       end
 
       it "returns true if this is an abort method call with one argument" do
-        node = as_node "abort \"message\""
+        node = as_node("abort \"message\"")
         subject.abort?(node).should be_true
       end
 
       it "returns true if this is an abort method call with two arguments" do
-        node = as_node "abort \"message\", 1"
+        node = as_node("abort \"message\", 1")
         subject.abort?(node).should be_true
       end
 
       it "returns false if it has a receiver" do
-        node = as_node "obj.abort"
+        node = as_node("obj.abort")
         subject.abort?(node).should be_false
       end
 
       it "returns false if size of the arguments doesn't match" do
-        node = as_node "abort 1, 1, 1"
+        node = as_node("abort 1, 1, 1")
         subject.abort?(node).should be_false
       end
     end
 
     describe "#loop?" do
       it "returns true if this is a loop method call" do
-        node = as_node "loop"
+        node = as_node("loop")
         subject.loop?(node).should be_true
       end
 
       it "returns false if it has a receiver" do
-        node = as_node "obj.loop"
+        node = as_node("obj.loop")
         subject.loop?(node).should be_false
       end
 
       it "returns false if size of the arguments doesn't match" do
-        node = as_node "loop 1"
+        node = as_node("loop 1")
         subject.loop?(node).should be_false
       end
     end
@@ -609,27 +609,27 @@ module Ameba::AST
 
     describe "#operator_method?" do
       it "returns true for operator method definitions" do
-        node = as_node "def +(other); end"
+        node = as_node("def +(other); end")
         subject.operator_method?(node).should be_true
       end
 
       it "returns false for other method definitions" do
-        node = as_node "def method; end"
+        node = as_node("def method; end")
         subject.operator_method?(node).should be_false
       end
 
       it "returns true for operator method calls" do
-        node = as_node "obj + 1"
+        node = as_node("obj + 1")
         subject.operator_method?(node).should be_true
       end
 
       it "returns false for other method calls" do
-        node = as_node "obj.method"
+        node = as_node("obj.method")
         subject.operator_method?(node).should be_false
       end
 
       it "returns false for procs" do
-        node = as_node "-> { nil }"
+        node = as_node("-> { nil }")
         subject.operator_method?(node).should be_false
       end
     end
@@ -656,27 +656,27 @@ module Ameba::AST
 
     describe "#setter_method?" do
       it "returns true for setter method definitions" do
-        node = as_node "def foo=(@foo); end"
+        node = as_node("def foo=(@foo); end")
         subject.setter_method?(node).should be_true
       end
 
       it "returns false for other method definitions" do
-        node = as_node "def foo; end"
+        node = as_node("def foo; end")
         subject.setter_method?(node).should be_false
       end
 
       it "returns true for setter method calls" do
-        node = as_node "foo.bar = 123"
+        node = as_node("foo.bar = 123")
         subject.setter_method?(node).should be_true
       end
 
       it "returns false for regular method calls" do
-        node = as_node "obj.method"
+        node = as_node("obj.method")
         subject.setter_method?(node).should be_false
       end
 
       it "returns false for procs" do
-        node = as_node "-> { nil }"
+        node = as_node("-> { nil }")
         subject.setter_method?(node).should be_false
       end
     end
@@ -765,21 +765,21 @@ module Ameba::AST
       it "returns the exp code of a control expression" do
         s = "return 1"
         node = as_node(s).as Crystal::ControlExpression
-        exp_code = subject.control_exp_code node, [s]
+        exp_code = subject.control_exp_code(node, [s])
         exp_code.should eq "1"
       end
 
       it "wraps implicit tuple literal with curly brackets" do
         s = "return 1, 2"
         node = as_node(s).as Crystal::ControlExpression
-        exp_code = subject.control_exp_code node, [s]
+        exp_code = subject.control_exp_code(node, [s])
         exp_code.should eq "{1, 2}"
       end
 
       it "accepts explicit tuple literal" do
         s = "return {1, 2}"
         node = as_node(s).as Crystal::ControlExpression
-        exp_code = subject.control_exp_code node, [s]
+        exp_code = subject.control_exp_code(node, [s])
         exp_code.should eq "{1, 2}"
       end
     end

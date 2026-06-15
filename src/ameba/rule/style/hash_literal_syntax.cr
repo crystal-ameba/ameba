@@ -29,13 +29,13 @@ module Ameba::Rule::Style
     MSG = "Use `Hash(%s, %s).new` for creating an empty hash"
 
     def test(source)
-      AST::NodeVisitor.new self, source, skip: :macro
+      AST::NodeVisitor.new(self, source, skip: :macro)
     end
 
     def test(source, node : Crystal::HashLiteral)
       return unless node.entries.empty? && (hash_type = node.of)
 
-      issue_for node, MSG % {hash_type.key, hash_type.value} do |corrector|
+      issue_for(node, MSG % {hash_type.key, hash_type.value}) do |corrector|
         corrector.replace(node, "Hash(#{hash_type.key}, #{hash_type.value}).new")
       end
     end

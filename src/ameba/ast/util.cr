@@ -191,28 +191,28 @@ module Ameba::AST::Util
   #
   # That's because not all branches return(i.e. `else` is missing).
   def flow_expression?(node, in_loop = false)
-    return true if flow_command? node, in_loop
+    return true if flow_command?(node, in_loop)
 
     case node
     when Crystal::If, Crystal::Unless
-      flow_expressions? [node.then, node.else], in_loop
+      flow_expressions?([node.then, node.else], in_loop)
     when Crystal::BinaryOp
-      flow_expression? node.left, in_loop
+      flow_expression?(node.left, in_loop)
     when Crystal::Case, Crystal::Select
-      flow_expressions? [node.whens, node.else].flatten, in_loop
+      flow_expressions?([node.whens, node.else].flatten, in_loop)
     when Crystal::ExceptionHandler
-      flow_expressions? [node.else || node.body, node.rescues].flatten, in_loop
+      flow_expressions?([node.else || node.body, node.rescues].flatten, in_loop)
     when Crystal::While, Crystal::Until, Crystal::Rescue, Crystal::When
-      flow_expression? node.body, in_loop
+      flow_expression?(node.body, in_loop)
     when Crystal::Expressions
-      node.expressions.any? { |exp| flow_expression? exp, in_loop }
+      node.expressions.any? { |exp| flow_expression?(exp, in_loop) }
     else
       false
     end
   end
 
   private def flow_expressions?(nodes, in_loop)
-    nodes.all? { |exp| flow_expression? exp, in_loop }
+    nodes.all? { |exp| flow_expression?(exp, in_loop) }
   end
 
   # Returns `true` if node represents `raise` method call.

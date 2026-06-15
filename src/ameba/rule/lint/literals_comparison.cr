@@ -45,7 +45,7 @@ module Ameba::Rule::Lint
           "the same"
         end
 
-      issue_for node, MSG % what
+      issue_for(node, MSG % what)
     end
   end
 end

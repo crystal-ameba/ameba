@@ -54,7 +54,7 @@ module Ameba::Rule::Naming
             end
 
           if name_node && is_bool
-            issue_for name_node, MSG % {exp.name, name_node}
+            issue_for(name_node, MSG % {exp.name, name_node})
           end
         end
       end

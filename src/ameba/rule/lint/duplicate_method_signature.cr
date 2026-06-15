@@ -31,7 +31,7 @@ module Ameba::Rule::Lint
     MSG = "Duplicate method signature detected"
 
     def test(source)
-      AST::ScopeVisitor.new self, source
+      AST::ScopeVisitor.new(self, source)
     end
 
     def test(source, node : Crystal::ClassDef | Crystal::ModuleDef, scope : AST::Scope)
@@ -43,7 +43,7 @@ module Ameba::Rule::Lint
         next if def_node_to_s.matches?(/\Wprevious_def\W/)
         next if found_defs.add?(def_node_to_s.lines.first)
 
-        issue_for def_node, MSG
+        issue_for(def_node, MSG)
       end
     end
 

@@ -78,7 +78,7 @@ module Ameba::Rule::Style
       return if reference_count(body, arg) > 1
 
       # add issue if the given nodes pass all of the checks
-      issue_for_valid source, node, block, body
+      issue_for_valid(source, node, block, body)
     end
 
     # ameba:disable Metrics/CyclomaticComplexity
@@ -99,9 +99,9 @@ module Ameba::Rule::Style
       return unless end_location = block.end_location
 
       if call_code.includes?("{...}")
-        issue_for location, end_location, MSG % call_code
+        issue_for(location, end_location, MSG % call_code)
       else
-        issue_for location, end_location, MSG % call_code do |corrector|
+        issue_for(location, end_location, MSG % call_code) do |corrector|
           corrector.replace(location, end_location, call_code)
         end
       end
@@ -158,12 +158,12 @@ module Ameba::Rule::Style
     private def args_to_s(io : IO, node : Crystal::Call, short_block = nil, skip_last_arg = false) : Nil
       args = node.args.dup
       args.pop? if skip_last_arg
-      args.join io, ", "
+      args.join(io, ", ")
 
       named_args = node.named_args
       if named_args
         io << ", " unless args.empty? || named_args.empty?
-        named_args.join io, ", " do |arg, inner_io|
+        named_args.join(io, ", ") do |arg, inner_io|
           inner_io << arg.name << ": " << arg.value
         end
       end
@@ -184,7 +184,7 @@ module Ameba::Rule::Style
     end
 
     private def same_location_lines?(a, b)
-      name_location(a).try &.same_line?(b.location)
+      name_location(a).try(&.same_line?(b.location))
     end
 
     private def prefix_operator?(node)

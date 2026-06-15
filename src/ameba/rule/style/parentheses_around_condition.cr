@@ -46,7 +46,7 @@ module Ameba::Rule::Style
       return unless cond = node.cond
 
       if cond.is_a?(Crystal::Assign) && allow_safe_assignment?
-        issue_for cond, MSG_MISSING do |corrector|
+        issue_for(cond, MSG_MISSING) do |corrector|
           corrector.wrap(cond, '(', ')')
         end
         return
@@ -54,7 +54,7 @@ module Ameba::Rule::Style
 
       return unless redundant_parentheses?(node, cond)
 
-      issue_for cond, MSG_REDUNDANT do |corrector|
+      issue_for(cond, MSG_REDUNDANT) do |corrector|
         corrector.remove_trailing(cond, 1)
         corrector.remove_leading(cond, 1)
       end

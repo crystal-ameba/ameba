@@ -3,7 +3,7 @@ require "../../../spec_helper"
 module Ameba::AST
   describe Assignment do
     node = Crystal::NilLiteral.new
-    scope = Scope.new as_node "foo = 1"
+    scope = Scope.new(as_node("foo = 1"))
     variable = Variable.new(Crystal::Var.new("foo"), scope)
 
     describe "#initialize" do

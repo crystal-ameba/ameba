@@ -82,9 +82,9 @@ module Ameba::Rule::Typing
       node.args.each do |arg|
         case arg
         when Crystal::Assign
-          issue_for arg.target, MSG if default_value?
+          issue_for(arg.target, MSG) if default_value?
         when Crystal::Var, Crystal::Call, Crystal::StringLiteral, Crystal::SymbolLiteral
-          issue_for arg, MSG
+          issue_for(arg, MSG)
         end
       end
     end

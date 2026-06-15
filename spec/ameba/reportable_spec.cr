@@ -4,7 +4,7 @@ module Ameba
   describe Reportable do
     describe "#add_issue" do
       it "adds a new issue for node" do
-        source = Source.new path: "source.cr"
+        source = Source.new(path: "source.cr")
         source.add_issue(DummyRule.new, Crystal::Nop.new, "Error!")
 
         issue = source.issues.first
@@ -14,7 +14,7 @@ module Ameba
       end
 
       it "adds a new issue by line and column number" do
-        source = Source.new path: "source.cr"
+        source = Source.new(path: "source.cr")
         source.add_issue(DummyRule.new, {23, 2}, "Error!")
 
         issue = source.issues.first
@@ -26,13 +26,13 @@ module Ameba
 
     describe "#valid?" do
       it "returns true if no issues added" do
-        source = Source.new path: "source.cr"
+        source = Source.new(path: "source.cr")
         source.should be_valid
       end
 
       it "returns false if there are issues added" do
-        source = Source.new path: "source.cr"
-        source.add_issue DummyRule.new, {22, 2}, "ERROR!"
+        source = Source.new(path: "source.cr")
+        source.add_issue(DummyRule.new, {22, 2}, "ERROR!")
         source.should_not be_valid
       end
     end

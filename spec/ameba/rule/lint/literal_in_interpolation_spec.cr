@@ -21,7 +21,7 @@ module Ameba::Rule::Lint
         %q("#{false}"),
         %q("here are #{4} cats"),
       ].each do |str|
-        subject.catch(Source.new str).should_not be_valid
+        subject.catch(Source.new(str)).should_not be_valid
       end
     end
 

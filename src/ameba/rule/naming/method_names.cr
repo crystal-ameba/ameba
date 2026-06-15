@@ -50,7 +50,7 @@ module Ameba::Rule::Naming
 
       return if (expected = name.underscore) == name
 
-      issue_for node, MSG % {expected, name}, prefer_name_location: true
+      issue_for(node, MSG % {expected, name}, prefer_name_location: true)
     end
   end
 end

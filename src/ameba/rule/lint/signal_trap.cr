@@ -41,12 +41,12 @@ module Ameba::Rule::Lint
       return unless node.name == "trap"
 
       if (name_location = name_location(node)) && (name_end_location = name_end_location(node))
-        issue_for node.location, name_end_location, MSG % obj do |corrector|
-          corrector.replace obj, "Process"
-          corrector.replace name_location, name_end_location, "on_terminate"
+        issue_for(node.location, name_end_location, MSG % obj) do |corrector|
+          corrector.replace(obj, "Process")
+          corrector.replace(name_location, name_end_location, "on_terminate")
         end
       else
-        issue_for node, MSG % obj
+        issue_for(node, MSG % obj)
       end
     end
   end

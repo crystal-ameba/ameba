@@ -30,7 +30,7 @@ module Ameba::Rule::Lint
 
     def test(source)
       each_inline_directive(source) do |token, action|
-        check_action source, token, action
+        check_action(source, token, action)
       end
     end
 

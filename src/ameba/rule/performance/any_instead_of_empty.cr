@@ -42,7 +42,7 @@ module Ameba::Rule::Performance
       return unless node.name == "any?" && node.args.empty? && node.obj
       return if has_block?(node)
 
-      issue_for node, MSG, prefer_name_location: true
+      issue_for(node, MSG, prefer_name_location: true)
     end
   end
 end

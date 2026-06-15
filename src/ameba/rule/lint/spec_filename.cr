@@ -40,7 +40,7 @@ module Ameba::Rule::Lint
 
       expected = "#{name}_spec"
 
-      issue_for LOCATION, MSG % {expected, name} do
+      issue_for(LOCATION, MSG % {expected, name}) do
         new_path =
           path_.sibling(expected + path_.extension)
 

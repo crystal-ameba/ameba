@@ -32,7 +32,7 @@ module Ameba::Rule::Performance
     MSG = "Use `flat_map {...}` instead of `map {...}.flatten`"
 
     def test(source)
-      AST::NodeVisitor.new self, source, skip: :macro
+      AST::NodeVisitor.new(self, source, skip: :macro)
     end
 
     def test(source, node : Crystal::Call)
@@ -40,7 +40,7 @@ module Ameba::Rule::Performance
       return unless obj.is_a?(Crystal::Call) && has_block?(obj)
       return unless obj.name == "map"
 
-      issue_for name_location(obj), name_end_location(node), MSG
+      issue_for(name_location(obj), name_end_location(node), MSG)
     end
   end
 end
