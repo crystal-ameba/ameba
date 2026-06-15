@@ -28,8 +28,8 @@ jobs:
     steps:
       - uses: actions/checkout@v6
       - run: docker run --rm -v $PWD:/mnt -w /mnt crystallang/crystal:latest-alpine shards build ameba -Dpreview_mt --release --static
-      - run: tar zcf ameba-${{ github.ref_name }}-$(uname -m)-linux-musl.tar.gz -C bin ameba
-      - run: gh release -R ${{ github.repository }} upload ${{ github.ref_name }} ameba-${{ github.ref_name }}-$(uname -m)-linux-musl.tar.gz
+      - run: tar zcf ameba-${{ github.ref_name }}-linux-musl-$(uname -m).tar.gz -C bin ameba
+      - run: gh release -R ${{ github.repository }} upload ${{ github.ref_name }} ameba-${{ github.ref_name }}-linux-musl-$(uname -m).tar.gz
 
   darwin:
     needs:
@@ -45,8 +45,8 @@ jobs:
       - uses: crystal-lang/install-crystal@v1
       - uses: actions/checkout@v6
       - run: shards build ameba -Dpreview_mt --release
-      - run: tar zcf ameba-${{ github.ref_name }}-${{ matrix.arch }}-darwin.tar.gz -C bin ameba ameba.dwarf
-      - run: gh release -R ${{ github.repository }} upload ${{ github.ref_name }} ameba-${{ github.ref_name }}-${{ matrix.arch }}-darwin.tar.gz
+      - run: tar zcf ameba-${{ github.ref_name }}-darwin-${{ matrix.arch }}.tar.gz -C bin ameba ameba.dwarf
+      - run: gh release -R ${{ github.repository }} upload ${{ github.ref_name }} ameba-${{ github.ref_name }}-darwin-${{ matrix.arch }}.tar.gz
 
   x86_64-windows-msvc:
     needs:
@@ -56,5 +56,5 @@ jobs:
       - uses: crystal-lang/install-crystal@v1
       - uses: actions/checkout@v6
       - run: shards build ameba -Dpreview_mt --release --static
-      - run: cd bin; 7z a -tzip ../ameba-${{ github.ref_name }}-x86_64-windows-msvc.zip ameba.exe ameba.pdb
-      - run: gh release -R ${{ github.repository }} upload ${{ github.ref_name }} ameba-${{ github.ref_name }}-x86_64-windows-msvc.zip
+      - run: cd bin; 7z a -tzip ../ameba-${{ github.ref_name }}-windows-msvc-x86_64.zip ameba.exe ameba.pdb
+      - run: gh release -R ${{ github.repository }} upload ${{ github.ref_name }} ameba-${{ github.ref_name }}-windows-msvc-x86_64.zip
