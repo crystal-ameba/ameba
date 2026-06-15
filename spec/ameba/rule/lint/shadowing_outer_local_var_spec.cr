@@ -404,6 +404,151 @@ module Ameba::Rule::Lint
       end
     end
 
+    context "multi-assignment and short-circuit operators" do
+      it "reports when a splat multi-assignment target is shadowed" do
+        expect_issue subject, <<-CRYSTAL
+          a, *foo = [1, 2, 3]
+          bar { |foo| foo }
+               # ^^^ error: Shadowing outer local variable `foo`
+          CRYSTAL
+      end
+
+      it "reports when an assignment inside a short-circuit operator is shadowed" do
+        expect_issue subject, <<-CRYSTAL
+          done || (foo = compute)
+          bar { |foo| foo }
+               # ^^^ error: Shadowing outer local variable `foo`
+          CRYSTAL
+      end
+    end
+
+    context "unconnected (terminating) code branch" do
+      it "does not report when the assignment branch ends in `return`" do
+        expect_no_issues subject, <<-CRYSTAL
+          def foo
+            if cond
+              x = 1
+              return
+            end
+
+            bar { |x| x + 1 }
+          end
+          CRYSTAL
+      end
+
+      it "does not report when the assignment branch ends in `next`" do
+        expect_no_issues subject, <<-CRYSTAL
+          [1, 2].each do |i|
+            if cond
+              x = 1
+              next
+            end
+
+            bar { |x| x + 1 }
+          end
+          CRYSTAL
+      end
+
+      it "does not report when the assignment branch ends in `break`" do
+        expect_no_issues subject, <<-CRYSTAL
+          [1, 2].each do |i|
+            if cond
+              x = 1
+              break
+            end
+
+            bar { |x| x + 1 }
+          end
+          CRYSTAL
+      end
+
+      it "does not report when the assignment branch ends in `raise`" do
+        expect_no_issues subject, <<-CRYSTAL
+          def foo
+            if cond
+              x = 1
+              raise "boom"
+            end
+
+            bar { |x| x + 1 }
+          end
+          CRYSTAL
+      end
+
+      it "does not report when every branch of the assignment is terminating" do
+        expect_no_issues subject, <<-CRYSTAL
+          def foo
+            if cond
+              x = 1
+              return x
+            else
+              x = 2
+              return x
+            end
+
+            bar { |x| x + 1 }
+          end
+          CRYSTAL
+      end
+
+      it "reports when the terminating branch does not assign the variable" do
+        expect_issue subject, <<-CRYSTAL
+          def foo
+            x = 1
+            return if cond
+
+            bar { |x| x + 1 }
+                 # ^ error: Shadowing outer local variable `x`
+          end
+          CRYSTAL
+      end
+
+      it "reports when the assignment is reachable past a nested non-terminating branch" do
+        expect_issue subject, <<-CRYSTAL
+          def foo
+            if cond
+              return if other
+              x = 1
+            end
+
+            bar { |x| x + 1 }
+                 # ^ error: Shadowing outer local variable `x`
+          end
+          CRYSTAL
+      end
+    end
+
+    context "loops" do
+      it "reports when the assignment precedes the block in the body" do
+        expect_issue subject, <<-CRYSTAL
+          while cond
+            x = 1
+            bar { |x| x + 1 }
+                 # ^ error: Shadowing outer local variable `x`
+          end
+          CRYSTAL
+      end
+
+      # The assignment is lexically below the block, so the outer `x` is not in
+      # scope where the block is introduced, even across the loop's back edge.
+      it "does not report when the assignment is lexically below the block" do
+        expect_no_issues subject, <<-CRYSTAL
+          while cond
+            bar { |x| x + 1 }
+            x = 1
+          end
+          CRYSTAL
+      end
+
+      it "does not report when the loop never assigns the shadowed name" do
+        expect_no_issues subject, <<-CRYSTAL
+          while cond
+            bar { |x| x + 1 }
+          end
+          CRYSTAL
+      end
+    end
+
     context "macro" do
       it "does not report shadowed vars in outer scope" do
         expect_no_issues subject, <<-CRYSTAL
