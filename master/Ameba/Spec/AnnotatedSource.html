@@ -59,11 +59,6 @@
   <div class="types-list">
     <ul>
   
-  <li class=" " data-id="ameba/toplevel" data-name="top level namespace">
-      <a href="../../toplevel.html">Top Level Namespace</a>
-      
-    </li>
-  
   <li class="parent open current" data-id="ameba/Ameba" data-name="ameba">
       <a href="../../Ameba.html">Ameba</a>
       
@@ -1241,7 +1236,7 @@
   </h2>
   
     
-      <a href="https://github.com/crystal-ameba/ameba/blob/2fd9c8a/src/ameba/spec/annotated_source.cr#L2" target="_blank">
+      <a href="https://github.com/crystal-ameba/ameba/blob/f940cb8/src/ameba/spec/annotated_source.cr#L2" target="_blank">
         ameba/spec/annotated_source.cr
       </a>
     
@@ -1344,9 +1339,9 @@
   <ul class="list-summary">
     
       <li class="entry-summary">
-        <a href="#%3D%3D%28other%29-instance-method" class="signature"><strong>#==</strong>(other)</a>
+        <a href="#%3D%3D%28other%3Aself%29-instance-method" class="signature"><strong>#==</strong>(other : <span class="k">self</span>)</a>
         
-          <div class="summary"><p>Returns <code>false</code> (other can only be a <code>Value</code> here).</p></div>
+          <div class="summary"><p>Returns <code>true</code> if this reference is the same as <em>other</em>.</p></div>
         
       </li>
     
@@ -1430,7 +1425,7 @@ text via <code><a href="../../Ameba/Spec/AnnotatedSource.html#to_s%28io%29-insta
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/2fd9c8a/src/ameba/spec/annotated_source.cr#L43" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/f940cb8/src/ameba/spec/annotated_source.cr#L46" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1453,7 +1448,7 @@ text via <code><a href="../../Ameba/Spec/AnnotatedSource.html#to_s%28io%29-insta
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/2fd9c8a/src/ameba/spec/annotated_source.cr#L53" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/f940cb8/src/ameba/spec/annotated_source.cr#L56" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1487,7 +1482,7 @@ code line number that each annotation corresponds to.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/2fd9c8a/src/ameba/spec/annotated_source.cr#L16" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/f940cb8/src/ameba/spec/annotated_source.cr#L16" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1506,12 +1501,12 @@ code line number that each annotation corresponds to.</p>
     Instance Method Detail
   </h2>
   
-    <div class="entry-detail" id="==(other)-instance-method">
+    <div class="entry-detail" id="==(other:self)-instance-method">
       <div class="signature">
         
-        def <strong>==</strong>(other)
+        def <strong>==</strong>(other : <span class="k">self</span>)
 
-        <a class="method-permalink" href="#%3D%3D%28other%29-instance-method">#</a>
+        <a class="method-permalink" href="#%3D%3D%28other%3Aself%29-instance-method">#</a>
       </div>
       
         <div class="doc">
@@ -1520,13 +1515,13 @@ code line number that each annotation corresponds to.</p>
               Description copied from class Reference
             </div>
           
-          <p>Returns <code>false</code> (other can only be a <code>Value</code> here).</p>
+          <p>Returns <code>true</code> if this reference is the same as <em>other</em>. Invokes <code>same?</code>.</p>
         </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/2fd9c8a/src/ameba/spec/annotated_source.cr#L59" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/f940cb8/src/ameba/spec/annotated_source.cr#L62" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1548,7 +1543,7 @@ The prefix is empty if the annotation is at the end of a code line.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/2fd9c8a/src/ameba/spec/annotated_source.cr#L12" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/f940cb8/src/ameba/spec/annotated_source.cr#L12" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1564,7 +1559,7 @@ The prefix is empty if the annotation is at the end of a code line.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/2fd9c8a/src/ameba/spec/annotated_source.cr#L8" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/f940cb8/src/ameba/spec/annotated_source.cr#L8" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1601,7 +1596,7 @@ source1.to_s <span class="o">==</span> source2.to_s <span class="c"># =&gt; true
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/2fd9c8a/src/ameba/spec/annotated_source.cr#L110" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/f940cb8/src/ameba/spec/annotated_source.cr#L115" target="_blank">View source</a>]
         
       </div>
     </div>

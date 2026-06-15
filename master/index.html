@@ -59,11 +59,6 @@
   <div class="types-list">
     <ul>
   
-  <li class=" " data-id="ameba/toplevel" data-name="top level namespace">
-      <a href="toplevel.html">Top Level Namespace</a>
-      
-    </li>
-  
   <li class="parent " data-id="ameba/Ameba" data-name="ameba">
       <a href="Ameba.html">Ameba</a>
       
@@ -1213,12 +1208,13 @@
 <li><a href="#watch-a-tutorial">Watch a tutorial</a></li>
 <li><a href="#autocorrection">Autocorrection</a></li>
 <li><a href="#explain-issues">Explain issues</a></li>
+<li><a href="#describe-rules">Describe rules</a></li>
 <li><a href="#run-in-parallel">Run in parallel</a></li>
 </ul>
 </li>
 <li><a href="#installation">Installation</a>
 <ul>
-<li><a href="#as-a-project-dependency">As a project dependency:</a></li>
+<li><a href="#as-a-project-dependency">As a project dependency</a></li>
 <li><a href="#os-x">OS X</a></li>
 <li><a href="#docker">Docker</a></li>
 <li><a href="#from-sources">From sources</a></li>
@@ -1241,9 +1237,8 @@
   </svg>
 </a>About</h2>
 <p>Ameba is a static code analysis tool for the Crystal language.
-It enforces a consistent <a href="https://crystal-lang.org/reference/conventions/coding_style.html">Crystal code style</a>,
-also catches code smells and wrong code constructions.</p>
-<p>See also <a href="https://github.com/crystal-ameba/ameba/wiki">Roadmap</a>.</p>
+It enforces a consistent <a href="https://crystal-lang.org/reference/conventions/coding_style.html">Crystal code style</a>, also catches code smells and wrong code constructions.</p>
+<p>See also <a href="https://github.com/crystal-ameba/ameba/wiki#roadmap">Roadmap</a>.</p>
 <h2><a id="usage" class="anchor" href="#usage">
   <svg class="octicon-link" aria-hidden="true">
     <use href="#octicon-link"/>
@@ -1258,17 +1253,17 @@ Inspecting 107 files
 src/ameba/formatter/flycheck_formatter.cr:6:37
 [W] Lint/UnusedArgument: Unused argument `location`. If it's necessary, use `_` as an argument name to indicate that it won't be used.
 &gt; source.issues.each do |issue, location|
-                                ^
+                                ^------^
 
 src/ameba/formatter/base_formatter.cr:16:14
-[W] Lint/UselessAssign: Useless assignment to variable `s`
-&gt; return s += issues.size
-         ^
+[W] Lint/UselessAssign: Useless assignment to variable `size`
+&gt; return size += issues.size
+         ^--^
 
 src/ameba/formatter/base_formatter.cr:16:7 [Correctable]
 [C] Style/RedundantReturn: Redundant `return` detected
-&gt; return s += issues.size
-  ^---------------------^
+&gt; return size += issues.size
+  ^------------------------^
 
 Finished in 389.45 milliseconds
 107 inspected, 3 failures</code></pre>
@@ -1297,6 +1292,13 @@ and the reasoning by it being reported.</p>
 report and paste behind the <code>ameba</code> command to check it out.</p>
 <pre><code class="language-sh">$ ameba crystal/command/format.cr:26:83           # show explanation for the issue
 $ ameba --explain crystal/command/format.cr:26:83 # same thing</code></pre>
+<h3><a id="describe-rules" class="anchor" href="#describe-rules">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>Describe rules</h3>
+<p>You can use <code>--describe</code> flag to get a detailed description of a rule:</p>
+<pre><code class="language-sh">$ ameba --describe Lint/UselessAssign</code></pre>
 <h3><a id="run-in-parallel" class="anchor" href="#run-in-parallel">
   <svg class="octicon-link" aria-hidden="true">
     <use href="#octicon-link"/>
