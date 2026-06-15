@@ -8,15 +8,18 @@ module Ameba::Rule::Lint
   # ```
   # Lint/SpecFilename:
   #   Enabled: true
-  #   IgnoredDirs: [spec/support spec/fixtures spec/data]
-  #   IgnoredFilenames: [spec_helper]
+  #   IgnoredPaths: [spec/support/** spec/fixtures/** spec/data/** spec/**/spec_helper.cr]
   # ```
   class SpecFilename < Base
     properties do
       since_version "1.6.0"
       description "Enforces spec filenames to have `_spec` suffix"
-      ignored_dirs %w[spec/support spec/fixtures spec/data]
-      ignored_filenames %w[spec_helper]
+      ignored_paths %w[
+        spec/support/**
+        spec/fixtures/**
+        spec/data/**
+        spec/**/spec_helper.cr
+      ]
     end
 
     MSG = "Spec filename should have `_spec` suffix: `%s.cr`, not `%s.cr`"
@@ -24,18 +27,18 @@ module Ameba::Rule::Lint
     private LOCATION = {1, 1}
 
     def test(source : Source)
+      return if source.spec?
+
       path_ = Path[source.project_path].to_posix
       name = path_.stem
       path = path_.to_s
 
       return unless path.starts_with?("spec/")
       return unless path.ends_with?(".cr")
-      return if name.ends_with?("_spec")
 
-      ignored_dirs.each do |substr|
-        return if path.starts_with?("#{substr}/")
+      ignored_paths.each do |pattern|
+        return if File.match?(pattern, path)
       end
-      return if name.in?(ignored_filenames)
 
       expected = "#{name}_spec"
 
