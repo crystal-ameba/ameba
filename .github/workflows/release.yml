@@ -17,8 +17,28 @@ jobs:
     steps:
       - run: gh release -R ${{ github.repository }} create ${{ github.ref_name }} --draft --generate-notes
 
+  setup:
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.variables.outputs.version }}
+
+    steps:
+      - name: Inject slug/short variables
+        uses: rlespinasse/github-slug-action@v5
+
+      - name: Set output variables
+        id: variables
+        run: |
+          VERSION="${GITHUB_REF_NAME}"
+          if [[ $VERSION =~ ^v[0-9].* ]]; then
+            VERSION=${VERSION#"v"}
+          fi
+          echo "VERSION: ${VERSION}"
+          echo "version=${VERSION}" >> $GITHUB_OUTPUT
+
   linux-musl:
     needs:
+      - setup
       - gh-release-draft
     strategy:
       fail-fast: false
@@ -28,11 +48,12 @@ jobs:
     steps:
       - uses: actions/checkout@v6
       - run: docker run --rm -v $PWD:/mnt -w /mnt crystallang/crystal:latest-alpine shards build ameba -Dpreview_mt --release --static
-      - run: tar zcf ameba-${{ github.ref_name }}-linux-musl-$(uname -m).tar.gz -C bin ameba
-      - run: gh release -R ${{ github.repository }} upload ${{ github.ref_name }} ameba-${{ github.ref_name }}-linux-musl-$(uname -m).tar.gz
+      - run: tar zcf ameba-${{ needs.setup.outputs.version }}-linux-musl-$(uname -m).tar.gz -C bin ameba
+      - run: gh release -R ${{ github.repository }} upload ${{ github.ref_name }} ameba-${{ needs.setup.outputs.version }}-linux-musl-$(uname -m).tar.gz
 
   darwin:
     needs:
+      - setup
       - gh-release-draft
     strategy:
       fail-fast: false
@@ -45,16 +66,17 @@ jobs:
       - uses: crystal-lang/install-crystal@v1
       - uses: actions/checkout@v6
       - run: shards build ameba -Dpreview_mt --release
-      - run: tar zcf ameba-${{ github.ref_name }}-darwin-${{ matrix.arch }}.tar.gz -C bin ameba ameba.dwarf
-      - run: gh release -R ${{ github.repository }} upload ${{ github.ref_name }} ameba-${{ github.ref_name }}-darwin-${{ matrix.arch }}.tar.gz
+      - run: tar zcf ameba-${{ needs.setup.outputs.version }}-darwin-${{ matrix.arch }}.tar.gz -C bin ameba ameba.dwarf
+      - run: gh release -R ${{ github.repository }} upload ${{ github.ref_name }} ameba-${{ needs.setup.outputs.version }}-darwin-${{ matrix.arch }}.tar.gz
 
   x86_64-windows-msvc:
     needs:
+      - setup
       - gh-release-draft
     runs-on: windows-2025
     steps:
       - uses: crystal-lang/install-crystal@v1
       - uses: actions/checkout@v6
       - run: shards build ameba -Dpreview_mt --release --static
-      - run: cd bin; 7z a -tzip ../ameba-${{ github.ref_name }}-windows-msvc-x86_64.zip ameba.exe ameba.pdb
-      - run: gh release -R ${{ github.repository }} upload ${{ github.ref_name }} ameba-${{ github.ref_name }}-windows-msvc-x86_64.zip
+      - run: cd bin; 7z a -tzip ../ameba-${{ needs.setup.outputs.version }}-windows-msvc-x86_64.zip ameba.exe ameba.pdb
+      - run: gh release -R ${{ github.repository }} upload ${{ github.ref_name }} ameba-${{ needs.setup.outputs.version }}-windows-msvc-x86_64.zip
