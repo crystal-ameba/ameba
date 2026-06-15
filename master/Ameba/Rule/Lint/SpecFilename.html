@@ -1255,7 +1255,7 @@
   </h2>
   
     
-      <a href="https://github.com/crystal-ameba/ameba/blob/cddd43f/src/ameba/rule/lint/spec_filename.cr#L14" target="_blank">
+      <a href="https://github.com/crystal-ameba/ameba/blob/dd441f0/src/ameba/rule/lint/spec_filename.cr#L14" target="_blank">
         ameba/rule/lint/spec_filename.cr
       </a>
     
@@ -1449,7 +1449,7 @@
       <li class="entry-summary">
         <a href="#test%28source%3ASource%29-instance-method" class="signature"><strong>#test</strong>(source : Source)</a>
         
-          <div class="summary"><p><span class="flag orange">TODO</span>  fix the assumption that <em>source.path</em> contains relative path</p></div>
+          <div class="summary"><p>This method is designed to test the source passed in.</p></div>
         
       </li>
     
@@ -1652,7 +1652,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/cddd43f/src/ameba/rule/lint/spec_filename.cr#L14" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/dd441f0/src/ameba/rule/lint/spec_filename.cr#L14" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1782,7 +1782,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/cddd43f/src/ameba/rule/lint/spec_filename.cr#L15" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/dd441f0/src/ameba/rule/lint/spec_filename.cr#L15" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1980,7 +1980,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/cddd43f/src/ameba/rule/lint/spec_filename.cr#L15" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/dd441f0/src/ameba/rule/lint/spec_filename.cr#L15" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2009,13 +2009,20 @@
       
         <div class="doc">
           
-          <p><span class="flag orange">TODO</span>  fix the assumption that <em>source.path</em> contains relative path</p>
+            <div class="doc-inherited">
+              Description copied from class <a href="../../../Ameba/Rule/Base.html">Ameba::Rule::Base</a>
+            </div>
+          
+          <p>This method is designed to test the source passed in. If source has issues
+that are tested by this rule, it should add an issue.</p>
+<p>By default it uses a node visitor to traverse all the nodes in the source.</p>
+<p><span class="flag purple">NOTE</span>  Must be overridden for other type of rules.</p>
         </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/cddd43f/src/ameba/rule/lint/spec_filename.cr#L27" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/dd441f0/src/ameba/rule/lint/spec_filename.cr#L26" target="_blank">View source</a>]
         
       </div>
     </div>
