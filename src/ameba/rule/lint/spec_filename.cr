@@ -23,9 +23,8 @@ module Ameba::Rule::Lint
 
     private LOCATION = {1, 1}
 
-    # TODO: fix the assumption that *source.path* contains relative path
     def test(source : Source)
-      path_ = Path[source.path].to_posix
+      path_ = Path[source.project_path].to_posix
       name = path_.stem
       path = path_.to_s
 
