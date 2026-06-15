@@ -94,6 +94,21 @@
       
     </li>
   
+  <li class="parent " data-id="ameba/Ameba/AST/Dataflow" data-name="ameba::ast::dataflow">
+      <a href="../../Ameba/AST/Dataflow.html">Dataflow</a>
+      
+        <ul>
+  
+  <li class=" " data-id="ameba/Ameba/AST/Dataflow/ChildCollector" data-name="ameba::ast::dataflow::childcollector">
+      <a href="../../Ameba/AST/Dataflow/ChildCollector.html">ChildCollector</a>
+      
+    </li>
+  
+</ul>
+
+      
+    </li>
+  
   <li class=" " data-id="ameba/Ameba/AST/ElseIfAwareNodeVisitor" data-name="ameba::ast::elseifawarenodevisitor">
       <a href="../../Ameba/AST/ElseIfAwareNodeVisitor.html">ElseIfAwareNodeVisitor</a>
       
@@ -151,6 +166,21 @@
   
   <li class=" " data-id="ameba/Ameba/AST/NodeVisitor/Category" data-name="ameba::ast::nodevisitor::category">
       <a href="../../Ameba/AST/NodeVisitor/Category.html">Category</a>
+      
+    </li>
+  
+</ul>
+
+      
+    </li>
+  
+  <li class="parent " data-id="ameba/Ameba/AST/ReachingDefinitionAnalyzer" data-name="ameba::ast::reachingdefinitionanalyzer">
+      <a href="../../Ameba/AST/ReachingDefinitionAnalyzer.html">ReachingDefinitionAnalyzer</a>
+      
+        <ul>
+  
+  <li class=" " data-id="ameba/Ameba/AST/ReachingDefinitionAnalyzer/DefinedSet" data-name="ameba::ast::reachingdefinitionanalyzer::definedset">
+      <a href="../../Ameba/AST/ReachingDefinitionAnalyzer/DefinedSet.html">DefinedSet</a>
       
     </li>
   
@@ -1226,7 +1256,7 @@ Holds the var node and variable assignments.</p>
   </h2>
   
     
-      <a href="https://github.com/crystal-ameba/ameba/blob/8033ebf/src/ameba/ast/variabling/variable.cr#L4" target="_blank">
+      <a href="https://github.com/crystal-ameba/ameba/blob/2fd9c8a/src/ameba/ast/variabling/variable.cr#L4" target="_blank">
         ameba/ast/variabling/variable.cr
       </a>
     
@@ -1291,13 +1321,6 @@ Holds the var node and variable assignments.</p>
         <a href="#captured_by_block%3F%28scope%3D%40scope%29-instance-method" class="signature"><strong>#captured_by_block?</strong>(scope = @scope)</a>
         
           <div class="summary"><p>Returns <code>true</code> if the current var is referenced in in the block.</p></div>
-        
-      </li>
-    
-      <li class="entry-summary">
-        <a href="#declared_before%3F%28node%29-instance-method" class="signature"><strong>#declared_before?</strong>(node)</a>
-        
-          <div class="summary"><p>Returns <code>true</code> if the variable is declared before the <code><a href="../../Ameba/AST/Variable.html#node%3ACrystal%3A%3AVar-instance-method">#node</a></code>.</p></div>
         
       </li>
     
@@ -1479,7 +1502,7 @@ Holds the var node and variable assignments.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/8033ebf/src/ameba/ast/variabling/variable.cr#L25" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/2fd9c8a/src/ameba/ast/variabling/variable.cr#L25" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1521,7 +1544,7 @@ variable.assignment.size <span class="c"># =&gt; 2</span></code></pre>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/8033ebf/src/ameba/ast/variabling/variable.cr#L42" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/2fd9c8a/src/ameba/ast/variabling/variable.cr#L42" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1542,7 +1565,7 @@ variable.assignment.size <span class="c"># =&gt; 2</span></code></pre>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/8033ebf/src/ameba/ast/variabling/variable.cr#L6" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/2fd9c8a/src/ameba/ast/variabling/variable.cr#L6" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1570,33 +1593,7 @@ by block:</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/8033ebf/src/ameba/ast/variabling/variable.cr#L90" target="_blank">View source</a>]
-        
-      </div>
-    </div>
-  
-    <div class="entry-detail" id="declared_before?(node)-instance-method">
-      <div class="signature">
-        
-        def <strong>declared_before?</strong>(node)
-
-        <a class="method-permalink" href="#declared_before%3F%28node%29-instance-method">#</a>
-      </div>
-      
-        <div class="doc">
-          
-          <p>Returns <code>true</code> if the variable is declared before the <code><a href="../../Ameba/AST/Variable.html#node%3ACrystal%3A%3AVar-instance-method">#node</a></code>.</p>
-<p>A local variable is considered declared once its first assignment
-finishes evaluating; a parameter is declared at the point it's
-introduced. This is distinct from the variable's lexical <code><a href="../../Ameba/AST/Variable.html#location%28%2Aargs%2C%2A%2Aoptions%29-instance-method">#location</a></code>:
-in <code>x = foo { |x| }</code> the outer <code>x</code> appears at column 1, but is only
-declared after the block runs.</p>
-        </div>
-      
-      <br/>
-      <div>
-        
-          [<a href="https://github.com/crystal-ameba/ameba/blob/8033ebf/src/ameba/ast/variabling/variable.cr#L145" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/2fd9c8a/src/ameba/ast/variabling/variable.cr#L90" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1612,7 +1609,7 @@ declared after the block runs.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/8033ebf/src/ameba/ast/variabling/variable.cr#L17" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/2fd9c8a/src/ameba/ast/variabling/variable.cr#L17" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1628,7 +1625,7 @@ declared after the block runs.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/8033ebf/src/ameba/ast/variabling/variable.cr#L17" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/2fd9c8a/src/ameba/ast/variabling/variable.cr#L17" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1650,7 +1647,7 @@ the same Crystal node as <code>@node</code>.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/8033ebf/src/ameba/ast/variabling/variable.cr#L132" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/2fd9c8a/src/ameba/ast/variabling/variable.cr#L132" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1671,7 +1668,7 @@ the same Crystal node as <code>@node</code>.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/8033ebf/src/ameba/ast/variabling/variable.cr#L126" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/2fd9c8a/src/ameba/ast/variabling/variable.cr#L126" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1687,7 +1684,7 @@ the same Crystal node as <code>@node</code>.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/8033ebf/src/ameba/ast/variabling/variable.cr#L17" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/2fd9c8a/src/ameba/ast/variabling/variable.cr#L17" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1703,7 +1700,7 @@ the same Crystal node as <code>@node</code>.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/8033ebf/src/ameba/ast/variabling/variable.cr#L17" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/2fd9c8a/src/ameba/ast/variabling/variable.cr#L17" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1719,7 +1716,7 @@ the same Crystal node as <code>@node</code>.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/8033ebf/src/ameba/ast/variabling/variable.cr#L17" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/2fd9c8a/src/ameba/ast/variabling/variable.cr#L17" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1735,7 +1732,7 @@ the same Crystal node as <code>@node</code>.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/8033ebf/src/ameba/ast/variabling/variable.cr#L17" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/2fd9c8a/src/ameba/ast/variabling/variable.cr#L17" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1756,7 +1753,7 @@ the same Crystal node as <code>@node</code>.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/8033ebf/src/ameba/ast/variabling/variable.cr#L12" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/2fd9c8a/src/ameba/ast/variabling/variable.cr#L12" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1779,7 +1776,7 @@ variable.reference(var_node, some_scope)</code></pre>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/8033ebf/src/ameba/ast/variabling/variable.cr#L63" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/2fd9c8a/src/ameba/ast/variabling/variable.cr#L63" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1802,7 +1799,7 @@ variable.reference(var_node, some_scope)</code></pre>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/8033ebf/src/ameba/ast/variabling/variable.cr#L71" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/2fd9c8a/src/ameba/ast/variabling/variable.cr#L71" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1826,7 +1823,7 @@ variable.referenced? <span class="c"># =&gt; true</span></code></pre>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/8033ebf/src/ameba/ast/variabling/variable.cr#L53" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/2fd9c8a/src/ameba/ast/variabling/variable.cr#L53" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1847,7 +1844,7 @@ variable.referenced? <span class="c"># =&gt; true</span></code></pre>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/8033ebf/src/ameba/ast/variabling/variable.cr#L9" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/2fd9c8a/src/ameba/ast/variabling/variable.cr#L9" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1868,7 +1865,7 @@ variable.referenced? <span class="c"># =&gt; true</span></code></pre>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/8033ebf/src/ameba/ast/variabling/variable.cr#L15" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/2fd9c8a/src/ameba/ast/variabling/variable.cr#L15" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1889,7 +1886,7 @@ variable.referenced? <span class="c"># =&gt; true</span></code></pre>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/8033ebf/src/ameba/ast/variabling/variable.cr#L29" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/2fd9c8a/src/ameba/ast/variabling/variable.cr#L29" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1911,7 +1908,7 @@ variable.referenced? <span class="c"># =&gt; true</span></code></pre>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/8033ebf/src/ameba/ast/variabling/variable.cr#L114" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/2fd9c8a/src/ameba/ast/variabling/variable.cr#L114" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1927,7 +1924,7 @@ variable.referenced? <span class="c"># =&gt; true</span></code></pre>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/8033ebf/src/ameba/ast/variabling/variable.cr#L17" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/2fd9c8a/src/ameba/ast/variabling/variable.cr#L17" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1943,7 +1940,7 @@ variable.referenced? <span class="c"># =&gt; true</span></code></pre>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/8033ebf/src/ameba/ast/variabling/variable.cr#L17" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/2fd9c8a/src/ameba/ast/variabling/variable.cr#L17" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1965,7 +1962,7 @@ variable.referenced? <span class="c"># =&gt; true</span></code></pre>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/8033ebf/src/ameba/ast/variabling/variable.cr#L102" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/2fd9c8a/src/ameba/ast/variabling/variable.cr#L102" target="_blank">View source</a>]
         
       </div>
     </div>
