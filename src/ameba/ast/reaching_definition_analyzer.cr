@@ -27,7 +27,6 @@ module Ameba::AST
     # Returns a mapping of each inner-scope node's `object_id` to the set of
     # variable names that reach the point where that scope is introduced.
     def inner_scope_definitions : Hash(UInt64, DefinedSet)
-      @definitions.clear
       if body = scope_body(@scope.node)
         propagate(body, @entry)
       end
@@ -99,6 +98,9 @@ module Ameba::AST
     {% end %}
 
     {% for type in LOOP_NODES %}
+      # A loop body is walked once in textual order: a variable assigned later
+      # in the body is not in scope at an earlier point, since Crystal scoping
+      # is lexical and does not extend a definition backwards over the back edge.
       private def transfer(node : Crystal::{{ type.id }}, defined : DefinedSet) : DefinedSet
         defined = propagate(node.cond, defined)
         defined | propagate(node.body, defined)
@@ -150,10 +152,9 @@ module Ameba::AST
     private def define(target, defined : DefinedSet) : DefinedSet
       target = target.exp if target.is_a?(Crystal::Splat)
       return defined unless target.is_a?(Crystal::Var)
+      return defined if defined.includes?(target.name)
 
-      defined = defined.dup
-      defined << target.name
-      defined
+      defined.dup << target.name
     end
 
     private def merge_branches(base : DefinedSet, branches) : DefinedSet
