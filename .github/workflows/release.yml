@@ -15,7 +15,14 @@ jobs:
   gh-release-draft:
     runs-on: ubuntu-latest
     steps:
-      - run: gh release -R ${{ github.repository }} create ${{ github.ref_name }} --draft --generate-notes
+      - name: Create a GitHub release
+        run: |
+          # Check if release exists; if not, create it
+          if ! gh release -R ${{ github.repository }} view ${{ github.ref_name }} --json id > /dev/null 2>&1; then
+            gh release -R ${{ github.repository }} create ${{ github.ref_name }} --draft --generate-notes
+          else
+            echo "Release ${{ github.ref_name }} already exists, skipping."
+          fi
 
   setup:
     runs-on: ubuntu-latest
