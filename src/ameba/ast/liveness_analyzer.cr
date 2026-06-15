@@ -303,31 +303,34 @@ module Ameba::AST
       outer_break = @break_live
       outer_next = @next_live
 
-      # `break` exits to post-loop code, `next` jumps to loop condition.
-      @break_live = live
-      entry_live = live.dup
+      begin
+        # `break` exits to post-loop code, `next` jumps to loop condition.
+        @break_live = live
+        entry_live = live.dup
 
-      converged_cond_live = entry_live
-      MAX_FIXED_POINT_ITERATIONS.times do
+        converged_cond_live = entry_live
+        MAX_FIXED_POINT_ITERATIONS.times do
+          @next_live = entry_live
+
+          converged_cond_live = propagate_through(cond, entry_live, false)
+          body_live = propagate_through(body, converged_cond_live, false)
+          new_entry = body_live | live
+
+          break if new_entry == entry_live
+          entry_live = new_entry
+        end
+
+        # Final pass with marking enabled using the converged live set
         @next_live = entry_live
 
-        converged_cond_live = propagate_through(cond, entry_live, false)
-        body_live = propagate_through(body, converged_cond_live, false)
-        new_entry = body_live | live
+        cond_live = propagate_through(cond, entry_live, mark)
+        propagate_through(body, cond_live, mark)
 
-        break if new_entry == entry_live
-        entry_live = new_entry
+        converged_cond_live
+      ensure
+        @break_live = outer_break
+        @next_live = outer_next
       end
-
-      # Final pass with marking enabled using the converged live set
-      @next_live = entry_live
-      cond_live = propagate_through(cond, entry_live, mark)
-      propagate_through(body, cond_live, mark)
-
-      @break_live = outer_break
-      @next_live = outer_next
-
-      converged_cond_live
     end
 
     private def propagate_through_case(node : Crystal::Case | Crystal::Select, live : LiveSet, mark) : LiveSet
