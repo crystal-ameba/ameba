@@ -518,6 +518,37 @@ module Ameba::Rule::Lint
       end
     end
 
+    context "loops" do
+      it "reports when the assignment precedes the block in the body" do
+        expect_issue subject, <<-CRYSTAL
+          while cond
+            x = 1
+            bar { |x| x + 1 }
+                 # ^ error: Shadowing outer local variable `x`
+          end
+          CRYSTAL
+      end
+
+      # The assignment is lexically below the block, so the outer `x` is not in
+      # scope where the block is introduced, even across the loop's back edge.
+      it "does not report when the assignment is lexically below the block" do
+        expect_no_issues subject, <<-CRYSTAL
+          while cond
+            bar { |x| x + 1 }
+            x = 1
+          end
+          CRYSTAL
+      end
+
+      it "does not report when the loop never assigns the shadowed name" do
+        expect_no_issues subject, <<-CRYSTAL
+          while cond
+            bar { |x| x + 1 }
+          end
+          CRYSTAL
+      end
+    end
+
     context "macro" do
       it "does not report shadowed vars in outer scope" do
         expect_no_issues subject, <<-CRYSTAL

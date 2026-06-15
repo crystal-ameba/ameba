@@ -140,6 +140,55 @@ module Ameba::AST
       end
     end
 
+    context "loops" do
+      it "reaches a block assigned earlier in the same iteration" do
+        reaches?(<<-CRYSTAL, "x").should be_true
+          while cond
+            x = 1
+            foo { |x| }
+          end
+          CRYSTAL
+      end
+
+      it "reaches a block when assigned before the loop" do
+        reaches?(<<-CRYSTAL, "x").should be_true
+          x = 1
+          while cond
+            foo { |x| }
+          end
+          CRYSTAL
+      end
+
+      # Crystal scoping is lexical: a variable assigned later in the body is not
+      # in scope at an earlier point, even though the loop's back edge would
+      # reach it at runtime.
+      it "does not reach a block that precedes the assignment in the body" do
+        reaches?(<<-CRYSTAL, "x").should be_false
+          while cond
+            foo { |x| }
+            x = 1
+          end
+          CRYSTAL
+      end
+
+      it "does not reach a block that precedes the assignment in an until body" do
+        reaches?(<<-CRYSTAL, "x").should be_false
+          until cond
+            foo { |x| }
+            x = 1
+          end
+          CRYSTAL
+      end
+
+      it "does not reach a block in a loop that never assigns the variable" do
+        reaches?(<<-CRYSTAL, "x").should be_false
+          while cond
+            foo { |x| }
+          end
+          CRYSTAL
+      end
+    end
+
     context "captured definitions" do
       it "reaches through a nested block from an outer assignment" do
         reaches?(<<-CRYSTAL, "x").should be_true
