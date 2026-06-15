@@ -57,7 +57,7 @@ module Ameba::AST
       @dead_stores.clear
 
       body = scope_body(@scope.node)
-      entry_live = body ? propagate_through(body, LiveSet.new) : LiveSet.new
+      entry_live = propagate_through(body, LiveSet.new)
 
       Result.new(@dead_stores, entry_live)
     end
@@ -106,15 +106,23 @@ module Ameba::AST
     # Type-specific overloads. Crystal dispatches to the most specific matching
     # overload at runtime when the argument is a virtual type (Crystal::ASTNode+).
 
-    private def propagate_through(node : Crystal::Nop, live : LiveSet, mark = true) : LiveSet
+    private def propagate_through(nodes : Enumerable, live : LiveSet, mark = true) : LiveSet
+      nodes.reverse_each do |node|
+        live = propagate_through(node, live, mark)
+      end
+      live
+    end
+
+    private def propagate_through(node : Crystal::Nop?, live : LiveSet, mark = true) : LiveSet
       live
     end
 
     private def propagate_through(node : Crystal::Expressions, live : LiveSet, mark = true) : LiveSet
-      node.expressions.reverse_each do |exp|
-        live = propagate_through(exp, live, mark)
-      end
-      live
+      propagate_through(node.expressions, live, mark)
+    end
+
+    private def propagate_through(node : Crystal::NamedArgument, live : LiveSet, mark = true) : LiveSet
+      propagate_through(node.value, live, mark)
     end
 
     private def propagate_through(node : Crystal::Assign, live : LiveSet, mark = true) : LiveSet
@@ -160,10 +168,7 @@ module Ameba::AST
           live = remove_from_live_set(node, target.name, live, mark)
         end
       end
-      node.values.reverse_each do |value|
-        live = propagate_through(value, live, mark)
-      end
-      live
+      propagate_through(node.values, live, mark)
     end
 
     private def propagate_through(node : Crystal::UninitializedVar, live : LiveSet, mark = true) : LiveSet
@@ -222,8 +227,8 @@ module Ameba::AST
     {% end %}
 
     private def propagate_through(node : Crystal::ExceptionHandler, live : LiveSet, mark = true) : LiveSet
-      post_ensure = (body = node.ensure) ? propagate_through(body, live, mark) : live
-      after_body = (body = node.else) ? propagate_through(body, post_ensure, mark) : post_ensure
+      post_ensure = propagate_through(node.ensure, live, mark)
+      after_body = propagate_through(node.else, post_ensure, mark)
 
       # Rescue branches handle exceptions thrown at any point in the body,
       # so collect all variables they need.
@@ -260,47 +265,23 @@ module Ameba::AST
         return live
       end
 
-      node.block_arg.try do |arg|
-        live = propagate_through(arg, live, mark)
-      end
-
-      node.named_args.try &.reverse_each do |named_arg|
-        live = propagate_through(named_arg.value, live, mark)
-      end
-
-      node.args.reverse_each do |arg|
-        live = propagate_through(arg, live, mark)
-      end
-
-      node.obj.try do |obj|
-        live = propagate_through(obj, live, mark)
-      end
-
+      live = propagate_through(node.block_arg, live, mark)
+      live = propagate_through(node.named_args, live, mark)
+      live = propagate_through(node.args, live, mark)
+      live = propagate_through(node.obj, live, mark)
       live
     end
 
     private def propagate_through(node : Crystal::Return, live : LiveSet, mark = true) : LiveSet
-      target_live = LiveSet.new
-      node.exp.try do |exp|
-        target_live = propagate_through(exp, target_live, mark)
-      end
-      target_live
+      propagate_through(node.exp, LiveSet.new, mark)
     end
 
     private def propagate_through(node : Crystal::Break, live : LiveSet, mark = true) : LiveSet
-      target_live = @break_live || LiveSet.new
-      node.exp.try do |exp|
-        target_live = propagate_through(exp, target_live, mark)
-      end
-      target_live
+      propagate_through(node.exp, @break_live || LiveSet.new, mark)
     end
 
     private def propagate_through(node : Crystal::Next, live : LiveSet, mark = true) : LiveSet
-      target_live = @next_live || LiveSet.new
-      node.exp.try do |exp|
-        target_live = propagate_through(exp, target_live, mark)
-      end
-      target_live
+      propagate_through(node.exp, @next_live || LiveSet.new, mark)
     end
 
     # Inner scope nodes: don't descend into nested scopes
@@ -310,13 +291,11 @@ module Ameba::AST
       end
     {% end %}
 
-    private def propagate_through(node, live : LiveSet, mark = true) : LiveSet
+    private def propagate_through(node : Crystal::ASTNode, live : LiveSet, mark = true) : LiveSet
       children = [] of Crystal::ASTNode
       node.accept_children(ChildCollector.new(children))
-      children.reverse_each do |child|
-        live = propagate_through(child, live, mark)
-      end
-      live
+
+      propagate_through(children, live, mark)
     end
 
     private def propagate_through_loop(cond, body, live : LiveSet, mark) : LiveSet
@@ -356,13 +335,11 @@ module Ameba::AST
 
       node.whens.each do |when_node|
         when_live = propagate_through(when_node.body, live, mark)
-        when_node.conds.reverse_each do |cond|
-          when_live = propagate_through(cond, when_live, mark)
-        end
+        when_live = propagate_through(when_node.conds, when_live, mark)
         branch_lives.concat(when_live)
       end
 
-      else_live = (body = node.else) ? propagate_through(body, live, mark) : live
+      else_live = propagate_through(node.else, live, mark)
       branch_lives.concat(else_live)
 
       if node.is_a?(Crystal::Case) && (cond = node.cond)
