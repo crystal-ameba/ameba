@@ -27,6 +27,16 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v6
 
+      - name: Install Crystal
+        uses: crystal-lang/install-crystal@v1
+
+      - name: Setup VERSION file
+        run: |
+          VERSION="$(shards version)"
+          GIT_COMMIT="$(git rev-parse --short HEAD)"
+
+          echo "$VERSION+git.commit.$GIT_COMMIT" >> VERSION
+
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v4
 
