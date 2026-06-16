@@ -29,22 +29,25 @@ module Ameba::Rule::Lint
     def test(source : Source)
       return if source.spec?
 
-      path_ = Path[source.project_path].to_posix
-      name = path_.stem
-      path = path_.to_s
+      project_path = Path[source.project_path]
+        .to_posix
+        .to_s
 
-      return unless path.starts_with?("spec/")
-      return unless path.ends_with?(".cr")
+      return unless project_path.starts_with?("spec/")
+      return unless project_path.ends_with?(".cr")
 
       ignored_paths.each do |pattern|
-        return if File.match?(pattern, path)
+        return if File.match?(pattern, project_path)
       end
+
+      path = Path[source.path]
+      name = path.stem
 
       expected = "#{name}_spec"
 
       issue_for(LOCATION, MSG % {expected, name}) do
         new_path =
-          path_.sibling(expected + path_.extension)
+          path.sibling(expected + path.extension)
 
         FileUtils.mv(path, new_path)
       end
