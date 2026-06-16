@@ -7,9 +7,14 @@ end
 module Ameba
   describe Version do
     context "#to_s" do
-      it "outputs version string" do
+      it "outputs full version string for non-release version" do
         version = build_ameba_version("1.2.3-dev+foo")
         version.to_s.should eq "1.2.3-dev+foo"
+      end
+
+      it "outputs simple version string for release version" do
+        version = build_ameba_version("1.2.3+foo")
+        version.to_s.should eq "1.2.3"
       end
     end
 
@@ -47,6 +52,13 @@ module Ameba
       it "returns `false` if the version contains pre-release identifiers" do
         version = build_ameba_version("1.2.3-foo")
         version.production?.should be_false
+      end
+    end
+
+    context "#simple" do
+      it "returns the simple version string" do
+        version = build_ameba_version("1.2.3-dev+foo")
+        version.simple.to_s.should eq "1.2.3"
       end
     end
   end
