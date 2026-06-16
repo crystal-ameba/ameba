@@ -181,7 +181,7 @@ module Ameba::Rule
       # ```
       class_getter documentation_url : String do
         version = Ameba.version
-        version = version.production? ? version.simple.to_s : "master"
+        version = version.release? ? version.simple.to_s : "master"
 
         "https://crystal-ameba.github.io/ameba/%s/Ameba/Rule/%s.html" % {
           version, rule_name,

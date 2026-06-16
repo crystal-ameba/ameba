@@ -38,20 +38,20 @@ module Ameba
       end
     end
 
-    context "#production?" do
+    context "#release?" do
       it "returns `true` if the version does not contain pre-release identifiers" do
         version = build_ameba_version("1.2.3")
-        version.production?.should be_true
+        version.release?.should be_true
       end
 
       it "ignores build metadata" do
         version = build_ameba_version("1.2.3+foo")
-        version.production?.should be_true
+        version.release?.should be_true
       end
 
       it "returns `false` if the version contains pre-release identifiers" do
         version = build_ameba_version("1.2.3-foo")
-        version.production?.should be_false
+        version.release?.should be_false
       end
     end
 

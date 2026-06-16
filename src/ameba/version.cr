@@ -44,14 +44,14 @@ module Ameba
       version.prerelease.identifiers.any?("dev")
     end
 
-    # Returns `true` if the current `version` is a production version.
-    def production? : Bool
+    # Returns `true` if the current `version` is a release version.
+    def release? : Bool
       version.prerelease.identifiers.empty?
     end
 
     # Appends the version string to the given *io*.
     def to_s(io : IO) : Nil
-      (production? ? simple : version).to_s(io)
+      (release? ? simple : version).to_s(io)
     end
 
     # Returns the `version` without prerelease and build metadata.
