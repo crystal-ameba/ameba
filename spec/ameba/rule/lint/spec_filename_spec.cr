@@ -27,15 +27,13 @@ module Ameba::Rule::Lint
     end
 
     context "properties" do
-      context "#ignored_dirs" do
+      context "#ignored_paths" do
         it "provide sane defaults" do
           expect_no_issues subject, code: "", path: "spec/support/foo.cr"
           expect_no_issues subject, code: "", path: "spec/fixtures/foo.cr"
           expect_no_issues subject, code: "", path: "spec/data/foo.cr"
         end
-      end
 
-      context "#ignored_filenames" do
         it "ignores spec_helper by default" do
           expect_no_issues subject, code: "", path: "spec/spec_helper.cr"
           expect_no_issues subject, code: "", path: "spec/foo/spec_helper.cr"
