@@ -908,24 +908,16 @@
           "type": "string",
           "default": "1.6.0"
         },
-        "IgnoredDirs": {
+        "IgnoredPaths": {
           "type": "array",
           "items": {
             "type": "string"
           },
           "default": [
-            "spec/support",
-            "spec/fixtures",
-            "spec/data"
-          ]
-        },
-        "IgnoredFilenames": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "default": [
-            "spec_helper"
+            "spec/support/**",
+            "spec/fixtures/**",
+            "spec/data/**",
+            "spec/**/spec_helper.cr"
           ]
         },
         "Severity": {
