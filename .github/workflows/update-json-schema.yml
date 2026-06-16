@@ -55,5 +55,5 @@ jobs:
       - name: Commit and push changes
         if: steps.git-diff-changes.outputs.has-changes == 'true'
         run: |
-          git commit -am "Update JSON Schema"
+          git commit -am "Update JSON Schema [skip ci]"
           git push -u origin HEAD
