@@ -86,7 +86,7 @@ module Ameba::Formatter
         # For more details on any individual rule, run
         # `ameba --ignore-config --only RuleName`.
 
-        Version: "#{Ameba.version.for_production}"
+        Version: "#{Ameba.version.simple}"
 
         YAML
     end

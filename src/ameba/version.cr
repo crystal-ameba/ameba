@@ -44,24 +44,19 @@ module Ameba
       version.prerelease.identifiers.any?("dev")
     end
 
-    # Returns `true` if the current `version` is a production version.
-    def production? : Bool
+    # Returns `true` if the current `version` is a release version.
+    def release? : Bool
       version.prerelease.identifiers.empty?
     end
 
     # Appends the version string to the given *io*.
     def to_s(io : IO) : Nil
-      version.to_s(io)
+      (release? ? simple : version).to_s(io)
     end
 
-    # Returns the `version` as a string without prerelease and build metadata.
-    def for_production : String
-      version.copy_with(prerelease: nil, build: nil).to_s
-    end
-
-    # Returns the version string used for rule documentation URLs.
-    def for_docs : String
-      production? ? for_production : "master"
+    # Returns the `version` without prerelease and build metadata.
+    def simple : SemanticVersion
+      version.copy_with(prerelease: nil, build: nil)
     end
   end
 end
