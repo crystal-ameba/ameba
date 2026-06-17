@@ -1225,7 +1225,7 @@
   </h2>
   
     
-      <a href="https://github.com/crystal-ameba/ameba/blob/b8afbb3/src/ameba/version.cr#L19" target="_blank">
+      <a href="https://github.com/crystal-ameba/ameba/blob/2070e9d/src/ameba/version.cr#L19" target="_blank">
         ameba/version.cr
       </a>
     
@@ -1307,23 +1307,16 @@
       </li>
     
       <li class="entry-summary">
-        <a href="#for_docs%3AString-instance-method" class="signature"><strong>#for_docs</strong> : String</a>
+        <a href="#release%3F%3ABool-instance-method" class="signature"><strong>#release?</strong> : Bool</a>
         
-          <div class="summary"><p>Returns the version string used for rule documentation URLs.</p></div>
-        
-      </li>
-    
-      <li class="entry-summary">
-        <a href="#for_production%3AString-instance-method" class="signature"><strong>#for_production</strong> : String</a>
-        
-          <div class="summary"><p>Returns the <code><a href="../Ameba/Version.html#version%3ASemanticVersion-instance-method">#version</a></code> as a string without prerelease and build metadata.</p></div>
+          <div class="summary"><p>Returns <code>true</code> if the current <code><a href="../Ameba/Version.html#version%3ASemanticVersion-instance-method">#version</a></code> is a release version.</p></div>
         
       </li>
     
       <li class="entry-summary">
-        <a href="#production%3F%3ABool-instance-method" class="signature"><strong>#production?</strong> : Bool</a>
+        <a href="#simple%3ASemanticVersion-instance-method" class="signature"><strong>#simple</strong> : SemanticVersion</a>
         
-          <div class="summary"><p>Returns <code>true</code> if the current <code><a href="../Ameba/Version.html#version%3ASemanticVersion-instance-method">#version</a></code> is a production version.</p></div>
+          <div class="summary"><p>Returns the <code><a href="../Ameba/Version.html#version%3ASemanticVersion-instance-method">#version</a></code> without prerelease and build metadata.</p></div>
         
       </li>
     
@@ -1396,7 +1389,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/b8afbb3/src/ameba/version.cr#L39" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/2070e9d/src/ameba/version.cr#L39" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1433,70 +1426,49 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/b8afbb3/src/ameba/version.cr#L43" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/2070e9d/src/ameba/version.cr#L43" target="_blank">View source</a>]
         
       </div>
     </div>
   
-    <div class="entry-detail" id="for_docs:String-instance-method">
+    <div class="entry-detail" id="release?:Bool-instance-method">
       <div class="signature">
         
-        def <strong>for_docs</strong> : String
+        def <strong>release?</strong> : Bool
 
-        <a class="method-permalink" href="#for_docs%3AString-instance-method">#</a>
+        <a class="method-permalink" href="#release%3F%3ABool-instance-method">#</a>
       </div>
       
         <div class="doc">
           
-          <p>Returns the version string used for rule documentation URLs.</p>
+          <p>Returns <code>true</code> if the current <code><a href="../Ameba/Version.html#version%3ASemanticVersion-instance-method">#version</a></code> is a release version.</p>
         </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/b8afbb3/src/ameba/version.cr#L63" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/2070e9d/src/ameba/version.cr#L48" target="_blank">View source</a>]
         
       </div>
     </div>
   
-    <div class="entry-detail" id="for_production:String-instance-method">
+    <div class="entry-detail" id="simple:SemanticVersion-instance-method">
       <div class="signature">
         
-        def <strong>for_production</strong> : String
+        def <strong>simple</strong> : SemanticVersion
 
-        <a class="method-permalink" href="#for_production%3AString-instance-method">#</a>
+        <a class="method-permalink" href="#simple%3ASemanticVersion-instance-method">#</a>
       </div>
       
         <div class="doc">
           
-          <p>Returns the <code><a href="../Ameba/Version.html#version%3ASemanticVersion-instance-method">#version</a></code> as a string without prerelease and build metadata.</p>
+          <p>Returns the <code><a href="../Ameba/Version.html#version%3ASemanticVersion-instance-method">#version</a></code> without prerelease and build metadata.</p>
         </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/b8afbb3/src/ameba/version.cr#L58" target="_blank">View source</a>]
-        
-      </div>
-    </div>
-  
-    <div class="entry-detail" id="production?:Bool-instance-method">
-      <div class="signature">
-        
-        def <strong>production?</strong> : Bool
-
-        <a class="method-permalink" href="#production%3F%3ABool-instance-method">#</a>
-      </div>
-      
-        <div class="doc">
-          
-          <p>Returns <code>true</code> if the current <code><a href="../Ameba/Version.html#version%3ASemanticVersion-instance-method">#version</a></code> is a production version.</p>
-        </div>
-      
-      <br/>
-      <div>
-        
-          [<a href="https://github.com/crystal-ameba/ameba/blob/b8afbb3/src/ameba/version.cr#L48" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/2070e9d/src/ameba/version.cr#L58" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1517,7 +1489,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/b8afbb3/src/ameba/version.cr#L53" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/2070e9d/src/ameba/version.cr#L53" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1538,7 +1510,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/b8afbb3/src/ameba/version.cr#L37" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/2070e9d/src/ameba/version.cr#L37" target="_blank">View source</a>]
         
       </div>
     </div>
