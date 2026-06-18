@@ -20,7 +20,7 @@ jobs:
 
     steps:
       - name: Download source
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
         with:
           ref: ${{ inputs.git-branch }}
 
