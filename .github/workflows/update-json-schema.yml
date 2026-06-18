@@ -25,7 +25,7 @@ jobs:
         uses: crystal-lang/install-crystal@v1
 
       - name: Download source
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
         with:
           ssh-key: ${{ secrets.MASTER_PUSHER_SSH_KEY }}
 
