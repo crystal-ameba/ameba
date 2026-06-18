@@ -76,7 +76,7 @@ module Ameba::Rule::Style
         property property? property! setter
         def_equals_and_hash def_equals def_hash
         delegate forward_missing_to
-        describe context it pending fail
+        describe context it pending pending! fail
         eq be be_a be_close contain start_with end_with match
         use_json_discriminator
       ]
