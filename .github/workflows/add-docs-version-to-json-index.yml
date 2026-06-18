@@ -38,6 +38,7 @@ jobs:
             .versions |= (
               if ( . | map(.name) | index(\"${VERSION}\") | not ) then
                 . += [ {\"name\": \"${VERSION}\", \"url\": \"/ameba/${VERSION}/\", \"released\": ${RELEASED}} ]
+                | sort_by(.name) | reverse | sort_by(.released)
               else
                 .
               end
