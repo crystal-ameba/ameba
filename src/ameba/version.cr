@@ -54,9 +54,9 @@ module Ameba
       (release? ? simple : version).to_s(io)
     end
 
-    # Returns the `version` without prerelease and build metadata.
+    # Returns the `version` without build metadata.
     def simple : SemanticVersion
-      version.copy_with(prerelease: nil, build: nil)
+      version.copy_with(build: nil)
     end
   end
 end

@@ -56,9 +56,9 @@ module Ameba
     end
 
     context "#simple" do
-      it "returns the simple version string" do
+      it "returns the version without build metadata" do
         version = build_ameba_version("1.2.3-dev+foo")
-        version.simple.to_s.should eq "1.2.3"
+        version.simple.to_s.should eq "1.2.3-dev"
       end
     end
   end
