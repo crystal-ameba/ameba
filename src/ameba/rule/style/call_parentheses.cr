@@ -53,7 +53,7 @@ module Ameba::Rule::Style
   #   ExcludeMultilineCalls: true
   #   ExcludeTypeDeclarations: true
   #   ExcludeHeredocs: true
-  #   ExcludedToplevelCallNames: [spawn, raise, super, previous_def, exit, abort, sleep, print, printf, puts, p, p!, pp, pp!, record, class_getter, class_getter?, class_getter!, class_property, class_property?, class_property!, class_setter, getter, getter?, getter!, property, property?, property!, setter, def_equals_and_hash, def_equals, def_hash, delegate, forward_missing_to, describe, context, it, pending, fail, use_json_discriminator]
+  #   ExcludedToplevelCallNames: [spawn, raise, super, previous_def, exit, abort, sleep, print, printf, puts, p, p!, pp, pp!, record, class_getter, class_getter?, class_getter!, class_property, class_property?, class_property!, class_setter, getter, getter?, getter!, property, property?, property!, setter, def_equals_and_hash, def_equals, def_hash, delegate, forward_missing_to, describe, context, it, pending, pending!, fail, eq, be, be_a, be_close, contain, start_with, end_with, match, use_json_discriminator]
   #   ExcludedCallNames: [should, should_not]
   #   ExcludedDslCallNames: []
   # ```
