@@ -11,7 +11,7 @@ module Ameba::Rule
   }
 
   # Represents a base of all rules. In other words, all rules
-  # inherits from this class:
+  # inherit from this class:
   #
   # ```
   # class Ameba::Rule::MyRule < Ameba::Rule::Base
@@ -74,7 +74,7 @@ module Ameba::Rule
       {{ @type }}.rule_name
     end
 
-    # Returns a group this rule belong to.
+    # Returns a group this rule belongs to.
     #
     # ```
     # module Ameba
