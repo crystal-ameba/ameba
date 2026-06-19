@@ -12,8 +12,13 @@ module Ameba
         env("AMEBA_BUILD_VERSION") ||
           read_file?("#{__DIR__}/../../VERSION") ||
           `shards version "#{__DIR__}"`.stringify
+      version = version.chomp
+
+      unless version =~ /\A\d+\.\d+\.\d+(?:-[0-9a-z.-]+)?(?:\+[0-9a-z.-]+)?\z/i
+        raise "Invalid Ameba version: #{version}"
+      end
     %}
-    {{ version.chomp }}
+    {{ version }}
   end
 
   class Version
