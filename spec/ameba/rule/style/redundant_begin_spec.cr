@@ -283,6 +283,41 @@ module Ameba::Rule::Style
         CRYSTAL
     end
 
+    it "fails if there is top level redundant begin in a block" do
+      source = expect_issue subject, <<-CRYSTAL
+        foo.each do |x|
+          begin
+        # ^^^^^ error: Redundant `begin` block detected
+            a = 1
+          ensure
+            a = 2
+          end
+        end
+        CRYSTAL
+
+      expect_correction source, <<-CRYSTAL
+        foo.each do |x|
+         #{trailing_whitespace}
+            a = 1
+          ensure
+            a = 2
+         #{trailing_whitespace}
+        end
+        CRYSTAL
+    end
+
+    it "doesn't report if block is using curly braces" do
+      expect_no_issues subject, <<-CRYSTAL
+        foo.each { |x|
+          begin
+            a = 1
+          ensure
+            a = 2
+          end
+        }
+        CRYSTAL
+    end
+
     it "doesn't report if begin-end block in a proc literal" do
       expect_no_issues subject, <<-CRYSTAL
         foo = ->{

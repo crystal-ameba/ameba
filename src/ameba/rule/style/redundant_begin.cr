@@ -65,7 +65,7 @@ module Ameba::Rule::Style
 
     MSG = "Redundant `begin` block detected"
 
-    def test(source, node : Crystal::Def)
+    def test(source, node : Crystal::Def | Crystal::Block)
       return unless def_loc = node.location
 
       case body = node.body
