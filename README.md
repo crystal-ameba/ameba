@@ -20,7 +20,6 @@
   - [Autocorrection](#autocorrection)
   - [Explain issues](#explain-issues)
   - [Describe rules](#describe-rules)
-  - [Run in parallel](#run-in-parallel)
 - [Installation](#installation)
   - [As a project dependency](#as-a-project-dependency)
   - [OS X](#os-x)
@@ -105,17 +104,6 @@ You can use `--describe` flag to get a detailed description of a rule:
 $ ameba --describe Lint/UselessAssign
 ```
 
-### Run in parallel
-
-Some quick benchmark results measured while running Ameba on Crystal repo:
-
-```sh
-$ CRYSTAL_WORKERS=1 ameba #=> 29.11 seconds
-$ CRYSTAL_WORKERS=2 ameba #=> 19.49 seconds
-$ CRYSTAL_WORKERS=4 ameba #=> 13.48 seconds
-$ CRYSTAL_WORKERS=8 ameba #=> 10.14 seconds
-```
-
 ## Installation
 
 ### As a project dependency
@@ -140,13 +128,13 @@ targets:
 And then run:
 
 ```sh
-$ shards build ameba -Dpreview_mt
+$ shards build ameba
 ```
 
 Alternatively, skip adding `ameba` target and use `crystal build` command directly:
 
 ```sh
-$ crystal build -Dpreview_mt -o bin/ameba lib/ameba/bin/ameba.cr
+$ crystal build -o bin/ameba lib/ameba/bin/ameba.cr
 ```
 
 Both of these will result in a compiled binary placed under `bin/ameba` path.
