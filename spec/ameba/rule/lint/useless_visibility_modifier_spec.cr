@@ -50,7 +50,7 @@ module Ameba::Rule::Lint
     it "fails if a `protected` method visibility modifier is used at the top level" do
       source = expect_issue subject, <<-CRYSTAL
         protected def foo
-                # ^^^^^^^ error: Useless visibility modifier
+        # ^^^^^^^ error: Useless visibility modifier
         end
         CRYSTAL
 

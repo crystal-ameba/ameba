@@ -42,7 +42,12 @@ module Ameba::Rule::Lint
       return if node.receiver || node.name == "->"
       return unless node.visibility.protected?
 
-      issue_for(node, MSG) do |corrector|
+      return unless location = node.location
+
+      begin_location = location.adjust(column_number: -{{ "protected ".size }})
+      end_location = location.adjust(column_number: -2)
+
+      issue_for(begin_location, end_location, MSG) do |corrector|
         corrector.remove_preceding(node, {{ "protected ".size }})
       end
     end
