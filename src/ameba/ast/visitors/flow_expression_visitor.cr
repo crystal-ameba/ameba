@@ -29,6 +29,12 @@ module Ameba::AST
     end
 
     # :nodoc:
+    def visit(node : Crystal::Block)
+      on_loop_started(node)
+      true
+    end
+
+    # :nodoc:
     def end_visit(node : Crystal::While | Crystal::Until)
       on_loop_ended(node)
     end
@@ -36,6 +42,11 @@ module Ameba::AST
     # :nodoc:
     def end_visit(node : Crystal::Call)
       on_loop_ended(node) if loop?(node)
+    end
+
+    # :nodoc:
+    def end_visit(node : Crystal::Block)
+      on_loop_ended(node)
     end
 
     private def on_loop_started(node)
