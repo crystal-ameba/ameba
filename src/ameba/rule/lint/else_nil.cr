@@ -56,7 +56,7 @@ module Ameba::Rule::Lint
         issue_for(node_else, MSG) do |corrector|
           corrector.remove(
             else_location,
-            end_location.adjust(column_number: -{{ "end".size }})
+            end_location.adjust(column_number: -{{ "end".size }}),
           )
         end
       else
