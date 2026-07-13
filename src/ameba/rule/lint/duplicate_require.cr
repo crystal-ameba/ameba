@@ -10,10 +10,10 @@ module Ameba::Rule::Lint
   # YAML configuration example:
   #
   # ```
-  # Lint/DuplicatedRequire:
+  # Lint/DuplicateRequire:
   #   Enabled: true
   # ```
-  class DuplicatedRequire < Base
+  class DuplicateRequire < Base
     properties do
       since_version "0.14.0"
       description "Reports duplicated `require` statements"
