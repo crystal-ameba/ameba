@@ -144,6 +144,7 @@ module Ameba::Rule::Style
       end_loc = def_end_loc = nil
 
       Tokenizer.new(lexer).run do |token|
+        next unless token.type.ident?
         next unless token.value == Crystal::Keyword::END
 
         end_loc, def_end_loc = def_end_loc, token.location
