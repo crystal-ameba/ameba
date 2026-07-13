@@ -96,7 +96,7 @@ class Ameba::Config
         builder.string(rule_name)
         builder.object do
           builder.field("$ref", "#/$defs/BaseRule")
-          builder.field("$comment", documentation_url)
+          builder.field("$comment", documentation_url.to_s)
           builder.field("title", rule_name)
 
           {% if description = properties["description".id] %}

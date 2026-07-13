@@ -16,7 +16,7 @@ module Ameba
       rule_presenter_each_rule do |rule, output|
         output.should contain rule.name
         output.should contain rule.severity.to_s
-        output.should contain rule.class.documentation_url
+        output.should contain rule.class.documentation_url.to_s
 
         if description = rule.description
           output.should contain description

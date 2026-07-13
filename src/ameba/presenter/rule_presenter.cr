@@ -30,7 +30,7 @@ module Ameba::Presenter
       end
 
       output_title("Documentation URL")
-      output_paragraph(rule.class.documentation_url)
+      output_paragraph(rule.class.documentation_url.to_s)
 
       if rule_description = rule.description
         output_title("Description")

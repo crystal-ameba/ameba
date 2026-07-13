@@ -1,3 +1,5 @@
+require "uri"
+
 module Ameba::Rule
   # Marks a rule as deprecated, with an optional reason.
   annotation Deprecated
@@ -176,14 +178,14 @@ module Ameba::Rule
       # Returns the documentation URL for this rule.
       #
       # ```
-      # Ameba::Rule::Lint::Syntax.documentation_url
+      # Ameba::Rule::Lint::Syntax.documentation_url.to_s
       # # => "https://crystal-ameba.github.io/ameba/master/Ameba/Rule/Lint/Syntax.html"
       # ```
-      class_getter documentation_url : String do
+      class_getter documentation_url : URI do
         version = Ameba.version
         version = version.dev? ? "master" : version.simple.to_s
 
-        "https://crystal-ameba.github.io/ameba/%s/Ameba/Rule/%s.html" % {
+        URI.parse "https://crystal-ameba.github.io/ameba/%s/Ameba/Rule/%s.html" % {
           version, rule_name,
         }
       end
