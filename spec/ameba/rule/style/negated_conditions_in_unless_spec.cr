@@ -21,7 +21,7 @@ module Ameba::Rule::Style
     it "fails if there is a negated condition in unless" do
       expect_issue subject, <<-CRYSTAL
         unless !a
-        # ^^^^^^^ error: Avoid negated conditions in unless blocks
+        # ^^^^^^^ error: Avoid negated conditions in `unless` blocks
           :nok
         end
         CRYSTAL
@@ -30,7 +30,7 @@ module Ameba::Rule::Style
     it "fails if one of AND conditions is negated" do
       expect_issue subject, <<-CRYSTAL
         unless a && !b
-        # ^^^^^^^^^^^^ error: Avoid negated conditions in unless blocks
+        # ^^^^^^^^^^^^ error: Avoid negated conditions in `unless` blocks
           :nok
         end
         CRYSTAL
@@ -39,7 +39,7 @@ module Ameba::Rule::Style
     it "fails if one of OR conditions is negated" do
       expect_issue subject, <<-CRYSTAL
         unless a || !b
-        # ^^^^^^^^^^^^ error: Avoid negated conditions in unless blocks
+        # ^^^^^^^^^^^^ error: Avoid negated conditions in `unless` blocks
           :nok
         end
         CRYSTAL
@@ -48,7 +48,7 @@ module Ameba::Rule::Style
     it "fails if one of inner conditions is negated" do
       expect_issue subject, <<-CRYSTAL
         unless a && (b || !c)
-        # ^^^^^^^^^^^^^^^^^^^ error: Avoid negated conditions in unless blocks
+        # ^^^^^^^^^^^^^^^^^^^ error: Avoid negated conditions in `unless` blocks
           :nok
         end
         CRYSTAL

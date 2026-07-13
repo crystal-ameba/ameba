@@ -1,5 +1,5 @@
 module Ameba
-  # Helper module that is utilizes helpers for working with globs.
+  # Helper module that utilizes helpers for working with globs.
   module GlobUtils
     extend self
 

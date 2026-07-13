@@ -1,7 +1,7 @@
 module Ameba::Rule::Lint
   # A rule that disallows calls to `debugger`.
   #
-  # This is because we don't want debugger breakpoints accidentally being
+  # This is because we don't want debugger breakpoints accidentally
   # committed into our codebase.
   #
   # YAML configuration example:
@@ -18,7 +18,7 @@ module Ameba::Rule::Lint
       description "Disallows calls to `debugger`"
     end
 
-    MSG = "Possible forgotten `debugger` statement detected"
+    MSG = "Possibly forgotten `debugger` statement detected"
 
     def test(source, node : Crystal::Call)
       return unless node.name == "debugger" && node.obj.nil?

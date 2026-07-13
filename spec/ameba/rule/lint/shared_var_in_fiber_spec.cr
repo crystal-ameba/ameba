@@ -45,7 +45,7 @@ module Ameba::Rule::Lint
         while idx < 10
           spawn do
             puts(idx)
-               # ^^^ error: Shared variable `idx` is used in fiber
+               # ^^^ error: Shared variable `idx` is used in a fiber
           end
           idx += 1
         end
@@ -63,7 +63,7 @@ module Ameba::Rule::Lint
           break if i >= 10
           spawn do
             puts(i)
-               # ^ error: Shared variable `i` is used in fiber
+               # ^ error: Shared variable `i` is used in a fiber
           end
           i += 1
         end
@@ -83,7 +83,7 @@ module Ameba::Rule::Lint
           num = num + 1
           spawn do
             m = num
-              # ^^^ error: Shared variable `num` is used in fiber
+              # ^^^ error: Shared variable `num` is used in a fiber
             channel.send m
           end
         end
@@ -124,10 +124,10 @@ module Ameba::Rule::Lint
           baz += 1
           spawn do
             puts foo
-               # ^^^ error: Shared variable `foo` is used in fiber
+               # ^^^ error: Shared variable `foo` is used in a fiber
             puts foo + bar + baz
-               # ^^^ error: Shared variable `foo` is used in fiber
-                           # ^^^ error: Shared variable `baz` is used in fiber
+               # ^^^ error: Shared variable `foo` is used in a fiber
+                           # ^^^ error: Shared variable `baz` is used in a fiber
           end
           foo += 1
         end

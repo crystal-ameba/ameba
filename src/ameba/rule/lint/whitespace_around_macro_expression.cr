@@ -7,7 +7,7 @@ module Ameba::Rule::Lint
   # {{foo}}
   # ```
   #
-  # And it has to written as this instead:
+  # And has to be written as this instead:
   #
   # ```
   # {{ foo }}

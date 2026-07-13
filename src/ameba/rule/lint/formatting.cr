@@ -28,7 +28,7 @@ module Ameba::Rule::Lint
   class Formatting < Base
     properties do
       since_version "1.4.0"
-      description "Reports not formatted sources"
+      description "Reports unformatted sources"
       fail_on_error false
     end
 

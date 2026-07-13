@@ -11,7 +11,7 @@ module Ameba::Formatter
 
     # Creates a new instance of `ExplainFormatter`.
     #
-    # Accepts *output* which indicates the io where the explanation will be written to.
+    # Accepts *output* which indicates the `IO` where the explanation will be written to.
     # Second argument is *location* which indicates the location to explain.
     #
     # ```

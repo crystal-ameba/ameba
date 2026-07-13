@@ -23,17 +23,17 @@ module Ameba::Rule::Lint
     it "reports if the block argument is missing" do
       expect_issue subject, <<-CRYSTAL
         def foo
-          # ^^^ error: Missing anonymous block argument. Use `&` as an argument name to indicate yielding method.
+          # ^^^ error: Missing anonymous block argument. Use `&` as an argument name to indicate a yielding method.
           yield 42
         end
 
         def bar
-          # ^^^ error: Missing anonymous block argument. Use `&` as an argument name to indicate yielding method.
+          # ^^^ error: Missing anonymous block argument. Use `&` as an argument name to indicate a yielding method.
           yield 24
         end
 
         def baz(a, b, c)
-          # ^^^ error: Missing anonymous block argument. Use `&` as an argument name to indicate yielding method.
+          # ^^^ error: Missing anonymous block argument. Use `&` as an argument name to indicate a yielding method.
           yield a, b, c
         end
         CRYSTAL

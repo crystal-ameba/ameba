@@ -18,7 +18,7 @@ module Ameba::Rule::Lint
   # 3.times { puts channel.receive } # => # 3, 3, 3
   # ```
   #
-  # The problem is there is only one shared between fibers variable `n`
+  # The problem is there is only one variable `n` shared between fibers
   # and when `channel.receive` is executed its value is `3`.
   #
   # To solve this, the code above needs to be rewritten to the following:
@@ -57,7 +57,7 @@ module Ameba::Rule::Lint
       description "Disallows shared variables in fibers"
     end
 
-    MSG = "Shared variable `%s` is used in fiber"
+    MSG = "Shared variable `%s` is used in a fiber"
 
     def test(source)
       AST::ScopeVisitor.new(self, source)

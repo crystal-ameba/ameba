@@ -188,7 +188,7 @@ module Ameba::Rule
         }
       end
 
-      # Returns documentation for this rule, if there is any.
+      # Returns the documentation for this rule, if there is any.
       #
       # ```
       # module Ameba

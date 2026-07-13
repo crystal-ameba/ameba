@@ -1,5 +1,5 @@
 module Ameba::Rule::Lint
-  # A rule that disallows a rescued exception that get shadowed by a
+  # A rule that disallows a rescued exception that gets shadowed by a
   # less specific exception being rescued before a more specific
   # exception is rescued.
   #
@@ -36,7 +36,7 @@ module Ameba::Rule::Lint
   class ShadowedException < Base
     properties do
       since_version "0.3.0"
-      description "Disallows rescued exception that get shadowed"
+      description "Disallows a rescued exception that gets shadowed"
     end
 
     MSG = "Shadowed exception found: `%s`"
