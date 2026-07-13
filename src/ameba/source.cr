@@ -49,7 +49,7 @@ module Ameba
     # Returns lines of code split by new line character.
     # Since `code` is immutable and can't be changed, this
     # method caches lines in an instance variable, so calling
-    # it second time will not perform a split, but will return
+    # it a second time will not perform a split, but will return
     # lines instantly.
     #
     # ```

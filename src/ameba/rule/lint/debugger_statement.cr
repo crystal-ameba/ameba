@@ -1,7 +1,7 @@
 module Ameba::Rule::Lint
   # A rule that disallows calls to `debugger`.
   #
-  # This is because we don't want debugger breakpoints accidentally being
+  # This is because we don't want debugger breakpoints accidentally
   # committed into our codebase.
   #
   # YAML configuration example:

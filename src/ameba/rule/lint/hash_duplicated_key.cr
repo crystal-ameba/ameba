@@ -7,7 +7,7 @@ module Ameba::Rule::Lint
   # h = {"foo" => 1, "bar" => 2, "foo" => 3}
   # ```
   #
-  # And it has to written as this instead:
+  # And has to be written as this instead:
   #
   # ```
   # h = {"foo" => 1, "bar" => 2}

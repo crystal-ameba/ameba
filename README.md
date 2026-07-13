@@ -37,7 +37,7 @@
 ## About
 
 Ameba is a static code analysis tool for the Crystal language.
-It enforces a consistent [Crystal code style](https://crystal-lang.org/reference/conventions/coding_style.html), also catches code smells and wrong code constructions.
+It enforces a consistent [Crystal code style](https://crystal-lang.org/reference/conventions/coding_style.html), also catches code smells and wrong code constructs.
 
 See also [Roadmap](https://github.com/crystal-ameba/ameba/wiki#roadmap).
 
@@ -87,10 +87,10 @@ $ ameba --fix
 ### Explain issues
 
 Ameba allows you to dig deeper into an issue, by showing you details about the issue
-and the reasoning by it being reported.
+and the reasoning behind it being reported.
 
-To be convenient, you can just copy-paste the `PATH:line:column` string from the
-report and paste behind the `ameba` command to check it out.
+For convenience, you can just copy-paste the `PATH:line:column` string from the
+report and paste it behind the `ameba` command to check it out.
 
 ```sh
 $ ameba crystal/command/format.cr:26:83           # show explanation for the issue
