@@ -1237,7 +1237,7 @@
   </svg>
 </a>About</h2>
 <p>Ameba is a static code analysis tool for the Crystal language.
-It enforces a consistent <a href="https://crystal-lang.org/reference/conventions/coding_style.html">Crystal code style</a>, also catches code smells and wrong code constructions.</p>
+It enforces a consistent <a href="https://crystal-lang.org/reference/conventions/coding_style.html">Crystal code style</a>, also catches code smells and wrong code constructs.</p>
 <p>See also <a href="https://github.com/crystal-ameba/ameba/wiki#roadmap">Roadmap</a>.</p>
 <h2><a id="usage" class="anchor" href="#usage">
   <svg class="octicon-link" aria-hidden="true">
@@ -1287,9 +1287,9 @@ Finished in 389.45 milliseconds
   </svg>
 </a>Explain issues</h3>
 <p>Ameba allows you to dig deeper into an issue, by showing you details about the issue
-and the reasoning by it being reported.</p>
-<p>To be convenient, you can just copy-paste the <code>PATH:line:column</code> string from the
-report and paste behind the <code>ameba</code> command to check it out.</p>
+and the reasoning behind it being reported.</p>
+<p>For convenience, you can just copy-paste the <code>PATH:line:column</code> string from the
+report and paste it behind the <code>ameba</code> command to check it out.</p>
 <pre><code class="language-sh">$ ameba crystal/command/format.cr:26:83           # show explanation for the issue
 $ ameba --explain crystal/command/format.cr:26:83 # same thing</code></pre>
 <h3><a id="describe-rules" class="anchor" href="#describe-rules">

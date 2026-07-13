@@ -1210,10 +1210,10 @@
   </h2>
 
   <p>This rule is used to identify usage of arg-less <code>Enumerable#any?</code> calls.</p>
-<p>Using <code>Enumerable#any?</code> instead of <code>Enumerable#empty?</code> might lead to an
+<p>Using <code>Enumerable#any?</code> instead of <code>Enumerable#empty?</code> might lead to
 unexpected results (like <code>[nil, false].any? # =&gt; false</code>). In some cases
-it also might be less efficient, since it iterates until the block will
-return a <em>truthy</em> value, instead of just checking if there's at least
+it also might be less efficient, since it iterates until the block
+returns a <em>truthy</em> value, instead of just checking if there's at least
 one value present.</p>
 <p>For example, this is considered invalid:</p>
 <pre><code class="language-crystal">[<span class="n">1</span>, <span class="n">2</span>, <span class="n">3</span>].any?</code></pre>
@@ -1264,7 +1264,7 @@ one value present.</p>
   </h2>
   
     
-      <a href="https://github.com/crystal-ameba/ameba/blob/40bc67f/src/ameba/rule/performance/any_instead_of_empty.cr#L31" target="_blank">
+      <a href="https://github.com/crystal-ameba/ameba/blob/fcbd570/src/ameba/rule/performance/any_instead_of_empty.cr#L31" target="_blank">
         ameba/rule/performance/any_instead_of_empty.cr
       </a>
     
@@ -1358,7 +1358,7 @@ one value present.</p>
       <li class="entry-summary">
         <a href="#parsed_doc%3AString%7CNil-class-method" class="signature"><strong>.parsed_doc</strong> : String | Nil</a>
         
-          <div class="summary"><p>Returns documentation for this rule, if there is any.</p></div>
+          <div class="summary"><p>Returns the documentation for this rule, if there is any.</p></div>
         
       </li>
     
@@ -1867,7 +1867,7 @@ one value present.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/40bc67f/src/ameba/rule/performance/any_instead_of_empty.cr#L31" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/fcbd570/src/ameba/rule/performance/any_instead_of_empty.cr#L31" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1967,7 +1967,7 @@ one value present.</p>
       
         <div class="doc">
           
-          <p>Returns documentation for this rule, if there is any.</p>
+          <p>Returns the documentation for this rule, if there is any.</p>
 <pre><code class="language-crystal"><span class="k">module</span> <span class="t">Ameba</span>
   <span class="c"># This is a test rule.</span>
   <span class="c"># Does nothing.</span>
@@ -1997,7 +1997,7 @@ one value present.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/40bc67f/src/ameba/rule/performance/any_instead_of_empty.cr#L34" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/fcbd570/src/ameba/rule/performance/any_instead_of_empty.cr#L34" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2139,7 +2139,7 @@ one value present.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/40bc67f/src/ameba/rule/performance/any_instead_of_empty.cr#L34" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/fcbd570/src/ameba/rule/performance/any_instead_of_empty.cr#L34" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2169,7 +2169,7 @@ one value present.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/40bc67f/src/ameba/rule/performance/any_instead_of_empty.cr#L41" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/fcbd570/src/ameba/rule/performance/any_instead_of_empty.cr#L41" target="_blank">View source</a>]
         
       </div>
     </div>
