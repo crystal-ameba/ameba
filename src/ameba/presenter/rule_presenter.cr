@@ -29,6 +29,9 @@ module Ameba::Presenter
         end
       end
 
+      output_title("Documentation URL")
+      output_paragraph(colorize_markdown(rule.class.documentation_url))
+
       if rule_description = rule.description
         output_title("Description")
         output_paragraph(colorize_markdown(rule_description))
