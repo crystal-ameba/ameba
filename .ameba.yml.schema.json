@@ -522,7 +522,7 @@
       "$ref": "#/$defs/BaseRule",
       "$comment": "https://crystal-ameba.github.io/ameba/master/Ameba/Rule/Lint/Formatting.html",
       "title": "Lint/Formatting",
-      "description": "Reports not formatted sources",
+      "description": "Reports unformatted sources",
       "properties": {
         "SinceVersion": {
           "type": "string",
@@ -822,7 +822,7 @@
       "$ref": "#/$defs/BaseRule",
       "$comment": "https://crystal-ameba.github.io/ameba/master/Ameba/Rule/Lint/ShadowedException.html",
       "title": "Lint/ShadowedException",
-      "description": "Disallows rescued exception that get shadowed",
+      "description": "Disallows a rescued exception that gets shadowed",
       "properties": {
         "SinceVersion": {
           "type": "string",
@@ -902,7 +902,7 @@
       "$ref": "#/$defs/BaseRule",
       "$comment": "https://crystal-ameba.github.io/ameba/master/Ameba/Rule/Lint/SpecFilename.html",
       "title": "Lint/SpecFilename",
-      "description": "Enforces spec filenames to have `_spec` suffix",
+      "description": "Enforces spec filenames to have a `_spec` suffix",
       "properties": {
         "SinceVersion": {
           "type": "string",
