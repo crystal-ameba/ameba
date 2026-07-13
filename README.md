@@ -22,7 +22,7 @@
   - [Describe rules](#describe-rules)
 - [Installation](#installation)
   - [As a project dependency](#as-a-project-dependency)
-  - [OS X](#os-x)
+  - [Homebrew](#homebrew)
   - [Docker](#docker)
   - [From sources](#from-sources)
 - [Configuration](#configuration)
@@ -146,7 +146,7 @@ which is the slowest option:
 $ lib/ameba/bin/ameba.cr
 ```
 
-### OS X
+### Homebrew
 
 ```sh
 $ brew tap crystal-ameba/ameba
