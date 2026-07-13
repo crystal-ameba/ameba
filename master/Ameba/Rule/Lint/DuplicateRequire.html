@@ -16,7 +16,7 @@
 <script type="text/javascript" src="../../../js/doc.js"></script>
 
   <meta name="repository-name" content="ameba">
-  <title>Ameba::Rule::Lint::DuplicatedRequire - ameba master</title>
+  <title>Ameba::Rule::Lint::DuplicateRequire - ameba master</title>
   <script type="text/javascript">
     CrystalDocs.base_path = "../../../";
   </script>
@@ -509,11 +509,6 @@
       
     </li>
   
-  <li class=" current" data-id="ameba/Ameba/Rule/Lint/DuplicatedRequire" data-name="ameba::rule::lint::duplicatedrequire">
-      <a href="../../../Ameba/Rule/Lint/DuplicatedRequire.html">DuplicatedRequire</a>
-      
-    </li>
-  
   <li class=" " data-id="ameba/Ameba/Rule/Lint/DuplicateEnumValue" data-name="ameba::rule::lint::duplicateenumvalue">
       <a href="../../../Ameba/Rule/Lint/DuplicateEnumValue.html">DuplicateEnumValue</a>
       
@@ -521,6 +516,11 @@
   
   <li class=" " data-id="ameba/Ameba/Rule/Lint/DuplicateMethodSignature" data-name="ameba::rule::lint::duplicatemethodsignature">
       <a href="../../../Ameba/Rule/Lint/DuplicateMethodSignature.html">DuplicateMethodSignature</a>
+      
+    </li>
+  
+  <li class=" current" data-id="ameba/Ameba/Rule/Lint/DuplicateRequire" data-name="ameba::rule::lint::duplicaterequire">
+      <a href="../../../Ameba/Rule/Lint/DuplicateRequire.html">DuplicateRequire</a>
       
     </li>
   
@@ -1190,12 +1190,12 @@
 
   <span class="kind">
     class
-  </span> Ameba::<wbr>Rule::<wbr>Lint::<wbr>DuplicatedRequire
+  </span> Ameba::<wbr>Rule::<wbr>Lint::<wbr>DuplicateRequire
 
 </h1>
 
 
-  <ul class="superclass-hierarchy"><li class="superclass"><a href="../../../Ameba/Rule/Lint/DuplicatedRequire.html">Ameba::Rule::Lint::DuplicatedRequire</a></li><li class="superclass"><a href="../../../Ameba/Rule/Base.html">Ameba::Rule::Base</a></li><li class="superclass">Reference</li><li class="superclass">Object</li></ul>
+  <ul class="superclass-hierarchy"><li class="superclass"><a href="../../../Ameba/Rule/Lint/DuplicateRequire.html">Ameba::Rule::Lint::DuplicateRequire</a></li><li class="superclass"><a href="../../../Ameba/Rule/Base.html">Ameba::Rule::Base</a></li><li class="superclass">Reference</li><li class="superclass">Object</li></ul>
 
 
 
@@ -1214,7 +1214,7 @@
 <span class="k">require</span> <span class="s">&quot;./stuff&quot;</span>
 <span class="k">require</span> <span class="s">&quot;./thing&quot;</span> <span class="c"># duplicated require</span></code></pre>
 <p>YAML configuration example:</p>
-<pre><code class="language-crystal"><span class="t">Lint</span><span class="o">/</span><span class="t">DuplicatedRequire</span>:
+<pre><code class="language-crystal"><span class="t">Lint</span><span class="o">/</span><span class="t">DuplicateRequire</span>:
   <span class="t">Enabled</span>: <span class="n">true</span></code></pre>
 
 
@@ -1256,8 +1256,8 @@
   </h2>
   
     
-      <a href="https://github.com/crystal-ameba/ameba/blob/a4566dd/src/ameba/rule/lint/duplicated_require.cr#L16" target="_blank">
-        ameba/rule/lint/duplicated_require.cr
+      <a href="https://github.com/crystal-ameba/ameba/blob/40bc67f/src/ameba/rule/lint/duplicate_require.cr#L16" target="_blank">
+        ameba/rule/lint/duplicate_require.cr
       </a>
     
     <br/>
@@ -1625,14 +1625,14 @@
 <span class="k">require</span> <span class="s">&quot;./stuff&quot;</span>
 <span class="k">require</span> <span class="s">&quot;./thing&quot;</span> <span class="c"># duplicated require</span></code></pre>
 <p>YAML configuration example:</p>
-<pre><code class="language-crystal"><span class="t">Lint</span><span class="o">/</span><span class="t">DuplicatedRequire</span>:
+<pre><code class="language-crystal"><span class="t">Lint</span><span class="o">/</span><span class="t">DuplicateRequire</span>:
   <span class="t">Enabled</span>: <span class="n">true</span></code></pre>
         </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/a4566dd/src/ameba/rule/lint/duplicated_require.cr#L16" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/40bc67f/src/ameba/rule/lint/duplicate_require.cr#L16" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1762,7 +1762,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/a4566dd/src/ameba/rule/lint/duplicated_require.cr#L17" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/40bc67f/src/ameba/rule/lint/duplicate_require.cr#L17" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1904,7 +1904,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/a4566dd/src/ameba/rule/lint/duplicated_require.cr#L17" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/40bc67f/src/ameba/rule/lint/duplicate_require.cr#L17" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1934,7 +1934,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/a4566dd/src/ameba/rule/lint/duplicated_require.cr#L24" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/40bc67f/src/ameba/rule/lint/duplicate_require.cr#L24" target="_blank">View source</a>]
         
       </div>
     </div>
