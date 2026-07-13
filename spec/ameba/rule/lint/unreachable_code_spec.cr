@@ -477,6 +477,25 @@ module Ameba::Rule::Lint
           end
           CRYSTAL
       end
+
+      it "reports if there is unreachable code in block after break" do
+        expect_issue subject, <<-CRYSTAL
+          %w[foo bar].each do |v|
+            break
+            puts v
+          # ^^^^^^ error: Unreachable code detected
+          end
+          CRYSTAL
+      end
+
+      it "doesn't report if break in a block is in a condition" do
+        expect_no_issues subject, <<-CRYSTAL
+          %w[foo bar].each do |v|
+            break unless v
+            puts v
+          end
+          CRYSTAL
+      end
     end
 
     context "next" do
@@ -499,6 +518,25 @@ module Ameba::Rule::Lint
               next
             end
             puts a
+          end
+          CRYSTAL
+      end
+
+      it "reports if there is unreachable code in block after next" do
+        expect_issue subject, <<-CRYSTAL
+          %w[foo bar].each do |v|
+            next
+            puts v
+          # ^^^^^^ error: Unreachable code detected
+          end
+          CRYSTAL
+      end
+
+      it "doesn't report if next in a block is in a condition" do
+        expect_no_issues subject, <<-CRYSTAL
+          %w[foo bar].each do |v|
+            next unless v
+            puts v
           end
           CRYSTAL
       end
