@@ -18,7 +18,7 @@ module Ameba::Rule::Lint
       description "Disallows calls to `debugger`"
     end
 
-    MSG = "Possible forgotten `debugger` statement detected"
+    MSG = "Possibly forgotten `debugger` statement detected"
 
     def test(source, node : Crystal::Call)
       return unless node.name == "debugger" && node.obj.nil?

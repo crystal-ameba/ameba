@@ -26,7 +26,7 @@ module Ameba::Rule::Lint
     end
 
     MSG = "Missing anonymous block argument. Use `&` as an argument " \
-          "name to indicate yielding method."
+          "name to indicate a yielding method."
 
     def test(source)
       AST::ScopeVisitor.new(self, source)

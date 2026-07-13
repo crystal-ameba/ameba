@@ -57,7 +57,7 @@ module Ameba::Rule::Lint
       description "Disallows shared variables in fibers"
     end
 
-    MSG = "Shared variable `%s` is used in fiber"
+    MSG = "Shared variable `%s` is used in a fiber"
 
     def test(source)
       AST::ScopeVisitor.new(self, source)
