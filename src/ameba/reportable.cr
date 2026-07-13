@@ -16,7 +16,11 @@ module Ameba
                   status : Issue::Status? = nil,
                   block : (Source::Corrector ->)? = nil) : Issue
       status ||=
-        Issue::Status::Disabled if location_disabled?(location, rule)
+        if location_disabled?(location, rule)
+          Issue::Status::Disabled
+        else
+          Issue::Status::Enabled
+        end
 
       Issue.new(code, rule, location, end_location, message, status, block).tap do |issue|
         issues << issue
