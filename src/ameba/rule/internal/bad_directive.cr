@@ -1,4 +1,4 @@
-module Ameba::Rule::Lint
+module Ameba::Rule::Internal
   # A rule that reports incorrect comment directives for Ameba.
   #
   # ```
@@ -11,7 +11,7 @@ module Ameba::Rule::Lint
   # YAML configuration example:
   #
   # ```
-  # Lint/BadDirective:
+  # Internal/BadDirective:
   #   Enabled: true
   # ```
   class BadDirective < Base

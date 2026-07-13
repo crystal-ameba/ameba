@@ -1,18 +1,18 @@
 require "../../../spec_helper"
 
-module Ameba::Rule::Lint
+module Ameba::Rule::Internal
   describe BadDirective do
     subject = BadDirective.new
 
     it "does not report if action is correct" do
       expect_no_issues subject, <<-CRYSTAL
-        # ameba:disable Lint/BadDirective
+        # ameba:disable Internal/BadDirective
         CRYSTAL
     end
 
     it "reports if there is incorrect action" do
       expect_issue subject, <<-CRYSTAL
-        # ameba:foo Lint/BadDirective
+        # ameba:foo Internal/BadDirective
               # ^^^ error: Bad action in comment directive: `foo`. Possible values: `disable`, `enable`
         CRYSTAL
     end
