@@ -1,8 +1,8 @@
 require "../../../spec_helper"
 
 module Ameba::Rule::Lint
-  describe DuplicatedRequire do
-    subject = DuplicatedRequire.new
+  describe DuplicateRequire do
+    subject = DuplicateRequire.new
 
     it "passes if there are no duplicated requires" do
       expect_no_issues subject, <<-CRYSTAL
