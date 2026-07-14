@@ -577,9 +577,19 @@ module Ameba::AST
     end
 
     describe "#loop?" do
-      it "returns true if this is a loop method call" do
-        node = as_node("loop")
+      it "returns true if this is a loop method call with a block" do
+        node = as_node("loop { }")
         subject.loop?(node).should be_true
+      end
+
+      it "returns true if this is a loop method call with a block arg" do
+        node = as_node("loop(&block)")
+        subject.loop?(node).should be_true
+      end
+
+      it "returns false if there is no block" do
+        node = as_node("loop")
+        subject.loop?(node).should be_false
       end
 
       it "returns false if it has a receiver" do
