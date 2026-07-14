@@ -49,7 +49,9 @@ module Ameba::Formatter
 
     # Reports a message when inspection is finished.
     def finished(sources) : Nil
-      return unless step_summary_file = ENV["GITHUB_STEP_SUMMARY"]?
+      step_summary_file =
+        ENV["AMEBA_GITHUB_STEP_SUMMARY"]? || ENV["GITHUB_STEP_SUMMARY"]?
+      return unless step_summary_file
 
       time_elapsed =
         @started_at.try(&.elapsed)
@@ -115,8 +117,8 @@ module Ameba::Formatter
     end
 
     private BLOB_URL = begin
-      repo = ENV["GITHUB_REPOSITORY"]?
-      sha = ENV["GITHUB_SHA"]?
+      repo = ENV["AMEBA_GITHUB_REPOSITORY"]? || ENV["GITHUB_REPOSITORY"]?
+      sha = ENV["AMEBA_GITHUB_SHA"]? || ENV["GITHUB_SHA"]?
 
       if repo && sha
         "https://github.com/#{repo}/blob/#{sha}"
