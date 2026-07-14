@@ -239,7 +239,7 @@ module Ameba::AST::Util
     when Crystal::While, Crystal::Until
       true
     when Crystal::Call
-      node.name == "loop" && node.args.empty? && node.obj.nil?
+      node.name == "loop" && node.args.empty? && node.obj.nil? && has_block?(node)
     else
       false
     end
