@@ -15,6 +15,8 @@ module Ameba::Rule::Security
   # If a peer without a valid certificate must be reached in
   # a controlled environment, disable this rule inline.
   #
+  # Reference: [CWE-295](https://cwe.mitre.org/data/definitions/295.html)
+  #
   # YAML configuration example:
   #
   # ```

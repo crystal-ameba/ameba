@@ -21,6 +21,8 @@ module Ameba::Rule::Security
   # token = Random::Secure.hex(32)
   # ```
   #
+  # Reference: [CWE-338](https://cwe.mitre.org/data/definitions/338.html)
+  #
   # YAML configuration example:
   #
   # ```

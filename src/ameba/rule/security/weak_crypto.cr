@@ -22,6 +22,8 @@ module Ameba::Rule::Security
   # OpenSSL::Digest.new("SHA256")
   # ```
   #
+  # Reference: [CWE-327](https://cwe.mitre.org/data/definitions/327.html)
+  #
   # YAML configuration example:
   #
   # ```
