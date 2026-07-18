@@ -20,6 +20,7 @@ module Ameba::Rule
           Metrics
           Naming
           Performance
+          Security
           Style
           Typing
         ]
