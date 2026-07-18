@@ -30,6 +30,12 @@ module Ameba::Rule::Security
         CRYSTAL
     end
 
+    it "passes for names that only contain a secret word as substring" do
+      expect_no_issues subject, <<-CRYSTAL
+        compass = "north by northwest"
+        CRYSTAL
+    end
+
     it "reports hardcoded secrets in local variables" do
       expect_issue subject, <<-CRYSTAL
         password = "s3cr3t_p4ssw0rd"
@@ -48,6 +54,42 @@ module Ameba::Rule::Security
       expect_issue subject, <<-CRYSTAL
         SECRET_KEY = "supersecretvalue1"
         # ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ error: Hardcoded secret detected; load it from the environment or a credentials store
+        CRYSTAL
+    end
+
+    it "reports hardcoded secrets in named arguments" do
+      expect_issue subject, <<-CRYSTAL
+        login(password: "s3cr3t_p4ssw0rd")
+            # ^^^^^^^^^^^^^^^^^^^^^^^^^^^ error: Hardcoded secret detected; load it from the environment or a credentials store
+        CRYSTAL
+    end
+
+    it "reports hardcoded secrets in hash literals" do
+      expect_issue subject, <<-CRYSTAL
+        config = {"password" => "s3cr3t_p4ssw0rd"}
+                              # ^^^^^^^^^^^^^^^^^ error: Hardcoded secret detected; load it from the environment or a credentials store
+        CRYSTAL
+    end
+
+    it "reports hardcoded secrets in parameter defaults" do
+      expect_issue subject, <<-CRYSTAL
+        def connect(password = "s3cr3t_p4ssw0rd")
+                             # ^^^^^^^^^^^^^^^^^ error: Hardcoded secret detected; load it from the environment or a credentials store
+        end
+        CRYSTAL
+    end
+
+    it "reports well-known credential formats regardless of the name" do
+      expect_issue subject, <<-CRYSTAL
+        key = "AKIAIOSFODNN7EXAMPLE"
+            # ^^^^^^^^^^^^^^^^^^^^^^ error: Hardcoded AWS access key detected; load it from the environment or a credentials store
+        CRYSTAL
+    end
+
+    it "reports token values once even when assigned to a secret name" do
+      expect_issue subject, <<-CRYSTAL
+        password = "AKIAIOSFODNN7EXAMPLE"
+                 # ^^^^^^^^^^^^^^^^^^^^^^ error: Hardcoded AWS access key detected; load it from the environment or a credentials store
         CRYSTAL
     end
 
