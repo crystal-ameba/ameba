@@ -20,6 +20,11 @@ module Ameba::Rule::Security
   # Crypto::Subtle.constant_time_compare(signature, OpenSSL::HMAC.hexdigest(:sha256, key, data))
   # ```
   #
+  # Comparing two freshly computed digests with each other is not
+  # reported, since neither side is a stored reference value.
+  #
+  # Reference: [CWE-208](https://cwe.mitre.org/data/definitions/208.html)
+  #
   # YAML configuration example:
   #
   # ```
@@ -45,7 +50,10 @@ module Ameba::Rule::Security
     def test(source, node : Crystal::Call)
       return unless node.name.in?(COMPARISON_OPERATORS)
       return unless node.args.size == 1
-      return unless digest_call?(node.obj) || digest_call?(node.args.first)
+
+      lhs, rhs = node.obj, node.args.first
+      return unless digest_call?(lhs) || digest_call?(rhs)
+      return if digest_call?(lhs) && digest_call?(rhs)
 
       issue_for(node, MSG % node.name)
     end

@@ -10,6 +10,12 @@ module Ameba::Rule::Security
         CRYSTAL
     end
 
+    it "passes when both sides are digest calls" do
+      expect_no_issues subject, <<-CRYSTAL
+        Digest::SHA256.hexdigest(a) == Digest::SHA256.hexdigest(b)
+        CRYSTAL
+    end
+
     it "passes for comparison of non-digest values" do
       expect_no_issues subject, <<-CRYSTAL
         a == b
