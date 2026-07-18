@@ -18,6 +18,27 @@ module Ameba::Rule::Security
         CRYSTAL
     end
 
+    it "passes when dynamic parts are shell-quoted or safely cast" do
+      expect_no_issues subject, <<-'CRYSTAL'
+        system("ls -l #{Process.quote(path)}")
+        system("kill #{pid.to_i}")
+        CRYSTAL
+    end
+
+    it "respects MinConfidence" do
+      rule = CommandInjection.new
+      rule.min_confidence = "High"
+
+      expect_no_issues rule, <<-'CRYSTAL'
+        system("ls -l #{path}")
+        CRYSTAL
+
+      expect_issue rule, <<-'CRYSTAL'
+        system("cat #{env.params.query["file"]}")
+        # ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ error: Shell command built from interpolated string can lead to command injection
+        CRYSTAL
+    end
+
     it "reports system calls with interpolated strings" do
       expect_issue subject, <<-'CRYSTAL'
         system("ls -l #{path}")

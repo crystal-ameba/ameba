@@ -23,6 +23,26 @@ module Ameba::Rule::Security
         CRYSTAL
     end
 
+    it "passes when dynamic parts are safely cast" do
+      expect_no_issues subject, <<-'CRYSTAL'
+        db.query("SELECT * FROM users WHERE id = #{id.to_i}")
+        CRYSTAL
+    end
+
+    it "respects MinConfidence" do
+      rule = SqlInjection.new
+      rule.min_confidence = "High"
+
+      expect_no_issues rule, <<-'CRYSTAL'
+        db.query("SELECT * FROM users WHERE id = #{id}")
+        CRYSTAL
+
+      expect_issue rule, <<-'CRYSTAL'
+        db.query("SELECT * FROM users WHERE id = #{env.params.query["id"]}")
+               # ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ error: SQL statement built from interpolated string can lead to SQL injection
+        CRYSTAL
+    end
+
     it "reports queries built from interpolated strings" do
       expect_issue subject, <<-'CRYSTAL'
         db.query("SELECT * FROM users WHERE id = #{id}")
