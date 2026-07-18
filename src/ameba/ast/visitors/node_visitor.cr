@@ -37,6 +37,7 @@ module Ameba::AST
       ModuleDef,
       MultiAssign,
       NilLiteral,
+      Path,
       ProcLiteral,
       Rescue,
       Select,

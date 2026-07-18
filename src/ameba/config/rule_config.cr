@@ -201,6 +201,7 @@ class Ameba::Config
         Lint:        Ameba::Severity::Warning,
         Metrics:     Ameba::Severity::Warning,
         Performance: Ameba::Severity::Warning,
+        Security:    Ameba::Severity::Error,
       }
 
       class_getter default_severity : Ameba::Severity do
