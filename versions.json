@@ -36,6 +36,11 @@
       "released": true
     },
     {
+      "name": "1.4.0",
+      "url": "/ameba/1.4.0/",
+      "released": true
+    },
+    {
       "name": "1.0.0",
       "url": "/ameba/1.0.0/",
       "released": true
