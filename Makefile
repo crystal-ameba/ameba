@@ -28,7 +28,7 @@ SHARDS_BIN ?= shards
 INSTALL_BIN ?= /usr/bin/install
 
 # Flags to pass to the Crystal compiler
-CRFLAGS ?= -Dpreview_mt
+CRFLAGS ?=
 
 # The source files to compile
 SRC_SOURCES := $(shell find src -name '*.cr' 2>/dev/null)

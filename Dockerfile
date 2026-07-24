@@ -1,5 +1,5 @@
 FROM alpine:edge AS builder
-ARG CRFLAGS="-Dpreview_mt"
+ARG CRFLAGS=""
 RUN apk add --update crystal shards yaml-dev musl-dev make
 RUN mkdir /ameba
 WORKDIR /ameba
