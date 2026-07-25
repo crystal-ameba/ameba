@@ -79,7 +79,7 @@ module Ameba::Rule
     describe ".documentation_url" do
       it "returns the parsed rule documentation URL" do
         Lint::Syntax.documentation_url.should eq \
-          "https://crystal-ameba.github.io/ameba/master/Ameba/Rule/Lint/Syntax.html"
+          "https://crystal-ameba.org/ameba/master/Ameba/Rule/Lint/Syntax.html"
       end
     end
 
