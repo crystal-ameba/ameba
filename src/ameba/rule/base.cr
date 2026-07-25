@@ -177,13 +177,13 @@ module Ameba::Rule
       #
       # ```
       # Ameba::Rule::Lint::Syntax.documentation_url
-      # # => "https://crystal-ameba.org/ameba/master/Ameba/Rule/Lint/Syntax.html"
+      # # => "https://crystal-ameba.org/api/master/Ameba/Rule/Lint/Syntax.html"
       # ```
       class_getter documentation_url : String do
         version = Ameba.version
         version = version.dev? ? "master" : version.simple.to_s
 
-        "https://crystal-ameba.org/ameba/%s/Ameba/Rule/%s.html" % {
+        "https://crystal-ameba.org/api/%s/Ameba/Rule/%s.html" % {
           version, rule_name,
         }
       end
