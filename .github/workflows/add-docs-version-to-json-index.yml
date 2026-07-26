@@ -37,7 +37,7 @@ jobs:
           JQ_EXPRESSION="
             .versions |= (
               if ( . | map(.name) | index(\"${VERSION}\") | not ) then
-                . += [ {\"name\": \"${VERSION}\", \"url\": \"/ameba/${VERSION}/\", \"released\": ${RELEASED}} ]
+                . += [ {\"name\": \"${VERSION}\", \"url\": \"/api/${VERSION}/\", \"released\": ${RELEASED}} ]
                 | sort_by(.name) | reverse | sort_by(.released)
               else
                 .

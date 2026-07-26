@@ -52,7 +52,7 @@ jobs:
           crystal docs \
             --project-version="${{ inputs.version || inputs.ref }}" \
             --source-refname="${{ steps.ref-sha.outputs.sha }}" \
-            --json-config-url="/ameba/versions.json"
+            --json-config-url="/api/versions.json"
 
       - name: Deploy docs 🚀
         uses: JamesIves/github-pages-deploy-action@v4
