@@ -23,8 +23,8 @@ module Ameba::Rule::Lint
                   _{v} # ^^^^ error: Redundant use of `Object#to_s` in interpolation
           CRYSTAL
 
-        expect_correction source, <<-'CRYSTAL'
-          "Hello, #{{{ v }}}"
+        expect_correction source, <<-'CRYSTAL', v: {{ v }}.inspect
+          "Hello, #{%{v}}"
           CRYSTAL
       end
     {% end %}
