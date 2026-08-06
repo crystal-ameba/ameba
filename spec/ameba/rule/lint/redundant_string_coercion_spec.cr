@@ -16,19 +16,27 @@ module Ameba::Rule::Lint
         CRYSTAL
     end
 
-    {% for v in %w[name :symbol 42 false 't'] %}
+    {% for v in {"name", :symbol, 42, false, 't'} %}
       it "reports if there is a redundant string coercion ({{ v.id }})" do
-        expect_issue subject, <<-'CRYSTAL', v: {{ v }}
+        source = expect_issue subject, <<-'CRYSTAL', v: {{ v }}.inspect
           "Hello, #{%{v}.to_s}"
                   _{v} # ^^^^ error: Redundant use of `Object#to_s` in interpolation
+          CRYSTAL
+
+        expect_correction source, <<-'CRYSTAL'
+          "Hello, #{{{ v }}}"
           CRYSTAL
       end
     {% end %}
 
     it "reports redundant coercion in regex" do
-      expect_issue subject, <<-'CRYSTAL'
+      source = expect_issue subject, <<-'CRYSTAL'
         /\w #{name.to_s}/
                  # ^^^^ error: Redundant use of `Object#to_s` in interpolation
+        CRYSTAL
+
+      expect_correction source, <<-'CRYSTAL'
+        /\w #{name}/
         CRYSTAL
     end
 
