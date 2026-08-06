@@ -12,7 +12,7 @@ module Ameba::Rule::Lint
         CRYSTAL
     end
 
-    it "reports if there are a duplicated requires" do
+    it "reports if there are duplicated requires" do
       source = expect_issue subject, <<-CRYSTAL
         require "big"
         require "math"
