@@ -70,6 +70,26 @@ class Ameba::Source
       @action_root.empty?
     end
 
+    # Records the updates made by the block in isolation and keeps them only if
+    # they change the code and combining them with the updates recorded so far
+    # wouldn't lose or fuse any of them. Returns `true` when they were kept.
+    def transaction(&) : Bool
+      committed, @action_root = @action_root, Rewriter::Action.new(0, code.size)
+
+      pending =
+        begin
+          yield
+          @action_root
+        ensure
+          @action_root = committed
+        end
+
+      return false if no_op?(pending) || committed.conflicts_with?(pending)
+
+      @action_root = committed.combine(pending)
+      true
+    end
+
     # Replaces the code of the given range with *content*.
     def replace(begin_pos, end_pos, content)
       combine begin_pos, end_pos,
@@ -117,6 +137,12 @@ class Ameba::Source
           last_end = end_pos
         end
         io << code[last_end...code.size]
+      end
+    end
+
+    private def no_op?(action)
+      action.ordered_replacements.all? do |begin_pos, end_pos, replacement|
+        code[begin_pos...end_pos] == replacement
       end
     end
 

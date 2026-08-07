@@ -105,7 +105,7 @@ module Ameba
         source.pos(location).should eq 7
 
         Rule::Layout::TrailingWhitespace.new.catch(source)
-        source.correct!.should be_true
+        source.correct!.should eq source.issues
         source.code.should eq "foo\nbar"
 
         source.pos(location).should eq 4
@@ -123,8 +123,47 @@ module Ameba
 
         source.issues.size.should eq 1
         source.issues.first.enabled?.should be_false
-        source.correct!.should be_false
+        source.correct!.should be_nil
         source.code.should contain ".not_nil!"
+      end
+
+      it "defers conflicting issues until the corrected source is reinspected" do
+        source = Source.new("list.map { |i| i.size }.max")
+        rules = [Rule::Performance::MinMaxAfterMap.new, Rule::Style::VerboseBlock.new]
+        rules.each(&.catch(source))
+
+        source.issues.size.should eq 2
+        applied_issue = source.issues.first
+        source.correct!.should eq [applied_issue]
+        source.code.should eq "list.max_of { |i| i.size }"
+
+        source.issues.clear
+        rules.each(&.catch(source))
+
+        source.issues.map(&.rule).should eq [rules.last]
+        source.correct!.should eq source.issues
+        source.code.should eq "list.max_of(&.size)"
+      end
+
+      it "does not let a correction that changes nothing block a conflicting one" do
+        source = Source.new("abcdef\n")
+        rule = DummyRule.new
+        source.add_issue(rule, {1, 1}, {1, 6}, "no-op") { |corrector| corrector.replace({1, 1}, {1, 6}, "abcdef") }
+        source.add_issue(rule, {1, 2}, {1, 3}, "fix") { |corrector| corrector.replace({1, 2}, {1, 3}, "X") }
+
+        source.correct!.try(&.map(&.message)).should eq ["fix"]
+        source.code.should eq "aXdef\n"
+      end
+
+      it "does not report issues as corrected if their corrections change nothing" do
+        source = Source.new("abcdef\n")
+        rule = DummyRule.new
+        source.add_issue(rule, {1, 1}, {1, 1}, "no-op") { |corrector| corrector.replace({1, 1}, {1, 1}, "a") }
+        source.add_issue(rule, {1, 2}, {1, 2}, "no edits") { |_| }
+        source.add_issue(rule, {1, 3}, {1, 4}, "fix") { |corrector| corrector.replace({1, 3}, {1, 4}, "X") }
+
+        source.correct!.try(&.map(&.message)).should eq ["fix"]
+        source.code.should eq "abXef\n"
       end
 
       it "corrects enabled issues" do
@@ -137,7 +176,7 @@ module Ameba
 
         source.issues.size.should eq 1
         source.issues.first.enabled?.should be_true
-        source.correct!.should be_true
+        source.correct!.should eq source.issues
         source.code.should_not contain ".not_nil!"
       end
     end

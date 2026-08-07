@@ -60,6 +60,29 @@ class Ameba::Source::Rewriter
         (replacement && !replacement.empty?)
     end
 
+    # Returns `true` if `#combine` would lose or fuse an edit when placing
+    # *action* in this tree. It follows the same structural decisions.
+    def conflicts_with?(action : self) : Bool
+      if action.begin_pos == @begin_pos && action.end_pos == @end_pos
+        return true if action.replacement && (@replacement || !@children.empty?)
+        return action.children.any? { |child| conflicts_with?(child) }
+      end
+      # A replacement swallows everything placed inside of it
+      return true if @replacement
+
+      family = analyze_hierarchy(action)
+      return true if family[:fusible]
+
+      case
+      when parent = family[:parent]
+        parent.conflicts_with?(action)
+      when action.replacement
+        !!family[:child].try(&.present?)
+      else
+        action.children.any? { |child| conflicts_with?(child) }
+      end
+    end
+
     protected def with(*,
                        begin_pos = @begin_pos,
                        end_pos = @end_pos,
