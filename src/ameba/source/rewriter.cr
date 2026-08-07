@@ -70,6 +70,15 @@ class Ameba::Source
       @action_root.empty?
     end
 
+    # Combines the updates from *other* unless any of their effective ranges
+    # overlap. Returns `true` when the updates were combined.
+    def merge(other : self)
+      return false if @action_root.conflicts_with?(other.@action_root)
+
+      @action_root = @action_root.combine(other.@action_root)
+      true
+    end
+
     # Replaces the code of the given range with *content*.
     def replace(begin_pos, end_pos, content)
       combine begin_pos, end_pos,
