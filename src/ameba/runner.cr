@@ -167,7 +167,7 @@ module Ameba
 
         # The issues that couldn't be corrected will be found again so we
         # only keep the corrected ones in order to avoid duplicate reporting.
-        corrected_issues << source.issues.select(&.correctable?)
+        corrected_issues << source.corrected_issues.dup
         source.issues.clear
       end
 

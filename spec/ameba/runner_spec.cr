@@ -198,12 +198,13 @@ module Ameba
         end
       end
 
-      pending "handles rules with incompatible autocorrect" do
+      it "handles rules with incompatible autocorrect" do
         rules = [Rule::Performance::MinMaxAfterMap.new, Rule::Style::VerboseBlock.new]
         source = Source.new("list.map { |i| i.size }.max", File.tempname("source", ".cr"))
 
         Runner.new(rules, [source], formatter, default_severity, autocorrect: true).run
         source.code.should eq "list.max_of(&.size)"
+        source.issues.map(&.rule).should eq rules
       end
     end
 
