@@ -1,4 +1,4 @@
-module Ameba::Rule::Lint
+module Ameba::Rule::Internal
   # A rule that reports non-existent rules in comment directives.
   #
   # For example, the user can mistakenly add a directive
@@ -14,7 +14,7 @@ module Ameba::Rule::Lint
   # YAML configuration example:
   #
   # ```
-  # Lint/NonExistentRule:
+  # Internal/NonExistentRule:
   #   Enabled: true
   # ```
   class NonExistentRule < Base

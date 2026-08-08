@@ -1,19 +1,19 @@
 require "../../../spec_helper"
 
-module Ameba::Rule::Lint
-  describe DeprecatedRule do
-    subject = DeprecatedRule.new
+module Ameba::Rule::Internal
+  describe NonExistentRule do
+    subject = NonExistentRule.new
 
     it "does not report if the rule name is correct" do
       expect_no_issues subject, <<-CRYSTAL
-        # ameba:disable Lint/NonExistentRule
+        # ameba:disable Internal/NonExistentRule
         CRYSTAL
     end
 
-    it "reports if there are deprecated rule names" do
+    it "reports if there are incorrect rule names" do
       expect_issue subject, <<-CRYSTAL
-        # ameba:disable Ameba/DeprecatedRule
-                      # ^^^^^^^^^^^^^^^^^^^^ error: Deprecated rule: `Ameba/DeprecatedRule` (This rule is deprecated)
+        # ameba:disable BadRule1, BadRule2
+                      # ^^^^^^^^^^^^^^^^^^ error: Such rules do not exist: `BadRule1`, `BadRule2`
         CRYSTAL
     end
 
