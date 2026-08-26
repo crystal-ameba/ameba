@@ -1237,7 +1237,7 @@ issue.end_location.to_s.should eq <span class="s">&quot;source.cr:3:5&quot;</spa
 issue.message.should eq(
   <span class="s">&quot;Avoid chaining a method call on a do...end block.&quot;</span>
 )</code></pre>
-<p>Autocorrection can be tested using <code><a href="../../Ameba/Spec/ExpectIssue.html#expect_correction%28source%2Ccorrection%2C%2A%2Cfile%3D__FILE__%2Cline%3D__LINE__%29-instance-method">#expect_correction</a></code> after
+<p>Autocorrection can be tested using <code><a href="../../Ameba/Spec/ExpectIssue.html#expect_correction%28source%2Ccorrection%2C%2A%2Cfile%3D__FILE__%2Cline%3D__LINE__%2C%2A%2Areplacements%29-instance-method">#expect_correction</a></code> after
 <code><a href="../../Ameba/Spec/ExpectIssue.html#expect_issue%28rules%3ARule%3A%3ABase%7CEnumerable%28Rule%3A%3ABase%29%2Cannotated_code%3AString%2Cpath%3D%22%22%2C%2A%2Cfile%3D__FILE__%2Cline%3D__LINE__%2C%2A%2Areplacements%29-instance-method">#expect_issue</a></code>.</p>
 <pre><code class="language-crystal">source <span class="o">=</span> expect_issue subject, <span class="s">&lt;&lt;-CRYSTAL</span>
 <span class="s">  x % 2 == 0
@@ -1311,7 +1311,7 @@ issue messages with <code>[...]</code>:</p>
   </h2>
   
     
-      <a href="https://github.com/crystal-ameba/ameba/blob/acd5734/src/ameba/spec/expect_issue.cr#L96" target="_blank">
+      <a href="https://github.com/crystal-ameba/ameba/blob/0bac766/src/ameba/spec/expect_issue.cr#L96" target="_blank">
         ameba/spec/expect_issue.cr
       </a>
     
@@ -1340,7 +1340,7 @@ issue messages with <code>[...]</code>:</p>
   <ul class="list-summary">
     
       <li class="entry-summary">
-        <a href="#expect_correction%28source%2Ccorrection%2C%2A%2Cfile%3D__FILE__%2Cline%3D__LINE__%29-instance-method" class="signature"><strong>#expect_correction</strong>(source, correction, *, file = __FILE__, line = __LINE__)</a>
+        <a href="#expect_correction%28source%2Ccorrection%2C%2A%2Cfile%3D__FILE__%2Cline%3D__LINE__%2C%2A%2Areplacements%29-instance-method" class="signature"><strong>#expect_correction</strong>(source, correction, *, file = __FILE__, line = __LINE__, **replacements)</a>
         
       </li>
     
@@ -1383,18 +1383,18 @@ issue messages with <code>[...]</code>:</p>
     Instance Method Detail
   </h2>
   
-    <div class="entry-detail" id="expect_correction(source,correction,*,file=__FILE__,line=__LINE__)-instance-method">
+    <div class="entry-detail" id="expect_correction(source,correction,*,file=__FILE__,line=__LINE__,**replacements)-instance-method">
       <div class="signature">
         
-        def <strong>expect_correction</strong>(source, correction, *, file = __FILE__, line = __LINE__)
+        def <strong>expect_correction</strong>(source, correction, *, file = __FILE__, line = __LINE__, **replacements)
 
-        <a class="method-permalink" href="#expect_correction%28source%2Ccorrection%2C%2A%2Cfile%3D__FILE__%2Cline%3D__LINE__%29-instance-method">#</a>
+        <a class="method-permalink" href="#expect_correction%28source%2Ccorrection%2C%2A%2Cfile%3D__FILE__%2Cline%3D__LINE__%2C%2A%2Areplacements%29-instance-method">#</a>
       </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/acd5734/src/ameba/spec/expect_issue.cr#L130" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/0bac766/src/ameba/spec/expect_issue.cr#L130" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1410,7 +1410,7 @@ issue messages with <code>[...]</code>:</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/acd5734/src/ameba/spec/expect_issue.cr#L97" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/0bac766/src/ameba/spec/expect_issue.cr#L97" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1426,7 +1426,7 @@ issue messages with <code>[...]</code>:</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/acd5734/src/ameba/spec/expect_issue.cr#L145" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/0bac766/src/ameba/spec/expect_issue.cr#L147" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1442,7 +1442,7 @@ issue messages with <code>[...]</code>:</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/acd5734/src/ameba/spec/expect_issue.cr#L155" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/0bac766/src/ameba/spec/expect_issue.cr#L157" target="_blank">View source</a>]
         
       </div>
     </div>
