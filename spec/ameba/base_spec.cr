@@ -78,8 +78,11 @@ module Ameba::Rule
 
     describe ".documentation_url" do
       it "returns the parsed rule documentation URL" do
+        version = Ameba.version
+        version = version.dev? ? "master" : version.simple.to_s
+
         Lint::Syntax.documentation_url.should eq \
-          "https://crystal-ameba.org/api/master/Ameba/Rule/Lint/Syntax.html"
+          "https://crystal-ameba.org/api/#{version}/Ameba/Rule/Lint/Syntax.html"
       end
     end
 

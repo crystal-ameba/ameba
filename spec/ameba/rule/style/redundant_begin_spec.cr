@@ -178,7 +178,7 @@ module Ameba::Rule::Style
         CRYSTAL
     end
 
-    it "fails if there is a redundant block in a method with multiple args" do
+    it "fails if there is a redundant block in a method with multiple args and closing parenthesis on a new line" do
       source = expect_issue subject, <<-CRYSTAL
         def method(a : String,
                   b : String

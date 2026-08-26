@@ -7,8 +7,7 @@ module Ameba
         rule: DummyRule.new,
         location: nil,
         end_location: nil,
-        message: "Blah",
-        status: nil
+        message: "Blah"
 
       issue.rule.should_not be_nil
       issue.message.should eq "Blah"
@@ -20,8 +19,7 @@ module Ameba
         rule: DummyRule.new,
         location: location,
         end_location: nil,
-        message: "Blah",
-        status: nil
+        message: "Blah"
 
       issue.location.to_s.should eq location.to_s
       issue.end_location.should be_nil
@@ -33,8 +31,7 @@ module Ameba
         rule: DummyRule.new,
         location: nil,
         end_location: location,
-        message: "Blah",
-        status: nil
+        message: "Blah"
 
       issue.location.should be_nil
       issue.end_location.to_s.should eq location.to_s

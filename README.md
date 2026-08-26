@@ -22,7 +22,7 @@
   - [Describe rules](#describe-rules)
 - [Installation](#installation)
   - [As a project dependency](#as-a-project-dependency)
-  - [OS X](#os-x)
+  - [Homebrew](#homebrew)
   - [Docker](#docker)
   - [From sources](#from-sources)
 - [Configuration](#configuration)
@@ -146,7 +146,7 @@ which is the slowest option:
 $ lib/ameba/bin/ameba.cr
 ```
 
-### OS X
+### Homebrew
 
 ```sh
 $ brew tap crystal-ameba/ameba
@@ -248,10 +248,12 @@ time = Time.epoch(1483859302) # ameba:disable Style, Lint
 
 ## Editors & integrations
 
+- Ameba Language Server: [ameba-ls](https://github.com/crystal-ameba/ameba-ls)
 - Vim: [vim-crystal](https://github.com/rhysd/vim-crystal), [Ale](https://github.com/w0rp/ale)
 - Emacs: [ameba.el](https://github.com/crystal-ameba/ameba.el)
 - Sublime Text: [Sublime Linter Ameba](https://github.com/epergo/SublimeLinter-contrib-ameba)
-- VSCode: [vscode-crystal-ameba](https://github.com/crystal-ameba/vscode-crystal-ameba)
+- VS Code: [vscode-crystal-ameba](https://github.com/crystal-ameba/vscode-crystal-ameba)
+- Zed (via Ameba LS): [Crystal — Zed extension](https://zed.dev/extensions/crystal)
 - Codacy: [codacy-ameba](https://github.com/codacy/codacy-ameba)
 - GitHub Actions: [github-action](https://github.com/crystal-ameba/github-action)
 

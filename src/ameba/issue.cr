@@ -27,8 +27,7 @@ module Ameba
     delegate :enabled?, :disabled?,
       to: status
 
-    def initialize(@code, @rule, @location, @end_location, @message, status : Status? = nil, @block : (Source::Corrector ->)? = nil)
-      @status = status || Status::Enabled
+    def initialize(@code, @rule, @location, @end_location, @message, @status : Status = :enabled, @block : (Source::Corrector ->)? = nil)
     end
 
     def syntax?
