@@ -125,6 +125,32 @@ module Ameba::Rule::Style
           bar : String | Nil
           CRYSTAL
       end
+
+      it "#only_two_element_unions" do
+        rule = VerboseNilType.new
+        rule.only_two_element_unions = true
+
+        expect_no_issues rule, <<-CRYSTAL
+          foo : String | Number | Nil
+          bar : String?
+          baz : Nil
+          CRYSTAL
+
+        source = expect_issue rule, <<-CRYSTAL
+          foo : String | Nil = nil
+              # ^^^^^^^^^^^^ error: Prefer `?` instead of `| Nil` in unions
+          bar : String | Nil
+              # ^^^^^^^^^^^^ error: Prefer `?` instead of `| Nil` in unions
+          baz : String | Number?
+              # ^^^^^^^^^^^^^^^^ error: Prefer `| Nil` instead of `?` in unions
+          CRYSTAL
+
+        expect_correction source, <<-CRYSTAL
+          foo : String? = nil
+          bar : String?
+          baz : String | Number | Nil
+          CRYSTAL
+      end
     end
   end
 end
