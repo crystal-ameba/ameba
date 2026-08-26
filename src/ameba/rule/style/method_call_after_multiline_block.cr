@@ -31,6 +31,7 @@ module Ameba::Rule::Style
 
     properties do
       description "Disallows method calls after multi-line `do`...`end` blocks"
+      enabled false
     end
 
     MSG = "Avoid chaining a method call on a do...end block"
