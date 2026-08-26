@@ -2249,6 +2249,10 @@
         "ExplicitNil": {
           "type": "boolean",
           "default": false
+        },
+        "OnlyTwoElementUnions": {
+          "type": "boolean",
+          "default": false
         }
       }
     },
