@@ -89,17 +89,16 @@ module Ameba::Rule::Style
         end
         body_dedent ||= heredoc_indent
 
-        corrected_code = source_lines
-          .map_with_index! do |line, idx|
-            # ignore 1st line containing the marker
-            next line if idx.zero? || line.empty?
+        source_lines.map_with_index! do |line, idx|
+          # ignore 1st line containing the marker
+          next line if idx.zero? || line.empty?
 
-            dedent =
-              idx == source_lines.size - 1 ? heredoc_indent : body_dedent
+          dedent =
+            idx == source_lines.size - 1 ? heredoc_indent : body_dedent
 
-            "#{" " * correct_indent}#{line[dedent..]}"
-          end
-          .join('\n')
+          "#{" " * correct_indent}#{line[dedent..]}"
+        end
+        corrected_code = source_lines.join('\n')
 
         corrector.replace(node, corrected_code)
       end

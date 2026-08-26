@@ -73,11 +73,12 @@ module Ameba::Rule::Style
     end
 
     private def slice_digits(value, by = 3)
-      %w[].tap do |slices|
+      slice = %w[].tap do |slices|
         value.chars.reject!(&.== '_').each_slice(by) do |slice|
           slices << slice.join
         end
-      end.join('_')
+      end
+      slice.join('_')
     end
 
     private def parse_number(value)
