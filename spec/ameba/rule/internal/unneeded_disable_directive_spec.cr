@@ -1,6 +1,6 @@
 require "../../../spec_helper"
 
-module Ameba::Rule::Lint
+module Ameba::Rule::Internal
   describe UnneededDisableDirective do
     subject = UnneededDisableDirective.new
 

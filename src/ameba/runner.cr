@@ -47,7 +47,7 @@ module Ameba
     @syntax_rule = Rule::Lint::Syntax.new
 
     # Checks for unneeded disable directives. Always inspects a source last
-    @unneeded_disable_directive_rule : Rule::Lint::UnneededDisableDirective?
+    @unneeded_disable_directive_rule : Rule::Internal::UnneededDisableDirective?
 
     # Returns `true` if correctable issues should be autocorrected.
     private getter? autocorrect : Bool
@@ -81,8 +81,8 @@ module Ameba
       @rules =
         rules.select(&->rule_runnable?(Rule::Base))
       @unneeded_disable_directive_rule =
-        rules.find(&.class.==(Rule::Lint::UnneededDisableDirective))
-          .as?(Rule::Lint::UnneededDisableDirective)
+        rules.find(&.class.==(Rule::Internal::UnneededDisableDirective))
+          .as?(Rule::Internal::UnneededDisableDirective)
     end
 
     protected def rule_runnable?(rule)
