@@ -22,25 +22,26 @@ module Ameba
     # expand(["spec/*.cr", "src"]) # => all files in src folder + first level specs
     # ```
     def expand(globs, root = Dir.current)
-      files = globs.flat_map do |glob|
-        glob = Path[glob]
-          .expand(root)
-          .relative_to(Dir.current)
-          .normalize
+      globs
+        .flat_map do |glob|
+          glob = Path[glob]
+            .expand(root)
+            .relative_to(Dir.current)
+            .normalize
 
-        if File.directory?(glob)
-          glob = glob / "**" / "*.{cr,ecr}"
+          if File.directory?(glob)
+            glob = glob / "**" / "*.{cr,ecr}"
+          end
+
+          glob = glob
+            .to_posix
+            .to_s
+            .lchop("./")
+
+          Dir[glob]
         end
-
-        glob = glob
-          .to_posix
-          .to_s
-          .lchop("./")
-
-        Dir[glob]
-      end
-
-      files.uniq!.select!(&->File.file?(String))
+        .uniq!
+        .select!(&->File.file?(String))
     end
 
     private def rejected_globs(globs, root = Dir.current)

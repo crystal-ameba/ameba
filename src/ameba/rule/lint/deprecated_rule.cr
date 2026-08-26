@@ -42,14 +42,13 @@ module Ameba::Rule::Lint
       token_value = token.value.to_s[prefix_size - 1...-1]?
 
       msg = deprecated_rules.size == 1 ? MSG_ONE : MSG_MANY
-      rule_names = deprecated_rules.map do |rule|
+      msg = msg % deprecated_rules.map do |rule|
         str = "`#{rule.rule_name}`"
         if deprecation_reason = rule.deprecation_reason
           str += " (#{deprecation_reason})"
         end
         str
-      end
-      msg = msg % rule_names.join(", ")
+      end.join(", ")
 
       issue_for name_location_or(token, token_value, adjust_location_column_number: prefix_size),
         msg
