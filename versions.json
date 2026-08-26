@@ -6,6 +6,11 @@
       "released": false
     },
     {
+      "name": "1.7.0",
+      "url": "/api/1.7.0/",
+      "released": true
+    },
+    {
       "name": "1.6.4",
       "url": "/api/1.6.4/",
       "released": true
