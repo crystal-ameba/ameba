@@ -109,6 +109,7 @@ module Ameba::Rule::Performance
       expect_correction source, <<-CRYSTAL
         (1..3)
           .compact_map(&.itself)
+
         CRYSTAL
     end
 
