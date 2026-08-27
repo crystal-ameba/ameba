@@ -90,12 +90,20 @@ module Ameba::Rule::Performance
         (1..3)
           .map(&.itself).compact
          # ^^^^^^^^^^^^^^^^^^^^^ error: Use `compact_map {...}` instead of `map {...}.compact`
+
+        (1..3)
+          .map(&.itself)
+         # ^^^^^^^^^^^^^ error: Use `compact_map {...}` instead of `map {...}.compact`
+          .compact
         CRYSTAL
 
       expect_correction source, <<-CRYSTAL
         (1..3)
           .compact_map(&.itself)
-        CRYSTAL
+
+        (1..3)
+          .compact_map(&.itself)
+       CRYSTAL
     end
 
     it "does not report if source is a spec" do
