@@ -103,7 +103,7 @@ module Ameba::Rule::Performance
 
         (1..3)
           .compact_map(&.itself)
-       CRYSTAL
+        CRYSTAL
     end
 
     it "does not report if source is a spec" do
