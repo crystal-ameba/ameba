@@ -27,6 +27,8 @@ module Ameba::Rule::Style
   #   Enabled: true
   # ```
   class MethodCallAfterMultilineBlock < Base
+    include AST::Util
+
     properties do
       description "Disallows method calls after multi-line `do`...`end` blocks"
       enabled false
