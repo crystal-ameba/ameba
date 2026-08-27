@@ -5,19 +5,19 @@ module Ameba::Rule::Style
   # For example, this is considered invalid:
   #
   # ```
-  # items do
+  # items.map do |item|
   #   # ...
-  # end.compact
+  # end.join(", ")
   # ```
   #
   # And should instead be written as:
   #
   # ```
-  # result = items do
+  # result = items.map do |item|
   #   # ...
   # end
   #
-  # result.compact
+  # result.join(", ")
   # ```
   #
   # YAML configuration example:
@@ -27,14 +27,12 @@ module Ameba::Rule::Style
   #   Enabled: true
   # ```
   class MethodCallAfterMultilineBlock < Base
-    include AST::Util
-
     properties do
       description "Disallows method calls after multi-line `do`...`end` blocks"
       enabled false
     end
 
-    MSG = "Avoid chaining a method call on a do...end block"
+    MSG = "Avoid chaining a method call on a `do`...`end` block"
 
     def test(source, node : Crystal::Call)
       return unless receiver = node.obj.as?(Crystal::Call)
@@ -42,7 +40,7 @@ module Ameba::Rule::Style
       return unless location = block.location
       return unless end_location = block.end_location
       return if location.same_line?(end_location)
-      return unless source.code[source.pos(location)]? == 'd'
+      return if source.code[source.pos(location)]? == '{'
 
       issue_for(name_location_or(node), MSG)
     end
