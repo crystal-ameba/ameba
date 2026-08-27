@@ -9,7 +9,7 @@ module Ameba::Rule::Style
         thing do
           # ...
         end.method
-          # ^^^^^^ error: Avoid chaining a method call on a do...end block
+          # ^^^^^^ error: Avoid chaining a method call on a `do`...`end` block
         CRYSTAL
     end
 
@@ -32,7 +32,7 @@ module Ameba::Rule::Style
         thing do
           :value
         end.first.second
-          # ^^^^^ error: Avoid chaining a method call on a do...end block
+          # ^^^^^ error: Avoid chaining a method call on a `do`...`end` block
         CRYSTAL
     end
   end
