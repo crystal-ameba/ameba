@@ -40,8 +40,8 @@ module Ameba::Rule::Performance
       return if has_arguments?(node) || has_block?(node)
 
       return unless obj.is_a?(Crystal::Call) && has_block?(obj)
-      return if has_arguments?(obj)
       return unless obj.name == "map"
+      return if has_arguments?(obj)
 
       return unless name_location = name_location(obj)
       return unless name_location_end = name_end_location(obj)
