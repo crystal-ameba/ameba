@@ -72,7 +72,7 @@ module Ameba::Rule::Style
       return false unless strip_parentheses?(exp, is_ternary)
 
       if exclude_multiline?
-        if (location = node.location) && (end_location = node.end_location)
+        if (location = cond.location) && (end_location = cond.end_location)
           return false unless location.same_line?(end_location)
         end
       end
