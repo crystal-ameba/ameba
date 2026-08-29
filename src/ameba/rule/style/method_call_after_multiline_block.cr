@@ -30,6 +30,7 @@ module Ameba::Rule::Style
     include AST::Util
 
     properties do
+      since_version "1.8.0"
       description "Disallows method calls after multi-line `do`...`end` blocks"
       enabled false
     end
