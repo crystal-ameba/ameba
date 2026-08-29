@@ -28,6 +28,7 @@ class Ameba::Config
     silent:           Formatter::BaseFormatter,
     disabled:         Formatter::DisabledFormatter,
     json:             Formatter::JSONFormatter,
+    sarif:            Formatter::SARIFFormatter,
     "github-actions": Formatter::GitHubActionsFormatter,
   }
 
