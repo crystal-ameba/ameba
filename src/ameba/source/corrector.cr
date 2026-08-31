@@ -13,6 +13,17 @@ class Ameba::Source
       @rewriter = Rewriter.new(code)
     end
 
+    # Combines the corrections from *other* if they do not conflict with any
+    # corrections already scheduled.
+    def merge(other : self)
+      @rewriter.merge(other.@rewriter)
+    end
+
+    # Returns `true` if no correction has been recorded.
+    def empty?
+      @rewriter.empty?
+    end
+
     # Replaces the code of the given range with *content*.
     def replace(location, end_location, content)
       @rewriter.replace(loc_to_pos(location), loc_to_pos(end_location) + 1, content)
