@@ -40,7 +40,14 @@ module Ameba::Rule::Performance
       return unless obj.is_a?(Crystal::Call) && has_block?(obj)
       return unless obj.name == "map"
 
-      issue_for(name_location(obj), name_end_location(node), MSG)
+      return unless name_location = name_location(obj)
+      return unless name_location_end = name_end_location(obj)
+      return unless end_location = name_end_location(node)
+
+      issue_for(name_location, end_location, MSG) do |corrector|
+        corrector.replace(name_location, name_location_end, "flat_map")
+        corrector.remove_trailing(node, {{ ".flatten".size }})
+      end
     end
   end
 end

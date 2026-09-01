@@ -11,11 +11,16 @@ module Ameba::Rule::Performance
     end
 
     it "reports if there is map followed by flatten call" do
-      expect_issue subject, <<-CRYSTAL
+      source = expect_issue subject, <<-CRYSTAL
         %w[Alice Bob].map(&.chars).flatten
                     # ^^^^^^^^^^^^^^^^^^^^ error: Use `flat_map {...}` instead of `map {...}.flatten`
         %w[Alice Bob].map(&block).flatten
                     # ^^^^^^^^^^^^^^^^^^^ error: Use `flat_map {...}` instead of `map {...}.flatten`
+        CRYSTAL
+
+      expect_correction source, <<-CRYSTAL
+        %w[Alice Bob].flat_map(&.chars)
+        %w[Alice Bob].flat_map(&block)
         CRYSTAL
     end
 
