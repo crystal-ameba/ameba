@@ -43,8 +43,14 @@ module Ameba::Rule::Performance
       return unless obj.is_a?(Crystal::Call) && obj.block
       return unless obj.name == "map"
 
-      issue_for name_location(obj), name_end_location(node),
-        MSG % {node.name, node.name}
+      return unless name_location = name_location(obj)
+      return unless name_location_end = name_end_location(obj)
+      return unless end_location = name_end_location(node)
+
+      issue_for(name_location, end_location, MSG % {node.name, node.name}) do |corrector|
+        corrector.replace(name_location, name_location_end, node.name)
+        corrector.remove_trailing(node, node.name.size + 1)
+      end
     end
   end
 end
