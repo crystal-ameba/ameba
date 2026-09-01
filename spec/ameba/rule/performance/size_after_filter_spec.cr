@@ -17,11 +17,16 @@ module Ameba::Rule::Performance
     end
 
     it "reports if there is a select followed by size" do
-      expect_issue subject, <<-CRYSTAL
+      source = expect_issue subject, <<-CRYSTAL
         [1, 2, 3].select { |e| e > 2 }.size
                 # ^^^^^^^^^^^^^^^^^^^^^^^^^ error: Use `count {...}` instead of `select {...}.size`
         [1, 2, 3].select(&block).size
                 # ^^^^^^^^^^^^^^^^^^^ error: Use `count {...}` instead of `select {...}.size`
+        CRYSTAL
+
+      expect_correction source, <<-CRYSTAL
+        [1, 2, 3].count { |e| e > 2 }
+        [1, 2, 3].count(&block)
         CRYSTAL
     end
 
@@ -32,16 +37,24 @@ module Ameba::Rule::Performance
     end
 
     it "reports if there is a reject followed by size" do
-      expect_issue subject, <<-CRYSTAL
+      source = expect_issue subject, <<-CRYSTAL
         [1, 2, 3].reject { |e| e < 2 }.size
                 # ^^^^^^^^^^^^^^^^^^^^^^^^^ error: Use `count {...}` instead of `reject {...}.size`
+        CRYSTAL
+
+      expect_correction source, <<-CRYSTAL
+        [1, 2, 3].count { |e| e < 2 }
         CRYSTAL
     end
 
     it "reports if a block shorthand used" do
-      expect_issue subject, <<-CRYSTAL
+      source = expect_issue subject, <<-CRYSTAL
         [1, 2, 3].reject(&.empty?).size
                 # ^^^^^^^^^^^^^^^^^^^^^ error: Use `count {...}` instead of `reject {...}.size`
+        CRYSTAL
+
+      expect_correction source, <<-CRYSTAL
+        [1, 2, 3].count(&.empty?)
         CRYSTAL
     end
 
@@ -59,7 +72,7 @@ module Ameba::Rule::Performance
     context "macro" do
       it "doesn't report in macro scope" do
         expect_no_issues subject, <<-CRYSTAL
-          {{[1, 2, 3].select { |v| v > 1 }.size}}
+          {{ [1, 2, 3].select { |v| v > 1 }.size }}
           CRYSTAL
       end
     end

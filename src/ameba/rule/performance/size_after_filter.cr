@@ -52,7 +52,14 @@ module Ameba::Rule::Performance
       return unless obj.is_a?(Crystal::Call) && has_block?(obj)
       return unless obj.name.in?(filter_names)
 
-      issue_for(name_location(obj), name_end_location(node), MSG % obj.name)
+      return unless name_location = name_location(obj)
+      return unless name_location_end = name_end_location(obj)
+      return unless end_location = name_end_location(node)
+
+      issue_for(name_location, end_location, MSG % obj.name) do |corrector|
+        corrector.replace(name_location, name_location_end, "count")
+        corrector.remove_trailing(node, {{ ".size".size }})
+      end
     end
   end
 end
