@@ -34,6 +34,8 @@ module Ameba::Rule::Lint
   #   Enabled: true
   # ```
   class TrailingRescueException < Base
+    include AST::Util
+
     properties do
       since_version "1.7.0"
       description "Disallows trailing `rescue` with a path"
@@ -43,11 +45,19 @@ module Ameba::Rule::Lint
 
     def test(source, node : Crystal::ExceptionHandler)
       return unless node.suffix &&
-                    (rescues = node.rescues) &&
-                    (resc = rescues.first?) &&
-                    resc.body.is_a?(Crystal::Path)
+                    (rescue_node = node.rescues.try(&.first?)) &&
+                    (rescue_body = rescue_node.body).is_a?(Crystal::Path)
 
-      issue_for(resc.body, MSG, prefer_name_location: true)
+      issue_for(rescue_body, MSG, prefer_name_location: true) do |corrector|
+        next unless node_source = node_source(node.body, source.lines)
+
+        corrector.replace node, <<-CRYSTAL
+          begin
+            #{node_source}
+          rescue #{rescue_body}
+          end
+          CRYSTAL
+      end
     end
   end
 end
