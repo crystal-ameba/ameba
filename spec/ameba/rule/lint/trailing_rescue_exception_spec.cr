@@ -18,9 +18,16 @@ module Ameba::Rule::Lint
     end
 
     it "fails if trailing rescue has exception name" do
-      expect_issue subject, <<-CRYSTAL
+      source = expect_issue subject, <<-CRYSTAL
         puts "hello" rescue MyException
                           # ^^^^^^^^^^^ error: Use a block variant of `rescue` to filter by the exception type
+        CRYSTAL
+
+      expect_correction source, <<-CRYSTAL
+        begin
+          puts "hello"
+        rescue MyException
+        end
         CRYSTAL
     end
   end
