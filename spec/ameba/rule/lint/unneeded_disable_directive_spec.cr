@@ -46,17 +46,26 @@ module Ameba::Rule::Lint
     end
 
     it "fails if there is unneeded directive" do
-      expect_issue subject, <<-CRYSTAL, rule_name: NamedRule.name
+      source = expect_issue subject, <<-CRYSTAL, rule_name: NamedRule.name
         # ameba:disable %{rule_name}
         # ^{rule_name}^^^^^^^^^^^^^^ error: Unnecessary disabling of `%{rule_name}`
+        a = 1
+        CRYSTAL
+
+      expect_correction source, <<-CRYSTAL
+
         a = 1
         CRYSTAL
     end
 
     it "fails if there is inline unneeded directive" do
-      expect_issue subject, <<-CRYSTAL, rule_name: NamedRule.name
+      source = expect_issue subject, <<-CRYSTAL, rule_name: NamedRule.name
         a = 1 # ameba:disable %{rule_name}
             # ^{rule_name}^^^^^^^^^^^^^^^^ error: Unnecessary disabling of `%{rule_name}`
+        CRYSTAL
+
+      expect_correction source, <<-CRYSTAL
+        a = 1 #{""}
         CRYSTAL
     end
 
