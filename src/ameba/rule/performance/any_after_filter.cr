@@ -38,13 +38,32 @@ module Ameba::Rule::Performance
     MSG = "Use `any? {...}` instead of `%s {...}.any?`"
 
     def test(source, node : Crystal::Call)
-      return unless node.name == "any?" && (obj = node.obj)
-      return if has_block?(node)
+      return unless valid_call?(node) && (obj = node.obj)
+      return unless obj.is_a?(Crystal::Call) && valid_filter?(obj)
 
-      return unless obj.is_a?(Crystal::Call) && has_block?(obj)
-      return unless obj.name.in?(filter_names)
+      return unless name_location = name_location(obj)
+      return unless end_location = name_end_location(node)
 
-      issue_for(name_location(obj), name_end_location(node), MSG % obj.name)
+      report_issue(source, name_location, end_location, obj, node)
+    end
+
+    private def valid_call?(node)
+      node.name == "any?" && !has_block?(node) && !has_arguments?(node) && !node.has_parentheses?
+    end
+
+    private def valid_filter?(obj : Crystal::Call)
+      has_block?(obj) && obj.name.in?(filter_names) && !has_arguments?(obj)
+    end
+
+    private def report_issue(source, name_location, end_location, obj : Crystal::Call, node)
+      if obj.name == "select" && (name_location_end = name_end_location(obj))
+        issue_for(name_location, end_location, MSG % obj.name) do |corrector|
+          corrector.replace(name_location, name_location_end, "any?")
+          corrector.remove_trailing(node, {{ ".any?".size }})
+        end
+      else
+        issue_for(name_location, end_location, MSG % obj.name)
+      end
     end
   end
 end
