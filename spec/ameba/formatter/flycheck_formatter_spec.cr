@@ -23,7 +23,7 @@ module Ameba::Formatter
 
         subject.source_finished(source)
         subject.output.to_s.should eq(
-          "source.cr:1:2: C: [#{DummyRule.rule_name}] message\n"
+          "source.cr:1:2: C: [#{DummyRule.rule_name}] message\n",
         )
       end
 
@@ -33,7 +33,7 @@ module Ameba::Formatter
 
         subject.source_finished(source)
         subject.output.to_s.should eq(
-          "source.cr:1:2: C: [#{DummyRule.rule_name}] multi line\n"
+          "source.cr:1:2: C: [#{DummyRule.rule_name}] multi line\n",
         )
       end
 
