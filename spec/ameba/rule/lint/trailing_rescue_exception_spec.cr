@@ -25,14 +25,19 @@ module Ameba::Rule::Lint
         end
         CRYSTAL
 
-      expect_correction source, <<-CRYSTAL
-        def foo
-          begin
-            puts "hello"
-          rescue MyException
+      # https://github.com/crystal-lang/crystal/pull/17365
+      {% if compare_versions(Crystal::VERSION, "1.22.0-dev") >= 0 %}
+        expect_correction source, <<-CRYSTAL
+          def foo
+            begin
+              puts "hello"
+            rescue MyException
+            end
           end
-        end
-        CRYSTAL
+          CRYSTAL
+      {% else %}
+        expect_no_corrections source
+      {% end %}
     end
   end
 end
