@@ -25,18 +25,31 @@ module Ameba::Rule::Layout
       return if source_lines_size == 1 && last_source_line.empty?
 
       last_line_empty = last_source_line.empty?
-      return if source_lines_size.zero? ||
-                (source_lines.last(2).join.presence && last_line_empty)
+      return if source_lines.last(2).join.presence && last_line_empty
 
       location = {source_lines_size, 1}
 
       if last_line_empty
-        issue_for(location, MSG)
+        issue_for(location, MSG) do |corrector|
+          remove_excessive_newlines(corrector, source.code)
+        end
       else
+        newline = source.code.includes?("\r\n") ? "\r\n" : "\n"
+
         issue_for(location, MSG_FINAL_NEWLINE) do |corrector|
-          corrector.insert_before({source_lines_size + 1, 1}, '\n')
+          corrector.insert_before(source.code.size, newline)
         end
       end
+    end
+
+    private def remove_excessive_newlines(corrector, code)
+      last_char_idx = code.rindex(/[^\s]/)
+      return corrector.remove(0...code.size) if last_char_idx.nil?
+
+      return unless newline_idx = code.index('\n', last_char_idx)
+
+      target_pos = newline_idx + 1
+      corrector.remove(target_pos...code.size) if target_pos < code.size
     end
   end
 end
