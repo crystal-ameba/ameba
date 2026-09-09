@@ -60,8 +60,8 @@ module Ameba::Rule::Performance
     context "macro" do
       it "reports in macro scope" do
         source = expect_issue subject, <<-CRYSTAL
-          {{ [1, 2, 3].reject { |e| e > 2  }.any? }}
-                     # ^^^^^^^^^^^^^^^^^^^^^^^^^^ error: Use `any? {...}` instead of `reject {...}.any?`
+          {{ [1, 2, 3].reject { |e| e > 2 }.any? }}
+                     # ^^^^^^^^^^^^^^^^^^^^^^^^^ error: Use `any? {...}` instead of `reject {...}.any?`
           CRYSTAL
 
         expect_no_corrections source

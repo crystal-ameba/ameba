@@ -15,8 +15,6 @@ module Ameba::Rule::Lint
         {{
           if foo > 1
             foo
-          else
-            "default"
           end
         }}
         CRYSTAL
