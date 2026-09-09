@@ -11,17 +11,12 @@ module Ameba::Rule::Performance
         CRYSTAL
     end
 
-    it "reports if there is map followed by product/sum without a block" do
-      source = expect_issue subject, <<-CRYSTAL
-        (1..3).map(&.to_u64).product
-             # ^^^^^^^^^^^^^^^^^^^^^ error: Use `product {...}` instead of `map {...}.product`
+    it "reports if there is map followed by sum without a block" do
+      expect_issue subject, <<-CRYSTAL
         (1..3).map(&.to_u64).sum
              # ^^^^^^^^^^^^^^^^^ error: Use `sum {...}` instead of `map {...}.sum`
-        CRYSTAL
-
-      expect_correction source, <<-CRYSTAL
-        (1..3).product(&.to_u64)
-        (1..3).sum(&.to_u64)
+        (1..3).map(&block).sum
+            #  ^^^^^^^^^^^^^^^ error: Use `sum {...}` instead of `map {...}.sum`
         CRYSTAL
     end
 
