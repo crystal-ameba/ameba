@@ -1650,11 +1650,21 @@
       "$ref": "#/$defs/BaseRule",
       "$comment": "https://crystal-ameba.org/api/master/Ameba/Rule/Performance/MapInsteadOfBlock.html",
       "title": "Performance/MapInsteadOfBlock",
-      "description": "Identifies usage of `sum/product` calls that follow `map`",
+      "description": "Identifies usage of certain calls that follow `map` and can be replaced with a single call",
       "properties": {
         "SinceVersion": {
           "type": "string",
           "default": "0.14.0"
+        },
+        "CallNames": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": [
+            "sum",
+            "product"
+          ]
         },
         "Severity": {
           "$ref": "#/$defs/Severity",
