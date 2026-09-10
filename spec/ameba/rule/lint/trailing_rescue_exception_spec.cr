@@ -19,16 +19,25 @@ module Ameba::Rule::Lint
 
     it "fails if trailing rescue has exception name" do
       source = expect_issue subject, <<-CRYSTAL
-        puts "hello" rescue MyException
-                          # ^^^^^^^^^^^ error: Use a block variant of `rescue` to filter by the exception type
-        CRYSTAL
-
-      expect_correction source, <<-CRYSTAL
-        begin
-          puts "hello"
-        rescue MyException
+        def foo
+          foo = do_foo rescue MyException
+                            # ^^^^^^^^^^^ error: Use a block variant of `rescue` to filter by the exception type
         end
         CRYSTAL
+
+      # https://github.com/crystal-lang/crystal/pull/17365
+      {% if compare_versions(Crystal::VERSION, "1.22.0-dev") >= 0 %}
+        expect_correction source, <<-CRYSTAL
+          def foo
+            foo = begin
+              do_foo
+            rescue MyException
+            end
+          end
+          CRYSTAL
+      {% else %}
+        expect_no_corrections source
+      {% end %}
     end
   end
 end

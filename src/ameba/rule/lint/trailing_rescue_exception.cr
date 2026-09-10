@@ -48,16 +48,39 @@ module Ameba::Rule::Lint
                     (rescue_node = node.rescues.try(&.first?)) &&
                     (rescue_body = rescue_node.body).is_a?(Crystal::Path)
 
-      issue_for(rescue_body, MSG, prefer_name_location: true) do |corrector|
-        next unless node_source = node_source(node.body, source.lines)
+      # https://github.com/crystal-lang/crystal/pull/17365
+      {% if compare_versions(Crystal::VERSION, "1.22.0-dev") >= 0 %}
+        issue_for(rescue_body, MSG, prefer_name_location: true) do |corrector|
+          next unless node_source = node_source(node.body, source.lines)
 
-        corrector.replace node, <<-CRYSTAL
-          begin
-            #{node_source}
-          rescue #{rescue_body}
-          end
-          CRYSTAL
+          replacement = indent_replacement(<<-CRYSTAL, node, source.lines)
+            begin
+              #{node_source}
+            rescue #{rescue_body}
+            end
+            CRYSTAL
+
+          corrector.replace(node, replacement)
+        end
+      {% else %}
+        issue_for(rescue_body, MSG, prefer_name_location: true)
+      {% end %}
+    end
+
+    private def indent_replacement(str, node, source_lines)
+      return str unless location = node.location
+      return str unless str['\n']?
+
+      source_line =
+        source_lines[location.line_number - 1]
+
+      indent =
+        source_line.each_char.take_while(&.whitespace?).size
+
+      lines = str.each_line.map_with_index do |line, index|
+        index.zero? ? line : "#{" " * indent}#{line}"
       end
+      lines.join('\n')
     end
   end
 end
