@@ -1209,15 +1209,19 @@
     Overview
   </h2>
 
-  <p>This rule is used to identify usage of <code>sum/product</code> calls
-that follow <code>map</code>.</p>
+  <p>This rule is used to identify usage of certain calls that follow <code>map</code> and
+can be replaced with a single call - allowing to skip intermediate array
+allocation.</p>
 <p>For example, this is considered inefficient:</p>
 <pre><code class="language-crystal">(<span class="n">1</span>..<span class="n">3</span>).map(<span class="o">&amp;</span>.<span class="o">*</span>(<span class="n">2</span>)).sum</code></pre>
 <p>And can be written as this:</p>
 <pre><code class="language-crystal">(<span class="n">1</span>..<span class="n">3</span>).sum(<span class="o">&amp;</span>.<span class="o">*</span>(<span class="n">2</span>))</code></pre>
 <p>YAML configuration example:</p>
 <pre><code class="language-crystal"><span class="t">Performance</span><span class="o">/</span><span class="t">MapInsteadOfBlock</span>:
-  <span class="t">Enabled</span>: <span class="n">true</span></code></pre>
+  <span class="t">Enabled</span>: <span class="n">true</span>
+  <span class="t">CallNames</span>:
+    <span class="o">-</span> sum
+    <span class="o">-</span> product</code></pre>
 
 
 
@@ -1260,7 +1264,7 @@ that follow <code>map</code>.</p>
   </h2>
   
     
-      <a href="https://github.com/crystal-ameba/ameba/blob/dd99ca1/src/ameba/rule/performance/map_instead_of_block.cr#L25" target="_blank">
+      <a href="https://github.com/crystal-ameba/ameba/blob/71e2dec/src/ameba/rule/performance/map_instead_of_block.cr#L29" target="_blank">
         ameba/rule/performance/map_instead_of_block.cr
       </a>
     
@@ -1280,11 +1284,6 @@ that follow <code>map</code>.</p>
     </h2>
   
   <dl>
-    
-      <dt class="entry-const" id="CALL_NAMES">
-        <strong>CALL_NAMES</strong> = <code>[<span class="s">&quot;sum&quot;</span>, <span class="s">&quot;product&quot;</span>] <span class="k">of</span> <span class="t">::</span><span class="t">String</span></code>
-      </dt>
-      
     
       <dt class="entry-const" id="MSG">
         <strong>MSG</strong> = <code><span class="s">&quot;Use `%s {...}` instead of `map {...}.%s`&quot;</span></code>
@@ -1309,14 +1308,14 @@ that follow <code>map</code>.</p>
       <li class="entry-summary">
         <a href="#new%28ctx%3AYAML%3A%3AParseContext%2Cnode%3AYAML%3A%3ANodes%3A%3ANode%29-class-method" class="signature"><strong>.new</strong>(ctx : YAML::ParseContext, node : YAML::Nodes::Node)</a>
         
-          <div class="summary"><p>This rule is used to identify usage of <code>sum/product</code> calls that follow <code>map</code>.</p></div>
+          <div class="summary"><p>This rule is used to identify usage of certain calls that follow <code>map</code> and can be replaced with a single call - allowing to skip intermediate array allocation.</p></div>
         
       </li>
     
       <li class="entry-summary">
         <a href="#new%28config%3Dnil%29-class-method" class="signature"><strong>.new</strong>(config = <span class="n">nil</span>)</a>
         
-          <div class="summary"><p>This rule is used to identify usage of <code>sum/product</code> calls that follow <code>map</code>.</p></div>
+          <div class="summary"><p>This rule is used to identify usage of certain calls that follow <code>map</code> and can be replaced with a single call - allowing to skip intermediate array allocation.</p></div>
         
       </li>
     
@@ -1387,6 +1386,16 @@ that follow <code>map</code>.</p>
     Instance Method Summary
   </h2>
   <ul class="list-summary">
+    
+      <li class="entry-summary">
+        <a href="#call_names%3AArray%28String%29-instance-method" class="signature"><strong>#call_names</strong> : Array(String)</a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#call_names%3D%28call_names%3AArray%28String%29%29-instance-method" class="signature"><strong>#call_names=</strong>(call_names : Array(String))</a>
+        
+      </li>
     
       <li class="entry-summary">
         <a href="#description%3AString-instance-method" class="signature"><strong>#description</strong> : String</a>
@@ -1862,15 +1871,19 @@ that follow <code>map</code>.</p>
       
         <div class="doc">
           
-          <p>This rule is used to identify usage of <code>sum/product</code> calls
-that follow <code>map</code>.</p>
+          <p>This rule is used to identify usage of certain calls that follow <code>map</code> and
+can be replaced with a single call - allowing to skip intermediate array
+allocation.</p>
 <p>For example, this is considered inefficient:</p>
 <pre><code class="language-crystal">(<span class="n">1</span>..<span class="n">3</span>).map(<span class="o">&amp;</span>.<span class="o">*</span>(<span class="n">2</span>)).sum</code></pre>
 <p>And can be written as this:</p>
 <pre><code class="language-crystal">(<span class="n">1</span>..<span class="n">3</span>).sum(<span class="o">&amp;</span>.<span class="o">*</span>(<span class="n">2</span>))</code></pre>
 <p>YAML configuration example:</p>
 <pre><code class="language-crystal"><span class="t">Performance</span><span class="o">/</span><span class="t">MapInsteadOfBlock</span>:
-  <span class="t">Enabled</span>: <span class="n">true</span></code></pre>
+  <span class="t">Enabled</span>: <span class="n">true</span>
+  <span class="t">CallNames</span>:
+    <span class="o">-</span> sum
+    <span class="o">-</span> product</code></pre>
         </div>
       
       <br/>
@@ -1889,21 +1902,25 @@ that follow <code>map</code>.</p>
       
         <div class="doc">
           
-          <p>This rule is used to identify usage of <code>sum/product</code> calls
-that follow <code>map</code>.</p>
+          <p>This rule is used to identify usage of certain calls that follow <code>map</code> and
+can be replaced with a single call - allowing to skip intermediate array
+allocation.</p>
 <p>For example, this is considered inefficient:</p>
 <pre><code class="language-crystal">(<span class="n">1</span>..<span class="n">3</span>).map(<span class="o">&amp;</span>.<span class="o">*</span>(<span class="n">2</span>)).sum</code></pre>
 <p>And can be written as this:</p>
 <pre><code class="language-crystal">(<span class="n">1</span>..<span class="n">3</span>).sum(<span class="o">&amp;</span>.<span class="o">*</span>(<span class="n">2</span>))</code></pre>
 <p>YAML configuration example:</p>
 <pre><code class="language-crystal"><span class="t">Performance</span><span class="o">/</span><span class="t">MapInsteadOfBlock</span>:
-  <span class="t">Enabled</span>: <span class="n">true</span></code></pre>
+  <span class="t">Enabled</span>: <span class="n">true</span>
+  <span class="t">CallNames</span>:
+    <span class="o">-</span> sum
+    <span class="o">-</span> product</code></pre>
         </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/dd99ca1/src/ameba/rule/performance/map_instead_of_block.cr#L25" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/71e2dec/src/ameba/rule/performance/map_instead_of_block.cr#L29" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2033,7 +2050,7 @@ that follow <code>map</code>.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/dd99ca1/src/ameba/rule/performance/map_instead_of_block.cr#L28" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/71e2dec/src/ameba/rule/performance/map_instead_of_block.cr#L32" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2051,6 +2068,34 @@ that follow <code>map</code>.</p>
 </a>
     Instance Method Detail
   </h2>
+  
+    <div class="entry-detail" id="call_names:Array(String)-instance-method">
+      <div class="signature">
+        
+        def <strong>call_names</strong> : Array(String)
+
+        <a class="method-permalink" href="#call_names%3AArray%28String%29-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="call_names=(call_names:Array(String))-instance-method">
+      <div class="signature">
+        
+        def <strong>call_names=</strong>(call_names : Array(String))
+
+        <a class="method-permalink" href="#call_names%3D%28call_names%3AArray%28String%29%29-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+      </div>
+    </div>
   
     <div class="entry-detail" id="description:String-instance-method">
       <div class="signature">
@@ -2175,7 +2220,7 @@ that follow <code>map</code>.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/dd99ca1/src/ameba/rule/performance/map_instead_of_block.cr#L28" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/71e2dec/src/ameba/rule/performance/map_instead_of_block.cr#L32" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2205,7 +2250,7 @@ that follow <code>map</code>.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/dd99ca1/src/ameba/rule/performance/map_instead_of_block.cr#L41" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/71e2dec/src/ameba/rule/performance/map_instead_of_block.cr#L44" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2221,7 +2266,7 @@ that follow <code>map</code>.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/dd99ca1/src/ameba/rule/performance/map_instead_of_block.cr#L37" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/71e2dec/src/ameba/rule/performance/map_instead_of_block.cr#L40" target="_blank">View source</a>]
         
       </div>
     </div>
