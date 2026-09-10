@@ -40,6 +40,18 @@ module Ameba::Rule::Performance
         CRYSTAL
     end
 
+    context "properties" do
+      it "#call_names" do
+        rule = MapInsteadOfBlock.new
+        rule.call_names = %w[sum product join]
+
+        expect_issue rule, <<-CRYSTAL
+          (1..3).map(&.to_u64).join(", ")
+               # ^^^^^^^^^^^^^^^^^^ error: Use `join {...}` instead of `map {...}.join`
+          CRYSTAL
+      end
+    end
+
     context "macro" do
       it "doesn't report in macro scope" do
         expect_no_issues subject, <<-CRYSTAL
