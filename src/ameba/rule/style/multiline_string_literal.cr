@@ -51,7 +51,7 @@ module Ameba::Rule::Style
 
       # ignore string literals split by \
       return if allow_backslash_split_strings? &&
-                source.code.lines[location.line_number - 1].ends_with?('\\')
+                source.lines[location.line_number - 1].ends_with?('\\')
 
       issue_for(node, MSG)
     end

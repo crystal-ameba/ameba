@@ -59,7 +59,7 @@ module Ameba::Rule::Performance
     context "macro" do
       it "doesn't report in macro scope" do
         expect_no_issues subject, <<-CRYSTAL
-          {{[1, 2, 3].select { |v| v > 1 }.size}}
+          {{ [1, 2, 3].select { |v| v > 1 }.size }}
           CRYSTAL
       end
     end
