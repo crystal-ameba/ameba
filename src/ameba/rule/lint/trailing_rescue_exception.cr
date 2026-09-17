@@ -53,14 +53,32 @@ module Ameba::Rule::Lint
         issue_for(rescue_body, MSG, prefer_name_location: true) do |corrector|
           next unless node_source = node_source(node.body, source.lines)
 
-          replacement = indent_replacement(<<-CRYSTAL, node, source.lines)
-            begin
-              #{node_source}
-            rescue #{rescue_body}
-            end
-            CRYSTAL
+          # https://github.com/crystal-lang/crystal/pull/17426
+          replacement =
+            if ensure_node = node.ensure
+              ensure_node_source = node_source(ensure_node, source.lines)
 
-          corrector.replace(node, replacement)
+              <<-CRYSTAL
+                begin
+                  #{node_source}
+                rescue #{rescue_body}
+                  nil
+                ensure
+                  #{ensure_node_source}
+                end
+                CRYSTAL
+            else
+              <<-CRYSTAL
+                begin
+                  #{node_source}
+                rescue #{rescue_body}
+                  nil
+                end
+                CRYSTAL
+            end
+
+          corrector.replace node,
+            indent_replacement(replacement, node, source.lines)
         end
       {% else %}
         issue_for(rescue_body, MSG, prefer_name_location: true)

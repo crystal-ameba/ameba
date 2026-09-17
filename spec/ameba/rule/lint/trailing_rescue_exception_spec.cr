@@ -32,6 +32,33 @@ module Ameba::Rule::Lint
             foo = begin
               do_foo
             rescue MyException
+              nil
+            end
+          end
+          CRYSTAL
+      {% else %}
+        expect_no_corrections source
+      {% end %}
+    end
+
+    it "properly autocorrects taking into account the `ensure` node" do
+      source = expect_issue subject, <<-CRYSTAL
+        def foo
+          foo = %w[foo] rescue MyException ensure %w[bar]
+                             # ^^^^^^^^^^^ error: Use a block variant of `rescue` to filter by the exception type
+        end
+        CRYSTAL
+
+      # https://github.com/crystal-lang/crystal/pull/17426
+      {% if compare_versions(Crystal::VERSION, "1.22.0-dev") >= 0 %}
+        expect_correction source, <<-CRYSTAL
+          def foo
+            foo = begin
+              %w[foo]
+            rescue MyException
+              nil
+            ensure
+              %w[bar]
             end
           end
           CRYSTAL
