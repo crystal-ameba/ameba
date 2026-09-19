@@ -51,7 +51,7 @@ module Ameba::Rule::Lint
     end
 
     private def with_index_arg?(block : Crystal::Block)
-      block.args.size >= 2 && block.args.last.name != "_"
+      block.args.size >= 2 && !block.args.last.name.starts_with?('_')
     end
 
     private def report(source, node, msg)

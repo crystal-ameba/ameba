@@ -31,6 +31,15 @@ module Ameba::Rule::Lint
           CRYSTAL
       end
 
+      it "reports if there is an underscored index argument (2)" do
+        expect_issue subject, <<-CRYSTAL
+          collection.each.with_index do |e, _idx|
+                        # ^^^^^^^^^^ error: Remove redundant `with_index`
+            e += 1
+          end
+          CRYSTAL
+      end
+
       it "reports if there is no args" do
         expect_issue subject, <<-CRYSTAL
           collection.each.with_index do
@@ -84,6 +93,15 @@ module Ameba::Rule::Lint
       it "reports if there is underscored index argument" do
         expect_issue subject, <<-CRYSTAL
           collection.each_with_index do |e, _|
+                   # ^^^^^^^^^^^^^^^ error: Use `each` instead of `each_with_index`
+            e += 1
+          end
+          CRYSTAL
+      end
+
+      it "reports if there is underscored index argument (2)" do
+        expect_issue subject, <<-CRYSTAL
+          collection.each_with_index do |e, _idx|
                    # ^^^^^^^^^^^^^^^ error: Use `each` instead of `each_with_index`
             e += 1
           end
