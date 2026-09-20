@@ -30,6 +30,15 @@ module Ameba::Rule::Lint
         CRYSTAL
     end
 
+    it "reports if there is underscored index argument (2)" do
+      expect_issue subject, <<-CRYSTAL
+        collection.each_with_object(0) do |e, _obj|
+                 # ^^^^^^^^^^^^^^^^ error: Use `each` instead of `each_with_object`
+          e += 1
+        end
+        CRYSTAL
+    end
+
     it "reports if there is no args" do
       expect_issue subject, <<-CRYSTAL
         collection.each_with_object(0) do
