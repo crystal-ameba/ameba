@@ -22,9 +22,19 @@ module Ameba::Rule::Layout
       expect_correction source, "no-blankline\n"
     end
 
+    it "fails if there is no blank lines at the end with CRLF" do
+      source = expect_issue subject, "a = 1\r\nno-blankline # error: Trailing newline missing"
+      expect_correction source, "a = 1\r\nno-blankline\r\n"
+    end
+
     it "reports and autocorrects excessive trailing blank line (LF)" do
       source = expect_issue subject, "a = 1\n\n # error: Excessive trailing newline detected"
       expect_correction source, "a = 1\n"
+    end
+
+    it "reports and autocorrects excessive trailing blank line (CRLF)" do
+      source = expect_issue subject, "a = 1\r\n\r\n # error: Excessive trailing newline detected"
+      expect_correction source, "a = 1\r\n"
     end
 
     it "reports and autocorrects multiple excessive trailing blank lines" do
