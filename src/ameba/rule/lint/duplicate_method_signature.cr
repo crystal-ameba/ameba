@@ -41,7 +41,7 @@ module Ameba::Rule::Lint
         def_node_to_s = def_node.to_s
 
         next if def_node_to_s.matches?(/\Wprevious_def\W/)
-        next if found_defs.add?(def_node_to_s.lines.first)
+        next if found_defs.add?(def_node_to_s.each_line.first)
 
         issue_for(def_node, MSG)
       end
