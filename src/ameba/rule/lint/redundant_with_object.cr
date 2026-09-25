@@ -4,7 +4,7 @@ module Ameba::Rule::Lint
   # For example, this is considered invalid:
   #
   # ```
-  # collection.each_with_object(0) do |e|
+  # collection.each.with_object(0) do |e|
   #   # ...
   # end
   #
@@ -33,19 +33,29 @@ module Ameba::Rule::Lint
       description "Disallows redundant `with_object` calls"
     end
 
-    MSG = "Use `each` instead of `each_with_object`"
+    MSG_EACH_ITERATOR = "Remove redundant `with_object`"
+    MSG_EACH_BLOCK    = "Use `each` instead of `each_with_object`"
 
     def test(source, node : Crystal::Call)
-      return if node.name != "each_with_object" ||
-                node.args.size != 1 ||
-                !(block = node.block) ||
-                with_index_arg?(block)
+      args, block = node.args, node.block
 
-      issue_for(node, MSG, prefer_name_location: true)
+      return if block.nil? || args.size > 1
+      return if valid_args?(block)
+
+      case node.name
+      when "with_object"
+        report(source, node, MSG_EACH_ITERATOR)
+      when "each_with_object"
+        report(source, node, MSG_EACH_BLOCK)
+      end
     end
 
-    private def with_index_arg?(block : Crystal::Block)
+    private def valid_args?(block : Crystal::Block)
       block.args.size >= 2 && !block.args.last.name.starts_with?('_')
+    end
+
+    private def report(source, node, msg)
+      issue_for(node, msg, prefer_name_location: true)
     end
   end
 end

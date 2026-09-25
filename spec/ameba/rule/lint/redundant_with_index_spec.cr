@@ -81,7 +81,7 @@ module Ameba::Rule::Lint
           CRYSTAL
       end
 
-      it "reports if there is not index argument" do
+      it "reports if there is no index argument" do
         expect_issue subject, <<-CRYSTAL
           collection.each_with_index do |e|
                    # ^^^^^^^^^^^^^^^ error: Use `each` instead of `each_with_index`
