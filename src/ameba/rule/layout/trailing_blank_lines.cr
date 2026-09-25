@@ -26,7 +26,7 @@ module Ameba::Rule::Layout
 
       last_line_empty = last_source_line.empty?
       return if source_lines_size.zero? ||
-                (source_lines.last(2).join.presence && last_line_empty)
+                (!source_lines.last(2).all?(&.empty?) && last_line_empty)
 
       location = {source_lines_size, 1}
 

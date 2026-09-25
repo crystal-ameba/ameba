@@ -17,9 +17,8 @@ module Ameba::Rule::Layout
       expect_correction source, "no-blankline\n"
     end
 
-    it "fails if there more then one blank line at the end of a source" do
-      source = expect_issue subject, "a = 1\n \n # error: Excessive trailing newline detected"
-      expect_no_corrections source
+    it "passes if there is a single space between the last line and the end" do
+      expect_no_issues subject, "a = 1\n \n"
     end
 
     it "fails if last line is not blank" do
