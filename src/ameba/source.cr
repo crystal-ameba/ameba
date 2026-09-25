@@ -19,6 +19,9 @@ module Ameba
     # Crystal code (content of a source file).
     getter code : String
 
+    # Issues whose corrections were applied by the latest call to `#correct!`.
+    getter corrected_issues = [] of Issue
+
     # Creates a new source by `code` and `path`.
     #
     # For example:
@@ -34,7 +37,17 @@ module Ameba
     # Returns `false` if no issues were corrected.
     def correct!
       corrector = Corrector.new(code)
-      issues.each { |issue| issue.correct(corrector) if issue.enabled? }
+      corrected_issues.clear
+
+      issues.each do |issue|
+        next unless issue.enabled?
+
+        issue_corrector = Corrector.new(code)
+        issue.correct(issue_corrector)
+        next if issue_corrector.empty?
+
+        corrected_issues << issue if corrector.merge(issue_corrector)
+      end
 
       corrected_code = corrector.process
       return false if code == corrected_code

@@ -60,6 +60,24 @@ class Ameba::Source::Rewriter
         (replacement && !replacement.empty?)
     end
 
+    def conflicts_with?(action)
+      return true if incompatible_ranged_actions?(action.ranged_actions)
+
+      replacements = action.ordered_replacements
+
+      ordered_replacements.any? do |begin_pos, end_pos, _|
+        replacements.any? do |other_begin_pos, other_end_pos, _|
+          ranges_overlap?(begin_pos, end_pos, other_begin_pos, other_end_pos)
+        end
+      end
+    end
+
+    protected def ranged_actions
+      actions = [{@begin_pos, @end_pos, !@replacement.nil?}]
+      actions.concat(@children.flat_map(&.ranged_actions))
+      actions
+    end
+
     protected def with(*,
                        begin_pos = @begin_pos,
                        end_pos = @end_pos,
@@ -194,6 +212,34 @@ class Ameba::Source::Rewriter
         replacement: action.replacement || @replacement,
         insert_after: "#{insert_after}#{action.insert_after}",
       ).combine_children(action.children)
+    end
+
+    private def ranges_overlap?(begin_pos, end_pos, other_begin_pos, other_end_pos)
+      case
+      when begin_pos == end_pos
+        other_begin_pos < begin_pos < other_end_pos
+      when other_begin_pos == other_end_pos
+        begin_pos < other_begin_pos < end_pos
+      else
+        begin_pos < other_end_pos && other_begin_pos < end_pos
+      end
+    end
+
+    private def incompatible_ranged_actions?(actions)
+      ranged_actions.any? do |begin_pos, end_pos, replacement|
+        actions.any? do |other_begin_pos, other_end_pos, other_replacement|
+          ranges_cross?(begin_pos, end_pos, other_begin_pos, other_end_pos) ||
+            (begin_pos == end_pos &&
+              begin_pos == other_begin_pos &&
+              other_begin_pos == other_end_pos &&
+              replacement && other_replacement)
+        end
+      end
+    end
+
+    private def ranges_cross?(begin_pos, end_pos, other_begin_pos, other_end_pos)
+      begin_pos < other_begin_pos < end_pos < other_end_pos ||
+        other_begin_pos < begin_pos < other_end_pos < end_pos
     end
   end
 end
