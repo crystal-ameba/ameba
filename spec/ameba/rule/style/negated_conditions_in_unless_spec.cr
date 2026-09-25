@@ -6,13 +6,13 @@ module Ameba::Rule::Style
 
     it "passes with a unless without negated condition" do
       expect_no_issues subject, <<-CRYSTAL
-        unless a
+        unless foo
           :ok
         end
 
-        :ok unless b
+        :ok unless bar
 
-        unless s.empty?
+        unless baz.empty?
           :ok
         end
         CRYSTAL
@@ -20,29 +20,29 @@ module Ameba::Rule::Style
 
     it "reports and autocorrects simple negated condition" do
       source = expect_issue subject, <<-CRYSTAL
-        unless !a
-        # ^^^^^^^ error: Avoid negated conditions in `unless` blocks
-          :nok
+        unless !foo
+        # ^^^^^^^^^ error: Avoid negated conditions in `unless` blocks
+          :foo
         end
         CRYSTAL
 
       expect_correction source, <<-CRYSTAL
-        if a
-          :nok
+        if foo
+          :foo
         end
         CRYSTAL
     end
 
     it "reports and autocorrects negated method call" do
       source = expect_issue subject, <<-CRYSTAL
-        unless !s.empty?
-        # ^^^^^^^^^^^^^^ error: Avoid negated conditions in `unless` blocks
+        unless !foo.empty?
+        # ^^^^^^^^^^^^^^^^ error: Avoid negated conditions in `unless` blocks
           :ok
         end
         CRYSTAL
 
       expect_correction source, <<-CRYSTAL
-        if s.empty?
+        if foo.empty?
           :ok
         end
         CRYSTAL
@@ -65,8 +65,8 @@ module Ameba::Rule::Style
 
     it "reports and autocorrects unless with else" do
       source = expect_issue subject, <<-CRYSTAL
-        unless !a
-        # ^^^^^^^ error: Avoid negated conditions in `unless` blocks
+        unless !foo
+        # ^^^^^^^^^ error: Avoid negated conditions in `unless` blocks
           :ok
         else
           :nok
@@ -74,7 +74,7 @@ module Ameba::Rule::Style
         CRYSTAL
 
       expect_correction source, <<-CRYSTAL
-        if a
+        if foo
           :ok
         else
           :nok
@@ -84,12 +84,12 @@ module Ameba::Rule::Style
 
     it "reports and autocorrects suffix unless" do
       source = expect_issue subject, <<-CRYSTAL
-        :ok unless !a
-        # ^^^^^^^^^^^ error: Avoid negated conditions in `unless` blocks
+        :ok unless !foo
+        # ^^^^^^^^^^^^^ error: Avoid negated conditions in `unless` blocks
         CRYSTAL
 
       expect_correction source, <<-CRYSTAL
-        :ok if a
+        :ok if foo
         CRYSTAL
     end
 
@@ -97,14 +97,14 @@ module Ameba::Rule::Style
       source = expect_issue subject, <<-CRYSTAL
         unless !
         # ^^^^^^ error: Avoid negated conditions in `unless` blocks
-          a
+          foo
           :ok
         end
         CRYSTAL
 
       expect_correction source, <<-CRYSTAL
         if #{""}
-          a
+          foo
           :ok
         end
         CRYSTAL
