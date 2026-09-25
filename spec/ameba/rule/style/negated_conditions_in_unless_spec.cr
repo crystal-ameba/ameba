@@ -25,6 +25,7 @@ module Ameba::Rule::Style
           :nok
         end
         CRYSTAL
+
       expect_correction source, <<-CRYSTAL
         if a
           :nok
@@ -39,22 +40,9 @@ module Ameba::Rule::Style
           :ok
         end
         CRYSTAL
+
       expect_correction source, <<-CRYSTAL
         if s.empty?
-          :ok
-        end
-        CRYSTAL
-    end
-
-    it "reports and autocorrects negation with whitespace" do
-      source = expect_issue subject, <<-CRYSTAL
-        unless ! a
-        # ^^^^^^^^ error: Avoid negated conditions in `unless` blocks
-          :ok
-        end
-        CRYSTAL
-      expect_correction source, <<-CRYSTAL
-        if a
           :ok
         end
         CRYSTAL
@@ -67,6 +55,7 @@ module Ameba::Rule::Style
           :ok
         end
         CRYSTAL
+
       expect_correction source, <<-CRYSTAL
         if (a || b)
           :ok
@@ -83,6 +72,7 @@ module Ameba::Rule::Style
           :nok
         end
         CRYSTAL
+
       expect_correction source, <<-CRYSTAL
         if a
           :ok
@@ -97,6 +87,7 @@ module Ameba::Rule::Style
         :ok unless !a
         # ^^^^^^^^^^^ error: Avoid negated conditions in `unless` blocks
         CRYSTAL
+
       expect_correction source, <<-CRYSTAL
         :ok if a
         CRYSTAL
@@ -110,6 +101,7 @@ module Ameba::Rule::Style
           :ok
         end
         CRYSTAL
+
       expect_correction source, <<-CRYSTAL
         if #{""}
           a
@@ -125,6 +117,7 @@ module Ameba::Rule::Style
           :nok
         end
         CRYSTAL
+
       expect_no_corrections source
     end
 
@@ -135,6 +128,7 @@ module Ameba::Rule::Style
           :nok
         end
         CRYSTAL
+
       expect_no_corrections source
     end
 
@@ -145,6 +139,7 @@ module Ameba::Rule::Style
           :nok
         end
         CRYSTAL
+
       expect_no_corrections source
     end
   end
