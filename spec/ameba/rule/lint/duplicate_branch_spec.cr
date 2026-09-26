@@ -147,7 +147,7 @@ module Ameba::Rule::Lint
     context "properties" do
       context "#ignore_literal_branches" do
         it "when disabled reports duplicated (static) literal branch bodies" do
-          rule = DuplicateBranch.new
+          rule = subject.class.new
           rule.ignore_literal_branches = false
 
           expect_issue rule, <<-CRYSTAL
@@ -165,7 +165,7 @@ module Ameba::Rule::Lint
         end
 
         it "when enabled does not report duplicated (static) literal branch bodies" do
-          rule = DuplicateBranch.new
+          rule = subject.class.new
           rule.ignore_literal_branches = true
 
           # static literals
@@ -187,7 +187,7 @@ module Ameba::Rule::Lint
 
       context "#ignore_constant_branches" do
         it "when disabled reports constant branch bodies" do
-          rule = DuplicateBranch.new
+          rule = subject.class.new
           rule.ignore_constant_branches = false
 
           expect_issue rule, <<-CRYSTAL
@@ -199,7 +199,7 @@ module Ameba::Rule::Lint
         end
 
         it "when enabled does not report constant branch bodies" do
-          rule = DuplicateBranch.new
+          rule = subject.class.new
           rule.ignore_constant_branches = true
 
           expect_no_issues rule, <<-CRYSTAL
@@ -210,7 +210,7 @@ module Ameba::Rule::Lint
       end
 
       context "#ignore_duplicate_else_branch" do
-        rule = DuplicateBranch.new
+        rule = subject.class.new
         rule.ignore_duplicate_else_branch = true
 
         context "when enabled does not report duplicated `else` branch bodies" do

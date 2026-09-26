@@ -57,7 +57,7 @@ module Ameba::Rule::Naming
         end
 
         it "allows setting custom names" do
-          rule = BinaryOperatorParameterName.new
+          rule = subject.class.new
 
           rule.allowed_names = %w[a b c]
           expect_issue rule, <<-CRYSTAL

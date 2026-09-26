@@ -61,7 +61,7 @@ module Ameba::Rule::Style
     context "properties" do
       context "#default_delimiters" do
         it "allows setting custom values" do
-          rule = PercentLiteralDelimiters.new
+          rule = subject.class.new
           rule.default_delimiters = "||"
           rule.preferred_delimiters = {
             "%w" => "{}",
@@ -74,7 +74,7 @@ module Ameba::Rule::Style
         end
 
         it "allows ignoring default delimiters by setting them to `nil`" do
-          rule = PercentLiteralDelimiters.new
+          rule = subject.class.new
           rule.default_delimiters = nil
           rule.preferred_delimiters = {
             "%Q" => "{}",
@@ -95,7 +95,7 @@ module Ameba::Rule::Style
 
       context "#preferred_delimiters" do
         it "allows setting custom values" do
-          rule = PercentLiteralDelimiters.new
+          rule = subject.class.new
           rule.preferred_delimiters = {
             "%w" => "()",
             "%i" => "||",
@@ -108,7 +108,7 @@ module Ameba::Rule::Style
         end
 
         it "allows ignoring certain delimiters by setting them to `nil`" do
-          rule = PercentLiteralDelimiters.new
+          rule = subject.class.new
           rule.preferred_delimiters["%r"] = nil
 
           expect_no_issues rule, <<-CRYSTAL
@@ -121,7 +121,7 @@ module Ameba::Rule::Style
 
       context "#ignore_literals_containing_delimiters?" do
         it "ignores different delimiters if enabled" do
-          rule = PercentLiteralDelimiters.new
+          rule = subject.class.new
           rule.ignore_literals_containing_delimiters = true
 
           expect_issue rule, <<-CRYSTAL
@@ -144,7 +144,7 @@ module Ameba::Rule::Style
         end
 
         it "ignores different delimiters if disabled" do
-          rule = PercentLiteralDelimiters.new
+          rule = subject.class.new
           rule.ignore_literals_containing_delimiters = false
 
           expect_issue rule, <<-CRYSTAL
