@@ -97,7 +97,7 @@ module Ameba::Rule::Documentation
     context "properties" do
       describe "#admonitions" do
         it "lets setting custom admonitions" do
-          rule = Admonition.new
+          rule = subject.class.new
           rule.admonitions = %w[FOO BAR]
 
           rule.admonitions.each do |admonition|

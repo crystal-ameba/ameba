@@ -45,7 +45,7 @@ module Ameba::Rule::Performance
 
     context "properties" do
       it "#call_names" do
-        rule = ChainedCallWithNoBang.new
+        rule = subject.class.new
         rule.call_names = %w[uniq]
 
         expect_no_issues rule, <<-CRYSTAL

@@ -142,7 +142,7 @@ module Ameba::Rule::Style
 
     context "properties" do
       context "#indent_by" do
-        rule = HeredocIndent.new
+        rule = subject.class.new
         rule.indent_by = 0
 
         it "passes if heredoc body has the same indent level" do
@@ -192,7 +192,7 @@ module Ameba::Rule::Style
       end
 
       context "#body_auto_dedent" do
-        rule = HeredocIndent.new
+        rule = subject.class.new
         rule.body_auto_dedent = false
 
         it "leaves the indentation within the heredoc string" do

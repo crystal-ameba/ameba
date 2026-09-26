@@ -122,7 +122,7 @@ module Ameba::Rule::Style
     context "properties" do
       describe "#allow_backslash_split_strings" do
         it "allows backslash-split strings by default" do
-          rule = MultilineStringLiteral.new
+          rule = subject.class.new
 
           expect_no_issues rule, <<-CRYSTAL
             "foo" \\
@@ -132,7 +132,7 @@ module Ameba::Rule::Style
         end
 
         it "reports backslash-split strings when disabled" do
-          rule = MultilineStringLiteral.new
+          rule = subject.class.new
           rule.allow_backslash_split_strings = false
 
           expect_issue rule, <<-CRYSTAL

@@ -38,7 +38,7 @@ module Ameba::Rule::Performance
 
     context "properties" do
       it "#call_names" do
-        rule = ExcessiveAllocations.new
+        rule = subject.class.new
         rule.call_names = {
           "children" => "each_child",
         }

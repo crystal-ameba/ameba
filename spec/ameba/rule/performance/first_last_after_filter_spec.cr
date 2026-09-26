@@ -65,7 +65,7 @@ module Ameba::Rule::Performance
 
     context "properties" do
       it "#filter_names" do
-        rule = FirstLastAfterFilter.new
+        rule = subject.class.new
         rule.filter_names = %w[reject]
 
         expect_no_issues rule, <<-CRYSTAL

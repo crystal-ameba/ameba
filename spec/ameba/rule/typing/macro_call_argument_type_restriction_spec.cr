@@ -47,7 +47,7 @@ module Ameba::Rule::Typing
 
     context "properties" do
       context "#default_value" do
-        rule = MacroCallArgumentTypeRestriction.new
+        rule = subject.class.new
         rule.default_value = true
 
         it "fails if a macro call arg with a default value doesn't have a type restriction" do

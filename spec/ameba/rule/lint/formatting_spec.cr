@@ -44,7 +44,7 @@ module Ameba::Rule::Lint
     context "properties" do
       context "#fail_on_error" do
         it "passes on formatter errors by default" do
-          rule = Formatting.new
+          rule = subject.class.new
 
           expect_no_issues rule, <<-CRYSTAL
             def method(a, b)
@@ -53,7 +53,7 @@ module Ameba::Rule::Lint
         end
 
         it "reports on formatter errors when enabled" do
-          rule = Formatting.new
+          rule = subject.class.new
           rule.fail_on_error = true
 
           expect_issue rule, <<-CRYSTAL
