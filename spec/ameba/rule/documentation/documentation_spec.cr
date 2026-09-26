@@ -89,7 +89,7 @@ module Ameba::Rule::Documentation
     context "properties" do
       describe "#ignore_classes" do
         it "lets the rule to ignore method definitions if true" do
-          rule = Documentation.new
+          rule = subject.class.new
           rule.ignore_classes = true
 
           expect_no_issues rule, <<-CRYSTAL
@@ -101,7 +101,7 @@ module Ameba::Rule::Documentation
 
       describe "#ignore_modules" do
         it "lets the rule to ignore method definitions if true" do
-          rule = Documentation.new
+          rule = subject.class.new
           rule.ignore_modules = true
 
           expect_no_issues rule, <<-CRYSTAL
@@ -113,7 +113,7 @@ module Ameba::Rule::Documentation
 
       describe "#ignore_enums" do
         it "lets the rule to ignore method definitions if true" do
-          rule = Documentation.new
+          rule = subject.class.new
           rule.ignore_enums = true
 
           expect_no_issues rule, <<-CRYSTAL
@@ -125,7 +125,7 @@ module Ameba::Rule::Documentation
 
       describe "#ignore_defs" do
         it "lets the rule to ignore method definitions if true" do
-          rule = Documentation.new
+          rule = subject.class.new
           rule.ignore_defs = true
 
           expect_no_issues rule, <<-CRYSTAL
@@ -137,7 +137,7 @@ module Ameba::Rule::Documentation
 
       describe "#ignore_macros" do
         it "lets the rule to ignore macros if true" do
-          rule = Documentation.new
+          rule = subject.class.new
           rule.ignore_macros = true
 
           expect_no_issues rule, <<-CRYSTAL
@@ -148,7 +148,7 @@ module Ameba::Rule::Documentation
       end
 
       describe "#require_example" do
-        rule = Documentation.new
+        rule = subject.class.new
         rule.require_example = true
 
         it "fails if there is a documented public type without example" do

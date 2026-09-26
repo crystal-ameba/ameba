@@ -46,14 +46,14 @@ module Ameba::Rule::Lint
 
     context "properties" do
       it "#string_array_unwanted_symbols" do
-        rule = PercentArrays.new
+        rule = subject.class.new
         rule.string_array_unwanted_symbols = ","
 
         expect_no_issues rule, %(%w[one])
       end
 
       it "#symbol_array_unwanted_symbols" do
-        rule = PercentArrays.new
+        rule = subject.class.new
         rule.symbol_array_unwanted_symbols = ","
 
         expect_no_issues rule, %(%i[:one])

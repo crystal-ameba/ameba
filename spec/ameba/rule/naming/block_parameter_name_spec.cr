@@ -30,7 +30,7 @@ module Ameba::Rule::Naming
     context "properties" do
       context "#min_name_length" do
         it "allows setting custom values" do
-          rule = BlockParameterName.new
+          rule = subject.class.new
           rule.allowed_names = %w[a b c]
 
           rule.min_name_length = 3
@@ -48,7 +48,7 @@ module Ameba::Rule::Naming
 
       context "#allow_names_ending_in_numbers" do
         it "allows setting custom values" do
-          rule = BlockParameterName.new
+          rule = subject.class.new
           rule.min_name_length = 1
           rule.allowed_names = %w[]
 
@@ -67,7 +67,7 @@ module Ameba::Rule::Naming
 
       context "#allowed_names" do
         it "allows setting custom names" do
-          rule = BlockParameterName.new
+          rule = subject.class.new
           rule.min_name_length = 3
 
           rule.allowed_names = %w[a b c]
@@ -85,7 +85,7 @@ module Ameba::Rule::Naming
 
       context "#forbidden_names" do
         it "allows setting custom names" do
-          rule = BlockParameterName.new
+          rule = subject.class.new
           rule.min_name_length = 1
           rule.allowed_names = %w[]
 

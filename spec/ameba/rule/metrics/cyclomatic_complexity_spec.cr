@@ -26,7 +26,7 @@ module Ameba::Rule::Metrics
     end
 
     it "reports one issue for a complex method" do
-      rule = CyclomaticComplexity.new
+      rule = subject.class.new
       rule.max_complexity = 5
 
       source = Source.new(complex_method, "source.cr")
@@ -40,7 +40,7 @@ module Ameba::Rule::Metrics
     end
 
     it "doesn't report an issue for an increased threshold" do
-      rule = CyclomaticComplexity.new
+      rule = subject.class.new
       rule.max_complexity = 100
 
       expect_no_issues rule, complex_method

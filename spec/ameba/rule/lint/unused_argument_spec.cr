@@ -248,7 +248,7 @@ module Ameba::Rule::Lint
     context "properties" do
       describe "#ignore_defs" do
         it "lets the rule to ignore def scopes if true" do
-          rule = UnusedArgument.new
+          rule = subject.class.new
           rule.ignore_defs = true
 
           expect_no_issues rule, <<-CRYSTAL
@@ -258,7 +258,7 @@ module Ameba::Rule::Lint
         end
 
         it "lets the rule not to ignore def scopes if false" do
-          rule = UnusedArgument.new
+          rule = subject.class.new
           rule.ignore_defs = false
 
           expect_issue rule, <<-CRYSTAL
@@ -271,7 +271,7 @@ module Ameba::Rule::Lint
 
       context "#ignore_blocks" do
         it "lets the rule to ignore block scopes if true" do
-          rule = UnusedArgument.new
+          rule = subject.class.new
           rule.ignore_blocks = true
 
           expect_no_issues rule, <<-CRYSTAL
@@ -280,7 +280,7 @@ module Ameba::Rule::Lint
         end
 
         it "lets the rule not to ignore block scopes if false" do
-          rule = UnusedArgument.new
+          rule = subject.class.new
           rule.ignore_blocks = false
 
           expect_issue rule, <<-CRYSTAL
@@ -292,7 +292,7 @@ module Ameba::Rule::Lint
 
       context "#ignore_procs" do
         it "lets the rule to ignore proc scopes if true" do
-          rule = UnusedArgument.new
+          rule = subject.class.new
           rule.ignore_procs = true
 
           expect_no_issues rule, <<-CRYSTAL
@@ -301,7 +301,7 @@ module Ameba::Rule::Lint
         end
 
         it "lets the rule not to ignore proc scopes if false" do
-          rule = UnusedArgument.new
+          rule = subject.class.new
           rule.ignore_procs = false
 
           expect_issue rule, <<-CRYSTAL

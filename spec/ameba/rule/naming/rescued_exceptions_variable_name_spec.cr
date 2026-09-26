@@ -30,12 +30,12 @@ module Ameba::Rule::Naming
     context "properties" do
       context "#allowed_names" do
         it "returns sensible defaults" do
-          rule = RescuedExceptionsVariableName.new
+          rule = subject.class.new
           rule.allowed_names.should eq %w[e ex exception err error]
         end
 
         it "allows setting custom names" do
-          rule = RescuedExceptionsVariableName.new
+          rule = subject.class.new
           rule.allowed_names = %w[foo]
 
           expect_issue rule, <<-CRYSTAL

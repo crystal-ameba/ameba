@@ -64,7 +64,7 @@ module Ameba::Rule::Style
 
     context "properties" do
       it "#exclude_calls_with_block" do
-        rule = VerboseBlock.new
+        rule = subject.class.new
 
         rule.exclude_calls_with_block = true
         expect_no_issues rule, <<-CRYSTAL
@@ -83,7 +83,7 @@ module Ameba::Rule::Style
       end
 
       it "#exclude_multiple_line_blocks" do
-        rule = VerboseBlock.new
+        rule = subject.class.new
 
         rule.exclude_multiple_line_blocks = true
         expect_no_issues rule, <<-CRYSTAL
@@ -106,7 +106,7 @@ module Ameba::Rule::Style
       end
 
       it "#exclude_prefix_operators" do
-        rule = VerboseBlock.new
+        rule = subject.class.new
 
         rule.exclude_prefix_operators = true
         expect_no_issues rule, <<-CRYSTAL
@@ -134,7 +134,7 @@ module Ameba::Rule::Style
       end
 
       it "#exclude_operators" do
-        rule = VerboseBlock.new
+        rule = subject.class.new
 
         rule.exclude_operators = true
         expect_no_issues rule, <<-CRYSTAL
@@ -153,7 +153,7 @@ module Ameba::Rule::Style
       end
 
       it "#exclude_setters" do
-        rule = VerboseBlock.new
+        rule = subject.class.new
 
         rule.exclude_setters = true
         expect_no_issues rule, <<-CRYSTAL
@@ -172,7 +172,7 @@ module Ameba::Rule::Style
       end
 
       it "#max_line_length" do
-        rule = VerboseBlock.new
+        rule = subject.class.new
         rule.exclude_multiple_line_blocks = false
 
         rule.max_line_length = 60
@@ -196,7 +196,7 @@ module Ameba::Rule::Style
       end
 
       it "#max_length" do
-        rule = VerboseBlock.new
+        rule = subject.class.new
 
         rule.max_length = 30
         expect_no_issues rule, <<-CRYSTAL
@@ -229,7 +229,7 @@ module Ameba::Rule::Style
     end
 
     it "reports call args and named_args" do
-      rule = VerboseBlock.new
+      rule = subject.class.new
       rule.exclude_operators = false
 
       source = expect_issue rule, <<-CRYSTAL

@@ -130,12 +130,12 @@ module Ameba::Rule::Naming
     context "properties" do
       context "#ignore_symbols" do
         it "returns `false` by default" do
-          rule = AsciiIdentifiers.new
+          rule = subject.class.new
           rule.ignore_symbols?.should be_false
         end
 
         it "stops reporting symbol literals if set to `true`" do
-          rule = AsciiIdentifiers.new
+          rule = subject.class.new
           rule.ignore_symbols = true
 
           expect_no_issues rule, <<-CRYSTAL

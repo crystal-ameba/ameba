@@ -373,7 +373,7 @@ module Ameba::Rule::Style
     context "properties" do
       context "#exclude_multiline_calls" do
         it "ignores multiline calls when enabled" do
-          rule = CallParentheses.new
+          rule = subject.class.new
           rule.exclude_multiline_calls = true
 
           expect_no_issues rule, <<-CRYSTAL
@@ -383,7 +383,7 @@ module Ameba::Rule::Style
         end
 
         it "reports multiline calls when disabled" do
-          rule = CallParentheses.new
+          rule = subject.class.new
           rule.exclude_multiline_calls = false
 
           source = expect_issue rule, <<-CRYSTAL
@@ -401,7 +401,7 @@ module Ameba::Rule::Style
 
       context "#excluded_dsl_call_names" do
         it "passes for given call paths (at toplevel namespace)" do
-          rule = CallParentheses.new
+          rule = subject.class.new
           rule.excluded_dsl_call_names = [
             "foo > *",
             "foo > fox > *",
@@ -426,7 +426,7 @@ module Ameba::Rule::Style
         end
 
         it "passes for given call paths (within a class)" do
-          rule = CallParentheses.new
+          rule = subject.class.new
           rule.excluded_dsl_call_names = [
             "Foo > foo > *",
             "Foo > foo > fox > *",
@@ -453,7 +453,7 @@ module Ameba::Rule::Style
         end
 
         it "reports outer calls regardless of dsl calls (within a class)" do
-          rule = CallParentheses.new
+          rule = subject.class.new
           rule.excluded_dsl_call_names = [
             "Foo > foo > *",
           ]
@@ -473,7 +473,7 @@ module Ameba::Rule::Style
         end
 
         it "reports outer calls regardless of dsl calls (at toplevel namespace)" do
-          rule = CallParentheses.new
+          rule = subject.class.new
           rule.excluded_dsl_call_names = [
             "foo > *",
           ]
@@ -491,7 +491,7 @@ module Ameba::Rule::Style
 
       context "#exclude_type_declarations" do
         it "ignores type declarations when enabled" do
-          rule = CallParentheses.new
+          rule = subject.class.new
           rule.exclude_type_declarations = true
 
           expect_no_issues rule, <<-CRYSTAL
@@ -500,7 +500,7 @@ module Ameba::Rule::Style
         end
 
         it "reports type declarations when disabled" do
-          rule = CallParentheses.new
+          rule = subject.class.new
           rule.exclude_type_declarations = false
 
           source = expect_issue rule, <<-CRYSTAL
@@ -516,7 +516,7 @@ module Ameba::Rule::Style
 
       context "#exclude_heredocs" do
         it "ignores calls with heredoc arguments when enabled" do
-          rule = CallParentheses.new
+          rule = subject.class.new
           rule.exclude_heredocs = true
 
           expect_no_issues rule, <<-CRYSTAL
@@ -525,7 +525,7 @@ module Ameba::Rule::Style
         end
 
         it "reports calls with heredoc arguments when disabled" do
-          rule = CallParentheses.new
+          rule = subject.class.new
           rule.exclude_heredocs = false
 
           source = expect_issue rule, <<-CRYSTAL
@@ -543,7 +543,7 @@ module Ameba::Rule::Style
 
       context "#excluded_toplevel_call_names" do
         it "ignores top level calls" do
-          rule = CallParentheses.new
+          rule = subject.class.new
           rule.excluded_toplevel_call_names = %w[foo bar]
 
           expect_no_issues rule, <<-CRYSTAL
@@ -560,7 +560,7 @@ module Ameba::Rule::Style
 
       context "#excluded_call_names" do
         it "ignores non-top level calls" do
-          rule = CallParentheses.new
+          rule = subject.class.new
           rule.excluded_call_names = %w[foo bar]
 
           expect_no_issues rule, <<-CRYSTAL
