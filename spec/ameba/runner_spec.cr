@@ -206,6 +206,18 @@ module Ameba
         source.code.should eq "list.max_of(&.size)"
         source.issues.map(&.rule).should eq rules
       end
+
+      it "handles rules with incompatible, conflicting autocorrect" do
+        verbose_block = Rule::Style::VerboseBlock.new
+        # The default excludes bodies with short blocks, including the nested max_of call.
+        verbose_block.exclude_calls_with_block = false
+        rules = [Rule::Performance::MinMaxAfterMap.new, verbose_block]
+        source = Source.new("list.map { |arr| arr.map(&.size).max }.max", File.tempname("source", ".cr"))
+
+        Runner.new(rules, [source], formatter, default_severity, autocorrect: true).run
+        source.code.should eq "list.max_of(&.max_of(&.size))"
+        source.issues.map(&.rule).should eq [rules.first, rules.last, rules.first]
+      end
     end
 
     describe "#explain" do
