@@ -105,7 +105,7 @@ module Ameba
         source.pos(location).should eq 7
 
         Rule::Layout::TrailingWhitespace.new.catch(source)
-        source.correct!.should be_true
+        source.correct!.should eq source.issues
         source.code.should eq "foo\nbar"
 
         source.pos(location).should eq 4
@@ -137,7 +137,7 @@ module Ameba
 
         source.issues.size.should eq 1
         source.issues.first.enabled?.should be_true
-        source.correct!.should be_true
+        source.correct!.should eq source.issues
         source.code.should_not contain ".not_nil!"
       end
     end
