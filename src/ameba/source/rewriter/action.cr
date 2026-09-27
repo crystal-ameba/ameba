@@ -65,9 +65,9 @@ class Ameba::Source::Rewriter
 
       replacements = action.ordered_replacements
 
-      ordered_replacements.any? do |begin_pos, end_pos, _|
-        replacements.any? do |other_begin_pos, other_end_pos, _|
-          ranges_overlap?(begin_pos, end_pos, other_begin_pos, other_end_pos)
+      ordered_replacements.any? do |begin_pos, end_pos|
+        replacements.any? do |other_begin_pos, other_end_pos|
+          (begin_pos...end_pos).overlaps?(other_begin_pos...other_end_pos)
         end
       end
     end
@@ -214,32 +214,16 @@ class Ameba::Source::Rewriter
       ).combine_children(action.children)
     end
 
-    private def ranges_overlap?(begin_pos, end_pos, other_begin_pos, other_end_pos)
-      case
-      when begin_pos == end_pos
-        other_begin_pos < begin_pos < other_end_pos
-      when other_begin_pos == other_end_pos
-        begin_pos < other_begin_pos < end_pos
-      else
-        begin_pos < other_end_pos && other_begin_pos < end_pos
-      end
-    end
-
     private def incompatible_ranged_actions?(actions)
       ranged_actions.any? do |begin_pos, end_pos, replacement|
         actions.any? do |other_begin_pos, other_end_pos, other_replacement|
-          ranges_cross?(begin_pos, end_pos, other_begin_pos, other_end_pos) ||
+          (begin_pos...end_pos).crosses?(other_begin_pos...other_end_pos) ||
             (begin_pos == end_pos &&
               begin_pos == other_begin_pos &&
               other_begin_pos == other_end_pos &&
               replacement && other_replacement)
         end
       end
-    end
-
-    private def ranges_cross?(begin_pos, end_pos, other_begin_pos, other_end_pos)
-      begin_pos < other_begin_pos < end_pos < other_end_pos ||
-        other_begin_pos < begin_pos < other_end_pos < end_pos
     end
   end
 end
