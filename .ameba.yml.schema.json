@@ -1468,21 +1468,11 @@
       "$ref": "#/$defs/BaseRule",
       "$comment": "https://crystal-ameba.org/api/master/Ameba/Rule/Performance/AnyAfterFilter.html",
       "title": "Performance/AnyAfterFilter",
-      "description": "Identifies usage of `any?` calls that follow filters",
+      "description": "Identifies usage of `any?` calls that follow `map/select/reject` filters",
       "properties": {
         "SinceVersion": {
           "type": "string",
           "default": "0.8.1"
-        },
-        "FilterNames": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "default": [
-            "select",
-            "reject"
-          ]
         },
         "Severity": {
           "$ref": "#/$defs/Severity",
