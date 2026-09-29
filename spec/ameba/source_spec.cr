@@ -71,7 +71,7 @@ module Ameba
 
         source.issues.size.should eq 1
         source.issues.first.enabled?.should be_false
-        source.correct!.should be_false
+        source.correct!.should be_nil
         source.code.should contain ".not_nil!"
       end
 
