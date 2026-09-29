@@ -56,7 +56,7 @@ module Ameba::Rule::Typing
 
     context "properties" do
       context "#private_methods" do
-        rule = MethodReturnTypeRestriction.new
+        rule = subject.class.new
         rule.private_methods = true
 
         it "passes if a public method has a return type restriction" do
@@ -105,7 +105,7 @@ module Ameba::Rule::Typing
       end
 
       context "#protected_methods" do
-        rule = MethodReturnTypeRestriction.new
+        rule = subject.class.new
         rule.protected_methods = true
 
         it "passes if a public method has a return type restriction" do
@@ -147,7 +147,7 @@ module Ameba::Rule::Typing
       end
 
       context "#nodoc_methods" do
-        rule = MethodReturnTypeRestriction.new
+        rule = subject.class.new
         rule.nodoc_methods = true
 
         it "fails if a public method doesn't have a return type restriction" do

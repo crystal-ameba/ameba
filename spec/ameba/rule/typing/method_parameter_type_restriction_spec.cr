@@ -94,7 +94,7 @@ module Ameba::Rule::Typing
 
     context "properties" do
       context "#private_methods" do
-        rule = MethodParameterTypeRestriction.new
+        rule = subject.class.new
         rule.private_methods = true
 
         it "passes if a method has a parameter type restriction" do
@@ -129,7 +129,7 @@ module Ameba::Rule::Typing
       end
 
       context "#protected_methods" do
-        rule = MethodParameterTypeRestriction.new
+        rule = subject.class.new
         rule.protected_methods = true
 
         it "passes if a method has a parameter type restriction" do
@@ -165,7 +165,7 @@ module Ameba::Rule::Typing
 
       context "#default_value" do
         it "fails if a method parameter with a default value doesn't have a type restriction" do
-          rule = MethodParameterTypeRestriction.new
+          rule = subject.class.new
           rule.default_value = true
 
           expect_issue rule, <<-CRYSTAL
@@ -177,7 +177,7 @@ module Ameba::Rule::Typing
       end
 
       context "#block_parameters" do
-        rule = MethodParameterTypeRestriction.new
+        rule = subject.class.new
         rule.block_parameters = true
 
         it "fails if a block parameter without a name doesn't have a type restriction" do
@@ -198,7 +198,7 @@ module Ameba::Rule::Typing
       end
 
       context "#nodoc_methods" do
-        rule = MethodParameterTypeRestriction.new
+        rule = subject.class.new
         rule.nodoc_methods = true
 
         it "fails if a public method parameter doesn't have a type restriction" do

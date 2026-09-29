@@ -42,7 +42,7 @@ module Ameba::Rule::Performance
 
     context "properties" do
       it "#call_names" do
-        rule = MapInsteadOfBlock.new
+        rule = subject.class.new
         rule.call_names = %w[sum product join]
 
         expect_issue rule, <<-CRYSTAL

@@ -126,7 +126,7 @@ module Ameba::Rule::Style
         end
 
         it "allows to skip ternary control expressions" do
-          rule = ParenthesesAroundCondition.new
+          rule = subject.class.new
           rule.exclude_ternary = true
 
           expect_no_issues rule, <<-CRYSTAL
@@ -149,7 +149,7 @@ module Ameba::Rule::Style
         end
 
         it "allows to skip multiline expressions" do
-          rule = ParenthesesAroundCondition.new
+          rule = subject.class.new
           rule.exclude_multiline = true
 
           expect_no_issues rule, <<-CRYSTAL
@@ -186,7 +186,7 @@ module Ameba::Rule::Style
         end
 
         it "allows to configure assignments" do
-          rule = ParenthesesAroundCondition.new
+          rule = subject.class.new
           rule.allow_safe_assignment = true
 
           source = expect_issue rule, <<-CRYSTAL

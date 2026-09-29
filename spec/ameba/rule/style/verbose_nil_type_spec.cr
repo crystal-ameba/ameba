@@ -105,7 +105,7 @@ module Ameba::Rule::Style
 
     context "properties" do
       it "#explicit_nil" do
-        rule = VerboseNilType.new
+        rule = subject.class.new
         rule.explicit_nil = true
 
         expect_no_issues rule, <<-CRYSTAL
@@ -127,7 +127,7 @@ module Ameba::Rule::Style
       end
 
       it "#only_two_element_unions" do
-        rule = VerboseNilType.new
+        rule = subject.class.new
         rule.only_two_element_unions = true
 
         expect_no_issues rule, <<-CRYSTAL

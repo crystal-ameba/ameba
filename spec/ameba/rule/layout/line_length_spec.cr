@@ -35,7 +35,7 @@ module Ameba::Rule::Layout
 
     context "properties" do
       it "#max_length" do
-        rule = LineLength.new
+        rule = subject.class.new
         rule.max_length = long_line.size
 
         expect_no_issues rule, long_line

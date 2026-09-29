@@ -69,7 +69,7 @@ module Ameba::Rule::Style
 
     context "properties" do
       it "#ignore_suffix" do
-        rule = Elsif.new
+        rule = subject.class.new
         rule.ignore_suffix = false
 
         expect_issue rule, <<-CRYSTAL
@@ -85,7 +85,7 @@ module Ameba::Rule::Style
       end
 
       it "#allowed_branches" do
-        rule = Elsif.new
+        rule = subject.class.new
         rule.max_branches = 1
 
         expect_no_issues rule, <<-CRYSTAL

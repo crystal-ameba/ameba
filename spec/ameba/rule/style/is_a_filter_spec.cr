@@ -43,7 +43,7 @@ module Ameba::Rule::Style
 
     context "properties" do
       it "#filter_names" do
-        rule = IsAFilter.new
+        rule = subject.class.new
         rule.filter_names = %w[select]
 
         expect_no_issues rule, <<-CRYSTAL
