@@ -65,8 +65,8 @@ class Ameba::Source::Rewriter
 
       other_replacements = other.ordered_replacements
 
-      ordered_replacements.any? do |range|
-        other_replacements.any? do |other_range|
+      ordered_replacements.any? do |range, _|
+        other_replacements.any? do |other_range, _|
           range.overlaps?(other_range)
         end
       end
