@@ -1209,7 +1209,7 @@
     Overview
   </h2>
 
-  <p>A rule that disallows redundant <code>with_index</code> calls.</p>
+  <p>A rule that disallows redundant <code>each_with_index</code> calls.</p>
 <p>For example, this is considered invalid:</p>
 <pre><code class="language-crystal">collection.each.with_index <span class="k">do</span> <span class="o">|</span>e<span class="o">|</span>
   <span class="c"># ...</span>
@@ -1265,7 +1265,7 @@ collection.each_with_index <span class="k">do</span> <span class="o">|</span>e, 
   </h2>
   
     
-      <a href="https://github.com/crystal-ameba/ameba/blob/bff84ad/src/ameba/rule/lint/redundant_with_index.cr#L30" target="_blank">
+      <a href="https://github.com/crystal-ameba/ameba/blob/7dc53ac/src/ameba/rule/lint/redundant_with_index.cr#L30" target="_blank">
         ameba/rule/lint/redundant_with_index.cr
       </a>
     
@@ -1286,13 +1286,13 @@ collection.each_with_index <span class="k">do</span> <span class="o">|</span>e, 
   
   <dl>
     
-      <dt class="entry-const" id="MSG_EACH_WITH_INDEX">
-        <strong>MSG_EACH_WITH_INDEX</strong> = <code><span class="s">&quot;Use `each` instead of `each_with_index`&quot;</span></code>
+      <dt class="entry-const" id="MSG_EACH_BLOCK">
+        <strong>MSG_EACH_BLOCK</strong> = <code><span class="s">&quot;Use `each` instead of `each_with_index`&quot;</span></code>
       </dt>
       
     
-      <dt class="entry-const" id="MSG_WITH_INDEX">
-        <strong>MSG_WITH_INDEX</strong> = <code><span class="s">&quot;Remove redundant `with_index`&quot;</span></code>
+      <dt class="entry-const" id="MSG_EACH_ITERATOR">
+        <strong>MSG_EACH_ITERATOR</strong> = <code><span class="s">&quot;Remove redundant `with_index`&quot;</span></code>
       </dt>
       
     
@@ -1319,7 +1319,7 @@ collection.each_with_index <span class="k">do</span> <span class="o">|</span>e, 
       <li class="entry-summary">
         <a href="#new%28config%3Dnil%29-class-method" class="signature"><strong>.new</strong>(config = <span class="n">nil</span>)</a>
         
-          <div class="summary"><p>A rule that disallows redundant <code>with_index</code> calls.</p></div>
+          <div class="summary"><p>A rule that disallows redundant <code>each_with_index</code> calls.</p></div>
         
       </li>
     
@@ -1634,7 +1634,7 @@ collection.each_with_index <span class="k">do</span> <span class="o">|</span>e, 
       
         <div class="doc">
           
-          <p>A rule that disallows redundant <code>with_index</code> calls.</p>
+          <p>A rule that disallows redundant <code>each_with_index</code> calls.</p>
 <p>For example, this is considered invalid:</p>
 <pre><code class="language-crystal">collection.each.with_index <span class="k">do</span> <span class="o">|</span>e<span class="o">|</span>
   <span class="c"># ...</span>
@@ -1655,7 +1655,7 @@ collection.each_with_index <span class="k">do</span> <span class="o">|</span>e, 
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/bff84ad/src/ameba/rule/lint/redundant_with_index.cr#L30" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/7dc53ac/src/ameba/rule/lint/redundant_with_index.cr#L30" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1785,7 +1785,7 @@ collection.each_with_index <span class="k">do</span> <span class="o">|</span>e, 
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/bff84ad/src/ameba/rule/lint/redundant_with_index.cr#L31" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/7dc53ac/src/ameba/rule/lint/redundant_with_index.cr#L31" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1927,7 +1927,7 @@ collection.each_with_index <span class="k">do</span> <span class="o">|</span>e, 
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/bff84ad/src/ameba/rule/lint/redundant_with_index.cr#L31" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/7dc53ac/src/ameba/rule/lint/redundant_with_index.cr#L31" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1957,7 +1957,7 @@ collection.each_with_index <span class="k">do</span> <span class="o">|</span>e, 
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/bff84ad/src/ameba/rule/lint/redundant_with_index.cr#L39" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/7dc53ac/src/ameba/rule/lint/redundant_with_index.cr#L39" target="_blank">View source</a>]
         
       </div>
     </div>

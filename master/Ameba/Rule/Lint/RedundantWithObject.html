@@ -1211,7 +1211,7 @@
 
   <p>A rule that disallows redundant <code>each_with_object</code> calls.</p>
 <p>For example, this is considered invalid:</p>
-<pre><code class="language-crystal">collection.each_with_object(<span class="n">0</span>) <span class="k">do</span> <span class="o">|</span>e<span class="o">|</span>
+<pre><code class="language-crystal">collection.each.with_object(<span class="n">0</span>) <span class="k">do</span> <span class="o">|</span>e<span class="o">|</span>
   <span class="c"># ...</span>
 <span class="k">end</span>
 
@@ -1265,7 +1265,7 @@ collection.each_with_object(<span class="n">0</span>) <span class="k">do</span> 
   </h2>
   
     
-      <a href="https://github.com/crystal-ameba/ameba/blob/bff84ad/src/ameba/rule/lint/redundant_with_object.cr#L30" target="_blank">
+      <a href="https://github.com/crystal-ameba/ameba/blob/7dc53ac/src/ameba/rule/lint/redundant_with_object.cr#L30" target="_blank">
         ameba/rule/lint/redundant_with_object.cr
       </a>
     
@@ -1286,8 +1286,13 @@ collection.each_with_object(<span class="n">0</span>) <span class="k">do</span> 
   
   <dl>
     
-      <dt class="entry-const" id="MSG">
-        <strong>MSG</strong> = <code><span class="s">&quot;Use `each` instead of `each_with_object`&quot;</span></code>
+      <dt class="entry-const" id="MSG_EACH_BLOCK">
+        <strong>MSG_EACH_BLOCK</strong> = <code><span class="s">&quot;Use `each` instead of `each_with_object`&quot;</span></code>
+      </dt>
+      
+    
+      <dt class="entry-const" id="MSG_EACH_ITERATOR">
+        <strong>MSG_EACH_ITERATOR</strong> = <code><span class="s">&quot;Remove redundant `with_object`&quot;</span></code>
       </dt>
       
     
@@ -1631,7 +1636,7 @@ collection.each_with_object(<span class="n">0</span>) <span class="k">do</span> 
           
           <p>A rule that disallows redundant <code>each_with_object</code> calls.</p>
 <p>For example, this is considered invalid:</p>
-<pre><code class="language-crystal">collection.each_with_object(<span class="n">0</span>) <span class="k">do</span> <span class="o">|</span>e<span class="o">|</span>
+<pre><code class="language-crystal">collection.each.with_object(<span class="n">0</span>) <span class="k">do</span> <span class="o">|</span>e<span class="o">|</span>
   <span class="c"># ...</span>
 <span class="k">end</span>
 
@@ -1650,7 +1655,7 @@ collection.each_with_object(<span class="n">0</span>) <span class="k">do</span> 
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/bff84ad/src/ameba/rule/lint/redundant_with_object.cr#L30" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/7dc53ac/src/ameba/rule/lint/redundant_with_object.cr#L30" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1780,7 +1785,7 @@ collection.each_with_object(<span class="n">0</span>) <span class="k">do</span> 
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/bff84ad/src/ameba/rule/lint/redundant_with_object.cr#L31" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/7dc53ac/src/ameba/rule/lint/redundant_with_object.cr#L31" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1922,7 +1927,7 @@ collection.each_with_object(<span class="n">0</span>) <span class="k">do</span> 
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/bff84ad/src/ameba/rule/lint/redundant_with_object.cr#L31" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/7dc53ac/src/ameba/rule/lint/redundant_with_object.cr#L31" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1952,7 +1957,7 @@ collection.each_with_object(<span class="n">0</span>) <span class="k">do</span> 
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/bff84ad/src/ameba/rule/lint/redundant_with_object.cr#L38" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/7dc53ac/src/ameba/rule/lint/redundant_with_object.cr#L39" target="_blank">View source</a>]
         
       </div>
     </div>
