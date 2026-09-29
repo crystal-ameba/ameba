@@ -309,7 +309,7 @@ module Ameba::AST::Util
     return false unless node.responds_to?(:doc)
     return false unless doc = node.doc.presence
 
-    doc.lines.first?.try(&.strip) == ":nodoc:"
+    doc.each_line.first?.try(&.strip) == ":nodoc:"
   end
 
   # :nodoc:
