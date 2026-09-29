@@ -60,20 +60,20 @@ class Ameba::Source::Rewriter
         (replacement && !replacement.empty?)
     end
 
-    def conflicts_with?(action)
-      return true if incompatible_ranged_actions?(action.ranged_actions)
+    def conflicts_with?(other : self)
+      return true if incompatible_ranged_actions?(other.ranged_actions)
 
-      replacements = action.ordered_replacements
+      other_replacements = other.ordered_replacements
 
-      ordered_replacements.any? do |begin_pos, end_pos|
-        replacements.any? do |other_begin_pos, other_end_pos|
-          (begin_pos...end_pos).overlaps?(other_begin_pos...other_end_pos)
+      ordered_replacements.any? do |range|
+        other_replacements.any? do |other_range|
+          range.overlaps?(other_range)
         end
       end
     end
 
     protected def ranged_actions
-      actions = [{@begin_pos, @end_pos, !@replacement.nil?}]
+      actions = [{@begin_pos...@end_pos, !@replacement.nil?}]
       actions.concat(@children.flat_map(&.ranged_actions))
       actions
     end
@@ -215,12 +215,10 @@ class Ameba::Source::Rewriter
     end
 
     private def incompatible_ranged_actions?(actions)
-      ranged_actions.any? do |begin_pos, end_pos, replacement|
-        actions.any? do |other_begin_pos, other_end_pos, other_replacement|
-          (begin_pos...end_pos).crosses?(other_begin_pos...other_end_pos) ||
-            (begin_pos == end_pos &&
-              begin_pos == other_begin_pos &&
-              other_begin_pos == other_end_pos &&
+      ranged_actions.any? do |range, replacement|
+        actions.any? do |other_range, other_replacement|
+          range.crosses?(other_range) ||
+            (range == other_range &&
               replacement && other_replacement)
         end
       end

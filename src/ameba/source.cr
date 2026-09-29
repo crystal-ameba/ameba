@@ -32,7 +32,7 @@ module Ameba
 
     # Corrects any correctable issues and updates `code`.
     # Returns the corrected issues, or `false` if the code was unchanged.
-    def correct! : Array(Issue) | Bool?
+    def correct! : Array(Issue) | Bool
       corrector = Corrector.new(code)
       corrected_issues = [] of Issue
 
@@ -41,6 +41,7 @@ module Ameba
 
         issue_corrector = Corrector.new(code)
         issue.correct(issue_corrector)
+
         if !issue_corrector.empty? && corrector.merge(issue_corrector)
           corrected_issues << issue
         end

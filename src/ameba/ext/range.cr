@@ -1,7 +1,5 @@
-# Helpers for half-open source ranges. Empty ranges represent insertions.
 module Ameba::Ext::Range
-  # Returns whether the effects of two ranges overlap. An insertion conflicts
-  # with a replacement only when it falls strictly inside the replaced range.
+  # Returns whether the two ranges overlap.
   def overlaps?(other : Range) : Bool
     case
     when self.begin == self.end
