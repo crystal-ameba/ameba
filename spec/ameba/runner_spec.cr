@@ -200,7 +200,9 @@ module Ameba
 
       it "handles rules with incompatible autocorrect" do
         rules = [Rule::Performance::MinMaxAfterMap.new, Rule::Style::VerboseBlock.new]
-        source = Source.new("list.map { |i| i.size }.max", File.tempname("source", ".cr"))
+        source = Source.new <<-CRYSTAL, File.tempname("source", ".cr")
+          list.map { |i| i.size }.max
+          CRYSTAL
 
         Runner.new(rules, [source], formatter, default_severity, autocorrect: true).run
         source.code.should eq "list.max_of(&.size)"
@@ -208,11 +210,15 @@ module Ameba
       end
 
       it "handles rules with incompatible, conflicting autocorrect" do
-        verbose_block = Rule::Style::VerboseBlock.new
-        # The default excludes bodies with short blocks, including the nested max_of call.
-        verbose_block.exclude_calls_with_block = false
-        rules = [Rule::Performance::MinMaxAfterMap.new, verbose_block]
-        source = Source.new("list.map { |arr| arr.map(&.size).max }.max", File.tempname("source", ".cr"))
+        rules = [
+          Rule::Performance::MinMaxAfterMap.new,
+          # The default excludes bodies with short blocks, including the nested `max` call.
+          Rule::Style::VerboseBlock.new
+            .tap(&.exclude_calls_with_block = false),
+        ]
+        source = Source.new <<-CRYSTAL, File.tempname("source", ".cr")
+          list.map { |arr| arr.map(&.size).max }.max
+          CRYSTAL
 
         Runner.new(rules, [source], formatter, default_severity, autocorrect: true).run
         source.code.should eq "list.max_of(&.max_of(&.size))"
