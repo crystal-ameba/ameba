@@ -86,6 +86,66 @@ class Ameba::Source
       rewriter.process.should eq "puts(:hi)"
     end
 
+    it "merges non-overlapping corrections" do
+      rewriter = Rewriter.new(code)
+      other = Rewriter.new(code)
+      rewriter.replace(*hello, ":hi")
+      other.replace(*world, ":everybody")
+
+      rewriter.merge(other).should be_true
+      rewriter.process.should eq "puts(:hi, :everybody)"
+    end
+
+    it "does not merge overlapping corrections" do
+      rewriter = Rewriter.new(code)
+      other = Rewriter.new(code)
+      rewriter.replace(*hello, ":hi")
+      other.replace(hello[0], world[1], ":greeting")
+
+      rewriter.merge(other).should be_false
+      rewriter.process.should eq "puts(:hi, :world)"
+    end
+
+    it "merges insertions at the boundary of a replacement" do
+      rewriter = Rewriter.new("abcdef")
+      other = Rewriter.new("abcdef")
+      rewriter.replace(1, 3, "X")
+      other.insert_before(3, "Y")
+
+      rewriter.merge(other).should be_true
+      rewriter.process.should eq "aXYdef"
+    end
+
+    it "does not merge insertions inside a replacement" do
+      rewriter = Rewriter.new("abcdef")
+      other = Rewriter.new("abcdef")
+      rewriter.replace(1, 3, "X")
+      other.insert_before(2, "Y")
+
+      rewriter.merge(other).should be_false
+      rewriter.process.should eq "aXdef"
+    end
+
+    it "does not merge crossing wraps" do
+      rewriter = Rewriter.new("abcdef")
+      other = Rewriter.new("abcdef")
+      rewriter.wrap(1, 4, '[', ']')
+      other.wrap(2, 5, '(', ')')
+
+      rewriter.merge(other).should be_false
+      rewriter.process.should eq "a[bcd]ef"
+    end
+
+    it "does not merge replacements at the same empty range" do
+      rewriter = Rewriter.new("abcdef")
+      other = Rewriter.new("abcdef")
+      rewriter.replace(2, 2, 'x')
+      other.replace(2, 2, 'y')
+
+      rewriter.merge(other).should be_false
+      rewriter.process.should eq "abxcdef"
+    end
+
     it "rejects out-of-range ranges" do
       rewriter = Rewriter.new(code)
       expect_raises(IndexError) { rewriter.insert_before(0, 100, "hola") }

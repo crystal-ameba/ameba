@@ -163,11 +163,14 @@ module Ameba
         end
 
         check_unneeded_directives(source, excluded_rules)
-        break unless autocorrect? && source.correct!
+        break unless autocorrect?
+
+        applied_issues = source.correct!
+        break unless applied_issues
 
         # The issues that couldn't be corrected will be found again so we
         # only keep the corrected ones in order to avoid duplicate reporting.
-        corrected_issues << source.issues.select(&.correctable?)
+        corrected_issues << applied_issues
         source.issues.clear
       end
 
