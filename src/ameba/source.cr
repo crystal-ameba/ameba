@@ -37,7 +37,7 @@ module Ameba
       corrected_issues = [] of Issue
 
       issues.each do |issue|
-        next unless issue.enabled?
+        next unless issue.enabled? && issue.correctable?
 
         issue_corrector = Corrector.new(code)
         issue.correct(issue_corrector)
