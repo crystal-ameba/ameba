@@ -20,7 +20,6 @@ module Ameba::Ext::Range
         other.begin < self.begin < other.end < self.end
     end
   {% end %}
-  
 end
 
 struct Range(B, E)
