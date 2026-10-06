@@ -39,6 +39,8 @@ module Ameba
       issues.each do |issue|
         next unless issue.enabled? && issue.correctable?
 
+        # Build each correction against the same source snapshot. Conflicting
+        # issues are deferred until Runner reinspects the corrected source.
         issue_corrector = Corrector.new(code)
         issue.correct(issue_corrector)
 

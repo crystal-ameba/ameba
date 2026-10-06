@@ -209,6 +209,24 @@ module Ameba
         source.issues.map(&.rule).should eq rules
       end
 
+      it "handles deeply nested conflicting autocorrections in either rule order" do
+        [false, true].each do |reverse|
+          rules = [
+            Rule::Performance::MinMaxAfterMap.new,
+            Rule::Style::VerboseBlock.new
+              .tap(&.exclude_calls_with_block = false),
+          ]
+          rules.reverse! if reverse
+          source = Source.new <<-CRYSTAL, File.tempname("source", ".cr")
+            list.map { |group| group.map { |arr| arr.map(&.size).max }.max }.max
+            CRYSTAL
+
+          Runner.new(rules, [source], formatter, default_severity, autocorrect: true).run
+          source.code.should eq "list.max_of(&.max_of(&.max_of(&.size)))"
+          File.read(source.path).should eq source.code
+        end
+      end
+
       it "handles rules with incompatible, conflicting autocorrect" do
         rules = [
           Rule::Performance::MinMaxAfterMap.new,

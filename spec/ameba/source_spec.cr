@@ -75,6 +75,24 @@ module Ameba
         source.code.should contain ".not_nil!"
       end
 
+      it "defers conflicting issues until the corrected source is reinspected" do
+        source = Source.new("list.map { |i| i.size }.max")
+        rules = [Rule::Performance::MinMaxAfterMap.new, Rule::Style::VerboseBlock.new]
+        rules.each(&.catch(source))
+
+        source.issues.size.should eq 2
+        applied_issue = source.issues.first
+        source.correct!.should eq [applied_issue]
+        source.code.should eq "list.max_of { |i| i.size }"
+
+        source.issues.clear
+        rules.each(&.catch(source))
+
+        source.issues.map(&.rule).should eq [rules.last]
+        source.correct!.should eq source.issues
+        source.code.should eq "list.max_of(&.size)"
+      end
+
       it "corrects enabled issues" do
         source = Source.new <<-CRYSTAL
           foo.match("bar").not_nil!
