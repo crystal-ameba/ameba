@@ -67,7 +67,16 @@ class Ameba::Source::Rewriter
 
       ordered_replacements.any? do |begin_pos, end_pos|
         other_replacements.any? do |other_begin_pos, other_end_pos|
-          (begin_pos...end_pos).overlaps?(other_begin_pos...other_end_pos)
+          # Insertions have empty ranges, but conflict when strictly inside a
+          # replacement. Insertions at its boundaries can be merged safely.
+          case
+          when begin_pos == end_pos
+            other_begin_pos < begin_pos < other_end_pos
+          when other_begin_pos == other_end_pos
+            begin_pos < other_begin_pos < end_pos
+          else
+            (begin_pos...end_pos).overlaps?(other_begin_pos...other_end_pos)
+          end
         end
       end
     end
