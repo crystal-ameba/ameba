@@ -226,6 +226,9 @@ class Ameba::Source::Rewriter
     private def incompatible_ranged_actions?(actions)
       ranged_actions.any? do |range, replacement|
         actions.any? do |other_range, other_replacement|
+          # Containment is valid for nested wraps and the shared root range.
+          # Only partial overlap breaks the action hierarchy; overlapping
+          # effective replacements are checked separately in #conflicts_with?.
           range.crosses?(other_range) ||
             (range == other_range &&
               replacement && other_replacement)

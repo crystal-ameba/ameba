@@ -126,6 +126,42 @@ class Ameba::Source
       rewriter.process.should eq "aXdef"
     end
 
+    it "merges nested wraps in either order" do
+      [false, true].each do |reverse|
+        rewriter = Rewriter.new("abcdef")
+        other = Rewriter.new("abcdef")
+        rewriter.wrap(1, 5, '[', ']')
+        other.wrap(2, 4, '(', ')')
+        rewriter, other = other, rewriter if reverse
+
+        rewriter.merge(other).should be_true
+        rewriter.process.should eq "a[b(cd)e]f"
+      end
+    end
+
+    it "merges wraps at the same range" do
+      rewriter = Rewriter.new("abcdef")
+      other = Rewriter.new("abcdef")
+      rewriter.wrap(1, 4, '[', ']')
+      other.wrap(1, 4, '(', ')')
+
+      rewriter.merge(other).should be_true
+      rewriter.process.should eq "a([bcd])ef"
+    end
+
+    it "merges a wrap with a contained replacement in either order" do
+      [false, true].each do |reverse|
+        rewriter = Rewriter.new("abcdef")
+        other = Rewriter.new("abcdef")
+        rewriter.wrap(1, 5, '[', ']')
+        other.replace(2, 4, "X")
+        rewriter, other = other, rewriter if reverse
+
+        rewriter.merge(other).should be_true
+        rewriter.process.should eq "a[bXe]f"
+      end
+    end
+
     it "does not merge crossing wraps" do
       rewriter = Rewriter.new("abcdef")
       other = Rewriter.new("abcdef")
