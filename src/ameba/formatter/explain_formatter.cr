@@ -6,7 +6,7 @@ module Ameba::Formatter
   class ExplainFormatter
     include Util
 
-    getter output : IO::FileDescriptor | IO::Memory
+    getter output : IO
     getter location : Crystal::Location
 
     # Creates a new instance of `ExplainFormatter`.

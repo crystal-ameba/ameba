@@ -6,8 +6,7 @@ module Ameba::Formatter
   # to report results and also implements stub methods for
   # callbacks in `Ameba::Runner#run` method.
   class BaseFormatter
-    # TODO: allow other IOs
-    getter output : IO::FileDescriptor | IO::Memory
+    getter output : IO
     getter config = {} of Symbol => String | Bool
 
     def initialize(@output = STDOUT)
