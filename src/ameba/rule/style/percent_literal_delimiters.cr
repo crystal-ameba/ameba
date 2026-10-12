@@ -58,28 +58,32 @@ module Ameba::Rule::Style
       end
 
       def run(&on_literal : LiteralState -> Nil) : Nil
-        current_state = nil
+        current_state = {} of Int32 => LiteralState
+        nest_level = 0
 
         @tokenizer.run do |token|
           case token.type
           when .string_array_start?, .symbol_array_start?, .delimiter_start?
+            nest_level += 1
+
             if literal = extract_percent_literal(token.raw)
               if delimiters = delimiters_for_literal(literal)
-                current_state = LiteralState.new(token, literal, delimiters)
+                current_state[nest_level] = LiteralState.new(token, literal, delimiters)
               end
             end
           when .string?
-            if (state = current_state) && @rule.ignore_literals_containing_delimiters?
-              current_state = nil if state.includes_delimiters?(token.raw)
+            if (state = current_state[nest_level]?) && @rule.ignore_literals_containing_delimiters?
+              current_state.delete(nest_level) if state.includes_delimiters?(token.raw)
             end
           when .string_array_end?, .delimiter_end?
-            if state = current_state
+            if state = current_state.delete(nest_level)
               unless state.correct_delimiters?
                 state.end_token = token
                 on_literal.call(state)
               end
-              current_state = nil
             end
+
+            nest_level -= 1
           end
         end
       end
