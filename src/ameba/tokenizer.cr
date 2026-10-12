@@ -51,6 +51,8 @@ module Ameba
     private def run_normal_state(lexer, break_on_rcurly = false, &block : Crystal::Token -> _)
       loop do
         token = @lexer.next_token
+        token = token.dup
+
         block.call(token)
 
         case token.type
@@ -69,6 +71,8 @@ module Ameba
     private def run_delimiter_state(lexer, token, &block : Crystal::Token -> _)
       loop do
         token = @lexer.next_string_token(token.delimiter_state)
+        token = token.dup
+
         block.call(token)
 
         case token.type
@@ -92,6 +96,8 @@ module Ameba
                 else
                   lexer.next_string_token(token.delimiter_state)
                 end
+        token = token.dup
+
         block.call(token) unless token.type.space?
 
         case token.type
