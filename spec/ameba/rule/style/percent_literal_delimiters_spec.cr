@@ -69,6 +69,18 @@ module Ameba::Rule::Style
         CRYSTAL
     end
 
+    it "properly autocorrects nested percent literals (2)" do
+      source = expect_issue subject, <<-'CRYSTAL'
+        query.should eq %{SELECT * FROM users WHERE "users"."updated_at" > '#{date.to_s(%{%F %X.%6N %z})}'}
+                                                                                      # ^ error: `%`-literals should be delimited by `(` and `)`
+                      # ^ error: `%`-literals should be delimited by `(` and `)`
+        CRYSTAL
+
+      expect_correction source, <<-'CRYSTAL'
+        query.should eq %(SELECT * FROM users WHERE "users"."updated_at" > '#{date.to_s(%(%F %X.%6N %z))}')
+        CRYSTAL
+    end
+
     context "properties" do
       context "#default_delimiters" do
         it "allows setting custom values" do
