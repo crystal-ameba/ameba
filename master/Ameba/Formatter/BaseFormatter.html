@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="generator" content="Crystal Docs 1.20.3">
+<meta name="generator" content="Crystal Docs 1.21.0">
 <meta name="crystal_docs.project_version" content="master">
 <meta name="crystal_docs.project_name" content="ameba">
 
@@ -1209,7 +1209,7 @@
     Overview
   </h2>
 
-  <p>A base formatter for all formatters. It uses <code><a href="../../Ameba/Formatter/BaseFormatter.html#output%3AIO%3A%3AFileDescriptor%7CIO%3A%3AMemory-instance-method">#output</a></code> IO
+  <p>A base formatter for all formatters. It uses <code><a href="../../Ameba/Formatter/BaseFormatter.html#output%3AIO-instance-method">#output</a></code> IO
 to report results and also implements stub methods for
 callbacks in <code><a href="../../Ameba/Runner.html#run-instance-method">Ameba::Runner#run</a></code> method.</p>
 
@@ -1260,7 +1260,7 @@ callbacks in <code><a href="../../Ameba/Runner.html#run-instance-method">Ameba::
   </h2>
   
     
-      <a href="https://github.com/crystal-ameba/ameba/blob/0925f0b/src/ameba/formatter/base_formatter.cr#L8" target="_blank">
+      <a href="https://github.com/crystal-ameba/ameba/blob/7d5c7ff/src/ameba/formatter/base_formatter.cr#L8" target="_blank">
         ameba/formatter/base_formatter.cr
       </a>
     
@@ -1318,9 +1318,7 @@ callbacks in <code><a href="../../Ameba/Runner.html#run-instance-method">Ameba::
       </li>
     
       <li class="entry-summary">
-        <a href="#output%3AIO%3A%3AFileDescriptor%7CIO%3A%3AMemory-instance-method" class="signature"><strong>#output</strong> : IO::FileDescriptor | IO::Memory</a>
-        
-          <div class="summary"><p><span class="flag orange">TODO</span>  allow other IOs</p></div>
+        <a href="#output%3AIO-instance-method" class="signature"><strong>#output</strong> : IO</a>
         
       </li>
     
@@ -1400,7 +1398,7 @@ callbacks in <code><a href="../../Ameba/Runner.html#run-instance-method">Ameba::
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/0925f0b/src/ameba/formatter/base_formatter.cr#L13" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/7d5c7ff/src/ameba/formatter/base_formatter.cr#L12" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1432,7 +1430,7 @@ callbacks in <code><a href="../../Ameba/Runner.html#run-instance-method">Ameba::
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/0925f0b/src/ameba/formatter/base_formatter.cr#L11" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/7d5c7ff/src/ameba/formatter/base_formatter.cr#L10" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1454,28 +1452,23 @@ A list of inspected sources is passed as an argument.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/0925f0b/src/ameba/formatter/base_formatter.cr#L34" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/7d5c7ff/src/ameba/formatter/base_formatter.cr#L33" target="_blank">View source</a>]
         
       </div>
     </div>
   
-    <div class="entry-detail" id="output:IO::FileDescriptor|IO::Memory-instance-method">
+    <div class="entry-detail" id="output:IO-instance-method">
       <div class="signature">
         
-        def <strong>output</strong> : IO::FileDescriptor | IO::Memory
+        def <strong>output</strong> : IO
 
-        <a class="method-permalink" href="#output%3AIO%3A%3AFileDescriptor%7CIO%3A%3AMemory-instance-method">#</a>
+        <a class="method-permalink" href="#output%3AIO-instance-method">#</a>
       </div>
-      
-        <div class="doc">
-          
-          <p><span class="flag orange">TODO</span>  allow other IOs</p>
-        </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/0925f0b/src/ameba/formatter/base_formatter.cr#L10" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/7d5c7ff/src/ameba/formatter/base_formatter.cr#L9" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1498,7 +1491,7 @@ A corresponding source is passed as an argument.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/0925f0b/src/ameba/formatter/base_formatter.cr#L30" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/7d5c7ff/src/ameba/formatter/base_formatter.cr#L29" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1521,7 +1514,7 @@ A corresponding source is passed as an argument.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/0925f0b/src/ameba/formatter/base_formatter.cr#L24" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/7d5c7ff/src/ameba/formatter/base_formatter.cr#L23" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1543,7 +1536,7 @@ A list of sources to inspect is passed as an argument.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/0925f0b/src/ameba/formatter/base_formatter.cr#L18" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/7d5c7ff/src/ameba/formatter/base_formatter.cr#L17" target="_blank">View source</a>]
         
       </div>
     </div>
