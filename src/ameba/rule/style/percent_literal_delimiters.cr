@@ -65,7 +65,7 @@ module Ameba::Rule::Style
           when .string_array_start?, .symbol_array_start?, .delimiter_start?
             if literal = extract_percent_literal(token.raw)
               if delimiters = delimiters_for_literal(literal)
-                current_state = LiteralState.new(token.dup, literal, delimiters)
+                current_state = LiteralState.new(token, literal, delimiters)
               end
             end
           when .string?

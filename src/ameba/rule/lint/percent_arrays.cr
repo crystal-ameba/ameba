@@ -40,7 +40,7 @@ module Ameba::Rule::Lint
       Tokenizer.new(source).run do |token|
         case token.type
         when .string_array_start?, .symbol_array_start?
-          start_token = token.dup
+          start_token = token
         when .string?
           if (_start = start_token) && !issue
             issue = array_entry_invalid?(token.value.to_s, _start.raw)
