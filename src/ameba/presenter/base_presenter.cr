@@ -3,8 +3,7 @@ module Ameba::Presenter
   private DISABLED_MARK = "x".colorize(:red)
 
   class BasePresenter
-    # TODO: allow other IOs
-    getter output : IO::FileDescriptor | IO::Memory
+    getter output : IO
 
     def initialize(@output = STDOUT)
     end
