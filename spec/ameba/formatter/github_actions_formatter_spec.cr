@@ -26,7 +26,7 @@ module Ameba::Formatter
         subject.source_finished(source)
         output.to_s.should eq(
           "::notice file=/path/to/file.cr,line=1,col=2,endLine=1,endColumn=2," \
-          "title=Ameba/DummyRule::message%0A2nd line\n"
+          "title=Ameba/DummyRule::message%0A2nd line\n",
         )
       end
     end
@@ -87,11 +87,11 @@ module Ameba::Formatter
             if repo && sha
               summary.should contain(
                 "| [1-2](https://github.com/#{repo}/blob/#{sha}/src/source.cr#L1-L2) " \
-                "| Convention | #{linked_name} | DummyRuleError |"
+                "| Convention | #{linked_name} | DummyRuleError |",
               )
               summary.should contain(
                 "| [1](https://github.com/#{repo}/blob/#{sha}/src/source.cr#L1) " \
-                "| Convention | #{linked_name} | DummyRuleError 2\\|3 |"
+                "| Convention | #{linked_name} | DummyRuleError 2\\|3 |",
               )
             else
               summary.should contain "| 1-2 | Convention | #{linked_name} | DummyRuleError |"

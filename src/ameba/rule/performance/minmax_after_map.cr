@@ -61,11 +61,11 @@ module Ameba::Rule::Performance
         corrector.replace(
           name_location,
           name_location.adjust(column_number: {{ "map".size - 1 }}),
-          of_name
+          of_name,
         )
         corrector.remove(
           node_name_location.adjust(column_number: -1),
-          end_location
+          end_location,
         )
       end
     end
