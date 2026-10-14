@@ -20,7 +20,7 @@ module Ameba
 
         message = String.build do |io|
           io << "Infinite loop"
-          io << " in " << path unless path.to_s.empty?
+          io << " in " << path
           io << " caused by " << root_cause
         end
 
