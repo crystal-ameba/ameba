@@ -49,7 +49,7 @@ module Ameba::Rule::Lint
                     (rescue_body = rescue_node.body).is_a?(Crystal::Path)
 
       # https://github.com/crystal-lang/crystal/pull/17365
-      {% if compare_versions(Crystal::VERSION, "1.22.0-dev") >= 0 %}
+      {% if compare_versions(Crystal::VERSION, "1.22.0") >= 0 %}
         issue_for(rescue_body, MSG, prefer_name_location: true) do |corrector|
           next unless node_source = node_source(node.body, source.lines)
 
