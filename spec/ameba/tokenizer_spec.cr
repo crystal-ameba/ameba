@@ -13,6 +13,21 @@ module Ameba
 
   describe Tokenizer do
     describe "#run" do
+      it "duplicates the token given to the block" do
+        tokens = [] of Crystal::Token
+
+        Tokenizer.new(Source.new("%w[foo bar]")).run do |token|
+          tokens << token
+        end
+
+        tokens.map(&.type.to_s)
+          .should eq %w[STRING_ARRAY_START STRING STRING STRING_ARRAY_END EOF]
+
+        tokens.each_permutation(2) do |(token1, token2)|
+          token1.should_not be(token2)
+        end
+      end
+
       it_tokenizes %("string"), %w[DELIMITER_START STRING DELIMITER_END EOF]
       it_tokenizes %(100), %w[NUMBER EOF]
       it_tokenizes %('a'), %w[CHAR EOF]
