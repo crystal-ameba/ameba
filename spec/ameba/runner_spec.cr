@@ -204,9 +204,13 @@ module Ameba
           list.map { |i| i.size }.max
           CRYSTAL
 
-        Runner.new(rules, [source], formatter, default_severity, autocorrect: true).run
-        source.code.should eq "list.max_of(&.size)"
-        source.issues.map(&.rule).should eq rules
+        begin
+          Runner.new(rules, [source], formatter, default_severity, autocorrect: true).run
+          source.code.should eq "list.max_of(&.size)"
+          source.issues.map(&.rule).should eq rules
+        ensure
+          File.delete(source.path) rescue nil
+        end
       end
 
       it "handles deeply nested conflicting autocorrections in either rule order" do
@@ -221,9 +225,13 @@ module Ameba
             list.map { |group| group.map { |arr| arr.map(&.size).max }.max }.max
             CRYSTAL
 
-          Runner.new(rules, [source], formatter, default_severity, autocorrect: true).run
-          source.code.should eq "list.max_of(&.max_of(&.max_of(&.size)))"
-          File.read(source.path).should eq source.code
+          begin
+            Runner.new(rules, [source], formatter, default_severity, autocorrect: true).run
+            source.code.should eq "list.max_of(&.max_of(&.max_of(&.size)))"
+            File.read(source.path).should eq source.code
+          ensure
+            File.delete(source.path) rescue nil
+          end
         end
       end
 
@@ -238,9 +246,13 @@ module Ameba
           list.map { |arr| arr.map(&.size).max }.max
           CRYSTAL
 
-        Runner.new(rules, [source], formatter, default_severity, autocorrect: true).run
-        source.code.should eq "list.max_of(&.max_of(&.size))"
-        source.issues.map(&.rule).should eq [rules.first, rules.last, rules.first]
+        begin
+          Runner.new(rules, [source], formatter, default_severity, autocorrect: true).run
+          source.code.should eq "list.max_of(&.max_of(&.size))"
+          source.issues.map(&.rule).should eq [rules.first, rules.last, rules.first]
+        ensure
+          File.delete(source.path) rescue nil
+        end
       end
     end
 
