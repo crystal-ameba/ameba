@@ -4,9 +4,9 @@ module Ameba
   describe Source do
     describe ".new" do
       it "allows to create a source by code and path" do
-        source = Source.new("code", "path")
-        source.path.should eq "path"
-        source.project_path.should eq "path"
+        source = Source.new("code", "foo.cr")
+        source.path.should eq Path["foo.cr"]
+        source.project_path.should eq source.path
         source.code.should eq "code"
         source.lines.should eq ["code"]
       end
@@ -14,13 +14,15 @@ module Ameba
 
     describe "#fullpath" do
       it "returns an absolute path of the source" do
-        source = Source.new(path: "source_spec.cr")
-        source.fullpath.should eq File.expand_path("source_spec.cr")
+        path = Path["source_spec.cr"]
+
+        source = Source.new(path: path)
+        source.fullpath.should eq path.expand
       end
 
       it "returns fullpath if path is blank" do
         source = Source.new
-        source.fullpath.should eq Dir.current
+        source.fullpath.should eq Path[Dir.current]
       end
     end
 

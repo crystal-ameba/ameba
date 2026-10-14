@@ -6,15 +6,13 @@ module Ameba
     include Reportable
 
     # Path to the source file.
-    getter path : String
+    getter path : Path
 
     # Path to the source file relative to the project root.
-    getter project_path : String
+    getter project_path : Path
 
     # Absolute path to the source file.
-    getter fullpath : String do
-      File.expand_path(path)
-    end
+    getter fullpath : Path { path.expand }
 
     # Crystal code (content of a source file).
     getter code : String
@@ -24,10 +22,12 @@ module Ameba
     # For example:
     #
     # ```
-    # path = "src/source.cr"
+    # path = Path["src", "source.cr"]
     # Ameba::Source.new(File.read(path), path)
     # ```
-    def initialize(@code = "", @path = "", @project_path = path)
+    def initialize(@code = "", path : Path | String = "", project_path : Path | String = path)
+      @path = Path[path]
+      @project_path = Path[project_path]
     end
 
     # Corrects any correctable issues and updates `code`.
@@ -69,32 +69,32 @@ module Ameba
 
       if ecr?
         begin
-          code = ECR.process_string(code, path)
+          code = ECR.process_string(code, path.to_s)
         rescue ex : ECR::Lexer::SyntaxException
           # Need to rescue to add the filename
           raise Crystal::SyntaxException.new(
             ex.message,
             ex.line_number,
             ex.column_number,
-            path,
+            path.to_s,
           )
         end
       end
 
       Crystal::Parser.new(code)
         .tap(&.wants_doc = true)
-        .tap(&.filename = path)
+        .tap(&.filename = path.to_s)
         .parse
     end
 
     # Returns `true` if the source is a spec file, `false` otherwise.
     def spec?
-      path.ends_with?("_spec.cr")
+      path.basename.ends_with?("_spec.cr")
     end
 
     # Returns `true` if the source is an ECR template, `false` otherwise.
     def ecr?
-      path.ends_with?(".ecr")
+      path.basename.ends_with?(".ecr")
     end
 
     # Converts an AST location to a string position.

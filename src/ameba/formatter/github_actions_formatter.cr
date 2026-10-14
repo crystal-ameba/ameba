@@ -25,7 +25,7 @@ module Ameba::Formatter
           output << command_name(issue.rule.severity)
           output << " "
           output << "file="
-          output << escape_property(source.path)
+          output << escape_property(source.path.to_s)
           if location = issue.location
             output << ",line="
             output << location.line_number

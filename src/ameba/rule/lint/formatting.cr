@@ -41,7 +41,7 @@ module Ameba::Rule::Lint
       source_code = source.code
       return if source_code.empty?
 
-      result = Crystal.format(source_code, source.path)
+      result = Crystal.format(source_code, source.path.to_s)
       return if result == source_code
 
       issue_for(LOCATION, MSG) do |corrector|
