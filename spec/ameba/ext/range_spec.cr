@@ -58,6 +58,23 @@ describe Range do
       (2...5).crosses?(1..5).should be_false
     end
 
+    it "distinguishes containment at adjacent endpoints" do
+      (3..5).crosses?(4...6).should be_false
+      (4...6).crosses?(3..5).should be_false
+      (3..5).crosses?(2...6).should be_false
+      (3...4).crosses?(2..3).should be_false
+      (2..3).crosses?(3...4).should be_false
+      (3..5).crosses?(4...7).should be_true
+    end
+
+    it "supports beginless and endless ranges" do
+      (...5).crosses?(2..5).should be_true
+      (...5).crosses?(2...5).should be_false
+      (..5).crosses?(5..).should be_true
+      (1..).crosses?(..3).should be_true
+      (1..).crosses?(2..).should be_false
+    end
+
     it "rejects contained, identical, empty, and disjoint ranges" do
       (1...5).crosses?(2...4).should be_false
       (2...4).crosses?(1...5).should be_false
