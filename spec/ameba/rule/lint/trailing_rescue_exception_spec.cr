@@ -26,7 +26,7 @@ module Ameba::Rule::Lint
         CRYSTAL
 
       # https://github.com/crystal-lang/crystal/pull/17365
-      {% if compare_versions(Crystal::VERSION, "1.22.0-dev") >= 0 %}
+      {% if compare_versions(Crystal::VERSION, "1.22.0") >= 0 %}
         expect_correction source, <<-CRYSTAL
           def foo
             foo = begin
@@ -50,7 +50,7 @@ module Ameba::Rule::Lint
         CRYSTAL
 
       # https://github.com/crystal-lang/crystal/pull/17426
-      {% if compare_versions(Crystal::VERSION, "1.22.0-dev") >= 0 %}
+      {% if compare_versions(Crystal::VERSION, "1.22.0") >= 0 %}
         expect_correction source, <<-CRYSTAL
           def foo
             foo = begin
