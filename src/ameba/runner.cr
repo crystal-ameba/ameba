@@ -18,11 +18,8 @@ module Ameba
           issues_by_iteration[loop_start..-1]
             .join(" -> ", &.map(&.rule.name).uniq!.join(", "))
 
-        message = String.build do |io|
-          io << "Infinite loop"
-          io << " in " << path unless path.empty?
-          io << " caused by " << root_cause
-        end
+        message =
+          "Infinite loop in #{path} caused by #{root_cause}"
 
         super message
       end

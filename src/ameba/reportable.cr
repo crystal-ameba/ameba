@@ -106,7 +106,7 @@ module Ameba
                   status : Issue::Status? = nil,
                   block : (Source::Corrector ->)? = nil) : Issue
       location =
-        Crystal::Location.new(path, *location)
+        Crystal::Location.new(path.to_s, *location)
 
       add_issue(rule, location, nil, message, status, block)
     end
@@ -128,9 +128,9 @@ module Ameba
                   status : Issue::Status? = nil,
                   block : (Source::Corrector ->)? = nil) : Issue
       location =
-        Crystal::Location.new(path, *location)
+        Crystal::Location.new(path.to_s, *location)
       end_location =
-        Crystal::Location.new(path, *end_location)
+        Crystal::Location.new(path.to_s, *end_location)
 
       add_issue(rule, location, end_location, message, status, block)
     end

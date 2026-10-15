@@ -100,8 +100,8 @@ module Ameba::Rule
       !!excluded.try &.any? do |path|
         path = Path.posix(path).to_native.expand(root)
 
-        source.fullpath == path.to_s ||
-          Dir[path.to_posix].includes?(source.fullpath)
+        source.fullpath == path ||
+          Dir[path.to_posix].includes?(source.fullpath.to_s)
       end
     end
 

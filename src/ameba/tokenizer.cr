@@ -22,7 +22,7 @@ module Ameba
       @lexer.count_whitespace = true
       @lexer.comments_enabled = true
       @lexer.wants_raw = true
-      @lexer.filename = source.path
+      @lexer.filename = source.path.to_s
     end
 
     # Instantiates Tokenizer using a `lexer`.

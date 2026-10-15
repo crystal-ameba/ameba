@@ -18,9 +18,7 @@ module Ameba::Rule::Naming
     private LOCATION = {1, 1}
 
     def test(source : Source)
-      path = Path[source.path]
-      name = path.basename
-
+      name = source.path.basename
       return if (expected = name.underscore) == name
 
       issue_for(LOCATION, MSG % {expected, name})

@@ -108,7 +108,7 @@ module Ameba::Formatter
     end
 
     record Source,
-      path : String,
+      path : Path,
       issues = [] of Issue do
       include JSON::Serializable
     end
