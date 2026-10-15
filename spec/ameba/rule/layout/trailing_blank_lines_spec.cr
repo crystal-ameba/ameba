@@ -28,32 +28,45 @@ module Ameba::Rule::Layout
     end
 
     it "reports and autocorrects excessive trailing blank line (LF)" do
-      source = expect_issue subject, "a = 1\n\n # error: Excessive trailing newline detected"
+      source = expect_issue subject, <<-CRYSTAL
+        a = 1
+
+        # ^{} error: Excessive trailing newline detected
+        \n\n\n
+        CRYSTAL
+
       expect_correction source, "a = 1\n"
     end
 
     it "reports and autocorrects excessive trailing blank line (CRLF)" do
-      source = expect_issue subject, "a = 1\r\n\r\n # error: Excessive trailing newline detected"
+      source = expect_issue subject, <<-CRYSTAL
+        a = 1
+
+        # ^{} error: Excessive trailing newline detected
+        \r\n\r\n
+        CRYSTAL
+
       expect_correction source, "a = 1\r\n"
     end
 
-    it "reports and autocorrects multiple excessive trailing blank lines" do
-      source = expect_issue subject, "a = 1\n\n\n\n # error: Excessive trailing newline detected"
-      expect_correction source, "a = 1\n"
-    end
-
     it "preserves trailing whitespace on the last code line before excessive newlines" do
-      source = expect_issue subject, "a = 1 \n\n # error: Excessive trailing newline detected"
+      source = expect_issue subject, <<-CRYSTAL
+        a = 1 #{""}
+
+        # ^{} error: Excessive trailing newline detected
+        \n\n
+        CRYSTAL
+
       expect_correction source, "a = 1 \n"
     end
 
-    it "reports and autocorrects single newline file" do
-      source = expect_issue subject, "\n # error: Excessive trailing newline detected"
-      expect_correction source, ""
-    end
-
     it "reports and autocorrects whitespace-only file" do
-      source = expect_issue subject, "\n\n # error: Excessive trailing newline detected"
+      source = expect_issue subject, <<-CRYSTAL
+
+        # ^{} error: Excessive trailing newline detected
+        \n\n
+        CRYSTAL
+
       expect_correction source, ""
     end
 

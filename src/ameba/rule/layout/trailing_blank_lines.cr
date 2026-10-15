@@ -27,20 +27,27 @@ module Ameba::Rule::Layout
       last_line_empty = last_source_line.empty?
       return if !source_lines.last(2).all?(&.empty?) && last_line_empty
 
-      location = {source_lines_size, 1}
-
       newline =
         source.code.includes?("\r\n") ? "\r\n" : "\n"
 
       if last_line_empty
-        issue_for(location, MSG) do |corrector|
-          replacement = source.code.rstrip("\r\n")
-          replacement += newline unless replacement.empty?
+        replacement = source.code.rstrip("\r\n")
+        replacement += newline unless replacement.empty?
 
+        diff =
+          source_lines_size - replacement.each_line.size
+
+        location = {source_lines_size - diff + 1, 1}
+        end_location = {source_lines_size, 1}
+
+        issue_for(location, end_location, MSG) do |corrector|
           corrector.replace(0...source.code.size, replacement)
         end
       else
-        issue_for(location, MSG_FINAL_NEWLINE) do |corrector|
+        location = {source_lines_size, 1}
+        end_location = {source_lines_size, last_source_line.size}
+
+        issue_for(location, end_location, MSG_FINAL_NEWLINE) do |corrector|
           corrector.insert_before(source.code.size, newline)
         end
       end
