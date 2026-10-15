@@ -60,6 +60,33 @@ class Ameba::Source::Rewriter
         (replacement && !replacement.empty?)
     end
 
+    def conflicts_with?(other : self)
+      return true if incompatible_ranged_actions?(other.ranged_actions)
+
+      other_replacements = other.ordered_replacements
+
+      ordered_replacements.any? do |begin_pos, end_pos|
+        other_replacements.any? do |other_begin_pos, other_end_pos|
+          # Insertions have empty ranges, but conflict when strictly inside a
+          # replacement. Insertions at its boundaries can be merged safely.
+          case
+          when begin_pos == end_pos
+            other_begin_pos < begin_pos < other_end_pos
+          when other_begin_pos == other_end_pos
+            begin_pos < other_begin_pos < end_pos
+          else
+            (begin_pos...end_pos).overlaps?(other_begin_pos...other_end_pos)
+          end
+        end
+      end
+    end
+
+    protected def ranged_actions
+      actions = [{@begin_pos...@end_pos, !@replacement.nil?}]
+      actions.concat(@children.flat_map(&.ranged_actions))
+      actions
+    end
+
     protected def with(*,
                        begin_pos = @begin_pos,
                        end_pos = @end_pos,
@@ -194,6 +221,19 @@ class Ameba::Source::Rewriter
         replacement: action.replacement || @replacement,
         insert_after: "#{insert_after}#{action.insert_after}",
       ).combine_children(action.children)
+    end
+
+    private def incompatible_ranged_actions?(actions)
+      ranged_actions.any? do |range, replacement|
+        actions.any? do |other_range, other_replacement|
+          # Containment is valid for nested wraps and the shared root range.
+          # Only partial overlap breaks the action hierarchy; overlapping
+          # effective replacements are checked separately in #conflicts_with?.
+          range.crosses?(other_range) ||
+            (range == other_range &&
+              replacement && other_replacement)
+        end
+      end
     end
   end
 end
