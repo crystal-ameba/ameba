@@ -153,7 +153,7 @@ module Ameba::Rule::Style
       return true unless (then_loc = node.then.location).nil? || cond_loc < then_loc
 
       if ending
-        !node.else.is_a?(Crystal::Nop)
+        !node.else.is_a?(Crystal::Nop) || !node.else_location.nil?
       else
         return true if node.else.is_a?(Crystal::Nop)
         return true unless code = node_source(node, source.lines)

@@ -182,7 +182,7 @@ module Ameba::Rule::Style
     it_reports_body "work"
     it_reports_body "# TODO"
 
-    pending "does not report an issue if `else` branch is present but empty" do
+    it "does not report an issue if `else` branch is present but empty" do
       expect_no_issues subject, <<-CRYSTAL
         def method
           if bar = foo
