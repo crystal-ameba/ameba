@@ -24,6 +24,8 @@ module Ameba::Rule::Naming
   #   ForbiddenNames: []
   # ```
   class BlockParameterName < Base
+    include AST::Util
+
     properties do
       since_version "1.6.0"
       description "Disallows non-descriptive block parameter names"
@@ -36,15 +38,23 @@ module Ameba::Rule::Naming
     MSG = "Disallowed block parameter name found"
 
     def test(source, node : Crystal::Call)
-      node.try(&.block).try(&.args).try &.each do |arg|
+      return unless block = node.block
+
+      block.args.each do |arg|
         next if valid_name?(arg.name)
 
         issue_for(arg, MSG, prefer_name_location: true)
       end
+
+      unpacked_block_vars(block).try &.each do |var|
+        next if valid_name?(var.name)
+
+        issue_for(var, MSG, prefer_name_location: true)
+      end
     end
 
     private def valid_name?(name)
-      return true if name.blank? # TODO: handle unpacked variables
+      return true if name.blank?
       return true if name.starts_with?('_') || name.in?(allowed_names)
 
       return false if name.in?(forbidden_names)
