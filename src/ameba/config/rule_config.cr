@@ -146,21 +146,29 @@ class Ameba::Config
 
                   builder.string("items")
                   builder.object do
-                    # TODO: Implement type validation for array items
-                    builder.field("type", "string")
+                    {% if of = prop[:default].of %}
+                      ::Ameba::Config::RuleConfig.json_schema_type(builder, {{ of.resolve.stringify }})
+                    {% else %}
+                      ::Ameba::Config::RuleConfig.json_schema_type_of(builder, {{ prop[:default].splat }})
+                    {% end %}
                   end
 
                 {% elsif prop[:default].is_a?(HashLiteral) %}
+                  {% of_value = prop[:default].of_value %}
+
                   builder.field("type", "object")
 
                   builder.string("properties")
                   builder.object do
-                    {% for pr in prop[:default] %}
+                    {% for pr, value in prop[:default] %}
                       builder.string({{ pr }})
                       builder.object do
-                        # TODO: Implement type validation for object properties
-                        builder.field("type", "string")
-                        builder.field("default", {{ prop[:default][pr] }})
+                        {% if of_value %}
+                          ::Ameba::Config::RuleConfig.json_schema_type(builder, {{ of_value.resolve.stringify }})
+                        {% else %}
+                          ::Ameba::Config::RuleConfig.json_schema_type_of(builder, {{ value }})
+                        {% end %}
+                        builder.field("default", {{ value }})
                       end
                     {% end %}
                   end
@@ -194,6 +202,74 @@ class Ameba::Config
           end
         end
       end
+    end
+
+    # :nodoc:
+    #
+    # Writes the JSON schema `type` field matching the given *values* literals
+    macro json_schema_type_of(builder, *values)
+      {% types = [] of StringLiteral %}
+
+      {% for value in values %}
+        {% if value.is_a?(StringLiteral) %}
+          {% type = "String" %}
+        {% elsif value.is_a?(BoolLiteral) %}
+          {% type = "Bool" %}
+        {% elsif value.is_a?(NumberLiteral) %}
+          {% type = "Number" %}
+        {% elsif value.is_a?(NilLiteral) %}
+          {% type = "Nil" %}
+        {% else %}
+          {% raise "Unhandled schema type for value: #{value}" %}
+        {% end %}
+
+        {% types << type unless types.includes?(type) %}
+      {% end %}
+
+      ::Ameba::Config::RuleConfig.json_schema_type({{ builder }}, {{ types.splat }})
+    end
+
+    # :nodoc:
+    #
+    # Writes the JSON schema `type` field matching the given *types* names
+    macro json_schema_type(builder, *types)
+      {% json_types = [] of StringLiteral %}
+      {% nilable = false %}
+
+      {% raise "Missing schema type" if types.empty? %}
+
+      {% for type in types %}
+        {% type = parse_type(type).resolve %}
+
+        {% for t in (type.union? ? type.union_types : [type]) %}
+          {% if t == Nil %}
+            {% nilable = true %}
+          {% elsif t == String %}
+            {% json_type = "string" %}
+          {% elsif t == Bool %}
+            {% json_type = "boolean" %}
+          {% elsif t <= Number %}
+            {% json_type = "number" %}
+          {% else %}
+            {% raise "Unhandled schema type: #{t}" %}
+          {% end %}
+
+          {% json_types << json_type unless t == Nil || json_types.includes?(json_type) %}
+        {% end %}
+      {% end %}
+
+      {% json_types << "null" if nilable %}
+
+      {% if json_types.size == 1 %}
+        {{ builder }}.field("type", {{ json_types.first }})
+      {% else %}
+        {{ builder }}.string("type")
+        {{ builder }}.array do
+          {% for json_type in json_types %}
+            {{ builder }}.string({{ json_type }})
+          {% end %}
+        end
+      {% end %}
     end
 
     macro included
