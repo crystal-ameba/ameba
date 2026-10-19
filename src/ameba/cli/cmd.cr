@@ -147,7 +147,7 @@ module Ameba::CLI
 
       parser.on("--only RULE1,RULE2,...",
         "Run only given rules (or groups)") do |rules|
-        opts.only = rules.split(',').map! { |rule| rule.strip.rchop(':') }.to_set if rules.presence
+        opts.only = rules.split(',').map!(&.strip.rchop(':')).to_set if rules.presence
       end
 
       parser.on("--except RULE1,RULE2,...",
