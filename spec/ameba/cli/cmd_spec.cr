@@ -84,6 +84,15 @@ module Ameba
         opts.only.should eq Set{"RULE1", "RULE2"}
       end
 
+      it "accepts trailing colons in --only rules" do
+        opts = CLI.parse_args(["--only", "Style/RedundantSelf:", "--fix"])
+        opts.only.should eq Set{"Style/RedundantSelf"}
+        opts.autocorrect?.should be_true
+
+        opts = CLI.parse_args(["--only", "Style/RedundantSelf:, Lint/SignalTrap: "])
+        opts.only.should eq Set{"Style/RedundantSelf", "Lint/SignalTrap"}
+      end
+
       it "accepts --except flag" do
         opts = CLI.parse_args(["--except", "RULE1,RULE2"])
         opts.except.should eq Set{"RULE1", "RULE2"}
