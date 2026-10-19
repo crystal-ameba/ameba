@@ -85,11 +85,18 @@ module Ameba::Rule::Style
       return if name.in?(CRYSTAL_KEYWORDS)
       return if name.in?(allowed_method_names)
 
+      return if name.in?(visible_variable_names(scope))
+      return unless node_source = node_source(node, source.lines)
+
+      issue_for(obj, MSG) do |corrector|
+        corrector.replace(node, node_source.sub(/\Aself\s*\./, ""))
+      end
+    end
+
+    private def visible_variable_names(scope)
       vars = Set(String).new
 
       while scope
-        break if scope.type_definition?
-
         scope.arguments.each do |arg|
           vars << arg.name
         end
@@ -98,15 +105,13 @@ module Ameba::Rule::Style
             vars << assign.variable.name
           end
         end
+        if scope.type_definition? || !scope.inherited?
+          break
+        end
         scope = scope.outer_scope
       end
 
-      return if name.in?(vars)
-      return unless node_source = node_source(node, source.lines)
-
-      issue_for(obj, MSG) do |corrector|
-        corrector.replace(node, node_source.sub(/\Aself\s*\./, ""))
-      end
+      vars
     end
   end
 end
