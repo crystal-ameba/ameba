@@ -115,6 +115,19 @@ module Ameba::Rule::Style
         CRYSTAL
     end
 
+    it "does not report if `self` is used within the definition of a variable with the same name in class-level blocks" do
+      expect_no_issues subject, <<-CRYSTAL
+        class Actor
+          attribute actor_id : Int32
+
+          after_save do
+            actor_id = self.actor_id
+            actor_id
+          end
+        end
+        CRYSTAL
+    end
+
     it "does not report if `self` is used within the definition of a variable with the same name" do
       expect_no_issues subject, <<-CRYSTAL
         class Foo
