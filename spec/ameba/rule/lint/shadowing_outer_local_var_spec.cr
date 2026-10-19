@@ -31,7 +31,7 @@ module Ameba::Rule::Lint
         CRYSTAL
     end
 
-    pending "reports if there is a shadowing in an unpacked variable in a block" do
+    it "reports if there is a shadowing in an unpacked variable in a block" do
       expect_issue subject, <<-CRYSTAL
         def some_method
           foo = 1
@@ -43,7 +43,7 @@ module Ameba::Rule::Lint
         CRYSTAL
     end
 
-    pending "reports if there is a shadowing in an unpacked variable in a block (2)" do
+    it "reports if there is a shadowing in an unpacked variable in a block (2)" do
       expect_issue subject, <<-CRYSTAL
         def some_method
           foo = 1

@@ -31,6 +31,8 @@ module Ameba::Rule::Lint
   #   Enabled: true
   # ```
   class ShadowingOuterLocalVar < Base
+    include AST::Util
+
     properties do
       since_version "0.7.0"
       description "Disallows the usage of the same name as outer local variables " \
@@ -53,22 +55,27 @@ module Ameba::Rule::Lint
     private def find_shadowing(source, scope)
       return unless outer_scope = scope.outer_scope
 
-      each_argument_node(scope) do |arg|
-        # TODO: handle unpacked variables from `Block#unpacks`
-        next unless name = arg.name.presence
+      each_argument_node(scope) do |node, name|
+        next unless name = name.presence
 
         next unless outer_scope.find_variable(name)
         next unless outer_scope.declared_at?(name, scope.node)
         next if outer_scope.assigns_ivar?(name)
         next if outer_scope.assigns_type_dec_variable?(name)
 
-        issue_for(arg.node, MSG % name, prefer_name_location: true)
+        issue_for(node, MSG % name, prefer_name_location: true)
       end
     end
 
     private def each_argument_node(scope, &)
       scope.arguments.each do |arg|
-        yield arg unless arg.ignored?
+        yield arg.node, arg.name unless arg.ignored?
+      end
+
+      return unless (node = scope.node).is_a?(Crystal::Block)
+
+      unpacked_block_vars(node).try &.each do |var|
+        yield var, var.name unless var.name.starts_with?('_')
       end
     end
   end
