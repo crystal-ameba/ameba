@@ -27,6 +27,20 @@ module Ameba::Rule::Naming
         CRYSTAL
     end
 
+    it "fails if unpacked block parameter name doesn't match #allowed_names" do
+      expect_issue subject, <<-CRYSTAL
+        [{1, {2, [3]}}].each { |(x, (foo, *y)), _z| }
+                               # ^ error: Disallowed block parameter name found
+                                         # ^ error: Disallowed block parameter name found
+        CRYSTAL
+    end
+
+    it "passes if unpacked block parameter name starts with '_'" do
+      expect_no_issues subject, <<-CRYSTAL
+        [{1, 2}].each { |(_, _foo)| }
+        CRYSTAL
+    end
+
     context "properties" do
       context "#min_name_length" do
         it "allows setting custom values" do
