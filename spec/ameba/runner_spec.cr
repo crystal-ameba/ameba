@@ -198,12 +198,61 @@ module Ameba
         end
       end
 
-      pending "handles rules with incompatible autocorrect" do
+      it "handles rules with incompatible autocorrect" do
         rules = [Rule::Performance::MinMaxAfterMap.new, Rule::Style::VerboseBlock.new]
-        source = Source.new("list.map { |i| i.size }.max", File.tempname("source", ".cr"))
+        source = Source.new <<-CRYSTAL, File.tempname("source", ".cr")
+          list.map { |i| i.size }.max
+          CRYSTAL
 
-        Runner.new(rules, [source], formatter, default_severity, autocorrect: true).run
-        source.code.should eq "list.max_of(&.size)"
+        begin
+          Runner.new(rules, [source], formatter, default_severity, autocorrect: true).run
+          source.code.should eq "list.max_of(&.size)"
+          source.issues.map(&.rule).should eq rules
+        ensure
+          File.delete(source.path) rescue nil
+        end
+      end
+
+      it "handles deeply nested conflicting autocorrections in either rule order" do
+        [false, true].each do |reverse|
+          rules = [
+            Rule::Performance::MinMaxAfterMap.new,
+            Rule::Style::VerboseBlock.new
+              .tap(&.exclude_calls_with_block = false),
+          ]
+          rules.reverse! if reverse
+          source = Source.new <<-CRYSTAL, File.tempname("source", ".cr")
+            list.map { |group| group.map { |arr| arr.map(&.size).max }.max }.max
+            CRYSTAL
+
+          begin
+            Runner.new(rules, [source], formatter, default_severity, autocorrect: true).run
+            source.code.should eq "list.max_of(&.max_of(&.max_of(&.size)))"
+            File.read(source.path).should eq source.code
+          ensure
+            File.delete(source.path) rescue nil
+          end
+        end
+      end
+
+      it "handles rules with incompatible, conflicting autocorrect" do
+        rules = [
+          Rule::Performance::MinMaxAfterMap.new,
+          # The default excludes bodies with short blocks, including the nested `max` call.
+          Rule::Style::VerboseBlock.new
+            .tap(&.exclude_calls_with_block = false),
+        ]
+        source = Source.new <<-CRYSTAL, File.tempname("source", ".cr")
+          list.map { |arr| arr.map(&.size).max }.max
+          CRYSTAL
+
+        begin
+          Runner.new(rules, [source], formatter, default_severity, autocorrect: true).run
+          source.code.should eq "list.max_of(&.max_of(&.size))"
+          source.issues.map(&.rule).should eq [rules.first, rules.last, rules.first]
+        ensure
+          File.delete(source.path) rescue nil
+        end
       end
     end
 
