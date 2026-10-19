@@ -56,7 +56,7 @@ module Ameba::Rule::Lint
     end
 
     def visit(node : Crystal::Def)
-      return super unless node.name == "->"
+      return false unless super
 
       in_call_args(false) do
         node.accept_children(self)

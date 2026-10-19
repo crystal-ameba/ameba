@@ -60,6 +60,14 @@ module Ameba::Rule::Lint
       end
     end
 
+    it "ignores assignments within def passed as call argument" do
+      expect_no_issues subject, <<-CRYSTAL
+        memoize def foo
+          bar = 1
+        end
+        CRYSTAL
+    end
+
     it "ignores assignments within assignments" do
       expect_no_issues subject, <<-CRYSTAL
         self.foo = foo = 1
