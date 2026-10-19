@@ -49,6 +49,30 @@ module Ameba::Rule::Lint
         CRYSTAL
     end
 
+    it "reports if unpacked block argument is unused" do
+      source = expect_issue subject, <<-CRYSTAL
+        [{1, {2, 3}}].each do |(foo, (bar, *baz))|
+                                          # ^^^ error: Unused argument `baz`. [...]
+                              # ^^^ error: Unused argument `foo`. [...]
+          bar
+        end
+        CRYSTAL
+
+      expect_correction source, <<-CRYSTAL
+        [{1, {2, 3}}].each do |(_, (bar, *_))|
+          bar
+        end
+        CRYSTAL
+    end
+
+    it "doesn't report if unpacked block arguments are used" do
+      expect_no_issues subject, <<-CRYSTAL
+        [{1, {2, 3}}].each do |(foo, (bar, *baz)), _qux|
+          foo + bar + baz.sum
+        end
+        CRYSTAL
+    end
+
     it "reports if proc argument is unused" do
       source = expect_issue subject, <<-CRYSTAL
         -> (foo : Int32, bar : String) do
