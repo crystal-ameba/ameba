@@ -3,6 +3,8 @@ require "./base_visitor"
 module Ameba::AST
   # AST Visitor that traverses the source and constructs scopes.
   class ScopeVisitor < BaseVisitor
+    include Util
+
     # Non-exhaustive list of nodes to be visited by Ameba's rules.
     NODES = {
       ClassDef,
@@ -94,6 +96,18 @@ module Ameba::AST
     end
 
     # :nodoc:
+    def visit(node : Crystal::Block)
+      return unless on_scope_enter(node)
+
+      # Unpacked variables are visited after the block body,
+      # so they need to be registered before they're referenced
+      unpacked_block_vars(node).try &.each do |var|
+        @current_scope.add_argument(var)
+      end
+      true
+    end
+
+    # :nodoc:
     def visit(node : Crystal::Def)
       node.name == "->" || on_scope_enter(node)
     end
@@ -176,6 +190,8 @@ module Ameba::AST
     def visit(node : Crystal::Var)
       variable = @current_scope.find_variable(node.name)
       case
+      when @current_scope.arguments.any?(&.node.same?(node))
+        # node is an already registered argument (i.e. unpacked block variable)
       when @current_scope.arg?(node) # node is an argument
         @current_scope.add_argument(node)
       when variable.nil? && @current_assign # node is a variable
