@@ -68,7 +68,7 @@ class Ameba::Config
           {% call.raise("Rule property `#{name}` would override the `#{getter}` method of `#{@type}`") %}
         {% end %}
 
-        {% properties[name] = {key: key, type: type} %}
+        {% properties[name] = {key: key} %}
 
         @[YAML::Field(key: {{ key }}, converter: {{ converter }})]
         {% if type == Bool %}
@@ -125,25 +125,21 @@ class Ameba::Config
           builder.string("properties")
           builder.object do
             {% for prop_name, prop in properties %}
-              {% unless prop_name == "description".id %}
+              {% unless prop_name == "description".id || prop_name == "severity".id %}
                 builder.string({{ prop[:key] }})
                 builder.object do
-                  {% if prop[:type] == Severity %}
-                    builder.field("$ref", "#/$defs/Severity")
-                    builder.field("default", rule.severity.to_s)
-                  {% else %}
-                    # Described by the type of its instance variable, within
-                    # the rule being instantiated (which can be a subclass)
-                    \{% begin %}
-                      ::Ameba::Config::RuleConfig.json_schema_type(builder, \{{ @type }}, [{{ prop_name.symbolize }}], default: rule.@{{ prop_name }})
-                    \{% end %}
-                  {% end %}
+                  # Described by the type of its instance variable, within
+                  # the rule being instantiated (which can be a subclass)
+                  \{% begin %}
+                    ::Ameba::Config::RuleConfig.json_schema_type(builder, \{{ @type }}, [{{ prop_name.symbolize }}], default: rule.@{{ prop_name }})
+                  \{% end %}
                 end
               {% end %}
             {% end %}
 
-            # Built-in properties are described within `BaseRule`,
-            # unless their defaults differ for this rule
+            # Built-in properties (and `Severity`, even if defined within
+            # `properties`) are described within `BaseRule`, unless their
+            # defaults differ for this rule
 
             {% unless properties["enabled".id] %}
               # Deprecated rules are disabled by default
@@ -156,15 +152,13 @@ class Ameba::Config
               end
             {% end %}
 
-            {% unless properties["severity".id] %}
-              unless rule.severity == Rule::Base.default_severity
-                builder.string("Severity")
-                builder.object do
-                  builder.field("$ref", "#/$defs/Severity")
-                  builder.field("default", rule.severity.to_s)
-                end
+            unless rule.severity == Rule::Base.default_severity
+              builder.string("Severity")
+              builder.object do
+                builder.field("$ref", "#/$defs/Severity")
+                builder.field("default", rule.severity.to_s)
               end
-            {% end %}
+            end
           end
         end
       end
