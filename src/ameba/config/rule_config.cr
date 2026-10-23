@@ -214,7 +214,7 @@ class Ameba::Config
       {% hashes = [] of HashLiteral %}
 
       {% for value in values %}
-        {% if value.is_a?(StringLiteral) %}
+        {% if value.is_a?(StringLiteral) || value.is_a?(StringInterpolation) %}
           {% json_types << "string" %}
         {% elsif value.is_a?(BoolLiteral) %}
           {% json_types << "boolean" %}
