@@ -102,26 +102,27 @@ module Ameba::AST::Util
       !!(node.args.present? || node.splat_index || node.double_splat)
   end
 
-  # Returns the variables unpacked within the *node* arguments
-  # (i.e. `foo`, `bar` and `baz` in `|(foo, (bar, *baz))|`).
-  def unpacked_block_vars(node : Crystal::Block) : Array(Crystal::Var)?
+  # Returns the unpacked block arguments within the *node*
+  # (i.e. `foo`, `bar` and `baz` in `|(foo, (bar, *baz))|`),
+  # or `nil` if there are no unpacked arguments.
+  def unpacked_block_args(node : Crystal::Block) : Array(Crystal::Var)?
     return unless unpacks = node.unpacks
 
-    vars = [] of Crystal::Var
+    args = [] of Crystal::Var
     unpacks.try &.each_value do |unpack|
-      collect_unpacked_vars(unpack, vars)
+      collect_unpacked_args(unpack, args)
     end
-    vars
+    args
   end
 
-  private def collect_unpacked_vars(node, vars)
+  private def collect_unpacked_args(node, args)
     case node
     when Crystal::Var
-      vars << node
+      args << node
     when Crystal::Splat
-      collect_unpacked_vars(node.exp, vars)
+      collect_unpacked_args(node.exp, args)
     when Crystal::Expressions
-      node.expressions.each { |exp| collect_unpacked_vars(exp, vars) }
+      node.expressions.each { |exp| collect_unpacked_args(exp, args) }
     end
   end
 

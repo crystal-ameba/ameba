@@ -99,10 +99,10 @@ module Ameba::AST
     def visit(node : Crystal::Block)
       return unless on_scope_enter(node)
 
-      # Unpacked variables are visited after the block body,
+      # Unpacked arguments are visited after the block body,
       # so they need to be registered before they're referenced
-      unpacked_block_vars(node).try &.each do |var|
-        @current_scope.add_argument(var)
+      unpacked_block_args(node).try &.each do |arg|
+        @current_scope.add_argument(arg)
       end
       true
     end

@@ -483,19 +483,19 @@ module Ameba::AST
       end
     end
 
-    describe "#unpacked_block_vars" do
+    describe "#unpacked_block_args" do
       it "returns an empty array if the block has no unpacked arguments" do
         node = as_node("foo { |bar| }").as(Crystal::Call)
         block = node.block.should be_a(Crystal::Block)
 
-        subject.unpacked_block_vars(block).should be_nil
+        subject.unpacked_block_args(block).should be_nil
       end
 
       it "returns nested and splatted unpacked variables" do
         node = as_node("foo { |(a, (b, *c)), d, (e)| }").as(Crystal::Call)
         block = node.block.should be_a(Crystal::Block)
 
-        vars = subject.unpacked_block_vars(block).should_not be_nil
+        vars = subject.unpacked_block_args(block).should_not be_nil
         vars.map(&.name).should eq %w[a b c e]
       end
     end
