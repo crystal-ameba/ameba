@@ -48,6 +48,14 @@ class Ameba::Config
           {% end %}
         {% end %}
 
+        {% getter = type == Bool ? "#{name}?".id : name %}
+
+        {% if properties[name] %}
+          {% call.raise("Rule property `#{name}` is already defined") %}
+        {% elsif @type.has_method?(getter) %}
+          {% call.raise("Rule property `#{name}` would override the `#{getter}` method of `#{@type}`") %}
+        {% end %}
+
         {% properties[name] = {key: key, type: type} %}
 
         @[YAML::Field(key: {{ key }}, converter: {{ converter }})]
