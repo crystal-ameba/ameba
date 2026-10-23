@@ -49,12 +49,10 @@ module Ameba::Rule::Style
       return unless types.any? { |type| has_nil?(type) }
       return if types.all? { |type| has_nil?(type) }
 
-      # https://github.com/crystal-lang/crystal/issues/11071
-      return if types.any?(Crystal::Metaclass)
-
       if prefer_short_nil?(types)
         # `String | Nil` -> `String?`
         return unless has_verbose_nil?(node)
+        return unless types.any? { |type| nilable_type?(type) }
         message = MSG_VERBOSE
       else
         # `String?` -> `String | Nil`
@@ -198,13 +196,21 @@ module Ameba::Rule::Style
       end
       return sources unless nilable
 
-      # https://github.com/crystal-lang/crystal/issues/11071
-      if prefer_short_nil?(types) && !types.any?(Crystal::Metaclass)
-        sources[-1] += '?'
+      if prefer_short_nil?(types) &&
+         (index = types.rindex { |type| nilable_type?(type) })
+        sources[index] += '?'
       else
         sources << "Nil"
       end
       sources
+    end
+
+    # Returns `true` if the *node* can be suffixed with `?`, which
+    # is not the case for the metaclasses (i.e. `Foo.class?`).
+    #
+    # https://github.com/crystal-lang/crystal/issues/11071
+    private def nilable_type?(node)
+      !node.is_a?(Crystal::Metaclass) && !has_nil?(node)
     end
 
     # Returns `true` if the *node* contains explicit `Nil` type,

@@ -17,6 +17,21 @@ module Ameba::Rule::Style
     it "passes if the union includes metaclass (Foo.class)" do
       expect_no_issues subject, <<-CRYSTAL
         foo : Foo.class | Nil = nil
+        bar : Nil | Foo.class | Bar.class
+        CRYSTAL
+    end
+
+    it "corrects the verbose nil type (metaclass)" do
+      source = expect_issue subject, <<-CRYSTAL
+        foo : Foo.class | Bar | Nil
+            # ^^^^^^^^^^^^^^^^^^^^^ error: Prefer `?` instead of `| Nil` in unions
+        bar : Nil | Bar | Foo.class
+            # ^^^^^^^^^^^^^^^^^^^^^ error: Prefer `?` instead of `| Nil` in unions
+        CRYSTAL
+
+      expect_correction source, <<-CRYSTAL
+        foo : Foo.class | Bar?
+        bar : Bar? | Foo.class
         CRYSTAL
     end
 
@@ -253,6 +268,15 @@ module Ameba::Rule::Style
           foo : String | Int32 | Nil
           bar : String | Int32 | Nil
           baz : Array(String | Nil) | Nil
+          CRYSTAL
+
+        source = expect_issue rule, <<-CRYSTAL
+          foo : Foo.class | Bar?
+              # ^^^^^^^^^^^^^^^^ error: Prefer `| Nil` instead of `?` in unions
+          CRYSTAL
+
+        expect_correction source, <<-CRYSTAL
+          foo : Foo.class | Bar | Nil
           CRYSTAL
       end
 
