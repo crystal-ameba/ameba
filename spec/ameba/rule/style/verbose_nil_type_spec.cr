@@ -70,7 +70,6 @@ module Ameba::Rule::Style
       source = expect_issue subject, <<-CRYSTAL
         foo : (Array(String | Nil) | Nil) | Foo
             # ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ error: Prefer `?` instead of `| Nil` in unions
-            # ^^^^^^^^^^^^^^^^^^^^^^^^^^^ error: Prefer `?` instead of `| Nil` in unions
                    # ^^^^^^^^^^^^ error: Prefer `?` instead of `| Nil` in unions
         CRYSTAL
 
@@ -162,8 +161,6 @@ module Ameba::Rule::Style
       source = expect_issue subject, <<-CRYSTAL
         foo : (Nil | (Symbol | Nil)) | Foo
             # ^^^^^^^^^^^^^^^^^^^^^^^^^^^^ error: Prefer `?` instead of `| Nil` in unions
-            # ^^^^^^^^^^^^^^^^^^^^^^ error: Prefer `?` instead of `| Nil` in unions
-                   # ^^^^^^^^^^^^^^ error: Prefer `?` instead of `| Nil` in unions
         CRYSTAL
 
       expect_correction source, <<-CRYSTAL
@@ -202,8 +199,11 @@ module Ameba::Rule::Style
         CRYSTAL
     end
 
-    it "does not correct unions containing comments" do
+    it "does not correct multi-line unions" do
       source = expect_issue subject, <<-CRYSTAL
+        alias Foo = Nil | Bool | Int64 |
+                  # ^^^^^^^^^^^^^^^^^^^^ error: Prefer `?` instead of `| Nil` in unions
+                    Float64 | String
         foo : String | # comment
             # ^^^^^^^^^^^^^^^^^^ error: Prefer `?` instead of `| Nil` in unions
               Nil
@@ -242,8 +242,6 @@ module Ameba::Rule::Style
         source = expect_issue rule, <<-CRYSTAL
           foo : String? | Int32?
               # ^^^^^^^^^^^^^^^^ error: Prefer `| Nil` instead of `?` in unions
-              # ^^^^^^^ error: Prefer `| Nil` instead of `?` in unions
-                        # ^^^^^^ error: Prefer `| Nil` instead of `?` in unions
           bar : (String | Int32)?
               # ^^^^^^^^^^^^^^^^^ error: Prefer `| Nil` instead of `?` in unions
           baz : Array(String?)?
@@ -287,6 +285,11 @@ module Ameba::Rule::Style
       it "#only_two_element_unions (nested unions)" do
         rule = subject.class.new
         rule.only_two_element_unions = true
+
+        expect_no_issues rule, <<-CRYSTAL
+          foo : (String | Nil) | Int32
+          bar : Int32 | (String | Nil)
+          CRYSTAL
 
         source = expect_issue rule, <<-CRYSTAL
           foo : String? | Nil

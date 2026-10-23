@@ -39,6 +39,10 @@ module Ameba::Rule::Style
     MSG_VERBOSE = "Prefer `?` instead of `| Nil` in unions"
     MSG_SHORT   = "Prefer `| Nil` instead of `?` in unions"
 
+    def test(source)
+      UnionVisitor.new(self, source)
+    end
+
     def test(source, node : Crystal::Union)
       types = flatten_types(node)
 
@@ -83,9 +87,12 @@ module Ameba::Rule::Style
     end
 
     private def correctable?(node, code_lines)
-      # Corrected code is rendered from the AST, which lacks the comments
-      return false unless code = node_source(node, code_lines)
-      return false if code.includes?('#')
+      return false unless (location = node.location) &&
+                          (end_location = node.end_location)
+
+      # Corrected code is rendered in a single line, so we skip multi-line
+      # unions (which might have comments too) to preserve their formatting
+      return false unless location.same_line?(end_location)
 
       # Location of a union starting (or ending) with a parenthesized
       # proc notation excludes the parenthesis, so we skip those.
@@ -104,32 +111,11 @@ module Ameba::Rule::Style
     end
 
     private def type_source(node : Crystal::Path, code_lines)
-      names = node.names.join("::")
-      node.global? ? "::#{names}" : names
+      path_name(node)
     end
 
-    # Since unions are flattened, removing `Nil` type from anywhere in the
-    # union and appending `?` (or `| Nil`) is semantically the same and does
-    # not affect the type of the union.
     private def type_source(node : Crystal::Union, code_lines)
-      types = flatten_types(node)
-      nilable = types.any? { |type| has_nil?(type) }
-
-      types.reject! { |type| has_nil?(type) }
-      return "Nil" if types.empty?
-
-      code = types
-        .map { |type| type_operand(type, code_lines) || return }
-        .join(" | ")
-
-      return code unless nilable
-
-      # https://github.com/crystal-lang/crystal/issues/11071
-      if prefer_short_nil?(types) && !types.any?(Crystal::Metaclass)
-        "#{code}?"
-      else
-        "#{code} | Nil"
-      end
+      union_type_sources(node, code_lines).try(&.join(" | "))
     end
 
     # Generic type arguments are rendered recursively, so that the nested
@@ -141,7 +127,7 @@ module Ameba::Rule::Style
         type_source(type, code_lines) || return
       end
       node.named_args.try &.each do |arg|
-        value = type_source(arg.value, code_lines) || return
+        return unless value = type_source(arg.value, code_lines)
         args << "#{::Symbol.quote_for_named_argument(arg.name)}: #{value}"
       end
 
@@ -180,17 +166,45 @@ module Ameba::Rule::Style
 
     # Same as `#type_source`, but wraps multi-type unions and procs
     # in parentheses, to be used as an operand of the type expression.
-    private def type_operand(node, code_lines)
-      return unless code = type_source(node, code_lines)
+    private def type_operand(node : Crystal::Union, code_lines)
+      return unless sources = union_type_sources(node, code_lines)
 
-      case node
-      when Crystal::ProcNotation
-        "(#{code})"
-      when Crystal::Union
-        code.includes?(" | ") ? "(#{code})" : code
-      else
-        code
+      sources.size > 1 ? "(#{sources.join(" | ")})" : sources.first
+    end
+
+    private def type_operand(node : Crystal::ProcNotation, code_lines)
+      type_source(node, code_lines).try { |code| "(#{code})" }
+    end
+
+    private def type_operand(node, code_lines)
+      type_source(node, code_lines)
+    end
+
+    # Returns sources of the flattened union types, with `Nil` type moved
+    # to the end, either as a `?` suffix or as a separate `Nil` type.
+    #
+    # Since unions are flattened, removing `Nil` type from anywhere in the
+    # union and appending `?` (or `| Nil`) is semantically the same and does
+    # not affect the type of the union.
+    private def union_type_sources(node : Crystal::Union, code_lines)
+      types = flatten_types(node)
+      nilable = types.any? { |type| has_nil?(type) }
+
+      types.reject! { |type| has_nil?(type) }
+      return %w[Nil] if types.empty?
+
+      sources = types.map do |type|
+        type_operand(type, code_lines) || return
       end
+      return sources unless nilable
+
+      # https://github.com/crystal-lang/crystal/issues/11071
+      if prefer_short_nil?(types) && !types.any?(Crystal::Metaclass)
+        sources[-1] += '?'
+      else
+        sources << "Nil"
+      end
+      sources
     end
 
     # Returns `true` if the *node* contains explicit `Nil` type,
@@ -225,12 +239,28 @@ module Ameba::Rule::Style
         nil_type.end_location == type.end_location
     end
 
-    private def has_nil?(node : Crystal::Union)
-      node.types.any? { |type| has_nil?(type) }
-    end
-
     private def has_nil?(node)
       path_named?(node, "Nil")
+    end
+
+    private class UnionVisitor < AST::NodeVisitor
+      # Nested unions are flattened by the compiler, so we inspect
+      # them only as a part of the outermost union.
+      def visit(node : Crystal::Union)
+        return false if skip?(node)
+
+        @rule.test(@source, node)
+        accept_types(node)
+        false
+      end
+
+      private def accept_types(node : Crystal::Union)
+        node.types.each { |type| accept_types(type) }
+      end
+
+      private def accept_types(node)
+        node.accept(self)
+      end
     end
   end
 end
