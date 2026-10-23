@@ -75,7 +75,7 @@ module Ameba::Rule::Style
         CRYSTAL
 
       expect_correction source, <<-CRYSTAL
-        foo : (Array(String?) | Nil) | Foo
+        foo : Array(String?) | Foo?
         CRYSTAL
     end
 
@@ -90,6 +90,74 @@ module Ameba::Rule::Style
         CRYSTAL
     end
 
+    it "corrects the verbose nil type (generics)" do
+      source = expect_issue subject, <<-CRYSTAL
+        foo : Array(String | Nil) | Nil
+            # ^^^^^^^^^^^^^^^^^^^^^^^^^ error: Prefer `?` instead of `| Nil` in unions
+                  # ^^^^^^^^^^^^ error: Prefer `?` instead of `| Nil` in unions
+        bar : Array(String | Symbol) | Nil
+            # ^^^^^^^^^^^^^^^^^^^^^^^^^^^^ error: Prefer `?` instead of `| Nil` in unions
+        baz : Array(String) | Nil
+            # ^^^^^^^^^^^^^^^^^^^ error: Prefer `?` instead of `| Nil` in unions
+        bat : Hash(Foo::Bar, (Baz)) | Nil
+            # ^^^^^^^^^^^^^^^^^^^^^^^^^^^ error: Prefer `?` instead of `| Nil` in unions
+        CRYSTAL
+
+      expect_correction source, <<-CRYSTAL
+        foo : Array(String?)?
+        bar : Array(String | Symbol)?
+        baz : Array(String)?
+        bat : Hash(Foo::Bar, Baz)?
+        CRYSTAL
+    end
+
+    it "corrects the verbose nil type (deeply nested `Nil`)" do
+      source = expect_issue subject, <<-CRYSTAL
+        foo : Array(Hash(String, Int32 | Nil)) | Nil
+            # ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ error: Prefer `?` instead of `| Nil` in unions
+                               # ^^^^^^^^^^^ error: Prefer `?` instead of `| Nil` in unions
+        bar : NamedTuple(x: String | Nil) | Nil
+            # ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ error: Prefer `?` instead of `| Nil` in unions
+                          # ^^^^^^^^^^^^ error: Prefer `?` instead of `| Nil` in unions
+        baz : (String | Nil -> Int32) | Nil
+             # ^^^^^^^^^^^^^^^^^^^^^^^^^^^^ error: Prefer `?` instead of `| Nil` in unions
+             # ^^^^^^^^^^^^ error: Prefer `?` instead of `| Nil` in unions
+        CRYSTAL
+
+      expect_correction source, <<-CRYSTAL
+        foo : Array(Hash(String, Int32?))?
+        bar : NamedTuple(x: String?)?
+        baz : (String? -> Int32) | Nil
+        CRYSTAL
+    end
+
+    it "corrects the verbose nil type (generic shorthands)" do
+      source = expect_issue subject, <<-CRYSTAL
+        foo : {String | Nil, Int32} | Nil
+            # ^^^^^^^^^^^^^^^^^^^^^^^^^^^ error: Prefer `?` instead of `| Nil` in unions
+             # ^^^^^^^^^^^^ error: Prefer `?` instead of `| Nil` in unions
+        bar : {"a b": Int32 | Nil} | Nil
+            # ^^^^^^^^^^^^^^^^^^^^^^^^^^ error: Prefer `?` instead of `| Nil` in unions
+                    # ^^^^^^^^^^^ error: Prefer `?` instead of `| Nil` in unions
+        baz : (Int32 | Nil)* | Nil
+            # ^^^^^^^^^^^^^^^^^^^^ error: Prefer `?` instead of `| Nil` in unions
+            # ^^^^^^^^^^^^^ error: Prefer `?` instead of `| Nil` in unions
+        bat : Int32[4] | Nil
+            # ^^^^^^^^^^^^^^ error: Prefer `?` instead of `| Nil` in unions
+        bun : Array(String | Nil -> Int32) | Nil
+            # ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ error: Prefer `?` instead of `| Nil` in unions
+                  # ^^^^^^^^^^^^ error: Prefer `?` instead of `| Nil` in unions
+        CRYSTAL
+
+      expect_correction source, <<-CRYSTAL
+        foo : {String?, Int32}?
+        bar : {"a b": Int32?}?
+        baz : Int32?*?
+        bat : Int32[4]?
+        bun : Array(String? -> Int32)?
+        CRYSTAL
+    end
+
     it "corrects the parenthesized single type unions" do
       source = expect_issue subject, <<-CRYSTAL
         foo : (Nil | (Symbol | Nil)) | Foo
@@ -101,6 +169,47 @@ module Ameba::Rule::Style
       expect_correction source, <<-CRYSTAL
         foo : Symbol | Foo?
         CRYSTAL
+    end
+
+    it "corrects the verbose nil type (metaclass within generics)" do
+      source = expect_issue subject, <<-CRYSTAL
+        foo : Array(Foo.class) | Nil
+            # ^^^^^^^^^^^^^^^^^^^^^^ error: Prefer `?` instead of `| Nil` in unions
+        bar : Array(Foo.class | Nil) | Nil
+            # ^^^^^^^^^^^^^^^^^^^^^^^^^^^^ error: Prefer `?` instead of `| Nil` in unions
+        CRYSTAL
+
+      expect_correction source, <<-CRYSTAL
+        foo : Array(Foo.class)?
+        bar : Array(Foo.class | Nil)?
+        CRYSTAL
+    end
+
+    it "does not correct unions starting or ending with parenthesized proc notation" do
+      source = expect_issue subject, <<-CRYSTAL
+        foo : Nil | (String -> Int32)
+            # ^^^^^^^^^^^^^^^^^^^^^^ error: Prefer `?` instead of `| Nil` in unions
+        bar : (String -> Int32) | Nil
+             # ^^^^^^^^^^^^^^^^^^^^^^ error: Prefer `?` instead of `| Nil` in unions
+        baz : Nil | (String -> Int32) | Int32
+            # ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ error: Prefer `?` instead of `| Nil` in unions
+        CRYSTAL
+
+      expect_correction source, <<-CRYSTAL
+        foo : Nil | (String -> Int32)
+        bar : (String -> Int32) | Nil
+        baz : (String -> Int32) | Int32?
+        CRYSTAL
+    end
+
+    it "does not correct unions containing comments" do
+      source = expect_issue subject, <<-CRYSTAL
+        foo : String | # comment
+            # ^^^^^^^^^^^^^^^^^^ error: Prefer `?` instead of `| Nil` in unions
+              Nil
+        CRYSTAL
+
+      expect_no_corrections source
     end
 
     context "properties" do
@@ -123,6 +232,29 @@ module Ameba::Rule::Style
         expect_correction source, <<-CRYSTAL
           foo : String | Nil = nil
           bar : String | Nil
+          CRYSTAL
+      end
+
+      it "#explicit_nil (nested unions)" do
+        rule = subject.class.new
+        rule.explicit_nil = true
+
+        source = expect_issue rule, <<-CRYSTAL
+          foo : String? | Int32?
+              # ^^^^^^^^^^^^^^^^ error: Prefer `| Nil` instead of `?` in unions
+              # ^^^^^^^ error: Prefer `| Nil` instead of `?` in unions
+                        # ^^^^^^ error: Prefer `| Nil` instead of `?` in unions
+          bar : (String | Int32)?
+              # ^^^^^^^^^^^^^^^^^ error: Prefer `| Nil` instead of `?` in unions
+          baz : Array(String?)?
+              # ^^^^^^^^^^^^^^^ error: Prefer `| Nil` instead of `?` in unions
+                    # ^^^^^^^ error: Prefer `| Nil` instead of `?` in unions
+          CRYSTAL
+
+        expect_correction source, <<-CRYSTAL
+          foo : String | Int32 | Nil
+          bar : String | Int32 | Nil
+          baz : Array(String | Nil) | Nil
           CRYSTAL
       end
 
@@ -149,6 +281,24 @@ module Ameba::Rule::Style
           foo : String? = nil
           bar : String?
           baz : String | Number | Nil
+          CRYSTAL
+      end
+
+      it "#only_two_element_unions (nested unions)" do
+        rule = subject.class.new
+        rule.only_two_element_unions = true
+
+        source = expect_issue rule, <<-CRYSTAL
+          foo : String? | Nil
+              # ^^^^^^^^^^^^^ error: Prefer `?` instead of `| Nil` in unions
+          bar : Array(String | Int32?) | Nil
+              # ^^^^^^^^^^^^^^^^^^^^^^^^^^^^ error: Prefer `?` instead of `| Nil` in unions
+                    # ^^^^^^^^^^^^^^^ error: Prefer `| Nil` instead of `?` in unions
+          CRYSTAL
+
+        expect_correction source, <<-CRYSTAL
+          foo : String?
+          bar : Array(String | Int32 | Nil)?
           CRYSTAL
       end
     end

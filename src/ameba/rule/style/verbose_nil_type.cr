@@ -39,69 +39,190 @@ module Ameba::Rule::Style
     MSG_VERBOSE = "Prefer `?` instead of `| Nil` in unions"
     MSG_SHORT   = "Prefer `| Nil` instead of `?` in unions"
 
-    private NIL_TYPE_PATTERN    = /(\s*\|\s*Nil(?=\W|$))|((?<=\W|^)Nil\s*\|\s*)/
-    private SINGLE_TYPE_PATTERN = /\((\w+)\)/
-
     def test(source, node : Crystal::Union)
-      return unless has_nil?(node)
-      return unless node_source = node_source(node, source.lines)
+      types = flatten_types(node)
+
+      return unless types.any? { |type| has_nil?(type) }
+      return if types.all? { |type| has_nil?(type) }
 
       # https://github.com/crystal-lang/crystal/issues/11071
-      return if node_source.includes?(".class")
+      return if types.any?(Crystal::Metaclass)
 
-      # `String?` -> `String | Nil`
-      if explicit_nil? || (only_two_element_unions? && type_count(node) > 2)
-        return unless node_source.ends_with?('?')
+      if prefer_short_nil?(types)
+        # `String | Nil` -> `String?`
+        return unless has_verbose_nil?(node)
+        message = MSG_VERBOSE
+      else
+        # `String?` -> `String | Nil`
+        return unless has_short_nil?(node)
+        message = MSG_SHORT
+      end
 
-        issue_for(node, MSG_SHORT) do |corrector|
-          corrector.replace(node, "%s | Nil" % node_source.rstrip('?'))
-        end
+      if correctable?(node, source.lines)
+        corrected_code = type_source(node, source.lines)
+      end
+
+      unless corrected_code
+        issue_for(node, message)
         return
       end
 
-      # `String | Nil` -> `String?`
-      return unless node_source.matches?(NIL_TYPE_PATTERN)
-
-      # Unions that _do not_ contain generic types are safe to modify using
-      # simple find-and-replace, due to the fact that their types are being
-      # flattened in the end, so removing `Nil` type from anywhere in the
-      # union and appending `?` should be semantically the same and should
-      # not affect the type of the union.
-      #
-      # If union contains generic type however, we need to be careful, as
-      # simple find-and-replace might change the type of the union -
-      # and that's why we skip the auto-correction of those.
-      if has_generic?(node)
-        issue_for(node, MSG_VERBOSE)
-        return
-      end
-
-      issue_for(node, MSG_VERBOSE) do |corrector|
-        corrected_code = "%s?" % node_source
-          .gsub(NIL_TYPE_PATTERN, "")
-          .gsub('?', "")
-
-        # handle `(String | ((Symbol)))` cases
-        while corrected_code.matches?(SINGLE_TYPE_PATTERN)
-          corrected_code = corrected_code
-            .gsub(SINGLE_TYPE_PATTERN, "\\1")
-        end
+      issue_for(node, message) do |corrector|
         corrector.replace(node, corrected_code)
       end
     end
 
-    private def type_count(node : Crystal::Union)
-      node.types.sum do |type|
-        type.is_a?(Crystal::Union) ? type.types.size : 1
+    # Returns `true` if the `?` shorthand is preferred for the union
+    # consisting of (flattened) *types*.
+    private def prefer_short_nil?(types)
+      return false if explicit_nil?
+      return true unless only_two_element_unions?
+
+      # non-`Nil` types + `Nil` itself
+      types.count { |type| !has_nil?(type) } + 1 <= 2
+    end
+
+    private def correctable?(node, code_lines)
+      # Corrected code is rendered from the AST, which lacks the comments
+      return false unless code = node_source(node, code_lines)
+      return false if code.includes?('#')
+
+      # Location of a union starting (or ending) with a parenthesized
+      # proc notation excludes the parenthesis, so we skip those.
+      {node.types.first, node.types.last}.none? do |type|
+        type.is_a?(Crystal::Union) && type.types.size == 1 &&
+          type.types.first.is_a?(Crystal::ProcNotation)
       end
     end
 
-    private def has_generic?(node : Crystal::Union)
-      node.types.any? { |type| has_generic?(type) }
+    private def flatten_types(node : Crystal::Union) : Array(Crystal::ASTNode)
+      node.types.flat_map { |type| flatten_types(type) }
     end
 
-    private def has_generic?(node)
-      node.is_a?(Crystal::Generic)
+    private def flatten_types(node) : Array(Crystal::ASTNode)
+      [node] of Crystal::ASTNode
+    end
+
+    private def type_source(node : Crystal::Path, code_lines)
+      names = node.names.join("::")
+      node.global? ? "::#{names}" : names
+    end
+
+    # Since unions are flattened, removing `Nil` type from anywhere in the
+    # union and appending `?` (or `| Nil`) is semantically the same and does
+    # not affect the type of the union.
+    private def type_source(node : Crystal::Union, code_lines)
+      types = flatten_types(node)
+      nilable = types.any? { |type| has_nil?(type) }
+
+      types.reject! { |type| has_nil?(type) }
+      return "Nil" if types.empty?
+
+      code = types
+        .map { |type| type_operand(type, code_lines) || return }
+        .join(" | ")
+
+      return code unless nilable
+
+      # https://github.com/crystal-lang/crystal/issues/11071
+      if prefer_short_nil?(types) && !types.any?(Crystal::Metaclass)
+        "#{code}?"
+      else
+        "#{code} | Nil"
+      end
+    end
+
+    # Generic type arguments are rendered recursively, so that the nested
+    # unions are corrected along with the outer one, within a single pass.
+    private def type_source(node : Crystal::Generic, code_lines)
+      return unless (name = node.name).is_a?(Crystal::Path)
+
+      args = node.type_vars.map do |type|
+        type_source(type, code_lines) || return
+      end
+      node.named_args.try &.each do |arg|
+        value = type_source(arg.value, code_lines) || return
+        args << "#{::Symbol.quote_for_named_argument(arg.name)}: #{value}"
+      end
+
+      case node.suffix
+      in .question?
+        nil
+      in .asterisk?
+        type_operand(node.type_vars.first, code_lines).try { |type| "#{type}*" }
+      in .bracket?
+        type_operand(node.type_vars.first, code_lines).try { |type| "#{type}[#{args.last}]" }
+      in .none?
+        # `{String, Int32}` and `{foo: String}` shorthands have no location
+        if name.location
+          "#{type_source(name, code_lines)}(#{args.join(", ")})"
+        else
+          "{#{args.join(", ")}}"
+        end
+      end
+    end
+
+    private def type_source(node : Crystal::ProcNotation, code_lines)
+      inputs = node.inputs.try &.map do |type|
+        type_source(type, code_lines) || return
+      end
+      output = node.output.try do |type|
+        type_operand(type, code_lines) || return
+      end
+
+      [inputs.try(&.join(", ")), "->", output].compact.join(' ')
+    end
+
+    # Some nodes (i.e. `NumberLiteral`) lack the end location
+    private def type_source(node, code_lines)
+      node_source(node, code_lines) || node.to_s
+    end
+
+    # Same as `#type_source`, but wraps multi-type unions and procs
+    # in parentheses, to be used as an operand of the type expression.
+    private def type_operand(node, code_lines)
+      return unless code = type_source(node, code_lines)
+
+      case node
+      when Crystal::ProcNotation
+        "(#{code})"
+      when Crystal::Union
+        code.includes?(" | ") ? "(#{code})" : code
+      else
+        code
+      end
+    end
+
+    # Returns `true` if the *node* contains explicit `Nil` type,
+    # either directly or within the nested unions.
+    private def has_verbose_nil?(node : Crystal::Union)
+      types = short_nil?(node) ? node.types[...-1] : node.types
+      types.any? { |type| has_verbose_nil?(type) }
+    end
+
+    private def has_verbose_nil?(node)
+      has_nil?(node)
+    end
+
+    # Returns `true` if the *node* contains `T?` shorthand,
+    # either directly or within the nested unions.
+    private def has_short_nil?(node : Crystal::Union)
+      short_nil?(node) || node.types.any? { |type| has_short_nil?(type) }
+    end
+
+    private def has_short_nil?(node)
+      false
+    end
+
+    # Returns `true` if the *node* is a `T?` shorthand, which the parser
+    # expands to `T | ::Nil`, with `::Nil` sharing the location of `T`.
+    private def short_nil?(node : Crystal::Union)
+      return false unless node.types.size == 2
+
+      type, nil_type = node.types
+      nil_type.is_a?(Crystal::Path) && nil_type.global? && has_nil?(nil_type) &&
+        nil_type.location == type.location &&
+        nil_type.end_location == type.end_location
     end
 
     private def has_nil?(node : Crystal::Union)
