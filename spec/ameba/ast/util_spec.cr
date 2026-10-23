@@ -483,6 +483,29 @@ module Ameba::AST
       end
     end
 
+    describe "#all_block_args" do
+      it "returns an empty array if the block has no arguments" do
+        node = as_node("foo { }").as(Crystal::Call)
+        block = node.block.should be_a(Crystal::Block)
+
+        subject.all_block_args(block).should be_empty
+      end
+
+      it "returns regular arguments" do
+        node = as_node("foo { |bar, *baz| }").as(Crystal::Call)
+        block = node.block.should be_a(Crystal::Block)
+
+        subject.all_block_args(block).map(&.name).should eq %w[bar baz]
+      end
+
+      it "returns regular and unpacked arguments in order" do
+        node = as_node("foo { |(a, (b, *c)), d, (e)| }").as(Crystal::Call)
+        block = node.block.should be_a(Crystal::Block)
+
+        subject.all_block_args(block).map(&.name).should eq %w[a b c d e]
+      end
+    end
+
     describe "#unpacked_block_args" do
       it "returns an empty array if the block has no unpacked arguments" do
         node = as_node("foo { |bar| }").as(Crystal::Call)

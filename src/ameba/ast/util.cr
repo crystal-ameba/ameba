@@ -102,6 +102,24 @@ module Ameba::AST::Util
       !!(node.args.present? || node.splat_index || node.double_splat)
   end
 
+  # Returns all of the block arguments within the *node* as variables,
+  # with the unpacked arguments substituted in place of their (unnamed)
+  # placeholder arguments (i.e. `foo`, `bar`, `baz` and `bat` in
+  # `|foo, (bar, *baz), bat|`).
+  def all_block_args(node : Crystal::Block) : Array(Crystal::Var)
+    unpacks = node.unpacks
+
+    args = [] of Crystal::Var
+    node.args.each_with_index do |arg, idx|
+      if unpack = unpacks.try(&.[idx]?)
+        collect_unpacked_args(unpack, args)
+      else
+        args << arg
+      end
+    end
+    args
+  end
+
   # Returns the unpacked block arguments within the *node*
   # (i.e. `foo`, `bar` and `baz` in `|(foo, (bar, *baz))|`),
   # or `nil` if there are no unpacked arguments.
