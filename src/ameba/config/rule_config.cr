@@ -147,7 +147,7 @@ class Ameba::Config
                   builder.string("items")
                   builder.object do
                     {% if of = prop[:default].of %}
-                      ::Ameba::Config::RuleConfig.json_schema_type(builder, {{ of.resolve.stringify }})
+                      ::Ameba::Config::RuleConfig.json_schema_type(builder, ::Union({{ of }}))
                     {% else %}
                       ::Ameba::Config::RuleConfig.json_schema_type_of(builder, {{ prop[:default].splat }})
                     {% end %}
@@ -164,7 +164,7 @@ class Ameba::Config
                       builder.string({{ pr }})
                       builder.object do
                         {% if of_value %}
-                          ::Ameba::Config::RuleConfig.json_schema_type(builder, {{ of_value.resolve.stringify }})
+                          ::Ameba::Config::RuleConfig.json_schema_type(builder, ::Union({{ of_value }}))
                         {% else %}
                           ::Ameba::Config::RuleConfig.json_schema_type_of(builder, {{ value }})
                         {% end %}
@@ -208,56 +208,61 @@ class Ameba::Config
     #
     # Writes the JSON schema `type` field matching the given *values* literals
     macro json_schema_type_of(builder, *values)
-      {% types = [] of StringLiteral %}
+      {% json_types = [] of StringLiteral %}
 
       {% for value in values %}
         {% if value.is_a?(StringLiteral) %}
-          {% type = "String" %}
+          {% json_types << "string" %}
         {% elsif value.is_a?(BoolLiteral) %}
-          {% type = "Bool" %}
+          {% json_types << "boolean" %}
         {% elsif value.is_a?(NumberLiteral) %}
-          {% type = "Number" %}
+          {% json_types << "number" %}
         {% elsif value.is_a?(NilLiteral) %}
-          {% type = "Nil" %}
+          {% json_types << "null" %}
         {% else %}
           {% raise "Unhandled schema type for value: #{value}" %}
         {% end %}
-
-        {% types << type unless types.includes?(type) %}
       {% end %}
 
-      ::Ameba::Config::RuleConfig.json_schema_type({{ builder }}, {{ types.splat }})
+      ::Ameba::Config::RuleConfig.json_schema_type_field({{ builder }}, {{ json_types.splat }})
     end
 
     # :nodoc:
     #
-    # Writes the JSON schema `type` field matching the given *types* names
-    macro json_schema_type(builder, *types)
+    # Writes the JSON schema `type` field matching the given *type*.
+    #
+    # NOTE: *type* is resolved here rather than by the caller, so that it may
+    # refer to types defined after the rule class itself. Unions should be
+    # wrapped in `::Union(...)`, since `A | B` given as an argument is a `Call`.
+    macro json_schema_type(builder, type)
+      {% type = type.resolve %}
       {% json_types = [] of StringLiteral %}
-      {% nilable = false %}
 
-      {% raise "Missing schema type" if types.empty? %}
-
-      {% for type in types %}
-        {% type = parse_type(type).resolve %}
-
-        {% for t in (type.union? ? type.union_types : [type]) %}
-          {% if t == Nil %}
-            {% nilable = true %}
-          {% elsif t == String %}
-            {% json_type = "string" %}
-          {% elsif t == Bool %}
-            {% json_type = "boolean" %}
-          {% elsif t <= Number %}
-            {% json_type = "number" %}
-          {% else %}
-            {% raise "Unhandled schema type: #{t}" %}
-          {% end %}
-
-          {% json_types << json_type unless t == Nil || json_types.includes?(json_type) %}
+      {% for t in (type.union? ? type.union_types : [type]) %}
+        {% if t == Nil %}
+          {% json_types << "null" %}
+        {% elsif t == String %}
+          {% json_types << "string" %}
+        {% elsif t == Bool %}
+          {% json_types << "boolean" %}
+        {% elsif t <= Number %}
+          {% json_types << "number" %}
+        {% else %}
+          {% raise "Unhandled schema type: #{t}" %}
         {% end %}
       {% end %}
 
+      ::Ameba::Config::RuleConfig.json_schema_type_field({{ builder }}, {{ json_types.splat }})
+    end
+
+    # :nodoc:
+    #
+    # Writes the JSON schema `type` field with the given *json_types*,
+    # skipping duplicates and placing `"null"` (if present) last
+    macro json_schema_type_field(builder, *json_types)
+      {% nilable = json_types.includes?("null") %}
+
+      {% json_types = json_types.reject(&.== "null").uniq %}
       {% json_types << "null" if nilable %}
 
       {% if json_types.size == 1 %}
