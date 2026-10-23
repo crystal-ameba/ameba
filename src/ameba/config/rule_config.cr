@@ -180,23 +180,59 @@ class Ameba::Config
     # :nodoc:
     #
     # Writes the JSON schema matching all of the given *nodes*, each being
-    # either a literal value, or a type wrapped in `::Union(...)` (since `A | B`
-    # given as an argument is a `Call`). Nodes can be wrapped in parentheses
-    # as well (since `[] of A, B` given as arguments is a `Proc` type).
+    # either a literal value, a constant, or a type wrapped in `::Union(...)`
+    # (since `A | B` given as an argument is a `Call`). Nodes can be wrapped
+    # in parentheses as well (since `[] of A, B` given as arguments is
+    # a `Proc` type).
     #
-    # Schemas of the nested `items`, `properties` and `additionalProperties`
-    # are written by expanding this macro again, one level at a time.
+    # Constants are described by their values (enum members by their types),
+    # resolved one step at a time, by expanding this macro again, until
+    # there are none left. The rest is handled by `json_schema_type_of`.
     #
     # With *defaults* set to `true`, the default value of each one of the
     # `properties` is written as well.
-    #
-    # Anything of an unknown type (method calls, types not supported by the
-    # JSON schema) leaves the schema unconstrained.
     #
     # NOTE: It needs to be called without a receiver, so that constants and
     # types are resolved lazily, from within the rule scope (which allows
     # referring to the ones defined after the rule class itself as well).
     macro json_schema_type(builder, *nodes, defaults = false)
+      {% resolved_nodes = [] of ASTNode %}
+      {% resolved = false %}
+
+      {% for node in nodes %}
+        {% node = node.expressions.last if node.is_a?(Expressions) %}
+
+        {% if node.is_a?(Path) && (value = node.resolve?) && !value.is_a?(TypeNode) %}
+          {% enum_type = node.names.size > 1 && parse_type("#{"::".id if node.global?}#{node.names[0...-1].join("::").id}").resolve? %}
+          {% if enum_type.is_a?(TypeNode) && enum_type < Enum %}
+            {% node = "::Union(::#{enum_type})".id %}
+          {% else %}
+            {% node = value %}
+          {% end %}
+          {% resolved = true %}
+        {% end %}
+
+        {% resolved_nodes << node %}
+      {% end %}
+
+      {% if resolved %}
+        json_schema_type({{ builder }}, {{ resolved_nodes.map { |node| "(#{node})".id }.splat }}, defaults: {{ defaults }})
+      {% else %}
+        json_schema_type_of({{ builder }}, {{ resolved_nodes.map { |node| "(#{node})".id }.splat }}, defaults: {{ defaults }})
+      {% end %}
+    end
+
+    # :nodoc:
+    #
+    # Writes the JSON schema matching all of the given *nodes*, with all
+    # of the constants already resolved by `json_schema_type`.
+    #
+    # Schemas of the nested `items`, `properties` and `additionalProperties`
+    # are written by expanding `json_schema_type` again, one level at a time.
+    #
+    # Anything of an unknown type (method calls, types not supported by the
+    # JSON schema) leaves the schema unconstrained.
+    macro json_schema_type_of(builder, *nodes, defaults = false)
       {% json_types = [] of StringLiteral %}
       {% items = [] of ASTNode %}
       {% properties = {} of ASTNode => ArrayLiteral %}
@@ -206,20 +242,6 @@ class Ameba::Config
 
       {% for node in nodes %}
         {% node = node.expressions.last if node.is_a?(Expressions) %}
-
-        # Constants are described by their values (enum members by their types),
-        # following the ones defined in terms of other constants as well
-        # (up to a fixed depth, since there are no `while` loops in macros)
-        {% for _ in 1..8 %}
-          {% if node.is_a?(Path) && (value = node.resolve?) && !value.is_a?(TypeNode) %}
-            {% enum_type = node.names.size > 1 && parse_type("#{"::".id if node.global?}#{node.names[0...-1].join("::").id}").resolve? %}
-            {% if enum_type.is_a?(TypeNode) && enum_type < Enum %}
-              {% node = parse_type("::Union(::#{enum_type})") %}
-            {% else %}
-              {% node = value %}
-            {% end %}
-          {% end %}
-        {% end %}
 
         {% if node.is_a?(Generic) && node.name.stringify == "::Union" %}
           {% type = node.resolve %}
