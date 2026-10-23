@@ -228,6 +228,9 @@ module Ameba::Rule::Style
         foo : String | # comment
             # ^^^^^^^^^^^^^^^^^^ error: Prefer `?` instead of `| Nil` in unions
               Nil
+        bar : (String -> Int32) |
+            # ^^^^^^^^^^^^^^^^^^^ error: Prefer `?` instead of `| Nil` in unions
+              Nil
         CRYSTAL
 
       expect_no_corrections source

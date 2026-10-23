@@ -17,6 +17,8 @@ module Ameba::Rule::Style
   #
   # The `OnlyTwoElementUnions` option mixes the two approaches, requiring short version (`?`)
   # in two-element unions and verbose version (`| Nil`) in multi-element unions.
+  # Since nested unions are flattened, their types are counted as well, so i.e.
+  # `(String | Symbol) | Nil` is considered a three-element union.
   #
   # YAML configuration example:
   #
@@ -50,7 +52,7 @@ module Ameba::Rule::Style
       return if types.all? { |type| has_nil?(type) }
 
       # Types written explicitly, i.e. without the ones implied by `T?`
-      written_types = written_types(node)
+      written_types = flatten_types(node, implied_nil: false)
 
       if prefer_short_nil?(types)
         # `String | Nil` -> `String?`
@@ -67,14 +69,14 @@ module Ameba::Rule::Style
     end
 
     private def report(source, node, message)
-      location = union_location(node, source.lines)
-      end_location = union_end_location(node, source.lines)
+      location = union_location(node, source.lines) || node.location
+      end_location = union_end_location(node, source.lines) || node.end_location
 
       # Corrected code is rendered in a single line, so we skip multi-line
       # unions (which might have comments too) to preserve their formatting
       unless location && end_location && location.same_line?(end_location) &&
              (corrected_code = type_source(node, source.lines))
-        issue_for(node, message)
+        issue_for(location, end_location, message)
         return
       end
 
@@ -137,11 +139,16 @@ module Ameba::Rule::Style
       node.is_a?(Crystal::ProcNotation)
     end
 
-    private def flatten_types(node : Crystal::Union) : Array(Crystal::ASTNode)
-      node.types.flat_map { |type| flatten_types(type) }
+    # Returns the types of the *node* union, including the ones of
+    # the nested unions, optionally skipping the `Nil` types implied
+    # by the `T?` shorthand if *implied_nil* is `false`.
+    private def flatten_types(node : Crystal::Union, *, implied_nil = true) : Array(Crystal::ASTNode)
+      types = node.types
+      types = types[...-1] if !implied_nil && short_nil?(node)
+      types.flat_map { |type| flatten_types(type, implied_nil: implied_nil) }
     end
 
-    private def flatten_types(node) : Array(Crystal::ASTNode)
+    private def flatten_types(node, **opts) : Array(Crystal::ASTNode)
       [node] of Crystal::ASTNode
     end
 
@@ -248,16 +255,6 @@ module Ameba::Rule::Style
     # https://github.com/crystal-lang/crystal/issues/11071
     private def nilable_type?(node)
       !node.is_a?(Crystal::Metaclass) && !has_nil?(node)
-    end
-
-    # Same as `#flatten_types`, but skips the `Nil` types implied by `T?`
-    private def written_types(node : Crystal::Union) : Array(Crystal::ASTNode)
-      types = short_nil?(node) ? node.types[...-1] : node.types
-      types.flat_map { |type| written_types(type) }
-    end
-
-    private def written_types(node) : Array(Crystal::ASTNode)
-      [node] of Crystal::ASTNode
     end
 
     # Returns `true` if the *node* is a `T?` shorthand, which the parser
