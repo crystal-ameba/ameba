@@ -203,7 +203,7 @@ class Ameba::Config
         {% node = node.expressions.last if node.is_a?(Expressions) %}
 
         {% if node.is_a?(Path) && (value = node.resolve?) && !value.is_a?(TypeNode) %}
-          {% enum_type = node.names.size > 1 && parse_type("#{"::".id if node.global?}#{node.names[0...-1].join("::").id}").resolve? %}
+          {% enum_type = node.names.size > 1 && parse_type(node.stringify.gsub(/::[^:]+$/, "")).resolve? %}
           {% if enum_type.is_a?(TypeNode) && enum_type < Enum %}
             {% node = "::Union(::#{enum_type})".id %}
           {% else %}
@@ -215,11 +215,11 @@ class Ameba::Config
         {% resolved_nodes << node %}
       {% end %}
 
-      {% if resolved %}
-        json_schema_type({{ builder }}, {{ resolved_nodes.map { |node| "(#{node})".id }.splat }}, defaults: {{ defaults }})
-      {% else %}
-        json_schema_type_of({{ builder }}, {{ resolved_nodes.map { |node| "(#{node})".id }.splat }}, defaults: {{ defaults }})
-      {% end %}
+      {{ (resolved ? "json_schema_type" : "json_schema_type_of").id }}(
+        {{ builder }},
+        {{ resolved_nodes.map { |node| "(#{node})".id }.splat }},
+        defaults: {{ defaults }},
+      )
     end
 
     # :nodoc:
@@ -240,10 +240,25 @@ class Ameba::Config
       {% additional_properties = [] of ASTNode %}
       {% unconstrained = false %}
 
+      # Symbols are autocasted into enum members, which are parsed from strings
+      {%
+        literal_json_types = {
+          "StringLiteral"       => "string",
+          "StringInterpolation" => "string",
+          "SymbolLiteral"       => "string",
+          "BoolLiteral"         => "boolean",
+          "NumberLiteral"       => "number",
+          "NilLiteral"          => "null",
+        }
+      %}
+
       {% for node in nodes %}
         {% node = node.expressions.last if node.is_a?(Expressions) %}
 
-        {% if node.is_a?(Generic) && node.name.stringify == "::Union" %}
+        {% if json_type = literal_json_types[node.class_name] %}
+          {% json_types << json_type %}
+
+        {% elsif node.is_a?(Generic) && node.name.stringify == "::Union" %}
           {% type = node.resolve %}
 
           {% for type in (type.union? ? type.union_types : [type]) %}
@@ -253,12 +268,10 @@ class Ameba::Config
               {% json_types << "boolean" %}
             {% elsif type <= Number %}
               {% json_types << "number" %}
-            {% elsif type == String || type == ::Path || type == Time %}
-              {% json_types << "string" %}
             {% elsif type < Enum && type.annotation(Flags) %}
               {% json_types << "array" %}
               {% items << "::Union(::String)".id %}
-            {% elsif type < Enum %}
+            {% elsif type == String || type == ::Path || type == Time || type < Enum %}
               {% json_types << "string" %}
             {% elsif type <= Array || type <= Set || type <= Tuple %}
               {% json_types << "array" %}
@@ -280,18 +293,6 @@ class Ameba::Config
               {% unconstrained = true %}
             {% end %}
           {% end %}
-
-        {% elsif node.is_a?(StringLiteral) || node.is_a?(StringInterpolation) %}
-          {% json_types << "string" %}
-        {% elsif node.is_a?(SymbolLiteral) %}
-          # Autocasted into enum members, which are parsed from strings
-          {% json_types << "string" %}
-        {% elsif node.is_a?(BoolLiteral) %}
-          {% json_types << "boolean" %}
-        {% elsif node.is_a?(NumberLiteral) %}
-          {% json_types << "number" %}
-        {% elsif node.is_a?(NilLiteral) %}
-          {% json_types << "null" %}
 
         {% elsif node.is_a?(ArrayLiteral) || node.is_a?(TupleLiteral) %}
           {% json_types << "array" %}
@@ -332,8 +333,20 @@ class Ameba::Config
           {{ builder }}.field("default", {{ hash }})
         {% end %}
       {% else %}
-        {% unless json_types.empty? %}
-          json_schema_type_field({{ builder }}, {{ json_types.splat }})
+        # Duplicates are skipped, with `"null"` (if present) placed last
+        {% nilable = json_types.includes?("null") %}
+        {% json_types = json_types.reject(&.== "null").uniq %}
+        {% json_types << "null" if nilable %}
+
+        {% if json_types.size == 1 %}
+          {{ builder }}.field("type", {{ json_types.first }})
+        {% elsif !json_types.empty? %}
+          {{ builder }}.string("type")
+          {{ builder }}.array do
+            {% for json_type in json_types %}
+              {{ builder }}.string({{ json_type }})
+            {% end %}
+          end
         {% end %}
 
         {% unless items.empty? %}
@@ -351,7 +364,7 @@ class Ameba::Config
               {{ builder }}.object do
                 json_schema_type({{ builder }}, {{ key_nodes.map { |node| "(#{node})".id }.splat }})
 
-                {% if property_defaults.keys.includes?(key) %}
+                {% if property_defaults.has_key?(key) %}
                   {{ builder }}.field("default", {{ property_defaults[key] }})
                 {% end %}
               end
@@ -365,28 +378,6 @@ class Ameba::Config
             json_schema_type({{ builder }}, {{ additional_properties.map { |node| "(#{node})".id }.splat }})
           end
         {% end %}
-      {% end %}
-    end
-
-    # :nodoc:
-    #
-    # Writes the JSON schema `type` field with the given *json_types*,
-    # skipping duplicates and placing `"null"` (if present) last
-    macro json_schema_type_field(builder, *json_types)
-      {% nilable = json_types.includes?("null") %}
-
-      {% json_types = json_types.reject(&.== "null").uniq %}
-      {% json_types << "null" if nilable %}
-
-      {% if json_types.size == 1 %}
-        {{ builder }}.field("type", {{ json_types.first }})
-      {% else %}
-        {{ builder }}.string("type")
-        {{ builder }}.array do
-          {% for json_type in json_types %}
-            {{ builder }}.string({{ json_type }})
-          {% end %}
-        end
       {% end %}
     end
 
