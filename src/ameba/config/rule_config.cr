@@ -141,39 +141,6 @@ class Ameba::Config
                     builder.string("null")
                   end
 
-                {% elsif prop[:default].is_a?(ArrayLiteral) %}
-                  builder.field("type", "array")
-
-                  builder.string("items")
-                  builder.object do
-                    {% if of = prop[:default].of %}
-                      ::Ameba::Config::RuleConfig.json_schema_type(builder, ::Union({{ of }}))
-                    {% else %}
-                      ::Ameba::Config::RuleConfig.json_schema_type_of(builder, {{ prop[:default].splat }})
-                    {% end %}
-                  end
-
-                {% elsif prop[:default].is_a?(HashLiteral) %}
-                  {% of_value = prop[:default].of_value %}
-
-                  builder.field("type", "object")
-
-                  builder.string("properties")
-                  builder.object do
-                    {% for pr, value in prop[:default] %}
-                      builder.string({{ pr }})
-                      builder.object do
-                        {% if of_value %}
-                          ::Ameba::Config::RuleConfig.json_schema_type(builder, ::Union({{ of_value }}))
-                        {% else %}
-                          ::Ameba::Config::RuleConfig.json_schema_type_of(builder, {{ value }})
-                        {% end %}
-                        builder.field("default", {{ value }})
-                      end
-                    {% end %}
-                  end
-                  {% default_set = true %}
-
                 {% elsif prop[:type] == Severity %}
                   builder.field("$ref", "#/$defs/Severity")
                   builder.field("default", {{ prop[:default].capitalize }})
@@ -181,7 +148,13 @@ class Ameba::Config
                   {% default_set = true %}
 
                 {% else %}
-                  {% raise "Unhandled schema type for #{prop}" %}
+                  {% nodes = [prop[:default]] %}
+                  {% nodes << "::Union(#{prop[:type]})".id if prop[:type] %}
+
+                  # Hash defaults are written per key, within `properties`
+                  {% default_set = prop[:default].is_a?(HashLiteral) || prop[:default].is_a?(NamedTupleLiteral) %}
+
+                  json_schema_type(builder, {{ nodes.map { |node| "(#{node})".id }.splat }}, defaults: {{ default_set }})
                 {% end %}
 
                 {% unless default_set %}
@@ -206,124 +179,168 @@ class Ameba::Config
 
     # :nodoc:
     #
-    # Writes the JSON schema `type` field matching the given *values* literals,
-    # followed by the `items` / `properties` schemas of any nested containers
-    macro json_schema_type_of(builder, *values)
+    # Writes the JSON schema matching all of the given *nodes*, each being
+    # either a literal value, or a type wrapped in `::Union(...)` (since `A | B`
+    # given as an argument is a `Call`). Nodes can be wrapped in parentheses
+    # as well (since `[] of A, B` given as arguments is a `Proc` type).
+    #
+    # Schemas of the nested `items`, `properties` and `additionalProperties`
+    # are written by expanding this macro again, one level at a time.
+    #
+    # With *defaults* set to `true`, the default value of each one of the
+    # `properties` is written as well.
+    #
+    # Anything of an unknown type (method calls, types not supported by the
+    # JSON schema) leaves the schema unconstrained.
+    #
+    # NOTE: It needs to be called without a receiver, so that constants and
+    # types are resolved lazily, from within the rule scope (which allows
+    # referring to the ones defined after the rule class itself as well).
+    macro json_schema_type(builder, *nodes, defaults = false)
       {% json_types = [] of StringLiteral %}
-      {% arrays = [] of ArrayLiteral %}
-      {% hashes = [] of HashLiteral %}
+      {% items = [] of ASTNode %}
+      {% properties = {} of ASTNode => ArrayLiteral %}
+      {% property_defaults = {} of ASTNode => ASTNode %}
+      {% additional_properties = [] of ASTNode %}
+      {% unconstrained = false %}
 
-      {% for value in values %}
-        {% if value.is_a?(StringLiteral) || value.is_a?(StringInterpolation) %}
-          {% json_types << "string" %}
-        {% elsif value.is_a?(BoolLiteral) %}
-          {% json_types << "boolean" %}
-        {% elsif value.is_a?(NumberLiteral) %}
-          {% json_types << "number" %}
-        {% elsif value.is_a?(NilLiteral) %}
-          {% json_types << "null" %}
-        {% elsif value.is_a?(ArrayLiteral) %}
-          {% json_types << "array" %}
-          {% arrays << value %}
-        {% elsif value.is_a?(HashLiteral) %}
-          {% json_types << "object" %}
-          {% hashes << value %}
-        {% else %}
-          {% raise "Unhandled schema type for value: #{value}" %}
-        {% end %}
-      {% end %}
+      {% for node in nodes %}
+        {% node = node.expressions.last if node.is_a?(Expressions) %}
 
-      ::Ameba::Config::RuleConfig.json_schema_type_field({{ builder }}, {{ json_types.splat }})
-
-      {% unless arrays.empty? %}
-        {% item_type = arrays.map(&.of).reject(&.nil?).first %}
-        {% items = arrays.reduce([] of ASTNode) { |acc, array| acc + array } %}
-
-        {{ builder }}.string("items")
-        {{ builder }}.object do
-          {% if item_type %}
-            ::Ameba::Config::RuleConfig.json_schema_type({{ builder }}, ::Union({{ item_type }}))
-          {% else %}
-            ::Ameba::Config::RuleConfig.json_schema_type_of({{ builder }}, {{ items.splat }})
-          {% end %}
-        end
-      {% end %}
-
-      {% unless hashes.empty? %}
-        {% value_type = hashes.map(&.of_value).reject(&.nil?).first %}
-        {% properties = {} of ASTNode => ArrayLiteral %}
-
-        {% for hash in hashes %}
-          {% for key, value in hash %}
-            {% properties[key] = (properties[key] || [] of ASTNode) + [value] %}
+        # Constants are described by their values (enum members by their types),
+        # following the ones defined in terms of other constants as well
+        # (up to a fixed depth, since there are no `while` loops in macros)
+        {% for _ in 1..8 %}
+          {% if node.is_a?(Path) && (value = node.resolve?) && !value.is_a?(TypeNode) %}
+            {% enum_type = node.names.size > 1 && parse_type("#{"::".id if node.global?}#{node.names[0...-1].join("::").id}").resolve? %}
+            {% if enum_type.is_a?(TypeNode) && enum_type < Enum %}
+              {% node = parse_type("::Union(::#{enum_type})") %}
+            {% else %}
+              {% node = value %}
+            {% end %}
           {% end %}
         {% end %}
 
-        {{ builder }}.string("properties")
-        {{ builder }}.object do
-          {% for key, values in properties %}
-            {{ builder }}.string({{ key }})
-            {{ builder }}.object do
-              {% if value_type %}
-                ::Ameba::Config::RuleConfig.json_schema_type({{ builder }}, ::Union({{ value_type }}))
-              {% else %}
-                ::Ameba::Config::RuleConfig.json_schema_type_of({{ builder }}, {{ values.splat }})
+        {% if node.is_a?(Generic) && node.name.stringify == "::Union" %}
+          {% type = node.resolve %}
+
+          {% for type in (type.union? ? type.union_types : [type]) %}
+            {% if type == Nil %}
+              {% json_types << "null" %}
+            {% elsif type == Bool %}
+              {% json_types << "boolean" %}
+            {% elsif type <= Number %}
+              {% json_types << "number" %}
+            {% elsif type == String || type == ::Path || type == Time %}
+              {% json_types << "string" %}
+            {% elsif type < Enum && type.annotation(Flags) %}
+              {% json_types << "array" %}
+              {% items << "::Union(::String)".id %}
+            {% elsif type < Enum %}
+              {% json_types << "string" %}
+            {% elsif type <= Array || type <= Set || type <= Tuple %}
+              {% json_types << "array" %}
+
+              {% for type_var in type.type_vars %}
+                {% items << "::Union(#{type_var})".id %}
               {% end %}
-            end
+            {% elsif type <= Hash %}
+              {% json_types << "object" %}
+
+              {% additional_properties << "::Union(#{type.type_vars.last})".id %}
+            {% elsif type <= NamedTuple %}
+              {% json_types << "object" %}
+
+              {% for key in type.keys %}
+                {% properties[key.stringify] = (properties[key.stringify] || [] of ASTNode) + ["::Union(#{type[key]})".id] %}
+              {% end %}
+            {% else %}
+              {% unconstrained = true %}
+            {% end %}
           {% end %}
-        end
-      {% end %}
-    end
 
-    # :nodoc:
-    #
-    # Writes the JSON schema `type` field matching the given *type*,
-    # followed by the `items` / `additionalProperties` schemas of any
-    # `Array`, `Set` or `Hash` types within it.
-    #
-    # NOTE: *type* is resolved here rather than by the caller, so that it may
-    # refer to types defined after the rule class itself. Unions should be
-    # wrapped in `::Union(...)`, since `A | B` given as an argument is a `Call`.
-    macro json_schema_type(builder, type)
-      {% type = type.resolve %}
-      {% json_types = [] of StringLiteral %}
-      {% item_types = [] of TypeNode %}
-      {% value_types = [] of TypeNode %}
-
-      {% for t in (type.union? ? type.union_types : [type]) %}
-        {% if t == Nil %}
-          {% json_types << "null" %}
-        {% elsif t == String %}
+        {% elsif node.is_a?(StringLiteral) || node.is_a?(StringInterpolation) %}
           {% json_types << "string" %}
-        {% elsif t == Bool %}
+        {% elsif node.is_a?(SymbolLiteral) %}
+          # Autocasted into enum members, which are parsed from strings
+          {% json_types << "string" %}
+        {% elsif node.is_a?(BoolLiteral) %}
           {% json_types << "boolean" %}
-        {% elsif t <= Number %}
+        {% elsif node.is_a?(NumberLiteral) %}
           {% json_types << "number" %}
-        {% elsif t <= Array || t <= Set %}
+        {% elsif node.is_a?(NilLiteral) %}
+          {% json_types << "null" %}
+
+        {% elsif node.is_a?(ArrayLiteral) || node.is_a?(TupleLiteral) %}
           {% json_types << "array" %}
-          {% item_types << t.type_vars.first %}
-        {% elsif t <= Hash %}
+
+          {% for element in node %}
+            {% items << element %}
+          {% end %}
+          {% if node.is_a?(ArrayLiteral) && node.of %}
+            {% items << "::Union(#{node.of})".id %}
+          {% end %}
+
+        {% elsif node.is_a?(HashLiteral) || node.is_a?(NamedTupleLiteral) %}
           {% json_types << "object" %}
-          {% value_types << t.type_vars.last %}
+
+          {% value_type = node.is_a?(HashLiteral) && node.of_value %}
+          {% value_type = "::Union(#{value_type})".id if value_type %}
+
+          {% for key, value in node %}
+            {% key = key.id.stringify unless key.is_a?(StringLiteral) || key.is_a?(StringInterpolation) %}
+            {% key_nodes = [value] %}
+            {% key_nodes << value_type if value_type %}
+
+            {% properties[key] = (properties[key] || [] of ASTNode) + key_nodes %}
+            {% property_defaults[key] = value if defaults %}
+            {% additional_properties << value if node.is_a?(HashLiteral) %}
+          {% end %}
+
+          {% additional_properties << value_type if value_type %}
+
         {% else %}
-          {% raise "Unhandled schema type: #{t}" %}
+          {% unconstrained = true %}
         {% end %}
       {% end %}
 
-      ::Ameba::Config::RuleConfig.json_schema_type_field({{ builder }}, {{ json_types.splat }})
+      {% if unconstrained %}
+        # Hash defaults written per key would be lost otherwise
+        {% if defaults && (hash = nodes.find { |node| node.is_a?(HashLiteral) || node.is_a?(NamedTupleLiteral) }) %}
+          {{ builder }}.field("default", {{ hash }})
+        {% end %}
+      {% else %}
+        {% unless json_types.empty? %}
+          json_schema_type_field({{ builder }}, {{ json_types.splat }})
+        {% end %}
 
-      {% for nested in [{"items", item_types}, {"additionalProperties", value_types}] %}
-        {% field, types = nested %}
-        {% unless types.empty? %}
-          # Unions print as `(A | B)`, so they're passed on flattened
-          {% flattened = [] of TypeNode %}
-          {% for nested_type in types %}
-            {% flattened += nested_type.union? ? nested_type.union_types : [nested_type] %}
-          {% end %}
-
-          {{ builder }}.string({{ field }})
+        {% unless items.empty? %}
+          {{ builder }}.string("items")
           {{ builder }}.object do
-            ::Ameba::Config::RuleConfig.json_schema_type({{ builder }}, ::Union({{ flattened.uniq.splat }}))
+            json_schema_type({{ builder }}, {{ items.map { |node| "(#{node})".id }.splat }})
+          end
+        {% end %}
+
+        {% unless properties.empty? %}
+          {{ builder }}.string("properties")
+          {{ builder }}.object do
+            {% for key, key_nodes in properties %}
+              {{ builder }}.string({{ key }})
+              {{ builder }}.object do
+                json_schema_type({{ builder }}, {{ key_nodes.map { |node| "(#{node})".id }.splat }})
+
+                {% if property_defaults.keys.includes?(key) %}
+                  {{ builder }}.field("default", {{ property_defaults[key] }})
+                {% end %}
+              end
+            {% end %}
+          end
+        {% end %}
+
+        {% unless additional_properties.empty? %}
+          {{ builder }}.string("additionalProperties")
+          {{ builder }}.object do
+            json_schema_type({{ builder }}, {{ additional_properties.map { |node| "(#{node})".id }.splat }})
           end
         {% end %}
       {% end %}
