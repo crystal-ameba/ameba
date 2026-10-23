@@ -3,32 +3,23 @@ class Ameba::Config
   module RuleConfig
     # Define rule properties
     macro properties(&block)
-      {% definitions = [] of NamedTuple %}
-
-      {% if (prop = block.body).is_a? Call %}
-        {% if (named_args = prop.named_args) && (type = named_args.select(&.name.== "as".id).first) %}
-          {% definitions << {var: prop.name, value: prop.args.first, type: type.value} %}
-        {% else %}
-          {% definitions << {var: prop.name, value: prop.args.first} %}
-        {% end %}
-      {% elsif block.body.is_a? Expressions %}
-        {% for prop in block.body.expressions %}
-          {% if prop.is_a? Call %}
-            {% if (named_args = prop.named_args) && (type = named_args.select(&.name.== "as".id).first) %}
-              {% definitions << {var: prop.name, value: prop.args.first, type: type.value} %}
-            {% else %}
-              {% definitions << {var: prop.name, value: prop.args.first} %}
-            {% end %}
-          {% end %}
-        {% end %}
-      {% end %}
-
+      {% calls = block.body.is_a?(Expressions) ? block.body.expressions : [block.body] %}
       {% properties = {} of MacroId => NamedTuple %}
-      {% for df in definitions %}
-        {% name = df[:var].id %}
+
+      {%
+        number_types = {
+          :i8 => Int8, :i16 => Int16, :i32 => Int32, :i64 => Int64, :i128 => Int128,
+          :u8 => UInt8, :u16 => UInt16, :u32 => UInt32, :u64 => UInt64, :u128 => UInt128,
+          :f32 => Float32, :f64 => Float64,
+        }
+      %}
+
+      {% for call in calls.select(&.is_a?(Call)) %}
+        {% name = call.name.id %}
         {% key = name.camelcase.stringify %}
-        {% value = df[:value] %}
-        {% type = df[:type] %}
+        {% value = call.args.first %}
+        {% type = call.named_args && call.named_args.find(&.name.== "as".id) %}
+        {% type = type.value if type %}
         {% converter = nil %}
 
         {% if key == "Severity" %}
@@ -36,27 +27,18 @@ class Ameba::Config
           {% converter = SeverityYamlConverter %}
         {% end %}
 
+        # Types are given explicitly (when known), so that they are documented
         {% unless type %}
           {% if value.is_a?(BoolLiteral) %}
             {% type = Bool %}
           {% elsif value.is_a?(StringLiteral) || value.is_a?(StringInterpolation) %}
             {% type = String %}
           {% elsif value.is_a?(NumberLiteral) %}
-            {% if value.kind == :i32 %}
-              {% type = Int32 %}
-            {% elsif value.kind == :i64 %}
-              {% type = Int64 %}
-            {% elsif value.kind == :i128 %}
-              {% type = Int128 %}
-            {% elsif value.kind == :f32 %}
-              {% type = Float32 %}
-            {% elsif value.kind == :f64 %}
-              {% type = Float64 %}
-            {% end %}
+            {% type = number_types[value.kind] %}
           {% end %}
         {% end %}
 
-        {% properties[name] = {key: key, default: value, type: type, converter: converter} %}
+        {% properties[name] = {key: key, type: type} %}
 
         @[YAML::Field(key: {{ key }}, converter: {{ converter }})]
         {% if type == Bool %}
@@ -93,14 +75,19 @@ class Ameba::Config
       end
 
       def self.to_json_schema(builder : JSON::Builder) : Nil
+        # Default values are read from the rule loaded with no configuration
+        # given, since the ones written within `properties` can be autocasted
+        # (like symbols into enum members)
+        rule = new
+
         builder.string(rule_name)
         builder.object do
           builder.field("$ref", "#/$defs/BaseRule")
           builder.field("$comment", documentation_url)
           builder.field("title", rule_name)
 
-          {% if description = properties["description".id] %}
-            builder.field("description", {{ description[:default] }})
+          {% if properties["description".id] %}
+            builder.field("description", rule.description)
           {% end %}
 
           builder.string("properties")
@@ -111,14 +98,12 @@ class Ameba::Config
                 builder.object do
                   {% if prop[:type] == Severity %}
                     builder.field("$ref", "#/$defs/Severity")
-                    builder.field("default", {{ prop[:default].capitalize }})
+                    builder.field("default", rule.severity.to_s)
                   {% else %}
-                    default = {{ prop[:default] }}
-
                     # Described by the type of its instance variable, within
                     # the rule being instantiated (which can be a subclass)
                     \{% begin %}
-                      ::Ameba::Config::RuleConfig.json_schema_type(builder, \{{ @type }}, [{{ prop_name.symbolize }}], default: default)
+                      ::Ameba::Config::RuleConfig.json_schema_type(builder, \{{ @type }}, [{{ prop_name.symbolize }}], default: rule.@{{ prop_name }})
                     \{% end %}
                   {% end %}
                 end
