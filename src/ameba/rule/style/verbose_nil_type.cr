@@ -49,28 +49,37 @@ module Ameba::Rule::Style
       return unless types.any? { |type| has_nil?(type) }
       return if types.all? { |type| has_nil?(type) }
 
+      # Types written explicitly, i.e. without the ones implied by `T?`
+      written_types = written_types(node)
+
       if prefer_short_nil?(types)
         # `String | Nil` -> `String?`
-        return unless has_verbose_nil?(node)
+        return unless written_types.any? { |type| has_nil?(type) }
         return unless types.any? { |type| nilable_type?(type) }
         message = MSG_VERBOSE
       else
         # `String?` -> `String | Nil`
-        return unless has_short_nil?(node)
+        return unless written_types.size < types.size
         message = MSG_SHORT
       end
 
-      if correctable?(node, source.lines)
-        corrected_code = type_source(node, source.lines)
-      end
+      report(source, node, message)
+    end
 
-      unless corrected_code
+    private def report(source, node, message)
+      location = union_location(node, source.lines)
+      end_location = union_end_location(node, source.lines)
+
+      # Corrected code is rendered in a single line, so we skip multi-line
+      # unions (which might have comments too) to preserve their formatting
+      unless location && end_location && location.same_line?(end_location) &&
+             (corrected_code = type_source(node, source.lines))
         issue_for(node, message)
         return
       end
 
-      issue_for(node, message) do |corrector|
-        corrector.replace(node, corrected_code)
+      issue_for(location, end_location, message) do |corrector|
+        corrector.replace(location, end_location, corrected_code)
       end
     end
 
@@ -84,20 +93,48 @@ module Ameba::Rule::Style
       types.count { |type| !has_nil?(type) } + 1 <= 2
     end
 
-    private def correctable?(node, code_lines)
-      return false unless (location = node.location) &&
-                          (end_location = node.end_location)
+    # Location of a union starting with a parenthesized proc notation
+    # excludes the opening parenthesis, so we need to adjust it.
+    private def union_location(node, code_lines)
+      return unless location = node.location
+      return location unless starts_with_proc?(node)
+      return unless line = code_lines[location.line_number - 1]?
 
-      # Corrected code is rendered in a single line, so we skip multi-line
-      # unions (which might have comments too) to preserve their formatting
-      return false unless location.same_line?(end_location)
+      prefix = line[0...location.column_number - 1].rstrip
+      return unless prefix.ends_with?('(')
 
-      # Location of a union starting (or ending) with a parenthesized
-      # proc notation excludes the parenthesis, so we skip those.
-      {node.types.first, node.types.last}.none? do |type|
-        type.is_a?(Crystal::Union) && type.types.size == 1 &&
-          type.types.first.is_a?(Crystal::ProcNotation)
-      end
+      location.adjust(column_number: prefix.size - location.column_number)
+    end
+
+    # Location of a union ending with a parenthesized proc notation
+    # excludes the closing parenthesis, so we need to adjust it.
+    private def union_end_location(node, code_lines)
+      return unless end_location = node.end_location
+      return end_location unless ends_with_proc?(node)
+      return unless line = code_lines[end_location.line_number - 1]?
+
+      suffix = line[end_location.column_number..]
+      return unless suffix.lstrip.starts_with?(')')
+
+      end_location.adjust(column_number: suffix.size - suffix.lstrip.size + 1)
+    end
+
+    private def starts_with_proc?(node : Crystal::Union)
+      type = node.types.first
+      type.location == node.location && starts_with_proc?(type)
+    end
+
+    private def starts_with_proc?(node)
+      node.is_a?(Crystal::ProcNotation)
+    end
+
+    private def ends_with_proc?(node : Crystal::Union)
+      type = node.types.last
+      type.end_location == node.end_location && ends_with_proc?(type)
+    end
+
+    private def ends_with_proc?(node)
+      node.is_a?(Crystal::ProcNotation)
     end
 
     private def flatten_types(node : Crystal::Union) : Array(Crystal::ASTNode)
@@ -213,25 +250,14 @@ module Ameba::Rule::Style
       !node.is_a?(Crystal::Metaclass) && !has_nil?(node)
     end
 
-    # Returns `true` if the *node* contains explicit `Nil` type,
-    # either directly or within the nested unions.
-    private def has_verbose_nil?(node : Crystal::Union)
+    # Same as `#flatten_types`, but skips the `Nil` types implied by `T?`
+    private def written_types(node : Crystal::Union) : Array(Crystal::ASTNode)
       types = short_nil?(node) ? node.types[...-1] : node.types
-      types.any? { |type| has_verbose_nil?(type) }
+      types.flat_map { |type| written_types(type) }
     end
 
-    private def has_verbose_nil?(node)
-      has_nil?(node)
-    end
-
-    # Returns `true` if the *node* contains `T?` shorthand,
-    # either directly or within the nested unions.
-    private def has_short_nil?(node : Crystal::Union)
-      short_nil?(node) || node.types.any? { |type| has_short_nil?(type) }
-    end
-
-    private def has_short_nil?(node)
-      false
+    private def written_types(node) : Array(Crystal::ASTNode)
+      [node] of Crystal::ASTNode
     end
 
     # Returns `true` if the *node* is a `T?` shorthand, which the parser
