@@ -14,7 +14,17 @@ class Ameba::Config
         }
       %}
 
-      {% for call in calls.select(&.is_a?(Call)) %}
+      {% for call in calls.reject(&.is_a?(Nop)) %}
+        {% unless call.is_a?(Call) && !call.receiver && call.args.size == 1 && !call.block && !call.block_arg && call.name =~ /\A[a-z_][a-z0-9_]*\z/ %}
+          {% call.raise("Rule properties are expected to be defined as `name value` (optionally followed by `as: Type`), not: `#{call}`") %}
+        {% end %}
+
+        {% for named_arg in call.named_args || [] of NamedArgument %}
+          {% unless named_arg.name == "as".id %}
+            {% named_arg.raise("Unknown option `#{named_arg.name}` of rule property `#{call.name}` (expected `as`)") %}
+          {% end %}
+        {% end %}
+
         {% name = call.name.id %}
         {% key = name.camelcase.stringify %}
         {% value = call.args.first %}
@@ -87,7 +97,9 @@ class Ameba::Config
           builder.field("title", rule_name)
 
           {% if properties["description".id] %}
-            builder.field("description", rule.description)
+            if description = rule.description
+              builder.field("description", description)
+            end
           {% end %}
 
           builder.string("properties")
