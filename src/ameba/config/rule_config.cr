@@ -130,12 +130,26 @@ class Ameba::Config
               {% end %}
             {% end %}
 
+            # Built-in properties are described within `BaseRule`,
+            # unless their defaults differ for this rule
+
+            {% unless properties["enabled".id] %}
+              # Deprecated rules are disabled by default
+              unless rule.enabled?
+                builder.string("Enabled")
+                builder.object do
+                  builder.field("type", "boolean")
+                  builder.field("default", false)
+                end
+              end
+            {% end %}
+
             {% unless properties["severity".id] %}
-              unless default_severity == Rule::Base.default_severity
+              unless rule.severity == Rule::Base.default_severity
                 builder.string("Severity")
                 builder.object do
                   builder.field("$ref", "#/$defs/Severity")
-                  builder.field("default", default_severity.to_s)
+                  builder.field("default", rule.severity.to_s)
                 end
               end
             {% end %}
