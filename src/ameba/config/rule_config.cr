@@ -287,7 +287,8 @@ class Ameba::Config
 
                 {% if named_tuple_defaults %}
                   if (%named_tuple = {{ default }}).is_a?(NamedTuple)
-                    {{ builder }}.field("default", %named_tuple[{{ key.id.symbolize }}])
+                    {{ builder }}.string("default")
+                    ::Ameba::Config::RuleConfig.json_schema_default({{ builder }}, %named_tuple[{{ key.id.symbolize }}])
                   end
                 {% end %}
               end
@@ -296,11 +297,17 @@ class Ameba::Config
             {% if hash_defaults %}
               if (%hash = {{ default }}).is_a?(Hash)
                 %hash.each do |%key, %value|
+                  {% unless properties.empty? %}
+                    # Keys of named tuples (within the same union) are already written
+                    next if {{ properties.keys }}.includes?(%key.to_s)
+                  {% end %}
+
                   {{ builder }}.string(%key.to_s)
                   {{ builder }}.object do
                     ::Ameba::Config::RuleConfig.json_schema_type({{ builder }}, {{ rule }}, {{ additional_properties.splat }})
 
-                    {{ builder }}.field("default", %value)
+                    {{ builder }}.string("default")
+                    ::Ameba::Config::RuleConfig.json_schema_default({{ builder }}, %value)
                   end
                 end
               end
@@ -330,22 +337,38 @@ class Ameba::Config
         {% end %}
       {% end %}
 
-      {% if default && !additional_properties.empty? %}
-        # Hash keys are written the same way as within `properties`
-        # (since not all of them can be serialized as JSON object keys)
-        if (%hash = {{ default }}).is_a?(Hash)
-          {{ builder }}.string("default")
-          {{ builder }}.object do
-            %hash.each do |%key, %value|
-              {{ builder }}.field(%key.to_s, %value)
-            end
-          end
-        else
-          {{ builder }}.field("default", %hash)
-        end
-      {% elsif default %}
-        {{ builder }}.field("default", {{ default }})
+      {% if default %}
+        {{ builder }}.string("default")
+        ::Ameba::Config::RuleConfig.json_schema_default({{ builder }}, {{ default }})
       {% end %}
+    end
+
+    # :nodoc:
+    #
+    # Writes the given *value* as JSON, with the keys of all of the hashes
+    # within written as strings, the same way as within `properties`
+    # (since not all of them can be serialized as JSON object keys).
+    def self.json_schema_default(builder : JSON::Builder, value : Hash | NamedTuple) : Nil
+      builder.object do
+        value.each do |key, item|
+          builder.string(key.to_s)
+          json_schema_default(builder, item)
+        end
+      end
+    end
+
+    # :ditto:
+    def self.json_schema_default(builder : JSON::Builder, value : Array | Set | Tuple) : Nil
+      builder.array do
+        value.each do |item|
+          json_schema_default(builder, item)
+        end
+      end
+    end
+
+    # :ditto:
+    def self.json_schema_default(builder : JSON::Builder, value) : Nil
+      value.to_json(builder)
     end
 
     macro included
