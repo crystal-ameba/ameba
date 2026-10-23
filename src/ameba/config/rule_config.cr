@@ -3,10 +3,17 @@ class Ameba::Config
   module RuleConfig
     # Define rule properties
     macro properties(&block)
-      {% calls = block.body.is_a?(Expressions) ? block.body.expressions : [block.body] %}
-      {% properties = {} of MacroId => NamedTuple %}
-
       {%
+        calls = block.body.is_a?(Expressions) ? block.body.expressions : [block.body]
+        properties = {} of MacroId => NamedTuple
+
+        built_in_names = {
+          "Enabled"      => "enabled",
+          "Severity"     => "severity",
+          "Excluded"     => "excluded",
+          "SinceVersion" => "since_version",
+        }
+
         number_types = {
           :i8 => Int8, :i16 => Int16, :i32 => Int32, :i64 => Int64, :i128 => Int128,
           :u8 => UInt8, :u16 => UInt16, :u32 => UInt32, :u64 => UInt64, :u128 => UInt128,
@@ -50,8 +57,13 @@ class Ameba::Config
 
         {% getter = type == Bool ? "#{name}?".id : name %}
 
+        {% same_key_name = properties.keys.find { |other| properties[other][:key] == key } %}
+        {% same_key_name ||= built_in_names[key].id if built_in_names[key] && built_in_names[key] != name.stringify %}
+
         {% if properties[name] %}
           {% call.raise("Rule property `#{name}` is already defined") %}
+        {% elsif same_key_name %}
+          {% call.raise("Rule property `#{name}` would be configured with the same `#{key.id}` key as `#{same_key_name}`") %}
         {% elsif @type.has_method?(getter) %}
           {% call.raise("Rule property `#{name}` would override the `#{getter}` method of `#{@type}`") %}
         {% end %}
