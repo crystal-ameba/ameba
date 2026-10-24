@@ -41,6 +41,20 @@ module Ameba::Rule::Style
         CRYSTAL
     end
 
+    it "does not report if there .is_a? call on a non-argument variable" do
+      expect_no_issues subject, <<-CRYSTAL
+        t.select { |foo| bar.is_a?(String) }
+        t.reject { |foo| bar.nil? }
+        CRYSTAL
+    end
+
+    it "does not report if there .is_a? call within block with unpacked arguments" do
+      expect_no_issues subject, <<-CRYSTAL
+        t.select { |(foo, bar)| foo.is_a?(String) }
+        t.reject { |(foo, bar)| bar.nil? }
+        CRYSTAL
+    end
+
     context "properties" do
       it "#filter_names" do
         rule = subject.class.new

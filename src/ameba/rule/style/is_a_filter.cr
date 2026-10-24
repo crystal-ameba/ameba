@@ -62,7 +62,8 @@ module Ameba::Rule::Style
       return unless (block = node.block) && block.args.size == 1
       return unless (body = block.body).is_a?(Crystal::IsA)
       return unless (path = body.const).is_a?(Crystal::Path)
-      return unless body.obj.is_a?(Crystal::Var)
+      return unless (obj = body.obj).is_a?(Crystal::Var)
+      return unless obj.name == block.args.first.name
 
       name = path_name(path, include_global: !body.nil_check?)
 
