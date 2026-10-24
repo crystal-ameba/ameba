@@ -39,6 +39,16 @@ module Ameba::Rule::Lint
         CRYSTAL
     end
 
+    it "reports if there is a shadowed unpacked block argument" do
+      expect_issue subject, <<-CRYSTAL
+        [{1, 2}].each do |(i, j)|
+          i = 2
+        # ^^^^^ error: Argument `i` is assigned before it is used
+          i + j
+        end
+        CRYSTAL
+    end
+
     it "reports if there is a shadowed proc argument" do
       expect_issue subject, <<-CRYSTAL
         -> (x : Int32) {

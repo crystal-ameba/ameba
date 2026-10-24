@@ -38,6 +38,17 @@ module Ameba::AST
       rule.scopes.size.should eq 2
     end
 
+    it "registers unpacked block variables as arguments" do
+      rule = ScopeRule.new
+      ScopeVisitor.new rule, Source.new <<-CRYSTAL
+        [{1, {2, 3}}].each { |(a, (b, *c)), d| a + b + d }
+        CRYSTAL
+      scope = rule.scopes.first
+      scope.arguments.reject(&.anonymous?).map(&.name).sort!.should eq %w[a b c d]
+      scope.arguments.find!(&.name.== "a").variable.references.size.should eq 1
+      scope.arguments.find!(&.name.== "c").variable.references.should be_empty
+    end
+
     it "correctly resets location-less node scope" do
       rule = ScopeRule.new
       ScopeVisitor.new rule, Source.new <<-CRYSTAL
