@@ -96,18 +96,6 @@ module Ameba::AST
     end
 
     # :nodoc:
-    def visit(node : Crystal::Block)
-      return unless on_scope_enter(node)
-
-      # Unpacked arguments are visited after the block body,
-      # so they need to be registered before they're referenced
-      unpacked_block_args(node).try &.each do |arg|
-        @current_scope.add_argument(arg)
-      end
-      true
-    end
-
-    # :nodoc:
     def visit(node : Crystal::Def)
       node.name == "->" || on_scope_enter(node)
     end
@@ -175,12 +163,6 @@ module Ameba::AST
     end
 
     # :nodoc:
-    def visit(node : Crystal::Arg)
-      @current_scope.add_argument(node)
-      true
-    end
-
-    # :nodoc:
     def visit(node : Crystal::InstanceVar)
       @current_scope.add_ivariable(node)
       true
@@ -190,10 +172,8 @@ module Ameba::AST
     def visit(node : Crystal::Var)
       variable = @current_scope.find_variable(node.name)
       case
-      when @current_scope.arguments.any?(&.node.same?(node))
-        # node is an already registered argument (i.e. unpacked block variable)
-      when @current_scope.arg?(node) # node is an argument
-        @current_scope.add_argument(node)
+      when @current_scope.arg?(node)
+        # node is an argument, already registered by the scope
       when variable.nil? && @current_assign # node is a variable
         @current_scope.add_variable(node)
       when variable # node is a reference

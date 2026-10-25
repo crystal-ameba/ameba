@@ -46,6 +46,32 @@ module Ameba::AST
     # ```
     def initialize(@node, @outer_scope = nil)
       @outer_scope.try(&.inner_scopes.<< self)
+
+      # Some arguments (i.e. unpacked block arguments, or macro's double splat
+      # and block arguments) are visited after the body, so they need to be
+      # registered before they're referenced
+      add_arguments(node)
+    end
+
+    private def add_arguments(node : Crystal::Def | Crystal::Macro)
+      node.args.each { |arg| add_argument(arg) }
+      node.double_splat.try { |arg| add_argument(arg) }
+      node.block_arg.try { |arg| add_argument(arg) }
+    end
+
+    private def add_arguments(node : Crystal::FunDef)
+      node.args.each { |arg| add_argument(arg) }
+    end
+
+    private def add_arguments(node : Crystal::ProcLiteral)
+      add_arguments(node.def)
+    end
+
+    private def add_arguments(node : Crystal::Block)
+      Util.all_block_args(node).each { |arg| add_argument(arg) }
+    end
+
+    private def add_arguments(node : Crystal::ASTNode)
     end
 
     # Creates a new variable in the current scope.
@@ -247,20 +273,7 @@ module Ameba::AST
 
     # Returns `true` if var is an argument in current scope, `false` otherwise.
     def arg?(var)
-      case current_node = node
-      when Crystal::Def
-        var.is_a?(Crystal::Arg) && any_arg?(current_node.args, var)
-      when Crystal::Block
-        var.is_a?(Crystal::Var) && any_arg?(current_node.args, var)
-      when Crystal::ProcLiteral
-        var.is_a?(Crystal::Var) && any_arg?(current_node.def.args, var)
-      else
-        false
-      end
-    end
-
-    private def any_arg?(args, var)
-      args.any? { |arg| arg.name == var.name && arg.location == var.location }
+      arguments.any?(&.node.same?(var))
     end
 
     # Returns `true` if the *node* represents exactly
