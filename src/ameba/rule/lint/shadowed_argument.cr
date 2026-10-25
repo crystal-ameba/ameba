@@ -73,7 +73,7 @@ module Ameba::Rule::Lint
             assigns.first?
         next unless target
 
-        issue_for(target.node, MSG % arg.name)
+        issue_for(target.location, target.end_location, MSG % arg.name)
       end
     end
   end
