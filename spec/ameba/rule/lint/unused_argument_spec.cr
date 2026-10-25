@@ -200,6 +200,17 @@ module Ameba::Rule::Lint
     end
 
     context "macro" do
+      it "reports if the argument name is only a part of an identifier used in a macro" do
+        expect_issue subject, <<-CRYSTAL
+          [{1, 2}].each { |a, b| puts a }
+                            # ^ error: Unused argument `b`. If it's necessary, use `_` as an argument name to indicate that it won't be used.
+
+          macro foo(&blk)
+            {{ blk }}
+          end
+          CRYSTAL
+      end
+
       it "doesn't report if it is a used macro argument" do
         expect_no_issues subject, <<-CRYSTAL
           macro my_macro(arg)
