@@ -102,6 +102,29 @@ module Ameba::AST::Util
       !!(node.args.present? || node.splat_index || node.double_splat)
   end
 
+  # Returns the variables unpacked within the *node* arguments
+  # (i.e. `foo`, `bar` and `baz` in `|(foo, (bar, *baz))|`).
+  def unpacked_block_vars(node : Crystal::Block) : Array(Crystal::Var)?
+    return unless unpacks = node.unpacks
+
+    vars = [] of Crystal::Var
+    unpacks.each_value do |unpack|
+      collect_unpacked_vars(unpack, vars)
+    end
+    vars
+  end
+
+  private def collect_unpacked_vars(node, vars)
+    case node
+    when Crystal::Var
+      vars << node
+    when Crystal::Splat
+      collect_unpacked_vars(node.exp, vars)
+    when Crystal::Expressions
+      node.expressions.each { |exp| collect_unpacked_vars(exp, vars) }
+    end
+  end
+
   # Returns the path name of the *path*.
   #
   # If *include_global* is `true` (default), the global prefix `::` is included.
