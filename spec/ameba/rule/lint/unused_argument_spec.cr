@@ -179,6 +179,33 @@ module Ameba::Rule::Lint
     end
 
     context "super" do
+      it "doesn't report if variable is referenced implicitly within a block" do
+        expect_no_issues subject, <<-CRYSTAL
+          class Bar < Foo
+            def method(a, b)
+              [1].each { super }
+              -> { previous_def }
+            end
+          end
+          CRYSTAL
+      end
+
+      it "reports if variable is not referenced by super with empty parentheses" do
+        expect_issue subject, <<-CRYSTAL
+          class Bar < Foo
+            def method(foo)
+                     # ^^^ error: Unused argument `foo`. [...]
+              super()
+            end
+
+            def other_method(foo)
+                           # ^^^ error: Unused argument `foo`. [...]
+              previous_def()
+            end
+          end
+          CRYSTAL
+      end
+
       it "reports if variable is not referenced implicitly by super" do
         source = expect_issue subject, <<-CRYSTAL
           class Bar < Foo
