@@ -86,6 +86,26 @@ module Ameba::AST
       end
     end
 
+    # Declares the variable of the `rescue` *node* (i.e. `ex` in `rescue ex`)
+    # and assigns it. Just like with an assignment, the already visible
+    # variable with the same name gets reassigned instead.
+    #
+    # ```
+    # scope = Scope.new(def_node, nil)
+    # scope.add_rescue_variable(rescue_node)
+    # ```
+    def add_rescue_variable(node : Crystal::Rescue) : Variable?
+      return unless name = node.name
+
+      variable = find_variable(name) ||
+                 add_variable(Crystal::Var.new(name).at(rescue_variable_location(node)))
+      variable.tap(&.assign(node, self))
+    end
+
+    private def rescue_variable_location(node)
+      node.location.try(&.adjust(column_number: {{ "rescue ".size }}))
+    end
+
     # Creates a new argument in the current scope.
     #
     # ```

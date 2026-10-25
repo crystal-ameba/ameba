@@ -163,6 +163,12 @@ module Ameba::AST
     end
 
     # :nodoc:
+    def visit(node : Crystal::Rescue)
+      @current_scope.add_rescue_variable(node)
+      true
+    end
+
+    # :nodoc:
     def visit(node : Crystal::InstanceVar)
       @current_scope.add_ivariable(node)
       true

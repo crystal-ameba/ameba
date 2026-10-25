@@ -169,6 +169,31 @@ module Ameba::AST
     end
   end
 
+  describe "#add_rescue_variable" do
+    it "declares and assigns the rescue variable" do
+      node = as_node("begin; rescue ex; end").as(Crystal::ExceptionHandler)
+      rescues = node.rescues.should_not be_nil
+      rescue_node = rescues.first
+      scope = Scope.new(node)
+
+      variable = scope.add_rescue_variable(rescue_node).should_not be_nil
+      variable.name.should eq "ex"
+      variable.assignments.map(&.node).should eq [rescue_node]
+
+      location = variable.location.should_not be_nil
+      location.column_number.should eq 15
+    end
+
+    it "does nothing if the rescue has no variable" do
+      node = as_node("begin; rescue; end").as(Crystal::ExceptionHandler)
+      scope = Scope.new(node)
+
+      rescues = node.rescues.should_not be_nil
+      scope.add_rescue_variable(rescues.first).should be_nil
+      scope.variables.should be_empty
+    end
+  end
+
   describe "#find_variable" do
     it "returns the variable in the scope by name" do
       scope = Scope.new(as_node("foo = 1"))
