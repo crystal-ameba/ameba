@@ -283,6 +283,21 @@ module Ameba::Rule::Style
         CRYSTAL
     end
 
+    it "does not report if `self` is used in the presence of an out variable with the same name" do
+      expect_no_issues subject, <<-CRYSTAL
+        class Foo
+          def foo
+            42
+          end
+
+          def bar
+            LibFoo.get(out foo)
+            self.foo + foo
+          end
+        end
+        CRYSTAL
+    end
+
     it "does not report if `self` is used in the presence of a rescue variable with the same name" do
       expect_no_issues subject, <<-CRYSTAL
         class Foo

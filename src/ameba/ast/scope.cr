@@ -99,8 +99,27 @@ module Ameba::AST
     def add_rescue_variable(node : Crystal::Rescue) : Variable?
       return unless name = node.name
 
-      variable = find_variable(name) ||
-                 add_variable(Crystal::Var.new(name).at(node.name_location))
+      declare_variable(Crystal::Var.new(name).at(node.name_location), node)
+    end
+
+    # Declares the variable of the `out` *node* (i.e. `x` in `foo(out x)`)
+    # and assigns it. Just like with an assignment, the already visible
+    # variable with the same name gets reassigned instead.
+    #
+    # ```
+    # scope = Scope.new(def_node, nil)
+    # scope.add_out_variable(out_node)
+    # ```
+    def add_out_variable(node : Crystal::Out) : Variable?
+      return unless (var = node.exp).is_a?(Crystal::Var)
+
+      declare_variable(var, node)
+    end
+
+    # Declares the *var*, unless the variable with the same name is already
+    # visible, and assigns it using the given assignment *node*.
+    private def declare_variable(var : Crystal::Var, node) : Variable
+      variable = find_variable(var.name) || add_variable(var)
       variable.tap(&.assign(node, self))
     end
 

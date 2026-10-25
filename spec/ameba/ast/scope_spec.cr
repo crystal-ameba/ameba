@@ -169,6 +169,27 @@ module Ameba::AST
     end
   end
 
+  describe "#add_out_variable" do
+    it "declares and assigns the out variable" do
+      node = as_node("foo(out x)").as(Crystal::Call)
+      out_node = node.args.first.as(Crystal::Out)
+      scope = Scope.new(node)
+
+      variable = scope.add_out_variable(out_node).should_not be_nil
+      variable.name.should eq "x"
+      variable.node.should be(out_node.exp)
+      variable.assignments.map(&.node).should eq [out_node]
+    end
+
+    it "does nothing if the out argument is not a local variable" do
+      node = as_node("foo(out @x)").as(Crystal::Call)
+      scope = Scope.new(node)
+
+      scope.add_out_variable(node.args.first.as(Crystal::Out)).should be_nil
+      scope.variables.should be_empty
+    end
+  end
+
   describe "#add_rescue_variable" do
     it "declares and assigns the rescue variable" do
       node = as_node("begin; rescue ex; end").as(Crystal::ExceptionHandler)

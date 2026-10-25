@@ -13,6 +13,16 @@ module Ameba::AST
       end
     end
 
+    describe "#target_node" do
+      it "returns the variable of the out argument" do
+        call = as_node("foo(out x)").as(Crystal::Call)
+        out_node = call.args.first.as(Crystal::Out)
+
+        assignment = Assignment.new(out_node, variable, scope)
+        assignment.target_node.should be(out_node.exp)
+      end
+    end
+
     describe "delegation" do
       it "delegates locations" do
         assignment = Assignment.new(node, variable, scope)

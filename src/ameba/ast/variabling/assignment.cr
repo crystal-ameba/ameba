@@ -39,6 +39,7 @@ module Ameba::AST
     def target_node
       case assign = node
       when Crystal::UninitializedVar          then assign.var
+      when Crystal::Out                       then assign.exp
       when Crystal::Assign, Crystal::OpAssign then assign.target
       when Crystal::MultiAssign
         assign.targets.find(node) do |target|

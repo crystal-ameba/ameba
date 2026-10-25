@@ -169,6 +169,12 @@ module Ameba::AST
     end
 
     # :nodoc:
+    def visit(node : Crystal::Out)
+      # `out x` declares (or assigns) the variable, rather than reading it
+      !@current_scope.add_out_variable(node)
+    end
+
+    # :nodoc:
     def visit(node : Crystal::InstanceVar)
       @current_scope.add_ivariable(node)
       true

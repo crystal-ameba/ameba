@@ -64,6 +64,20 @@ module Ameba::AST
       variable.references.size.should eq 1
     end
 
+    it "registers out variables" do
+      rule = ScopeRule.new
+      ScopeVisitor.new rule, Source.new <<-CRYSTAL
+        def foo
+          LibFoo.get(out x)
+          x
+        end
+        CRYSTAL
+      scope = rule.scopes.first
+      variable = scope.find_variable("x").should_not be_nil
+      variable.assignments.size.should eq 1
+      variable.references.size.should eq 1
+    end
+
     it "assigns rescue variables to the already visible ones" do
       rule = ScopeRule.new
       ScopeVisitor.new rule, Source.new <<-CRYSTAL
