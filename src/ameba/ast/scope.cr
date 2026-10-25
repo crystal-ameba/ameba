@@ -196,8 +196,19 @@ module Ameba::AST
     def references?(variable : Variable, check_inner_scopes = true)
       variable.references.any? do |reference|
         (reference.scope == self) ||
-          (check_inner_scopes && inner_scopes.any?(&.references?(variable)))
+          (check_inner_scopes && reference.scope.nested_in?(self))
       end || variable.used_in_macro?
+    end
+
+    # Returns `true` if current scope is nested (at any depth) within
+    # the given *scope*, `false` otherwise.
+    def nested_in?(scope : Scope) : Bool
+      current_scope = outer_scope
+      while current_scope
+        return true if current_scope == scope
+        current_scope = current_scope.outer_scope
+      end
+      false
     end
 
     # Returns `true` if current scope (or any of inner scopes) yields,
