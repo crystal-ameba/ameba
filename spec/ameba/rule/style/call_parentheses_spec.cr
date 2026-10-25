@@ -180,6 +180,54 @@ module Ameba::Rule::Style
         CRYSTAL
     end
 
+    it "fails without correcting nested method call with block, as the block would be rebound" do
+      rule = subject.class.new
+      rule.exclude_multiline_calls = true
+
+      source = expect_issue rule, <<-CRYSTAL
+        foo bar 1 do |x|
+          # ^^^^^ error: Missing parentheses in method call
+          x
+        end
+        CRYSTAL
+
+      expect_no_corrections source
+    end
+
+    it "fails for method call with nested method call with block" do
+      rule = subject.class.new
+      rule.exclude_multiline_calls = false
+
+      source = expect_issue rule, <<-CRYSTAL
+        foo bar 1 do |x|
+        # ^^^^^^^^^^^^^^ error: Missing parentheses in method call
+          # ^^^^^ error: Missing parentheses in method call
+          x
+        end
+        CRYSTAL
+
+      expect_correction source, <<-CRYSTAL
+        foo(bar 1 do |x|
+          x
+        end)
+        CRYSTAL
+    end
+
+    it "fails for nested method call with block, being an argument of a parenthesized call" do
+      source = expect_issue subject, <<-CRYSTAL
+        foo(bar 1 do |x|
+          # ^^^^^ error: Missing parentheses in method call
+          x
+        end)
+        CRYSTAL
+
+      expect_correction source, <<-CRYSTAL
+        foo(bar(1) do |x|
+          x
+        end)
+        CRYSTAL
+    end
+
     it "fails for method call with block (short) + inner call with heredoc argument" do
       source = expect_issue subject, <<-CRYSTAL
         foo &.bar <<-FOO
