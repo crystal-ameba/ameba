@@ -28,8 +28,29 @@ module Ameba::Rule::Lint
         CRYSTAL
 
       expect_correction source, <<-CRYSTAL
-        def method(foo, bar, _baz : Symbol)
+        def method(foo, bar, baz _baz : Symbol)
           foo + bar
+        end
+        CRYSTAL
+    end
+
+    it "keeps the external name of the method argument when correcting" do
+      source = expect_issue subject, <<-CRYSTAL
+        def method(*, foo, **opts)
+                    # ^^^ error: Unused argument `foo`. [...]
+                           # ^^^^ error: Unused argument `opts`. [...]
+        end
+
+        def other_method(*args)
+                        # ^^^^ error: Unused argument `args`. [...]
+        end
+        CRYSTAL
+
+      expect_correction source, <<-CRYSTAL
+        def method(*, foo _foo, **_opts)
+        end
+
+        def other_method(*_args)
         end
         CRYSTAL
     end
@@ -99,7 +120,7 @@ module Ameba::Rule::Lint
         CRYSTAL
 
       expect_correction source, <<-CRYSTAL
-        def method(_foo, _bar, _baz)
+        def method(foo _foo, bar _bar, baz _baz)
           nil
         end
         CRYSTAL
@@ -242,7 +263,7 @@ module Ameba::Rule::Lint
 
         expect_correction source, <<-CRYSTAL
           class Bar < Foo
-            def method(foo, _bar)
+            def method(foo, bar _bar)
               super foo
             end
           end
