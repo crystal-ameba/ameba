@@ -465,6 +465,40 @@ module Ameba::AST
     end
 
     context "exception handlers" do
+      it "treats the rescue variable as assigned on entering the rescue branch" do
+        scope = def_scope <<-CRYSTAL
+          def foo
+            raise "x"
+          rescue ex
+          end
+          CRYSTAL
+        dead_store_names(scope).should eq ["ex"]
+      end
+
+      it "does not report the rescue variable used after the handler" do
+        scope = def_scope <<-CRYSTAL
+          def foo
+            begin
+              raise "x"
+            rescue ex
+            end
+            ex
+          end
+          CRYSTAL
+        dead_store_names(scope).should be_empty
+      end
+
+      it "treats the argument as overwritten by the rescue variable" do
+        scope = def_scope <<-CRYSTAL
+          def foo(ex)
+            raise "x"
+          rescue ex
+            ex
+          end
+          CRYSTAL
+        LivenessAnalyzer.new(scope).entry_live_set.should_not contain("ex")
+      end
+
       it "does not report assignment used in rescue" do
         scope = def_scope <<-CRYSTAL
           def foo(a)

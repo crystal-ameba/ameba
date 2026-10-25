@@ -197,5 +197,50 @@ module Ameba::Rule::Lint
         end
         CRYSTAL
     end
+
+    it "passes when variable is used after the exception handler" do
+      expect_no_issues subject, <<-CRYSTAL
+        def foo
+          begin
+            raise MyException.new("OH NO!")
+          rescue ex : MyException
+          end
+          puts ex
+        end
+
+        def bar
+          begin
+            raise MyException.new("OH NO!")
+          rescue ex : MyException
+          end
+          [1].each { puts ex }
+        end
+        CRYSTAL
+    end
+
+    it "passes when variable is used in ensure" do
+      expect_no_issues subject, <<-CRYSTAL
+        begin
+          raise MyException.new("OH NO!")
+        rescue ex : MyException
+        ensure
+          puts ex
+        end
+        CRYSTAL
+    end
+
+    it "fails when variable is overwritten after the exception handler" do
+      expect_issue subject, <<-CRYSTAL
+        def foo
+          begin
+            raise MyException.new("OH NO!")
+          rescue ex : MyException
+               # ^^ error: Unused `rescue` variable `ex`
+          end
+          ex = nil
+          puts ex
+        end
+        CRYSTAL
+    end
   end
 end

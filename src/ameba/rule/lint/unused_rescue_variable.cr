@@ -37,74 +37,38 @@ module Ameba::Rule::Lint
 
     MSG = "Unused `rescue` variable `%s`"
 
-    def test(source, node : Crystal::Rescue)
-      return unless name = node.name
-
-      visitor = VariableReferenceVisitor.new(node.body, name)
-      return if visitor.referenced?
-
-      issue_for name_location_or(node),
-        MSG % name
-    end
-  end
-
-  private class VariableReferenceVisitor < Crystal::Visitor
-    include AST::Util
-
-    getter variable_name : String
-    getter? referenced = false
-
-    def initialize(node : Crystal::ASTNode, @variable_name)
-      node.accept(self)
+    def test(source)
+      AST::ScopeVisitor.new(self, source)
     end
 
-    def visit(node : Crystal::Var)
-      @referenced ||= true if node.name == variable_name
-      true
-    end
+    def test(source, node, scope : AST::Scope)
+      return unless has_rescue_assignments?(scope)
 
-    def visit(node : Crystal::MacroIf | Crystal::MacroFor)
-      if AST::MacroReferenceFinder.new(node, variable_name).references?
-        @referenced ||= true
+      AST::LivenessAnalyzer.new(scope).dead_stores.each do |assign|
+        next unless (rescue_node = assign.node).is_a?(Crystal::Rescue)
+
+        var = assign.variable
+
+        # TODO: The liveness analysis doesn't descend into inner scopes
+        #       (i.e. blocks), so the variables referenced within any of them
+        #       are skipped, which hides i.e. the variable overwritten before
+        #       being referenced within a block, as in
+        #       `rescue ex; end; ex = nil; [1].each { puts ex }`.
+        #       Once the analysis treats the inner scope references as reads
+        #       at their location, this can be narrowed down to the inner
+        #       scopes preceding the `rescue`, which might be invoked later.
+        next if var.captured_by_block?
+        next if scope.inner_scopes.any?(&.references?(var))
+        next if AST::MacroReferenceFinder.new(rescue_node.body, var.name).references?
+
+        issue_for(name_location_or(rescue_node), MSG % var.name)
       end
-      false
     end
 
-    # Shadowed variable usage check
-    def visit(node : Crystal::Block)
-      all_block_args(node).all? { |arg| should_visit?(arg) }
-    end
-
-    # Shadowed variable usage check
-    def visit(node : Crystal::ProcLiteral)
-      node.def.args.all? { |arg| should_visit?(arg) }
-    end
-
-    # Shadowed variable usage check
-    def visit(node : Crystal::UninitializedVar)
-      should_visit?(node.var)
-    end
-
-    # Shadowed variable usage check
-    def visit(node : Crystal::Assign | Crystal::OpAssign)
-      should_visit?(node.target)
-    end
-
-    # Shadowed variable usage check
-    def visit(node : Crystal::MultiAssign)
-      node.targets.all? { |target| should_visit?(target) }
-    end
-
-    def visit(node : Crystal::ASTNode)
-      true
-    end
-
-    private def should_visit?(node : Crystal::Var | Crystal::Arg)
-      node.name != variable_name
-    end
-
-    private def should_visit?(node : Crystal::ASTNode)
-      true
+    private def has_rescue_assignments?(scope)
+      scope.variables.any? do |var|
+        var.assignments.any?(&.node.is_a?(Crystal::Rescue))
+      end
     end
   end
 end

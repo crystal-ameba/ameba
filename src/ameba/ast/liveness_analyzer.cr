@@ -261,7 +261,7 @@ module Ameba::AST
       # so collect all variables they need.
       rescue_live = LiveSet.new
       node.rescues.try &.each do |rescue_node|
-        rescue_live.concat(propagate_through(rescue_node.body, post_ensure, mark))
+        rescue_live.concat(propagate_through(rescue_node, post_ensure, mark))
       end
 
       # Body can throw at any point, so variables live in any rescue
@@ -269,6 +269,16 @@ module Ameba::AST
       # Union rescue_live because rescue-needed variables are live before the entire handler.
       body_live = propagate_through(node.body, after_body | rescue_live, mark)
       body_live | rescue_live
+    end
+
+    private def propagate_through(node : Crystal::Rescue, live : LiveSet, mark = true) : LiveSet
+      live = propagate_through(node.body, live, mark)
+
+      # The rescue variable (if any) gets assigned on entering the branch
+      if (name = node.name) && name.in?(@var_names) && find_assignment(node, name)
+        live = remove_from_live_set(node, name, live, mark)
+      end
+      live
     end
 
     private def propagate_through(node : Crystal::BinaryOp, live : LiveSet, mark = true) : LiveSet
