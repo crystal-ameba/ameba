@@ -62,7 +62,6 @@ module Ameba::Rule::Lint
       args.each do |arg|
         next if result.entry_live_set.includes?(arg.name)
         next if arg.variable.used_in_macro?
-        next if referenced_explicitly_in_inner_scope?(scope, arg.variable)
 
         assigns = arg.variable.assignments
         # Prefer the first non-dead-store assignment (the one whose value
@@ -75,14 +74,6 @@ module Ameba::Rule::Lint
         next unless target
 
         issue_for(target.node, MSG % arg.name)
-      end
-    end
-
-    # Implicit references (i.e. made by bare `super` within a block)
-    # are already taken into account by the liveness analysis.
-    private def referenced_explicitly_in_inner_scope?(scope, variable)
-      variable.references.any? do |ref|
-        ref.explicit? && ref.scope != scope
       end
     end
   end
