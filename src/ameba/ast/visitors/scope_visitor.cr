@@ -195,6 +195,15 @@ module Ameba::AST
     end
 
     # :nodoc:
+    def visit(node : Crystal::PointerOf)
+      return true unless (var = node.exp).is_a?(Crystal::Var)
+      return true unless variable = @current_scope.find_variable(var.name)
+
+      variable.reference(var, @current_scope).address_taken = true
+      false
+    end
+
+    # :nodoc:
     def visit(node : Crystal::Call)
       scope = @current_scope
       case

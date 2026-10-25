@@ -48,6 +48,7 @@ module Ameba::Rule::Lint
 
         next if var.special? || var.ignored? || var.used_in_macro?
         next if referenced_in_inner_scope_before?(scope, var, assign)
+        next if assign.address_taken_before?
 
         report_issue(source, assign, var)
       end

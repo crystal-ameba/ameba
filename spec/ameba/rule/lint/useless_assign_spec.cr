@@ -197,6 +197,41 @@ module Ameba::Rule::Lint
       end
     end
 
+    context "pointers" do
+      it "does not report if variable is reassigned after its address is taken" do
+        expect_no_issues subject, <<-CRYSTAL
+          def foo
+            a = 1
+            ptr = pointerof(a)
+            a = 2
+            ptr.value
+          end
+
+          def bar
+            ptr = Pointer(Int32).null
+            a = 0
+            while rand > 0.5
+              ptr = pointerof(a)
+              a = 1
+            end
+            ptr.value
+          end
+          CRYSTAL
+      end
+
+      it "reports if variable is reassigned before its address is taken" do
+        expect_issue subject, <<-CRYSTAL
+          def foo
+            a = 1
+          # ^ error: Useless assignment to variable `a`
+            a = 2
+            ptr = pointerof(a)
+            ptr.value
+          end
+          CRYSTAL
+      end
+    end
+
     it "reports useless assignment before super with explicit args" do
       expect_issue subject, <<-CRYSTAL
         def foo(bar)

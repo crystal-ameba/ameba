@@ -57,5 +57,22 @@ module Ameba::AST
         assignment.scope.should eq variable.scope
       end
     end
+
+    describe "#address_taken_before?" do
+      it "returns true only for the assignments following `pointerof`" do
+        rule = ScopeRule.new
+        ScopeVisitor.new rule, Source.new <<-CRYSTAL
+          def foo
+            a = 1
+            ptr = pointerof(a)
+            a = 2
+          end
+          CRYSTAL
+        scope = rule.scopes.find!(&.def?)
+        variable = scope.find_variable("a").should_not be_nil
+
+        variable.assignments.map(&.address_taken_before?).should eq [false, true]
+      end
+    end
   end
 end
