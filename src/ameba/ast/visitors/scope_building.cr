@@ -12,8 +12,9 @@ module Ameba::AST
     private abstract def on_scope_end(node)
 
     private def on_assign_end(target, node)
-      target.is_a?(Crystal::Var) &&
-        @current_scope.assign_variable(target.name, node)
+      if var = Util.assigned_var(target)
+        @current_scope.assign_variable(var.name, node)
+      end
     end
 
     # A main visit method that accepts `Crystal::ASTNode`.

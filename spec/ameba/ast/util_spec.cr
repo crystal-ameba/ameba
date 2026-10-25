@@ -96,6 +96,18 @@ module Ameba::AST
       end
     end
 
+    describe "#assigned_var" do
+      it "returns the assigned variable" do
+        node = as_node("a, *b, @c, _ = 1, 2, 3, 4").as(Crystal::MultiAssign)
+        a, b, c, underscore = node.targets
+
+        subject.assigned_var(a).try(&.name).should eq "a"
+        subject.assigned_var(b).try(&.name).should eq "b"
+        subject.assigned_var(c).should be_nil
+        subject.assigned_var(underscore).should be_nil
+      end
+    end
+
     describe "#path_name" do
       it "returns path name of the node" do
         path = Crystal::Path.new(%w[Foo Bar])

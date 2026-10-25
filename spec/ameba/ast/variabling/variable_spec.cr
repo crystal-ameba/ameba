@@ -134,6 +134,13 @@ module Ameba::AST
         end
       end
 
+      it "returns true if the variable is a splat target of Crystal::MultiAssign node" do
+        assign_node = as_nodes("a, *b = 1, 2, 3").multi_assign_nodes.last
+        splat = assign_node.targets.last.as(Crystal::Splat)
+        variable = Variable.new(splat.exp.as(Crystal::Var), scope)
+        variable.target_of?(assign_node).should be_true
+      end
+
       it "returns false if the node is not assign" do
         variable = Variable.new(Crystal::Var.new("v"), scope)
         variable.target_of?(as_node("nil")).should be_false

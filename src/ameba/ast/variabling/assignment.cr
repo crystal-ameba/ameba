@@ -56,9 +56,12 @@ module Ameba::AST
       when Crystal::Out                       then assign.exp
       when Crystal::Assign, Crystal::OpAssign then assign.target
       when Crystal::MultiAssign
-        assign.targets.find(node) do |target|
-          target.is_a?(Crystal::Var) && target.name == variable.name
+        assign.targets.each do |target|
+          if var = Util.assigned_var(target)
+            return var if var.name == variable.name
+          end
         end
+        node
       else
         node
       end

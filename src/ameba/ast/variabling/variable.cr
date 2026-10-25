@@ -116,7 +116,7 @@ module Ameba::AST
       when Crystal::UninitializedVar          then eql?(assign.var)
       when Crystal::Assign, Crystal::OpAssign then eql?(assign.target)
       when Crystal::MultiAssign
-        assign.targets.any? { |target| eql?(target) }
+        assign.targets.any? { |target| eql?(Util.assigned_var(target)) }
       else
         false
       end
