@@ -132,19 +132,6 @@ module Ameba::AST::Util
     args
   end
 
-  # Returns the unpacked block arguments within the *node*
-  # (i.e. `foo`, `bar` and `baz` in `|(foo, (bar, *baz))|`),
-  # or `nil` if there are no unpacked arguments.
-  def unpacked_block_args(node : Crystal::Block) : Array(Crystal::Var)?
-    return unless unpacks = node.unpacks
-
-    args = [] of Crystal::Var
-    unpacks.each_value do |unpack|
-      collect_unpacked_args(unpack, args)
-    end
-    args
-  end
-
   private def collect_unpacked_args(node, args)
     case node
     when Crystal::Var
