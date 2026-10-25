@@ -15,6 +15,15 @@ module Ameba::Rule::Performance
   # %w[Alice Bob].flat_map(&.chars)
   # ```
   #
+  # NOTE: The issues are not autocorrected, since `flatten` flattens the
+  # collection recursively, while `flat_map` flattens it only one level deep,
+  # so these are equivalent only when the block returns flat collections:
+  #
+  # ```
+  # [[1, [2]]].map(&.itself).flatten # => [1, 2]
+  # [[1, [2]]].flat_map(&.itself)    # => [1, [2]]
+  # ```
+  #
   # YAML configuration example:
   #
   # ```
@@ -40,14 +49,7 @@ module Ameba::Rule::Performance
       return unless obj.is_a?(Crystal::Call) && has_block?(obj)
       return unless obj.name == "map"
 
-      return unless name_location = name_location(obj)
-      return unless name_location_end = name_end_location(obj)
-      return unless end_location = name_end_location(node)
-
-      issue_for(name_location, end_location, MSG) do |corrector|
-        corrector.replace(name_location, name_location_end, "flat_map")
-        corrector.remove_trailing(node, {{ ".flatten".size }})
-      end
+      issue_for(name_location(obj), name_end_location(node), MSG)
     end
   end
 end

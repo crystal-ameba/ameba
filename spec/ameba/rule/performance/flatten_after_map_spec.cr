@@ -18,10 +18,7 @@ module Ameba::Rule::Performance
                     # ^^^^^^^^^^^^^^^^^^^ error: Use `flat_map {...}` instead of `map {...}.flatten`
         CRYSTAL
 
-      expect_correction source, <<-CRYSTAL
-        %w[Alice Bob].flat_map(&.chars)
-        %w[Alice Bob].flat_map(&block)
-        CRYSTAL
+      expect_no_corrections source
     end
 
     it "does not report is source is a spec" do
