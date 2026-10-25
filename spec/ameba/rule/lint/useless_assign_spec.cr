@@ -140,6 +140,63 @@ module Ameba::Rule::Lint
         CRYSTAL
     end
 
+    context "inner scopes" do
+      it "reports if variable is reassigned before being referenced in a block" do
+        expect_issue subject, <<-CRYSTAL
+          def foo
+            a = 1
+          # ^ error: Useless assignment to variable `a`
+            a = 2
+            [1].each { puts a }
+          end
+
+          def bar
+            a = 1
+          # ^ error: Useless assignment to variable `a`
+            a = 2
+            spawn { puts a }
+          end
+          CRYSTAL
+      end
+
+      it "doesn't report if variable is reassigned after being referenced in a block" do
+        expect_no_issues subject, <<-CRYSTAL
+          def foo
+            a = 1
+            on_event { puts a }
+            a = 2
+          end
+
+          def bar
+            a = 1
+            callback = -> { puts a }
+            a = 2
+            callback.call
+          end
+
+          def baz
+            callbacks = [] of ->
+            while rand > 0.5
+              a = 1
+              callbacks << -> { puts a }
+              a = 2
+            end
+            callbacks
+          end
+          CRYSTAL
+      end
+
+      it "doesn't report if variable is reassigned within a block" do
+        expect_no_issues subject, <<-CRYSTAL
+          def foo
+            a = 1
+            [1].each { a = 2 }
+            puts a
+          end
+          CRYSTAL
+      end
+    end
+
     it "reports useless assignment before super with explicit args" do
       expect_issue subject, <<-CRYSTAL
         def foo(bar)
