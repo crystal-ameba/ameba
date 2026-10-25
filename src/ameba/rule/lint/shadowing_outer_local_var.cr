@@ -54,7 +54,6 @@ module Ameba::Rule::Lint
       return unless outer_scope = scope.outer_scope
 
       each_argument_node(scope) do |arg|
-        # TODO: handle unpacked variables from `Block#unpacks`
         next unless name = arg.name.presence
 
         next unless outer_scope.find_variable(name)

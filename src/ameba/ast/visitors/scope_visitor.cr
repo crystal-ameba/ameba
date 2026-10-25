@@ -3,6 +3,8 @@ require "./base_visitor"
 module Ameba::AST
   # AST Visitor that traverses the source and constructs scopes.
   class ScopeVisitor < BaseVisitor
+    include Util
+
     # Non-exhaustive list of nodes to be visited by Ameba's rules.
     NODES = {
       ClassDef,
@@ -161,12 +163,6 @@ module Ameba::AST
     end
 
     # :nodoc:
-    def visit(node : Crystal::Arg)
-      @current_scope.add_argument(node)
-      true
-    end
-
-    # :nodoc:
     def visit(node : Crystal::InstanceVar)
       @current_scope.add_ivariable(node)
       true
@@ -176,8 +172,8 @@ module Ameba::AST
     def visit(node : Crystal::Var)
       variable = @current_scope.find_variable(node.name)
       case
-      when @current_scope.arg?(node) # node is an argument
-        @current_scope.add_argument(node)
+      when @current_scope.arg?(node)
+        # node is an argument, already registered by the scope
       when variable.nil? && @current_assign # node is a variable
         @current_scope.add_variable(node)
       when variable # node is a reference

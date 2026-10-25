@@ -28,6 +28,8 @@ module Ameba::Rule::Lint
   #   Enabled: true
   # ```
   class RedundantWithIndex < Base
+    include AST::Util
+
     properties do
       since_version "0.11.0"
       description "Disallows redundant `with_index` calls"
@@ -51,7 +53,10 @@ module Ameba::Rule::Lint
     end
 
     private def valid_args?(block : Crystal::Block)
-      block.args.size >= 2 && !block.args.last.name.starts_with?('_')
+      return false unless block.args.size >= 2
+
+      block_args_at(block, block.args.size - 1)
+        .any? { |arg| !arg.name.starts_with?('_') }
     end
 
     private def report(source, node, msg)

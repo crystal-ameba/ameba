@@ -95,11 +95,6 @@ module Ameba::AST
       @current_assign = nil
     end
 
-    def visit(node : Crystal::Arg)
-      @current_scope.add_argument(node)
-      true
-    end
-
     def visit(node : Crystal::InstanceVar)
       @current_scope.add_ivariable(node)
       true
@@ -110,8 +105,8 @@ module Ameba::AST
       variable = scope.find_variable(node.name)
 
       case
-      when scope.arg?(node) # node is an argument
-        scope.add_argument(node)
+      when scope.arg?(node)
+        # node is an argument, already registered by the scope
       when variable.nil? && @current_assign # node is a variable
         scope.add_variable(node)
       when variable # node is a reference

@@ -65,6 +65,20 @@ module Ameba::Rule::Style
         CRYSTAL
     end
 
+    it "does not report if `self` is used in the presence of an unpacked block argument with the same name" do
+      expect_no_issues subject, <<-CRYSTAL
+        class Foo
+          def foo
+            42
+          end
+
+          def bar
+            [{1, 2}].map { |(foo, _)| self.foo + foo }
+          end
+        end
+        CRYSTAL
+    end
+
     it "does not report if `self` is used in the presence of a block argument with the same name (inside block)" do
       expect_no_issues subject, <<-CRYSTAL
         class Foo

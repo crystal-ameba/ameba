@@ -15,6 +15,52 @@ module Ameba::AST
         scope = Scope.new(as_node(source))
         scope.node.should_not be_nil
       end
+
+      it "registers regular and unpacked block arguments" do
+        node = as_node("foo { |a, (b, *c)| }").as(Crystal::Call)
+        block = node.block.should be_a(Crystal::Block)
+
+        scope = Scope.new(block)
+        scope.arguments.map(&.name).should eq %w[a b c]
+      end
+
+      it "registers def arguments" do
+        scope = Scope.new(as_node("def foo(a, *b, c = 1, **d, &e); end"))
+        scope.arguments.map(&.name).should eq %w[a b c d e]
+      end
+
+      it "registers macro arguments" do
+        scope = Scope.new(as_node("macro foo(a, *b, **c, &d); end"))
+        scope.arguments.map(&.name).should eq %w[a b c d]
+      end
+
+      it "registers proc arguments" do
+        scope = Scope.new(as_node("->(a : Int32, b : String) { }"))
+        scope.arguments.map(&.name).should eq %w[a b]
+      end
+
+      it "registers fun arguments" do
+        scope = Scope.new(as_node("fun foo(a : Int32, b : Int32) : Int32; end"))
+        scope.arguments.map(&.name).should eq %w[a b]
+      end
+
+      it "does not register arguments for other nodes" do
+        scope = Scope.new(as_node("enum Foo; A; B; end"))
+        scope.arguments.should be_empty
+      end
+    end
+
+    describe "#arg?" do
+      it "returns true for regular and unpacked block arguments" do
+        node = as_node("foo { |a, (b, *c)| }").as(Crystal::Call)
+        block = node.block.should be_a(Crystal::Block)
+        scope = Scope.new(block)
+
+        AST::Util.all_block_args(block).each do |arg|
+          scope.arg?(arg).should be_true
+        end
+        scope.arg?(Crystal::Var.new("b")).should be_false
+      end
     end
   end
 

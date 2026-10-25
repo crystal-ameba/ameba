@@ -63,6 +63,23 @@ module Ameba::Rule::Lint
           CRYSTAL
       end
 
+      it "does not report if there is an unpacked object argument" do
+        expect_no_issues subject, <<-CRYSTAL
+          collection.each.with_object(0) do |e, (a, _)|
+            puts a
+          end
+          CRYSTAL
+      end
+
+      it "reports if there is a fully underscored unpacked object argument" do
+        expect_issue subject, <<-CRYSTAL
+          collection.each.with_object(0) do |e, (_, _b)|
+                        # ^^^^^^^^^^^ error: Remove redundant `with_object`
+            puts e
+          end
+          CRYSTAL
+      end
+
       it "does not report if there are more than 2 args" do
         expect_no_issues subject, <<-CRYSTAL
           tup.each.with_object(0) do |key, value, object|
@@ -127,6 +144,23 @@ module Ameba::Rule::Lint
         expect_no_issues subject, <<-CRYSTAL
           collection.each_with_object(0) do |_, obj|
             puts i
+          end
+          CRYSTAL
+      end
+
+      it "does not report if there is an unpacked object argument" do
+        expect_no_issues subject, <<-CRYSTAL
+          collection.each_with_object(0) do |e, (a, _)|
+            puts a
+          end
+          CRYSTAL
+      end
+
+      it "reports if there is a fully underscored unpacked object argument" do
+        expect_issue subject, <<-CRYSTAL
+          collection.each_with_object(0) do |e, (_, _b)|
+                   # ^^^^^^^^^^^^^^^^ error: Use `each` instead of `each_with_object`
+            puts e
           end
           CRYSTAL
       end

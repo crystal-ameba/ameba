@@ -46,6 +46,32 @@ module Ameba::AST
     # ```
     def initialize(@node, @outer_scope = nil)
       @outer_scope.try(&.inner_scopes.<< self)
+
+      # Some arguments (i.e. unpacked block arguments, or macro's double splat
+      # and block arguments) are visited after the body, so they need to be
+      # registered before they're referenced
+      add_arguments(node)
+    end
+
+    private def add_arguments(node : Crystal::Def | Crystal::Macro)
+      node.args.each { |arg| add_argument(arg) }
+      node.double_splat.try { |arg| add_argument(arg) }
+      node.block_arg.try { |arg| add_argument(arg) }
+    end
+
+    private def add_arguments(node : Crystal::FunDef)
+      node.args.each { |arg| add_argument(arg) }
+    end
+
+    private def add_arguments(node : Crystal::ProcLiteral)
+      add_arguments(node.def)
+    end
+
+    private def add_arguments(node : Crystal::Block)
+      Util.all_block_args(node).each { |arg| add_argument(arg) }
+    end
+
+    private def add_arguments(node : Crystal::ASTNode)
     end
 
     # Creates a new variable in the current scope.
@@ -54,8 +80,10 @@ module Ameba::AST
     # scope = Scope.new(class_node, nil)
     # scope.add_variable(var_node)
     # ```
-    def add_variable(node)
-      variables << Variable.new(node, self)
+    def add_variable(node) : Variable
+      Variable.new(node, self).tap do |var|
+        variables << var
+      end
     end
 
     # Creates a new argument in the current scope.
@@ -64,9 +92,11 @@ module Ameba::AST
     # scope = Scope.new(class_node, nil)
     # scope.add_argument(arg_node)
     # ```
-    def add_argument(node)
-      add_variable(Crystal::Var.new(node.name).at(node))
-      arguments << Argument.new(node, variables.last)
+    def add_argument(node) : Argument
+      var = add_variable(Crystal::Var.new(node.name).at(node))
+      Argument.new(node, var).tap do |arg|
+        arguments << arg
+      end
     end
 
     # Adds a new instance variable to the current scope.
@@ -75,8 +105,10 @@ module Ameba::AST
     # scope = Scope.new(class_node, nil)
     # scope.add_ivariable(ivar_node)
     # ```
-    def add_ivariable(node)
-      ivariables << InstanceVariable.new(node)
+    def add_ivariable(node) : InstanceVariable
+      InstanceVariable.new(node).tap do |ivar|
+        ivariables << ivar
+      end
     end
 
     # Adds a new type declaration variable to the current scope.
@@ -85,8 +117,10 @@ module Ameba::AST
     # scope = Scope.new(class_node, nil)
     # scope.add_type_dec_variable(node)
     # ```
-    def add_type_dec_variable(node)
-      type_dec_variables << TypeDecVariable.new(node)
+    def add_type_dec_variable(node) : TypeDecVariable
+      TypeDecVariable.new(node).tap do |type_dec_var|
+        type_dec_variables << type_dec_var
+      end
     end
 
     # Returns variable by its name or `nil` if it does not exist.
@@ -239,20 +273,7 @@ module Ameba::AST
 
     # Returns `true` if var is an argument in current scope, `false` otherwise.
     def arg?(var)
-      case current_node = node
-      when Crystal::Def
-        var.is_a?(Crystal::Arg) && any_arg?(current_node.args, var)
-      when Crystal::Block
-        var.is_a?(Crystal::Var) && any_arg?(current_node.args, var)
-      when Crystal::ProcLiteral
-        var.is_a?(Crystal::Var) && any_arg?(current_node.def.args, var)
-      else
-        false
-      end
-    end
-
-    private def any_arg?(args, var)
-      args.any? { |arg| arg.name == var.name && arg.location == var.location }
+      arguments.any?(&.node.same?(var))
     end
 
     # Returns `true` if the *node* represents exactly
