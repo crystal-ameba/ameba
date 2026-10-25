@@ -7,7 +7,9 @@ module Ameba::Rule::Style
   # as a string of two characters, or `nil` to ignore a particular `%`-literal / default.
   #
   # Setting `IgnoreLiteralsContainingDelimiters` to `true` will ignore `%`-literals that
-  # contain one or both delimiters.
+  # contain one or both delimiters. Otherwise these are reported without being
+  # autocorrected in case the delimiters are unbalanced within the literal
+  # (i.e. `%w(a] b)`), since replacing the delimiters would make it invalid.
   #
   # YAML configuration example:
   #
@@ -45,9 +47,13 @@ module Ameba::Rule::Style
         x = state.start_token.location.adjust(column_number: state.literal.size)
         y = state.end_token.location
 
-        issue_for(state.location, state.end_location, msg) do |corrector|
-          corrector.replace(x, x, state.opening_delimiter)
-          corrector.replace(y, y, state.closing_delimiter)
+        if state.unbalanced_delimiters?
+          issue_for(state.location, state.end_location, msg)
+        else
+          issue_for(state.location, state.end_location, msg) do |corrector|
+            corrector.replace(x, x, state.opening_delimiter)
+            corrector.replace(y, y, state.closing_delimiter)
+          end
         end
       end
     end
@@ -72,8 +78,12 @@ module Ameba::Rule::Style
               end
             end
           when .string?
-            if (state = current_state[nest_level]?) && @rule.ignore_literals_containing_delimiters?
-              current_state.delete(nest_level) if state.includes_delimiters?(token.raw)
+            if (state = current_state[nest_level]?) && state.includes_delimiters?(token.raw)
+              if @rule.ignore_literals_containing_delimiters?
+                current_state.delete(nest_level)
+              else
+                state.track_delimiters(token.raw)
+              end
             end
           when .string_array_end?, .delimiter_end?
             if state = current_state.delete(nest_level)
@@ -96,12 +106,17 @@ module Ameba::Rule::Style
         @rule.preferred_delimiters.fetch(literal) { @rule.default_delimiters }
       end
 
-      struct LiteralState
+      class LiteralState
         getter start_token : Crystal::Token
         property! end_token : Crystal::Token
         getter literal : String
         getter opening_delimiter : Char
         getter closing_delimiter : Char
+
+        # Nesting depth of the preferred delimiters within the literal contents,
+        # and whether it went below zero at any point
+        @delimiters_depth = 0
+        @delimiters_underflow = false
 
         def initialize(@start_token, @literal, delimiters)
           @opening_delimiter = delimiters[0]
@@ -111,6 +126,31 @@ module Ameba::Rule::Style
         def includes_delimiters?(string)
           string.includes?(opening_delimiter) ||
             string.includes?(closing_delimiter)
+        end
+
+        # Tracks the preferred delimiters contained within the given *string*
+        # (a part of the literal contents).
+        def track_delimiters(string) : Nil
+          escaped = false
+          string.each_char do |char|
+            case
+            when escaped
+              escaped = false
+            when char == '\\'
+              escaped = true
+            when char == opening_delimiter
+              @delimiters_depth += 1
+            when char == closing_delimiter
+              @delimiters_depth -= 1
+              @delimiters_underflow = true if @delimiters_depth.negative?
+            end
+          end
+        end
+
+        # Returns `true` if the preferred delimiters within the literal contents
+        # are unbalanced, which makes them unusable as the literal delimiters.
+        def unbalanced_delimiters?
+          @delimiters_underflow || !@delimiters_depth.zero?
         end
 
         def correct_delimiters?

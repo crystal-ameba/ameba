@@ -58,6 +58,35 @@ module Ameba::Rule::Style
         CRYSTAL
     end
 
+    it "does not correct literals containing unbalanced delimiters" do
+      source = expect_issue subject, <<-CRYSTAL
+        %w(a] b)
+        # ^{} error: `%w`-literals should be delimited by `[` and `]`
+        %i(c[ d)
+        # ^{} error: `%i`-literals should be delimited by `[` and `]`
+        %w(
+        # ^{} error: `%w`-literals should be delimited by `[` and `]`
+          e ]f
+        )
+        CRYSTAL
+
+      expect_no_corrections source
+    end
+
+    it "corrects literals containing balanced delimiters" do
+      source = expect_issue subject, <<-CRYSTAL
+        %w(a[ b])
+        # ^{} error: `%w`-literals should be delimited by `[` and `]`
+        %r(a{2})
+        # ^{} error: `%r`-literals should be delimited by `{` and `}`
+        CRYSTAL
+
+      expect_correction source, <<-CRYSTAL
+        %w[a[ b]]
+        %r{a{2}}
+        CRYSTAL
+    end
+
     it "properly autocorrects nested percent literals" do
       source = expect_issue subject, <<-'CRYSTAL'
         query.should eq %{SELECT * FROM users WHERE "users"."updated_at" > '#{date.to_s("%F %X.%6N %z")}'}
