@@ -15,6 +15,14 @@ module Ameba::Rule::Performance
   # Array.new(5) { |i| i * 2 }
   # ```
   #
+  # NOTE: These are not equivalent for negative counts, since `Int#times`
+  # doesn't iterate over them, while `Array.new` raises `ArgumentError`:
+  #
+  # ```
+  # -1.times.map { |i| i * 2 }.to_a # => []
+  # Array.new(-1) { |i| i * 2 }     # raises ArgumentError
+  # ```
+  #
   # YAML configuration example:
   #
   # ```
