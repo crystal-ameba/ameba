@@ -831,5 +831,41 @@ module Ameba::AST
         dead_store_names(scope).should eq ["b"]
       end
     end
+
+    context "inner scopes" do
+      it "treats variables referenced in a block as read at its location" do
+        scope = def_scope <<-CRYSTAL
+          def foo
+            a = 1
+            [1].each { puts a }
+            a = 2
+          end
+          CRYSTAL
+        dead_store_names(scope).should eq ["a"]
+      end
+
+      it "treats bare super in a block as reading all arguments at its location" do
+        scope = def_scope <<-CRYSTAL
+          def foo(a)
+            a = 1
+            [1].each { [2].each { super } }
+          end
+          CRYSTAL
+        analyzer = LivenessAnalyzer.new(scope)
+        analyzer.dead_stores.should be_empty
+        analyzer.entry_live_set.should_not contain("a")
+      end
+
+      it "treats arguments as live at entry if read in a block before reassignment" do
+        scope = def_scope <<-CRYSTAL
+          def foo(a)
+            [1].each { super }
+            a = 1
+            a
+          end
+          CRYSTAL
+        LivenessAnalyzer.new(scope).entry_live_set.should contain("a")
+      end
+    end
   end
 end

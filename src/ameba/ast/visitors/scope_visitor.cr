@@ -190,8 +190,8 @@ module Ameba::AST
         return false
       when scope.type_definition? && accessor_macro?(node)
         return false
-      when scope.def? && special_node?(node)
-        scope.arguments.each do |arg|
+      when special_node?(node) && (def_scope = special_node_def_scope(scope))
+        def_scope.arguments.each do |arg|
           ref = arg.variable.reference(scope)
           ref.explicit = false
         end
@@ -199,8 +199,21 @@ module Ameba::AST
       true
     end
 
+    # Returns `true` if the *node* implicitly forwards the arguments
+    # of the enclosing method, i.e. `super`, but not `super()`.
     private def special_node?(node)
-      node.name.in?(SPECIAL_NODE_NAMES) && node.args.empty?
+      node.name.in?(SPECIAL_NODE_NAMES) &&
+        node.args.empty? && !node.has_parentheses?
+    end
+
+    # Returns the scope of the method whose arguments are forwarded by
+    # the special node within *scope*, looking through any enclosing
+    # blocks (or procs), or `nil` if it's not within a method.
+    private def special_node_def_scope(scope) : Scope?
+      while scope && scope.block?
+        scope = scope.outer_scope
+      end
+      scope if scope.try(&.def?)
     end
 
     private def accessor_macro?(node)
