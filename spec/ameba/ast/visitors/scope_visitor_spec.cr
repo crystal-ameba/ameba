@@ -78,6 +78,20 @@ module Ameba::AST
       variable.references.size.should eq 1
     end
 
+    it "registers references taking the variable address" do
+      rule = ScopeRule.new
+      ScopeVisitor.new rule, Source.new <<-CRYSTAL
+        def foo
+          a = 1
+          ptr = pointerof(a)
+          a + ptr.value
+        end
+        CRYSTAL
+      scope = rule.scopes.first
+      variable = scope.find_variable("a").should_not be_nil
+      variable.references.map(&.address_taken?).should eq [true, false]
+    end
+
     it "assigns rescue variables to the already visible ones" do
       rule = ScopeRule.new
       ScopeVisitor.new rule, Source.new <<-CRYSTAL

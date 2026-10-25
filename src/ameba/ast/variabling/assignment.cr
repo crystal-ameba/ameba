@@ -25,6 +25,20 @@ module Ameba::AST
     def initialize(@node, @variable, @scope)
     end
 
+    # Returns `true` if the address of the variable is taken (i.e. via `pointerof`)
+    # before this assignment, since the assigned value might be then read
+    # through the pointer at any later point.
+    def address_taken_before? : Bool
+      return true unless assign_location = location
+
+      variable.references.any? do |ref|
+        next false unless ref.address_taken?
+        next true unless ref_location = ref.location
+
+        ref_location < assign_location
+      end
+    end
+
     # Returns `true` if this assignment is an op assign, `false` if not.
     # For example, this is an op assign:
     #
