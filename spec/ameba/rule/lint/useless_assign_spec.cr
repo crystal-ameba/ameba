@@ -131,6 +131,15 @@ module Ameba::Rule::Lint
         CRYSTAL
     end
 
+    it "does not report if variable is used by bare super in a block" do
+      expect_no_issues subject, <<-CRYSTAL
+        def foo(bar)
+          bar = 1
+          [1].each { super }
+        end
+        CRYSTAL
+    end
+
     it "reports useless assignment before super with explicit args" do
       expect_issue subject, <<-CRYSTAL
         def foo(bar)

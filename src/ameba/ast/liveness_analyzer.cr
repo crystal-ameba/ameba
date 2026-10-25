@@ -25,6 +25,7 @@ module Ameba::AST
     @var_names : Set(String)
     @assignment_map : Hash(Tuple(String, UInt64), Assignment)
     @inner_scope_nodes : Set(UInt64)
+    @inner_scope_reads : Hash(UInt64, LiveSet)
 
     # Live sets for loop flow control: `break` exits to post-loop,
     # `next` jumps to loop condition. Without these, assignments
@@ -36,6 +37,7 @@ module Ameba::AST
       @var_names = @scope.variables.map(&.name).to_set
       @assignment_map = build_assignment_map
       @inner_scope_nodes = @scope.inner_scopes.map(&.node.object_id).to_set
+      @inner_scope_reads = build_inner_scope_reads
     end
 
     # Returns assignments where the value is never read before being
@@ -72,6 +74,31 @@ module Ameba::AST
         end
       end
       map
+    end
+
+    # Maps the nodes of the inner scopes to the names of this scope's variables
+    # referenced within them (at any depth), i.e. `a` for the block in
+    # `a = 1; [1].each { puts a }`.
+    private def build_inner_scope_reads
+      reads = Hash(UInt64, LiveSet).new
+
+      @scope.variables.each do |var|
+        var.references.each do |ref|
+          next unless inner_scope = inner_scope_containing(ref.scope)
+
+          reads.put_if_absent(inner_scope.node.object_id) { LiveSet.new } << var.name
+        end
+      end
+      reads
+    end
+
+    # Returns the inner scope of the analyzed scope, which contains (or is)
+    # the given *scope*, or `nil` if there's no such scope.
+    private def inner_scope_containing(scope) : Scope?
+      while scope && (outer_scope = scope.outer_scope)
+        return scope if outer_scope == @scope
+        scope = outer_scope
+      end
     end
 
     private def inner_scope_node?(node)
@@ -265,6 +292,7 @@ module Ameba::AST
         return live
       end
 
+      live = propagate_through(node.block, live, mark)
       live = propagate_through(node.block_arg, live, mark)
       live = propagate_through(node.named_args, live, mark)
       live = propagate_through(node.args, live, mark)
@@ -284,10 +312,16 @@ module Ameba::AST
       propagate_through(node.exp, @next_live || LiveSet.new, mark)
     end
 
-    # Inner scope nodes: don't descend into nested scopes
+    # Inner scope nodes: don't descend into nested scopes, but since they
+    # can read the current values of the variables they reference (i.e. blocks),
+    # treat these as being read at the location of the inner scope
     {% for type in INNER_SCOPE_NODES %}
       private def propagate_through(node : Crystal::{{ type.id }}, live : LiveSet, mark = true) : LiveSet
-        live
+        if reads = @inner_scope_reads[node.object_id]?
+          live | reads
+        else
+          live
+        end
       end
     {% end %}
 

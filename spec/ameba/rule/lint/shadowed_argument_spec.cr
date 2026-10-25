@@ -123,6 +123,38 @@ module Ameba::Rule::Lint
         CRYSTAL
     end
 
+    it "reports if the argument is shadowed before super in a block" do
+      expect_issue subject, <<-CRYSTAL
+        def foo(bar)
+          bar = 1
+        # ^^^^^^^ error: Argument `bar` is assigned before it is used
+          [1].each { super }
+        end
+        CRYSTAL
+    end
+
+    it "doesn't report if the argument is forwarded by super in a block before being shadowed" do
+      expect_no_issues subject, <<-CRYSTAL
+        def foo(bar)
+          [1].each { super }
+          bar = 1
+          bar
+        end
+
+        def foo(bar)
+          while rand > 0.5
+            [1].each { super }
+            bar = 1
+          end
+        end
+
+        def foo(bar)
+          bar = 1 if rand > 0.5
+          [1].each { super }
+        end
+        CRYSTAL
+    end
+
     context "branch" do
       it "doesn't report if the argument is not shadowed in a condition" do
         expect_no_issues subject, <<-CRYSTAL
