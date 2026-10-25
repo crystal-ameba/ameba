@@ -54,8 +54,10 @@ module Ameba::AST
     # scope = Scope.new(class_node, nil)
     # scope.add_variable(var_node)
     # ```
-    def add_variable(node)
-      variables << Variable.new(node, self)
+    def add_variable(node) : Variable
+      Variable.new(node, self).tap do |var|
+        variables << var
+      end
     end
 
     # Creates a new argument in the current scope.
@@ -64,9 +66,11 @@ module Ameba::AST
     # scope = Scope.new(class_node, nil)
     # scope.add_argument(arg_node)
     # ```
-    def add_argument(node)
-      add_variable(Crystal::Var.new(node.name).at(node))
-      arguments << Argument.new(node, variables.last)
+    def add_argument(node) : Argument
+      var = add_variable(Crystal::Var.new(node.name).at(node))
+      Argument.new(node, var).tap do |arg|
+        arguments << arg
+      end
     end
 
     # Adds a new instance variable to the current scope.
@@ -75,8 +79,10 @@ module Ameba::AST
     # scope = Scope.new(class_node, nil)
     # scope.add_ivariable(ivar_node)
     # ```
-    def add_ivariable(node)
-      ivariables << InstanceVariable.new(node)
+    def add_ivariable(node) : InstanceVariable
+      InstanceVariable.new(node).tap do |ivar|
+        ivariables << ivar
+      end
     end
 
     # Adds a new type declaration variable to the current scope.
@@ -85,8 +91,10 @@ module Ameba::AST
     # scope = Scope.new(class_node, nil)
     # scope.add_type_dec_variable(node)
     # ```
-    def add_type_dec_variable(node)
-      type_dec_variables << TypeDecVariable.new(node)
+    def add_type_dec_variable(node) : TypeDecVariable
+      TypeDecVariable.new(node).tap do |type_dec_var|
+        type_dec_variables << type_dec_var
+      end
     end
 
     # Returns variable by its name or `nil` if it does not exist.
