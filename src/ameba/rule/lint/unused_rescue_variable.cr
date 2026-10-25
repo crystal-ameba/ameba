@@ -49,6 +49,8 @@ module Ameba::Rule::Lint
   end
 
   private class VariableReferenceVisitor < Crystal::Visitor
+    include AST::Util
+
     getter variable_name : String
     getter? referenced = false
 
@@ -70,7 +72,7 @@ module Ameba::Rule::Lint
 
     # Shadowed variable usage check
     def visit(node : Crystal::Block)
-      node.args.all? { |arg| should_visit?(arg) }
+      all_block_args(node).all? { |arg| should_visit?(arg) }
     end
 
     # Shadowed variable usage check

@@ -117,6 +117,19 @@ module Ameba::Rule::Lint
         CRYSTAL
     end
 
+    it "fails when variable is shadowed by nested unpacked block parameter" do
+      expect_issue subject, <<-CRYSTAL
+        begin
+          raise MyException.new("OH NO!")
+        rescue ex : MyException
+             # ^^ error: Unused `rescue` variable `ex`
+          [{1, 2}].each do |(ex, y)|
+            puts y
+          end
+        end
+        CRYSTAL
+    end
+
     it "fails when variable is shadowed by an uninitialized variable" do
       expect_issue subject, <<-CRYSTAL
         begin

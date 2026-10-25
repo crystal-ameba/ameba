@@ -107,15 +107,27 @@ module Ameba::AST::Util
   # placeholder arguments (i.e. `foo`, `bar`, `baz` and `bat` in
   # `|foo, (bar, *baz), bat|`).
   def all_block_args(node : Crystal::Block) : Array(Crystal::Var)
-    unpacks = node.unpacks
-
     args = [] of Crystal::Var
-    node.args.each_with_index do |arg, idx|
-      if unpack = unpacks.try(&.[idx]?)
-        collect_unpacked_args(unpack, args)
-      else
-        args << arg
-      end
+    node.args.each_index do |idx|
+      collect_block_args_at(node, idx, args)
+    end
+    args
+  end
+
+  # Returns the block arguments bound by the *index*-th parameter of the *node*,
+  # with the unpacked arguments substituted in place of their (unnamed)
+  # placeholder argument (i.e. `bar` and `baz` for index `1` in
+  # `|foo, (bar, *baz), bat|`).
+  def block_args_at(node : Crystal::Block, index : Int) : Array(Crystal::Var)
+    collect_block_args_at(node, index, [] of Crystal::Var)
+  end
+
+  private def collect_block_args_at(node, index, args)
+    case
+    when unpack = node.unpacks.try(&.[index]?)
+      collect_unpacked_args(unpack, args)
+    when arg = node.args[index]?
+      args << arg
     end
     args
   end

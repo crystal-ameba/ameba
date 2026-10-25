@@ -63,6 +63,23 @@ module Ameba::Rule::Lint
           CRYSTAL
       end
 
+      it "does not report if there is an unpacked index argument" do
+        expect_no_issues subject, <<-CRYSTAL
+          collection.each.with_index do |e, (a, _)|
+            puts a
+          end
+          CRYSTAL
+      end
+
+      it "reports if there is a fully underscored unpacked index argument" do
+        expect_issue subject, <<-CRYSTAL
+          collection.each.with_index do |e, (_, _b)|
+                        # ^^^^^^^^^^ error: Remove redundant `with_index`
+            puts e
+          end
+          CRYSTAL
+      end
+
       it "does not report if there are more than 2 args" do
         expect_no_issues subject, <<-CRYSTAL
           tup.each.with_index do |key, value, index|
@@ -127,6 +144,23 @@ module Ameba::Rule::Lint
         expect_no_issues subject, <<-CRYSTAL
           collection.each_with_index do |_, i|
             puts i
+          end
+          CRYSTAL
+      end
+
+      it "does not report if there is an unpacked index argument" do
+        expect_no_issues subject, <<-CRYSTAL
+          collection.each_with_index do |e, (a, _)|
+            puts a
+          end
+          CRYSTAL
+      end
+
+      it "reports if there is a fully underscored unpacked index argument" do
+        expect_issue subject, <<-CRYSTAL
+          collection.each_with_index do |e, (_, _b)|
+                   # ^^^^^^^^^^^^^^^ error: Use `each` instead of `each_with_index`
+            puts e
           end
           CRYSTAL
       end
