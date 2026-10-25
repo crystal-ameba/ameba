@@ -344,6 +344,87 @@ module Ameba::Rule::Style
         CRYSTAL
     end
 
+    it "reports if `self` is used before a variable with the same name is assigned" do
+      source = expect_issue subject, <<-CRYSTAL
+        class Foo
+          def foo
+            42
+          end
+
+          def bar
+            bar = self.foo
+                # ^^^^ error: Redundant `self` detected
+            foo = 1
+            bar + foo
+          end
+        end
+        CRYSTAL
+
+      expect_correction source, <<-CRYSTAL
+        class Foo
+          def foo
+            42
+          end
+
+          def bar
+            bar = foo
+            foo = 1
+            bar + foo
+          end
+        end
+        CRYSTAL
+    end
+
+    it "reports if `self` is used before a variable with the same name is assigned (in loop)" do
+      expect_issue subject, <<-CRYSTAL
+        class Foo
+          def foo
+            42
+          end
+
+          def bar
+            while rand > 0.5
+              bar = self.foo
+                  # ^^^^ error: Redundant `self` detected
+              foo = bar
+            end
+          end
+        end
+        CRYSTAL
+    end
+
+    it "reports if `self` is used in a block before a variable with the same name is assigned" do
+      expect_issue subject, <<-CRYSTAL
+        class Foo
+          def foo
+            42
+          end
+
+          def bar
+            [1, 2].map { |i| self.foo + i }
+                           # ^^^^ error: Redundant `self` detected
+            foo = 1
+            foo
+          end
+        end
+        CRYSTAL
+    end
+
+    it "does not report if `self` is used after a variable with the same name is assigned" do
+      expect_no_issues subject, <<-CRYSTAL
+        class Foo
+          def foo
+            42
+          end
+
+          def bar
+            foo = 1
+            [1, 2].map { |i| self.foo + i + foo }
+          end
+        end
+        CRYSTAL
+    end
+
     it "reports if there is redundant `self` used in a method body" do
       source = expect_issue subject, <<-CRYSTAL
         class Foo

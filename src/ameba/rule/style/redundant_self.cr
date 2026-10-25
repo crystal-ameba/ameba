@@ -85,7 +85,7 @@ module Ameba::Rule::Style
       return if name.in?(CRYSTAL_KEYWORDS)
       return if name.in?(allowed_method_names)
 
-      return if name.in?(visible_variable_names(scope))
+      return if name.in?(visible_variable_names(scope, node))
       return unless node_source = node_source(node, source.lines)
 
       issue_for(obj, MSG) do |corrector|
@@ -93,8 +93,14 @@ module Ameba::Rule::Style
       end
     end
 
-    private def visible_variable_names(scope)
+    # Returns the names of the arguments and local variables visible
+    # at the location of the *node*. Since `Crystal::Parser` treats a name
+    # as a local variable only after its first assignment, the variables
+    # assigned later on are not taken into account (i.e. `foo` is a method
+    # call in `bar = foo; foo = 42`).
+    private def visible_variable_names(scope, node)
       vars = Set(String).new
+      location = node.location
 
       while scope
         scope.arguments.each do |arg|
@@ -102,6 +108,9 @@ module Ameba::Rule::Style
         end
         scope.variables.each do |var|
           var.assignments.each do |assign|
+            next if location && (assign_location = assign.location) &&
+                    assign_location > location
+
             vars << assign.variable.name
           end
         end
