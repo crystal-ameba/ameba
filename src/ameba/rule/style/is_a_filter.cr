@@ -59,11 +59,11 @@ module Ameba::Rule::Style
     def test(source, node : Crystal::Call)
       return unless node.name.in?(filter_names)
       return unless location = name_location(node)
-      return unless (block = node.block) && block.args.size == 1
+      return unless (block = node.block) && (arg = single_block_arg(block))
       return unless (body = block.body).is_a?(Crystal::IsA)
       return unless (path = body.const).is_a?(Crystal::Path)
       return unless (obj = body.obj).is_a?(Crystal::Var)
-      return unless obj.name == block.args.first.name
+      return unless obj.name == arg.name
 
       name = path_name(path, include_global: !body.nil_check?)
 

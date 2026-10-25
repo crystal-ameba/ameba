@@ -506,6 +506,31 @@ module Ameba::AST
       end
     end
 
+    describe "#single_block_arg" do
+      it "returns the only block argument" do
+        node = as_node("foo { |bar| }").as(Crystal::Call)
+        block = node.block.should be_a(Crystal::Block)
+
+        arg = subject.single_block_arg(block).should_not be_nil
+        arg.should be(block.args.first)
+      end
+
+      {
+        "foo { }",
+        "foo { |bar, baz| }",
+        "foo { |*bar| }",
+        "foo { |(bar)| }",
+        "foo { |(bar, baz)| }",
+      }.each do |code|
+        it "returns nil for `#{code}`" do
+          node = as_node(code).as(Crystal::Call)
+          block = node.block.should be_a(Crystal::Block)
+
+          subject.single_block_arg(block).should be_nil
+        end
+      end
+    end
+
     describe "#takes_arguments?" do
       it "returns false if the node takes no arguments" do
         node = as_node("def foo; end")

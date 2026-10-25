@@ -55,6 +55,13 @@ module Ameba::Rule::Style
         CRYSTAL
     end
 
+    it "does not report if there .is_a? call within block with a splat argument" do
+      expect_no_issues subject, <<-CRYSTAL
+        t.select { |*foo| foo.is_a?(Tuple) }
+        t.reject { |*foo| foo.nil? }
+        CRYSTAL
+    end
+
     context "properties" do
       it "#filter_names" do
         rule = subject.class.new

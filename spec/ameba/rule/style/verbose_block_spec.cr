@@ -29,6 +29,14 @@ module Ameba::Rule::Style
         CRYSTAL
     end
 
+    it "passes if the block argument isn't bound to the yielded value as a whole" do
+      expect_no_issues subject, <<-CRYSTAL
+        [{1, 2}].map { |*a| a.size }
+        [{1, 2}].map { |(a)| a.to_s }
+        [{1, 2}].map { |(a, b)| a.to_s }
+        CRYSTAL
+    end
+
     it "reports if there is a call with a collapsible block" do
       source = expect_issue subject, <<-CRYSTAL
         (1..3).any? { |i| i.odd? }
