@@ -34,6 +34,22 @@ module Ameba::Rule::Lint
         CRYSTAL
     end
 
+    it "reports if method argument with an external name is unused" do
+      source = expect_issue subject, <<-CRYSTAL
+        def method(foo, bar baz : Symbol, "qux" quux)
+                          # ^^^^^^^^^^^^ error: Unused argument `baz`. [...]
+                                              # ^^^^ error: Unused argument `quux`. [...]
+          foo
+        end
+        CRYSTAL
+
+      expect_correction source, <<-CRYSTAL
+        def method(foo, bar _baz : Symbol, "qux" _quux)
+          foo
+        end
+        CRYSTAL
+    end
+
     it "reports if block argument is unused" do
       source = expect_issue subject, <<-CRYSTAL
         [1, 2].each_with_index do |foo, bar|

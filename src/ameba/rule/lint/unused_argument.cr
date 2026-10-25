@@ -71,7 +71,7 @@ module Ameba::Rule::Lint
 
         node = argument.node
 
-        location = node.location
+        location = node.name_location || node.location
         name_end_location = location.try(&.adjust(column_number: argument.name.size - 1))
 
         if node.responds_to?(:restriction)

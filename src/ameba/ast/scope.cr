@@ -94,6 +94,8 @@ module Ameba::AST
     # ```
     def add_argument(node) : Argument
       var = add_variable(Crystal::Var.new(node.name).at(node))
+      var.node.location = node.name_location if node.name_location
+
       Argument.new(node, var).tap do |arg|
         arguments << arg
       end

@@ -81,10 +81,12 @@ module Ameba
         end
       end
 
-      Crystal::Parser.new(code)
+      ast = Crystal::Parser.new(code)
         .tap(&.wants_doc = true)
         .tap(&.filename = path.to_s)
         .parse
+
+      ast.tap(&.accept(AST::ArgNameLocationVisitor.new(code.lines)))
     end
 
     # Returns `true` if the source is a spec file, `false` otherwise.

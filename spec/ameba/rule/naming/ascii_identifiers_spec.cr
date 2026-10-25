@@ -49,6 +49,14 @@ module Ameba::Rule::Naming
         CRYSTAL
     end
 
+    it "reports defs with parameter names containing non-ascii characters (external names)" do
+      expect_issue subject, <<-CRYSTAL
+        def forest_adventure(wolf include_🐺 = true)
+                                # ^^^^^^^^^ error: Identifier contains non-ascii characters
+        end
+        CRYSTAL
+    end
+
     it "reports defs with parameter default values containing non-ascii characters" do
       expect_issue subject, <<-CRYSTAL
         def forest_adventure(animal_type = :🐺)
