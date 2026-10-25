@@ -242,5 +242,33 @@ module Ameba::Rule::Lint
         end
         CRYSTAL
     end
+
+    it "fails when variable is overwritten before being referenced in a block" do
+      expect_issue subject, <<-CRYSTAL
+        def foo
+          begin
+            raise MyException.new("OH NO!")
+          rescue ex : MyException
+               # ^^ error: Unused `rescue` variable `ex`
+          end
+          ex = nil
+          [1].each { puts ex }
+        end
+        CRYSTAL
+    end
+
+    it "passes when variable is referenced in a block preceding the rescue" do
+      expect_no_issues subject, <<-CRYSTAL
+        def foo
+          ex = nil
+          callback = -> { puts ex }
+          begin
+            raise MyException.new("OH NO!")
+          rescue ex : MyException
+          end
+          callback.call
+        end
+        CRYSTAL
+    end
   end
 end

@@ -49,16 +49,7 @@ module Ameba::Rule::Lint
 
         var = assign.variable
 
-        # TODO: The liveness analysis doesn't descend into inner scopes
-        #       (i.e. blocks), so the variables referenced within any of them
-        #       are skipped, which hides i.e. the variable overwritten before
-        #       being referenced within a block, as in
-        #       `rescue ex; end; ex = nil; [1].each { puts ex }`.
-        #       Once the analysis treats the inner scope references as reads
-        #       at their location, this can be narrowed down to the inner
-        #       scopes preceding the `rescue`, which might be invoked later.
-        next if var.captured_by_block?
-        next if scope.inner_scopes.any?(&.references?(var))
+        next if assign.referenced_in_preceding_inner_scope?
         next if AST::MacroReferenceFinder.new(rescue_node.body, var.name).references?
 
         issue_for(name_location_or(rescue_node), MSG % var.name)

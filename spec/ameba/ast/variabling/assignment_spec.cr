@@ -58,6 +58,40 @@ module Ameba::AST
       end
     end
 
+    describe "#referenced_in_preceding_inner_scope?" do
+      it "returns true if the variable is referenced in a preceding block" do
+        rule = ScopeRule.new
+        ScopeVisitor.new rule, Source.new <<-CRYSTAL
+          def foo
+            a = 1
+            callback = -> { a }
+            a = 2
+          end
+          CRYSTAL
+        scope = rule.scopes.find!(&.def?)
+        variable = scope.find_variable("a").should_not be_nil
+
+        variable.assignments.map(&.referenced_in_preceding_inner_scope?)
+          .should eq [false, true]
+      end
+
+      it "returns false if the variable is referenced in the same scope only" do
+        rule = ScopeRule.new
+        ScopeVisitor.new rule, Source.new <<-CRYSTAL
+          def foo
+            a = 1
+            puts a
+            a = 2
+          end
+          CRYSTAL
+        scope = rule.scopes.find!(&.def?)
+        variable = scope.find_variable("a").should_not be_nil
+
+        variable.assignments.none?(&.referenced_in_preceding_inner_scope?)
+          .should be_true
+      end
+    end
+
     describe "#address_taken_before?" do
       it "returns true only for the assignments following `pointerof`" do
         rule = ScopeRule.new
