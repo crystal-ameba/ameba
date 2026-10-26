@@ -36,8 +36,12 @@ jobs:
       - name: Install dependencies
         run: shards install
 
+      - name: Setup Homebrew
+        if: matrix.os == 'ubuntu-latest'
+        uses: Homebrew/actions/setup-homebrew@2026.10.19.1
+
       - name: Install typos-cli
-        if: matrix.os == 'macos-latest'
+        if: matrix.os == 'macos-latest' || matrix.os == 'ubuntu-latest'
         run: brew install typos-cli
 
       - name: Run specs
