@@ -14,7 +14,7 @@ module Ameba::AST
     # A scope assignment belongs to
     getter scope : Scope
 
-    delegate location, to_s,
+    delegate location, end_location, to_s,
       to: @node
 
     # Creates a new assignment.
@@ -23,21 +23,6 @@ module Ameba::AST
     # Assignment.new(node, variable, scope)
     # ```
     def initialize(@node, @variable, @scope)
-    end
-
-    # Returns the end location of the assignment. In case of a `rescue`
-    # it's the end of its variable name (i.e. `rescue ex`), rather than
-    # the end of its body.
-    def end_location : Crystal::Location?
-      case node = @node
-      when Crystal::Rescue
-        return unless name = node.name
-
-        Util.rescue_name_location(node)
-          .try(&.adjust(column_number: name.size - 1))
-      else
-        node.end_location
-      end
     end
 
     # Returns `true` if this assignment is an op assign, `false` if not.

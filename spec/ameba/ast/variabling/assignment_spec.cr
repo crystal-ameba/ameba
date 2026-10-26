@@ -20,7 +20,7 @@ module Ameba::AST
         assignment.end_location.should eq node.end_location
       end
 
-      it "ends at the variable name in case of rescue" do
+      it "delegates end location to the rescue node" do
         handler = as_node(<<-CRYSTAL).as(Crystal::ExceptionHandler)
           begin
           rescue ex
