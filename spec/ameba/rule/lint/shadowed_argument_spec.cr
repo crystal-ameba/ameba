@@ -165,6 +165,26 @@ module Ameba::Rule::Lint
         CRYSTAL
     end
 
+    it "reports if the argument is shadowed by a rescue variable" do
+      source = expect_issue subject, <<-CRYSTAL
+        def foo(ex)
+          begin
+            raise "x"
+          rescue ex
+        # ^^^^^^^^^ error: Argument `ex` is assigned before it is used
+            puts "rescued"
+          end
+        end
+        CRYSTAL
+
+      issue = source.issues.first
+      location = issue.location.should_not be_nil
+      end_location = issue.end_location.should_not be_nil
+
+      {location.line_number, location.column_number}.should eq({4, 3})
+      {end_location.line_number, end_location.column_number}.should eq({4, 11})
+    end
+
     context "branch" do
       it "doesn't report if the argument is not shadowed in a condition" do
         expect_no_issues subject, <<-CRYSTAL

@@ -283,6 +283,52 @@ module Ameba::Rule::Style
         CRYSTAL
     end
 
+    it "does not report if `self` is used in the presence of a rescue variable with the same name" do
+      expect_no_issues subject, <<-CRYSTAL
+        class Foo
+          def foo
+            42
+          end
+
+          def bar
+            begin
+              raise "x"
+            rescue foo
+              puts self.foo
+            end
+            foo = 1
+          end
+
+          def baz
+            begin
+              raise "x"
+            rescue foo
+            end
+            self.foo
+          end
+        end
+        CRYSTAL
+    end
+
+    it "reports if `self` is used after a rescue variable with the same name declared in a block" do
+      expect_issue subject, <<-CRYSTAL
+        class Foo
+          def foo
+            42
+          end
+
+          def bar
+            [1].each do
+              raise "x"
+            rescue foo
+            end
+            self.foo
+          # ^^^^ error: Redundant `self` detected
+          end
+        end
+        CRYSTAL
+    end
+
     it "reports if there is redundant `self` used in a method body" do
       source = expect_issue subject, <<-CRYSTAL
         class Foo

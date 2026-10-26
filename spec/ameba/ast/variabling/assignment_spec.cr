@@ -20,6 +20,23 @@ module Ameba::AST
         assignment.end_location.should eq node.end_location
       end
 
+      it "delegates end location to the rescue node" do
+        handler = as_node(<<-CRYSTAL).as(Crystal::ExceptionHandler)
+          begin
+          rescue ex
+            puts ex
+          end
+          CRYSTAL
+        rescues = handler.rescues.should_not be_nil
+
+        assignment = Assignment.new(rescues.first, variable, scope)
+        location = assignment.location.should_not be_nil
+        end_location = assignment.end_location.should_not be_nil
+
+        {location.line_number, location.column_number}.should eq({2, 1})
+        {end_location.line_number, end_location.column_number}.should eq({2, 9})
+      end
+
       it "delegates to_s" do
         assignment = Assignment.new(node, variable, scope)
         assignment.to_s.should eq node.to_s

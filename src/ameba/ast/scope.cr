@@ -4,6 +4,8 @@ module Ameba::AST
   # Represents a context of the local variable visibility.
   # This is where the local variables belong to.
   class Scope
+    include Util
+
     # Whether the scope yields.
     setter yields = false
 
@@ -68,7 +70,7 @@ module Ameba::AST
     end
 
     private def add_arguments(node : Crystal::Block)
-      Util.all_block_args(node).each { |arg| add_argument(arg) }
+      all_block_args(node).each { |arg| add_argument(arg) }
     end
 
     private def add_arguments(node : Crystal::ASTNode)
@@ -84,6 +86,22 @@ module Ameba::AST
       Variable.new(node, self).tap do |var|
         variables << var
       end
+    end
+
+    # Declares the variable of the `rescue` *node* (i.e. `ex` in `rescue ex`)
+    # and assigns it. Just like with an assignment, the already visible
+    # variable with the same name gets reassigned instead.
+    #
+    # ```
+    # scope = Scope.new(def_node, nil)
+    # scope.add_rescue_variable(rescue_node)
+    # ```
+    def add_rescue_variable(node : Crystal::Rescue) : Variable?
+      return unless name = node.name
+
+      variable = find_variable(name) ||
+                 add_variable(Crystal::Var.new(name).at(node.name_location))
+      variable.tap(&.assign(node, self))
     end
 
     # Creates a new argument in the current scope.

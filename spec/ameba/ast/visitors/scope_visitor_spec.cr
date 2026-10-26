@@ -49,6 +49,41 @@ module Ameba::AST
       scope.arguments.find!(&.name.== "c").variable.references.should be_empty
     end
 
+    it "registers rescue variables" do
+      rule = ScopeRule.new
+      ScopeVisitor.new rule, Source.new <<-CRYSTAL
+        def foo
+          raise "x"
+        rescue ex
+          puts ex
+        end
+        CRYSTAL
+      scope = rule.scopes.first
+      variable = scope.find_variable("ex").should_not be_nil
+      variable.assignments.size.should eq 1
+      variable.references.size.should eq 1
+    end
+
+    it "assigns rescue variables to the already visible ones" do
+      rule = ScopeRule.new
+      ScopeVisitor.new rule, Source.new <<-CRYSTAL
+        def foo
+          ex = nil
+          [1].each do
+            raise "x"
+          rescue ex
+          end
+          ex
+        end
+        CRYSTAL
+      def_scope = rule.scopes.find!(&.def?)
+      block_scope = rule.scopes.find!(&.block?)
+
+      block_scope.variables.should be_empty
+      variable = def_scope.find_variable("ex").should_not be_nil
+      variable.assignments.size.should eq 2
+    end
+
     it "correctly resets location-less node scope" do
       rule = ScopeRule.new
       ScopeVisitor.new rule, Source.new <<-CRYSTAL
