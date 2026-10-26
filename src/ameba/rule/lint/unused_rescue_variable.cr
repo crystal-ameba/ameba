@@ -43,7 +43,7 @@ module Ameba::Rule::Lint
       visitor = VariableReferenceVisitor.new(node.body, name)
       return if visitor.referenced?
 
-      issue_for name_location_or(node, adjust_location_column_number: {{ "rescue ".size }}),
+      issue_for name_location_or(node),
         MSG % name
     end
   end

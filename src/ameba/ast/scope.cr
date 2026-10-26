@@ -100,7 +100,7 @@ module Ameba::AST
       return unless name = node.name
 
       variable = find_variable(name) ||
-                 add_variable(Crystal::Var.new(name).at(rescue_name_location(node)))
+                 add_variable(Crystal::Var.new(name).at(node.name_location))
       variable.tap(&.assign(node, self))
     end
 

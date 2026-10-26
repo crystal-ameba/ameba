@@ -7,6 +7,30 @@ private def rescue_node(code)
 end
 
 describe Crystal::Rescue do
+  describe "#name_location" do
+    it "returns the location of the variable name" do
+      node = rescue_node <<-CRYSTAL
+        begin
+        rescue ex : Exception
+        end
+        CRYSTAL
+
+      name_location = node.name_location.should_not be_nil
+      name_location.line_number.should eq 2
+      name_location.column_number.should eq 8
+    end
+
+    it "returns `nil` if there is no variable" do
+      node = rescue_node <<-CRYSTAL
+        begin
+        rescue Exception
+        end
+        CRYSTAL
+
+      node.name_location.should be_nil
+    end
+  end
+
   describe "#end_location" do
     {
       "rescue ex : Exception" => 21,

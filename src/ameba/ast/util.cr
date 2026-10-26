@@ -143,14 +143,6 @@ module Ameba::AST::Util
     end
   end
 
-  # Returns the location of the variable name of the `rescue` *node*
-  # (i.e. `ex` in `rescue ex`), or `nil` if there is no variable.
-  def rescue_name_location(node : Crystal::Rescue) : Crystal::Location?
-    return unless node.name
-
-    node.location.try(&.adjust(column_number: {{ "rescue ".size }}))
-  end
-
   # Returns the path name of the *path*.
   #
   # If *include_global* is `true` (default), the global prefix `::` is included.

@@ -96,23 +96,6 @@ module Ameba::AST
       end
     end
 
-    describe "#rescue_name_location" do
-      it "returns the location of the rescue variable name" do
-        node = as_node("begin; rescue ex; end").as(Crystal::ExceptionHandler)
-        rescues = node.rescues.should_not be_nil
-
-        location = subject.rescue_name_location(rescues.first).should_not be_nil
-        location.column_number.should eq 15
-      end
-
-      it "returns nil if the rescue has no variable" do
-        node = as_node("begin; rescue; end").as(Crystal::ExceptionHandler)
-        rescues = node.rescues.should_not be_nil
-
-        subject.rescue_name_location(rescues.first).should be_nil
-      end
-    end
-
     describe "#path_name" do
       it "returns path name of the node" do
         path = Crystal::Path.new(%w[Foo Bar])
