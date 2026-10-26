@@ -259,6 +259,11 @@
       
     </li>
   
+  <li class=" " data-id="ameba/Ameba/Ext/Rescue" data-name="ameba::ext::rescue">
+      <a href="../../Ameba/Ext/Rescue.html">Rescue</a>
+      
+    </li>
+  
 </ul>
 
       
@@ -1218,6 +1223,20 @@ This is where the local variables belong to.</p>
 
 
 
+  <h2>
+    <a id="included-modules" class="anchor" href="#included-modules">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>
+    Included Modules
+  </h2>
+  <ul class="other-types-list">
+    
+      <li class="other-type"><a href="../../Ameba/AST/Util.html">Ameba::AST::Util</a></li>
+    
+  </ul>
+
 
 
 
@@ -1237,7 +1256,7 @@ This is where the local variables belong to.</p>
   </h2>
   
     
-      <a href="https://github.com/crystal-ameba/ameba/blob/61b8d35/src/ameba/ast/scope.cr#L6" target="_blank">
+      <a href="https://github.com/crystal-ameba/ameba/blob/dc8b512/src/ameba/ast/scope.cr#L6" target="_blank">
         ameba/ast/scope.cr
       </a>
     
@@ -1302,6 +1321,13 @@ This is where the local variables belong to.</p>
         <a href="#add_ivariable%28node%29%3AInstanceVariable-instance-method" class="signature"><strong>#add_ivariable</strong>(node) : InstanceVariable</a>
         
           <div class="summary"><p>Adds a new instance variable to the current scope.</p></div>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#add_rescue_variable%28node%3ACrystal%3A%3ARescue%29%3AVariable%7CNil-instance-method" class="signature"><strong>#add_rescue_variable</strong>(node : Crystal::Rescue) : Variable | Nil</a>
+        
+          <div class="summary"><p>Declares the variable of the <code>rescue</code> <em>node</em> (i.e.</p></div>
         
       </li>
     
@@ -1591,6 +1617,188 @@ This is where the local variables belong to.</p>
     
       
 
+  <h3>Instance methods inherited from module <code><a href="../../Ameba/AST/Util.html">Ameba::AST::Util</a></code></h3>
+  
+  
+    <a href="../../Ameba/AST/Util.html#abort%3F%28node%29-instance-method" class="tooltip">
+      <span>abort?(node)</span>
+    abort?</a>, 
+    
+  
+    <a href="../../Ameba/AST/Util.html#all_block_args%28node%3ACrystal%3A%3ABlock%29%3AArray%28Crystal%3A%3AVar%29-instance-method" class="tooltip">
+      <span>all_block_args(node : Crystal::Block) : Array(Crystal::Var)</span>
+    all_block_args</a>, 
+    
+  
+    <a href="../../Ameba/AST/Util.html#block_args_at%28node%3ACrystal%3A%3ABlock%2Cindex%3AInt%29%3AArray%28Crystal%3A%3AVar%29-instance-method" class="tooltip">
+      <span>block_args_at(node : Crystal::Block, index : Int) : Array(Crystal::Var)</span>
+    block_args_at</a>, 
+    
+  
+    <a href="../../Ameba/AST/Util.html#control_exp_code%28node%3ACrystal%3A%3AControlExpression%2Ccode_lines%29-instance-method" class="tooltip">
+      <span>control_exp_code(node : Crystal::ControlExpression, code_lines)</span>
+    control_exp_code</a>, 
+    
+  
+    <a href="../../Ameba/AST/Util.html#dynamic_literal%3F%28node%29%3ABool-instance-method" class="tooltip">
+      <span>dynamic_literal?(node) : Bool</span>
+    dynamic_literal?</a>, 
+    
+  
+    <a href="../../Ameba/AST/Util.html#each_inline_directive%28source%2C%26block%3ACrystal%3A%3AToken%2CString%2CArray%28String%29-%3E_%29-instance-method" class="tooltip">
+      <span>each_inline_directive(source, &block : Crystal::Token, String, Array(String) -> _)</span>
+    each_inline_directive</a>, 
+    
+  
+    <a href="../../Ameba/AST/Util.html#exit%3F%28node%29-instance-method" class="tooltip">
+      <span>exit?(node)</span>
+    exit?</a>, 
+    
+  
+    <a href="../../Ameba/AST/Util.html#flow_command%3F%28node%2Cin_loop%29-instance-method" class="tooltip">
+      <span>flow_command?(node, in_loop)</span>
+    flow_command?</a>, 
+    
+  
+    <a href="../../Ameba/AST/Util.html#flow_expression%3F%28node%2Cin_loop%3Dfalse%29-instance-method" class="tooltip">
+      <span>flow_expression?(node, in_loop = <span class="n">false</span>)</span>
+    flow_expression?</a>, 
+    
+  
+    <a href="../../Ameba/AST/Util.html#has_arguments%3F%28node%29%3ABool-instance-method" class="tooltip">
+      <span>has_arguments?(node) : Bool</span>
+    has_arguments?</a>, 
+    
+  
+    <a href="../../Ameba/AST/Util.html#has_block%3F%28node%29%3ABool-instance-method" class="tooltip">
+      <span>has_block?(node) : Bool</span>
+    has_block?</a>, 
+    
+  
+    <a href="../../Ameba/AST/Util.html#has_short_block%3F%28node%2Ccode_lines%29-instance-method" class="tooltip">
+      <span>has_short_block?(node, code_lines)</span>
+    has_short_block?</a>, 
+    
+  
+    <a href="../../Ameba/AST/Util.html#heredoc%3F%28node%3ACrystal%3A%3AASTNode%2Csource%3ASource%29-instance-method" class="tooltip">
+      <span>heredoc?(node : Crystal::ASTNode, source : Source)</span>
+    heredoc?</a>, 
+    
+  
+    <a href="../../Ameba/AST/Util.html#literal%3F%28node%29%3ABool-instance-method" class="tooltip">
+      <span>literal?(node) : Bool</span>
+    literal?</a>, 
+    
+  
+    <a href="../../Ameba/AST/Util.html#loop%3F%28node%29-instance-method" class="tooltip">
+      <span>loop?(node)</span>
+    loop?</a>, 
+    
+  
+    <a href="../../Ameba/AST/Util.html#name_end_location%28node%29-instance-method" class="tooltip">
+      <span>name_end_location(node)</span>
+    name_end_location</a>, 
+    
+  
+    <a href="../../Ameba/AST/Util.html#name_location%28node%29-instance-method" class="tooltip">
+      <span>name_location(node)</span>
+    name_location</a>, 
+    
+  
+    <a href="../../Ameba/AST/Util.html#name_location_or%28token%3ACrystal%3A%3AToken%2Cname%2C%2A%2Cadjust_location_column_number%3Dnil%29-instance-method" class="tooltip">
+      <span>name_location_or(token : Crystal::Token, name, *, adjust_location_column_number = <span class="n">nil</span>)<br/>name_location_or(node : Crystal::ASTNode, *, adjust_location_column_number = <span class="n">nil</span>)</span>
+    name_location_or</a>, 
+    
+  
+    <a href="../../Ameba/AST/Util.html#name_size%28node%29-instance-method" class="tooltip">
+      <span>name_size(node)</span>
+    name_size</a>, 
+    
+  
+    <a href="../../Ameba/AST/Util.html#node_source%28node%2Ccode_lines%29-instance-method" class="tooltip">
+      <span>node_source(node, code_lines)</span>
+    node_source</a>, 
+    
+  
+    <a href="../../Ameba/AST/Util.html#nodoc%3F%28node%29-instance-method" class="tooltip">
+      <span>nodoc?(node)</span>
+    nodoc?</a>, 
+    
+  
+    <a href="../../Ameba/AST/Util.html#operator_method%3F%28node%29-instance-method" class="tooltip">
+      <span>operator_method?(node)</span>
+    operator_method?</a>, 
+    
+  
+    <a href="../../Ameba/AST/Util.html#operator_method_name%3F%28name%3AString%29-instance-method" class="tooltip">
+      <span>operator_method_name?(name : String)</span>
+    operator_method_name?</a>, 
+    
+  
+    <a href="../../Ameba/AST/Util.html#path_name%28node%3ACrystal%3A%3APath%2C%2A%2Cinclude_global%3Dtrue%29%3AString-instance-method" class="tooltip">
+      <span>path_name(node : Crystal::Path, *, include_global = <span class="n">true</span>) : String</span>
+    path_name</a>, 
+    
+  
+    <a href="../../Ameba/AST/Util.html#path_named%3F%28node%2C%2Anames%3AString%29%3ABool-instance-method" class="tooltip">
+      <span>path_named?(node, *names : String) : Bool</span>
+    path_named?</a>, 
+    
+  
+    <a href="../../Ameba/AST/Util.html#raise%3F%28node%29-instance-method" class="tooltip">
+      <span>raise?(node)</span>
+    raise?</a>, 
+    
+  
+    <a href="../../Ameba/AST/Util.html#setter_method%3F%28node%29-instance-method" class="tooltip">
+      <span>setter_method?(node)</span>
+    setter_method?</a>, 
+    
+  
+    <a href="../../Ameba/AST/Util.html#setter_method_name%3F%28name%3AString%29-instance-method" class="tooltip">
+      <span>setter_method_name?(name : String)</span>
+    setter_method_name?</a>, 
+    
+  
+    <a href="../../Ameba/AST/Util.html#short_block%3F%28node%2Ccode_lines%29-instance-method" class="tooltip">
+      <span>short_block?(node, code_lines)</span>
+    short_block?</a>, 
+    
+  
+    <a href="../../Ameba/AST/Util.html#source_between%28loc%2Cend_loc%2Ccode_lines%29%3AString%7CNil-instance-method" class="tooltip">
+      <span>source_between(loc, end_loc, code_lines) : String | Nil</span>
+    source_between</a>, 
+    
+  
+    <a href="../../Ameba/AST/Util.html#static_literal%3F%28node%29%3ABool-instance-method" class="tooltip">
+      <span>static_literal?(node) : Bool</span>
+    static_literal?</a>, 
+    
+  
+    <a href="../../Ameba/AST/Util.html#suffix%3F%28node%29-instance-method" class="tooltip">
+      <span>suffix?(node)</span>
+    suffix?</a>, 
+    
+  
+    <a href="../../Ameba/AST/Util.html#takes_arguments%3F%28node%29%3ABool-instance-method" class="tooltip">
+      <span>takes_arguments?(node) : Bool</span>
+    takes_arguments?</a>
+    
+  
+
+
+      
+
+
+      
+
+
+      
+
+
+    
+      
+
 
       
 
@@ -1644,7 +1852,7 @@ This is where the local variables belong to.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/61b8d35/src/ameba/ast/scope.cr#L47" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/dc8b512/src/ameba/ast/scope.cr#L49" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1706,7 +1914,7 @@ scope.add_argument(arg_node)</code></pre>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/61b8d35/src/ameba/ast/scope.cr#L95" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/dc8b512/src/ameba/ast/scope.cr#L113" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1729,7 +1937,32 @@ scope.add_ivariable(ivar_node)</code></pre>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/61b8d35/src/ameba/ast/scope.cr#L108" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/dc8b512/src/ameba/ast/scope.cr#L126" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="add_rescue_variable(node:Crystal::Rescue):Variable|Nil-instance-method">
+      <div class="signature">
+        
+        def <strong>add_rescue_variable</strong>(node : <a href="../../Crystal/Rescue.html">Crystal::Rescue</a>) : <a href="../../Ameba/AST/Variable.html">Variable</a> | Nil
+
+        <a class="method-permalink" href="#add_rescue_variable%28node%3ACrystal%3A%3ARescue%29%3AVariable%7CNil-instance-method">#</a>
+      </div>
+      
+        <div class="doc">
+          
+          <p>Declares the variable of the <code>rescue</code> <em>node</em> (i.e. <code>ex</code> in <code>rescue ex</code>)
+and assigns it. Just like with an assignment, the already visible
+variable with the same name gets reassigned instead.</p>
+<pre><code class="language-crystal">scope <span class="o">=</span> <span class="t">Scope</span>.new(def_node, <span class="n">nil</span>)
+scope.add_rescue_variable(rescue_node)</code></pre>
+        </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/crystal-ameba/ameba/blob/dc8b512/src/ameba/ast/scope.cr#L99" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1752,7 +1985,7 @@ scope.add_type_dec_variable(node)</code></pre>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/61b8d35/src/ameba/ast/scope.cr#L120" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/dc8b512/src/ameba/ast/scope.cr#L138" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1775,7 +2008,7 @@ scope.add_variable(var_node)</code></pre>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/61b8d35/src/ameba/ast/scope.cr#L83" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/dc8b512/src/ameba/ast/scope.cr#L85" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1796,7 +2029,7 @@ scope.add_variable(var_node)</code></pre>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/61b8d35/src/ameba/ast/scope.cr#L275" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/dc8b512/src/ameba/ast/scope.cr#L293" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1817,7 +2050,7 @@ scope.add_variable(var_node)</code></pre>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/61b8d35/src/ameba/ast/scope.cr#L20" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/dc8b512/src/ameba/ast/scope.cr#L22" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1840,7 +2073,7 @@ scope.assign_variable(var_name, assign_node)</code></pre>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/61b8d35/src/ameba/ast/scope.cr#L143" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/dc8b512/src/ameba/ast/scope.cr#L161" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1861,7 +2094,7 @@ scope.assign_variable(var_name, assign_node)</code></pre>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/61b8d35/src/ameba/ast/scope.cr#L205" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/dc8b512/src/ameba/ast/scope.cr#L223" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1882,7 +2115,7 @@ scope.assign_variable(var_name, assign_node)</code></pre>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/61b8d35/src/ameba/ast/scope.cr#L211" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/dc8b512/src/ameba/ast/scope.cr#L229" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1904,7 +2137,7 @@ scope.assign_variable(var_name, assign_node)</code></pre>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/61b8d35/src/ameba/ast/scope.cr#L180" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/dc8b512/src/ameba/ast/scope.cr#L198" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1925,7 +2158,7 @@ scope.assign_variable(var_name, assign_node)</code></pre>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/61b8d35/src/ameba/ast/scope.cr#L248" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/dc8b512/src/ameba/ast/scope.cr#L266" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1949,7 +2182,7 @@ introduced.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/61b8d35/src/ameba/ast/scope.cr#L154" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/dc8b512/src/ameba/ast/scope.cr#L172" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1970,7 +2203,7 @@ introduced.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/61b8d35/src/ameba/ast/scope.cr#L248" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/dc8b512/src/ameba/ast/scope.cr#L266" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1986,7 +2219,7 @@ introduced.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/61b8d35/src/ameba/ast/scope.cr#L37" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/dc8b512/src/ameba/ast/scope.cr#L39" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2002,7 +2235,7 @@ introduced.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/61b8d35/src/ameba/ast/scope.cr#L37" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/dc8b512/src/ameba/ast/scope.cr#L39" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2023,7 +2256,7 @@ introduced.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/61b8d35/src/ameba/ast/scope.cr#L248" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/dc8b512/src/ameba/ast/scope.cr#L266" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2045,7 +2278,7 @@ the same Crystal node as <code>@node</code>.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/61b8d35/src/ameba/ast/scope.cr#L281" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/dc8b512/src/ameba/ast/scope.cr#L299" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2068,7 +2301,7 @@ scope.find_variable(<span class="s">&quot;foo&quot;</span>)</code></pre>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/61b8d35/src/ameba/ast/scope.cr#L132" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/dc8b512/src/ameba/ast/scope.cr#L150" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2089,7 +2322,7 @@ scope.find_variable(<span class="s">&quot;foo&quot;</span>)</code></pre>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/61b8d35/src/ameba/ast/scope.cr#L248" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/dc8b512/src/ameba/ast/scope.cr#L266" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2133,7 +2366,7 @@ scope.find_variable(<span class="s">&quot;foo&quot;</span>)</code></pre>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/61b8d35/src/ameba/ast/scope.cr#L197" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/dc8b512/src/ameba/ast/scope.cr#L215" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2149,7 +2382,7 @@ scope.find_variable(<span class="s">&quot;foo&quot;</span>)</code></pre>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/61b8d35/src/ameba/ast/scope.cr#L263" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/dc8b512/src/ameba/ast/scope.cr#L281" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2165,7 +2398,7 @@ scope.find_variable(<span class="s">&quot;foo&quot;</span>)</code></pre>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/61b8d35/src/ameba/ast/scope.cr#L270" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/dc8b512/src/ameba/ast/scope.cr#L288" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2186,7 +2419,7 @@ scope.find_variable(<span class="s">&quot;foo&quot;</span>)</code></pre>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/61b8d35/src/ameba/ast/scope.cr#L32" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/dc8b512/src/ameba/ast/scope.cr#L34" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2207,7 +2440,7 @@ scope.find_variable(<span class="s">&quot;foo&quot;</span>)</code></pre>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/61b8d35/src/ameba/ast/scope.cr#L23" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/dc8b512/src/ameba/ast/scope.cr#L25" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2228,7 +2461,7 @@ scope.find_variable(<span class="s">&quot;foo&quot;</span>)</code></pre>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/61b8d35/src/ameba/ast/scope.cr#L248" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/dc8b512/src/ameba/ast/scope.cr#L266" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2244,7 +2477,7 @@ scope.find_variable(<span class="s">&quot;foo&quot;</span>)</code></pre>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/61b8d35/src/ameba/ast/scope.cr#L37" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/dc8b512/src/ameba/ast/scope.cr#L39" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2260,7 +2493,7 @@ scope.find_variable(<span class="s">&quot;foo&quot;</span>)</code></pre>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/61b8d35/src/ameba/ast/scope.cr#L37" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/dc8b512/src/ameba/ast/scope.cr#L39" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2281,7 +2514,7 @@ scope.find_variable(<span class="s">&quot;foo&quot;</span>)</code></pre>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/61b8d35/src/ameba/ast/scope.cr#L248" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/dc8b512/src/ameba/ast/scope.cr#L266" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2302,7 +2535,7 @@ scope.find_variable(<span class="s">&quot;foo&quot;</span>)</code></pre>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/61b8d35/src/ameba/ast/scope.cr#L35" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/dc8b512/src/ameba/ast/scope.cr#L37" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2323,7 +2556,7 @@ scope.find_variable(<span class="s">&quot;foo&quot;</span>)</code></pre>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/61b8d35/src/ameba/ast/scope.cr#L29" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/dc8b512/src/ameba/ast/scope.cr#L31" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2344,7 +2577,7 @@ scope.find_variable(<span class="s">&quot;foo&quot;</span>)</code></pre>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/61b8d35/src/ameba/ast/scope.cr#L17" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/dc8b512/src/ameba/ast/scope.cr#L19" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2366,7 +2599,7 @@ scope.find_variable(<span class="s">&quot;foo&quot;</span>)</code></pre>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/61b8d35/src/ameba/ast/scope.cr#L230" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/dc8b512/src/ameba/ast/scope.cr#L248" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2390,7 +2623,7 @@ scope.find_variable(<span class="s">&quot;foo&quot;</span>)</code></pre>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/61b8d35/src/ameba/ast/scope.cr#L192" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/dc8b512/src/ameba/ast/scope.cr#L210" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2406,7 +2639,7 @@ scope.find_variable(<span class="s">&quot;foo&quot;</span>)</code></pre>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/61b8d35/src/ameba/ast/scope.cr#L37" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/dc8b512/src/ameba/ast/scope.cr#L39" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2422,7 +2655,7 @@ scope.find_variable(<span class="s">&quot;foo&quot;</span>)</code></pre>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/61b8d35/src/ameba/ast/scope.cr#L37" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/dc8b512/src/ameba/ast/scope.cr#L39" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2443,7 +2676,7 @@ scope.find_variable(<span class="s">&quot;foo&quot;</span>)</code></pre>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/61b8d35/src/ameba/ast/scope.cr#L259" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/dc8b512/src/ameba/ast/scope.cr#L277" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2464,7 +2697,7 @@ scope.find_variable(<span class="s">&quot;foo&quot;</span>)</code></pre>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/61b8d35/src/ameba/ast/scope.cr#L26" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/dc8b512/src/ameba/ast/scope.cr#L28" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2486,7 +2719,7 @@ type definition, for example a class.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/61b8d35/src/ameba/ast/scope.cr#L218" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/dc8b512/src/ameba/ast/scope.cr#L236" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2507,7 +2740,7 @@ type definition, for example a class.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/61b8d35/src/ameba/ast/scope.cr#L14" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/dc8b512/src/ameba/ast/scope.cr#L16" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2528,7 +2761,7 @@ type definition, for example a class.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/61b8d35/src/ameba/ast/scope.cr#L244" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/dc8b512/src/ameba/ast/scope.cr#L262" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2549,7 +2782,7 @@ type definition, for example a class.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/61b8d35/src/ameba/ast/scope.cr#L11" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/dc8b512/src/ameba/ast/scope.cr#L13" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2570,7 +2803,7 @@ type definition, for example a class.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/61b8d35/src/ameba/ast/scope.cr#L8" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/dc8b512/src/ameba/ast/scope.cr#L10" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2592,7 +2825,7 @@ type definition, for example a class.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/61b8d35/src/ameba/ast/scope.cr#L239" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/dc8b512/src/ameba/ast/scope.cr#L257" target="_blank">View source</a>]
         
       </div>
     </div>
