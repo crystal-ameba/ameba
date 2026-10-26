@@ -360,10 +360,8 @@ module Ameba::AST::Util
 
   # Returns `true` if node is a _heredoc_, `false` otherwise.
   def heredoc?(node : Crystal::ASTNode, source : Source)
-    return false unless location = node.location
-    return false unless location_pos = source.pos(location)
-
-    source.code[location_pos..(location_pos + 2)]? == "<<-"
+    !!(location = node.location) &&
+      source.code[source.pos(location), 3]? == "<<-"
   end
 
   # Returns the exp code of a control expression.
