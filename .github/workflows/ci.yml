@@ -38,7 +38,7 @@ jobs:
 
       - name: Setup Homebrew
         if: matrix.os == 'ubuntu-latest'
-        uses: Homebrew/actions/setup-homebrew@2026.10.19.1
+        uses: Homebrew/actions/setup-homebrew@2026.10.26.1
 
       - name: Install typos-cli
         if: matrix.os == 'macos-latest' || matrix.os == 'ubuntu-latest'
