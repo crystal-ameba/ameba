@@ -44,10 +44,10 @@ module Ameba::Rule::Style
 
       # ignore regex and command literals
       return if source.code[location_pos]?.in?('/', '`')
-      return if source.code[location_pos..(location_pos + 1)]?.in?("%r", "%x")
+      return if source.code[location_pos, 2]?.in?("%r", "%x")
 
       # ignore heredoc string literals
-      return if source.code[location_pos..(location_pos + 2)]? == "<<-"
+      return if source.code[location_pos, 3]? == "<<-"
 
       # ignore string literals split by \
       return if allow_backslash_split_strings? &&
