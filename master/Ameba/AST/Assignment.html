@@ -1242,7 +1242,7 @@ Holds the assign node and the variable.</p>
   </h2>
   
     
-      <a href="https://github.com/crystal-ameba/ameba/blob/ca1b4fa/src/ameba/ast/variabling/assignment.cr#L7" target="_blank">
+      <a href="https://github.com/crystal-ameba/ameba/blob/d88832c/src/ameba/ast/variabling/assignment.cr#L7" target="_blank">
         ameba/ast/variabling/assignment.cr
       </a>
     
@@ -1288,6 +1288,13 @@ Holds the assign node and the variable.</p>
     Instance Method Summary
   </h2>
   <ul class="list-summary">
+    
+      <li class="entry-summary">
+        <a href="#address_taken_before%3F%3ABool-instance-method" class="signature"><strong>#address_taken_before?</strong> : Bool</a>
+        
+          <div class="summary"><p>Returns <code>true</code> if the address of the variable is taken (i.e.</p></div>
+        
+      </li>
     
       <li class="entry-summary">
         <a href="#end_location%28%2Aargs%2C%2A%2Aoptions%29-instance-method" class="signature"><strong>#end_location</strong>(*args, **options)</a>
@@ -1415,7 +1422,7 @@ Holds the assign node and the variable.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/ca1b4fa/src/ameba/ast/variabling/assignment.cr#L25" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/d88832c/src/ameba/ast/variabling/assignment.cr#L25" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1436,6 +1443,29 @@ Holds the assign node and the variable.</p>
     Instance Method Detail
   </h2>
   
+    <div class="entry-detail" id="address_taken_before?:Bool-instance-method">
+      <div class="signature">
+        
+        def <strong>address_taken_before?</strong> : Bool
+
+        <a class="method-permalink" href="#address_taken_before%3F%3ABool-instance-method">#</a>
+      </div>
+      
+        <div class="doc">
+          
+          <p>Returns <code>true</code> if the address of the variable is taken (i.e. via <code>pointerof</code>)
+before this assignment, since the assigned value might be then read
+through the pointer at any later point.</p>
+        </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/crystal-ameba/ameba/blob/d88832c/src/ameba/ast/variabling/assignment.cr#L31" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
     <div class="entry-detail" id="end_location(*args,**options)-instance-method">
       <div class="signature">
         
@@ -1447,7 +1477,7 @@ Holds the assign node and the variable.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/ca1b4fa/src/ameba/ast/variabling/assignment.cr#L17" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/d88832c/src/ameba/ast/variabling/assignment.cr#L17" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1463,7 +1493,7 @@ Holds the assign node and the variable.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/ca1b4fa/src/ameba/ast/variabling/assignment.cr#L17" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/d88832c/src/ameba/ast/variabling/assignment.cr#L17" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1479,7 +1509,7 @@ Holds the assign node and the variable.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/ca1b4fa/src/ameba/ast/variabling/assignment.cr#L17" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/d88832c/src/ameba/ast/variabling/assignment.cr#L17" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1495,7 +1525,7 @@ Holds the assign node and the variable.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/ca1b4fa/src/ameba/ast/variabling/assignment.cr#L17" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/d88832c/src/ameba/ast/variabling/assignment.cr#L17" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1516,7 +1546,7 @@ Holds the assign node and the variable.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/ca1b4fa/src/ameba/ast/variabling/assignment.cr#L9" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/d88832c/src/ameba/ast/variabling/assignment.cr#L9" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1539,7 +1569,7 @@ For example, this is an op assign:</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/ca1b4fa/src/ameba/ast/variabling/assignment.cr#L34" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/d88832c/src/ameba/ast/variabling/assignment.cr#L48" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1560,7 +1590,7 @@ For example, this is an op assign:</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/ca1b4fa/src/ameba/ast/variabling/assignment.cr#L15" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/d88832c/src/ameba/ast/variabling/assignment.cr#L15" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1581,7 +1611,7 @@ For example, this is an op assign:</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/ca1b4fa/src/ameba/ast/variabling/assignment.cr#L39" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/d88832c/src/ameba/ast/variabling/assignment.cr#L53" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1597,7 +1627,7 @@ For example, this is an op assign:</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/ca1b4fa/src/ameba/ast/variabling/assignment.cr#L17" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/d88832c/src/ameba/ast/variabling/assignment.cr#L17" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1613,7 +1643,7 @@ For example, this is an op assign:</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/ca1b4fa/src/ameba/ast/variabling/assignment.cr#L17" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/d88832c/src/ameba/ast/variabling/assignment.cr#L17" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1634,7 +1664,7 @@ For example, this is an op assign:</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/ca1b4fa/src/ameba/ast/variabling/assignment.cr#L12" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/d88832c/src/ameba/ast/variabling/assignment.cr#L12" target="_blank">View source</a>]
         
       </div>
     </div>

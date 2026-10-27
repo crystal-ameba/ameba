@@ -1243,7 +1243,7 @@ variable from its reference.</p>
   </h2>
   
     
-      <a href="https://github.com/crystal-ameba/ameba/blob/ca1b4fa/src/ameba/ast/variabling/reference.cr#L7" target="_blank">
+      <a href="https://github.com/crystal-ameba/ameba/blob/d88832c/src/ameba/ast/variabling/reference.cr#L7" target="_blank">
         ameba/ast/variabling/reference.cr
       </a>
     
@@ -1270,6 +1270,20 @@ variable from its reference.</p>
     Instance Method Summary
   </h2>
   <ul class="list-summary">
+    
+      <li class="entry-summary">
+        <a href="#address_taken%3D%28address_taken%3ABool%29-instance-method" class="signature"><strong>#address_taken=</strong>(address_taken : Bool)</a>
+        
+          <div class="summary"><p>Whether the address of the variable is taken by this reference (i.e.</p></div>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#address_taken%3F%3ABool-instance-method" class="signature"><strong>#address_taken?</strong> : Bool</a>
+        
+          <div class="summary"><p>Whether the address of the variable is taken by this reference (i.e.</p></div>
+        
+      </li>
     
       <li class="entry-summary">
         <a href="#explicit%3D%28explicit%3ABool%29-instance-method" class="signature"><strong>#explicit=</strong>(explicit : Bool)</a>
@@ -1442,6 +1456,52 @@ variable from its reference.</p>
     Instance Method Detail
   </h2>
   
+    <div class="entry-detail" id="address_taken=(address_taken:Bool)-instance-method">
+      <div class="signature">
+        
+        def <strong>address_taken=</strong>(address_taken : Bool)
+
+        <a class="method-permalink" href="#address_taken%3D%28address_taken%3ABool%29-instance-method">#</a>
+      </div>
+      
+        <div class="doc">
+          
+          <p>Whether the address of the variable is taken by this reference
+(i.e. <code>pointerof(x)</code>), which allows reading (and writing) the
+variable through the pointer.</p>
+        </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/crystal-ameba/ameba/blob/d88832c/src/ameba/ast/variabling/reference.cr#L13" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="address_taken?:Bool-instance-method">
+      <div class="signature">
+        
+        def <strong>address_taken?</strong> : Bool
+
+        <a class="method-permalink" href="#address_taken%3F%3ABool-instance-method">#</a>
+      </div>
+      
+        <div class="doc">
+          
+          <p>Whether the address of the variable is taken by this reference
+(i.e. <code>pointerof(x)</code>), which allows reading (and writing) the
+variable through the pointer.</p>
+        </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/crystal-ameba/ameba/blob/d88832c/src/ameba/ast/variabling/reference.cr#L13" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
     <div class="entry-detail" id="explicit=(explicit:Bool)-instance-method">
       <div class="signature">
         
@@ -1453,7 +1513,7 @@ variable from its reference.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/ca1b4fa/src/ameba/ast/variabling/reference.cr#L8" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/d88832c/src/ameba/ast/variabling/reference.cr#L8" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1469,7 +1529,7 @@ variable from its reference.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/ca1b4fa/src/ameba/ast/variabling/reference.cr#L8" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/d88832c/src/ameba/ast/variabling/reference.cr#L8" target="_blank">View source</a>]
         
       </div>
     </div>
