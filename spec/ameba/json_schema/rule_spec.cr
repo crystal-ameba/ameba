@@ -1,4 +1,5 @@
 require "../../spec_helper"
+require "../../../src/ameba/json_schema/*"
 
 # Called with a rule typed as `Rule::Base.class` (the same way as the
 # JSON schema builder does), so that `to_json_schema` is compiled for
@@ -58,6 +59,7 @@ module Ameba
       either "a", as: String | Array(String)
       sequence [] of String, as: Array(String) | {String, Int32}
       either_map({"a" => 1}, as: Hash(String, Int32) | NamedTuple(a: Int32))
+      levels [Severity::Warning]
     end
   end
 
@@ -85,6 +87,13 @@ module Ameba
     properties do
       description "Rule to test JSON schema of its severity"
       severity :error
+    end
+  end
+
+  class SchemaEnabledRule < Rule::Base
+    properties do
+      description "Rule to test JSON schema of its enabled property"
+      enabled true
     end
   end
 
@@ -246,6 +255,30 @@ module Ameba
 
         with_properties_schema(SchemaSeverityRule) do |properties|
           properties["Severity"].should eq JSON.parse(%({"$ref": "#/$defs/Severity", "default": "Error"}))
+        end
+
+        # Defined within the rule, the same way as within `BaseRule`
+        with_properties_schema(SchemaEnabledRule) do |properties|
+          properties.as_h.keys.should_not contain "Enabled"
+        end
+      end
+
+      it "describes the properties common to all of the rules within `BaseRule`" do
+        JSON.parse(JSONSchema::Builder.build)["$defs"]["BaseRule"]["properties"].should eq JSON.parse(<<-JSON)
+          {
+            "SinceVersion": {"type": ["string", "null"]},
+            "Enabled": {"type": "boolean", "default": true},
+            "Severity": {"$ref": "#/$defs/Severity", "default": "Convention"},
+            "Excluded": {"$ref": "#/$defs/Excluded"}
+          }
+          JSON
+      end
+
+      it "describes severities by their definition" do
+        with_properties_schema(SchemaRule) do |properties|
+          properties["Levels"].should eq JSON.parse(<<-JSON)
+            {"type": "array", "items": {"$ref": "#/$defs/Severity"}, "default": ["Warning"]}
+            JSON
         end
       end
     end

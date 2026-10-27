@@ -1,56 +1,159 @@
 class Ameba::Config
   # :nodoc:
   module RuleConfig
+    # Marks the instance variables of the rule properties.
+    #
+    # - *key*: the key of the property within the YAML config
+    # - *built_in*: `true` if the property is defined implicitly by
+    #   `properties` (like `Enabled`), rather than within the rule
+    # - *base*: `true` if the property is common to all of the rules
+    #   (like `Enabled`, even if defined within the rule)
+    # - *base_default*: the default value of the *base* property,
+    #   common to all of the rules (if any)
+    annotation Property
+    end
+
+    # Marks the rules with properties defined by `properties`.
+    annotation Properties
+    end
+
+    # Properties defined implicitly by `properties`, unless defined within
+    # the rule, which then uses their converter (and type, unless given
+    # or inferred from the value).
+    #
+    # The ones with *base* set to `true` are common to all of the rules,
+    # with their *base_default* values (if any). Values are given as code,
+    # evaluated within the rule.
+    BUILT_IN_PROPERTIES = [
+      {name: "description", type: "String?"},
+      {name: "since_version", type: "String?", base: true},
+      {name: "enabled", value: "!deprecated?", type: "Bool", base: true, base_default: "true"},
+      {
+        name:         "severity",
+        value:        "default_severity",
+        type:         "::Ameba::Severity",
+        converter:    "::Ameba::SeverityYamlConverter",
+        base:         true,
+        base_default: "::Ameba::Rule::Base.default_severity",
+      },
+      {name: "excluded", type: "Set(String)?", base: true},
+    ]
+
+    # Describes a rule property, see `.property_definitions`.
+    struct PropertyDefinition
+      # Returns the property name, e.g. `max_length`.
+      getter name : String
+
+      # Returns the property key within the YAML config, e.g. `MaxLength`.
+      getter key : String
+
+      # Returns the property type, e.g. `Int32`.
+      getter type : String
+
+      # Returns the property default value.
+      getter default : YAML::Any
+
+      # Returns `true` if the property is defined implicitly by `properties`
+      # (like `Enabled`), rather than within the rule.
+      getter? built_in : Bool
+
+      def initialize(*, @name, @key, @type, @default, @built_in = false)
+      end
+    end
+
     # Define rule properties
     macro properties(&block)
       {%
+        if owner = ([@type] + @type.ancestors).find(&.annotation(::Ameba::Config::RuleConfig::Properties))
+          block.raise("Rule properties are already defined within `#{owner}`")
+        end
+
         calls = block.body.is_a?(Expressions) ? block.body.expressions : [block.body]
         calls = calls.reject(&.is_a?(Nop))
-
-        properties = {} of MacroId => NamedTuple
-
-        built_in_names = {
-          "Enabled"      => "enabled",
-          "Severity"     => "severity",
-          "Excluded"     => "excluded",
-          "SinceVersion" => "since_version",
-        }
 
         number_types = {
           :i8 => Int8, :i16 => Int16, :i32 => Int32, :i64 => Int64, :i128 => Int128,
           :u8 => UInt8, :u16 => UInt16, :u32 => UInt32, :u64 => UInt64, :u128 => UInt128,
           :f32 => Float32, :f64 => Float64,
         }
-      %}
 
-      {% for call in calls %}
-        {%
-          unless call.is_a?(Call) && !call.receiver && call.args.size == 1 && !call.block && !call.block_arg && call.name =~ /\A[a-z_][a-z0-9_]*\z/
-            call.raise "Rule properties are expected to be defined as `name value` (optionally followed by `as: Type`), not: `#{call}`"
+        built_ins = ::Ameba::Config::RuleConfig::BUILT_IN_PROPERTIES.map do |built_in|
+          {
+            name:         built_in[:name].id,
+            value:        built_in[:value] && built_in[:value].id,
+            type:         parse_type(built_in[:type]).resolve,
+            type_name:    built_in[:type],
+            converter:    built_in[:converter] && parse_type(built_in[:converter]),
+            base:         built_in[:base] == true,
+            base_default: built_in[:base_default] && built_in[:base_default].id,
+          }
+        end
+
+        definitions = calls.map do |call|
+          if !call.is_a?(Call) || call.receiver || call.args.size != 1 || call.block || call.block_arg || !(call.name =~ /\A[a-z_][a-z0-9_]*\z/)
+            call.raise("Rule properties are expected to be defined as `name value` (optionally followed by `as: Type`), not: `#{call}`")
           end
 
-          name = call.name.id
-          key = name.camelcase.stringify
-          value = call.args.first
           type = nil
-          converter = nil
 
           if named_args = call.named_args
             named_args.each do |named_arg|
               if named_arg.name == "as".id
                 type = named_arg.value
               else
-                named_arg.raise "Unknown option `#{named_arg.name}` of rule property `#{call.name}` (expected `as`)"
+                named_arg.raise("Unknown option `#{named_arg.name}` of rule property `#{call.name}` (expected `as`)")
               end
             end
           end
 
-          if key == "Severity"
-            type = Severity
-            converter = SeverityYamlConverter
+          built_in = built_ins.find(&.[:name].== call.name.id)
+
+          {
+            call:               call,
+            name:               call.name.id,
+            value:              call.args.first,
+            type:               type,
+            fallback_type:      built_in && built_in[:type],
+            fallback_type_name: built_in && built_in[:type_name],
+            converter:          built_in && built_in[:converter],
+            built_in:           false,
+            base:               built_in && built_in[:base],
+            base_default:       built_in && built_in[:base_default],
+          }
+        end
+
+        # Built-in properties go first, so that the rule properties
+        # conflicting with them are reported
+        built_ins = built_ins
+          .reject { |built_in| definitions.any?(&.[:name].== built_in[:name]) }
+          .map do |built_in|
+            {
+              call:               nil,
+              name:               built_in[:name],
+              value:              built_in[:value],
+              type:               built_in[:type],
+              fallback_type:      nil,
+              fallback_type_name: nil,
+              converter:          built_in[:converter],
+              built_in:           true,
+              base:               built_in[:base],
+              base_default:       built_in[:base_default],
+            }
           end
 
+        properties = {} of MacroId => NamedTuple
+      %}
+
+      {% for definition in built_ins + definitions %}
+        {%
+          call = definition[:call]
+          name = definition[:name]
+          key = name.camelcase.stringify
+          value = definition[:value]
+          converter = definition[:converter]
+
           # Types are given explicitly (when known), so that they are documented
+          type = definition[:type]
           type ||=
             if value.is_a?(BoolLiteral)
               Bool
@@ -60,368 +163,134 @@ class Ameba::Config
               number_types[value.kind]
             end
 
+          # Types given with `as:` are only their paths, so they're resolved
+          # (unless defined later, like the aliases defined after the rule)
+          if type && !type.is_a?(TypeNode)
+            type = parse_type(type.stringify).resolve? || type
+          end
+
+          # Built-in properties keep their types, when defined within the rule
+          if fallback_type = definition[:fallback_type]
+            if !type
+              type = fallback_type
+            elsif type.is_a?(TypeNode) && !(type <= fallback_type)
+              call.raise("Rule property `#{name}` is expected to be of the `#{definition[:fallback_type_name].id}` type (as the built-in one), not `#{type}`")
+            end
+          end
+
           getter = type == Bool ? "#{name}?".id : name
 
-          same_key_name = properties.keys.find { |other| properties[other][:key] == key }
-          same_key_name ||= built_in_names[key].id if built_in_names[key] && built_in_names[key] != name.stringify
-
           if properties[name]
-            call.raise "Rule property `#{name}` is already defined"
-          elsif same_key_name
-            call.raise "Rule property `#{name}` would be configured with the same `#{key.id}` key as `#{same_key_name}`"
-          elsif @type.has_method?(getter)
-            call.raise "Rule property `#{name}` would override the `#{getter}` method of `#{@type}`"
+            call.raise("Rule property `#{name}` is already defined")
+          elsif same_key_name = properties.keys.find { |other| properties[other][:key] == key }
+            call.raise("Rule property `#{name}` would be configured with the same `#{key.id}` key as `#{same_key_name}`")
+          elsif !definition[:built_in] && @type.has_method?(getter)
+            call.raise("Rule property `#{name}` would override the `#{getter}` method of `#{@type}`")
           end
 
           properties[name] = {key: key}
         %}
 
+        @[::Ameba::Config::RuleConfig::Property(
+          key: {{ key }},
+          built_in: {{ definition[:built_in] }},
+          base: {{ definition[:base] == true }},
+          base_default: {{ definition[:base_default] }},
+        )]
         @[YAML::Field(key: {{ key }}, converter: {{ converter }})]
+
+        # Declared with the type as given (if so), since resolved types are
+        # referred to by their full names, which fails for the private ones
+        {% declared_type = definition[:type] || type %}
         {% if type == Bool %}
-          property? {{ name }}{{ " : #{type}".id if type }} = {{ value }}
+          property? {{ name }}{{ " : #{declared_type}".id if declared_type }} = {{ value }}
         {% else %}
-          property {{ name }}{{ " : #{type}".id if type }} = {{ value }}
+          property {{ name }}{{ " : #{declared_type}".id if declared_type }} = {{ value }}
         {% end %}
       {% end %}
 
-      {% unless properties["enabled".id] %}
-        @[YAML::Field(key: "Enabled")]
-        property? enabled = !{{ @type }}.deprecated?
-      {% end %}
-
-      {% unless properties["severity".id] %}
-        @[YAML::Field(key: "Severity", converter: Ameba::SeverityYamlConverter)]
-        property severity = {{ @type }}.default_severity
-      {% end %}
-
-      {% unless properties["excluded".id] %}
-        @[YAML::Field(key: "Excluded")]
-        property excluded : Set(String)?
-      {% end %}
-
-      {% unless properties["since_version".id] %}
-        @[YAML::Field(key: "SinceVersion")]
-        property since_version : String?
-      {% end %}
+      @[::Ameba::Config::RuleConfig::Properties]
+      {% if @type.abstract? %}abstract {% end %}class ::{{ @type }}
+      end
 
       def since_version : SemanticVersion?
         if version = @since_version
           SemanticVersion.parse(version)
         end
       end
-
-      def self.to_json_schema(builder : JSON::Builder) : Nil
-        # Default values are read from the rule loaded with no configuration
-        # given, since the ones written within `properties` can be autocasted
-        # (like symbols into enum members)
-        rule = new
-
-        builder.string(rule_name)
-        builder.object do
-          builder.field("$ref", "#/$defs/BaseRule")
-          builder.field("$comment", documentation_url)
-          builder.field("title", rule_name)
-
-          {% if properties["description".id] %}
-            if description = rule.description
-              builder.field("description", description)
-            end
-          {% end %}
-
-          builder.string("properties")
-          builder.object do
-            {% for prop_name, prop in properties %}
-              {% unless prop_name == "description".id || prop_name == "severity".id %}
-                builder.string({{ prop[:key] }})
-                builder.object do
-                  # Described by the type of its instance variable, within
-                  # the rule being instantiated (which can be a subclass)
-                  \{% begin %}
-                    ::Ameba::Config::RuleConfig.json_schema_type(builder, \{{ @type }}, [{{ prop_name.symbolize }}], default: rule.@{{ prop_name }})
-                  \{% end %}
-                end
-              {% end %}
-            {% end %}
-
-            # Built-in properties (and `Severity`, even if defined within
-            # `properties`) are described within `BaseRule`, unless their
-            # defaults differ for this rule
-
-            {% unless properties["enabled".id] %}
-              # Deprecated rules are disabled by default
-              unless rule.enabled?
-                builder.string("Enabled")
-                builder.object do
-                  builder.field("type", "boolean")
-                  builder.field("default", false)
-                end
-              end
-            {% end %}
-
-            unless rule.severity == Rule::Base.default_severity
-              builder.string("Severity")
-              builder.object do
-                builder.field("$ref", "#/$defs/Severity")
-                builder.field("default", rule.severity.to_s)
-              end
-            end
-          end
-        end
-      end
     end
 
-    # :nodoc:
-    #
-    # Writes the JSON schema matching all of the types given by *paths*
-    # within the *rule* type.
-    #
-    # Each path starts with the name of an instance variable, followed by
-    # the steps leading to a type nested within its own, each one being
-    # a tuple of the union member index, and the type variable index or
-    # named tuple key (`nil` standing for the flags enum member names).
-    # Nested types are never referred to by their names, which allows them
-    # to be private, or defined after the rule class itself.
-    #
-    # Schemas of the nested `items`, `prefixItems`, `properties` and
-    # `additionalProperties` are written by expanding this macro again,
-    # one level at a time.
-    #
-    # Types not supported by the JSON schema leave it unconstrained.
-    #
-    # With *default* given, it is written as well, and so are the defaults
-    # of each one of its keys (for hashes and named tuples).
-    #
-    # NOTE: It needs to be called from within a method body, so that the
-    # instance variables of the *rule* are known.
-    macro json_schema_type(builder, rule, *paths, default = nil)
-      {%
-        instance_vars = rule.resolve.instance_vars
-        types = [] of TypeNode
-        type_paths = [] of ArrayLiteral
+    # Returns the values of the rule properties, by their YAML keys,
+    # written the same way as within the YAML config.
+    def property_values : Hash(String, YAML::Any)
+      {% begin %}
+        values = {} of String => YAML::Any
 
-        paths.each do |path|
-          type = instance_vars.find(&.name.== path.first.id).type
+        {% for ivar in @type.instance_vars %}
+          {% if property = ivar.annotation(::Ameba::Config::RuleConfig::Property) %}
+            {% field = ivar.annotation(::YAML::Field) %}
 
-          path[1..-1].each do |step|
-            member = type.union? ? type.union_types[step[0]] : type
-
-            if step[1].is_a?(NilLiteral)
-              type = ::String
-            elsif step[1].is_a?(StringLiteral)
-              type = member[step[1].id]
-            else
-              type = member.type_vars[step[1]]
-            end
-          end
-
-          unless types.includes?(type)
-            types << type
-            type_paths << path
-          end
-        end
-
-        json_types = [] of StringLiteral
-        items = [] of ArrayLiteral
-        tuples = [] of ArrayLiteral
-        named_tuples = [] of TypeNode
-        properties = {} of StringLiteral => ArrayLiteral
-        additional_properties = [] of ArrayLiteral
-        unconstrained = false
-
-        types.each_with_index do |type, type_index|
-          path = type_paths[type_index]
-
-          (type.union? ? type.union_types : [type]).each_with_index do |member, index|
-            if member == ::Nil
-              json_types << "null"
-            elsif member == ::Bool
-              json_types << "boolean"
-            elsif member <= ::Int
-              json_types << "integer"
-            elsif member <= ::Float
-              json_types << "number"
-            elsif member < ::Enum && member.annotation(::Flags)
-              # Flags enums are parsed from a sequence
-              json_types << "array"
-              items << path + [{index, nil}]
-            elsif member == ::String || member == ::Path || member == ::Time || member < ::Enum
-              json_types << "string"
-            elsif member <= ::Array || member <= ::Set
-              json_types << "array"
-              items << path + [{index, 0}]
-            elsif member <= ::Tuple
-              json_types << "array"
-              tuples << member.type_vars.map_with_index { |_, i| path + [{index, i}] }
-            elsif member <= ::Hash
-              json_types << "object"
-              additional_properties << path + [{index, 1}]
-            elsif member <= ::NamedTuple
-              json_types << "object"
-              named_tuples << member
-
-              member.keys.each do |key|
-                properties[key.stringify] =
-                  (properties[key.stringify] || [] of ArrayLiteral) + [path + [{index, key.stringify}]]
-              end
-            else
-              unconstrained = true
-            end
-          end
-        end
-
-        # Tuples are described by position, unless mixed with other sequen
-        positional = tuples.size == 1 && items.empty?
-        unless positional
-          tuples.each do |tuple|
-            items = items + tuple
-          end
-        end
-      %}
-
-      {% unless unconstrained %}
-        # Duplicates (and integers within numbers) are skipped,
-        # with `"null"` (if present) placed last
-        {% nilable = json_types.includes?("null") %}
-
-        {% json_types = json_types.reject(&.== "integer") if json_types.includes?("number") %}
-        {% json_types = json_types.reject(&.== "null").uniq %}
-        {% json_types << "null" if nilable %}
-
-        {% if json_types.size == 1 %}
-          {{ builder }}.field("type", {{ json_types.first }})
-        {% elsif !json_types.empty? %}
-          {{ builder }}.string("type")
-          {{ builder }}.array do
-            {% for json_type in json_types %}
-              {{ builder }}.string({{ json_type }})
-            {% end %}
-          end
-        {% end %}
-
-        {% unless items.empty? %}
-          {{ builder }}.string("items")
-          {{ builder }}.object do
-            ::Ameba::Config::RuleConfig.json_schema_type({{ builder }}, {{ rule }}, {{ items.splat }})
-          end
-        {% end %}
-
-        {% if positional %}
-          {% tuple = tuples.first %}
-
-          {% unless tuple.empty? %}
-            {{ builder }}.string("prefixItems")
-            {{ builder }}.array do
-              {% for tuple_path in tuple %}
-                {{ builder }}.object do
-                  ::Ameba::Config::RuleConfig.json_schema_type({{ builder }}, {{ rule }}, {{ tuple_path }})
-                end
-              {% end %}
-            end
-          {% end %}
-
-          # Tuples are parsed from sequences of their exact size
-          {{ builder }}.field("minItems", {{ tuple.size }})
-          {{ builder }}.field("maxItems", {{ tuple.size }})
-        {% end %}
-
-        {% hash_defaults = default && !additional_properties.empty? %}
-        {% named_tuple_defaults = default && named_tuples.size == 1 %}
-
-        {% if !properties.empty? || hash_defaults %}
-          {{ builder }}.string("properties")
-          {{ builder }}.object do
-            {% for key, key_paths in properties %}
-              {{ builder }}.string({{ key }})
-              {{ builder }}.object do
-                ::Ameba::Config::RuleConfig.json_schema_type({{ builder }}, {{ rule }}, {{ key_paths.splat }})
-
-                {% if named_tuple_defaults %}
-                  if (%named_tuple = {{ default }}).is_a?(NamedTuple)
-                    {{ builder }}.string("default")
-                    ::Ameba::Config::RuleConfig.json_schema_default({{ builder }}, %named_tuple[{{ key.id.symbolize }}])
-                  end
-                {% end %}
-              end
-            {% end %}
-
-            {% if hash_defaults %}
-              if (%hash = {{ default }}).is_a?(Hash)
-                %hash.each do |%key, %value|
-                  {% unless properties.empty? %}
-                    # Keys of named tuples (within the same union) are already written
-                    next if {{ properties.keys }}.includes?(%key.to_s)
-                  {% end %}
-
-                  {{ builder }}.string(%key.to_s)
-                  {{ builder }}.object do
-                    ::Ameba::Config::RuleConfig.json_schema_type({{ builder }}, {{ rule }}, {{ additional_properties.splat }})
-
-                    {{ builder }}.string("default")
-                    ::Ameba::Config::RuleConfig.json_schema_default({{ builder }}, %value)
-                  end
-                end
-              end
-            {% end %}
-          end
-        {% end %}
-
-        # Named tuples are parsed only when all of their non-nilable keys are present
-        {% if named_tuples.size == 1 && additional_properties.empty? %}
-          {% required = named_tuples.first.keys.reject { |key| named_tuples.first[key].nilable? } %}
-
-          {% unless required.empty? %}
-            {{ builder }}.string("required")
-            {{ builder }}.array do
-              {% for key in required %}
-                {{ builder }}.string({{ key.stringify }})
-              {% end %}
-            end
+            values[{{ property[:key] }}] =
+              ::Ameba::Config::RuleConfig.to_yaml_any(@{{ ivar.name }}, {{ field[:converter] }})
           {% end %}
         {% end %}
 
-        {% unless additional_properties.empty? %}
-          {{ builder }}.string("additionalProperties")
-          {{ builder }}.object do
-            ::Ameba::Config::RuleConfig.json_schema_type({{ builder }}, {{ rule }}, {{ additional_properties.splat }})
-          end
-        {% end %}
-      {% end %}
-
-      {% if default %}
-        {{ builder }}.string("default")
-        ::Ameba::Config::RuleConfig.json_schema_default({{ builder }}, {{ default }})
+        values
       {% end %}
     end
 
     # :nodoc:
-    #
-    # Writes the given *value* as JSON, with the keys of all of the hashes
-    # within written as strings, the same way as within `properties`
-    # (since not all of them can be serialized as JSON object keys).
-    def self.json_schema_default(builder : JSON::Builder, value : Hash | NamedTuple) : Nil
-      builder.object do
-        value.each do |key, item|
-          builder.string(key.to_s)
-          json_schema_default(builder, item)
-        end
-      end
+    def self.to_yaml_any(value, converter : Nil) : YAML::Any
+      to_yaml_any { |builder| value.to_yaml(builder) }
     end
 
     # :ditto:
-    def self.json_schema_default(builder : JSON::Builder, value : Array | Set | Tuple) : Nil
-      builder.array do
-        value.each do |item|
-          json_schema_default(builder, item)
-        end
-      end
+    def self.to_yaml_any(value, converter) : YAML::Any
+      to_yaml_any { |builder| converter.to_yaml(value, builder) }
     end
 
-    # :ditto:
-    def self.json_schema_default(builder : JSON::Builder, value) : Nil
-      value.to_json(builder)
+    private def self.to_yaml_any(& : YAML::Nodes::Builder ->) : YAML::Any
+      nodes = YAML::Nodes::Builder.new
+      yield nodes
+
+      yaml = String.build do |io|
+        YAML.build(io) do |builder|
+          nodes.document.to_yaml(builder)
+        end
+      end
+      YAML.parse(yaml)
     end
 
     macro included
+      # Returns the definitions of the rule properties, with their defaults
+      # read from the rule loaded with no configuration given.
+      #
+      # NOTE: Abstract rules can't be loaded, and so their properties
+      # can't be described either.
+      def self.property_definitions : Array(::Ameba::Config::RuleConfig::PropertyDefinition)
+        \{% if @type.abstract? %}
+          raise "Properties of the abstract rule `#{name}` can't be described"
+        \{% else %}
+          defaults = new.property_values
+
+          [
+            \{% for ivar in @type.instance_vars %}
+              \{% if property = ivar.annotation(::Ameba::Config::RuleConfig::Property) %}
+                \{% key = property[:key] %}
+
+                ::Ameba::Config::RuleConfig::PropertyDefinition.new(
+                  name: \{{ ivar.name.stringify }},
+                  key: \{{ key }},
+                  type: \{{ ivar.type.union? ? ivar.type.union_types.join(" | ") : ivar.type.stringify }},
+                  default: defaults[\{{ key }}],
+                  built_in: \{{ property[:built_in] == true }},
+                ),
+              \{% end %}
+            \{% end %}
+          ] of ::Ameba::Config::RuleConfig::PropertyDefinition
+        \{% end %}
+      end
+
       GROUP_SEVERITY = {
         Lint:        Ameba::Severity::Warning,
         Metrics:     Ameba::Severity::Warning,

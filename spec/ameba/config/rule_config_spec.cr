@@ -1,20 +1,14 @@
 require "../../spec_helper"
 
-# Returns the error raised when compiling a rule with the given *properties*
-private def properties_error(properties : String)
+# Returns the error raised when compiling the given *source*, with Ameba required
+private def compile_error(source : String)
   # Temporary files are created next to the spec, not in the system temp directory.
   # Crystal can't require an absolute path, and on the Windows CI runner the temp directory
   # can be on a different drive than the checkout. The files are deleted afterwards.
   file = File.tempfile("rule_config.", ".cr", dir: __DIR__) do |io|
-    io.puts <<-CRYSTAL
-      require "../../../src/ameba"
-
-      class Ameba::InvalidPropertiesRule < Ameba::Rule::Base
-        properties do
-          #{properties}
-        end
-      end
-      CRYSTAL
+    io.puts %(require "../../../src/ameba")
+    io.puts
+    io.puts source
   end
 
   output = IO::Memory.new
@@ -30,6 +24,17 @@ private def properties_error(properties : String)
     .try(&.lchop("Error: "))
 ensure
   file.try(&.delete)
+end
+
+# Returns the error raised when compiling a rule with the given *properties*
+private def properties_error(properties : String)
+  compile_error <<-CRYSTAL
+    class Ameba::InvalidPropertiesRule < Ameba::Rule::Base
+      properties do
+        #{properties}
+      end
+    end
+    CRYSTAL
 end
 
 private def properties_error(properties : Enumerable(String))
@@ -68,6 +73,36 @@ module Ameba
     properties do
       description "Rule to test loading its severity from YAML"
       severity :warning
+    end
+  end
+
+  # Boolean properties typed with `as:` get query getters too
+  class ConfigBoolRule < Rule::Base
+    properties do
+      description "Rule to test its boolean properties typed with `as:`"
+      strict false, as: Bool
+      enabled false, as: Bool
+    end
+  end
+
+  # Private types can be given with `as:` (but not within unions,
+  # which can't be loaded from YAML then)
+  class ConfigPrivateTypeRule < Rule::Base
+    private enum Kind
+      Foo
+      Bar
+    end
+
+    properties do
+      description "Rule to test its properties of private types"
+      kinds [] of Kind, as: Array(Kind)
+    end
+  end
+
+  # Rules don't need to define a description
+  class ConfigUndescribedRule < Rule::Base
+    properties do
+      count 1
     end
   end
 
@@ -163,6 +198,20 @@ module Ameba
         rule.since_version.should eq SemanticVersion.parse("1.2.3")
       end
 
+      it "loads properties of private types given with `as:`" do
+        ConfigPrivateTypeRule.new(YAML.parse("Ameba/ConfigPrivateTypeRule: {Kinds: [bar]}"))
+          .kinds.map(&.to_s).should eq %w[Bar]
+      end
+
+      it "loads boolean properties typed with `as:`" do
+        ConfigBoolRule.new.strict?.should be_false
+        ConfigBoolRule.new.enabled?.should be_false
+
+        rule = ConfigBoolRule.new(YAML.parse("Ameba/ConfigBoolRule: {Strict: true, Enabled: true}"))
+        rule.strict?.should be_true
+        rule.enabled?.should be_true
+      end
+
       it "loads the severity defined within `properties`" do
         ConfigSeverityRule.new.severity.should eq Severity::Warning
         ConfigSeverityRule.new(YAML.parse("Ameba/ConfigSeverityRule: {Severity: error}"))
@@ -189,6 +238,93 @@ module Ameba
         expect_raises(Exception, "Incorrect severity name foo") do
           load_rule("Ameba/ConfigRule: {Severity: foo}")
         end
+      end
+    end
+
+    describe ".property_definitions" do
+      it "describes the properties" do
+        ConfigRule.property_definitions
+          .sort_by(&.name)
+          .map { |definition| {definition.name, definition.key, definition.type, definition.built_in?} }
+          .should eq [
+            {"count", "Count", "Int32", false},
+            {"description", "Description", "String", false},
+            {"either", "Either", "Array(String) | String", false},
+            {"enabled", "Enabled", "Bool", true},
+            {"excluded", "Excluded", "Set(String) | Nil", true},
+            {"limit", "Limit", "Int32 | Nil", false},
+            {"names", "Names", "Array(String)", false},
+            {"options", "Options", "Ameba::ConfigRule::Option", false},
+            {"pair", "Pair", "Tuple(String, Int32)", false},
+            {"prefix", "Prefix", "String", false},
+            {"record", "Record", "NamedTuple(a: Int32, b: String | Nil)", false},
+            {"severities", "Severities", "Hash(Ameba::Severity, Int32)", false},
+            {"severity", "Severity", "Ameba::Severity", true},
+            {"since_version", "SinceVersion", "Nil | String", true},
+            {"strict", "Strict", "Bool", false},
+          ]
+      end
+
+      it "describes the defaults the way they are configured" do
+        defaults = ConfigRule.property_definitions.to_h do |definition|
+          {YAML::Any.new(definition.key), definition.default}
+        end
+
+        YAML::Any.new(defaults).should eq YAML.parse(<<-YAML)
+          Description: Rule to test loading its properties from YAML
+          Count: 1
+          Limit: 2
+          Prefix: x
+          Strict: false
+          Names: [a]
+          Options: [foo]
+          Severities: {error: 1}
+          Pair: [a, 1]
+          Record: {a: 1, b: ~}
+          Either: a
+          Enabled: true
+          Severity: Convention
+          Excluded: ~
+          SinceVersion: ~
+          YAML
+      end
+
+      it "describes the built-in properties defined within `properties` as such" do
+        ConfigSeverityRule.property_definitions
+          .find!(&.key.== "Severity")
+          .built_in?.should be_false
+      end
+
+      it "describes the description of the rules without one as a built-in property" do
+        definition = ConfigUndescribedRule.property_definitions.find!(&.key.== "Description")
+        definition.built_in?.should be_true
+        definition.type.should eq "Nil | String"
+        definition.default.should eq YAML::Any.new(nil)
+      end
+
+      it "raises for abstract rules" do
+        expect_raises(Exception, "Properties of the abstract rule `Ameba::Rule::Performance::Base` can't be described") do
+          Rule::Performance::Base.property_definitions
+        end
+      end
+    end
+
+    describe "#property_values" do
+      it "returns the configured values of the properties" do
+        rule = load_rule <<-YAML
+          Ameba/ConfigRule:
+            Limit: ~
+            Options: [foo, bar]
+            Severity: error
+            Excluded: [a.cr]
+          YAML
+
+        values = rule.property_values
+        values["Limit"].should eq YAML::Any.new(nil)
+        values["Options"].should eq YAML.parse("[foo, bar]")
+        values["Severity"].should eq YAML::Any.new("Error")
+        values["Excluded"].should eq YAML.parse("[a.cr]")
+        values["Count"].should eq YAML::Any.new(1_i64)
       end
     end
 
@@ -274,6 +410,45 @@ module Ameba
 
         properties_error("special true").should eq \
           "Rule property `special` would override the `special?` method of `Ameba::InvalidPropertiesRule`"
+      end
+
+      it "raises if defined more than once" do
+        compile_error(<<-CRYSTAL).should eq "Rule properties are already defined within `Ameba::InvalidPropertiesRule`"
+          class Ameba::InvalidPropertiesRule < Ameba::Rule::Base
+            properties do
+              foo 1
+            end
+
+            properties do
+              bar 2
+            end
+          end
+          CRYSTAL
+
+        compile_error(<<-CRYSTAL).should eq "Rule properties are already defined within `Ameba::InvalidPropertiesParentRule`"
+          abstract class Ameba::InvalidPropertiesParentRule < Ameba::Rule::Base
+            properties do
+              foo 1
+            end
+          end
+
+          class Ameba::InvalidPropertiesRule < Ameba::InvalidPropertiesParentRule
+            properties do
+              bar 2
+            end
+          end
+          CRYSTAL
+      end
+
+      it "raises on built-in properties of other types" do
+        properties_error(%(severity "warning")).should eq \
+          "Rule property `severity` is expected to be of the `::Ameba::Severity` type (as the built-in one), not `String`"
+
+        properties_error("enabled 1").should eq \
+          "Rule property `enabled` is expected to be of the `Bool` type (as the built-in one), not `Int32`"
+
+        properties_error("excluded [] of String, as: Array(String)").should eq \
+          "Rule property `excluded` is expected to be of the `Set(String)?` type (as the built-in one), not `Array(String)`"
       end
     end
   end
