@@ -21,6 +21,13 @@ module Ameba::Rule::Performance
       expect_no_corrections source
     end
 
+    it "does not report if flatten is called with arguments or a block" do
+      expect_no_issues subject, <<-CRYSTAL
+        %w[Alice Bob].map(&.chars).flatten(1)
+        %w[Alice Bob].map(&.chars).flatten { |x| x }
+        CRYSTAL
+    end
+
     it "does not report is source is a spec" do
       expect_no_issues subject, path: "source_spec.cr", code: <<-CRYSTAL
         %w[Alice Bob].map(&.chars).flatten
