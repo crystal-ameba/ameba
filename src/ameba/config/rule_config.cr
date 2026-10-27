@@ -5,6 +5,8 @@ class Ameba::Config
     macro properties(&block)
       {%
         calls = block.body.is_a?(Expressions) ? block.body.expressions : [block.body]
+        calls = calls.reject(&.is_a?(Nop))
+
         properties = {} of MacroId => NamedTuple
 
         built_in_names = {
@@ -21,54 +23,58 @@ class Ameba::Config
         }
       %}
 
-      {% for call in calls.reject(&.is_a?(Nop)) %}
-        {% unless call.is_a?(Call) && !call.receiver && call.args.size == 1 && !call.block && !call.block_arg && call.name =~ /\A[a-z_][a-z0-9_]*\z/ %}
-          {% call.raise("Rule properties are expected to be defined as `name value` (optionally followed by `as: Type`), not: `#{call}`") %}
-        {% end %}
+      {% for call in calls %}
+        {%
+          unless call.is_a?(Call) && !call.receiver && call.args.size == 1 && !call.block && !call.block_arg && call.name =~ /\A[a-z_][a-z0-9_]*\z/
+            call.raise "Rule properties are expected to be defined as `name value` (optionally followed by `as: Type`), not: `#{call}`"
+          end
 
-        {% for named_arg in call.named_args || [] of NamedArgument %}
-          {% unless named_arg.name == "as".id %}
-            {% named_arg.raise("Unknown option `#{named_arg.name}` of rule property `#{call.name}` (expected `as`)") %}
-          {% end %}
-        {% end %}
+          name = call.name.id
+          key = name.camelcase.stringify
+          value = call.args.first
+          type = nil
+          converter = nil
 
-        {% name = call.name.id %}
-        {% key = name.camelcase.stringify %}
-        {% value = call.args.first %}
-        {% type = call.named_args && call.named_args.find(&.name.== "as".id) %}
-        {% type = type.value if type %}
-        {% converter = nil %}
+          if named_args = call.named_args
+            named_args.each do |named_arg|
+              if named_arg.name == "as".id
+                type = named_arg.value
+              else
+                named_arg.raise "Unknown option `#{named_arg.name}` of rule property `#{call.name}` (expected `as`)"
+              end
+            end
+          end
 
-        {% if key == "Severity" %}
-          {% type = Severity %}
-          {% converter = SeverityYamlConverter %}
-        {% end %}
+          if key == "Severity"
+            type = Severity
+            converter = SeverityYamlConverter
+          end
 
-        # Types are given explicitly (when known), so that they are documented
-        {% unless type %}
-          {% if value.is_a?(BoolLiteral) %}
-            {% type = Bool %}
-          {% elsif value.is_a?(StringLiteral) || value.is_a?(StringInterpolation) %}
-            {% type = String %}
-          {% elsif value.is_a?(NumberLiteral) %}
-            {% type = number_types[value.kind] %}
-          {% end %}
-        {% end %}
+          # Types are given explicitly (when known), so that they are documented
+          type ||=
+            if value.is_a?(BoolLiteral)
+              Bool
+            elsif value.is_a?(StringLiteral) || value.is_a?(StringInterpolation)
+              String
+            elsif value.is_a?(NumberLiteral)
+              number_types[value.kind]
+            end
 
-        {% getter = type == Bool ? "#{name}?".id : name %}
+          getter = type == Bool ? "#{name}?".id : name
 
-        {% same_key_name = properties.keys.find { |other| properties[other][:key] == key } %}
-        {% same_key_name ||= built_in_names[key].id if built_in_names[key] && built_in_names[key] != name.stringify %}
+          same_key_name = properties.keys.find { |other| properties[other][:key] == key }
+          same_key_name ||= built_in_names[key].id if built_in_names[key] && built_in_names[key] != name.stringify
 
-        {% if properties[name] %}
-          {% call.raise("Rule property `#{name}` is already defined") %}
-        {% elsif same_key_name %}
-          {% call.raise("Rule property `#{name}` would be configured with the same `#{key.id}` key as `#{same_key_name}`") %}
-        {% elsif @type.has_method?(getter) %}
-          {% call.raise("Rule property `#{name}` would override the `#{getter}` method of `#{@type}`") %}
-        {% end %}
+          if properties[name]
+            call.raise "Rule property `#{name}` is already defined"
+          elsif same_key_name
+            call.raise "Rule property `#{name}` would be configured with the same `#{key.id}` key as `#{same_key_name}`"
+          elsif @type.has_method?(getter)
+            call.raise "Rule property `#{name}` would override the `#{getter}` method of `#{@type}`"
+          end
 
-        {% properties[name] = {key: key} %}
+          properties[name] = {key: key}
+        %}
 
         @[YAML::Field(key: {{ key }}, converter: {{ converter }})]
         {% if type == Bool %}
@@ -80,7 +86,7 @@ class Ameba::Config
 
       {% unless properties["enabled".id] %}
         @[YAML::Field(key: "Enabled")]
-        property? enabled = !deprecated?
+        property? enabled = !{{ @type }}.deprecated?
       {% end %}
 
       {% unless properties["severity".id] %}
@@ -188,91 +194,95 @@ class Ameba::Config
     # NOTE: It needs to be called from within a method body, so that the
     # instance variables of the *rule* are known.
     macro json_schema_type(builder, rule, *paths, default = nil)
-      {% instance_vars = rule.resolve.instance_vars %}
-      {% types = [] of TypeNode %}
-      {% type_paths = [] of ArrayLiteral %}
+      {%
+        instance_vars = rule.resolve.instance_vars
+        types = [] of TypeNode
+        type_paths = [] of ArrayLiteral
 
-      {% for path in paths %}
-        {% type = instance_vars.find(&.name.== path.first.id).type %}
+        paths.each do |path|
+          type = instance_vars.find(&.name.== path.first.id).type
 
-        {% for step in path[1..-1] %}
-          {% member = type.union? ? type.union_types[step[0]] : type %}
+          path[1..-1].each do |step|
+            member = type.union? ? type.union_types[step[0]] : type
 
-          {% if step[1].is_a?(NilLiteral) %}
-            {% type = ::String %}
-          {% elsif step[1].is_a?(StringLiteral) %}
-            {% type = member[step[1].id] %}
-          {% else %}
-            {% type = member.type_vars[step[1]] %}
-          {% end %}
-        {% end %}
+            if step[1].is_a?(NilLiteral)
+              type = ::String
+            elsif step[1].is_a?(StringLiteral)
+              type = member[step[1].id]
+            else
+              type = member.type_vars[step[1]]
+            end
+          end
 
-        {% unless types.includes?(type) %}
-          {% types << type %}
-          {% type_paths << path %}
-        {% end %}
-      {% end %}
+          unless types.includes?(type)
+            types << type
+            type_paths << path
+          end
+        end
 
-      {% json_types = [] of StringLiteral %}
-      {% items = [] of ArrayLiteral %}
-      {% tuples = [] of ArrayLiteral %}
-      {% named_tuples = [] of TypeNode %}
-      {% properties = {} of StringLiteral => ArrayLiteral %}
-      {% additional_properties = [] of ArrayLiteral %}
-      {% unconstrained = false %}
+        json_types = [] of StringLiteral
+        items = [] of ArrayLiteral
+        tuples = [] of ArrayLiteral
+        named_tuples = [] of TypeNode
+        properties = {} of StringLiteral => ArrayLiteral
+        additional_properties = [] of ArrayLiteral
+        unconstrained = false
 
-      {% for type, type_index in types %}
-        {% path = type_paths[type_index] %}
+        types.each_with_index do |type, type_index|
+          path = type_paths[type_index]
 
-        {% for member, index in (type.union? ? type.union_types : [type]) %}
-          {% if member == ::Nil %}
-            {% json_types << "null" %}
-          {% elsif member == ::Bool %}
-            {% json_types << "boolean" %}
-          {% elsif member <= ::Int %}
-            {% json_types << "integer" %}
-          {% elsif member <= ::Float %}
-            {% json_types << "number" %}
-          {% elsif member < ::Enum && member.annotation(::Flags) %}
-            # Flags enums are parsed from a sequence of member names
-            {% json_types << "array" %}
-            {% items << path + [{index, nil}] %}
-          {% elsif member == ::String || member == ::Path || member == ::Time || member < ::Enum %}
-            {% json_types << "string" %}
-          {% elsif member <= ::Array || member <= ::Set %}
-            {% json_types << "array" %}
-            {% items << path + [{index, 0}] %}
-          {% elsif member <= ::Tuple %}
-            {% json_types << "array" %}
-            {% tuples << member.type_vars.map_with_index { |_, i| path + [{index, i}] } %}
-          {% elsif member <= ::Hash %}
-            {% json_types << "object" %}
-            {% additional_properties << path + [{index, 1}] %}
-          {% elsif member <= ::NamedTuple %}
-            {% json_types << "object" %}
-            {% named_tuples << member %}
+          (type.union? ? type.union_types : [type]).each_with_index do |member, index|
+            if member == ::Nil
+              json_types << "null"
+            elsif member == ::Bool
+              json_types << "boolean"
+            elsif member <= ::Int
+              json_types << "integer"
+            elsif member <= ::Float
+              json_types << "number"
+            elsif member < ::Enum && member.annotation(::Flags)
+              # Flags enums are parsed from a sequence
+              json_types << "array"
+              items << path + [{index, nil}]
+            elsif member == ::String || member == ::Path || member == ::Time || member < ::Enum
+              json_types << "string"
+            elsif member <= ::Array || member <= ::Set
+              json_types << "array"
+              items << path + [{index, 0}]
+            elsif member <= ::Tuple
+              json_types << "array"
+              tuples << member.type_vars.map_with_index { |_, i| path + [{index, i}] }
+            elsif member <= ::Hash
+              json_types << "object"
+              additional_properties << path + [{index, 1}]
+            elsif member <= ::NamedTuple
+              json_types << "object"
+              named_tuples << member
 
-            {% for key in member.keys %}
-              {% properties[key.stringify] = (properties[key.stringify] || [] of ArrayLiteral) + [path + [{index, key.stringify}]] %}
-            {% end %}
-          {% else %}
-            {% unconstrained = true %}
-          {% end %}
-        {% end %}
-      {% end %}
+              member.keys.each do |key|
+                properties[key.stringify] =
+                  (properties[key.stringify] || [] of ArrayLiteral) + [path + [{index, key.stringify}]]
+              end
+            else
+              unconstrained = true
+            end
+          end
+        end
 
-      # Tuples are described by position, unless mixed with other sequences
-      {% positional = tuples.size == 1 && items.empty? %}
-      {% unless positional %}
-        {% for tuple in tuples %}
-          {% items = items + tuple %}
-        {% end %}
-      {% end %}
+        # Tuples are described by position, unless mixed with other sequen
+        positional = tuples.size == 1 && items.empty?
+        unless positional
+          tuples.each do |tuple|
+            items = items + tuple
+          end
+        end
+      %}
 
       {% unless unconstrained %}
         # Duplicates (and integers within numbers) are skipped,
         # with `"null"` (if present) placed last
         {% nilable = json_types.includes?("null") %}
+
         {% json_types = json_types.reject(&.== "integer") if json_types.includes?("number") %}
         {% json_types = json_types.reject(&.== "null").uniq %}
         {% json_types << "null" if nilable %}
@@ -426,10 +436,10 @@ class Ameba::Config
         include YAML::Serializable
 
         def self.new(config = nil)
-          if (raw = config.try &.raw).is_a?(Hash)
-            yaml = raw[rule_name]?.try &.to_yaml
+          if (raw = config.try(&.raw)).is_a?(Hash)
+            yaml = raw[rule_name]?.try(&.to_yaml)
           end
-          from_yaml yaml || "{}"
+          from_yaml(yaml || "{}")
         end
       end
     end
