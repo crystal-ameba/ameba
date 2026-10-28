@@ -132,7 +132,7 @@ module Ameba::Rule::Style
         <<-HTML
         # ^^^^^ error: Heredoc body should be indented by 2 spaces
               <article/>
-        #{"  "}
+              #{""}
               <hr/>
               HTML
         CRYSTAL
@@ -151,14 +151,14 @@ module Ameba::Rule::Style
         <<-HTML
         # ^^^^^ error: Heredoc body should be indented by 2 spaces
               <article/>
-        #{"      "}
+              #{""}
               HTML
         CRYSTAL
 
       expect_correction source, <<-CRYSTAL
         <<-HTML
           <article/>
-        #{"  "}
+          #{""}
           HTML
         CRYSTAL
     end
@@ -231,7 +231,7 @@ module Ameba::Rule::Style
             <<-HTML
             # ^^^^^ error: Heredoc body should be indented by 0 spaces
               <article/>
-            #{"  "}
+              #{""}
               HTML
             CRYSTAL
 
@@ -277,7 +277,7 @@ module Ameba::Rule::Style
             <<-HTML
             # ^^^^^ error: Heredoc body should be indented by 2 spaces
                   <article/>
-            #{"  "}
+                  #{""}
                     <hr/>
                   HTML
             CRYSTAL
@@ -296,14 +296,14 @@ module Ameba::Rule::Style
             <<-HTML
             # ^^^^^ error: Heredoc body should be indented by 2 spaces
                   <article/>
-            #{"      "}
+                  #{""}
                   HTML
             CRYSTAL
 
           expect_correction source, <<-CRYSTAL
             <<-HTML
               <article/>
-            #{"  "}
+              #{""}
               HTML
             CRYSTAL
         end
