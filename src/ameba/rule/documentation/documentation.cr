@@ -16,6 +16,8 @@ module Ameba::Rule::Documentation
   #   RequireExample: false
   # ```
   class Documentation < Base
+    include AST::Util
+
     properties do
       since_version "1.5.0"
       enabled false
@@ -74,12 +76,19 @@ module Ameba::Rule::Documentation
       # bail out if the scope is not public,
       # i.e. `def bar` inside `private class Foo`
       return if (visibility = scope.visibility) && !visibility.public?
+      return if nodoc?(scope)
 
       if doc = node.doc.presence
         issue_for(node, MSG_EXAMPLE) unless valid_example?(doc)
       else
         issue_for(node, MSG)
       end
+    end
+
+    # Returns `true` if the scope or any of its outer scopes is marked
+    # with the `:nodoc:` directive, which hides it from the documentation.
+    private def nodoc?(scope : AST::Scope)
+      nodoc?(scope.node) || !!scope.outer_scope.try { |outer_scope| nodoc?(outer_scope) }
     end
 
     private def valid_example?(doc : String)

@@ -62,6 +62,21 @@ module Ameba::Rule::Documentation
         CRYSTAL
     end
 
+    it "passes for undocumented public types within `:nodoc:` namespaces" do
+      expect_no_issues subject, <<-CRYSTAL
+        # :nodoc:
+        module Foo
+          class Bar
+          end
+
+          module Baz
+            macro bat
+            end
+          end
+        end
+        CRYSTAL
+    end
+
     it "fails if there is an undocumented public type" do
       expect_issue subject, <<-CRYSTAL
         class Foo
@@ -156,6 +171,14 @@ module Ameba::Rule::Documentation
             # Foo documentation
             class Foo
             # ^^^^^^^ error: Missing documentation example
+            end
+            CRYSTAL
+        end
+
+        it "passes if there is a `:nodoc:` public type without example" do
+          expect_no_issues rule, <<-CRYSTAL
+            # :nodoc:
+            class Foo
             end
             CRYSTAL
         end
