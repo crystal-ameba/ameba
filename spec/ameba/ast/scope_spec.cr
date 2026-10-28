@@ -138,6 +138,27 @@ module Ameba::AST
       scope.references?(variable, check_inner_scopes: false).should be_false
     end
 
+    it "returns true if a deeply nested inner scope references variable" do
+      nodes = as_nodes <<-CRYSTAL
+        def method
+          a = 2
+          1.times { 2.times { 3.times { a } } }
+        end
+        CRYSTAL
+
+      scope = Scope.new(nodes.def_nodes.first)
+      inner_scope = nodes.block_nodes.reduce(scope) do |outer_scope, block_node|
+        Scope.new(block_node, outer_scope)
+      end
+
+      variable = Variable.new(nodes.var_nodes.first, scope)
+      variable.reference(nodes.var_nodes.last, inner_scope)
+
+      scope.references?(variable).should be_true
+      scope.inner_scopes.first.references?(variable).should be_true
+      scope.references?(variable, check_inner_scopes: false).should be_false
+    end
+
     it "returns false if current scope does not reference variable" do
       nodes = as_nodes <<-CRYSTAL
         def method
@@ -158,6 +179,41 @@ module Ameba::AST
       variable = Variable.new(var_node, scope)
 
       scope.inner_scopes.first.references?(variable).should be_false
+    end
+  end
+
+  describe "#nested_in?" do
+    it "returns true if the scope is nested within the given scope" do
+      nodes = as_nodes <<-CRYSTAL
+        def method
+          1.times { 2.times { } }
+        end
+        CRYSTAL
+
+      scope = Scope.new(nodes.def_nodes.first)
+      inner_scope = Scope.new(nodes.block_nodes.first, scope)
+      inner_inner_scope = Scope.new(nodes.block_nodes.last, inner_scope)
+
+      inner_scope.nested_in?(scope).should be_true
+      inner_inner_scope.nested_in?(scope).should be_true
+      inner_inner_scope.nested_in?(inner_scope).should be_true
+    end
+
+    it "returns false if the scope is not nested within the given scope" do
+      nodes = as_nodes <<-CRYSTAL
+        def method
+          1.times { }
+          2.times { }
+        end
+        CRYSTAL
+
+      scope = Scope.new(nodes.def_nodes.first)
+      inner_scope = Scope.new(nodes.block_nodes.first, scope)
+      sibling_scope = Scope.new(nodes.block_nodes.last, scope)
+
+      scope.nested_in?(scope).should be_false
+      scope.nested_in?(inner_scope).should be_false
+      inner_scope.nested_in?(sibling_scope).should be_false
     end
   end
 
