@@ -57,20 +57,30 @@ module Ameba::Rule::Performance
       return unless location = obj3.location
       return unless end_location = name_end_location(node)
 
-      issue_for(location, end_location, MSG % obj3) do |corrector|
-        corrected_code =
-          case
-          when block = obj.block
-            block_code =
-              node_source(block, source.lines)
+      if corrected_code = corrected_code(source, obj3, obj)
+        issue_for(location, end_location, MSG % obj3) do |corrector|
+          corrector.replace(location, end_location, corrected_code)
+        end
+      else
+        issue_for(location, end_location, MSG % obj3)
+      end
+    end
 
-            "Array.new(%s) %s" % {obj3, block_code}
-          when block_arg = obj.block_arg
-            "Array.new(%s, &%s)" % {obj3, block_arg}
-          end
-        next unless corrected_code
+    private def corrected_code(source, count, map_call)
+      return unless count_code = node_source(count, source.lines)
+      return unless name_end_location = name_end_location(map_call)
+      return unless end_location = map_call.end_location
 
-        corrector.replace(location, end_location, corrected_code)
+      args_location = name_end_location.adjust(column_number: 1)
+      return unless block_code = source_between(args_location, end_location, source.lines)
+
+      block_code = block_code.strip
+      block_code = block_code[1...-1].strip if block_code.starts_with?('(')
+
+      if block_code.starts_with?('&')
+        "Array.new(%s, %s)" % {count_code, block_code}
+      else
+        "Array.new(%s) %s" % {count_code, block_code}
       end
     end
   end
