@@ -132,10 +132,12 @@ module Ameba::Rule::Style
       location, end_location =
         replacement_locations(node, issue_location.last)
 
-      if location && end_location && !rebinds_block?(node, visitor, source)
+      if location && end_location
         return if exclude_multiline_calls? &&
                   !location.same_line?(end_location)
+      end
 
+      if location && end_location && !rebinds_block?(node, visitor, source)
         line = source.lines[location.line_number - 1]
         rest = line[(location.column_number - 1)..-1]
 
