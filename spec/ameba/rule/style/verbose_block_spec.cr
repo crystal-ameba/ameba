@@ -18,7 +18,7 @@ module Ameba::Rule::Style
     end
 
     it "passes if the block argument is used within the body" do
-      expect_no_issues subject, <<-CRYSTAL
+      expect_no_issues subject, <<-'CRYSTAL'
         (1..3).map { |i| i * i }
         (1..3).map { |j| j * j.to_i64 }
         (1..3).map { |k| k.to_i64 * k }
@@ -26,6 +26,12 @@ module Ameba::Rule::Style
         (1..3).map { |m| m.to_s[start: m.to_i64, count: 3]? }
         (1..3).map { |n| n.to_s.split.map { |z| n.to_i * z.to_i }.join }
         (1..3).map { |o| o.foo = foos[o.abs]? || 0 }
+        (1..3).map { |p| p.foo([p]) }
+        (1..3).map { |q| q.foo({q => q}) }
+        (1..3).map { |r| r.foo("#{r}") }
+        (1..3).map { |s| s.foo(s ? 1 : 2) }
+        (1..3).map { |t| t.foo(*t) }
+        (1..3).map { |u| u.foo(**u) }
         CRYSTAL
     end
 
@@ -67,6 +73,17 @@ module Ameba::Rule::Style
 
       expect_correction source, <<-CRYSTAL
         (1..3).map(&.to_s.split.reverse.join.strip)
+        CRYSTAL
+    end
+
+    it "reports if there is a call with a collapsible block (with block argument)" do
+      source = expect_issue subject, <<-CRYSTAL
+        (1..3).map { |i| i.each(&block) }
+             # ^^^^^^^^^^^^^^^^^^^^^^^^^^ error: Use short block notation instead: `map(&.each(&block))`
+        CRYSTAL
+
+      expect_correction source, <<-CRYSTAL
+        (1..3).map(&.each(&block))
         CRYSTAL
     end
 
