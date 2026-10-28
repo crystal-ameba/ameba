@@ -178,12 +178,23 @@ module Ameba::JSONSchema
           {% for key, key_paths in properties %}
             {{ builder }}.string({{ key }})
             {{ builder }}.object do
-              ::Ameba::JSONSchema.write_type({{ builder }}, {{ rule }}, {{ key_paths.splat }})
+              # `additionalProperties` doesn't apply to the keys within `properties`,
+              # so the values of hashes (within the same union) are admitted here too
+              ::Ameba::JSONSchema.write_type({{ builder }}, {{ rule }}, {{ (key_paths + additional_properties).splat }})
 
               {% if named_tuple_defaults %}
                 if (%named_tuple = {{ default }}).is_a?(NamedTuple)
                   {{ builder }}.string("default")
                   ::Ameba::JSONSchema.write_value({{ builder }}, %named_tuple[{{ key.id.symbolize }}])
+                end
+              {% end %}
+
+              {% if hash_defaults %}
+                if (%hash = {{ default }}).is_a?(Hash)
+                  if %entry = %hash.find { |%hash_key, _| %hash_key.to_s == {{ key }} }
+                    {{ builder }}.string("default")
+                    ::Ameba::JSONSchema.write_value({{ builder }}, %entry[1])
+                  end
                 end
               {% end %}
             end

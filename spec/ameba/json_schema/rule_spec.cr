@@ -59,6 +59,8 @@ module Ameba
       either "a", as: String | Array(String)
       sequence [] of String, as: Array(String) | {String, Int32}
       either_map({"a" => 1}, as: Hash(String, Int32) | NamedTuple(a: Int32))
+      mixed_map({"b" => "s"}, as: Hash(String, String) | NamedTuple(a: Int32))
+      mixed_sequences({"b" => ["s"]}, as: Hash(String, Array(String)) | NamedTuple(a: Tuple(String, Int32)))
       levels [Severity::Warning]
     end
   end
@@ -229,12 +231,44 @@ module Ameba
           properties["EitherMap"].should eq JSON.parse(<<-JSON)
             {
               "type": "object",
-              "properties": {"a": {"type": "integer"}},
+              "properties": {"a": {"type": "integer", "default": 1}},
               "additionalProperties": {"type": "integer"},
               "default": {"a": 1}
             }
             JSON
         end
+      end
+
+      it "admits hash values at the named tuple keys within the same union" do
+        with_properties_schema(SchemaRule) do |properties|
+          properties["MixedMap"].should eq JSON.parse(<<-JSON)
+            {
+              "type": "object",
+              "properties": {
+                "a": {"type": ["integer", "string"]},
+                "b": {"type": "string", "default": "s"}
+              },
+              "additionalProperties": {"type": "string"},
+              "default": {"b": "s"}
+            }
+            JSON
+
+          # Tuples don't impose their size on arrays accepted through the hash
+          properties["MixedSequences"].should eq JSON.parse(<<-JSON)
+            {
+              "type": "object",
+              "properties": {
+                "a": {"type": "array", "items": {"type": ["string", "integer"]}},
+                "b": {"type": "array", "items": {"type": "string"}, "default": ["s"]}
+              },
+              "additionalProperties": {"type": "array", "items": {"type": "string"}},
+              "default": {"b": ["s"]}
+            }
+            JSON
+        end
+
+        SchemaRule.from_yaml("MixedMap: {a: valid}").mixed_map
+          .should eq({"a" => "valid"})
       end
 
       it "describes built-in properties only if their defaults differ" do
