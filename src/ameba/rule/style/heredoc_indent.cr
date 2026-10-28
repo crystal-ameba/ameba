@@ -99,9 +99,7 @@ module Ameba::Rule::Style
 
             # Whitespace-only lines within the indentation have no content
             if line.blank? && line.size <= dedent
-              # Unlike a whitespace-only one, the last empty body line doesn't
-              # contribute a newline, hence it's followed by another empty line
-              next idx == source_lines.size - 2 ? "\n" : ""
+              next blank_line(correct_indent, idx == source_lines.size - 2)
             end
 
             "#{" " * correct_indent}#{line[dedent..]}"
@@ -110,6 +108,15 @@ module Ameba::Rule::Style
 
         corrector.replace(node, corrected_code)
       end
+    end
+
+    private def blank_line(correct_indent, last_body_line) : String
+      return "" unless last_body_line
+
+      # Unlike a whitespace-only one, the last empty body line doesn't
+      # contribute a newline, hence it keeps the indentation, or is
+      # followed by another empty line if there's none
+      correct_indent.zero? ? "\n" : " " * correct_indent
     end
 
     private def line_indent(source, location) : Int32

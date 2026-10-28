@@ -158,8 +158,7 @@ module Ameba::Rule::Style
       expect_correction source, <<-CRYSTAL
         <<-HTML
           <article/>
-
-
+        #{"  "}
           HTML
         CRYSTAL
     end
@@ -304,8 +303,7 @@ module Ameba::Rule::Style
           expect_correction source, <<-CRYSTAL
             <<-HTML
               <article/>
-
-
+            #{"  "}
               HTML
             CRYSTAL
         end
