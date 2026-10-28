@@ -60,6 +60,20 @@ module Ameba
           fizz
           CRYSTAL
       end
+
+      it "works with CRLF line endings" do
+        source = Source.new("foo\r\nbar\r\nfizz\r\nbuzz")
+
+        location = Crystal::Location.new("", 2, 1)
+        end_location = Crystal::Location.new("", 3, 4)
+
+        range = Range.new(
+          source.pos(location),
+          source.pos(end_location, end: true),
+          exclusive: true,
+        )
+        source.code[range].should eq "bar\r\nfizz"
+      end
     end
 
     describe "#correct!" do
