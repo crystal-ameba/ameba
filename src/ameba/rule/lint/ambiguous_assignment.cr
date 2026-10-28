@@ -36,7 +36,19 @@ module Ameba::Rule::Lint
     }
 
     def test(source, node : Crystal::Assign)
-      return unless op_end_location = node.value.location
+      check_value(source, node.value)
+    end
+
+    # Setter method calls, i.e. `x.foo =-1` or `x[0] =-1`
+    def test(source, node : Crystal::Call)
+      return unless setter_method?(node)
+      return unless value = node.args.last?
+
+      check_value(source, value)
+    end
+
+    private def check_value(source, value)
+      return unless op_end_location = value.location
 
       op_location = op_end_location.adjust(column_number: -1)
       op_text = source_between(op_location, op_end_location, source.lines)
