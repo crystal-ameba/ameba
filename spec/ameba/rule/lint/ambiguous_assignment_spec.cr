@@ -117,5 +117,25 @@ module Ameba::Rule::Lint
           CRYSTAL
       end
     end
+
+    it "reports setter method calls" do
+      expect_issue subject, <<-CRYSTAL
+        x.foo =-1
+            # ^^ error: Suspicious assignment detected. Did you mean `-=`?
+        x[0] =+1
+           # ^^ error: Suspicious assignment detected. Did you mean `+=`?
+        x[0, 1] =! y
+              # ^^ error: Suspicious assignment detected. Did you mean `!=`?
+        CRYSTAL
+    end
+
+    it "does not report setter method calls without mistypes" do
+      expect_no_issues subject, <<-CRYSTAL
+        x.foo = -1
+        x[0] = +1
+        x[0] = !y
+        x.foo= -1
+        CRYSTAL
+    end
   end
 end
