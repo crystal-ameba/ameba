@@ -21,7 +21,7 @@ module Ameba::Rule::Style
     it "reports and autocorrects simple negated condition" do
       source = expect_issue subject, <<-CRYSTAL
         unless !foo
-        # ^^^^^^^^^ error: Avoid negated conditions in `unless` blocks
+             # ^^^^ error: Avoid negated conditions in `unless` blocks
           :foo
         end
         CRYSTAL
@@ -36,7 +36,7 @@ module Ameba::Rule::Style
     it "reports and autocorrects negated method call" do
       source = expect_issue subject, <<-CRYSTAL
         unless !foo.empty?
-        # ^^^^^^^^^^^^^^^^ error: Avoid negated conditions in `unless` blocks
+             # ^^^^^^^^^^^ error: Avoid negated conditions in `unless` blocks
           :ok
         end
         CRYSTAL
@@ -51,7 +51,7 @@ module Ameba::Rule::Style
     it "reports and autocorrects parenthesized negated expression" do
       source = expect_issue subject, <<-CRYSTAL
         unless !(a || b)
-        # ^^^^^^^^^^^^^^ error: Avoid negated conditions in `unless` blocks
+             # ^^^^^^^^^ error: Avoid negated conditions in `unless` blocks
           :ok
         end
         CRYSTAL
@@ -66,7 +66,7 @@ module Ameba::Rule::Style
     it "reports and autocorrects unless with else" do
       source = expect_issue subject, <<-CRYSTAL
         unless !foo
-        # ^^^^^^^^^ error: Avoid negated conditions in `unless` blocks
+             # ^^^^ error: Avoid negated conditions in `unless` blocks
           :ok
         else
           :nok
@@ -85,7 +85,7 @@ module Ameba::Rule::Style
     it "reports and autocorrects suffix unless" do
       source = expect_issue subject, <<-CRYSTAL
         :ok unless !foo
-        # ^^^^^^^^^^^^^ error: Avoid negated conditions in `unless` blocks
+                 # ^^^^ error: Avoid negated conditions in `unless` blocks
         CRYSTAL
 
       expect_correction source, <<-CRYSTAL
@@ -96,7 +96,7 @@ module Ameba::Rule::Style
     it "reports and autocorrects multiline condition with negation" do
       source = expect_issue subject, <<-CRYSTAL
         unless !
-        # ^^^^^^ error: Avoid negated conditions in `unless` blocks
+             # ^ error: Avoid negated conditions in `unless` blocks
           foo
           :ok
         end
@@ -113,7 +113,7 @@ module Ameba::Rule::Style
     it "fails if one of AND conditions is negated" do
       source = expect_issue subject, <<-CRYSTAL
         unless a && !b
-        # ^^^^^^^^^^^^ error: Avoid negated conditions in `unless` blocks
+             # ^^^^^^^ error: Avoid negated conditions in `unless` blocks
           :nok
         end
         CRYSTAL
@@ -124,7 +124,7 @@ module Ameba::Rule::Style
     it "fails if one of OR conditions is negated" do
       source = expect_issue subject, <<-CRYSTAL
         unless a || !b
-        # ^^^^^^^^^^^^ error: Avoid negated conditions in `unless` blocks
+             # ^^^^^^^ error: Avoid negated conditions in `unless` blocks
           :nok
         end
         CRYSTAL
@@ -135,7 +135,7 @@ module Ameba::Rule::Style
     it "fails if one of inner conditions is negated" do
       source = expect_issue subject, <<-CRYSTAL
         unless a && (b || !c)
-        # ^^^^^^^^^^^^^^^^^^^ error: Avoid negated conditions in `unless` blocks
+             # ^^^^^^^^^^^^^^ error: Avoid negated conditions in `unless` blocks
           :nok
         end
         CRYSTAL

@@ -37,14 +37,15 @@ module Ameba::Rule::Style
     MSG = "Avoid negated conditions in `unless` blocks"
 
     def test(source, node : Crystal::Unless)
-      return unless negated_condition?(node.cond)
+      cond = node.cond
+      return unless negated_condition?(cond)
 
-      if (not_node = node.cond).is_a?(Crystal::Not)
-        issue_for(node, MSG) do |corrector|
-          correct(corrector, source, node, not_node)
+      if cond.is_a?(Crystal::Not)
+        issue_for(cond, MSG) do |corrector|
+          correct(corrector, source, node, cond)
         end
       else
-        issue_for(node, MSG)
+        issue_for(cond, MSG)
       end
     end
 
