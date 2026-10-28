@@ -229,7 +229,7 @@ module Ameba::Rule::Style
                        when ends_with_block
                          block
                        else
-                         block.location.try(&.adjust(column_number: -2))
+                         block_preceding_location(block, source)
                        end
                      end
       end_location ||= node.block_arg
@@ -249,6 +249,32 @@ module Ameba::Rule::Style
         end_location
       when Crystal::ASTNode
         end_location.end_location
+      end
+    end
+
+    # Returns the location of the last character preceding the *block*,
+    # skipping any whitespace and line continuations in between.
+    #
+    #     foo.bar baz \
+    #               ^--- x
+    #       do |what|
+    #       # ...
+    #     end
+    #
+    private def block_preceding_location(block, source)
+      return unless location = block.location
+
+      line_number = location.line_number
+      code = source.lines[line_number - 1]?.try(&.[0, location.column_number - 1]?)
+
+      while code
+        code = code.rstrip
+        return location.with(line_number, code.size) unless code.empty?
+
+        line_number -= 1
+        break unless line_number.positive?
+
+        code = source.lines[line_number - 1]?.try(&.rstrip.rchop('\\'))
       end
     end
 

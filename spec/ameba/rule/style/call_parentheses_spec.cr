@@ -194,6 +194,38 @@ module Ameba::Rule::Style
       expect_no_corrections source
     end
 
+    it "fails for method call with block, preceded by multiple spaces" do
+      source = expect_issue subject, <<-CRYSTAL
+        foo 1   do |x|
+        # ^^^ error: Missing parentheses in method call
+          x
+        end
+        CRYSTAL
+
+      expect_correction source, <<-CRYSTAL
+        foo(1)   do |x|
+          x
+        end
+        CRYSTAL
+    end
+
+    it "fails for method call with block, preceded by a line continuation" do
+      source = expect_issue subject, <<-CRYSTAL
+        foo 1 \\
+        # ^^^ error: Missing parentheses in method call
+          do |x|
+          x
+        end
+        CRYSTAL
+
+      expect_correction source, <<-CRYSTAL
+        foo(1) \\
+          do |x|
+          x
+        end
+        CRYSTAL
+    end
+
     it "fails without correcting nested method call with block, preceded by multi-byte characters" do
       rule = subject.class.new
       rule.exclude_multiline_calls = true
