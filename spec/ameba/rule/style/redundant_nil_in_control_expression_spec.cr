@@ -80,6 +80,24 @@ module Ameba::Rule::Style
         CRYSTAL
     end
 
+    it "reports `return nil` constructs with a line continuation" do
+      source = expect_issue subject, <<-CRYSTAL
+        def foo(x)
+          return \\
+            nil if x
+          # ^^^ error: Redundant `nil` detected
+          :bar
+        end
+        CRYSTAL
+
+      expect_correction source, <<-CRYSTAL
+        def foo(x)
+          return if x
+          :bar
+        end
+        CRYSTAL
+    end
+
     it "reports `next nil` constructs" do
       source = expect_issue subject, <<-CRYSTAL
         def foo

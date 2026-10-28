@@ -49,7 +49,8 @@ module Ameba::Rule::Style
         issue_for(exp, MSG)
       else
         issue_for(exp, MSG) do |corrector|
-          corrector.replace(node, node_code.sub(/\s*\(?nil\)?$/, ""))
+          # Keep just the keyword (`return`, `next`, `break`)
+          corrector.replace(node, node_code[/\A\w+/])
         end
       end
     end
