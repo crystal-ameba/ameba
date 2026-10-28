@@ -41,5 +41,16 @@ module Ameba::Rule::Style
         Hash(Int32, Int32).new
         CRYSTAL
     end
+
+    it "keeps the original type code" do
+      source = expect_issue subject, <<-CRYSTAL
+        a = {} of ::String => Array(Int32?)
+          # ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ error: Use `Hash(::String, Array(Int32?)).new` for creating an empty hash
+        CRYSTAL
+
+      expect_correction source, <<-CRYSTAL
+        a = Hash(::String, Array(Int32?)).new
+        CRYSTAL
+    end
   end
 end

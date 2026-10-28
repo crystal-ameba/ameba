@@ -20,6 +20,8 @@ module Ameba::Rule::Style
   #   Enabled: true
   # ```
   class ArrayLiteralSyntax < Base
+    include AST::Util
+
     properties do
       since_version "1.7.0"
       enabled false
@@ -34,6 +36,8 @@ module Ameba::Rule::Style
 
     def test(source, node : Crystal::ArrayLiteral)
       return unless node.elements.empty? && (array_type = node.of)
+
+      array_type = node_source(array_type, source.lines) || array_type
 
       issue_for(node, MSG % array_type) do |corrector|
         corrector.replace(node, "Array(#{array_type}).new")
