@@ -25,6 +25,32 @@ module Ameba::Rule::Performance
         CRYSTAL
     end
 
+    it "reports if there is any? call within a short block" do
+      source = expect_issue subject, <<-CRYSTAL
+        [[1], [] of Int32].select(&.any?)
+                                  # ^^^^ error: Use `{...}.present?` instead of `{...}.any?`
+        CRYSTAL
+
+      expect_correction source, <<-CRYSTAL
+        [[1], [] of Int32].select(&.present?)
+        CRYSTAL
+    end
+
+    it "reports and keeps the receiver code intact" do
+      source = expect_issue subject, <<-CRYSTAL
+        foo(1, # comment
+          2)
+          .any?
+         # ^^^^ error: Use `{...}.present?` instead of `{...}.any?`
+        CRYSTAL
+
+      expect_correction source, <<-CRYSTAL
+        foo(1, # comment
+          2)
+          .present?
+        CRYSTAL
+    end
+
     it "does not report if source is a spec" do
       expect_no_issues subject, <<-CRYSTAL, "source_spec.cr"
         [1, 2, 3].any?
