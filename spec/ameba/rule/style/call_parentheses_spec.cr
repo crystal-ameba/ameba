@@ -194,6 +194,20 @@ module Ameba::Rule::Style
       expect_no_corrections source
     end
 
+    it "fails without correcting nested method call with block, preceded by multi-byte characters" do
+      rule = subject.class.new
+      rule.exclude_multiline_calls = true
+
+      source = expect_issue rule, <<-CRYSTAL
+        foo bar "żółć", 1 do |x|
+          # ^^^^^^^^^^^^^ error: Missing parentheses in method call
+          x
+        end
+        CRYSTAL
+
+      expect_no_corrections source
+    end
+
     it "passes for multiline nested method call with block if multiline calls are excluded" do
       rule = subject.class.new
       rule.exclude_multiline_calls = true

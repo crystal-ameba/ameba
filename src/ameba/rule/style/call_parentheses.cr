@@ -157,10 +157,11 @@ module Ameba::Rule::Style
     # its `do ... end` block being passed to the outer call instead, i.e.
     # in case of `foo bar 1 do ... end`, where the block is passed to `bar`.
     private def rebinds_block?(node, visitor, source)
-      return false unless (block = node.block) && do_block?(block, source)
+      return false unless block = node.block
       return false unless outer_call = visitor.argument_of
+      return false if outer_call.has_parentheses?
 
-      !outer_call.has_parentheses?
+      do_block?(block, source)
     end
 
     private def do_block?(node : Crystal::Block, source)
