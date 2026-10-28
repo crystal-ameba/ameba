@@ -143,6 +143,16 @@ module Ameba::AST::Util
     end
   end
 
+  # Returns the only argument of the block *node*, bound to the yielded value
+  # as a whole (i.e. `foo` in `|foo|`), or `nil` if there's no such argument
+  # (i.e. in `||`, `|foo, bar|`, `|*foo|` or `|(foo, bar)|`).
+  def single_block_arg(node : Crystal::Block) : Crystal::Var?
+    return unless node.args.size == 1
+    return if node.splat_index || node.unpacks.try(&.has_key?(0))
+
+    node.args.first
+  end
+
   # Returns the path name of the *path*.
   #
   # If *include_global* is `true` (default), the global prefix `::` is included.

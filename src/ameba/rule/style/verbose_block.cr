@@ -57,9 +57,7 @@ module Ameba::Rule::Style
       #        ^---    ^  ^------------
       #        block  arg  body
       # ```
-      return unless (block = node.block) && block.args.size == 1
-
-      arg = block.args.first
+      return unless (block = node.block) && (arg = single_block_arg(block))
 
       # we filter out the blocks that are of call type - `i.to_i64.odd?`
       return unless (body = block.body).is_a?(Crystal::Call)
