@@ -57,5 +57,16 @@ module Ameba::Rule::Lint
         "0x#{250.to_s(base: 16)}"
         CRYSTAL
     end
+
+    it "removes the whitespace preceding the `to_s` call" do
+      source = expect_issue subject, <<-'CRYSTAL'
+        "#{name .to_s}"
+               # ^^^^ error: Redundant use of `Object#to_s` in interpolation
+        CRYSTAL
+
+      expect_correction source, <<-'CRYSTAL'
+        "#{name}"
+        CRYSTAL
+    end
   end
 end

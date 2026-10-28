@@ -95,5 +95,20 @@ module Ameba::Rule::Lint
           CRYSTAL
       end
     end
+
+    it "removes the whitespace preceding the `not_nil!` call" do
+      source = expect_issue subject, <<-CRYSTAL
+        (1..3).index(1)
+             # ^^^^^^^^ error: Use `index! {...}` instead of `index {...}.not_nil!`
+          .not_nil!
+        (1..3).index(1) .not_nil!
+             # ^^^^^^^^^^^^^^^^^^ error: Use `index! {...}` instead of `index {...}.not_nil!`
+        CRYSTAL
+
+      expect_correction source, <<-CRYSTAL
+        (1..3).index!(1)
+        (1..3).index!(1)
+        CRYSTAL
+    end
   end
 end

@@ -36,20 +36,24 @@ module Ameba::Rule::Performance
     end
 
     def test(source, node : Crystal::Call)
-      return unless node.name == "compact" && (obj = node.obj)
+      return unless node.name == "compact"
       return if has_arguments?(node) || has_block?(node)
 
-      return unless obj.is_a?(Crystal::Call) && has_block?(obj)
+      return unless (obj = node.obj).is_a?(Crystal::Call) && has_block?(obj)
       return unless obj.name == "map"
       return if has_arguments?(obj)
 
       return unless name_location = name_location(obj)
       return unless name_location_end = name_end_location(obj)
       return unless end_location = name_end_location(node)
+      return unless obj_end_location = obj.end_location
 
       issue_for(name_location, end_location, MSG) do |corrector|
         corrector.replace(name_location, name_location_end, "compact_map")
-        corrector.remove_trailing(node, {{ ".compact".size }})
+        # Remove the whitespace preceding the `.compact` call as well
+        corrector.remove(
+          source.pos(obj_end_location, end: true)...source.pos(end_location, end: true)
+        )
       end
     end
   end

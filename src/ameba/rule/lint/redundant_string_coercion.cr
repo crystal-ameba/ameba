@@ -34,12 +34,13 @@ module Ameba::Rule::Lint
       each_string_coercion_node(node) do |expr|
         begin_location = name_location(expr)
         end_location = expr.end_location
+        obj_end_location = expr.obj.try(&.end_location)
 
-        if begin_location && end_location
+        if begin_location && end_location && obj_end_location
           issue_for(begin_location, end_location, MSG) do |corrector|
+            # Remove the whitespace preceding the `.to_s` call as well
             corrector.remove(
-              begin_location.adjust(column_number: -1),
-              end_location,
+              source.pos(obj_end_location, end: true)...source.pos(end_location, end: true)
             )
           end
         else
