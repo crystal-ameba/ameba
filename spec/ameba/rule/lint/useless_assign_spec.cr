@@ -686,6 +686,36 @@ module Ameba::Rule::Lint
           CRYSTAL
       end
 
+      it "reports if a splat assign is not referenced" do
+        expect_issue subject, <<-CRYSTAL
+          def method
+            a, *b = 1, 2, 3
+              # ^ error: Useless assignment to variable `b`
+            a
+          end
+          CRYSTAL
+      end
+
+      it "reports if a splat assign is reassigned before being referenced" do
+        expect_issue subject, <<-CRYSTAL
+          def method
+            a, *b = 1, 2, 3
+              # ^ error: Useless assignment to variable `b`
+            b = [] of Int32
+            a + b.size
+          end
+          CRYSTAL
+      end
+
+      it "does not report if a splat assign is referenced" do
+        expect_no_issues subject, <<-CRYSTAL
+          def method
+            a, *b = 1, 2, 3
+            a + b.size
+          end
+          CRYSTAL
+      end
+
       it "reports if both assigns are not referenced" do
         expect_issue subject, <<-CRYSTAL
           def method

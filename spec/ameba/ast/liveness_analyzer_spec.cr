@@ -648,6 +648,16 @@ module Ameba::AST
     end
 
     context "multi assignments" do
+      it "reports unused multi-assign splat target" do
+        scope = def_scope <<-CRYSTAL
+          def foo
+            a, *b = 1, 2, 3
+            a
+          end
+          CRYSTAL
+        dead_store_names(scope).should eq ["b"]
+      end
+
       it "does not report when all targets are used" do
         scope = def_scope <<-CRYSTAL
           def foo

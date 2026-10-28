@@ -191,8 +191,8 @@ module Ameba::AST
 
     private def propagate_through(node : Crystal::MultiAssign, live : LiveSet, mark = true) : LiveSet
       node.targets.reverse_each do |target|
-        if target.is_a?(Crystal::Var) && target.name.in?(@var_names)
-          live = remove_from_live_set(node, target.name, live, mark)
+        if (var = Util.assigned_var(target)) && var.name.in?(@var_names)
+          live = remove_from_live_set(node, var.name, live, mark)
         end
       end
       propagate_through(node.values, live, mark)

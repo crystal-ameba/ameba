@@ -149,17 +149,11 @@ module Ameba::AST
       propagate(children, defined)
     end
 
-    private def define(target : Crystal::Var, defined : DefinedSet) : DefinedSet
-      return defined if target.name.in?(defined)
-      defined.dup << target.name
-    end
-
-    private def define(target : Crystal::Splat, defined : DefinedSet) : DefinedSet
-      define(target.exp, defined)
-    end
-
     private def define(target, defined : DefinedSet) : DefinedSet
-      defined
+      return defined unless var = Util.assigned_var(target)
+      return defined if var.name.in?(defined)
+
+      defined.dup << var.name
     end
 
     private def merge_branches(base : DefinedSet, branches) : DefinedSet

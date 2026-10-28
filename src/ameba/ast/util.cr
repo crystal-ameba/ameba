@@ -153,6 +153,14 @@ module Ameba::AST::Util
     node.args.first
   end
 
+  # Returns the local variable assigned by the given assignment *target*,
+  # unwrapping the splat (i.e. `b` in `a, *b = 1, 2, 3`), or `nil` if it's not
+  # a local variable (i.e. an instance variable, or an underscore).
+  def assigned_var(target : Crystal::ASTNode) : Crystal::Var?
+    target = target.exp if target.is_a?(Crystal::Splat)
+    target.as?(Crystal::Var)
+  end
+
   # Returns the path name of the *path*.
   #
   # If *include_global* is `true` (default), the global prefix `::` is included.
