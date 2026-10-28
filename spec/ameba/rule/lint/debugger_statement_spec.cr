@@ -35,5 +35,23 @@ module Ameba::Rule::Lint
         a = a + 1
         CRYSTAL
     end
+
+    it "fails if there is a debugger statement with a suffix condition" do
+      source = expect_issue subject, <<-CRYSTAL
+        a = 2
+        debugger if a > 1
+        # ^^^^^^ error: Possibly forgotten `debugger` statement detected
+        debugger unless a.zero?
+        # ^^^^^^ error: Possibly forgotten `debugger` statement detected
+        a = a + 1
+        CRYSTAL
+
+      expect_correction source, <<-CRYSTAL
+        a = 2
+
+
+        a = a + 1
+        CRYSTAL
+    end
   end
 end
