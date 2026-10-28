@@ -64,5 +64,55 @@ module Ameba::Rule::Style
         (a || b).nil?
         CRYSTAL
     end
+
+    it "reports and ignores `is_a?` within comments" do
+      source = expect_issue subject, <<-CRYSTAL
+        a.is_a?( # is_a?
+          Nil)
+        # ^^^ error: Use `nil?` instead of `is_a?(Nil)`
+        b.is_a?(Nil # is_a?
+              # ^^^ error: Use `nil?` instead of `is_a?(Nil)`
+        )
+        c = is_a?( # is_a?
+          Nil)
+        # ^^^ error: Use `nil?` instead of `is_a?(Nil)`
+        [1, nil].reject(&.is_a?( # is_a?
+          Nil))
+        # ^^^ error: Use `nil?` instead of `is_a?(Nil)`
+        CRYSTAL
+
+      expect_correction source, <<-CRYSTAL
+        a.nil?
+        b.nil?
+        c = self.nil?
+        [1, nil].reject(&.nil?)
+        CRYSTAL
+    end
+
+    it "reports and ignores `is_a?` within the receiver" do
+      source = expect_issue subject, <<-CRYSTAL
+        a.is_a?(Int32).is_a?(Nil)
+                           # ^^^ error: Use `nil?` instead of `is_a?(Nil)`
+        CRYSTAL
+
+      expect_correction source, <<-CRYSTAL
+        a.is_a?(Int32).nil?
+        CRYSTAL
+    end
+
+    it "reports and keeps the heredoc receiver intact" do
+      source = expect_issue subject, <<-CRYSTAL
+        <<-FOO.is_a?(Nil)
+                   # ^^^ error: Use `nil?` instead of `is_a?(Nil)`
+          is_a?
+          FOO
+        CRYSTAL
+
+      expect_correction source, <<-CRYSTAL
+        <<-FOO.nil?
+          is_a?
+          FOO
+        CRYSTAL
+    end
   end
 end

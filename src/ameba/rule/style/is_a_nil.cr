@@ -46,12 +46,27 @@ module Ameba::Rule::Style
 
     # Returns the range spanning from the `is_a?` name to the end of the *node*.
     private def nil_check_range(source, node)
+      return unless location = node.location
       return unless end_location = node.end_location
 
       end_pos = source.pos(end_location, end: true)
-      return unless start_pos = source.code.rindex("is_a?", end_pos)
 
-      start_pos...end_pos
+      # Skip the receiver code, unless it's an implicit one (no end location)
+      # or a heredoc (ends past the node)
+      if (obj_end_location = node.obj.end_location) && source.pos(obj_end_location) < end_pos
+        location = obj_end_location.adjust(column_number: 1)
+      end
+
+      lexer = Crystal::Lexer.new(source.code[source.pos(location)...end_pos])
+      lexer.line_number = location.line_number
+      lexer.column_number = location.column_number
+
+      until (token = lexer.next_token).type.eof?
+        if token.keyword?(Crystal::Keyword::IS_A_QUESTION)
+          return source.pos(token.location)...end_pos
+        end
+      end
+    rescue Crystal::SyntaxException
     end
 
     # Receiver-less call, i.e. `is_a?(Nil)`
