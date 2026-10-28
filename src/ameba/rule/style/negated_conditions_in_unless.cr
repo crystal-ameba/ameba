@@ -27,8 +27,6 @@ module Ameba::Rule::Style
   #   Enabled: true
   # ```
   class NegatedConditionsInUnless < Base
-    include AST::Util
-
     properties do
       since_version "0.2.0"
       description "Disallows negated conditions in `unless`"
@@ -42,28 +40,28 @@ module Ameba::Rule::Style
 
       if cond.is_a?(Crystal::Not)
         issue_for(cond, MSG) do |corrector|
-          correct(corrector, source, node, cond)
+          correct(corrector, source, cond)
         end
       else
         issue_for(cond, MSG)
       end
     end
 
-    private def correct(corrector, source, node, not_node)
-      return unless node_location = node.location
-      return unless not_node_location = not_node.location
+    private def correct(corrector, source, not_node)
+      return unless location = not_node.location
 
-      if suffix?(node)
-        return unless idx = source.lines[node_location.line_number - 1].index("unless")
-        node_location = node_location.with(column_number: idx + 1)
-      end
+      # The `unless` keyword is directly followed by the negated condition,
+      # both in the regular and in the suffix form
+      code = source.code
+      not_pos = source.pos(location)
 
-      corrector.replace(
-        node_location,
-        node_location.adjust(column_number: {{ "unless".size - 1 }}),
-        "if",
-      )
-      corrector.remove(not_node_location, not_node_location)
+      return unless keyword_pos = code.rindex("unless", not_pos - {{ "unless".size }})
+      keyword_range = keyword_pos...keyword_pos + {{ "unless".size }}
+
+      return unless code[keyword_range.end...not_pos].blank?
+
+      corrector.replace(keyword_range, "if")
+      corrector.remove(location, location)
     end
 
     private def negated_condition?(node)

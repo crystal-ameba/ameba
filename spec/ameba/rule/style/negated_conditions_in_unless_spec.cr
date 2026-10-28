@@ -93,6 +93,33 @@ module Ameba::Rule::Style
         CRYSTAL
     end
 
+    it "reports and autocorrects suffix unless preceded by `unless` text" do
+      source = expect_issue subject, <<-CRYSTAL
+        unless_foo = 1 unless !foo
+                            # ^^^^ error: Avoid negated conditions in `unless` blocks
+        puts "unless" unless !bar
+                           # ^^^^ error: Avoid negated conditions in `unless` blocks
+        CRYSTAL
+
+      expect_correction source, <<-CRYSTAL
+        unless_foo = 1 if foo
+        puts "unless" if bar
+        CRYSTAL
+    end
+
+    it "reports and autocorrects suffix unless with a multiline body" do
+      source = expect_issue subject, <<-CRYSTAL
+        foo(1,
+          2) unless !bar
+                  # ^^^^ error: Avoid negated conditions in `unless` blocks
+        CRYSTAL
+
+      expect_correction source, <<-CRYSTAL
+        foo(1,
+          2) if bar
+        CRYSTAL
+    end
+
     it "reports and autocorrects multiline condition with negation" do
       source = expect_issue subject, <<-CRYSTAL
         unless !
