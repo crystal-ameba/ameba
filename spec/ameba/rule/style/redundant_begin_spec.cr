@@ -205,6 +205,31 @@ module Ameba::Rule::Style
         CRYSTAL
     end
 
+    it "fails if there is a redundant block in a method with multiple args with nested parentheses" do
+      source = expect_issue subject, <<-CRYSTAL
+        def method(a = foo(1),
+                   b = (2))
+          begin
+        # ^^^^^ error: Redundant `begin` block detected
+            open_file
+          ensure
+            close_file
+          end
+        end
+        CRYSTAL
+
+      expect_correction source, <<-CRYSTAL
+        def method(a = foo(1),
+                   b = (2))
+         #{trailing_whitespace}
+            open_file
+          ensure
+            close_file
+         #{trailing_whitespace}
+        end
+        CRYSTAL
+    end
+
     it "doesn't report if there is an inner redundant block" do
       expect_no_issues subject, <<-CRYSTAL
         def method

@@ -117,7 +117,8 @@ module Ameba::Rule::Style
     end
 
     private def def_redundant_begin_loc(lexer)
-      in_body = in_argument_list = false
+      in_body = false
+      parens_depth = 0
 
       loop do
         token = lexer.next_token
@@ -130,11 +131,11 @@ module Ameba::Rule::Style
           return unless token.value == Crystal::Keyword::BEGIN
           return token.location
         when .op_lparen?
-          in_argument_list = true
+          parens_depth += 1
         when .op_rparen?
-          in_argument_list = false
+          parens_depth -= 1
         when .newline?
-          in_body = true unless in_argument_list
+          in_body = true if parens_depth.zero?
         when .space?
           # ignore
         else
