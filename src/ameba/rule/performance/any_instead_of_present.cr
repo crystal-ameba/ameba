@@ -42,14 +42,19 @@ module Ameba::Rule::Performance
     end
 
     def test(source, node : Crystal::Call)
-      return unless node.name == "any?" && (obj = node.obj)
+      return unless node.name == "any?" && node.obj
       return if has_arguments?(node) || has_block?(node)
 
-      issue_for(node, MSG, prefer_name_location: true) do |corrector|
-        obj_code =
-          node_source(obj, source.lines)
+      name_location, end_location =
+        name_location(node), name_end_location(node)
 
-        corrector.replace(node, "#{obj_code}.present?")
+      unless name_location && end_location
+        issue_for(node, MSG, prefer_name_location: true)
+        return
+      end
+
+      issue_for(name_location, end_location, MSG) do |corrector|
+        corrector.replace(name_location, end_location, "present?")
       end
     end
   end
