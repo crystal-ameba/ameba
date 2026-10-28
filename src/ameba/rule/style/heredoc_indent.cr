@@ -98,7 +98,11 @@ module Ameba::Rule::Style
               idx == source_lines.size - 1 ? heredoc_indent : body_dedent
 
             # Whitespace-only lines within the indentation have no content
-            next "" if line.blank? && line.size <= dedent
+            if line.blank? && line.size <= dedent
+              # Unlike a whitespace-only one, the last empty body line doesn't
+              # contribute a newline, hence it's followed by another empty line
+              next idx == source_lines.size - 2 ? "\n" : ""
+            end
 
             "#{" " * correct_indent}#{line[dedent..]}"
           end
