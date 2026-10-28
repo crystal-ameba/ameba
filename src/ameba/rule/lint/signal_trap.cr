@@ -19,6 +19,11 @@ module Ameba::Rule::Lint
   # end
   # ```
   #
+  # NOTE: The issues are not autocorrected, since `Process.on_terminate`
+  # sets a single handler for all of the INT, HUP and TERM signals (so the
+  # subsequent calls replace the previous handler), and yields
+  # a `Process::ExitReason` instead of a `Signal`.
+  #
   # YAML configuration example:
   #
   # ```
@@ -40,11 +45,8 @@ module Ameba::Rule::Lint
       return unless path_named?(obj, "Signal::INT", "Signal::HUP", "Signal::TERM")
       return unless node.name == "trap"
 
-      if (name_location = name_location(node)) && (name_end_location = name_end_location(node))
-        issue_for(node.location, name_end_location, MSG % obj) do |corrector|
-          corrector.replace(obj, "Process")
-          corrector.replace(name_location, name_end_location, "on_terminate")
-        end
+      if name_end_location = name_end_location(node)
+        issue_for(node.location, name_end_location, MSG % obj)
       else
         issue_for(node, MSG % obj)
       end
