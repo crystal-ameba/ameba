@@ -54,6 +54,23 @@ module Ameba::Rule::Lint
             end
             CRYSTAL
         end
+
+        it "fails for `initialize` method definition with a spaced out `self` receiver" do
+          source = expect_issue subject, <<-CRYSTAL
+            {{ keyword }} Foo
+              def self . initialize
+            # ^^^^^^^^^^^^^^^^^^^^^ error: `initialize` method definition should not have a receiver
+              end
+            end
+            CRYSTAL
+
+          expect_correction source, <<-CRYSTAL
+            {{ keyword }} Foo
+              def initialize
+              end
+            end
+            CRYSTAL
+        end
       end
     {% end %}
   end
