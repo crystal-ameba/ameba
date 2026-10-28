@@ -83,7 +83,7 @@ module Ameba::Rule::Documentation
     end
 
     private def valid_example?(doc : String)
-      !require_example? || doc.matches?(/^\s*```\n/m)
+      !require_example? || doc.matches?(/^\s*```(?:crystal)?\n/m)
     end
   end
 end

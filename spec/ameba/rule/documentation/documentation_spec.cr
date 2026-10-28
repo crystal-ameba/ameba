@@ -172,6 +172,31 @@ module Ameba::Rule::Documentation
             end
             CRYSTAL
         end
+
+        it "passes if there is a documented public type with crystal-tagged example" do
+          expect_no_issues rule, <<-CRYSTAL
+            # Foo documentation
+            #
+            # ```crystal
+            # foo = Foo.new
+            # ```
+            class Foo
+            end
+            CRYSTAL
+        end
+
+        it "fails if there is a documented public type with non-crystal example" do
+          expect_issue rule, <<-CRYSTAL
+            # Foo documentation
+            #
+            # ```text
+            # foo
+            # ```
+            class Foo
+            # ^^^^^^^ error: Missing documentation example
+            end
+            CRYSTAL
+        end
       end
     end
   end
