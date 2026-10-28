@@ -79,14 +79,33 @@ module Ameba::Rule::Lint
         end
         end_location ||= name_end_location
 
+        # Parameters can be passed by name, so we keep their external name
+        replacement =
+          if named_parameter?(scope, node)
+            "#{argument.name} #{name_suggestion}"
+          else
+            name_suggestion.to_s
+          end
+
         if location && name_end_location && end_location
           issue_for(location, end_location, message) do |corrector|
-            corrector.replace(location, name_end_location, name_suggestion)
+            corrector.replace(location, name_end_location, replacement)
           end
         else
           issue_for(node, message)
         end
       end
+    end
+
+    # Returns `true` if the *node* is a method parameter, which can be passed
+    # by name, and has no explicit external name (i.e. `bar` in `def foo(bar)`).
+    private def named_parameter?(scope, node)
+      return false unless (def_node = scope.node).is_a?(Crystal::Def)
+      return false unless node.is_a?(Crystal::Arg) && node.external_name == node.name
+      return false if def_node.double_splat.same?(node)
+
+      !(splat_index = def_node.splat_index) ||
+        !def_node.args[splat_index]?.same?(node)
     end
   end
 end
