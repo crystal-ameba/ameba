@@ -106,6 +106,9 @@ module Ameba::Rule::Style
     private def def_redundant_begin_range(source, node)
       return unless code = node_source(node, source.lines)
 
+      # Blocks using curly braces cannot have exception handlers
+      return if node.is_a?(Crystal::Block) && code.starts_with?('{')
+
       lexer = Crystal::Lexer.new(code)
       return unless begin_loc = def_redundant_begin_loc(lexer)
       return unless end_loc = def_redundant_end_loc(lexer)

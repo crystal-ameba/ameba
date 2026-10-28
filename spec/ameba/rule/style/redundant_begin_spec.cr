@@ -318,6 +318,20 @@ module Ameba::Rule::Style
         CRYSTAL
     end
 
+    it "doesn't report if block is using curly braces and has nested `end`s" do
+      expect_no_issues subject, <<-CRYSTAL
+        foo.each { |x|
+          begin
+            if x
+              a = 1
+            end
+          rescue
+            a = 2
+          end
+        }
+        CRYSTAL
+    end
+
     it "doesn't report if begin-end block in a proc literal" do
       expect_no_issues subject, <<-CRYSTAL
         foo = ->{
