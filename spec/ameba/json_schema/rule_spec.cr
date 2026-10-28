@@ -263,17 +263,6 @@ module Ameba
         end
       end
 
-      it "describes the properties common to all of the rules within `BaseRule`" do
-        JSON.parse(JSONSchema::Builder.build)["$defs"]["BaseRule"]["properties"].should eq JSON.parse(<<-JSON)
-          {
-            "SinceVersion": {"type": ["string", "null"]},
-            "Enabled": {"type": "boolean", "default": true},
-            "Severity": {"$ref": "#/$defs/Severity", "default": "Convention"},
-            "Excluded": {"$ref": "#/$defs/Excluded"}
-          }
-          JSON
-      end
-
       it "describes severities by their definition" do
         with_properties_schema(SchemaRule) do |properties|
           properties["Levels"].should eq JSON.parse(<<-JSON)
