@@ -20,8 +20,7 @@ class Ameba::Source
 
     # :ditto:
     def replace(range : Range(Int32, Int32), content)
-      begin_pos, end_pos = range.begin, range.end
-      end_pos -= 1 unless range.excludes_end?
+      begin_pos, end_pos = range_to_pos(range)
       @rewriter.replace(begin_pos, end_pos, content)
     end
 
@@ -32,8 +31,7 @@ class Ameba::Source
 
     # :ditto:
     def wrap(range : Range(Int32, Int32), insert_before, insert_after)
-      begin_pos, end_pos = range.begin, range.end
-      end_pos -= 1 unless range.excludes_end?
+      begin_pos, end_pos = range_to_pos(range)
       @rewriter.wrap(begin_pos, end_pos, insert_before, insert_after)
     end
 
@@ -44,8 +42,7 @@ class Ameba::Source
 
     # Shortcut for `replace(range, "")`
     def remove(range : Range(Int32, Int32))
-      begin_pos, end_pos = range.begin, range.end
-      end_pos -= 1 unless range.excludes_end?
+      begin_pos, end_pos = range_to_pos(range)
       @rewriter.remove(begin_pos, end_pos)
     end
 
@@ -56,8 +53,7 @@ class Ameba::Source
 
     # Shortcut for `wrap(range, content, nil)`
     def insert_before(range : Range(Int32, Int32), content)
-      begin_pos, end_pos = range.begin, range.end
-      end_pos -= 1 unless range.excludes_end?
+      begin_pos, end_pos = range_to_pos(range)
       @rewriter.insert_before(begin_pos, end_pos, content)
     end
 
@@ -68,8 +64,7 @@ class Ameba::Source
 
     # Shortcut for `wrap(range, nil, content)`
     def insert_after(range : Range(Int32, Int32), content)
-      begin_pos, end_pos = range.begin, range.end
-      end_pos -= 1 unless range.excludes_end?
+      begin_pos, end_pos = range_to_pos(range)
       @rewriter.insert_after(begin_pos, end_pos, content)
     end
 
@@ -126,9 +121,15 @@ class Ameba::Source
 
     # :ditto:
     def remove_trailing(range : Range(Int32, Int32), size)
-      end_pos = range.end
-      end_pos -= 1 unless range.excludes_end?
+      _, end_pos = range_to_pos(range)
       @rewriter.remove(end_pos - size, end_pos)
+    end
+
+    # Converts the given range into the begin and (exclusive) end positions.
+    private def range_to_pos(range : Range(Int32, Int32))
+      end_pos = range.end
+      end_pos += 1 unless range.excludes_end?
+      {range.begin, end_pos}
     end
 
     private def loc_to_pos(location : Crystal::Location | {Int32, Int32})
