@@ -293,6 +293,36 @@ module Ameba::Rule::Lint
           CRYSTAL
       end
 
+      it "reports unreachable code if body returns and there's only ensure" do
+        expect_issue subject, <<-CRYSTAL
+          def foo
+            begin
+              return do_something
+            ensure
+              cleanup
+            end
+            :unreachable
+          # ^^^^^^^^^^^^ error: Unreachable code detected
+          end
+          CRYSTAL
+      end
+
+      it "reports unreachable code if ensure returns" do
+        expect_issue subject, <<-CRYSTAL
+          def foo
+            begin
+              do_something
+            rescue
+              puts "error"
+            ensure
+              return :ensure
+            end
+            :unreachable
+          # ^^^^^^^^^^^^ error: Unreachable code detected
+          end
+          CRYSTAL
+      end
+
       it "doesn't report if there is no else and ensure doesn't return" do
         expect_no_issues subject, <<-CRYSTAL
           def foo

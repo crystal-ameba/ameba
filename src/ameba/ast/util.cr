@@ -260,7 +260,14 @@ module Ameba::AST::Util
     when Crystal::Case, Crystal::Select
       flow_expressions?([node.whens, node.else].flatten, in_loop)
     when Crystal::ExceptionHandler
-      flow_expressions?([node.else || node.body, node.rescues].flatten, in_loop)
+      if (ensure_node = node.ensure) && flow_expression?(ensure_node, in_loop)
+        return true
+      end
+      expressions = [node.else || node.body]
+      if rescues = node.rescues
+        expressions.concat(rescues)
+      end
+      flow_expressions?(expressions, in_loop)
     when Crystal::While, Crystal::Until, Crystal::Rescue, Crystal::When
       flow_expression?(node.body, in_loop)
     when Crystal::Expressions
