@@ -61,5 +61,19 @@ module Ameba::Rule::Lint
         foo.as?(Symbol).should_not be_nil
         CRYSTAL
     end
+
+    it "reports if `eq` expectation is used with a failure message" do
+      source = expect_issue subject, <<-CRYSTAL, path: "source_spec.cr"
+        foo.is_a?(String).should eq(true), "not a string"
+                               # ^^^^^^^^ error: Use `be_true` instead of `eq(true)` expectation
+        foo.as?(Symbol).should_not eq(nil), "a symbol"
+                                 # ^^^^^^^ error: Use `be_nil` instead of `eq(nil)` expectation
+        CRYSTAL
+
+      expect_correction source, <<-CRYSTAL
+        foo.is_a?(String).should be_true, "not a string"
+        foo.as?(Symbol).should_not be_nil, "a symbol"
+        CRYSTAL
+    end
   end
 end

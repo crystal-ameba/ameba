@@ -42,7 +42,8 @@ module Ameba::Rule::Lint
     end
 
     def test(source, node : Crystal::Call)
-      return unless node.name.in?("should", "should_not") && node.args.size == 1
+      # `should(expectation, failure_message = nil)`
+      return unless node.name.in?("should", "should_not") && node.args.size.in?(1, 2)
       return if has_block?(node)
 
       return unless (matcher = node.args.first).is_a?(Crystal::Call)
