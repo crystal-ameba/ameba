@@ -373,7 +373,7 @@ module Ameba
       end
     end
 
-    describe ".properties" do
+    describe ".properties", tags: %w[slow] do
       it "raises if a property has no or many values" do
         properties_error("foo").should eq \
           "Rule properties are expected to be defined as `name value` (optionally followed by `as: Type`), not: `foo`"
