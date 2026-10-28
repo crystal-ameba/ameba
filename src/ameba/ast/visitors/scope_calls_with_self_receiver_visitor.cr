@@ -1,7 +1,6 @@
 module Ameba::AST
   class ScopeCallsWithSelfReceiverVisitor < Crystal::Visitor
-    @current_scope : AST::Scope
-    @current_assign : Crystal::ASTNode?
+    include ScopeBuilding
 
     getter scope_call_queue = {} of AST::Scope => Array(Crystal::Call)
 
@@ -31,98 +30,12 @@ module Ameba::AST
       end
     end
 
-    private def on_assign_end(target, node)
-      target.is_a?(Crystal::Var) &&
-        @current_scope.assign_variable(target.name, node)
-    end
-
-    # A main visit method that accepts `Crystal::ASTNode`.
-    # Returns `true`, meaning all child nodes will be traversed.
-    def visit(node : Crystal::ASTNode)
-      true
-    end
-
-    def end_visit(node : Crystal::ASTNode)
-      on_scope_end(node) if @current_scope.eql?(node)
-    end
-
-    def visit(node : Crystal::Def)
-      node.name == "->" || on_scope_enter(node)
-    end
-
     def visit(node : Crystal::Block | Crystal::ProcLiteral)
       on_scope_enter(node)
     end
 
     def visit(node : Crystal::ClassDef | Crystal::ModuleDef)
       on_scope_enter(node)
-    end
-
-    def visit(node : Crystal::Assign | Crystal::OpAssign | Crystal::MultiAssign | Crystal::UninitializedVar)
-      @current_assign = node
-      true
-    end
-
-    def end_visit(node : Crystal::Assign | Crystal::OpAssign)
-      on_assign_end(node.target, node)
-      @current_assign = nil
-    end
-
-    def end_visit(node : Crystal::MultiAssign)
-      node.targets.each { |target| on_assign_end(target, node) }
-      @current_assign = nil
-    end
-
-    def end_visit(node : Crystal::UninitializedVar)
-      on_assign_end(node.var, node)
-      @current_assign = nil
-    end
-
-    def visit(node : Crystal::TypeDeclaration)
-      return unless (var = node.var).is_a?(Crystal::Var)
-
-      @current_scope.add_variable(var)
-      @current_scope.add_type_dec_variable(node)
-
-      @current_assign = node.value if node.value
-      true
-    end
-
-    def end_visit(node : Crystal::TypeDeclaration)
-      return unless (var = node.var).is_a?(Crystal::Var)
-
-      on_assign_end(var, node)
-      @current_assign = nil
-    end
-
-    def visit(node : Crystal::Rescue)
-      @current_scope.add_rescue_variable(node)
-      true
-    end
-
-    def visit(node : Crystal::Out)
-      # `out x` declares (or assigns) the variable, rather than reading it
-      !@current_scope.add_out_variable(node)
-    end
-
-    def visit(node : Crystal::InstanceVar)
-      @current_scope.add_ivariable(node)
-      true
-    end
-
-    def visit(node : Crystal::Var)
-      scope = @current_scope
-      variable = scope.find_variable(node.name)
-
-      case
-      when scope.arg?(node)
-        # node is an argument, already registered by the scope
-      when variable.nil? && @current_assign # node is a variable
-        scope.add_variable(node)
-      when variable # node is a reference
-        variable.reference(node, scope)
-      end
-      true
     end
 
     def visit(node : Crystal::Call)
