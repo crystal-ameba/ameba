@@ -57,6 +57,7 @@ module Ameba::Rule::Performance
       return if has_arguments?(node)
 
       return unless (obj = node.obj).is_a?(Crystal::Call)
+      return unless obj.obj
       return if has_arguments?(obj) || has_block?(obj)
 
       return unless method = call_names[obj.name]?
