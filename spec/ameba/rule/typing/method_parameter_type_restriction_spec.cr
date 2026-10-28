@@ -73,7 +73,7 @@ module Ameba::Rule::Typing
       expect_issue subject, <<-CRYSTAL
         def foo(bar, ext baz)
               # ^^^ error: Method parameter should have a type restriction
-                   # ^^^ error: Method parameter should have a type restriction
+                       # ^^^ error: Method parameter should have a type restriction
         end
         CRYSTAL
     end
