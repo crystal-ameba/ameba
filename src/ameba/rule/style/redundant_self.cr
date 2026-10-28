@@ -45,6 +45,11 @@ module Ameba::Rule::Style
   # end
   # ```
   #
+  # NOTE: A block might be yielded with a different default receiver
+  # (i.e. `with obj yield`), in which case removing `self` within it would
+  # result in calling a method on that receiver instead. Set `AutocorrectInBlocks`
+  # to `false` to report these without autocorrecting.
+  #
   # YAML configuration example:
   #
   # ```
@@ -54,6 +59,7 @@ module Ameba::Rule::Style
   #     - in?
   #     - inspect
   #     - not_nil!
+  #   AutocorrectInBlocks: true
   # ```
   class RedundantSelf < Base
     include AST::Util
@@ -62,6 +68,7 @@ module Ameba::Rule::Style
       since_version "1.7.0"
       description "Disallows redundant uses of `self`"
       allowed_method_names %w[in? inspect not_nil!]
+      autocorrect_in_blocks true
     end
 
     MSG = "Redundant `self` detected"
@@ -88,9 +95,25 @@ module Ameba::Rule::Style
       return if name.in?(visible_variable_names(scope))
       return unless node_source = node_source(node, source.lines)
 
-      issue_for(obj, MSG) do |corrector|
-        corrector.replace(node, node_source.sub(/\Aself\s*\./, ""))
+      if !autocorrect_in_blocks? && within_block?(scope)
+        issue_for(obj, MSG)
+      else
+        issue_for(obj, MSG) do |corrector|
+          corrector.replace(node, node_source.sub(/\Aself\s*\./, ""))
+        end
       end
+    end
+
+    # Returns `true` if the *scope* is (or is nested within) a block,
+    # within the enclosing method or type definition.
+    private def within_block?(scope)
+      while scope
+        return true if scope.node.is_a?(Crystal::Block)
+        break if scope.type_definition? || !scope.inherited?
+
+        scope = scope.outer_scope
+      end
+      false
     end
 
     private def visible_variable_names(scope)

@@ -467,5 +467,157 @@ module Ameba::Rule::Style
           CRYSTAL
       end
     {% end %}
+
+    context "within blocks" do
+      it "reports and corrects redundant `self` within a block" do
+        source = expect_issue subject, <<-CRYSTAL
+          class Foo
+            def foo
+              42
+            end
+
+            def bar
+              build do
+                self.foo
+              # ^^^^ error: Redundant `self` detected
+                [1].each { self.foo }
+                         # ^^^^ error: Redundant `self` detected
+              end
+            end
+          end
+          CRYSTAL
+
+        expect_correction source, <<-CRYSTAL
+          class Foo
+            def foo
+              42
+            end
+
+            def bar
+              build do
+                foo
+                [1].each { foo }
+              end
+            end
+          end
+          CRYSTAL
+      end
+
+      it "reports and corrects redundant `self` within a proc literal" do
+        source = expect_issue subject, <<-CRYSTAL
+          class Foo
+            def foo
+              42
+            end
+
+            def bar
+              -> { self.foo }
+                 # ^^^^ error: Redundant `self` detected
+            end
+          end
+          CRYSTAL
+
+        expect_correction source, <<-CRYSTAL
+          class Foo
+            def foo
+              42
+            end
+
+            def bar
+              -> { foo }
+            end
+          end
+          CRYSTAL
+      end
+
+      it "reports and corrects redundant `self` within a method defined in a block" do
+        source = expect_issue subject, <<-CRYSTAL
+          build do
+            class Foo
+              def foo
+                42
+              end
+
+              def bar
+                self.foo
+              # ^^^^ error: Redundant `self` detected
+              end
+            end
+          end
+          CRYSTAL
+
+        expect_correction source, <<-CRYSTAL
+          build do
+            class Foo
+              def foo
+                42
+              end
+
+              def bar
+                foo
+              end
+            end
+          end
+          CRYSTAL
+      end
+    end
+
+    context "properties" do
+      describe "#autocorrect_in_blocks" do
+        it "reports without correcting redundant `self` within a block if disabled" do
+          rule = subject.class.new
+          rule.autocorrect_in_blocks = false
+
+          source = expect_issue rule, <<-CRYSTAL
+            class Foo
+              def foo
+                42
+              end
+
+              def bar
+                build do
+                  self.foo
+                # ^^^^ error: Redundant `self` detected
+                  [1].each { self.foo }
+                           # ^^^^ error: Redundant `self` detected
+                end
+              end
+            end
+            CRYSTAL
+
+          expect_no_corrections source
+        end
+
+        it "still corrects redundant `self` outside of blocks if disabled" do
+          rule = subject.class.new
+          rule.autocorrect_in_blocks = false
+
+          source = expect_issue rule, <<-CRYSTAL
+            class Foo
+              def foo
+                42
+              end
+
+              def bar
+                self.foo
+              # ^^^^ error: Redundant `self` detected
+              end
+            end
+            CRYSTAL
+
+          expect_correction source, <<-CRYSTAL
+            class Foo
+              def foo
+                42
+              end
+
+              def bar
+                foo
+              end
+            end
+            CRYSTAL
+        end
+      end
+    end
   end
 end
