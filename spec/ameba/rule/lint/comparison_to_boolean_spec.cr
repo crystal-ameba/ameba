@@ -47,15 +47,7 @@ module Ameba::Rule::Lint
           end
           CRYSTAL
 
-        expect_correction source, <<-CRYSTAL
-          if s.empty?
-            :ok
-          end
-
-          if !s.empty?
-            :ok
-          end
-          CRYSTAL
+        expect_no_corrections source
       end
 
       it "fails if there is != comparison to boolean" do
@@ -71,15 +63,7 @@ module Ameba::Rule::Lint
           end
           CRYSTAL
 
-        expect_correction source, <<-CRYSTAL
-          if a
-            :ok
-          end
-
-          if !a
-            :ok
-          end
-          CRYSTAL
+        expect_no_corrections source
       end
 
       it "fails if there is case comparison to boolean" do
@@ -88,9 +72,7 @@ module Ameba::Rule::Lint
           # ^^^^^^^^ error: Comparison to a boolean is pointless
           CRYSTAL
 
-        expect_correction source, <<-CRYSTAL
-          a
-          CRYSTAL
+        expect_no_corrections source
       end
     end
 
@@ -108,15 +90,7 @@ module Ameba::Rule::Lint
           end
           CRYSTAL
 
-        expect_correction source, <<-CRYSTAL
-          if s.empty?
-            :ok
-          end
-
-          if !s.empty?
-            :ok
-          end
-          CRYSTAL
+        expect_no_corrections source
       end
 
       it "fails if there is != comparison to boolean" do
@@ -132,15 +106,7 @@ module Ameba::Rule::Lint
           end
           CRYSTAL
 
-        expect_correction source, <<-CRYSTAL
-          if a
-            :ok
-          end
-
-          if !a
-            :ok
-          end
-          CRYSTAL
+        expect_no_corrections source
       end
 
       it "fails if there is case comparison to boolean" do
@@ -149,9 +115,7 @@ module Ameba::Rule::Lint
           # ^^^^^^^^ error: Comparison to a boolean is pointless
           CRYSTAL
 
-        expect_correction source, <<-CRYSTAL
-          a
-          CRYSTAL
+        expect_no_corrections source
       end
     end
   end

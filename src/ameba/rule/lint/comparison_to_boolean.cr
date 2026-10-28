@@ -13,6 +13,10 @@ module Ameba::Rule::Lint
   # could get the same result by using either the variable directly,
   # or negating the variable.
   #
+  # NOTE: The issues are not autocorrected, since the results are the same
+  # only for the `Bool` values, while i.e. `1 == true` is `false`, and `1`
+  # alone is truthy.
+  #
   # YAML configuration example:
   #
   # ```
@@ -20,8 +24,6 @@ module Ameba::Rule::Lint
   #   Enabled: true
   # ```
   class ComparisonToBoolean < Base
-    include AST::Util
-
     properties do
       since_version "0.1.0"
       enabled false
@@ -44,19 +46,8 @@ module Ameba::Rule::Lint
       end
 
       return unless bool && exp
-      return unless exp_code = node_source(exp, source.lines)
 
-      not =
-        case node.name
-        when "==", "===" then !bool.value # foo == false
-        when "!="        then bool.value  # foo != true
-        end
-
-      exp_code = "!#{exp_code}" if not
-
-      issue_for(node, MSG) do |corrector|
-        corrector.replace(node, exp_code)
-      end
+      issue_for(node, MSG)
     end
   end
 end
