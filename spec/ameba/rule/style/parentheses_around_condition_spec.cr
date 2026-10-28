@@ -83,6 +83,33 @@ module Ameba::Rule::Style
       end
     {% end %}
 
+    it "keeps the condition separated from the adjacent tokens" do
+      source = expect_issue subject, <<-CRYSTAL
+        if(foo)
+        # ^^^^^ error: Redundant parentheses
+          :foo
+        end
+
+        while(bar)
+           # ^^^^^ error: Redundant parentheses
+        end
+
+        (baz)? 1 : 2
+        # ^^^ error: Redundant parentheses
+        CRYSTAL
+
+      expect_correction source, <<-CRYSTAL
+        if foo
+          :foo
+        end
+
+        while bar
+        end
+
+        baz ? 1 : 2
+        CRYSTAL
+    end
+
     context "case" do
       it "reports if redundant parentheses are found" do
         source = expect_issue subject, <<-CRYSTAL
