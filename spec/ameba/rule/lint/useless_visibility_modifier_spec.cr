@@ -59,5 +59,18 @@ module Ameba::Rule::Lint
         end
         CRYSTAL
     end
+
+    it "fails if a `protected` method visibility modifier is followed by multiple spaces" do
+      source = expect_issue subject, <<-CRYSTAL
+        protected  def foo
+        # ^^^^^^^ error: Useless visibility modifier
+        end
+        CRYSTAL
+
+      expect_correction source, <<-CRYSTAL
+        def foo
+        end
+        CRYSTAL
+    end
   end
 end
