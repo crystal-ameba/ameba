@@ -290,7 +290,7 @@ module Ameba::AST
 
     # Returns visibility of the current scope (could be inherited from the outer scope).
     def visibility
-      @visibility || inherited? { outer_scope.try(&.visibility) }
+      @visibility || outer_scope.try(&.visibility)
     end
 
     {% for type in %w[Def ClassDef ModuleDef EnumDef LibDef FunDef].map(&.id) %}

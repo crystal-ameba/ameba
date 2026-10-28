@@ -182,6 +182,42 @@ module Ameba::AST
         rule.scopes.last.node.visibility.should eq Crystal::Visibility::Private
         rule.scopes[0...-1].each(&.node.visibility.should eq Crystal::Visibility::Public)
       end
+
+      it "is being inherited by all of the inner scopes" do
+        rule = ScopeRule.new
+        ScopeVisitor.new rule, Source.new <<-CRYSTAL
+          private class Foo
+            def foo
+            end
+
+            def bar
+            end
+
+            class Bar
+              def baz
+              end
+            end
+          end
+          CRYSTAL
+        rule.scopes.size.should eq 5
+        rule.scopes.each(&.visibility.should eq Crystal::Visibility::Private)
+      end
+
+      it "is not being leaked to the following scopes" do
+        rule = ScopeRule.new
+        ScopeVisitor.new rule, Source.new <<-CRYSTAL
+          private alias Foo = Int32
+
+          class Bar
+            private getter bar = 1
+
+            class Baz
+            end
+          end
+          CRYSTAL
+        rule.scopes.size.should eq 3
+        rule.scopes.each(&.visibility.should be_nil)
+      end
     end
   end
 end
