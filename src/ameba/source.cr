@@ -62,8 +62,8 @@ module Ameba
     # Positions at which the code lines start.
     private getter line_offsets : Array(Int32) do
       offsets = [0]
-      code.each_line(chomp: false) do |line|
-        offsets << offsets.last + line.size
+      code.each_char_with_index do |char, index|
+        offsets << index + 1 if char == '\n'
       end
       offsets
     end
