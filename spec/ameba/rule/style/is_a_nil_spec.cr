@@ -17,10 +17,13 @@ module Ameba::Rule::Style
       source = expect_issue subject, <<-CRYSTAL
         a = is_a?(Nil)
                 # ^^^ error: Use `nil?` instead of `is_a?(Nil)`
+        b = self.is_a?(Nil)
+                     # ^^^ error: Use `nil?` instead of `is_a?(Nil)`
         CRYSTAL
 
       expect_correction source, <<-CRYSTAL
         a = self.nil?
+        b = self.nil?
         CRYSTAL
     end
 
@@ -32,6 +35,33 @@ module Ameba::Rule::Style
 
       expect_correction source, <<-CRYSTAL
         a.nil?
+        CRYSTAL
+    end
+
+    it "reports if there is a call to is_a?(Nil) within a short block" do
+      source = expect_issue subject, <<-CRYSTAL
+        [1, nil].reject(&.is_a?(Nil))
+                              # ^^^ error: Use `nil?` instead of `is_a?(Nil)`
+        CRYSTAL
+
+      expect_correction source, <<-CRYSTAL
+        [1, nil].reject(&.nil?)
+        CRYSTAL
+    end
+
+    it "reports and keeps the receiver code intact" do
+      source = expect_issue subject, <<-CRYSTAL
+        foo(1, # comment
+          2).is_a?(Nil)
+                 # ^^^ error: Use `nil?` instead of `is_a?(Nil)`
+        (a || b).is_a? Nil
+                     # ^^^ error: Use `nil?` instead of `is_a?(Nil)`
+        CRYSTAL
+
+      expect_correction source, <<-CRYSTAL
+        foo(1, # comment
+          2).nil?
+        (a || b).nil?
         CRYSTAL
     end
   end
