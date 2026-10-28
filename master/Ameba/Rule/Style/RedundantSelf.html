@@ -199,6 +199,11 @@
       
     </li>
   
+  <li class=" " data-id="ameba/Ameba/AST/ScopeBuilding" data-name="ameba::ast::scopebuilding">
+      <a href="../../../Ameba/AST/ScopeBuilding.html">ScopeBuilding</a>
+      
+    </li>
+  
   <li class=" " data-id="ameba/Ameba/AST/ScopeCallsWithSelfReceiverVisitor" data-name="ameba::ast::scopecallswithselfreceivervisitor">
       <a href="../../../Ameba/AST/ScopeCallsWithSelfReceiverVisitor.html">ScopeCallsWithSelfReceiverVisitor</a>
       
@@ -1249,13 +1254,18 @@
 
   init
 <span class="k">end</span></code></pre>
+<p><span class="flag purple">NOTE</span>  A block might be yielded with a different default receiver
+(i.e. <code>with obj yield</code>), in which case removing <code>self</code> within it would
+result in calling a method on that receiver instead. Set <code>AutocorrectInBlocks</code>
+to <code>false</code> to report these without autocorrecting.</p>
 <p>YAML configuration example:</p>
 <pre><code class="language-crystal"><span class="t">Style</span><span class="o">/</span><span class="t">RedundantSelf</span>:
   <span class="t">Enabled</span>: <span class="n">true</span>
   <span class="t">AllowedMethodNames</span>:
     <span class="o">-</span> in?
     <span class="o">-</span> inspect
-    <span class="o">-</span> not_nil!</code></pre>
+    <span class="o">-</span> not_nil!
+  <span class="t">AutocorrectInBlocks</span>: <span class="n">true</span></code></pre>
 
 
 
@@ -1298,7 +1308,7 @@
   </h2>
   
     
-      <a href="https://github.com/crystal-ameba/ameba/blob/b39f031/src/ameba/rule/style/redundant_self.cr#L58" target="_blank">
+      <a href="https://github.com/crystal-ameba/ameba/blob/85288a5/src/ameba/rule/style/redundant_self.cr#L64" target="_blank">
         ameba/rule/style/redundant_self.cr
       </a>
     
@@ -1431,6 +1441,16 @@
     
       <li class="entry-summary">
         <a href="#allowed_method_names%3D%28allowed_method_names%3AArray%28String%29%29-instance-method" class="signature"><strong>#allowed_method_names=</strong>(allowed_method_names : Array(String))</a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#autocorrect_in_blocks%3D%28autocorrect_in_blocks%3ABool%29-instance-method" class="signature"><strong>#autocorrect_in_blocks=</strong>(autocorrect_in_blocks : Bool)</a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#autocorrect_in_blocks%3F%3ABool-instance-method" class="signature"><strong>#autocorrect_in_blocks?</strong> : Bool</a>
         
       </li>
     
@@ -1648,6 +1668,11 @@
     <a href="../../../Ameba/AST/Util.html#short_block%3F%28node%2Ccode_lines%29-instance-method" class="tooltip">
       <span>short_block?(node, code_lines)</span>
     short_block?</a>, 
+    
+  
+    <a href="../../../Ameba/AST/Util.html#single_block_arg%28node%3ACrystal%3A%3ABlock%29%3ACrystal%3A%3AVar%7CNil-instance-method" class="tooltip">
+      <span>single_block_arg(node : Crystal::Block) : Crystal::Var | Nil</span>
+    single_block_arg</a>, 
     
   
     <a href="../../../Ameba/AST/Util.html#source_between%28loc%2Cend_loc%2Ccode_lines%29%3AString%7CNil-instance-method" class="tooltip">
@@ -1899,19 +1924,24 @@
 
   init
 <span class="k">end</span></code></pre>
+<p><span class="flag purple">NOTE</span>  A block might be yielded with a different default receiver
+(i.e. <code>with obj yield</code>), in which case removing <code>self</code> within it would
+result in calling a method on that receiver instead. Set <code>AutocorrectInBlocks</code>
+to <code>false</code> to report these without autocorrecting.</p>
 <p>YAML configuration example:</p>
 <pre><code class="language-crystal"><span class="t">Style</span><span class="o">/</span><span class="t">RedundantSelf</span>:
   <span class="t">Enabled</span>: <span class="n">true</span>
   <span class="t">AllowedMethodNames</span>:
     <span class="o">-</span> in?
     <span class="o">-</span> inspect
-    <span class="o">-</span> not_nil!</code></pre>
+    <span class="o">-</span> not_nil!
+  <span class="t">AutocorrectInBlocks</span>: <span class="n">true</span></code></pre>
         </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/b39f031/src/ameba/rule/style/redundant_self.cr#L58" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/85288a5/src/ameba/rule/style/redundant_self.cr#L64" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2041,7 +2071,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/b39f031/src/ameba/rule/style/redundant_self.cr#L61" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/85288a5/src/ameba/rule/style/redundant_self.cr#L67" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2080,6 +2110,34 @@
         def <strong>allowed_method_names=</strong>(allowed_method_names : Array(String))
 
         <a class="method-permalink" href="#allowed_method_names%3D%28allowed_method_names%3AArray%28String%29%29-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="autocorrect_in_blocks=(autocorrect_in_blocks:Bool)-instance-method">
+      <div class="signature">
+        
+        def <strong>autocorrect_in_blocks=</strong>(autocorrect_in_blocks : Bool)
+
+        <a class="method-permalink" href="#autocorrect_in_blocks%3D%28autocorrect_in_blocks%3ABool%29-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="autocorrect_in_blocks?:Bool-instance-method">
+      <div class="signature">
+        
+        def <strong>autocorrect_in_blocks?</strong> : Bool
+
+        <a class="method-permalink" href="#autocorrect_in_blocks%3F%3ABool-instance-method">#</a>
       </div>
       
       <br/>
@@ -2211,7 +2269,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/b39f031/src/ameba/rule/style/redundant_self.cr#L61" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/85288a5/src/ameba/rule/style/redundant_self.cr#L67" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2241,7 +2299,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/b39f031/src/ameba/rule/style/redundant_self.cr#L75" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/85288a5/src/ameba/rule/style/redundant_self.cr#L82" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2257,7 +2315,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/b39f031/src/ameba/rule/style/redundant_self.cr#L71" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/85288a5/src/ameba/rule/style/redundant_self.cr#L78" target="_blank">View source</a>]
         
       </div>
     </div>

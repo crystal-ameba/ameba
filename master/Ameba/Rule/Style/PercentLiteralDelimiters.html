@@ -199,6 +199,11 @@
       
     </li>
   
+  <li class=" " data-id="ameba/Ameba/AST/ScopeBuilding" data-name="ameba::ast::scopebuilding">
+      <a href="../../../Ameba/AST/ScopeBuilding.html">ScopeBuilding</a>
+      
+    </li>
+  
   <li class=" " data-id="ameba/Ameba/AST/ScopeCallsWithSelfReceiverVisitor" data-name="ameba::ast::scopecallswithselfreceivervisitor">
       <a href="../../../Ameba/AST/ScopeCallsWithSelfReceiverVisitor.html">ScopeCallsWithSelfReceiverVisitor</a>
       
@@ -1220,7 +1225,9 @@ can continue to specify individual preferred delimiters via <code>PreferredDelim
 setting to override the default. In both cases the delimiters should be specified
 as a string of two characters, or <code>nil</code> to ignore a particular <code>%</code>-literal / default.</p>
 <p>Setting <code>IgnoreLiteralsContainingDelimiters</code> to <code>true</code> will ignore <code>%</code>-literals that
-contain one or both delimiters.</p>
+contain one or both delimiters. Otherwise these are reported without being
+autocorrected in case the delimiters are unbalanced within the literal
+(i.e. <code>%w(a] b)</code>), since replacing the delimiters would make it invalid.</p>
 <p>YAML configuration example:</p>
 <pre><code class="language-crystal">Style/PercentLiteralDelimiters:
   Enabled: true
@@ -1270,7 +1277,7 @@ contain one or both delimiters.</p>
   </h2>
   
     
-      <a href="https://github.com/crystal-ameba/ameba/blob/b39f031/src/ameba/rule/style/percent_literal_delimiters.cr#L24" target="_blank">
+      <a href="https://github.com/crystal-ameba/ameba/blob/85288a5/src/ameba/rule/style/percent_literal_delimiters.cr#L26" target="_blank">
         ameba/rule/style/percent_literal_delimiters.cr
       </a>
     
@@ -1670,7 +1677,9 @@ can continue to specify individual preferred delimiters via <code>PreferredDelim
 setting to override the default. In both cases the delimiters should be specified
 as a string of two characters, or <code>nil</code> to ignore a particular <code>%</code>-literal / default.</p>
 <p>Setting <code>IgnoreLiteralsContainingDelimiters</code> to <code>true</code> will ignore <code>%</code>-literals that
-contain one or both delimiters.</p>
+contain one or both delimiters. Otherwise these are reported without being
+autocorrected in case the delimiters are unbalanced within the literal
+(i.e. <code>%w(a] b)</code>), since replacing the delimiters would make it invalid.</p>
 <p>YAML configuration example:</p>
 <pre><code class="language-crystal">Style/PercentLiteralDelimiters:
   Enabled: true
@@ -1685,7 +1694,7 @@ contain one or both delimiters.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/b39f031/src/ameba/rule/style/percent_literal_delimiters.cr#L24" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/85288a5/src/ameba/rule/style/percent_literal_delimiters.cr#L26" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1815,7 +1824,7 @@ contain one or both delimiters.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/b39f031/src/ameba/rule/style/percent_literal_delimiters.cr#L25" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/85288a5/src/ameba/rule/style/percent_literal_delimiters.cr#L27" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2041,7 +2050,7 @@ contain one or both delimiters.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/b39f031/src/ameba/rule/style/percent_literal_delimiters.cr#L25" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/85288a5/src/ameba/rule/style/percent_literal_delimiters.cr#L27" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2071,7 +2080,7 @@ contain one or both delimiters.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/b39f031/src/ameba/rule/style/percent_literal_delimiters.cr#L40" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/85288a5/src/ameba/rule/style/percent_literal_delimiters.cr#L42" target="_blank">View source</a>]
         
       </div>
     </div>

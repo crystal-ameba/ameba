@@ -199,6 +199,11 @@
       
     </li>
   
+  <li class=" " data-id="ameba/Ameba/AST/ScopeBuilding" data-name="ameba::ast::scopebuilding">
+      <a href="../../../Ameba/AST/ScopeBuilding.html">ScopeBuilding</a>
+      
+    </li>
+  
   <li class=" " data-id="ameba/Ameba/AST/ScopeCallsWithSelfReceiverVisitor" data-name="ameba::ast::scopecallswithselfreceivervisitor">
       <a href="../../../Ameba/AST/ScopeCallsWithSelfReceiverVisitor.html">ScopeCallsWithSelfReceiverVisitor</a>
       
@@ -1225,6 +1230,9 @@
   do_something
   <span class="k">break</span> <span class="k">if</span> some_condition
 <span class="k">end</span></code></pre>
+<p><span class="flag purple">NOTE</span>  The issues are not autocorrected if there are any variables declared
+within the <code>while</code> loop and referenced after it, since these become local
+to the <code>loop</code> block, and thus inaccessible after it.</p>
 <p>YAML configuration example:</p>
 <pre><code class="language-crystal"><span class="t">Style</span><span class="o">/</span><span class="t">WhileTrue</span>:
   <span class="t">Enabled</span>: <span class="n">true</span></code></pre>
@@ -1268,7 +1276,7 @@
   </h2>
   
     
-      <a href="https://github.com/crystal-ameba/ameba/blob/b39f031/src/ameba/rule/style/while_true.cr#L28" target="_blank">
+      <a href="https://github.com/crystal-ameba/ameba/blob/85288a5/src/ameba/rule/style/while_true.cr#L32" target="_blank">
         ameba/rule/style/while_true.cr
       </a>
     
@@ -1440,7 +1448,12 @@
       </li>
     
       <li class="entry-summary">
-        <a href="#test%28source%2Cnode%3ACrystal%3A%3AWhile%29-instance-method" class="signature"><strong>#test</strong>(source, node : Crystal::While)</a>
+        <a href="#test%28source%2Cnode%2Cscope%3AAST%3A%3AScope%29-instance-method" class="signature"><strong>#test</strong>(source, node, scope : AST::Scope)</a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#test%28source%29-instance-method" class="signature"><strong>#test</strong>(source)</a>
         
       </li>
     
@@ -1643,6 +1656,9 @@
   do_something
   <span class="k">break</span> <span class="k">if</span> some_condition
 <span class="k">end</span></code></pre>
+<p><span class="flag purple">NOTE</span>  The issues are not autocorrected if there are any variables declared
+within the <code>while</code> loop and referenced after it, since these become local
+to the <code>loop</code> block, and thus inaccessible after it.</p>
 <p>YAML configuration example:</p>
 <pre><code class="language-crystal"><span class="t">Style</span><span class="o">/</span><span class="t">WhileTrue</span>:
   <span class="t">Enabled</span>: <span class="n">true</span></code></pre>
@@ -1651,7 +1667,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/b39f031/src/ameba/rule/style/while_true.cr#L28" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/85288a5/src/ameba/rule/style/while_true.cr#L32" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1781,7 +1797,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/b39f031/src/ameba/rule/style/while_true.cr#L29" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/85288a5/src/ameba/rule/style/while_true.cr#L33" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1923,7 +1939,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/b39f031/src/ameba/rule/style/while_true.cr#L29" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/85288a5/src/ameba/rule/style/while_true.cr#L33" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1942,18 +1958,34 @@
       </div>
     </div>
   
-    <div class="entry-detail" id="test(source,node:Crystal::While)-instance-method">
+    <div class="entry-detail" id="test(source,node,scope:AST::Scope)-instance-method">
       <div class="signature">
         
-        def <strong>test</strong>(source, node : Crystal::While)
+        def <strong>test</strong>(source, node, scope : <a href="../../../Ameba/AST/Scope.html">AST::Scope</a>)
 
-        <a class="method-permalink" href="#test%28source%2Cnode%3ACrystal%3A%3AWhile%29-instance-method">#</a>
+        <a class="method-permalink" href="#test%28source%2Cnode%2Cscope%3AAST%3A%3AScope%29-instance-method">#</a>
       </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/b39f031/src/ameba/rule/style/while_true.cr#L36" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/85288a5/src/ameba/rule/style/while_true.cr#L44" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="test(source)-instance-method">
+      <div class="signature">
+        
+        def <strong>test</strong>(source)
+
+        <a class="method-permalink" href="#test%28source%29-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/crystal-ameba/ameba/blob/85288a5/src/ameba/rule/style/while_true.cr#L40" target="_blank">View source</a>]
         
       </div>
     </div>
