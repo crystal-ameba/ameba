@@ -66,9 +66,13 @@ module Ameba::Rule::Style
         begin_pos, end_pos =
           source.pos(location), source.pos(end_location)
 
+        # Guard against negative index wrapping around to the end of the code
+        preceding_char =
+          source.code[begin_pos - 1]? if begin_pos.positive?
+
         # Parentheses might be the only thing separating the condition
         # from the adjacent tokens, i.e. `if(foo)` or `(foo)? bar : baz`
-        corrector.replace(begin_pos...begin_pos + 1, separator(source.code[begin_pos - 1]?))
+        corrector.replace(begin_pos...begin_pos + 1, separator(preceding_char))
         corrector.replace(end_pos...end_pos + 1, separator(source.code[end_pos + 1]?))
       end
     end
