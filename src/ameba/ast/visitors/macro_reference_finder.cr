@@ -2,13 +2,18 @@ module Ameba::AST
   class MacroReferenceFinder < Crystal::Visitor
     property? references = false
 
-    def initialize(node, @reference : String)
+    @reference : Regex
+
+    def initialize(node, reference : String)
+      # Matches *reference* as a whole identifier, so that i.e. `b` isn't
+      # found within `blk`, `@b`, or `b?`, but still within `b.foo` or `b != c`
+      @reference = /(?<![\p{L}\p{N}_@$])#{Regex.escape(reference)}(?![\p{L}\p{N}_?]|!(?![=~]))/
       node.accept(self)
     end
 
     @[AlwaysInline]
     private def includes_reference?(val)
-      val.to_s.includes?(@reference)
+      val.to_s.matches?(@reference)
     end
 
     def visit(node : Crystal::MacroLiteral)
