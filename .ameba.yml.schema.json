@@ -2175,6 +2175,10 @@
             "inspect",
             "not_nil!"
           ]
+        },
+        "AutocorrectInBlocks": {
+          "type": "boolean",
+          "default": true
         }
       }
     },
