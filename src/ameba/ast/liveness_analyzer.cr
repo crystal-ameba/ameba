@@ -33,11 +33,24 @@ module Ameba::AST
     @break_live : LiveSet?
     @next_live : LiveSet?
 
-    def initialize(@scope : Scope)
-      @var_names = @scope.variables.map(&.name).to_set
-      @assignment_map = build_assignment_map
-      @inner_scope_nodes = @scope.inner_scopes.map(&.node.object_id).to_set
-      @inner_scope_reads = build_inner_scope_reads
+    # Variables live when leaving the scope, i.e. the captured variables,
+    # which might be read after the closure returns, or on its next invocation.
+    @exit_live : LiveSet
+
+    # Creates a new analyzer of the *scope*'s variables, and additionally
+    # the *captured_variables* (i.e. the outer scope variables assigned
+    # within a block), which are analyzed as long as they're assigned within
+    # the *scope*.
+    def initialize(@scope : Scope, captured_variables = [] of Variable)
+      variables = @scope.variables + captured_variables
+
+      @var_names = variables.to_set(&.name)
+      @exit_live = captured_variables
+        .select { |var| var.referenced? || var.used_in_macro? }
+        .to_set(&.name)
+      @assignment_map = build_assignment_map(variables)
+      @inner_scope_nodes = @scope.inner_scopes.to_set(&.node.object_id)
+      @inner_scope_reads = build_inner_scope_reads(variables)
     end
 
     # Returns assignments where the value is never read before being
@@ -59,15 +72,15 @@ module Ameba::AST
       @dead_stores.clear
 
       body = scope_body(@scope.node)
-      entry_live = propagate_through(body, LiveSet.new)
+      entry_live = propagate_through(body, @exit_live)
 
       Result.new(@dead_stores, entry_live)
     end
 
-    private def build_assignment_map
+    private def build_assignment_map(variables)
       map = Hash(Tuple(String, UInt64), Assignment).new
 
-      @scope.variables.each do |var|
+      variables.each do |var|
         var.assignments.each do |assign|
           key = {var.name, assign.node.object_id}
           map[key] ||= assign
@@ -79,10 +92,10 @@ module Ameba::AST
     # Maps the nodes of the inner scopes to the names of this scope's variables
     # referenced within them (at any depth), i.e. `a` for the block in
     # `a = 1; [1].each { puts a }`.
-    private def build_inner_scope_reads
+    private def build_inner_scope_reads(variables)
       reads = Hash(UInt64, LiveSet).new
 
-      @scope.variables.each do |var|
+      variables.each do |var|
         var.references.each do |ref|
           next unless inner_scope = inner_scope_containing(ref.scope)
 
@@ -96,7 +109,7 @@ module Ameba::AST
     # the given *scope*, or `nil` if there's no such scope.
     private def inner_scope_containing(scope) : Scope?
       while scope && (outer_scope = scope.outer_scope)
-        return scope if outer_scope == @scope
+        return scope if outer_scope.same?(@scope)
         scope = outer_scope
       end
     end
@@ -116,6 +129,15 @@ module Ameba::AST
       if assign = find_assignment(assign_node, var_name)
         @dead_stores << assign
       end
+    end
+
+    # Adds `var_name` to the live set.
+    private def add_to_live_set(var_name, live : LiveSet) : LiveSet
+      return live if var_name.in?(live)
+
+      live = live.dup
+      live.add(var_name)
+      live
     end
 
     # Removes `var_name` from the live set. When `mark` is true,
@@ -182,10 +204,7 @@ module Ameba::AST
       # Mark the dead store if the result is never read, then ensure the
       # variable is live (since the op-assign reads the current value).
       mark_dead_store(node, target.name, live) if mark
-      unless target.name.in?(live)
-        live = live.dup
-        live.add(target.name)
-      end
+      live = add_to_live_set(target.name, live)
       propagate_through(node.value, live, mark)
     end
 
@@ -224,12 +243,9 @@ module Ameba::AST
     end
 
     private def propagate_through(node : Crystal::Var, live : LiveSet, mark = true) : LiveSet
-      name = node.name
-      if name.in?(@var_names) && !name.in?(live)
-        live = live.dup
-        live.add(name)
-      end
-      live
+      return live unless node.name.in?(@var_names)
+
+      add_to_live_set(node.name, live)
     end
 
     {% for type in BRANCH_NODES %}
@@ -275,7 +291,7 @@ module Ameba::AST
       live = propagate_through(node.body, live, mark)
 
       # The rescue variable (if any) gets assigned on entering the branch
-      if (name = node.name) && name.in?(@var_names) && find_assignment(node, name)
+      if (name = node.name) && find_assignment(node, name)
         live = remove_from_live_set(node, name, live, mark)
       end
       live
@@ -293,11 +309,7 @@ module Ameba::AST
       # forward all method arguments, making each argument live.
       if node.name.in?("super", "previous_def") && !node.has_parentheses? && node.args.empty?
         @scope.arguments.each do |arg|
-          name = arg.name
-          if name.in?(@var_names) && !name.in?(live)
-            live = live.dup
-            live.add(name)
-          end
+          live = add_to_live_set(arg.name, live)
         end
         return live
       end
@@ -311,15 +323,15 @@ module Ameba::AST
     end
 
     private def propagate_through(node : Crystal::Return, live : LiveSet, mark = true) : LiveSet
-      propagate_through(node.exp, LiveSet.new, mark)
+      propagate_through(node.exp, @exit_live, mark)
     end
 
     private def propagate_through(node : Crystal::Break, live : LiveSet, mark = true) : LiveSet
-      propagate_through(node.exp, @break_live || LiveSet.new, mark)
+      propagate_through(node.exp, @break_live || @exit_live, mark)
     end
 
     private def propagate_through(node : Crystal::Next, live : LiveSet, mark = true) : LiveSet
-      propagate_through(node.exp, @next_live || LiveSet.new, mark)
+      propagate_through(node.exp, @next_live || @exit_live, mark)
     end
 
     # Inner scope nodes: don't descend into nested scopes, but since they

@@ -276,7 +276,7 @@ module Ameba::AST
     def nested_in?(scope : Scope) : Bool
       current_scope = outer_scope
       while current_scope
-        return true if current_scope == scope
+        return true if current_scope.same?(scope)
         current_scope = current_scope.outer_scope
       end
       false

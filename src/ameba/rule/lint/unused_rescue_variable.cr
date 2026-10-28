@@ -42,9 +42,12 @@ module Ameba::Rule::Lint
     end
 
     def test(source, node, scope : AST::Scope)
-      return unless has_rescue_assignments?(scope)
+      captured_variables = captured_rescue_variables(scope)
+      return unless captured_variables.present? ||
+                    scope.variables.any? { |var| rescue_assigned?(var, scope) }
 
-      AST::LivenessAnalyzer.new(scope).dead_stores.each do |assign|
+      analyzer = AST::LivenessAnalyzer.new(scope, captured_variables)
+      analyzer.dead_stores.each do |assign|
         next unless (rescue_node = assign.node).is_a?(Crystal::Rescue)
 
         var = assign.variable
@@ -57,9 +60,22 @@ module Ameba::Rule::Lint
       end
     end
 
-    private def has_rescue_assignments?(scope)
-      scope.variables.any? do |var|
-        var.assignments.any?(&.node.is_a?(Crystal::Rescue))
+    # Returns the outer scope variables captured by the *scope*
+    # (i.e. a block), which are assigned by its `rescue` nodes.
+    private def captured_rescue_variables(scope)
+      variables = [] of AST::Variable
+
+      current_scope = scope
+      while current_scope.inherited? && (outer_scope = current_scope.outer_scope)
+        variables.concat(outer_scope.variables.select { |var| rescue_assigned?(var, scope) })
+        current_scope = outer_scope
+      end
+      variables
+    end
+
+    private def rescue_assigned?(var, scope)
+      var.assignments.any? do |assign|
+        assign.scope.same?(scope) && assign.node.is_a?(Crystal::Rescue)
       end
     end
   end

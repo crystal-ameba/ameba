@@ -36,7 +36,7 @@ module Ameba::AST
       return true unless assign_location = location
 
       variable.references.any? do |ref|
-        next false if ref.scope == scope
+        next false unless ref.scope.nested_in?(scope)
         next true unless ref_location = ref.scope.location
 
         ref_location < assign_location

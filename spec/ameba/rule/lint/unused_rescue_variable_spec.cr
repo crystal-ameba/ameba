@@ -299,5 +299,152 @@ module Ameba::Rule::Lint
         end
         CRYSTAL
     end
+
+    context "with captured variable" do
+      it "fails if rescue variable is not used within a block" do
+        expect_issue subject, <<-CRYSTAL
+          ex = nil
+          [1].each do
+            begin
+              raise "x"
+            rescue ex
+                 # ^^ error: Unused `rescue` variable `ex`
+              puts "handled"
+            end
+          end
+          CRYSTAL
+      end
+
+      it "fails if rescue variable is not used within a proc" do
+        expect_issue subject, <<-CRYSTAL
+          def foo
+            ex = nil
+            callback = -> do
+              begin
+                raise "x"
+              rescue ex
+                   # ^^ error: Unused `rescue` variable `ex`
+                puts "handled"
+              end
+            end
+            callback.call
+          end
+          CRYSTAL
+      end
+
+      it "fails if rescue variable is not used within a nested block" do
+        expect_issue subject, <<-CRYSTAL
+          ex = nil
+          [1].each do
+            [2].each do
+              begin
+                raise "x"
+              rescue ex
+                   # ^^ error: Unused `rescue` variable `ex`
+              end
+            end
+          end
+          CRYSTAL
+      end
+
+      it "fails if rescue variable is overwritten before being used" do
+        expect_issue subject, <<-CRYSTAL
+          ex = nil
+          [1].each do
+            begin
+              raise "x"
+            rescue ex
+                 # ^^ error: Unused `rescue` variable `ex`
+            end
+            ex = nil
+            puts ex
+          end
+          puts ex
+          CRYSTAL
+      end
+
+      it "passes if rescue variable is used after the handler" do
+        expect_no_issues subject, <<-CRYSTAL
+          ex = nil
+          [1].each do
+            begin
+              raise "x"
+            rescue ex
+            end
+            puts ex
+          end
+          CRYSTAL
+      end
+
+      it "passes if rescue variable is used outside of a block" do
+        expect_no_issues subject, <<-CRYSTAL
+          ex = nil
+          [1].each do
+            begin
+              raise "x"
+            rescue ex
+            end
+          end
+          puts ex
+          CRYSTAL
+      end
+
+      it "passes if rescue variable is used outside of a proc" do
+        expect_no_issues subject, <<-CRYSTAL
+          def foo
+            ex = nil
+            callback = -> do
+              begin
+                raise "x"
+              rescue ex
+              end
+              nil
+            end
+            callback.call
+            ex
+          end
+          CRYSTAL
+      end
+
+      it "passes if rescue variable is used outside of a block after `next`" do
+        expect_no_issues subject, <<-CRYSTAL
+          ex = nil
+          [1].each do
+            begin
+              raise "x"
+            rescue ex
+              next
+            end
+          end
+          puts ex
+          CRYSTAL
+      end
+
+      it "passes if rescue variable is used in a subsequent block invocation" do
+        expect_no_issues subject, <<-CRYSTAL
+          ex = nil
+          [1, 2].each do
+            puts ex
+            begin
+              raise "x"
+            rescue ex
+            end
+          end
+          CRYSTAL
+      end
+
+      it "passes if rescue variable is used in a nested block after the handler" do
+        expect_no_issues subject, <<-CRYSTAL
+          ex = nil
+          [1].each do
+            begin
+              raise "x"
+            rescue ex
+            end
+            [2].each { puts ex }
+          end
+          CRYSTAL
+      end
+    end
   end
 end
