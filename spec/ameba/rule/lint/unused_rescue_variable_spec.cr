@@ -270,5 +270,34 @@ module Ameba::Rule::Lint
         end
         CRYSTAL
     end
+
+    it "passes when variable address is taken before the rescue" do
+      expect_no_issues subject, <<-CRYSTAL
+        def foo
+          ex = nil
+          ptr = pointerof(ex)
+          begin
+            raise MyException.new("OH NO!")
+          rescue ex : MyException
+          end
+          puts ptr.value
+        end
+        CRYSTAL
+    end
+
+    it "fails when variable address is taken after being overwritten" do
+      expect_issue subject, <<-CRYSTAL
+        def foo
+          begin
+            raise MyException.new("OH NO!")
+          rescue ex : MyException
+               # ^^ error: Unused `rescue` variable `ex`
+          end
+          ex = nil
+          ptr = pointerof(ex)
+          puts ptr.value
+        end
+        CRYSTAL
+    end
   end
 end
