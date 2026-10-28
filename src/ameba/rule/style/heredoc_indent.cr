@@ -84,7 +84,7 @@ module Ameba::Rule::Style
         if body_auto_dedent?
           body_dedent =
             source_lines[1...-1]
-              .reject!(&.empty?)
+              .reject!(&.blank?)
               .min_of?(&.each_char.take_while(&.whitespace?).size)
         end
         body_dedent ||= heredoc_indent
@@ -96,6 +96,9 @@ module Ameba::Rule::Style
 
             dedent =
               idx == source_lines.size - 1 ? heredoc_indent : body_dedent
+
+            # Whitespace-only lines within the indentation have no content
+            next "" if line.blank? && line.size <= dedent
 
             "#{" " * correct_indent}#{line[dedent..]}"
           end
