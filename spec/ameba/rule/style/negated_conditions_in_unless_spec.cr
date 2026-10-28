@@ -137,6 +137,36 @@ module Ameba::Rule::Style
         CRYSTAL
     end
 
+    it "reports and autocorrects condition preceded by a comment containing `unless`" do
+      source = expect_issue subject, <<-CRYSTAL
+        unless # unless
+          !foo
+        # ^^^^ error: Avoid negated conditions in `unless` blocks
+          :ok
+        end
+        CRYSTAL
+
+      expect_correction source, <<-CRYSTAL
+        if # unless
+          foo
+          :ok
+        end
+        CRYSTAL
+    end
+
+    it "reports and autocorrects suffix condition preceded by a comment containing `unless`" do
+      source = expect_issue subject, <<-CRYSTAL
+        :ok unless # unless
+          !foo
+        # ^^^^ error: Avoid negated conditions in `unless` blocks
+        CRYSTAL
+
+      expect_correction source, <<-CRYSTAL
+        :ok if # unless
+          foo
+        CRYSTAL
+    end
+
     it "fails if one of AND conditions is negated" do
       source = expect_issue subject, <<-CRYSTAL
         unless a && !b

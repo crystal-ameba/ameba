@@ -40,28 +40,42 @@ module Ameba::Rule::Style
 
       if cond.is_a?(Crystal::Not)
         issue_for(cond, MSG) do |corrector|
-          correct(corrector, source, cond)
+          correct(corrector, source, node, cond)
         end
       else
         issue_for(cond, MSG)
       end
     end
 
-    private def correct(corrector, source, not_node)
-      return unless location = not_node.location
+    private def correct(corrector, source, node, not_node)
+      return unless node_location = node.location
+      return unless not_location = not_node.location
+      return unless keyword_location = keyword_location(source, node_location, not_location)
 
-      # The `unless` keyword is directly followed by the negated condition,
-      # both in the regular and in the suffix form
-      code = source.code
-      not_pos = source.pos(location)
+      keyword_end_location =
+        keyword_location.adjust(column_number: {{ "unless".size - 1 }})
 
-      return unless keyword_pos = code.rindex("unless", not_pos - {{ "unless".size }})
-      keyword_range = keyword_pos...keyword_pos + {{ "unless".size }}
+      corrector.replace(keyword_location, keyword_end_location, "if")
+      corrector.remove(not_location, not_location)
+    end
 
-      return unless code[keyword_range.end...not_pos].blank?
+    # The `unless` keyword is directly followed by the negated condition,
+    # both in the regular and in the suffix form, so it's the last token
+    # (skipping whitespace and comments) preceding the condition
+    private def keyword_location(source, node_location, not_location)
+      code = source.code[source.pos(node_location)...source.pos(not_location)]
+      last_token = nil
 
-      corrector.replace(keyword_range, "if")
-      corrector.remove(location, location)
+      lexer = Crystal::Lexer.new(code)
+      completed = Tokenizer.new(lexer).run do |token|
+        next if token.type.space? || token.type.newline? || token.type.eof?
+        last_token = token
+      end
+      return unless completed
+      return unless token = last_token
+      return unless token.value == Crystal::Keyword::UNLESS
+
+      node_location.seek(token.location)
     end
 
     private def negated_condition?(node)
