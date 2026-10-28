@@ -288,9 +288,23 @@ module Ameba::AST
       @yields || (check_inner_scopes && inner_scopes.any?(&.yields?))
     end
 
+    # Returns `true` if and only if current scope represents a type
+    # definition declared with an absolute path, for example `class ::Foo`.
+    def global_type_definition?
+      case node = @node
+      when Crystal::ClassDef, Crystal::ModuleDef, Crystal::EnumDef
+        node.name.global?
+      else
+        false
+      end
+    end
+
     # Returns visibility of the current scope (could be inherited from the outer scope).
+    #
+    # Type definitions declared with an absolute path belong to the top-level
+    # namespace, hence they don't inherit the visibility of the outer scopes.
     def visibility
-      @visibility || outer_scope.try(&.visibility)
+      @visibility || (outer_scope.try(&.visibility) unless global_type_definition?)
     end
 
     {% for type in %w[Def ClassDef ModuleDef EnumDef LibDef FunDef].map(&.id) %}

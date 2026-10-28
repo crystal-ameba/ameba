@@ -315,6 +315,23 @@ module Ameba::AST
     end
   end
 
+  describe "#global_type_definition?" do
+    it "returns true if a type is declared with absolute path" do
+      %w[class module enum].each do |keyword|
+        scope = Scope.new(as_node("#{keyword} ::Foo; end"))
+        scope.global_type_definition?.should be_true
+      end
+    end
+
+    it "returns false otherwise" do
+      scope = Scope.new(as_node("class Foo::Bar; end"))
+      scope.global_type_definition?.should be_false
+
+      scope = Scope.new(as_node("def foo; end"))
+      scope.global_type_definition?.should be_false
+    end
+  end
+
   describe "#spawn_block?" do
     it "returns true if a node is a spawn block" do
       nodes = as_nodes("spawn {}")
