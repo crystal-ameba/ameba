@@ -109,7 +109,6 @@ module Ameba::Rule::Performance
       expect_correction source, <<-CRYSTAL
         (1..3)
           .compact_map(&.itself)
-          #{""}
         CRYSTAL
     end
 
@@ -125,6 +124,25 @@ module Ameba::Rule::Performance
           {{ [1, 2, 3].map(&.to_s).compact }}
           CRYSTAL
       end
+    end
+
+    it "removes the whitespace preceding the `compact` call" do
+      source = expect_issue subject, <<-CRYSTAL
+        (1..3).map(&.itself)
+             # ^^^^^^^^^^^^^ error: Use `compact_map {...}` instead of `map {...}.compact`
+          .compact
+        (1..3).map do |i|
+             # ^^^^^^^^^^ error: Use `compact_map {...}` instead of `map {...}.compact`
+          i
+        end .compact
+        CRYSTAL
+
+      expect_correction source, <<-CRYSTAL
+        (1..3).compact_map(&.itself)
+        (1..3).compact_map do |i|
+          i
+        end
+        CRYSTAL
     end
   end
 end

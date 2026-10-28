@@ -101,7 +101,6 @@ module Ameba::Rule::Performance
       expect_correction source, <<-CRYSTAL
         [1, 2, 3]
           .any?(&.odd?)
-          #{""}
         CRYSTAL
     end
 
@@ -141,6 +140,21 @@ module Ameba::Rule::Performance
 
         expect_no_corrections source
       end
+    end
+
+    it "removes the whitespace preceding the `any?` call" do
+      source = expect_issue subject, <<-CRYSTAL
+        [1, 2, 3].select { |e| e > 2 }
+                # ^^^^^^^^^^^^^^^^^^^^ error: Use `any? {...}` instead of `select {...}.any?`
+          .any?
+        [1, 2, 3].select(&.odd?) .any?
+                # ^^^^^^^^^^^^^^^^^^^^ error: Use `any? {...}` instead of `select {...}.any?`
+        CRYSTAL
+
+      expect_correction source, <<-CRYSTAL
+        [1, 2, 3].any? { |e| e > 2 }
+        [1, 2, 3].any?(&.odd?)
+        CRYSTAL
     end
   end
 end

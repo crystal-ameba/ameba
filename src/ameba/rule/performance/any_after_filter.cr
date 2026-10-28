@@ -47,6 +47,7 @@ module Ameba::Rule::Performance
       return unless node_name_end_location = name_end_location(node)
       return unless name_location = name_location(obj)
       return unless name_end_location = name_end_location(obj)
+      return unless obj_end_location = obj.end_location
 
       issue_location =
         {name_location, node_name_end_location}
@@ -55,7 +56,10 @@ module Ameba::Rule::Performance
       when "select", "map"
         issue_for(*issue_location, MSG % {"...", obj.name}) do |corrector|
           corrector.replace(name_location, name_end_location, "any?")
-          corrector.remove_trailing(node, {{ ".any?".size }})
+          # Remove the whitespace preceding the `.any?` call as well
+          corrector.remove(
+            source.pos(obj_end_location, end: true)...source.pos(node_name_end_location, end: true)
+          )
         end
       when "reject"
         issue_for(*issue_location, MSG % {"!...", obj.name})
