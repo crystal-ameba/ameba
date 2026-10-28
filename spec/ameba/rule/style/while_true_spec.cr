@@ -33,6 +33,31 @@ module Ameba::Rule::Style
         CRYSTAL
     end
 
+    it "fails if there is `until false`" do
+      source = expect_issue subject, <<-CRYSTAL
+        a = 1
+        until false
+        # ^^^^^^^^^ error: Until statement using `false` literal as condition
+          a += 1
+          break if a > 5
+        end
+        until a > 10
+          a += 1
+        end
+        CRYSTAL
+
+      expect_correction source, <<-CRYSTAL
+        a = 1
+        loop do
+          a += 1
+          break if a > 5
+        end
+        until a > 10
+          a += 1
+        end
+        CRYSTAL
+    end
+
     it "fails without correcting `while true` declaring variables used after it" do
       source = expect_issue subject, <<-CRYSTAL
         def foo
