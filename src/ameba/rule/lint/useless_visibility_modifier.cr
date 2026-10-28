@@ -44,12 +44,27 @@ module Ameba::Rule::Lint
 
       return unless location = node.location
 
-      begin_location = location.adjust(column_number: -{{ "protected ".size }})
-      end_location = location.adjust(column_number: -2)
+      unless begin_location = keyword_location(source, location)
+        issue_for(node, MSG)
+        return
+      end
+
+      end_location = begin_location.adjust(column_number: {{ "protected".size - 1 }})
 
       issue_for(begin_location, end_location, MSG) do |corrector|
-        corrector.remove_preceding(node, {{ "protected ".size }})
+        corrector.remove(begin_location, location.adjust(column_number: -1))
       end
+    end
+
+    # Returns the location of the `protected` keyword preceding
+    # the method definition at *location*.
+    private def keyword_location(source, location)
+      return unless line = source.lines[location.line_number - 1]?
+
+      code = line[0...location.column_number - 1].rstrip
+      return unless code.ends_with?("protected")
+
+      location.with(column_number: code.size - {{ "protected".size - 1 }})
     end
   end
 end
