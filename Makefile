@@ -53,10 +53,10 @@ spec: ## Run the spec suite
 spec:
 	$(CRYSTAL_BIN) spec --order random
 
-.PHONY: schema
-schema: ## Build the latest schema
-schema:
-	$(SHARDS_BIN) run schema
+.PHONY: json-schema
+json-schema: ## Build the latest JSON schema
+json-schema:
+	$(SHARDS_BIN) run json-schema-builder
 
 .PHONY: lint
 lint: ## Run ameba on its own code base
