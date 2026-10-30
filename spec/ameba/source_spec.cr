@@ -123,8 +123,26 @@ module Ameba
 
         source.issues.size.should eq 1
         source.issues.first.enabled?.should be_false
-        source.correct!.should be_false
+        source.correct!.should be_nil
         source.code.should contain ".not_nil!"
+      end
+
+      it "defers conflicting issues until the corrected source is reinspected" do
+        source = Source.new("list.map { |i| i.size }.max")
+        rules = [Rule::Performance::MinMaxAfterMap.new, Rule::Style::VerboseBlock.new]
+        rules.each(&.catch(source))
+
+        source.issues.size.should eq 2
+        applied_issue = source.issues.first
+        source.correct!.should eq [applied_issue]
+        source.code.should eq "list.max_of { |i| i.size }"
+
+        source.issues.clear
+        rules.each(&.catch(source))
+
+        source.issues.map(&.rule).should eq [rules.last]
+        source.correct!.should eq source.issues
+        source.code.should eq "list.max_of(&.size)"
       end
 
       it "corrects enabled issues" do
@@ -137,7 +155,7 @@ module Ameba
 
         source.issues.size.should eq 1
         source.issues.first.enabled?.should be_true
-        source.correct!.should be_true
+        source.correct!.should eq source.issues
         source.code.should_not contain ".not_nil!"
       end
     end
