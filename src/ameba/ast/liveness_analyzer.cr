@@ -360,9 +360,7 @@ module Ameba::AST
         return propagate_through(else_node, live, mark)
       end
 
-      # `select` without `else` blocks until one of its branches gets executed,
-      # exhaustive `case ... in` covers all of the possible values
-      node.is_a?(Crystal::Select) || node.exhaustive? ? LiveSet.new : live
+      exhaustive_branches?(node) ? LiveSet.new : live
     end
 
     private def propagate_through(node : Crystal::ExceptionHandler, live : LiveSet, mark = true) : LiveSet

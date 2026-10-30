@@ -294,12 +294,11 @@ module Ameba::AST::Util
   end
 
   private def flow_branches?(node, in_loop)
-    else_node = node.else
-
-    # `select` without `else` blocks until one of its branches gets executed,
-    # exhaustive `case ... in` without `else` covers all of the possible values
-    return false unless else_node || node.is_a?(Crystal::Select) || node.exhaustive?
-    return false if else_node && !flow_expression?(else_node, in_loop)
+    if else_node = node.else
+      return false unless flow_expression?(else_node, in_loop)
+    else
+      return false unless exhaustive_branches?(node)
+    end
 
     flow_expressions?(node.whens, in_loop)
   end
@@ -348,6 +347,13 @@ module Ameba::AST::Util
     else
       false
     end
+  end
+
+  # Returns `true` if *node* (`case` or `select`) always executes one of its
+  # `when` branches when it has no `else`, i.e. `select` blocking until one of
+  # them gets executed, or exhaustive `case ... in` covering all of the values.
+  def exhaustive_branches?(node : Crystal::Case | Crystal::Select) : Bool
+    node.is_a?(Crystal::Select) || node.exhaustive?
   end
 
   # Returns `true` if *node* represents a loop never left through its condition,

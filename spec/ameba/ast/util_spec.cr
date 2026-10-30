@@ -688,6 +688,23 @@ module Ameba::AST
       end
     end
 
+    describe "#exhaustive_branches?" do
+      it "returns true if this is a select" do
+        node = as_node("select\nwhen x = ch.receive\nend").as(Crystal::Select)
+        subject.exhaustive_branches?(node).should be_true
+      end
+
+      it "returns true if this is an exhaustive case" do
+        node = as_node("case x\nin Int32\nend").as(Crystal::Case)
+        subject.exhaustive_branches?(node).should be_true
+      end
+
+      it "returns false if this is a non-exhaustive case" do
+        node = as_node("case x\nwhen Int32\nend").as(Crystal::Case)
+        subject.exhaustive_branches?(node).should be_false
+      end
+    end
+
     describe "#endless_loop_condition?" do
       it "returns true if this is a while true / until false loop" do
         subject.endless_loop_condition?(as_node("while true; break; end")).should be_true
