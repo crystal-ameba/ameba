@@ -75,7 +75,7 @@ module Ameba::Rule::Performance
       args_location = name_end_location.adjust(column_number: 1)
       return unless block_code = source_between(args_location, end_location, source.lines)
 
-      block_code = block_code.strip
+      block_code = block_code.strip.sub(/\A\(\s*\)/, "").lstrip
       block_code = block_code[1...-1].strip if block_code.starts_with?('(')
 
       if block_code.starts_with?('&')

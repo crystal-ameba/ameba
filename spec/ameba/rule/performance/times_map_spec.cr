@@ -50,6 +50,24 @@ module Ameba::Rule::Performance
         CRYSTAL
     end
 
+    it "reports and corrects empty argument parentheses followed by a block" do
+      source = expect_issue subject, <<-CRYSTAL
+        3.times.map() { |i| i * 2 }.to_a
+        # ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ error: Use `Array.new(3) {...}` instead of `3.times.map {...}.to_a`
+        3.times.map( ) do |i|
+        # ^^^^^^^^^^^^^^^^^^^ error: Use `Array.new(3) {...}` instead of `3.times.map {...}.to_a`
+          i * 2
+        end.to_a
+        CRYSTAL
+
+      expect_correction source, <<-CRYSTAL
+        Array.new(3) { |i| i * 2 }
+        Array.new(3) do |i|
+          i * 2
+        end
+        CRYSTAL
+    end
+
     it "preserves the original formatting of the count expression" do
       source = expect_issue subject, <<-CRYSTAL
         1_000.times.map { |i| i * 2 }.to_a
