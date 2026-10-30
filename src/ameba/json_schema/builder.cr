@@ -1,6 +1,9 @@
 module Ameba::JSONSchema::Builder
   extend self
 
+  # Keys of the definitions written within `$defs`
+  DEFINITIONS = %w[Severity Globs Excluded BaseRule]
+
   def build(indent = 2) : String
     String.build do |str|
       build(str, indent)
@@ -11,6 +14,30 @@ module Ameba::JSONSchema::Builder
     File.open(path, "w") do |file|
       build(file, indent)
     end
+  end
+
+  # Writes the properties common to all of the rules, the ones defined
+  # within `$defs` by referring to them.
+  private def write_base_rule_properties(builder : JSON::Builder) : Nil
+    {% for property in ::Ameba::Config::RuleConfig::BUILT_IN_PROPERTIES %}
+      {% if property[:base] %}
+        {% key = property[:name].camelcase %}
+
+        builder.string({{ key }})
+        builder.object do
+          {% if DEFINITIONS.includes?(key) %}
+            builder.field("$ref", {{ "#/$defs/#{key.id}" }})
+
+            {% if property[:base_default] %}
+              builder.string("default")
+              ::Ameba::JSONSchema.write_value(builder, {{ property[:base_default].id }})
+            {% end %}
+          {% else %}
+            ::Ameba::JSONSchema.write_type(builder, nil, [{{ property[:type] }}], {% if property[:base_default] %}default: {{ property[:base_default].id }}{% end %})
+          {% end %}
+        end
+      {% end %}
+    {% end %}
   end
 
   def build(io : IO, indent = 2) : Nil
@@ -81,27 +108,7 @@ module Ameba::JSONSchema::Builder
 
             builder.string("properties")
             builder.object do
-              builder.string("SinceVersion")
-              builder.object do
-                builder.field("type", "string")
-              end
-
-              builder.string("Enabled")
-              builder.object do
-                builder.field("type", "boolean")
-                builder.field("default", true)
-              end
-
-              builder.string("Severity")
-              builder.object do
-                builder.field("$ref", "#/$defs/Severity")
-                builder.field("default", Rule::Base.default_severity.to_s)
-              end
-
-              builder.string("Excluded")
-              builder.object do
-                builder.field("$ref", "#/$defs/Excluded")
-              end
+              write_base_rule_properties(builder)
             end
           end
         end
