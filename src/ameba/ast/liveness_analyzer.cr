@@ -323,11 +323,7 @@ module Ameba::AST
 
     {% for type in LOOP_NODES %}
       private def propagate_through(node : Crystal::{{ type.id }}, live : LiveSet, mark = true) : LiveSet
-        # Endless loops (i.e. `while true`) are never left through
-        # the condition, so the code following them is reached only by `break`.
-        cond_exit_live = endless_loop?(node) ? LiveSet.new : live
-
-        propagate_through_loop(node.cond, node.body, live, cond_exit_live, mark)
+        propagate_through_loop(node, live, mark)
       end
     {% end %}
 
@@ -490,9 +486,13 @@ module Ameba::AST
       propagate_through(children, live, mark)
     end
 
-    # Propagates through the loop, which is left either by `break`
-    # (with the *live* set), or by the condition (with the *cond_exit_live* set).
-    private def propagate_through_loop(cond, body, live : LiveSet, cond_exit_live : LiveSet, mark) : LiveSet
+    private def propagate_through_loop(node : Crystal::While | Crystal::Until, live : LiveSet, mark) : LiveSet
+      cond, body = node.cond, node.body
+
+      # Endless loops (i.e. `while true`) are never left through
+      # the condition, so the code following them is reached only by `break`.
+      cond_exit_live = endless_loop?(node) ? LiveSet.new : live
+
       preserving_flow_control do
         # `break` exits to post-loop code, `next` jumps to loop condition.
         @flow = @flow.copy_with(break_live: live)
