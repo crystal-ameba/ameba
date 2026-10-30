@@ -137,10 +137,7 @@ module Ameba::AST
       rescue_entry = defined | body_defined
       node.rescues.try &.each do |rescue_node|
         # The rescue variable (if any) gets assigned on entering the branch
-        rescue_defined = rescue_entry
-        if name = rescue_node.name
-          rescue_defined = define(name, rescue_defined)
-        end
+        rescue_defined = rescue_node.name.try { |name| define(name, rescue_entry) } || rescue_entry
         rescue_defined = propagate(rescue_node.body, rescue_defined)
         merged = collect(merged, rescue_defined) unless terminates?(rescue_node.body)
       end

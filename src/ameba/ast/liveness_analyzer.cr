@@ -123,13 +123,16 @@ module Ameba::AST
       end
 
       @scope.inner_scopes.each do |inner_scope|
-        variables.each do |var|
-          next unless MacroReferenceFinder.new(inner_scope.node, var.name).references?
+        next if (names = macro_reads(inner_scope.node)).empty?
 
-          reads.put_if_absent(inner_scope.node.object_id) { LiveSet.new } << var.name
-        end
+        reads.put_if_absent(inner_scope.node.object_id) { LiveSet.new }.concat(names)
       end
       reads
+    end
+
+    # Returns the names of the variables referenced within the macros of the *node*.
+    private def macro_reads(node) : LiveSet
+      @var_names.select { |name| MacroReferenceFinder.new(node, name).references? }.to_set
     end
 
     # Returns the inner scope of the analyzed scope, which contains (or is)
@@ -414,14 +417,7 @@ module Ameba::AST
     {% for type in MACRO_NODES %}
       {% unless INNER_SCOPE_NODES.includes?(type) %}
         private def propagate_through(node : Crystal::{{ type.id }}, live : LiveSet, mark = true) : LiveSet
-          live = propagate_through_raise(live)
-
-          @var_names.each do |name|
-            next unless MacroReferenceFinder.new(node, name).references?
-
-            live = add_to_live_set(name, live)
-          end
-          live
+          propagate_through_raise(live) | macro_reads(node)
         end
       {% end %}
     {% end %}
