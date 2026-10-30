@@ -1219,7 +1219,8 @@
     Overview
   </h2>
 
-  <p>A rule that disallows the use of <code>while true</code> instead of using the idiomatic <code>loop</code></p>
+  <p>A rule that disallows the use of <code>while true</code> (or <code>until false</code>)
+instead of using the idiomatic <code>loop</code></p>
 <p>For example, this is considered invalid:</p>
 <pre><code class="language-crystal"><span class="k">while</span> <span class="n">true</span>
   do_something
@@ -1227,6 +1228,11 @@
 <span class="k">end</span></code></pre>
 <p>And should be replaced by the following:</p>
 <pre><code class="language-crystal">loop <span class="k">do</span>
+  do_something
+  <span class="k">break</span> <span class="k">if</span> some_condition
+<span class="k">end</span></code></pre>
+<p>The same applies to <code>until false</code>:</p>
+<pre><code class="language-crystal"><span class="k">until</span> <span class="n">false</span>
   do_something
   <span class="k">break</span> <span class="k">if</span> some_condition
 <span class="k">end</span></code></pre>
@@ -1276,7 +1282,7 @@ to the <code>loop</code> block, and thus inaccessible after it.</p>
   </h2>
   
     
-      <a href="https://github.com/crystal-ameba/ameba/blob/029c579/src/ameba/rule/style/while_true.cr#L32" target="_blank">
+      <a href="https://github.com/crystal-ameba/ameba/blob/3be8cd3/src/ameba/rule/style/while_true.cr#L42" target="_blank">
         ameba/rule/style/while_true.cr
       </a>
     
@@ -1299,6 +1305,11 @@ to the <code>loop</code> block, and thus inaccessible after it.</p>
     
       <dt class="entry-const" id="MSG">
         <strong>MSG</strong> = <code><span class="s">&quot;While statement using `true` literal as condition&quot;</span></code>
+      </dt>
+      
+    
+      <dt class="entry-const" id="MSG_UNTIL">
+        <strong>MSG_UNTIL</strong> = <code><span class="s">&quot;Until statement using `false` literal as condition&quot;</span></code>
       </dt>
       
     
@@ -1325,7 +1336,7 @@ to the <code>loop</code> block, and thus inaccessible after it.</p>
       <li class="entry-summary">
         <a href="#new%28config%3Dnil%29-class-method" class="signature"><strong>.new</strong>(config = <span class="n">nil</span>)</a>
         
-          <div class="summary"><p>A rule that disallows the use of <code>while true</code> instead of using the idiomatic <code>loop</code></p></div>
+          <div class="summary"><p>A rule that disallows the use of <code>while true</code> (or <code>until false</code>) instead of using the idiomatic <code>loop</code></p></div>
         
       </li>
     
@@ -1645,7 +1656,8 @@ to the <code>loop</code> block, and thus inaccessible after it.</p>
       
         <div class="doc">
           
-          <p>A rule that disallows the use of <code>while true</code> instead of using the idiomatic <code>loop</code></p>
+          <p>A rule that disallows the use of <code>while true</code> (or <code>until false</code>)
+instead of using the idiomatic <code>loop</code></p>
 <p>For example, this is considered invalid:</p>
 <pre><code class="language-crystal"><span class="k">while</span> <span class="n">true</span>
   do_something
@@ -1653,6 +1665,11 @@ to the <code>loop</code> block, and thus inaccessible after it.</p>
 <span class="k">end</span></code></pre>
 <p>And should be replaced by the following:</p>
 <pre><code class="language-crystal">loop <span class="k">do</span>
+  do_something
+  <span class="k">break</span> <span class="k">if</span> some_condition
+<span class="k">end</span></code></pre>
+<p>The same applies to <code>until false</code>:</p>
+<pre><code class="language-crystal"><span class="k">until</span> <span class="n">false</span>
   do_something
   <span class="k">break</span> <span class="k">if</span> some_condition
 <span class="k">end</span></code></pre>
@@ -1667,7 +1684,7 @@ to the <code>loop</code> block, and thus inaccessible after it.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/029c579/src/ameba/rule/style/while_true.cr#L32" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/3be8cd3/src/ameba/rule/style/while_true.cr#L42" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1797,7 +1814,7 @@ to the <code>loop</code> block, and thus inaccessible after it.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/029c579/src/ameba/rule/style/while_true.cr#L33" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/3be8cd3/src/ameba/rule/style/while_true.cr#L43" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1939,7 +1956,7 @@ to the <code>loop</code> block, and thus inaccessible after it.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/029c579/src/ameba/rule/style/while_true.cr#L33" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/3be8cd3/src/ameba/rule/style/while_true.cr#L43" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1969,7 +1986,7 @@ to the <code>loop</code> block, and thus inaccessible after it.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/029c579/src/ameba/rule/style/while_true.cr#L44" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/3be8cd3/src/ameba/rule/style/while_true.cr#L55" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1985,7 +2002,7 @@ to the <code>loop</code> block, and thus inaccessible after it.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/029c579/src/ameba/rule/style/while_true.cr#L40" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/3be8cd3/src/ameba/rule/style/while_true.cr#L51" target="_blank">View source</a>]
         
       </div>
     </div>
