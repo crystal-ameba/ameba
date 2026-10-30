@@ -446,22 +446,20 @@ module Ameba::AST
     end
 
     private def propagate_through_case(node : Crystal::Case | Crystal::Select, live : LiveSet, mark) : LiveSet
-      branch_lives = LiveSet.new
+      # Each `when` conditions are evaluated only if the preceding ones
+      # didn't match, so the branches are chained as `if`/`elsif`/`else`.
+      branch_live = propagate_through(node.else, live, mark)
 
-      node.whens.each do |when_node|
+      node.whens.reverse_each do |when_node|
         when_live = propagate_through(when_node.body, live, mark)
-        when_live = propagate_through(when_node.conds, when_live, mark)
-        branch_lives.concat(when_live)
+        branch_live = propagate_through(when_node.conds, when_live | branch_live, mark)
       end
-
-      else_live = propagate_through(node.else, live, mark)
-      branch_lives.concat(else_live)
 
       if node.is_a?(Crystal::Case) && (cond = node.cond)
-        branch_lives = propagate_through(cond, branch_lives, mark)
+        branch_live = propagate_through(cond, branch_live, mark)
       end
 
-      branch_lives
+      branch_live
     end
   end
 end

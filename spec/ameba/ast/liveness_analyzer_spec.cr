@@ -887,6 +887,34 @@ module Ameba::AST
             CRYSTAL
           dead_store_names(scope).should eq ["a", "a"]
         end
+
+        it "does not report assignment in when condition used in a subsequent branch" do
+          scope = def_scope <<-CRYSTAL
+            def foo(a)
+              case a
+              when (b = bar)
+                1
+              when 2
+                b
+              end
+            end
+            CRYSTAL
+          dead_store_names(scope).should be_empty
+        end
+
+        it "reports assignment in when condition used only in a preceding branch" do
+          scope = def_scope <<-CRYSTAL
+            def foo(a)
+              case a
+              when 1
+                b
+              when (b = bar)
+                2
+              end
+            end
+            CRYSTAL
+          dead_store_names(scope).should eq ["b"]
+        end
       end
     end
 
