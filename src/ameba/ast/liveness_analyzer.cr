@@ -508,18 +508,29 @@ module Ameba::AST
     end
 
     # Returns the variables live after the *node* call, which in case of
-    # the calls never returning (`raise`, `exit` and `abort`) aren't the ones
-    # read by the (unreachable) code following them, but the ones live
-    # when raising (i.e. read by `rescue` / `ensure`) or leaving the scope.
+    # the calls never returning (`raise`, `exit`, `abort` and `loop` without
+    # a `break`) aren't the ones read by the (unreachable) code following them,
+    # but the ones live when raising (i.e. read by `rescue` / `ensure`),
+    # returning or leaving the scope.
     private def propagate_through_no_return(node : Crystal::Call, live : LiveSet) : LiveSet
       case
       when Util.raise?(node)
         @flow.raise_live
       when Util.exit?(node), Util.abort?(node)
         @exit_live
+      when endless_loop_call?(node)
+        # the block might `return` (raising is handled by the caller)
+        @flow.return_live
       else
         live
       end
+    end
+
+    # Returns `true` if the *node* is a `loop do ... end` call never left by `break`.
+    private def endless_loop_call?(node : Crystal::Call) : Bool
+      return false unless Util.loop?(node) && (block = node.block)
+
+      !LoopBreakVisitor.new(block.body).found?
     end
 
     # Returns `true` if the *node* is a loop never left through its condition.
@@ -533,14 +544,17 @@ module Ameba::AST
     # Adds the variables live on any of the jumps, since the (unknown) code
     # expanded from a macro might `break`, `next`, `return` or raise at this point.
     private def propagate_through_macro(live : LiveSet) : LiveSet
-      jump_live = @flow.live
-      jump_live.subset_of?(live) ? live : live | jump_live
+      merge_live_sets(live, @flow.live)
     end
 
     # Adds the variables live when an exception is raised at this point.
     private def propagate_through_raise(live : LiveSet) : LiveSet
-      raise_live = @flow.raise_live
-      raise_live.subset_of?(live) ? live : live | raise_live
+      merge_live_sets(live, @flow.raise_live)
+    end
+
+    # Returns the union of the live sets, reusing *live* if it includes *other*.
+    private def merge_live_sets(live : LiveSet, other : LiveSet) : LiveSet
+      other.subset_of?(live) ? live : live | other
     end
 
     # Restores the flow control overwritten within the block.

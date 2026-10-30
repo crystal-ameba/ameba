@@ -639,6 +639,59 @@ module Ameba::AST
         dead_store_names(scope).should be_empty
       end
 
+      it "reports assignment read only after loop without break" do
+        scope = def_scope <<-CRYSTAL
+          def foo(xs)
+            a = 1
+            loop do
+              xs.each { break }
+            end
+            a
+          end
+          CRYSTAL
+        dead_store_names(scope).should eq ["a"]
+      end
+
+      it "does not report assignment read after loop with break" do
+        scope = def_scope <<-CRYSTAL
+          def foo
+            a = 1
+            loop do
+              break if something
+            end
+            a
+          end
+          CRYSTAL
+        dead_store_names(scope).should be_empty
+      end
+
+      it "does not report assignment read after loop with break within macro code" do
+        scope = def_scope <<-CRYSTAL
+          def foo
+            a = 1
+            loop do
+              {% if flag?(:foo) %}
+                break
+              {% end %}
+            end
+            a
+          end
+          CRYSTAL
+        dead_store_names(scope).should be_empty
+      end
+
+      it "does not report assignment read by the loop block" do
+        scope = def_scope <<-CRYSTAL
+          def foo
+            a = 1
+            loop do
+              puts a
+            end
+          end
+          CRYSTAL
+        dead_store_names(scope).should be_empty
+      end
+
       it "does not treat raise with a receiver as never returning" do
         scope = def_scope <<-CRYSTAL
           def foo
