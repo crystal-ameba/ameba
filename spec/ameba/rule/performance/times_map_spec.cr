@@ -36,6 +36,15 @@ module Ameba::Rule::Performance
         CRYSTAL
     end
 
+    it "does not report calls with arguments" do
+      expect_no_issues subject, <<-CRYSTAL
+        foo.times(2).map { |i| i * 2 }.to_a
+        foo.times(step: 2).map { |i| i * 2 }.to_a
+        3.times.map(1) { |i| i * 2 }.to_a
+        3.times.map { |i| i * 2 }.to_a(1)
+        CRYSTAL
+    end
+
     it "does not report is source is a spec" do
       expect_no_issues subject, path: "source_spec.cr", code: <<-CRYSTAL
         3.times.map { |i| i * i }.to_a
