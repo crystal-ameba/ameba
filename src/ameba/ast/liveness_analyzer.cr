@@ -33,6 +33,10 @@ module Ameba::AST
     @break_live : LiveSet?
     @next_live : LiveSet?
 
+    # Live set for `return`, which exits the scope through all of the
+    # enclosing `ensure` clauses.
+    @return_live : LiveSet
+
     # Variables live when leaving the scope, i.e. the captured variables,
     # which might be read after the closure returns, or on its next invocation.
     @exit_live : LiveSet
@@ -48,6 +52,7 @@ module Ameba::AST
       @exit_live = captured_variables
         .select { |var| var.referenced? || var.used_in_macro? }
         .to_set(&.name)
+      @return_live = @exit_live
       @assignment_map = build_assignment_map(variables)
       @inner_scope_nodes = @scope.inner_scopes.to_set(&.node.object_id)
       @inner_scope_reads = build_inner_scope_reads(variables)
@@ -271,20 +276,38 @@ module Ameba::AST
 
     private def propagate_through(node : Crystal::ExceptionHandler, live : LiveSet, mark = true) : LiveSet
       post_ensure = propagate_through(node.ensure, live, mark)
-      after_body = propagate_through(node.else, post_ensure, mark)
 
-      # Rescue branches handle exceptions thrown at any point in the body,
-      # so collect all variables they need.
-      rescue_live = LiveSet.new
-      node.rescues.try &.each do |rescue_node|
-        rescue_live.concat(propagate_through(rescue_node, post_ensure, mark))
+      # Save outer flow control context before overwriting
+      outer_return = @return_live
+      outer_break = @break_live
+      outer_next = @next_live
+
+      begin
+        # `return`, `break` and `next` leave the handler through
+        # the `ensure` clause, which might read the variables.
+        @return_live = propagate_through(node.ensure, outer_return, false)
+        @break_live = propagate_through(node.ensure, outer_break || @exit_live, false)
+        @next_live = propagate_through(node.ensure, outer_next || @exit_live, false)
+
+        after_body = propagate_through(node.else, post_ensure, mark)
+
+        # Rescue branches handle exceptions thrown at any point in the body,
+        # so collect all variables they need.
+        rescue_live = LiveSet.new
+        node.rescues.try &.each do |rescue_node|
+          rescue_live.concat(propagate_through(rescue_node, post_ensure, mark))
+        end
+
+        # Body can throw at any point, so variables live in any rescue
+        # branch must also be considered live throughout the body.
+        # Union rescue_live because rescue-needed variables are live before the entire handler.
+        body_live = propagate_through(node.body, after_body | rescue_live, mark)
+        body_live | rescue_live
+      ensure
+        @return_live = outer_return
+        @break_live = outer_break
+        @next_live = outer_next
       end
-
-      # Body can throw at any point, so variables live in any rescue
-      # branch must also be considered live throughout the body.
-      # Union rescue_live because rescue-needed variables are live before the entire handler.
-      body_live = propagate_through(node.body, after_body | rescue_live, mark)
-      body_live | rescue_live
     end
 
     private def propagate_through(node : Crystal::Rescue, live : LiveSet, mark = true) : LiveSet
@@ -323,7 +346,7 @@ module Ameba::AST
     end
 
     private def propagate_through(node : Crystal::Return, live : LiveSet, mark = true) : LiveSet
-      propagate_through(node.exp, @exit_live, mark)
+      propagate_through(node.exp, @return_live, mark)
     end
 
     private def propagate_through(node : Crystal::Break, live : LiveSet, mark = true) : LiveSet

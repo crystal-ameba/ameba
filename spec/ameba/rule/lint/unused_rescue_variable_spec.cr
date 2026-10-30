@@ -229,6 +229,72 @@ module Ameba::Rule::Lint
         CRYSTAL
     end
 
+    it "passes when variable is used in ensure of a nested handler on return" do
+      expect_no_issues subject, <<-CRYSTAL
+        def foo
+          begin
+            raise "x"
+          rescue ex
+            begin
+              return
+            ensure
+              puts ex
+            end
+          end
+        end
+        CRYSTAL
+    end
+
+    it "passes when variable is used in ensure of an outer handler on return" do
+      expect_no_issues subject, <<-CRYSTAL
+        def foo
+          ex = nil
+          begin
+            begin
+              raise "x"
+            rescue ex
+              return
+            end
+          ensure
+            puts ex
+          end
+        end
+        CRYSTAL
+    end
+
+    it "passes when variable is used in ensure on break" do
+      expect_no_issues subject, <<-CRYSTAL
+        loop do
+          begin
+            raise "x"
+          rescue ex
+            begin
+              break
+            ensure
+              puts ex
+            end
+          end
+        end
+        CRYSTAL
+    end
+
+    it "fails when variable is not used in ensure on return" do
+      expect_issue subject, <<-CRYSTAL
+        def foo
+          begin
+            raise "x"
+          rescue ex
+               # ^^ error: Unused `rescue` variable `ex`
+            begin
+              return
+            ensure
+              puts "done"
+            end
+          end
+        end
+        CRYSTAL
+    end
+
     it "fails when variable is overwritten after the exception handler" do
       expect_issue subject, <<-CRYSTAL
         def foo
