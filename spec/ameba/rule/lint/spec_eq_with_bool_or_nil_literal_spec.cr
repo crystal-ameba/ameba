@@ -12,6 +12,13 @@ module Ameba::Rule::Lint
         CRYSTAL
     end
 
+    it "does not report `eq` method calls with an explicit receiver" do
+      expect_no_issues subject, <<-CRYSTAL, path: "source_spec.cr"
+        foo.should Factory.new.eq(true)
+        foo.should_not factory.eq nil
+        CRYSTAL
+    end
+
     it "does not report if `be_true` / `be_false` expectation is used" do
       expect_no_issues subject, <<-CRYSTAL, path: "source_spec.cr"
         foo.is_a?(String).should be_true

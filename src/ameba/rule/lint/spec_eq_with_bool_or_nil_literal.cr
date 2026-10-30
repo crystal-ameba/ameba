@@ -46,8 +46,7 @@ module Ameba::Rule::Lint
       return if has_block?(node)
 
       return unless (matcher = node.args.first).is_a?(Crystal::Call)
-      return unless matcher.name == "eq" && matcher.args.size == 1
-      return if has_block?(matcher)
+      return unless eq_matcher?(matcher)
 
       replacement =
         case arg = matcher.args.first
@@ -59,6 +58,12 @@ module Ameba::Rule::Lint
       issue_for(matcher, MSG % {replacement, matcher.to_s}) do |corrector|
         corrector.replace(matcher, replacement)
       end
+    end
+
+    # Matches `eq(value)` only without an explicit receiver,
+    # since e.g. `foo.eq(true)` might construct a different matcher
+    private def eq_matcher?(node : Crystal::Call) : Bool
+      node.name == "eq" && node.args.size == 1 && !node.obj && !has_block?(node)
     end
   end
 end
