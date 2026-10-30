@@ -59,6 +59,64 @@ module Ameba::Rule::Lint
         CRYSTAL
     end
 
+    it "passes if rescue variable is used within `MacroIf` after the handler" do
+      expect_no_issues subject, <<-CRYSTAL
+        def foo
+          begin
+            raise MyException.new("OH NO!")
+          rescue ex : MyException
+          end
+          {% if flag?(:debug) %}
+            puts ex
+          {% end %}
+        end
+        CRYSTAL
+    end
+
+    it "passes if rescue variable is used within `MacroIf` in ensure" do
+      expect_no_issues subject, <<-CRYSTAL
+        begin
+          raise MyException.new("OH NO!")
+        rescue ex : MyException
+        ensure
+          {% if flag?(:debug) %}
+            puts ex
+          {% end %}
+        end
+        CRYSTAL
+    end
+
+    it "passes if rescue variable is used within `MacroIf` in a subsequent block" do
+      expect_no_issues subject, <<-CRYSTAL
+        def foo
+          begin
+            raise MyException.new("OH NO!")
+          rescue ex : MyException
+          end
+          [1].each do
+            {% if flag?(:debug) %}
+              puts ex
+            {% end %}
+          end
+        end
+        CRYSTAL
+    end
+
+    it "fails if rescue variable is used only within `MacroIf` before the handler" do
+      expect_issue subject, <<-CRYSTAL
+        def foo
+          {% if flag?(:debug) %}
+            puts ex
+          {% end %}
+          begin
+            raise MyException.new("OH NO!")
+          rescue ex : MyException
+               # ^^ error: Unused `rescue` variable `ex`
+          end
+        end
+        CRYSTAL
+    end
+
     it "fails if rescue variable is not used" do
       expect_issue subject, <<-CRYSTAL
         begin

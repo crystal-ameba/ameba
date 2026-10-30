@@ -109,13 +109,22 @@ module Ameba::AST
 
     # Maps the nodes of the inner scopes to the names of this scope's variables
     # referenced within them (at any depth), i.e. `a` for the block in
-    # `a = 1; [1].each { puts a }`.
+    # `a = 1; [1].each { puts a }`, including the references within macros,
+    # i.e. `a` for the macro in `a = 1; {% if flag?(:foo) %} puts a {% end %}`.
     private def build_inner_scope_reads(variables)
       reads = Hash(UInt64, LiveSet).new
 
       variables.each do |var|
         var.references.each do |ref|
           next unless inner_scope = inner_scope_containing(ref.scope)
+
+          reads.put_if_absent(inner_scope.node.object_id) { LiveSet.new } << var.name
+        end
+      end
+
+      @scope.inner_scopes.each do |inner_scope|
+        variables.each do |var|
+          next unless MacroReferenceFinder.new(inner_scope.node, var.name).references?
 
           reads.put_if_absent(inner_scope.node.object_id) { LiveSet.new } << var.name
         end

@@ -54,7 +54,6 @@ module Ameba::Rule::Lint
 
         next if assign.referenced_in_preceding_inner_scope?
         next if assign.address_taken_before?
-        next if AST::MacroReferenceFinder.new(rescue_node.body, var.name).references?
 
         issue_for(name_location_or(rescue_node), MSG % var.name)
       end
