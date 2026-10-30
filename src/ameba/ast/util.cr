@@ -1,5 +1,3 @@
-require "compiler/crystal/syntax/*"
-
 # Utility module for Ameba's rules.
 module Ameba::AST::Util
   extend self
@@ -321,30 +319,6 @@ module Ameba::AST::Util
       end
 
     !!body && !LoopBreakVisitor.new(body).found?
-  end
-
-  # Finds `break` nodes targeting the loop which body is being visited,
-  # skipping the ones consumed by the nested loops, blocks and procs.
-  private class LoopBreakVisitor < Crystal::Visitor
-    getter? found = false
-
-    def initialize(node)
-      node.accept(self)
-    end
-
-    # NOTE: `break` might be hidden within the (unparsed) macro code
-    def visit(node : Crystal::Break | Crystal::MacroIf | Crystal::MacroFor | Crystal::MacroExpression | Crystal::MacroLiteral | Crystal::MacroVerbatim)
-      @found = true
-      false
-    end
-
-    def visit(node : Crystal::While | Crystal::Until | Crystal::Block | Crystal::ProcLiteral | Crystal::Def)
-      false
-    end
-
-    def visit(node : Crystal::ASTNode)
-      !@found
-    end
   end
 
   # Returns `true` if node represents `raise` method call.
