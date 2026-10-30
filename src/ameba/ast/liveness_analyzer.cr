@@ -304,11 +304,30 @@ module Ameba::AST
       end
     {% end %}
 
-    {% for type in CASE_NODES %}
-      private def propagate_through(node : Crystal::{{ type.id }}, live : LiveSet, mark = true) : LiveSet
-        propagate_through_case(node, live, mark)
+    private def propagate_through(node : Crystal::Case, live : LiveSet, mark = true) : LiveSet
+      # Each `when` conditions are evaluated only if the preceding ones
+      # didn't match, so the branches are chained as `if`/`elsif`/`else`.
+      branch_live = propagate_through(node.else, live, mark)
+
+      node.whens.reverse_each do |when_node|
+        when_live = propagate_through(when_node.body, live, mark)
+        branch_live = propagate_through(when_node.conds, when_live | branch_live, mark)
       end
-    {% end %}
+
+      propagate_through(node.cond, branch_live, mark)
+    end
+
+    private def propagate_through(node : Crystal::Select, live : LiveSet, mark = true) : LiveSet
+      # Only the `when` condition of the chosen branch completes,
+      # so the branches are alternatives to each other.
+      branch_live = propagate_through(node.else, live, mark)
+
+      node.whens.each do |when_node|
+        when_live = propagate_through(when_node.body, live, mark)
+        branch_live |= propagate_through(when_node.conds, when_live, mark)
+      end
+      branch_live
+    end
 
     private def propagate_through(node : Crystal::ExceptionHandler, live : LiveSet, mark = true) : LiveSet
       # The `ensure` clause is entered on every way out of the handler,
@@ -478,23 +497,6 @@ module Ameba::AST
       ensure
         @flow = outer
       end
-    end
-
-    private def propagate_through_case(node : Crystal::Case | Crystal::Select, live : LiveSet, mark) : LiveSet
-      # Each `when` conditions are evaluated only if the preceding ones
-      # didn't match, so the branches are chained as `if`/`elsif`/`else`.
-      branch_live = propagate_through(node.else, live, mark)
-
-      node.whens.reverse_each do |when_node|
-        when_live = propagate_through(when_node.body, live, mark)
-        branch_live = propagate_through(when_node.conds, when_live | branch_live, mark)
-      end
-
-      if node.is_a?(Crystal::Case) && (cond = node.cond)
-        branch_live = propagate_through(cond, branch_live, mark)
-      end
-
-      branch_live
     end
   end
 end

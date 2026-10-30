@@ -862,6 +862,35 @@ module Ameba::AST
         dead_store_names(scope).should be_empty
       end
 
+      context "select" do
+        it "does not report assignment used in a branch other than the one overwriting it" do
+          scope = def_scope <<-CRYSTAL
+            def foo(a, b)
+              v = nil
+              select
+              when v = a.receive
+                v
+              when b.receive
+                v
+              end
+            end
+            CRYSTAL
+          dead_store_names(scope).should be_empty
+        end
+
+        it "reports assignment in when condition not used in its branch" do
+          scope = def_scope <<-CRYSTAL
+            def foo(a, b)
+              select
+              when v = a.receive
+              when b.receive
+              end
+            end
+            CRYSTAL
+          dead_store_names(scope).should eq ["v"]
+        end
+      end
+
       context "when" do
         it "does not report when assignment in when condition is used" do
           scope = def_scope <<-CRYSTAL
