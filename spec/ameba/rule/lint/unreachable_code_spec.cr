@@ -323,6 +323,22 @@ module Ameba::Rule::Lint
           CRYSTAL
       end
 
+      it "reports unreachable code if body returns and else doesn't" do
+        expect_issue subject, <<-CRYSTAL
+          def foo
+            begin
+              return 1
+            rescue
+              return 2
+            else
+              puts "never"
+            end
+            :unreachable
+          # ^^^^^^^^^^^^ error: Unreachable code detected
+          end
+          CRYSTAL
+      end
+
       it "doesn't report if ensure breaks out of a nested loop only" do
         expect_no_issues subject, <<-CRYSTAL
           loop do
@@ -448,6 +464,115 @@ module Ameba::Rule::Lint
             break
           end
           :reachable
+          CRYSTAL
+      end
+
+      it "doesn't report if a nested while is a branch which returns" do
+        expect_no_issues subject, <<-CRYSTAL
+          def method(x)
+            if x
+              while something
+                return :foo
+              end
+            else
+              return :bar
+            end
+            :reachable
+          end
+          CRYSTAL
+      end
+
+      it "doesn't report if a nested infinite loop has a break" do
+        expect_no_issues subject, <<-CRYSTAL
+          def method(x)
+            if x
+              while true
+                break if something
+                return :foo
+              end
+            else
+              return :bar
+            end
+            :reachable
+          end
+          CRYSTAL
+      end
+
+      it "reports unreachable code after infinite loops" do
+        expect_issue subject, <<-CRYSTAL
+          def method
+            while true
+              sleep 1
+            end
+            :unreachable
+          # ^^^^^^^^^^^^ error: Unreachable code detected
+          end
+
+          def method
+            until false
+              sleep 1
+            end
+            :unreachable
+          # ^^^^^^^^^^^^ error: Unreachable code detected
+          end
+
+          def method
+            loop do
+              [1, 2].each { break }
+            end
+            :unreachable
+          # ^^^^^^^^^^^^ error: Unreachable code detected
+          end
+          CRYSTAL
+      end
+
+      it "doesn't report code after loop with break" do
+        expect_no_issues subject, <<-CRYSTAL
+          def method
+            loop do
+              break if something
+            end
+            :reachable
+          end
+          CRYSTAL
+      end
+    end
+
+    context "case" do
+      it "reports unreachable code after exhaustive case" do
+        expect_issue subject, <<-CRYSTAL
+          def method(x : Int32 | String)
+            case x
+            in Int32  then return 1
+            in String then return 2
+            end
+            :unreachable
+          # ^^^^^^^^^^^^ error: Unreachable code detected
+          end
+          CRYSTAL
+      end
+
+      it "doesn't report code after non-exhaustive case without else" do
+        expect_no_issues subject, <<-CRYSTAL
+          def method(x)
+            case x
+            when Int32  then return 1
+            when String then return 2
+            end
+            :reachable
+          end
+          CRYSTAL
+      end
+    end
+
+    context "proc" do
+      it "reports unreachable code after next in a proc" do
+        expect_issue subject, <<-CRYSTAL
+          -> do
+            next 1
+            :unreachable
+          # ^^^^^^^^^^^^ error: Unreachable code detected
+          end
           CRYSTAL
       end
     end

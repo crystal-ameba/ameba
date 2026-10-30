@@ -337,11 +337,29 @@ module Ameba::AST
 
       it "returns false if this until with next inside of a loop" do
         node = as_node <<-CRYSTAL
-          until false
+          until something
             next
           end
           CRYSTAL
         subject.flow_expression?(node, true).should be_false
+      end
+
+      it "returns false if this while with a condition and a returning body" do
+        node = as_node <<-CRYSTAL
+          while something
+            return
+          end
+          CRYSTAL
+        subject.flow_expression?(node).should be_false
+      end
+
+      it "returns true if this infinite loop breaks only out of a nested block" do
+        node = as_node <<-CRYSTAL
+          loop do
+            [1, 2].each { break }
+          end
+          CRYSTAL
+        subject.flow_expression?(node).should be_true
       end
 
       it "returns true if this expressions consumed by flow expressions" do

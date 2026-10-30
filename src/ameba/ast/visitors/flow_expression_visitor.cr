@@ -23,7 +23,7 @@ module Ameba::AST
     end
 
     # :nodoc:
-    def visit(node : Crystal::Block)
+    def visit(node : Crystal::Block | Crystal::ProcLiteral)
       on_loop_started(node)
       true
     end
@@ -34,7 +34,7 @@ module Ameba::AST
     end
 
     # :nodoc:
-    def end_visit(node : Crystal::Block)
+    def end_visit(node : Crystal::Block | Crystal::ProcLiteral)
       on_loop_ended(node)
     end
 
