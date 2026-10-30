@@ -1,3 +1,5 @@
+require "compiler/crystal/syntax/*"
+
 # Utility module for Ameba's rules.
 module Ameba::AST::Util
   extend self
@@ -258,12 +260,11 @@ module Ameba::AST::Util
     when Crystal::BinaryOp
       flow_expression?(node.left, in_loop)
     when Crystal::Case, Crystal::Select
-      flow_expressions?([node.whens, node.else].flatten, in_loop)
+      flow_branches?(node, in_loop)
     when Crystal::ExceptionHandler
       flow_exception_handler?(node, in_loop)
-    when Crystal::While, Crystal::Until
-      # `break` / `next` within the body are consumed by the loop itself
-      flow_expression?(node.body, false)
+    when Crystal::While, Crystal::Until, Crystal::Call
+      infinite_loop?(node)
     when Crystal::Rescue, Crystal::When
       flow_expression?(node.body, in_loop)
     when Crystal::Expressions
@@ -277,15 +278,69 @@ module Ameba::AST::Util
     nodes.all? { |exp| flow_expression?(exp, in_loop) }
   end
 
+  private def flow_branches?(node, in_loop)
+    else_node = node.else
+
+    # exhaustive `case ... in` without `else` covers all of the possible values
+    return false unless else_node || (node.is_a?(Crystal::Case) && node.exhaustive?)
+    return false if else_node && !flow_expression?(else_node, in_loop)
+
+    flow_expressions?(node.whens, in_loop)
+  end
+
   private def flow_exception_handler?(node, in_loop)
     if (ensure_node = node.ensure) && flow_expression?(ensure_node, in_loop)
       return true
     end
-    expressions = [node.else || node.body]
-    if rescues = node.rescues
-      expressions.concat(rescues)
+
+    # `else` is executed only if `body` completes without interruption
+    body_flow = flow_expression?(node.body, in_loop) ||
+                ((else_node = node.else) && flow_expression?(else_node, in_loop))
+    return false unless body_flow
+
+    rescues = node.rescues
+    !rescues || flow_expressions?(rescues, in_loop)
+  end
+
+  # Returns `true` if *node* is a loop that never finishes normally,
+  # i.e. `while true`, `until false` or `loop do` without a `break` in its body.
+  #
+  # NOTE: `break` / `next` within the body are consumed by the loop itself,
+  # so the body itself being a flow expression doesn't make the loop one,
+  # since the loop body might be never executed.
+  private def infinite_loop?(node) : Bool
+    body =
+      case node
+      when Crystal::While then node.body if node.cond.true_literal?
+      when Crystal::Until then node.body if node.cond.false_literal?
+      when Crystal::Call
+        node.block.try(&.body) if loop?(node)
+      end
+
+    !!body && !LoopBreakVisitor.new(body).found?
+  end
+
+  # Finds `break` nodes targeting the loop which body is being visited,
+  # skipping the ones consumed by the nested loops, blocks and procs.
+  private class LoopBreakVisitor < Crystal::Visitor
+    getter? found = false
+
+    def initialize(node)
+      node.accept(self)
     end
-    flow_expressions?(expressions, in_loop)
+
+    def visit(node : Crystal::Break)
+      @found = true
+      false
+    end
+
+    def visit(node : Crystal::While | Crystal::Until | Crystal::Block | Crystal::ProcLiteral | Crystal::Def)
+      false
+    end
+
+    def visit(node : Crystal::ASTNode)
+      !@found
+    end
   end
 
   # Returns `true` if node represents `raise` method call.
