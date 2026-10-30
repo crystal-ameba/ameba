@@ -1250,8 +1250,6 @@ that is executed if a negated condition is NOT met.</p>
   </h2>
   <ul class="other-types-list">
     
-      <li class="other-type"><a href="../../../Ameba/AST/Util.html">Ameba::AST::Util</a></li>
-    
       <li class="other-type">YAML::Serializable</li>
     
   </ul>
@@ -1275,7 +1273,7 @@ that is executed if a negated condition is NOT met.</p>
   </h2>
   
     
-      <a href="https://github.com/crystal-ameba/ameba/blob/86dea74/src/ameba/rule/style/negated_conditions_in_unless.cr#L29" target="_blank">
+      <a href="https://github.com/crystal-ameba/ameba/blob/029c579/src/ameba/rule/style/negated_conditions_in_unless.cr#L29" target="_blank">
         ameba/rule/style/negated_conditions_in_unless.cr
       </a>
     
@@ -1456,198 +1454,6 @@ that is executed if a negated condition is NOT met.</p>
 
 
   <div class="methods-inherited">
-    
-      
-
-  <h3>Instance methods inherited from module <code><a href="../../../Ameba/AST/Util.html">Ameba::AST::Util</a></code></h3>
-  
-  
-    <a href="../../../Ameba/AST/Util.html#abort%3F%28node%29-instance-method" class="tooltip">
-      <span>abort?(node)</span>
-    abort?</a>, 
-    
-  
-    <a href="../../../Ameba/AST/Util.html#all_block_args%28node%3ACrystal%3A%3ABlock%29%3AArray%28Crystal%3A%3AVar%29-instance-method" class="tooltip">
-      <span>all_block_args(node : Crystal::Block) : Array(Crystal::Var)</span>
-    all_block_args</a>, 
-    
-  
-    <a href="../../../Ameba/AST/Util.html#assigned_var%28target%3ACrystal%3A%3AASTNode%29%3ACrystal%3A%3AVar%7CNil-instance-method" class="tooltip">
-      <span>assigned_var(target : Crystal::ASTNode) : Crystal::Var | Nil</span>
-    assigned_var</a>, 
-    
-  
-    <a href="../../../Ameba/AST/Util.html#block_args_at%28node%3ACrystal%3A%3ABlock%2Cindex%3AInt%29%3AArray%28Crystal%3A%3AVar%29-instance-method" class="tooltip">
-      <span>block_args_at(node : Crystal::Block, index : Int) : Array(Crystal::Var)</span>
-    block_args_at</a>, 
-    
-  
-    <a href="../../../Ameba/AST/Util.html#control_exp_code%28node%3ACrystal%3A%3AControlExpression%2Ccode_lines%29-instance-method" class="tooltip">
-      <span>control_exp_code(node : Crystal::ControlExpression, code_lines)</span>
-    control_exp_code</a>, 
-    
-  
-    <a href="../../../Ameba/AST/Util.html#dynamic_literal%3F%28node%29%3ABool-instance-method" class="tooltip">
-      <span>dynamic_literal?(node) : Bool</span>
-    dynamic_literal?</a>, 
-    
-  
-    <a href="../../../Ameba/AST/Util.html#each_inline_directive%28source%2C%26block%3ACrystal%3A%3AToken%2CString%2CArray%28String%29-%3E_%29-instance-method" class="tooltip">
-      <span>each_inline_directive(source, &block : Crystal::Token, String, Array(String) -> _)</span>
-    each_inline_directive</a>, 
-    
-  
-    <a href="../../../Ameba/AST/Util.html#exit%3F%28node%29-instance-method" class="tooltip">
-      <span>exit?(node)</span>
-    exit?</a>, 
-    
-  
-    <a href="../../../Ameba/AST/Util.html#flow_command%3F%28node%2Cin_loop%29-instance-method" class="tooltip">
-      <span>flow_command?(node, in_loop)</span>
-    flow_command?</a>, 
-    
-  
-    <a href="../../../Ameba/AST/Util.html#flow_expression%3F%28node%2Cin_loop%3Dfalse%29-instance-method" class="tooltip">
-      <span>flow_expression?(node, in_loop = <span class="n">false</span>)</span>
-    flow_expression?</a>, 
-    
-  
-    <a href="../../../Ameba/AST/Util.html#has_arguments%3F%28node%29%3ABool-instance-method" class="tooltip">
-      <span>has_arguments?(node) : Bool</span>
-    has_arguments?</a>, 
-    
-  
-    <a href="../../../Ameba/AST/Util.html#has_block%3F%28node%29%3ABool-instance-method" class="tooltip">
-      <span>has_block?(node) : Bool</span>
-    has_block?</a>, 
-    
-  
-    <a href="../../../Ameba/AST/Util.html#has_short_block%3F%28node%2Ccode_lines%29-instance-method" class="tooltip">
-      <span>has_short_block?(node, code_lines)</span>
-    has_short_block?</a>, 
-    
-  
-    <a href="../../../Ameba/AST/Util.html#heredoc%3F%28node%3ACrystal%3A%3AASTNode%2Csource%3ASource%29-instance-method" class="tooltip">
-      <span>heredoc?(node : Crystal::ASTNode, source : Source)</span>
-    heredoc?</a>, 
-    
-  
-    <a href="../../../Ameba/AST/Util.html#literal%3F%28node%29%3ABool-instance-method" class="tooltip">
-      <span>literal?(node) : Bool</span>
-    literal?</a>, 
-    
-  
-    <a href="../../../Ameba/AST/Util.html#loop%3F%28node%29-instance-method" class="tooltip">
-      <span>loop?(node)</span>
-    loop?</a>, 
-    
-  
-    <a href="../../../Ameba/AST/Util.html#name_end_location%28node%29-instance-method" class="tooltip">
-      <span>name_end_location(node)</span>
-    name_end_location</a>, 
-    
-  
-    <a href="../../../Ameba/AST/Util.html#name_location%28node%29-instance-method" class="tooltip">
-      <span>name_location(node)</span>
-    name_location</a>, 
-    
-  
-    <a href="../../../Ameba/AST/Util.html#name_location_or%28token%3ACrystal%3A%3AToken%2Cname%2C%2A%2Cadjust_location_column_number%3Dnil%29-instance-method" class="tooltip">
-      <span>name_location_or(token : Crystal::Token, name, *, adjust_location_column_number = <span class="n">nil</span>)<br/>name_location_or(node : Crystal::ASTNode, *, adjust_location_column_number = <span class="n">nil</span>)</span>
-    name_location_or</a>, 
-    
-  
-    <a href="../../../Ameba/AST/Util.html#name_size%28node%29-instance-method" class="tooltip">
-      <span>name_size(node)</span>
-    name_size</a>, 
-    
-  
-    <a href="../../../Ameba/AST/Util.html#node_source%28node%2Ccode_lines%29-instance-method" class="tooltip">
-      <span>node_source(node, code_lines)</span>
-    node_source</a>, 
-    
-  
-    <a href="../../../Ameba/AST/Util.html#nodoc%3F%28node%29-instance-method" class="tooltip">
-      <span>nodoc?(node)</span>
-    nodoc?</a>, 
-    
-  
-    <a href="../../../Ameba/AST/Util.html#operator_method%3F%28node%29-instance-method" class="tooltip">
-      <span>operator_method?(node)</span>
-    operator_method?</a>, 
-    
-  
-    <a href="../../../Ameba/AST/Util.html#operator_method_name%3F%28name%3AString%29-instance-method" class="tooltip">
-      <span>operator_method_name?(name : String)</span>
-    operator_method_name?</a>, 
-    
-  
-    <a href="../../../Ameba/AST/Util.html#path_name%28node%3ACrystal%3A%3APath%2C%2A%2Cinclude_global%3Dtrue%29%3AString-instance-method" class="tooltip">
-      <span>path_name(node : Crystal::Path, *, include_global = <span class="n">true</span>) : String</span>
-    path_name</a>, 
-    
-  
-    <a href="../../../Ameba/AST/Util.html#path_named%3F%28node%2C%2Anames%3AString%29%3ABool-instance-method" class="tooltip">
-      <span>path_named?(node, *names : String) : Bool</span>
-    path_named?</a>, 
-    
-  
-    <a href="../../../Ameba/AST/Util.html#raise%3F%28node%29-instance-method" class="tooltip">
-      <span>raise?(node)</span>
-    raise?</a>, 
-    
-  
-    <a href="../../../Ameba/AST/Util.html#setter_method%3F%28node%29-instance-method" class="tooltip">
-      <span>setter_method?(node)</span>
-    setter_method?</a>, 
-    
-  
-    <a href="../../../Ameba/AST/Util.html#setter_method_name%3F%28name%3AString%29-instance-method" class="tooltip">
-      <span>setter_method_name?(name : String)</span>
-    setter_method_name?</a>, 
-    
-  
-    <a href="../../../Ameba/AST/Util.html#short_block%3F%28node%2Ccode_lines%29-instance-method" class="tooltip">
-      <span>short_block?(node, code_lines)</span>
-    short_block?</a>, 
-    
-  
-    <a href="../../../Ameba/AST/Util.html#single_block_arg%28node%3ACrystal%3A%3ABlock%29%3ACrystal%3A%3AVar%7CNil-instance-method" class="tooltip">
-      <span>single_block_arg(node : Crystal::Block) : Crystal::Var | Nil</span>
-    single_block_arg</a>, 
-    
-  
-    <a href="../../../Ameba/AST/Util.html#source_between%28loc%2Cend_loc%2Ccode_lines%29%3AString%7CNil-instance-method" class="tooltip">
-      <span>source_between(loc, end_loc, code_lines) : String | Nil</span>
-    source_between</a>, 
-    
-  
-    <a href="../../../Ameba/AST/Util.html#static_literal%3F%28node%29%3ABool-instance-method" class="tooltip">
-      <span>static_literal?(node) : Bool</span>
-    static_literal?</a>, 
-    
-  
-    <a href="../../../Ameba/AST/Util.html#suffix%3F%28node%29-instance-method" class="tooltip">
-      <span>suffix?(node)</span>
-    suffix?</a>, 
-    
-  
-    <a href="../../../Ameba/AST/Util.html#takes_arguments%3F%28node%29%3ABool-instance-method" class="tooltip">
-      <span>takes_arguments?(node) : Bool</span>
-    takes_arguments?</a>
-    
-  
-
-
-      
-
-
-      
-
-
-      
-
-
     
       
 
@@ -1850,7 +1656,7 @@ that is executed if a negated condition is NOT met.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/86dea74/src/ameba/rule/style/negated_conditions_in_unless.cr#L29" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/029c579/src/ameba/rule/style/negated_conditions_in_unless.cr#L29" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1980,7 +1786,7 @@ that is executed if a negated condition is NOT met.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/86dea74/src/ameba/rule/style/negated_conditions_in_unless.cr#L32" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/029c579/src/ameba/rule/style/negated_conditions_in_unless.cr#L30" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2122,7 +1928,7 @@ that is executed if a negated condition is NOT met.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/86dea74/src/ameba/rule/style/negated_conditions_in_unless.cr#L32" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/029c579/src/ameba/rule/style/negated_conditions_in_unless.cr#L30" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2152,7 +1958,7 @@ that is executed if a negated condition is NOT met.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/86dea74/src/ameba/rule/style/negated_conditions_in_unless.cr#L39" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/029c579/src/ameba/rule/style/negated_conditions_in_unless.cr#L37" target="_blank">View source</a>]
         
       </div>
     </div>
