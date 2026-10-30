@@ -614,6 +614,37 @@ module Ameba::Rule::Lint
     end
 
     context "assign" do
+      it "reports unreachable code after other assignments of a flow expression" do
+        expect_issue subject, <<-CRYSTAL
+          def method
+            x : Int32 = raise "boom"
+            :unreachable
+          # ^^^^^^^^^^^^ error: Unreachable code detected
+          end
+
+          def method(x)
+            x += raise "boom"
+            :unreachable
+          # ^^^^^^^^^^^^ error: Unreachable code detected
+          end
+
+          def method
+            a, b = 1, raise "boom"
+            :unreachable
+          # ^^^^^^^^^^^^ error: Unreachable code detected
+          end
+          CRYSTAL
+      end
+
+      it "doesn't report code after conditional assignment of a flow expression" do
+        expect_no_issues subject, <<-CRYSTAL
+          def method(x)
+            x ||= raise "boom"
+            :reachable
+          end
+          CRYSTAL
+      end
+
       it "reports unreachable code after assignment of a flow expression" do
         expect_issue subject, <<-CRYSTAL
           def method(a)
