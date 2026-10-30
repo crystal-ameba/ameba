@@ -26,7 +26,7 @@ module Ameba::AST
     SPECIAL_NODE_NAMES = %w[super previous_def]
 
     @scope_queue = [] of Scope
-    @current_visibility : Crystal::Visibility?
+    @visibility_modifier : Crystal::VisibilityModifier?
     @skip : Array(Crystal::ASTNode.class)?
 
     def initialize(@rule, @source, skip = nil)
@@ -48,7 +48,10 @@ module Ameba::AST
       return if skip?(node)
 
       scope = Scope.new(node, @current_scope)
-      scope.visibility = @current_visibility
+
+      if (modifier = @visibility_modifier) && modifier.exp.same?(node)
+        scope.visibility = modifier.modifier
+      end
 
       @current_scope = scope
       true
@@ -56,8 +59,6 @@ module Ameba::AST
 
     private def on_scope_end(node)
       @scope_queue << @current_scope
-
-      @current_visibility = nil
 
       # go up if this is not a top level scope
       if outer_scope = @current_scope.outer_scope
@@ -74,7 +75,8 @@ module Ameba::AST
 
     # :nodoc:
     def visit(node : Crystal::VisibilityModifier)
-      @current_visibility = node.exp.visibility = node.modifier
+      node.exp.visibility = node.modifier
+      @visibility_modifier = node
       true
     end
 
