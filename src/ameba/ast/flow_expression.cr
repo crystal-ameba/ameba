@@ -45,7 +45,7 @@ module Ameba::AST
     #   a + 1 # => unreachable node
     # end
     # ```
-    def unreachable_nodes
+    getter unreachable_nodes : Array(Crystal::ASTNode) do
       unreachable_nodes = [] of Crystal::ASTNode
 
       case current_node = node
