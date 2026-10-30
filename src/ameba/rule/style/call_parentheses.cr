@@ -135,7 +135,9 @@ module Ameba::Rule::Style
       if location && end_location
         return if exclude_multiline_calls? &&
                   !location.same_line?(end_location)
+      end
 
+      if location && end_location && !rebinds_block?(node, visitor, source)
         line = source.lines[location.line_number - 1]
         rest = line[(location.column_number - 1)..-1]
 
@@ -149,6 +151,22 @@ module Ameba::Rule::Style
       else
         issue_for(*issue_location, MSG)
       end
+    end
+
+    # Returns `true` if adding parentheses to the *node* would result in
+    # its `do ... end` block being passed to the outer call instead, i.e.
+    # in case of `foo bar 1 do ... end`, where the block is passed to `bar`.
+    private def rebinds_block?(node, visitor, source)
+      return false unless block = node.block
+      return false unless outer_call = visitor.argument_of
+      return false if outer_call.has_parentheses?
+
+      do_block?(block, source)
+    end
+
+    private def do_block?(node : Crystal::Block, source)
+      !!(location = node.location) &&
+        source.code[source.pos(location), 2]? == "do"
     end
 
     private def excluded_dsl_call_names_match?(node, visitor)
@@ -211,7 +229,7 @@ module Ameba::Rule::Style
                        when ends_with_block
                          block
                        else
-                         block.location.try(&.adjust(column_number: -2))
+                         block_preceding_location(block, source)
                        end
                      end
       end_location ||= node.block_arg
@@ -231,6 +249,32 @@ module Ameba::Rule::Style
         end_location
       when Crystal::ASTNode
         end_location.end_location
+      end
+    end
+
+    # Returns the location of the last character preceding the *block*,
+    # skipping any whitespace and line continuations in between.
+    #
+    #     foo.bar baz \
+    #               ^--- x
+    #       do |what|
+    #       # ...
+    #     end
+    #
+    private def block_preceding_location(block, source)
+      return unless location = block.location
+
+      line_number = location.line_number
+      code = source.lines[line_number - 1]?.try(&.[0, location.column_number - 1]?)
+
+      while code
+        code = code.rstrip
+        return location.with(line_number, code.size) unless code.empty?
+
+        line_number -= 1
+        break unless line_number.positive?
+
+        code = source.lines[line_number - 1]?.try(&.rstrip.rchop('\\'))
       end
     end
 
@@ -255,6 +299,10 @@ module Ameba::Rule::Style
     private class CallInBlockVisitor < Crystal::Visitor
       include AST::Util
 
+      # Calls (innermost last) whose arguments are being visited,
+      # reset within the blocks
+      @argument_calls = [] of Crystal::Call
+
       getter outer_calls = [] of Crystal::Call
       getter type_definition : Crystal::ClassDef | Crystal::ModuleDef | Bool?
 
@@ -262,12 +310,28 @@ module Ameba::Rule::Style
         source.ast.accept(self)
       end
 
+      # Returns the call, the currently visited node is an argument of
+      def argument_of : Crystal::Call?
+        @argument_calls.last?
+      end
+
       private def outer_call(value, &)
         @outer_calls.push(value)
+        argument_calls, @argument_calls = @argument_calls, [] of Crystal::Call
         begin
           yield
         ensure
           @outer_calls.pop
+          @argument_calls = argument_calls
+        end
+      end
+
+      private def arguments_of(value, &)
+        @argument_calls.push(value)
+        begin
+          yield
+        ensure
+          @argument_calls.pop
         end
       end
 
@@ -301,9 +365,11 @@ module Ameba::Rule::Style
         @on_call.call(node, self)
 
         node.obj.try(&.accept(self))
-        node.args.each(&.accept(self))
-        node.named_args.try(&.each(&.accept(self)))
-        node.block_arg.try(&.accept(self))
+        arguments_of(node) do
+          node.args.each(&.accept(self))
+          node.named_args.try(&.each(&.accept(self)))
+          node.block_arg.try(&.accept(self))
+        end
         outer_call(node) do
           node.block.try(&.accept(self))
         end
