@@ -132,7 +132,7 @@ class Ameba::Source
 
       raise IndexError.new(
         "The range #{begin_pos}...#{end_pos} is outside the bounds of " \
-        "the source (0...#{code.size})"
+        "the source (0...#{code.size})",
       )
     end
   end
