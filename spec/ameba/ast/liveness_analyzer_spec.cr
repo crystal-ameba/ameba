@@ -370,7 +370,7 @@ module Ameba::AST
         dead_store_names(scope).should be_empty
       end
 
-      it "does not report assignment used after break" do
+      it "reports assignment overwritten before the only break of infinite loop" do
         scope = def_scope <<-CRYSTAL
           def foo
             found = false
@@ -383,7 +383,90 @@ module Ameba::AST
             found
           end
           CRYSTAL
+        dead_store_names(scope).should eq ["found"]
+      end
+
+      it "does not report assignment used after break" do
+        scope = def_scope <<-CRYSTAL
+          def foo
+            found = false
+            while true
+              break if something
+              found = true
+            end
+            found
+          end
+          CRYSTAL
         dead_store_names(scope).should be_empty
+      end
+
+      it "does not report assignment used after conditional loop" do
+        scope = def_scope <<-CRYSTAL
+          def foo
+            found = false
+            while something
+              if other
+                found = true
+                break
+              end
+            end
+            found
+          end
+          CRYSTAL
+        dead_store_names(scope).should be_empty
+      end
+
+      it "does not report assignment used after break within macro code" do
+        scope = def_scope <<-CRYSTAL
+          def foo
+            a = 1
+            while true
+              {% if flag?(:foo) %}
+                break
+              {% end %}
+              process
+            end
+            a
+          end
+          CRYSTAL
+        dead_store_names(scope).should be_empty
+
+        scope = def_scope <<-CRYSTAL
+          def foo
+            a = 1
+            while true
+              {{ "break".id }}
+            end
+            a
+          end
+          CRYSTAL
+        dead_store_names(scope).should be_empty
+      end
+
+      it "reports assignment read only after infinite loop with break in a block" do
+        scope = def_scope <<-CRYSTAL
+          def foo(xs)
+            a = 1
+            while true
+              xs.each { break }
+            end
+            a
+          end
+          CRYSTAL
+        dead_store_names(scope).should eq ["a"]
+      end
+
+      it "reports assignment read only after infinite until loop" do
+        scope = def_scope <<-CRYSTAL
+          def foo
+            a = 1
+            until false
+              process
+            end
+            a
+          end
+          CRYSTAL
+        dead_store_names(scope).should eq ["a"]
       end
 
       it "does not report assignment before next used in subsequent iteration" do
@@ -421,7 +504,7 @@ module Ameba::AST
         dead_store_names(scope).should be_empty
       end
 
-      it "does not report assignment inside conditional break" do
+      it "reports initializer overwritten inside conditional break, but not the latter" do
         scope = def_scope <<-CRYSTAL
           def foo
             options = 0
@@ -435,7 +518,7 @@ module Ameba::AST
             options
           end
           CRYSTAL
-        dead_store_names(scope).should be_empty
+        dead_store_names(scope).should eq ["options"]
       end
 
       it "does not report assignment read by the condition after next" do
@@ -475,6 +558,160 @@ module Ameba::AST
           end
           CRYSTAL
         dead_store_names(scope).should eq ["b"]
+      end
+    end
+
+    context "calls never returning" do
+      it "reports assignment read only after raise" do
+        scope = def_scope <<-CRYSTAL
+          def foo
+            a = 1
+            raise "x"
+            a
+          end
+          CRYSTAL
+        dead_store_names(scope).should eq ["a"]
+      end
+
+      it "reports assignment read only after Process.exit" do
+        scope = def_scope <<-CRYSTAL
+          def foo
+            a = 1
+            Process.exit 1
+            a
+          end
+          CRYSTAL
+        dead_store_names(scope).should eq ["a"]
+      end
+
+      it "reports assignment read only after exit / abort" do
+        scope = def_scope <<-CRYSTAL
+          def foo
+            a = 1
+            exit 1
+            a
+          end
+          CRYSTAL
+        dead_store_names(scope).should eq ["a"]
+
+        scope = def_scope <<-CRYSTAL
+          def foo
+            a = 1
+            abort "x"
+            a
+          end
+          CRYSTAL
+        dead_store_names(scope).should eq ["a"]
+      end
+
+      it "does not report assignment read by the raise arguments" do
+        scope = def_scope <<-CRYSTAL
+          def foo
+            a = 1
+            raise a.to_s
+          end
+          CRYSTAL
+        dead_store_names(scope).should be_empty
+      end
+
+      it "does not report assignment read in rescue after raise" do
+        scope = def_scope <<-CRYSTAL
+          def foo
+            a = 1
+            raise "x"
+            a
+          rescue
+            a
+          end
+          CRYSTAL
+        dead_store_names(scope).should be_empty
+      end
+
+      it "does not report assignment read in ensure after raise" do
+        scope = def_scope <<-CRYSTAL
+          def foo
+            a = 1
+            raise "x"
+          ensure
+            a
+          end
+          CRYSTAL
+        dead_store_names(scope).should be_empty
+      end
+
+      it "does not report assignment read after raise in a branch" do
+        scope = def_scope <<-CRYSTAL
+          def foo
+            a = 1
+            raise "x" if something
+            a
+          end
+          CRYSTAL
+        dead_store_names(scope).should be_empty
+      end
+
+      it "reports assignment read only after loop without break" do
+        scope = def_scope <<-CRYSTAL
+          def foo(xs)
+            a = 1
+            loop do
+              xs.each { break }
+            end
+            a
+          end
+          CRYSTAL
+        dead_store_names(scope).should eq ["a"]
+      end
+
+      it "does not report assignment read after loop with break" do
+        scope = def_scope <<-CRYSTAL
+          def foo
+            a = 1
+            loop do
+              break if something
+            end
+            a
+          end
+          CRYSTAL
+        dead_store_names(scope).should be_empty
+      end
+
+      it "does not report assignment read after loop with break within macro code" do
+        scope = def_scope <<-CRYSTAL
+          def foo
+            a = 1
+            loop do
+              {% if flag?(:foo) %}
+                break
+              {% end %}
+            end
+            a
+          end
+          CRYSTAL
+        dead_store_names(scope).should be_empty
+      end
+
+      it "does not report assignment read by the loop block" do
+        scope = def_scope <<-CRYSTAL
+          def foo
+            a = 1
+            loop do
+              puts a
+            end
+          end
+          CRYSTAL
+        dead_store_names(scope).should be_empty
+      end
+
+      it "does not treat raise with a receiver as never returning" do
+        scope = def_scope <<-CRYSTAL
+          def foo
+            a = 1
+            obj.raise "x"
+            a
+          end
+          CRYSTAL
+        dead_store_names(scope).should be_empty
       end
     end
 
@@ -862,7 +1099,64 @@ module Ameba::AST
         dead_store_names(scope).should be_empty
       end
 
+      it "reports assignment overwritten in each branch of exhaustive case" do
+        scope = def_scope <<-CRYSTAL
+          def foo(x : Int32 | String)
+            a = 1
+            case x
+            in Int32  then a = 2
+            in String then a = 3
+            end
+            a
+          end
+          CRYSTAL
+        dead_store_names(scope).should eq ["a"]
+      end
+
+      it "does not report assignment overwritten in each branch of non-exhaustive case" do
+        scope = def_scope <<-CRYSTAL
+          def foo(x)
+            a = 1
+            case x
+            when Int32  then a = 2
+            when String then a = 3
+            end
+            a
+          end
+          CRYSTAL
+        dead_store_names(scope).should be_empty
+      end
+
       context "select" do
+        it "reports assignment overwritten in each branch of select without else" do
+          scope = def_scope <<-CRYSTAL
+            def foo(ch)
+              a = 1
+              select
+              when v = ch.receive
+                a = v
+              end
+              a
+            end
+            CRYSTAL
+          dead_store_names(scope).should eq ["a"]
+        end
+
+        it "does not report assignment overwritten in each branch of select with else" do
+          scope = def_scope <<-CRYSTAL
+            def foo(ch)
+              a = 1
+              select
+              when v = ch.receive
+                a = v
+              else
+              end
+              a
+            end
+            CRYSTAL
+          dead_store_names(scope).should be_empty
+        end
+
         it "does not report assignment used in a branch other than the one overwriting it" do
           scope = def_scope <<-CRYSTAL
             def foo(a, b)
@@ -1012,7 +1306,7 @@ module Ameba::AST
         dead_store_names(scope).should eq ["word"]
       end
 
-      it "does not report multi-assign target used in next loop iteration" do
+      it "reports multi-assign target read only after infinite loop" do
         scope = def_scope <<-CRYSTAL
           def foo
             while true
@@ -1029,7 +1323,7 @@ module Ameba::AST
             word
           end
           CRYSTAL
-        dead_store_names(scope).should be_empty
+        dead_store_names(scope).should eq ["word"]
       end
 
       it "does not report assignment read by a call target" do

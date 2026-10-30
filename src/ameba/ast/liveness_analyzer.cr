@@ -9,6 +9,7 @@ module Ameba::AST
   # not in the live set, the assignment is marked as a dead store.
   class LivenessAnalyzer
     include Dataflow
+    include Util
 
     alias LiveSet = Set(String)
 
@@ -160,7 +161,7 @@ module Ameba::AST
     # Returns the name of the analyzed variable assigned by the *target* node,
     # or `nil` if it's not a variable (i.e. `obj.foo` or `@foo`), or not analyzed.
     private def tracked_var_name(target) : String?
-      if (var = Util.assigned_var(target)) && var.name.in?(@var_names)
+      if (var = assigned_var(target)) && var.name.in?(@var_names)
         var.name
       end
     end
@@ -323,14 +324,14 @@ module Ameba::AST
 
     {% for type in LOOP_NODES %}
       private def propagate_through(node : Crystal::{{ type.id }}, live : LiveSet, mark = true) : LiveSet
-        propagate_through_loop(node.cond, node.body, live, mark)
+        propagate_through_loop(node, live, mark)
       end
     {% end %}
 
     private def propagate_through(node : Crystal::Case, live : LiveSet, mark = true) : LiveSet
       # Each `when` conditions are evaluated only if the preceding ones
       # didn't match, so the branches are chained as `if`/`elsif`/`else`.
-      branch_live = propagate_through(node.else, live, mark)
+      branch_live = propagate_through_else(node, live, mark)
 
       node.whens.reverse_each do |when_node|
         when_live = propagate_through(when_node.body, live, mark)
@@ -343,13 +344,25 @@ module Ameba::AST
     private def propagate_through(node : Crystal::Select, live : LiveSet, mark = true) : LiveSet
       # Only the `when` condition of the chosen branch completes,
       # so the branches are alternatives to each other.
-      branch_live = propagate_through(node.else, live, mark)
+      branch_live = propagate_through_else(node, live, mark)
 
       node.whens.each do |when_node|
         when_live = propagate_through(when_node.body, live, mark)
         branch_live |= propagate_through(when_node.conds, when_live, mark)
       end
       branch_live
+    end
+
+    # Returns the variables live on entering the `else` branch of the *node*,
+    # or on falling through it (without any of the branches executed).
+    private def propagate_through_else(node : Crystal::Case | Crystal::Select, live : LiveSet, mark) : LiveSet
+      if else_node = node.else
+        return propagate_through(else_node, live, mark)
+      end
+
+      # `select` without `else` blocks until one of its branches gets executed,
+      # exhaustive `case ... in` covers all of the possible values
+      node.is_a?(Crystal::Select) || node.exhaustive? ? LiveSet.new : live
     end
 
     private def propagate_through(node : Crystal::ExceptionHandler, live : LiveSet, mark = true) : LiveSet
@@ -401,6 +414,7 @@ module Ameba::AST
     end
 
     private def propagate_through(node : Crystal::Call, live : LiveSet, mark = true) : LiveSet
+      live = propagate_through_no_return(node, live)
       live = propagate_through_raise(live)
 
       live = propagate_through(node.block, live, mark)
@@ -428,7 +442,7 @@ module Ameba::AST
     {% for type in MACRO_NODES %}
       {% unless INNER_SCOPE_NODES.includes?(type) %}
         private def propagate_through(node : Crystal::{{ type.id }}, live : LiveSet, mark = true) : LiveSet
-          propagate_through_raise(live) | macro_reads(node)
+          propagate_through_macro(live) | macro_reads(node)
         end
       {% end %}
     {% end %}
@@ -451,7 +465,7 @@ module Ameba::AST
     {% for type in INNER_SCOPE_NODES %}
       private def propagate_through(node : Crystal::{{ type.id }}, live : LiveSet, mark = true) : LiveSet
         {% if MACRO_NODES.includes?(type) %}
-          live = propagate_through_raise(live)
+          live = propagate_through_macro(live)
         {% end %}
 
         if reads = @inner_scope_reads[node.object_id]?
@@ -473,18 +487,24 @@ module Ameba::AST
       propagate_through(children, live, mark)
     end
 
-    private def propagate_through_loop(cond, body, live : LiveSet, mark) : LiveSet
+    private def propagate_through_loop(node : Crystal::While | Crystal::Until, live : LiveSet, mark) : LiveSet
+      cond, body = node.cond, node.body
+
+      # Endless loops (i.e. `while true`) are never left through
+      # the condition, so the code following them is reached only by `break`.
+      cond_exit_live = endless_loop?(node) ? LiveSet.new : live
+
       preserving_flow_control do
         # `break` exits to post-loop code, `next` jumps to loop condition.
         @flow = @flow.copy_with(break_live: live)
-        entry_live = live
+        entry_live = cond_exit_live
 
         MAX_FIXED_POINT_ITERATIONS.times do
           cond_live = propagate_through(cond, entry_live, false)
           @flow = @flow.copy_with(next_live: cond_live)
 
           body_live = propagate_through(body, cond_live, false)
-          new_entry = body_live | live
+          new_entry = body_live | cond_exit_live
 
           break if new_entry == entry_live
           entry_live = new_entry
@@ -500,10 +520,54 @@ module Ameba::AST
       end
     end
 
+    # Returns the variables live after the *node* call, which in case of
+    # the calls never returning (`raise`, `exit`, `abort` and `loop` without
+    # a `break`) aren't the ones read by the (unreachable) code following them,
+    # but the ones live when raising (i.e. read by `rescue` / `ensure`),
+    # returning or leaving the scope.
+    private def propagate_through_no_return(node : Crystal::Call, live : LiveSet) : LiveSet
+      case
+      when raise?(node)
+        @flow.raise_live
+      when exit?(node), abort?(node)
+        @exit_live
+      when endless_loop_call?(node)
+        # the block might `return` (raising is handled by the caller)
+        @flow.return_live
+      else
+        live
+      end
+    end
+
+    # Returns `true` if the *node* is a `loop do ... end` call never left by `break`.
+    private def endless_loop_call?(node : Crystal::Call) : Bool
+      return false unless loop?(node) && (block = node.block)
+
+      !LoopBreakVisitor.new(block.body).found?
+    end
+
+    # Returns `true` if the *node* is a loop never left through its condition.
+    private def endless_loop?(node : Crystal::While | Crystal::Until) : Bool
+      case node
+      in Crystal::While then node.cond.true_literal?
+      in Crystal::Until then node.cond.false_literal?
+      end
+    end
+
+    # Adds the variables live on any of the jumps, since the (unknown) code
+    # expanded from a macro might `break`, `next`, `return` or raise at this point.
+    private def propagate_through_macro(live : LiveSet) : LiveSet
+      merge_live_sets(live, @flow.live)
+    end
+
     # Adds the variables live when an exception is raised at this point.
     private def propagate_through_raise(live : LiveSet) : LiveSet
-      raise_live = @flow.raise_live
-      raise_live.subset_of?(live) ? live : live | raise_live
+      merge_live_sets(live, @flow.raise_live)
+    end
+
+    # Returns the union of the live sets, reusing *live* if it includes *other*.
+    private def merge_live_sets(live : LiveSet, other : LiveSet) : LiveSet
+      other.subset_of?(live) ? live : live | other
     end
 
     # Restores the flow control overwritten within the block.

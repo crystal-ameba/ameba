@@ -1241,15 +1241,29 @@ module Ameba::Rule::Lint
             CRYSTAL
         end
 
-        it "does not report if assignment is used after break" do
-          expect_no_issues subject, <<-CRYSTAL
+        it "reports if assignment is overwritten before the only break of infinite loop" do
+          expect_issue subject, <<-CRYSTAL
             def method
               found = false
+            # ^^^^^ error: Useless assignment to variable `found`
               while true
                 if something
                   found = true
                   break
                 end
+              end
+              found
+            end
+            CRYSTAL
+        end
+
+        it "does not report if assignment is used after break" do
+          expect_no_issues subject, <<-CRYSTAL
+            def method
+              found = false
+              while true
+                break if something
+                found = true
               end
               found
             end

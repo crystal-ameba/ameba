@@ -280,10 +280,11 @@ module Ameba::AST::Util
       node.name == "raise" && node.args.size == 1 && node.obj.nil?
   end
 
-  # Returns `true` if node represents `exit` method call.
+  # Returns `true` if node represents `exit` (or `Process.exit`) method call.
   def exit?(node)
     node.is_a?(Crystal::Call) &&
-      node.name == "exit" && node.args.size <= 1 && node.obj.nil?
+      node.name == "exit" && node.args.size <= 1 &&
+      (node.obj.nil? || path_named?(node.obj, "Process"))
   end
 
   # Returns `true` if node represents `abort` method call.
