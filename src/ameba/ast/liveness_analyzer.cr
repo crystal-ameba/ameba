@@ -376,9 +376,22 @@ module Ameba::AST
     end
 
     {% for type in RAISING_NODES %}
+      private def propagate_through(node : Crystal::{{ type.id }}, live : LiveSet, mark = true) : LiveSet
+        propagate_through_children(node, propagate_through_raise(live), mark)
+      end
+    {% end %}
+
+    {% for type in MACRO_NODES %}
       {% unless INNER_SCOPE_NODES.includes?(type) %}
         private def propagate_through(node : Crystal::{{ type.id }}, live : LiveSet, mark = true) : LiveSet
-          propagate_through_children(node, propagate_through_raise(live), mark)
+          live = propagate_through_raise(live)
+
+          @var_names.each do |name|
+            next unless MacroReferenceFinder.new(node, name).references?
+
+            live = add_to_live_set(name, live)
+          end
+          live
         end
       {% end %}
     {% end %}
@@ -400,7 +413,7 @@ module Ameba::AST
     # treat these as being read at the location of the inner scope
     {% for type in INNER_SCOPE_NODES %}
       private def propagate_through(node : Crystal::{{ type.id }}, live : LiveSet, mark = true) : LiveSet
-        {% if RAISING_NODES.includes?(type) %}
+        {% if MACRO_NODES.includes?(type) %}
           live = propagate_through_raise(live)
         {% end %}
 

@@ -59,6 +59,40 @@ module Ameba::Rule::Lint
         CRYSTAL
     end
 
+    it "passes if rescue variable is within `MacroExpression`" do
+      expect_no_issues subject, <<-CRYSTAL
+        begin
+          raise MyException.new("OH NO!")
+        rescue ex : MyException
+          puts {{ "ex".id }}
+        end
+        CRYSTAL
+    end
+
+    it "passes if rescue variable is within `MacroVerbatim`" do
+      expect_no_issues subject, <<-CRYSTAL
+        begin
+          raise MyException.new("OH NO!")
+        rescue ex : MyException
+          {% verbatim do %}
+            puts ex
+          {% end %}
+        end
+        CRYSTAL
+    end
+
+    it "passes if rescue variable is used within `MacroExpression` after the handler" do
+      expect_no_issues subject, <<-CRYSTAL
+        def foo
+          begin
+            raise MyException.new("OH NO!")
+          rescue ex : MyException
+          end
+          puts {{ "ex".id }}
+        end
+        CRYSTAL
+    end
+
     it "passes if rescue variable is used within `MacroIf` after the handler" do
       expect_no_issues subject, <<-CRYSTAL
         def foo
