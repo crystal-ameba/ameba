@@ -27,14 +27,12 @@ module Ameba::AST
     @inner_scope_nodes : Set(UInt64)
     @inner_scope_reads : Hash(UInt64, LiveSet)
 
-    # Live sets for loop flow control: `break` exits to post-loop,
-    # `next` jumps to loop condition. Without these, assignments
-    # before break/next would be incorrectly marked as dead.
-    @break_live : LiveSet?
-    @next_live : LiveSet?
-
-    # Live set for `return`, which exits the scope through all of the
-    # enclosing `ensure` clauses.
+    # Live sets for flow control: `break` exits to post-loop,
+    # `next` jumps to loop condition, and `return` exits the scope,
+    # all of them through the enclosing `ensure` clauses. Without these,
+    # assignments before break/next/return would be incorrectly marked as dead.
+    @break_live : LiveSet
+    @next_live : LiveSet
     @return_live : LiveSet
 
     # Variables live when leaving the scope, i.e. the captured variables,
@@ -52,7 +50,7 @@ module Ameba::AST
       @exit_live = captured_variables
         .select { |var| var.referenced? || var.used_in_macro? }
         .to_set(&.name)
-      @return_live = @exit_live
+      @break_live = @next_live = @return_live = @exit_live
       @assignment_map = build_assignment_map(variables)
       @inner_scope_nodes = @scope.inner_scopes.to_set(&.node.object_id)
       @inner_scope_reads = build_inner_scope_reads(variables)
@@ -277,17 +275,12 @@ module Ameba::AST
     private def propagate_through(node : Crystal::ExceptionHandler, live : LiveSet, mark = true) : LiveSet
       post_ensure = propagate_through(node.ensure, live, mark)
 
-      # Save outer flow control context before overwriting
-      outer_return = @return_live
-      outer_break = @break_live
-      outer_next = @next_live
-
-      begin
-        # `return`, `break` and `next` leave the handler through
+      preserving_flow_control do
+        # `break`, `next` and `return` leave the handler through
         # the `ensure` clause, which might read the variables.
-        @return_live = propagate_through(node.ensure, outer_return, false)
-        @break_live = propagate_through(node.ensure, outer_break || @exit_live, false)
-        @next_live = propagate_through(node.ensure, outer_next || @exit_live, false)
+        @break_live = propagate_through(node.ensure, @break_live, false)
+        @next_live = propagate_through(node.ensure, @next_live, false)
+        @return_live = propagate_through(node.ensure, @return_live, false)
 
         after_body = propagate_through(node.else, post_ensure, mark)
 
@@ -303,10 +296,6 @@ module Ameba::AST
         # Union rescue_live because rescue-needed variables are live before the entire handler.
         body_live = propagate_through(node.body, after_body | rescue_live, mark)
         body_live | rescue_live
-      ensure
-        @return_live = outer_return
-        @break_live = outer_break
-        @next_live = outer_next
       end
     end
 
@@ -350,11 +339,11 @@ module Ameba::AST
     end
 
     private def propagate_through(node : Crystal::Break, live : LiveSet, mark = true) : LiveSet
-      propagate_through(node.exp, @break_live || @exit_live, mark)
+      propagate_through(node.exp, @break_live, mark)
     end
 
     private def propagate_through(node : Crystal::Next, live : LiveSet, mark = true) : LiveSet
-      propagate_through(node.exp, @next_live || @exit_live, mark)
+      propagate_through(node.exp, @next_live, mark)
     end
 
     # Inner scope nodes: don't descend into nested scopes, but since they
@@ -378,11 +367,7 @@ module Ameba::AST
     end
 
     private def propagate_through_loop(cond, body, live : LiveSet, mark) : LiveSet
-      # Save outer loop context before overwriting
-      outer_break = @break_live
-      outer_next = @next_live
-
-      begin
+      preserving_flow_control do
         # `break` exits to post-loop code, `next` jumps to loop condition.
         @break_live = live
         entry_live = live.dup
@@ -406,9 +391,16 @@ module Ameba::AST
         propagate_through(body, cond_live, mark)
 
         converged_cond_live
+      end
+    end
+
+    # Restores the flow control live sets overwritten within the block.
+    private def preserving_flow_control(&)
+      outer = {@break_live, @next_live, @return_live}
+      begin
+        yield
       ensure
-        @break_live = outer_break
-        @next_live = outer_next
+        @break_live, @next_live, @return_live = outer
       end
     end
 
