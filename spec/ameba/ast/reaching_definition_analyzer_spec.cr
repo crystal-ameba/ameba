@@ -189,6 +189,31 @@ module Ameba::AST
     end
 
     context "other definitions" do
+      it "reaches a block after the handler from a rescue variable" do
+        reaches?(<<-CRYSTAL, "x").should be_true
+          def foo
+            begin
+              bar
+            rescue x
+            end
+            qux { |x| }
+          end
+          CRYSTAL
+      end
+
+      it "reaches a block within `ensure` from a rescue variable" do
+        reaches?(<<-CRYSTAL, "x").should be_true
+          def foo
+            begin
+              bar
+            rescue x
+            ensure
+              qux { |x| }
+            end
+          end
+          CRYSTAL
+      end
+
       it "reaches a block from an `out` argument" do
         reaches?(<<-CRYSTAL, "x").should be_true
           def foo

@@ -132,7 +132,12 @@ module Ameba::AST
 
       rescue_entry = defined | body_defined
       node.rescues.try &.each do |rescue_node|
-        rescue_defined = propagate(rescue_node.body, rescue_entry)
+        # The rescue variable (if any) gets assigned on entering the branch
+        rescue_defined = rescue_entry
+        if name = rescue_node.name
+          rescue_defined = define(name, rescue_defined)
+        end
+        rescue_defined = propagate(rescue_node.body, rescue_defined)
         merged = collect(merged, rescue_defined) unless terminates?(rescue_node.body)
       end
 
@@ -153,11 +158,16 @@ module Ameba::AST
       propagate(children, defined)
     end
 
-    private def define(target, defined : DefinedSet) : DefinedSet
+    private def define(target : Crystal::ASTNode, defined : DefinedSet) : DefinedSet
       return defined unless var = Util.assigned_var(target)
-      return defined if var.name.in?(defined)
 
-      defined.dup << var.name
+      define(var.name, defined)
+    end
+
+    private def define(name : String, defined : DefinedSet) : DefinedSet
+      return defined if name.in?(defined)
+
+      defined.dup << name
     end
 
     private def merge_branches(base : DefinedSet, branches) : DefinedSet
