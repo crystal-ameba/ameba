@@ -1088,7 +1088,64 @@ module Ameba::AST
         dead_store_names(scope).should be_empty
       end
 
+      it "reports assignment overwritten in each branch of exhaustive case" do
+        scope = def_scope <<-CRYSTAL
+          def foo(x : Int32 | String)
+            a = 1
+            case x
+            in Int32  then a = 2
+            in String then a = 3
+            end
+            a
+          end
+          CRYSTAL
+        dead_store_names(scope).should eq ["a"]
+      end
+
+      it "does not report assignment overwritten in each branch of non-exhaustive case" do
+        scope = def_scope <<-CRYSTAL
+          def foo(x)
+            a = 1
+            case x
+            when Int32  then a = 2
+            when String then a = 3
+            end
+            a
+          end
+          CRYSTAL
+        dead_store_names(scope).should be_empty
+      end
+
       context "select" do
+        it "reports assignment overwritten in each branch of select without else" do
+          scope = def_scope <<-CRYSTAL
+            def foo(ch)
+              a = 1
+              select
+              when v = ch.receive
+                a = v
+              end
+              a
+            end
+            CRYSTAL
+          dead_store_names(scope).should eq ["a"]
+        end
+
+        it "does not report assignment overwritten in each branch of select with else" do
+          scope = def_scope <<-CRYSTAL
+            def foo(ch)
+              a = 1
+              select
+              when v = ch.receive
+                a = v
+              else
+              end
+              a
+            end
+            CRYSTAL
+          dead_store_names(scope).should be_empty
+        end
+
         it "does not report assignment used in a branch other than the one overwriting it" do
           scope = def_scope <<-CRYSTAL
             def foo(a, b)

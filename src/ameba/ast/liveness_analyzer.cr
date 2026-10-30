@@ -325,7 +325,7 @@ module Ameba::AST
       private def propagate_through(node : Crystal::{{ type.id }}, live : LiveSet, mark = true) : LiveSet
         # Infinite loops (i.e. `while true`) are never left through
         # the condition, so the code following them is reached only by `break`.
-        cond_exit_live = infinite_loop?(node) ? LiveSet.new : live
+        cond_exit_live = endless_loop?(node) ? LiveSet.new : live
 
         propagate_through_loop(node.cond, node.body, live, cond_exit_live, mark)
       end
@@ -334,7 +334,7 @@ module Ameba::AST
     private def propagate_through(node : Crystal::Case, live : LiveSet, mark = true) : LiveSet
       # Each `when` conditions are evaluated only if the preceding ones
       # didn't match, so the branches are chained as `if`/`elsif`/`else`.
-      branch_live = propagate_through(node.else, live, mark)
+      branch_live = propagate_through_else(node, live, mark)
 
       node.whens.reverse_each do |when_node|
         when_live = propagate_through(when_node.body, live, mark)
@@ -347,13 +347,25 @@ module Ameba::AST
     private def propagate_through(node : Crystal::Select, live : LiveSet, mark = true) : LiveSet
       # Only the `when` condition of the chosen branch completes,
       # so the branches are alternatives to each other.
-      branch_live = propagate_through(node.else, live, mark)
+      branch_live = propagate_through_else(node, live, mark)
 
       node.whens.each do |when_node|
         when_live = propagate_through(when_node.body, live, mark)
         branch_live |= propagate_through(when_node.conds, when_live, mark)
       end
       branch_live
+    end
+
+    # Returns the variables live on entering the `else` branch of the *node*,
+    # or on falling through it (without any of the branches executed).
+    private def propagate_through_else(node : Crystal::Case | Crystal::Select, live : LiveSet, mark) : LiveSet
+      if else_node = node.else
+        return propagate_through(else_node, live, mark)
+      end
+
+      # `select` without `else` blocks until one of its branches gets executed,
+      # exhaustive `case ... in` covers all of the possible values
+      node.is_a?(Crystal::Select) || node.exhaustive? ? LiveSet.new : live
     end
 
     private def propagate_through(node : Crystal::ExceptionHandler, live : LiveSet, mark = true) : LiveSet
@@ -534,7 +546,7 @@ module Ameba::AST
     end
 
     # Returns `true` if the *node* is a loop never left through its condition.
-    private def infinite_loop?(node : Crystal::While | Crystal::Until) : Bool
+    private def endless_loop?(node : Crystal::While | Crystal::Until) : Bool
       case node
       in Crystal::While then node.cond.true_literal?
       in Crystal::Until then node.cond.false_literal?
