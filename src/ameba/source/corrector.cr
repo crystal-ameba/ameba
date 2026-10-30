@@ -4,11 +4,12 @@ class Ameba::Source
   # This class takes source code and rewrites it based
   # on the different correction actions supplied.
   class Corrector
-    @line_sizes = [] of Int32
+    # Positions at which the code lines start.
+    @line_offsets = [0]
 
-    def initialize(code : String)
-      code.each_line(chomp: false) do |line|
-        @line_sizes << line.size
+    def initialize(@code : String)
+      code.each_char_with_index do |char, index|
+        @line_offsets << index + 1 if char == '\n'
       end
       @rewriter = Rewriter.new(code)
     end
@@ -138,7 +139,9 @@ class Ameba::Source
       else
         line, column = location
       end
-      @line_sizes[0...line - 1].sum + (column - 1)
+      # Lines past the last one start at the end of the code
+      line_offset = @line_offsets[line - 1]? || @code.size
+      line_offset + (column - 1)
     end
 
     # Replaces the code of the given node with *content*.
