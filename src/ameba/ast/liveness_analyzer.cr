@@ -202,6 +202,7 @@ module Ameba::AST
       target = node.target
       unless target.is_a?(Crystal::Var) && target.name.in?(@var_names)
         live = propagate_through(node.value, live, mark)
+        live = propagate_through_raise(live) unless node.op.in?("||", "&&")
         return propagate_through(target, live, mark)
       end
 
@@ -210,15 +211,24 @@ module Ameba::AST
       # variable is live (since the op-assign reads the current value).
       mark_dead_store(node, target.name, live) if mark
       live = add_to_live_set(target.name, live)
+
+      # The operator (unless a logical one) is a call, which might raise
+      live = propagate_through_raise(live) unless node.op.in?("||", "&&")
       propagate_through(node.value, live, mark)
     end
 
     private def propagate_through(node : Crystal::MultiAssign, live : LiveSet, mark = true) : LiveSet
+      # A single value gets indexed for each of the targets in turn,
+      # which might raise both before and in between the assignments
+      raising = node.values.size == 1
+
+      live = propagate_through_raise(live) if raising
       node.targets.reverse_each do |target|
         if (var = Util.assigned_var(target)) && var.name.in?(@var_names)
           live = remove_from_live_set(node, var.name, live, mark)
         end
       end
+      live = propagate_through_raise(live) if raising
       propagate_through(node.values, live, mark)
     end
 
@@ -344,16 +354,13 @@ module Ameba::AST
       live
     end
 
-    # Yielding runs the block, and casting checks the type, both of which can raise
-    private def propagate_through(node : Crystal::Yield, live : LiveSet, mark = true) : LiveSet
-      live = propagate_through_raise(live)
-      live = propagate_through(node.exps, live, mark)
-      propagate_through(node.scope, live, mark)
-    end
-
-    private def propagate_through(node : Crystal::Cast, live : LiveSet, mark = true) : LiveSet
-      propagate_through(node.obj, propagate_through_raise(live), mark)
-    end
+    {% for type in RAISING_NODES %}
+      {% unless INNER_SCOPE_NODES.includes?(type) %}
+        private def propagate_through(node : Crystal::{{ type.id }}, live : LiveSet, mark = true) : LiveSet
+          propagate_through_children(node, propagate_through_raise(live), mark)
+        end
+      {% end %}
+    {% end %}
 
     private def propagate_through(node : Crystal::Return, live : LiveSet, mark = true) : LiveSet
       propagate_through(node.exp, @return_live, mark)
@@ -372,6 +379,10 @@ module Ameba::AST
     # treat these as being read at the location of the inner scope
     {% for type in INNER_SCOPE_NODES %}
       private def propagate_through(node : Crystal::{{ type.id }}, live : LiveSet, mark = true) : LiveSet
+        {% if RAISING_NODES.includes?(type) %}
+          live = propagate_through_raise(live)
+        {% end %}
+
         if reads = @inner_scope_reads[node.object_id]?
           live | reads
         else
@@ -381,6 +392,10 @@ module Ameba::AST
     {% end %}
 
     private def propagate_through(node : Crystal::ASTNode, live : LiveSet, mark = true) : LiveSet
+      propagate_through_children(node, live, mark)
+    end
+
+    private def propagate_through_children(node : Crystal::ASTNode, live : LiveSet, mark) : LiveSet
       children = [] of Crystal::ASTNode
       node.accept_children(ChildCollector.new(children))
 

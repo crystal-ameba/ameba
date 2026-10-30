@@ -692,6 +692,79 @@ module Ameba::AST
         dead_store_names(scope).should eq ["x"]
       end
 
+      it "does not report assignment followed by an op-assignment and used in rescue" do
+        scope = def_scope <<-CRYSTAL
+          def foo(a)
+            x = 1
+            a += 1
+            x = 2
+            a
+          rescue
+            x
+          end
+          CRYSTAL
+        dead_store_names(scope).should be_empty
+      end
+
+      it "does not report assignment followed by a multi-assignment of a single value and used in rescue" do
+        scope = def_scope <<-CRYSTAL
+          def foo(a)
+            x = 1
+            b, c = a
+            x = 2
+            b + c
+          rescue
+            x
+          end
+          CRYSTAL
+        dead_store_names(scope).should be_empty
+      end
+
+      it "does not report assignment followed by a string interpolation and used in rescue" do
+        scope = def_scope <<-'CRYSTAL'
+          def foo(a)
+            x = 1
+            b = "#{a}"
+            x = 2
+            b
+          rescue
+            x
+          end
+          CRYSTAL
+        dead_store_names(scope).should be_empty
+      end
+
+      it "does not report assignment followed by a macro expansion and used in rescue" do
+        scope = def_scope <<-CRYSTAL
+          def foo
+            x = 1
+            {% if flag?(:foo) %}
+              bar
+            {% end %}
+            x = 2
+          rescue
+            x
+          end
+          CRYSTAL
+        dead_store_names(scope).should be_empty
+      end
+
+      it "reports assignment followed by a logical op-assignment and overwritten" do
+        scope = def_scope <<-CRYSTAL
+          def foo(a)
+            begin
+              x = 1
+              a ||= 1
+              x = 2
+              bar(a)
+            rescue
+              x
+            end
+          end
+          CRYSTAL
+        dead_store_names(scope).should eq ["x"]
+      end
+
       it "does not report assignment in ensure read after next" do
         scope = def_scope <<-CRYSTAL
           def foo

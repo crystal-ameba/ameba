@@ -11,6 +11,11 @@ module Ameba::AST
       LibDef FunDef TypeDef CStructOrUnionDef TypeOf
       Macro MacroIf MacroFor
     ]
+    # Nodes, besides calls, which might raise an exception when evaluated
+    private RAISING_NODES = %w[
+      Yield Cast StringInterpolation
+      MacroExpression MacroIf MacroFor
+    ]
 
     # Returns the body node a scope analysis should walk for *node*.
     def scope_body(node)
