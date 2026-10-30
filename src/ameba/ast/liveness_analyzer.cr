@@ -16,6 +16,27 @@ module Ameba::AST
       dead_stores : Array(Assignment),
       entry_live_set : LiveSet
 
+    # Live sets for flow control: `break` exits to post-loop,
+    # `next` jumps to loop condition, `return` exits the scope, and a raised
+    # exception jumps to the enclosing `rescue` clauses (or exits the scope),
+    # all of them through the enclosing `ensure` clauses. Without these,
+    # assignments before break/next/return/raise would be incorrectly marked as dead.
+    private record FlowControl,
+      break_live : LiveSet,
+      next_live : LiveSet,
+      return_live : LiveSet,
+      raise_live : LiveSet do
+      # Returns the flow control with each of the live sets passed through the block.
+      def map(& : LiveSet -> LiveSet) : FlowControl
+        FlowControl.new(yield(break_live), yield(next_live), yield(return_live), yield(raise_live))
+      end
+
+      # Returns the variables live on any of the jumps.
+      def live : LiveSet
+        break_live | next_live | return_live | raise_live
+      end
+    end
+
     # Maximum iterations for fixed-point convergence in loops.
     # In practice, convergence happens in 2-3 iterations since the live set
     # can only grow monotonically and is bounded by the number of variables.
@@ -27,15 +48,7 @@ module Ameba::AST
     @inner_scope_nodes : Set(UInt64)
     @inner_scope_reads : Hash(UInt64, LiveSet)
 
-    # Live sets for flow control: `break` exits to post-loop,
-    # `next` jumps to loop condition, `return` exits the scope, and a raised
-    # exception jumps to the enclosing `rescue` clauses (or exits the scope),
-    # all of them through the enclosing `ensure` clauses. Without these,
-    # assignments before break/next/return/raise would be incorrectly marked as dead.
-    @break_live : LiveSet
-    @next_live : LiveSet
-    @return_live : LiveSet
-    @raise_live : LiveSet
+    @flow : FlowControl
 
     # Variables live when leaving the scope, i.e. the captured variables,
     # which might be read after the closure returns, or on its next invocation.
@@ -52,7 +65,7 @@ module Ameba::AST
       @exit_live = captured_variables
         .select { |var| var.referenced? || var.used_in_macro? }
         .to_set(&.name)
-      @break_live = @next_live = @return_live = @raise_live = @exit_live
+      @flow = FlowControl.new(@exit_live, @exit_live, @exit_live, @exit_live)
       @assignment_map = build_assignment_map(variables)
       @inner_scope_nodes = @scope.inner_scopes.to_set(&.node.object_id)
       @inner_scope_reads = build_inner_scope_reads(variables)
@@ -288,18 +301,14 @@ module Ameba::AST
       # The `ensure` clause is entered on every way out of the handler,
       # so its assignments are dead stores only if dead on each of these.
       if mark && (ensure_node = node.ensure)
-        exits_live = live | @break_live | @next_live | @return_live | @raise_live
-        propagate_through(ensure_node, exits_live, mark)
+        propagate_through(ensure_node, live | @flow.live, mark)
       end
       post_ensure = propagate_through(node.ensure, live, false)
 
       preserving_flow_control do
         # `break`, `next`, `return` and exceptions leave the handler
         # through the `ensure` clause, which might read the variables.
-        @break_live = propagate_through(node.ensure, @break_live, false)
-        @next_live = propagate_through(node.ensure, @next_live, false)
-        @return_live = propagate_through(node.ensure, @return_live, false)
-        @raise_live = propagate_through(node.ensure, @raise_live, false)
+        @flow = @flow.map { |jump_live| propagate_through(node.ensure, jump_live, false) }
 
         after_body = propagate_through(node.else, post_ensure, mark)
 
@@ -309,7 +318,7 @@ module Ameba::AST
         node.rescues.try &.each do |rescue_node|
           rescue_live.concat(propagate_through(rescue_node, post_ensure, mark))
         end
-        @raise_live = @raise_live | rescue_live
+        @flow = @flow.copy_with(raise_live: @flow.raise_live | rescue_live)
 
         # Conservatively consider the rescue-needed variables live
         # at both ends of the body, i.e. for macro expansions.
@@ -363,15 +372,15 @@ module Ameba::AST
     {% end %}
 
     private def propagate_through(node : Crystal::Return, live : LiveSet, mark = true) : LiveSet
-      propagate_through(node.exp, @return_live, mark)
+      propagate_through(node.exp, @flow.return_live, mark)
     end
 
     private def propagate_through(node : Crystal::Break, live : LiveSet, mark = true) : LiveSet
-      propagate_through(node.exp, @break_live, mark)
+      propagate_through(node.exp, @flow.break_live, mark)
     end
 
     private def propagate_through(node : Crystal::Next, live : LiveSet, mark = true) : LiveSet
-      propagate_through(node.exp, @next_live, mark)
+      propagate_through(node.exp, @flow.next_live, mark)
     end
 
     # Inner scope nodes: don't descend into nested scopes, but since they
@@ -405,13 +414,13 @@ module Ameba::AST
     private def propagate_through_loop(cond, body, live : LiveSet, mark) : LiveSet
       preserving_flow_control do
         # `break` exits to post-loop code, `next` jumps to loop condition.
-        @break_live = live
+        @flow = @flow.copy_with(break_live: live)
         entry_live = live.dup
 
         converged_cond_live = entry_live
         MAX_FIXED_POINT_ITERATIONS.times do
           converged_cond_live = propagate_through(cond, entry_live, false)
-          @next_live = converged_cond_live
+          @flow = @flow.copy_with(next_live: converged_cond_live)
 
           body_live = propagate_through(body, converged_cond_live, false)
           new_entry = body_live | live
@@ -422,7 +431,7 @@ module Ameba::AST
 
         # Final pass with marking enabled using the converged live set
         cond_live = propagate_through(cond, entry_live, mark)
-        @next_live = cond_live
+        @flow = @flow.copy_with(next_live: cond_live)
 
         propagate_through(body, cond_live, mark)
 
@@ -432,16 +441,17 @@ module Ameba::AST
 
     # Adds the variables live when an exception is raised at this point.
     private def propagate_through_raise(live : LiveSet) : LiveSet
-      @raise_live.subset_of?(live) ? live : live | @raise_live
+      raise_live = @flow.raise_live
+      raise_live.subset_of?(live) ? live : live | raise_live
     end
 
-    # Restores the flow control live sets overwritten within the block.
+    # Restores the flow control overwritten within the block.
     private def preserving_flow_control(&)
-      outer = {@break_live, @next_live, @return_live, @raise_live}
+      outer = @flow
       begin
         yield
       ensure
-        @break_live, @next_live, @return_live, @raise_live = outer
+        @flow = outer
       end
     end
 
