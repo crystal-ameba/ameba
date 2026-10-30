@@ -16,6 +16,8 @@ module Ameba::Rule::Documentation
   #   RequireExample: false
   # ```
   class Documentation < Base
+    include AST::Util
+
     properties do
       since_version "1.5.0"
       enabled false
@@ -67,19 +69,28 @@ module Ameba::Rule::Documentation
     end
 
     private def check_missing_doc(source, node, scope)
-      # bail out if the node is not public,
-      # i.e. `private def foo`
-      return if !node.visibility.public?
-
       # bail out if the scope is not public,
-      # i.e. `def bar` inside `private class Foo`
+      # i.e. `private def foo` or `def bar` inside `private class Foo`
       return if (visibility = scope.visibility) && !visibility.public?
+      return if nodoc?(scope)
 
       if doc = node.doc.presence
         issue_for(node, MSG_EXAMPLE) unless valid_example?(doc)
       else
         issue_for(node, MSG)
       end
+    end
+
+    # Returns `true` if the scope or any of its outer scopes is marked
+    # with the `:nodoc:` directive, which hides it from the documentation.
+    #
+    # Types declared with an absolute path (i.e. `class ::Foo`) belong
+    # to the top-level namespace, so their outer scopes are skipped.
+    private def nodoc?(scope : AST::Scope)
+      return true if nodoc?(scope.node)
+      return false if scope.global_type_definition?
+
+      !!scope.outer_scope.try { |outer_scope| nodoc?(outer_scope) }
     end
 
     private def valid_example?(doc : String)

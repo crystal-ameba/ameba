@@ -62,6 +62,79 @@ module Ameba::Rule::Documentation
         CRYSTAL
     end
 
+    it "passes for undocumented public types within `:nodoc:` namespaces" do
+      expect_no_issues subject, <<-CRYSTAL
+        # :nodoc:
+        module Foo
+          class Bar
+          end
+
+          module Baz
+            macro bat
+            end
+          end
+        end
+        CRYSTAL
+    end
+
+    it "fails for undocumented public types declared with absolute path within `:nodoc:` namespaces" do
+      expect_issue subject, <<-CRYSTAL
+        # :nodoc:
+        module Foo
+          class ::Bar
+        # ^^^^^^^^^^^ error: Missing documentation
+            class Baz
+          # ^^^^^^^^^ error: Missing documentation
+            end
+          end
+        end
+        CRYSTAL
+    end
+
+    it "passes for undocumented public defs within private types" do
+      expect_no_issues subject, <<-CRYSTAL
+        private class Foo
+          def foo
+          end
+
+          def bar
+          end
+
+          class Bar
+            def baz
+            end
+          end
+        end
+        CRYSTAL
+    end
+
+    it "fails for undocumented public types declared with absolute path within private namespaces" do
+      expect_issue subject, <<-CRYSTAL
+        private module Foo
+          class ::Bar
+        # ^^^^^^^^^^^ error: Missing documentation
+            def baz
+          # ^^^^^^^ error: Missing documentation
+            end
+          end
+        end
+        CRYSTAL
+    end
+
+    it "passes for undocumented types within `:nodoc:` types declared with absolute path" do
+      expect_issue subject, <<-CRYSTAL
+        module Foo
+        # ^^^^^^^^ error: Missing documentation
+          # :nodoc:
+          class ::Bar
+            enum Baz
+              A
+            end
+          end
+        end
+        CRYSTAL
+    end
+
     it "fails if there is an undocumented public type" do
       expect_issue subject, <<-CRYSTAL
         class Foo
@@ -156,6 +229,14 @@ module Ameba::Rule::Documentation
             # Foo documentation
             class Foo
             # ^^^^^^^ error: Missing documentation example
+            end
+            CRYSTAL
+        end
+
+        it "passes if there is a `:nodoc:` public type without example" do
+          expect_no_issues rule, <<-CRYSTAL
+            # :nodoc:
+            class Foo
             end
             CRYSTAL
         end
