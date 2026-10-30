@@ -46,12 +46,14 @@ module Ameba::Rule::Lint
       return unless (receiver = node.receiver).is_a?(Crystal::Var)
       return unless receiver.name == "self"
 
-      if (location = receiver.location) && (end_location = receiver.end_location)
-        issue_for(node, MSG) do |corrector|
-          corrector.remove(location, end_location.adjust(column_number: 1))
-        end
-      else
+      unless (location = receiver.location) && (name_location = node.name_location)
         issue_for(node, MSG)
+        return
+      end
+
+      # Remove everything between the receiver and the method name
+      issue_for(node, MSG) do |corrector|
+        corrector.remove(source.pos(location)...source.pos(name_location))
       end
     end
   end
