@@ -189,6 +189,30 @@ module Ameba::AST
     end
 
     context "other definitions" do
+      it "reaches a block in a subsequent `when` branch from a preceding `when` condition" do
+        reaches?(<<-CRYSTAL, "x").should be_true
+          def foo
+            case
+            when (x = bar)
+            when baz
+              qux { |x| }
+            end
+          end
+          CRYSTAL
+      end
+
+      it "does not reach a `select` branch from a condition of another one" do
+        reaches?(<<-CRYSTAL, "x").should be_false
+          def foo(a, b)
+            select
+            when x = a.receive
+            when b.receive
+              qux { |x| }
+            end
+          end
+          CRYSTAL
+      end
+
       it "reaches a block after the handler from a rescue variable" do
         reaches?(<<-CRYSTAL, "x").should be_true
           def foo

@@ -188,6 +188,9 @@ module Ameba::AST
       merged = nil
       node.whens.each do |when_node|
         when_defined = propagate(when_node.conds, base)
+        # The `case` conditions are evaluated only if the preceding ones didn't
+        # match, while only the chosen one of the `select` conditions completes
+        base = when_defined if node.is_a?(Crystal::Case)
         when_defined = propagate(when_node.body, when_defined)
         merged = collect(merged, when_defined) unless terminates?(when_node.body)
       end
