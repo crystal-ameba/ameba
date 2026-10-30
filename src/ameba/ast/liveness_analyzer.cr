@@ -323,7 +323,11 @@ module Ameba::AST
 
     {% for type in LOOP_NODES %}
       private def propagate_through(node : Crystal::{{ type.id }}, live : LiveSet, mark = true) : LiveSet
-        propagate_through_loop(node.cond, node.body, live, mark)
+        # Infinite loops (i.e. `while true`) are never left through
+        # the condition, so the code following them is reached only by `break`.
+        cond_exit_live = infinite_loop?(node) ? LiveSet.new : live
+
+        propagate_through_loop(node.cond, node.body, live, cond_exit_live, mark)
       end
     {% end %}
 
@@ -474,18 +478,20 @@ module Ameba::AST
       propagate_through(children, live, mark)
     end
 
-    private def propagate_through_loop(cond, body, live : LiveSet, mark) : LiveSet
+    # Propagates through the loop, which is left either by `break`
+    # (with the *live* set), or by the condition (with the *cond_exit_live* set).
+    private def propagate_through_loop(cond, body, live : LiveSet, cond_exit_live : LiveSet, mark) : LiveSet
       preserving_flow_control do
         # `break` exits to post-loop code, `next` jumps to loop condition.
         @flow = @flow.copy_with(break_live: live)
-        entry_live = live
+        entry_live = cond_exit_live
 
         MAX_FIXED_POINT_ITERATIONS.times do
           cond_live = propagate_through(cond, entry_live, false)
           @flow = @flow.copy_with(next_live: cond_live)
 
           body_live = propagate_through(body, cond_live, false)
-          new_entry = body_live | live
+          new_entry = body_live | cond_exit_live
 
           break if new_entry == entry_live
           entry_live = new_entry
@@ -513,6 +519,14 @@ module Ameba::AST
         @exit_live
       else
         live
+      end
+    end
+
+    # Returns `true` if the *node* is a loop never left through its condition.
+    private def infinite_loop?(node : Crystal::While | Crystal::Until) : Bool
+      case node
+      in Crystal::While then node.cond.true_literal?
+      in Crystal::Until then node.cond.false_literal?
       end
     end
 

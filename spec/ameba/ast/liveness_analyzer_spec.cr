@@ -370,7 +370,7 @@ module Ameba::AST
         dead_store_names(scope).should be_empty
       end
 
-      it "does not report assignment used after break" do
+      it "reports assignment overwritten before the only break of infinite loop" do
         scope = def_scope <<-CRYSTAL
           def foo
             found = false
@@ -383,7 +383,50 @@ module Ameba::AST
             found
           end
           CRYSTAL
+        dead_store_names(scope).should eq ["found"]
+      end
+
+      it "does not report assignment used after break" do
+        scope = def_scope <<-CRYSTAL
+          def foo
+            found = false
+            while true
+              break if something
+              found = true
+            end
+            found
+          end
+          CRYSTAL
         dead_store_names(scope).should be_empty
+      end
+
+      it "does not report assignment used after conditional loop" do
+        scope = def_scope <<-CRYSTAL
+          def foo
+            found = false
+            while something
+              if other
+                found = true
+                break
+              end
+            end
+            found
+          end
+          CRYSTAL
+        dead_store_names(scope).should be_empty
+      end
+
+      it "reports assignment read only after infinite until loop" do
+        scope = def_scope <<-CRYSTAL
+          def foo
+            a = 1
+            until false
+              process
+            end
+            a
+          end
+          CRYSTAL
+        dead_store_names(scope).should eq ["a"]
       end
 
       it "does not report assignment before next used in subsequent iteration" do
@@ -421,7 +464,7 @@ module Ameba::AST
         dead_store_names(scope).should be_empty
       end
 
-      it "does not report assignment inside conditional break" do
+      it "reports initializer overwritten inside conditional break, but not the latter" do
         scope = def_scope <<-CRYSTAL
           def foo
             options = 0
@@ -435,7 +478,7 @@ module Ameba::AST
             options
           end
           CRYSTAL
-        dead_store_names(scope).should be_empty
+        dead_store_names(scope).should eq ["options"]
       end
 
       it "does not report assignment read by the condition after next" do
@@ -1102,7 +1145,7 @@ module Ameba::AST
         dead_store_names(scope).should eq ["word"]
       end
 
-      it "does not report multi-assign target used in next loop iteration" do
+      it "reports multi-assign target read only after infinite loop" do
         scope = def_scope <<-CRYSTAL
           def foo
             while true
@@ -1119,7 +1162,7 @@ module Ameba::AST
             word
           end
           CRYSTAL
-        dead_store_names(scope).should be_empty
+        dead_store_names(scope).should eq ["word"]
       end
 
       it "does not report assignment read by a call target" do
