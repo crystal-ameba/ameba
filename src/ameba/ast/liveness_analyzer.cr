@@ -28,12 +28,14 @@ module Ameba::AST
     @inner_scope_reads : Hash(UInt64, LiveSet)
 
     # Live sets for flow control: `break` exits to post-loop,
-    # `next` jumps to loop condition, and `return` exits the scope,
+    # `next` jumps to loop condition, `return` exits the scope, and a raised
+    # exception jumps to the enclosing `rescue` clauses (or exits the scope),
     # all of them through the enclosing `ensure` clauses. Without these,
-    # assignments before break/next/return would be incorrectly marked as dead.
+    # assignments before break/next/return/raise would be incorrectly marked as dead.
     @break_live : LiveSet
     @next_live : LiveSet
     @return_live : LiveSet
+    @raise_live : LiveSet
 
     # Variables live when leaving the scope, i.e. the captured variables,
     # which might be read after the closure returns, or on its next invocation.
@@ -50,7 +52,7 @@ module Ameba::AST
       @exit_live = captured_variables
         .select { |var| var.referenced? || var.used_in_macro? }
         .to_set(&.name)
-      @break_live = @next_live = @return_live = @exit_live
+      @break_live = @next_live = @return_live = @raise_live = @exit_live
       @assignment_map = build_assignment_map(variables)
       @inner_scope_nodes = @scope.inner_scopes.to_set(&.node.object_id)
       @inner_scope_reads = build_inner_scope_reads(variables)
@@ -276,26 +278,26 @@ module Ameba::AST
       post_ensure = propagate_through(node.ensure, live, mark)
 
       preserving_flow_control do
-        # `break`, `next` and `return` leave the handler through
-        # the `ensure` clause, which might read the variables.
+        # `break`, `next`, `return` and exceptions leave the handler
+        # through the `ensure` clause, which might read the variables.
         @break_live = propagate_through(node.ensure, @break_live, false)
         @next_live = propagate_through(node.ensure, @next_live, false)
         @return_live = propagate_through(node.ensure, @return_live, false)
+        @raise_live = propagate_through(node.ensure, @raise_live, false)
 
         after_body = propagate_through(node.else, post_ensure, mark)
 
-        # Rescue branches handle exceptions thrown at any point in the body,
+        # Rescue branches handle exceptions raised at any point in the body,
         # so collect all variables they need.
         rescue_live = LiveSet.new
         node.rescues.try &.each do |rescue_node|
           rescue_live.concat(propagate_through(rescue_node, post_ensure, mark))
         end
+        @raise_live = @raise_live | rescue_live
 
-        # Body can throw at any point, so variables live in any rescue
-        # branch must also be considered live throughout the body.
-        # Union rescue_live because rescue-needed variables are live before the entire handler.
-        body_live = propagate_through(node.body, after_body | rescue_live, mark)
-        body_live | rescue_live
+        # Conservatively consider the rescue-needed variables live
+        # at both ends of the body, i.e. for macro expansions.
+        propagate_through(node.body, after_body | rescue_live, mark) | rescue_live
       end
     end
 
@@ -317,6 +319,8 @@ module Ameba::AST
     end
 
     private def propagate_through(node : Crystal::Call, live : LiveSet, mark = true) : LiveSet
+      live = propagate_through_raise(live)
+
       # Bare `super` and `previous_def` (without parentheses) implicitly
       # forward all method arguments, making each argument live.
       if node.name.in?("super", "previous_def") && !node.has_parentheses? && node.args.empty?
@@ -332,6 +336,17 @@ module Ameba::AST
       live = propagate_through(node.args, live, mark)
       live = propagate_through(node.obj, live, mark)
       live
+    end
+
+    # Yielding runs the block, and casting checks the type, both of which can raise
+    private def propagate_through(node : Crystal::Yield, live : LiveSet, mark = true) : LiveSet
+      live = propagate_through_raise(live)
+      live = propagate_through(node.exps, live, mark)
+      propagate_through(node.scope, live, mark)
+    end
+
+    private def propagate_through(node : Crystal::Cast, live : LiveSet, mark = true) : LiveSet
+      propagate_through(node.obj, propagate_through_raise(live), mark)
     end
 
     private def propagate_through(node : Crystal::Return, live : LiveSet, mark = true) : LiveSet
@@ -394,13 +409,18 @@ module Ameba::AST
       end
     end
 
+    # Adds the variables live when an exception is raised at this point.
+    private def propagate_through_raise(live : LiveSet) : LiveSet
+      @raise_live.subset_of?(live) ? live : live | @raise_live
+    end
+
     # Restores the flow control live sets overwritten within the block.
     private def preserving_flow_control(&)
-      outer = {@break_live, @next_live, @return_live}
+      outer = {@break_live, @next_live, @return_live, @raise_live}
       begin
         yield
       ensure
-        @break_live, @next_live, @return_live = outer
+        @break_live, @next_live, @return_live, @raise_live = outer
       end
     end
 

@@ -601,6 +601,96 @@ module Ameba::AST
           CRYSTAL
         dead_store_names(scope).should be_empty
       end
+
+      it "does not report assignment followed by a raising call and used in rescue" do
+        scope = def_scope <<-CRYSTAL
+          def foo
+            begin
+              x = 1
+              bar
+              x = 2
+            rescue
+              x
+            end
+          end
+          CRYSTAL
+        dead_store_names(scope).should be_empty
+      end
+
+      it "does not report assignment followed by a raising call and used in outer rescue" do
+        scope = def_scope <<-CRYSTAL
+          def foo
+            begin
+              begin
+                x = 1
+                bar
+                x = 2
+              ensure
+                baz
+              end
+            rescue
+              x
+            end
+          end
+          CRYSTAL
+        dead_store_names(scope).should be_empty
+      end
+
+      it "does not report assignment followed by a raising call and used in ensure" do
+        scope = def_scope <<-CRYSTAL
+          def foo
+            begin
+              x = 1
+              bar
+              x = 2
+            ensure
+              x
+            end
+          end
+          CRYSTAL
+        dead_store_names(scope).should be_empty
+      end
+
+      it "does not report assignment followed by a yield and used in rescue" do
+        scope = def_scope <<-CRYSTAL
+          def foo
+            x = 1
+            yield
+            x = 2
+          rescue
+            x
+          end
+          CRYSTAL
+        dead_store_names(scope).should be_empty
+      end
+
+      it "does not report assignment followed by a cast and used in rescue" do
+        scope = def_scope <<-CRYSTAL
+          def foo(y)
+            x = 1
+            y.as(Int32)
+            x = 2
+          rescue
+            x
+          end
+          CRYSTAL
+        dead_store_names(scope).should be_empty
+      end
+
+      it "reports assignment overwritten before any raising call" do
+        scope = def_scope <<-CRYSTAL
+          def foo
+            begin
+              x = 1
+              x = 2
+              bar
+            rescue
+              x
+            end
+          end
+          CRYSTAL
+        dead_store_names(scope).should eq ["x"]
+      end
     end
 
     context "binary operators" do

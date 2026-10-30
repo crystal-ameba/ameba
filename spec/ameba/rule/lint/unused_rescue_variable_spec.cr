@@ -278,6 +278,19 @@ module Ameba::Rule::Lint
         CRYSTAL
     end
 
+    it "passes when variable is used in ensure after a raising call" do
+      expect_no_issues subject, <<-CRYSTAL
+        begin
+          raise "x"
+        rescue ex
+          bar
+          ex = nil
+        ensure
+          puts ex
+        end
+        CRYSTAL
+    end
+
     it "fails when variable is not used in ensure on return" do
       expect_issue subject, <<-CRYSTAL
         def foo
