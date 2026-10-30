@@ -526,6 +526,26 @@ module Ameba::Rule::Lint
           CRYSTAL
       end
 
+      it "doesn't report code after loop with break within macro code" do
+        expect_no_issues subject, <<-CRYSTAL
+          def method
+            loop do
+              {% if flag?(:foo) %}
+                break
+              {% end %}
+            end
+            :reachable
+          end
+
+          def method
+            while true
+              {{ "break".id }}
+            end
+            :reachable
+          end
+          CRYSTAL
+      end
+
       it "doesn't report code after loop with break" do
         expect_no_issues subject, <<-CRYSTAL
           def method
@@ -560,6 +580,65 @@ module Ameba::Rule::Lint
             when String then return 2
             end
             :reachable
+          end
+          CRYSTAL
+      end
+    end
+
+    context "select" do
+      it "reports unreachable code after select without else" do
+        expect_issue subject, <<-CRYSTAL
+          def method(ch)
+            select
+            when x = ch.receive
+              return x
+            end
+            :unreachable
+          # ^^^^^^^^^^^^ error: Unreachable code detected
+          end
+          CRYSTAL
+      end
+
+      it "doesn't report code after select with non-returning else" do
+        expect_no_issues subject, <<-CRYSTAL
+          def method(ch)
+            select
+            when x = ch.receive
+              return x
+            else
+            end
+            :reachable
+          end
+          CRYSTAL
+      end
+    end
+
+    context "assign" do
+      it "reports unreachable code after assignment of a flow expression" do
+        expect_issue subject, <<-CRYSTAL
+          def method(a)
+            x = if a
+                  return 1
+                else
+                  return 2
+                end
+            :unreachable
+          # ^^^^^^^^^^^^ error: Unreachable code detected
+          end
+          CRYSTAL
+      end
+    end
+
+    context "nested" do
+      it "reports unreachable code only once" do
+        expect_issue subject, <<-CRYSTAL
+          def method(x)
+            return
+            if x
+          # ^^^^ error: Unreachable code detected
+              return
+              :unreachable
+            end
           end
           CRYSTAL
       end

@@ -259,6 +259,8 @@ module Ameba::AST::Util
       flow_expressions?([node.then, node.else], in_loop)
     when Crystal::BinaryOp
       flow_expression?(node.left, in_loop)
+    when Crystal::Assign
+      flow_expression?(node.value, in_loop)
     when Crystal::Case, Crystal::Select
       flow_branches?(node, in_loop)
     when Crystal::ExceptionHandler
@@ -281,8 +283,9 @@ module Ameba::AST::Util
   private def flow_branches?(node, in_loop)
     else_node = node.else
 
+    # `select` without `else` blocks until one of its branches gets executed,
     # exhaustive `case ... in` without `else` covers all of the possible values
-    return false unless else_node || (node.is_a?(Crystal::Case) && node.exhaustive?)
+    return false unless else_node || node.is_a?(Crystal::Select) || node.exhaustive?
     return false if else_node && !flow_expression?(else_node, in_loop)
 
     flow_expressions?(node.whens, in_loop)
@@ -329,7 +332,8 @@ module Ameba::AST::Util
       node.accept(self)
     end
 
-    def visit(node : Crystal::Break)
+    # NOTE: `break` might be hidden within the (unparsed) macro code
+    def visit(node : Crystal::Break | Crystal::MacroIf | Crystal::MacroFor | Crystal::MacroExpression | Crystal::MacroLiteral | Crystal::MacroVerbatim)
       @found = true
       false
     end
