@@ -275,7 +275,13 @@ module Ameba::AST
     {% end %}
 
     private def propagate_through(node : Crystal::ExceptionHandler, live : LiveSet, mark = true) : LiveSet
-      post_ensure = propagate_through(node.ensure, live, mark)
+      # The `ensure` clause is entered on every way out of the handler,
+      # so its assignments are dead stores only if dead on each of these.
+      if mark && (ensure_node = node.ensure)
+        exits_live = live | @break_live | @next_live | @return_live | @raise_live
+        propagate_through(ensure_node, exits_live, mark)
+      end
+      post_ensure = propagate_through(node.ensure, live, false)
 
       preserving_flow_control do
         # `break`, `next`, `return` and exceptions leave the handler

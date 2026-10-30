@@ -691,6 +691,38 @@ module Ameba::AST
           CRYSTAL
         dead_store_names(scope).should eq ["x"]
       end
+
+      it "does not report assignment in ensure read after next" do
+        scope = def_scope <<-CRYSTAL
+          def foo
+            x = 0
+            while x < 10
+              begin
+                next if bar
+              ensure
+                x = 1
+              end
+              x = 2
+            end
+          end
+          CRYSTAL
+        dead_store_names(scope).should be_empty
+      end
+
+      it "reports assignment in ensure overwritten on every exit" do
+        scope = def_scope <<-CRYSTAL
+          def foo
+            begin
+              bar
+            ensure
+              x = 1
+            end
+            x = 2
+            x
+          end
+          CRYSTAL
+        dead_store_names(scope).should eq ["x"]
+      end
     end
 
     context "binary operators" do
