@@ -466,7 +466,7 @@ module Ameba::AST
       preserving_flow_control do
         # `break` exits to post-loop code, `next` jumps to loop condition.
         @flow = @flow.copy_with(break_live: live)
-        entry_live = live.dup
+        entry_live = live
 
         converged_cond_live = entry_live
         MAX_FIXED_POINT_ITERATIONS.times do
