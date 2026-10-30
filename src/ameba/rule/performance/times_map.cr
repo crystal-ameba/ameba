@@ -59,33 +59,51 @@ module Ameba::Rule::Performance
       return unless end_location = node.end_location
 
       count_code = node_source(obj3, source.lines) || obj3.to_s
+      # keep the issue message on a single line
+      message = MSG % (count_code.includes?('\n') ? obj3 : count_code)
 
-      if corrected_code = corrected_code(source, count_code, obj)
-        issue_for(location, end_location, MSG % count_code) do |corrector|
+      if corrected_code = corrected_code(source, location, end_location, count_code, obj)
+        issue_for(location, end_location, message) do |corrector|
           corrector.replace(location, end_location, corrected_code)
         end
       else
-        issue_for(location, end_location, MSG % count_code)
+        issue_for(location, end_location, message)
       end
     end
 
-    private def corrected_code(source, count_code, map_call)
-      case
-      when block_arg = map_call.block_arg
-        return unless block_code = node_source(block_arg, source.lines)
+    private def corrected_code(source, location, end_location, count_code, map_call)
+      return unless block = map_call.block_arg || map_call.block
+      return unless block_location = block.location
+      # short blocks (`&.foo`) have no end location of their own
+      return unless block_end_location =
+                      block.end_location ||
+                      block.as?(Crystal::Block).try(&.body.end_location)
 
-        "Array.new(%s, &%s)" % {count_code, block_code}
-      when (block = map_call.block) && (location = block.location)
-        # short blocks (`&.foo`) have no end location of their own
-        return unless end_location = block.end_location || block.body.end_location
-        return unless block_code = source_between(location, end_location, source.lines)
+      # comments outside of the block would be lost
+      return if comments_between?(location, block_location, source) ||
+                comments_between?(block_end_location.adjust(column_number: 1), end_location, source)
 
-        if block_code.starts_with?('&')
-          "Array.new(%s, %s)" % {count_code, block_code}
-        else
-          "Array.new(%s) %s" % {count_code, block_code}
-        end
+      return unless block_code = source_between(block_location, block_end_location, source.lines)
+
+      block_code = "&#{block_code}" if map_call.block_arg
+
+      if block_code.starts_with?('&')
+        "Array.new(%s, %s)" % {count_code, block_code}
+      else
+        "Array.new(%s) %s" % {count_code, block_code}
       end
+    end
+
+    private def comments_between?(location, end_location, source)
+      return false unless code = source_between(location, end_location, source.lines)
+
+      lexer = Crystal::Lexer.new(code).tap(&.comments_enabled = true)
+      comments = false
+
+      Tokenizer.new(lexer).run do |token|
+        comments = true if token.type.comment?
+      end
+      comments
     end
   end
 end

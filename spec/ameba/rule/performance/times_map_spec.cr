@@ -68,15 +68,62 @@ module Ameba::Rule::Performance
         CRYSTAL
     end
 
-    it "reports and corrects comments within argument parentheses" do
+    it "reports and corrects comments within the block" do
+      source = expect_issue subject, <<-CRYSTAL
+        3.times.map do |i|
+        # ^^^^^^^^^^^^^^^^ error: Use `Array.new(3) {...}` instead of `3.times.map {...}.to_a`
+          i * 2 # comment
+        end.to_a
+        CRYSTAL
+
+      expect_correction source, <<-CRYSTAL
+        Array.new(3) do |i|
+          i * 2 # comment
+        end
+        CRYSTAL
+    end
+
+    it "reports but does not correct comments outside of the block" do
       source = expect_issue subject, <<-CRYSTAL
         3.times.map( # comment
         # ^^^^^^^^^^^^^^^^^^^^ error: Use `Array.new(3) {...}` instead of `3.times.map {...}.to_a`
         ) { |i| i * 2 }.to_a
+        3.times
+        # ^^^^^ error: Use `Array.new(3) {...}` instead of `3.times.map {...}.to_a`
+          .map { |i| i * 2 } # comment
+          .to_a
+        3.times # comment
+        # ^^^^^^^^^^^^^^^ error: Use `Array.new(3) {...}` instead of `3.times.map {...}.to_a`
+          .map(&.to_s)
+          .to_a
+        CRYSTAL
+
+      expect_no_corrections source
+    end
+
+    it "reports and corrects parenthesized count expression" do
+      source = expect_issue subject, <<-CRYSTAL
+        (n + 1 if n).times.map { |i| i * 2 }.to_a
+        # ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ error: Use `Array.new((n + 1 if n)) {...}` instead of `(n + 1 if n).times.map {...}.to_a`
         CRYSTAL
 
       expect_correction source, <<-CRYSTAL
-        Array.new(3) { |i| i * 2 }
+        Array.new((n + 1 if n)) { |i| i * 2 }
+        CRYSTAL
+    end
+
+    it "reports and corrects multi-line count expression" do
+      source = expect_issue subject, <<-CRYSTAL
+        [
+        # ^{} error: Use `Array.new([1, 2].size) {...}` instead of `[1, 2].size.times.map {...}.to_a`
+          1, 2,
+        ].size.times.map { |i| i * 2 }.to_a
+        CRYSTAL
+
+      expect_correction source, <<-CRYSTAL
+        Array.new([
+          1, 2,
+        ].size) { |i| i * 2 }
         CRYSTAL
     end
 
