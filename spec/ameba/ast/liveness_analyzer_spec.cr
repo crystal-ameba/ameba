@@ -1133,6 +1133,26 @@ module Ameba::AST
           CRYSTAL
         dead_store_names(scope).should eq ["b"]
       end
+
+      it "does not report assignment read in a block of bare super" do
+        scope = def_scope <<-CRYSTAL
+          def foo
+            x = 1
+            super { puts x }
+          end
+          CRYSTAL
+        dead_store_names(scope).should be_empty
+      end
+
+      it "does not report assignment passed as a block argument of bare super" do
+        scope = def_scope <<-CRYSTAL
+          def foo
+            blk = ->(i : Int32) { i }
+            super &blk
+          end
+          CRYSTAL
+        dead_store_names(scope).should be_empty
+      end
     end
 
     context "inner scopes" do

@@ -350,20 +350,19 @@ module Ameba::AST
     private def propagate_through(node : Crystal::Call, live : LiveSet, mark = true) : LiveSet
       live = propagate_through_raise(live)
 
+      live = propagate_through(node.block, live, mark)
+      live = propagate_through(node.block_arg, live, mark)
+      live = propagate_through(node.named_args, live, mark)
+      live = propagate_through(node.args, live, mark)
+      live = propagate_through(node.obj, live, mark)
+
       # Bare `super` and `previous_def` (without parentheses) implicitly
       # forward all method arguments, making each argument live.
       if node.name.in?("super", "previous_def") && !node.has_parentheses? && node.args.empty?
         @scope.arguments.each do |arg|
           live = add_to_live_set(arg.name, live)
         end
-        return live
       end
-
-      live = propagate_through(node.block, live, mark)
-      live = propagate_through(node.block_arg, live, mark)
-      live = propagate_through(node.named_args, live, mark)
-      live = propagate_through(node.args, live, mark)
-      live = propagate_through(node.obj, live, mark)
       live
     end
 
