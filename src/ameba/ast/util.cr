@@ -260,15 +260,11 @@ module Ameba::AST::Util
     when Crystal::Case, Crystal::Select
       flow_expressions?([node.whens, node.else].flatten, in_loop)
     when Crystal::ExceptionHandler
-      if (ensure_node = node.ensure) && flow_expression?(ensure_node, in_loop)
-        return true
-      end
-      expressions = [node.else || node.body]
-      if rescues = node.rescues
-        expressions.concat(rescues)
-      end
-      flow_expressions?(expressions, in_loop)
-    when Crystal::While, Crystal::Until, Crystal::Rescue, Crystal::When
+      flow_exception_handler?(node, in_loop)
+    when Crystal::While, Crystal::Until
+      # `break` / `next` within the body are consumed by the loop itself
+      flow_expression?(node.body, false)
+    when Crystal::Rescue, Crystal::When
       flow_expression?(node.body, in_loop)
     when Crystal::Expressions
       node.expressions.any? { |exp| flow_expression?(exp, in_loop) }
@@ -279,6 +275,17 @@ module Ameba::AST::Util
 
   private def flow_expressions?(nodes, in_loop)
     nodes.all? { |exp| flow_expression?(exp, in_loop) }
+  end
+
+  private def flow_exception_handler?(node, in_loop)
+    if (ensure_node = node.ensure) && flow_expression?(ensure_node, in_loop)
+      return true
+    end
+    expressions = [node.else || node.body]
+    if rescues = node.rescues
+      expressions.concat(rescues)
+    end
+    flow_expressions?(expressions, in_loop)
   end
 
   # Returns `true` if node represents `raise` method call.

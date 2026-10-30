@@ -308,6 +308,15 @@ module Ameba::AST
         subject.flow_expression?(node).should be_false
       end
 
+      it "returns false if this while with break inside of a loop" do
+        node = as_node <<-CRYSTAL
+          while true
+            break
+          end
+          CRYSTAL
+        subject.flow_expression?(node, true).should be_false
+      end
+
       it "returns true if this until consumed by flow expressions" do
         node = as_node <<-CRYSTAL
           until false
@@ -324,6 +333,15 @@ module Ameba::AST
           end
           CRYSTAL
         subject.flow_expression?(node).should be_false
+      end
+
+      it "returns false if this until with next inside of a loop" do
+        node = as_node <<-CRYSTAL
+          until false
+            next
+          end
+          CRYSTAL
+        subject.flow_expression?(node, true).should be_false
       end
 
       it "returns true if this expressions consumed by flow expressions" do

@@ -323,6 +323,22 @@ module Ameba::Rule::Lint
           CRYSTAL
       end
 
+      it "doesn't report if ensure breaks out of a nested loop only" do
+        expect_no_issues subject, <<-CRYSTAL
+          loop do
+            begin
+              puts "body"
+            ensure
+              while true
+                break
+              end
+            end
+            puts "reachable"
+            break
+          end
+          CRYSTAL
+      end
+
       it "doesn't report if there is no else and ensure doesn't return" do
         expect_no_issues subject, <<-CRYSTAL
           def foo
