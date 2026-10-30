@@ -42,7 +42,10 @@
       "type": "object",
       "properties": {
         "SinceVersion": {
-          "type": "string"
+          "type": [
+            "string",
+            "null"
+          ]
         },
         "Enabled": {
           "type": "boolean",
@@ -109,6 +112,10 @@
           "$ref": "#/$defs/Severity",
           "default": "Warning"
         },
+        "Timezone": {
+          "type": "string",
+          "default": "UTC"
+        },
         "Admonitions": {
           "type": "array",
           "items": {
@@ -119,10 +126,6 @@
             "FIXME",
             "BUG"
           ]
-        },
-        "Timezone": {
-          "type": "string",
-          "default": "UTC"
         }
       }
     },
@@ -185,7 +188,7 @@
           "default": false
         },
         "MaxLength": {
-          "type": "number",
+          "type": "integer",
           "default": 140
         }
       }
@@ -1224,7 +1227,7 @@
           "default": "0.9.1"
         },
         "MaxComplexity": {
-          "type": "number",
+          "type": "integer",
           "default": 12
         },
         "Severity": {
@@ -1309,7 +1312,7 @@
           "default": "1.6.0"
         },
         "MinNameLength": {
-          "type": "number",
+          "type": "integer",
           "default": 3
         },
         "AllowNamesEndingInNumbers": {
@@ -1490,6 +1493,10 @@
           "type": "string",
           "default": "0.14.0"
         },
+        "Enabled": {
+          "type": "boolean",
+          "default": false
+        },
         "Severity": {
           "$ref": "#/$defs/Severity",
           "default": "Warning"
@@ -1587,6 +1594,15 @@
               "type": "string",
               "default": "each_line"
             }
+          },
+          "additionalProperties": {
+            "type": "string"
+          },
+          "default": {
+            "codepoints": "each_codepoint",
+            "graphemes": "each_grapheme",
+            "chars": "each_char",
+            "lines": "each_line"
           }
         },
         "Severity": {
@@ -1860,7 +1876,7 @@
           "default": true
         },
         "MaxBranches": {
-          "type": "number",
+          "type": "integer",
           "default": 0
         }
       }
@@ -1920,7 +1936,7 @@
           "default": "1.7.0"
         },
         "IndentBy": {
-          "type": "number",
+          "type": "integer",
           "default": 2
         },
         "BodyAutoDedent": {
@@ -1982,7 +1998,7 @@
           "default": false
         },
         "IntMinDigits": {
-          "type": "number",
+          "type": "integer",
           "default": 6
         }
       }
@@ -2068,26 +2084,46 @@
           ],
           "default": "()"
         },
+        "IgnoreLiteralsContainingDelimiters": {
+          "type": "boolean",
+          "default": false
+        },
         "PreferredDelimiters": {
           "type": "object",
           "properties": {
             "%w": {
-              "type": "string",
+              "type": [
+                "string",
+                "null"
+              ],
               "default": "[]"
             },
             "%i": {
-              "type": "string",
+              "type": [
+                "string",
+                "null"
+              ],
               "default": "[]"
             },
             "%r": {
-              "type": "string",
+              "type": [
+                "string",
+                "null"
+              ],
               "default": "{}"
             }
+          },
+          "additionalProperties": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "default": {
+            "%w": "[]",
+            "%i": "[]",
+            "%r": "{}"
           }
-        },
-        "IgnoreLiteralsContainingDelimiters": {
-          "type": "boolean",
-          "default": false
         }
       }
     },
@@ -2165,6 +2201,10 @@
           "type": "string",
           "default": "1.7.0"
         },
+        "AutocorrectInBlocks": {
+          "type": "boolean",
+          "default": true
+        },
         "AllowedMethodNames": {
           "type": "array",
           "items": {
@@ -2175,10 +2215,6 @@
             "inspect",
             "not_nil!"
           ]
-        },
-        "AutocorrectInBlocks": {
-          "type": "boolean",
-          "default": true
         }
       }
     },
@@ -2226,14 +2262,14 @@
         },
         "MaxLineLength": {
           "type": [
-            "number",
+            "integer",
             "null"
           ],
           "default": null
         },
         "MaxLength": {
           "type": [
-            "number",
+            "integer",
             "null"
           ],
           "default": 50
