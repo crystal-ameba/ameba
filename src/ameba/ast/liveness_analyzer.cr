@@ -25,10 +25,17 @@ module Ameba::AST
       break_live : LiveSet,
       next_live : LiveSet,
       return_live : LiveSet,
-      raise_live : LiveSet do
+      raise_live : LiveSet
+
+    private struct FlowControl
       # Returns the flow control with each of the live sets passed through the block.
       def map(& : LiveSet -> LiveSet) : FlowControl
-        FlowControl.new(yield(break_live), yield(next_live), yield(return_live), yield(raise_live))
+        FlowControl.new(
+          yield(break_live),
+          yield(next_live),
+          yield(return_live),
+          yield(raise_live),
+        )
       end
 
       # Returns the variables live on any of the jumps.
@@ -132,7 +139,9 @@ module Ameba::AST
 
     # Returns the names of the variables referenced within the macros of the *node*.
     private def macro_reads(node) : LiveSet
-      @var_names.select { |name| MacroReferenceFinder.new(node, name).references? }.to_set
+      @var_names.select do |name|
+        MacroReferenceFinder.new(node, name).references?
+      end.to_set
     end
 
     # Returns the inner scope of the analyzed scope, which contains (or is)
@@ -354,7 +363,9 @@ module Ameba::AST
       preserving_flow_control do
         # `break`, `next`, `return` and exceptions leave the handler
         # through the `ensure` clause, which might read the variables.
-        @flow = @flow.map { |jump_live| propagate_through(node.ensure, jump_live, false) }
+        @flow = @flow.map do |jump_live|
+          propagate_through(node.ensure, jump_live, false)
+        end
 
         after_body = propagate_through(node.else, post_ensure, mark)
 

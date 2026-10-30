@@ -182,6 +182,7 @@ module Ameba::AST
 
     private def merge_whens(node : Crystal::Case | Crystal::Select, base : DefinedSet, *, chained : Bool) : DefinedSet
       merged = nil
+
       node.whens.each do |when_node|
         when_defined = propagate(when_node.conds, base)
         base = when_defined if chained
