@@ -1055,6 +1055,28 @@ module Ameba::AST
       end
     end
 
+    context "out arguments" do
+      it "reports assignment overwritten by an out argument" do
+        scope = def_scope <<-CRYSTAL
+          def foo
+            x = 1
+            LibC.bar(out x)
+            x
+          end
+          CRYSTAL
+        dead_store_names(scope).should eq ["x"]
+      end
+
+      it "does not report unused out argument" do
+        scope = def_scope <<-CRYSTAL
+          def foo
+            LibC.bar(out x)
+          end
+          CRYSTAL
+        dead_store_names(scope).should be_empty
+      end
+    end
+
     context "top level scope" do
       it "detects dead stores at top level" do
         scope = top_scope <<-CRYSTAL

@@ -188,6 +188,17 @@ module Ameba::AST
       end
     end
 
+    context "other definitions" do
+      it "reaches a block from an `out` argument" do
+        reaches?(<<-CRYSTAL, "x").should be_true
+          def foo
+            LibC.bar(out x)
+            qux { |x| }
+          end
+          CRYSTAL
+      end
+    end
+
     context "captured definitions" do
       it "reaches through a nested block from an outer assignment" do
         reaches?(<<-CRYSTAL, "x").should be_true

@@ -73,6 +73,10 @@ module Ameba::AST
       define(node.var, defined)
     end
 
+    private def transfer(node : Crystal::Out, defined : DefinedSet) : DefinedSet
+      define(node.exp, defined)
+    end
+
     private def transfer(node : Crystal::TypeDeclaration, defined : DefinedSet) : DefinedSet
       defined = propagate(node.value, defined)
       define(node.var, defined)

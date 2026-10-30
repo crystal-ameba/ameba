@@ -266,6 +266,17 @@ module Ameba::AST
       live
     end
 
+    private def propagate_through(node : Crystal::Out, live : LiveSet, mark = true) : LiveSet
+      # `out x` assigns the variable (rather than reading it), yet its value
+      # is often unwanted, being required only by the C function signature,
+      # so don't mark it as dead.
+      var = node.exp
+      if var.is_a?(Crystal::Var) && var.name.in?(@var_names) && find_assignment(node, var.name)
+        live = remove_from_live_set(node, var.name, live, mark: false)
+      end
+      live
+    end
+
     private def propagate_through(node : Crystal::TypeDeclaration, live : LiveSet, mark = true) : LiveSet
       var = node.var
       if var.is_a?(Crystal::Var) && var.name.in?(@var_names)
