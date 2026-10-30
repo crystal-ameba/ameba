@@ -68,10 +68,47 @@ module Ameba::Rule::Performance
         CRYSTAL
     end
 
+    it "reports and corrects comments within argument parentheses" do
+      source = expect_issue subject, <<-CRYSTAL
+        3.times.map( # comment
+        # ^^^^^^^^^^^^^^^^^^^^ error: Use `Array.new(3) {...}` instead of `3.times.map {...}.to_a`
+        ) { |i| i * 2 }.to_a
+        CRYSTAL
+
+      expect_correction source, <<-CRYSTAL
+        Array.new(3) { |i| i * 2 }
+        CRYSTAL
+    end
+
+    it "reports and corrects block arguments" do
+      source = expect_issue subject, <<-CRYSTAL
+        3.times.map(&block).to_a
+        # ^^^^^^^^^^^^^^^^^^^^^^ error: Use `Array.new(3) {...}` instead of `3.times.map {...}.to_a`
+        3.times.map(&->(i : Int32) { i * 2 }).to_a
+        # ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ error: Use `Array.new(3) {...}` instead of `3.times.map {...}.to_a`
+        CRYSTAL
+
+      expect_correction source, <<-CRYSTAL
+        Array.new(3, &block)
+        Array.new(3, &->(i : Int32) { i * 2 })
+        CRYSTAL
+    end
+
+    it "reports and corrects `to_a` call with parentheses" do
+      source = expect_issue subject, <<-CRYSTAL
+        3.times.map { |i| i * 2 }.to_a()
+        # ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ error: Use `Array.new(3) {...}` instead of `3.times.map {...}.to_a`
+        CRYSTAL
+
+      expect_correction source, <<-CRYSTAL
+        Array.new(3) { |i| i * 2 }
+        CRYSTAL
+    end
+
     it "preserves the original formatting of the count expression" do
       source = expect_issue subject, <<-CRYSTAL
         1_000.times.map { |i| i * 2 }.to_a
-        # ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ error: Use `Array.new(1000) {...}` instead of `1000.times.map {...}.to_a`
+        # ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ error: Use `Array.new(1_000) {...}` instead of `1_000.times.map {...}.to_a`
         CRYSTAL
 
       expect_correction source, <<-CRYSTAL

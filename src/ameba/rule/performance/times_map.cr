@@ -56,32 +56,35 @@ module Ameba::Rule::Performance
       return unless obj2.name == "times" && (obj3 = obj2.obj)
 
       return unless location = obj3.location
-      return unless end_location = name_end_location(node)
+      return unless end_location = node.end_location
 
-      if corrected_code = corrected_code(source, obj3, obj)
-        issue_for(location, end_location, MSG % obj3) do |corrector|
+      count_code = node_source(obj3, source.lines) || obj3.to_s
+
+      if corrected_code = corrected_code(source, count_code, obj)
+        issue_for(location, end_location, MSG % count_code) do |corrector|
           corrector.replace(location, end_location, corrected_code)
         end
       else
-        issue_for(location, end_location, MSG % obj3)
+        issue_for(location, end_location, MSG % count_code)
       end
     end
 
-    private def corrected_code(source, count, map_call)
-      return unless count_code = node_source(count, source.lines)
-      return unless name_end_location = name_end_location(map_call)
-      return unless end_location = map_call.end_location
+    private def corrected_code(source, count_code, map_call)
+      case
+      when block_arg = map_call.block_arg
+        return unless block_code = node_source(block_arg, source.lines)
 
-      args_location = name_end_location.adjust(column_number: 1)
-      return unless block_code = source_between(args_location, end_location, source.lines)
+        "Array.new(%s, &%s)" % {count_code, block_code}
+      when (block = map_call.block) && (location = block.location)
+        # short blocks (`&.foo`) have no end location of their own
+        return unless end_location = block.end_location || block.body.end_location
+        return unless block_code = source_between(location, end_location, source.lines)
 
-      block_code = block_code.strip.sub(/\A\(\s*\)/, "").lstrip
-      block_code = block_code[1...-1].strip if block_code.starts_with?('(')
-
-      if block_code.starts_with?('&')
-        "Array.new(%s, %s)" % {count_code, block_code}
-      else
-        "Array.new(%s) %s" % {count_code, block_code}
+        if block_code.starts_with?('&')
+          "Array.new(%s, %s)" % {count_code, block_code}
+        else
+          "Array.new(%s) %s" % {count_code, block_code}
+        end
       end
     end
   end
