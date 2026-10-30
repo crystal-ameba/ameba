@@ -45,13 +45,14 @@ module Ameba::Rule::Performance
 
     # ameba:disable Metrics/CyclomaticComplexity
     def test(source, node : Crystal::Call)
-      return if has_block?(node)
+      return if has_block?(node) || has_arguments?(node)
       return unless node.name == "to_a" && (obj = node.obj)
 
       return unless obj.is_a?(Crystal::Call) && has_block?(obj)
+      return if has_arguments?(obj)
       return unless obj.name == "map" && (obj2 = obj.obj)
 
-      return if !obj2.is_a?(Crystal::Call) || has_block?(obj2)
+      return if !obj2.is_a?(Crystal::Call) || has_block?(obj2) || has_arguments?(obj2)
       return unless obj2.name == "times" && (obj3 = obj2.obj)
 
       return unless location = obj3.location
