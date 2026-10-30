@@ -145,6 +145,14 @@ module Ameba::AST
       @inner_scope_nodes.includes?(node.object_id)
     end
 
+    # Returns the name of the analyzed variable assigned by the *target* node,
+    # or `nil` if it's not a variable (i.e. `obj.foo` or `@foo`), or not analyzed.
+    private def tracked_var_name(target) : String?
+      if (var = Util.assigned_var(target)) && var.name.in?(@var_names)
+        var.name
+      end
+    end
+
     private def find_assignment(node, var_name) : Assignment?
       @assignment_map[{var_name, node.object_id}]?
     end
@@ -205,15 +213,15 @@ module Ameba::AST
       return live if inner_scope_node?(node)
 
       target = node.target
-      unless target.is_a?(Crystal::Var) && target.name.in?(@var_names)
+      unless name = tracked_var_name(target)
         live = propagate_through(node.value, live, mark)
         return propagate_through(target, live, mark)
       end
 
       # Only remove from live set if this assignment is tracked in the scope.
       # Untracked assignments (e.g. inside record/accessor macro args) are transparent.
-      if find_assignment(node, target.name)
-        live = remove_from_live_set(node, target.name, live, mark)
+      if find_assignment(node, name)
+        live = remove_from_live_set(node, name, live, mark)
       end
       propagate_through(node.value, live, mark)
     end
@@ -225,7 +233,7 @@ module Ameba::AST
       raising = !node.op.in?("||", "&&")
 
       target = node.target
-      unless target.is_a?(Crystal::Var) && target.name.in?(@var_names)
+      unless name = tracked_var_name(target)
         live = propagate_through(node.value, live, mark)
         live = propagate_through_raise(live) if raising
         return propagate_through(target, live, mark)
@@ -234,8 +242,8 @@ module Ameba::AST
       # OpAssign both writes and reads the variable (x += 1 means x = x + 1).
       # Mark the dead store if the result is never read, then ensure the
       # variable is live (since the op-assign reads the current value).
-      mark_dead_store(node, target.name, live) if mark
-      live = add_to_live_set(target.name, live)
+      mark_dead_store(node, name, live) if mark
+      live = add_to_live_set(name, live)
       live = propagate_through_raise(live) if raising
       propagate_through(node.value, live, mark)
     end
@@ -247,8 +255,8 @@ module Ameba::AST
 
       live = propagate_through_raise(live) if raising
       node.targets.reverse_each do |target|
-        if (var = Util.assigned_var(target)) && var.name.in?(@var_names)
-          live = remove_from_live_set(node, var.name, live, mark)
+        if name = tracked_var_name(target)
+          live = remove_from_live_set(node, name, live, mark)
         else
           # Other targets (i.e. `obj.foo` or `arr[i]`) read their receivers and arguments
           live = propagate_through(target, live, mark)
@@ -259,9 +267,8 @@ module Ameba::AST
     end
 
     private def propagate_through(node : Crystal::UninitializedVar, live : LiveSet, mark = true) : LiveSet
-      var = node.var
-      if var.is_a?(Crystal::Var) && var.name.in?(@var_names)
-        live = remove_from_live_set(node, var.name, live, mark)
+      if name = tracked_var_name(node.var)
+        live = remove_from_live_set(node, name, live, mark)
       end
       live
     end
@@ -270,28 +277,21 @@ module Ameba::AST
       # `out x` assigns the variable (rather than reading it), yet its value
       # is often unwanted, being required only by the C function signature,
       # so don't mark it as dead.
-      var = node.exp
-      if var.is_a?(Crystal::Var) && var.name.in?(@var_names) && find_assignment(node, var.name)
-        live = remove_from_live_set(node, var.name, live, mark: false)
+      if (name = tracked_var_name(node.exp)) && find_assignment(node, name)
+        live = remove_from_live_set(node, name, live, mark: false)
       end
       live
     end
 
     private def propagate_through(node : Crystal::TypeDeclaration, live : LiveSet, mark = true) : LiveSet
-      var = node.var
-      if var.is_a?(Crystal::Var) && var.name.in?(@var_names)
-        if value = node.value
-          live = remove_from_live_set(node, var.name, live, mark)
-          live = propagate_through(value, live, mark)
-        else
-          # Type declarations without a value are type restrictions, not
-          # assignments — don't mark as dead. Since Crystal requires the
-          # variable to be previously undefined, kill it from the live set
-          # as no prior references can exist.
-          live = remove_from_live_set(node, var.name, live, mark: false)
-        end
+      if name = tracked_var_name(node.var)
+        # Type declarations without a value are type restrictions, not
+        # assignments — don't mark as dead. Since Crystal requires the
+        # variable to be previously undefined, kill it from the live set
+        # as no prior references can exist.
+        live = remove_from_live_set(node, name, live, mark && !node.value.nil?)
       end
-      live
+      propagate_through(node.value, live, mark)
     end
 
     private def propagate_through(node : Crystal::Var, live : LiveSet, mark = true) : LiveSet

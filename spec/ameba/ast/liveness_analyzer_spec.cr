@@ -1124,6 +1124,16 @@ module Ameba::AST
           CRYSTAL
         dead_store_names(scope).should be_empty
       end
+
+      it "does not report assignment read by an instance variable type declaration" do
+        scope = def_scope <<-CRYSTAL
+          def initialize
+            a = 1
+            @b : Int32 = a
+          end
+          CRYSTAL
+        dead_store_names(scope).should be_empty
+      end
     end
 
     context "uninitialized" do
