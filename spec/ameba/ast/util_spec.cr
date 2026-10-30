@@ -683,6 +683,41 @@ module Ameba::AST
       end
     end
 
+    describe "#endless_loop_condition?" do
+      it "returns true if this is a while true / until false loop" do
+        subject.endless_loop_condition?(as_node("while true; break; end")).should be_true
+        subject.endless_loop_condition?(as_node("until false; break; end")).should be_true
+      end
+
+      it "returns false if this is a loop with a condition" do
+        subject.endless_loop_condition?(as_node("while foo; end")).should be_false
+        subject.endless_loop_condition?(as_node("until true; end")).should be_false
+        subject.endless_loop_condition?(as_node("loop { }")).should be_false
+      end
+    end
+
+    describe "#endless_loop?" do
+      it "returns true if this is a loop without break" do
+        subject.endless_loop?(as_node("while true; next; end")).should be_true
+        subject.endless_loop?(as_node("until false; foo; end")).should be_true
+        subject.endless_loop?(as_node("loop { [1].each { break } }")).should be_true
+      end
+
+      it "returns false if this is a loop with break" do
+        subject.endless_loop?(as_node("while true; break if foo; end")).should be_false
+        subject.endless_loop?(as_node("loop { break }")).should be_false
+      end
+
+      it "returns false if this is a loop with a condition" do
+        subject.endless_loop?(as_node("while foo; return; end")).should be_false
+      end
+
+      it "returns false if this is not a loop" do
+        subject.endless_loop?(as_node("foo { }")).should be_false
+        subject.endless_loop?(as_node("loop(&block)")).should be_false
+      end
+    end
+
     describe "#loop?" do
       it "returns true if this is a loop method call with a block" do
         node = as_node("loop { }")

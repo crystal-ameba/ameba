@@ -257,14 +257,17 @@ module Ameba::AST::Util
       flow_expressions?([node.then, node.else], in_loop)
     when Crystal::BinaryOp
       flow_expression?(node.left, in_loop)
-    when Crystal::Assign
-      flow_expression?(node.value, in_loop)
+    when Crystal::Assign, Crystal::OpAssign, Crystal::MultiAssign, Crystal::TypeDeclaration
+      flow_assignment?(node, in_loop)
     when Crystal::Case, Crystal::Select
       flow_branches?(node, in_loop)
     when Crystal::ExceptionHandler
       flow_exception_handler?(node, in_loop)
     when Crystal::While, Crystal::Until, Crystal::Call
-      infinite_loop?(node)
+      # NOTE: `break` / `next` within the body are consumed by the loop itself,
+      # so the body itself being a flow expression doesn't make the loop one,
+      # since the loop body might be never executed.
+      endless_loop?(node)
     when Crystal::Rescue, Crystal::When
       flow_expression?(node.body, in_loop)
     when Crystal::Expressions
@@ -276,6 +279,18 @@ module Ameba::AST::Util
 
   private def flow_expressions?(nodes, in_loop)
     nodes.all? { |exp| flow_expression?(exp, in_loop) }
+  end
+
+  private def flow_assignment?(node, in_loop)
+    case node
+    when Crystal::OpAssign
+      # the value of `||=` / `&&=` is evaluated conditionally
+      !node.op.in?("||", "&&") && flow_expression?(node.value, in_loop)
+    when Crystal::MultiAssign
+      node.values.any? { |value| flow_expression?(value, in_loop) }
+    else
+      !!(value = node.value) && flow_expression?(value, in_loop)
+    end
   end
 
   private def flow_branches?(node, in_loop)
@@ -301,24 +316,6 @@ module Ameba::AST::Util
 
     rescues = node.rescues
     !rescues || flow_expressions?(rescues, in_loop)
-  end
-
-  # Returns `true` if *node* is a loop that never finishes normally,
-  # i.e. `while true`, `until false` or `loop do` without a `break` in its body.
-  #
-  # NOTE: `break` / `next` within the body are consumed by the loop itself,
-  # so the body itself being a flow expression doesn't make the loop one,
-  # since the loop body might be never executed.
-  private def infinite_loop?(node) : Bool
-    body =
-      case node
-      when Crystal::While then node.body if node.cond.true_literal?
-      when Crystal::Until then node.body if node.cond.false_literal?
-      when Crystal::Call
-        node.block.try(&.body) if loop?(node)
-      end
-
-    !!body && !LoopBreakVisitor.new(body).found?
   end
 
   # Returns `true` if node represents `raise` method call.
@@ -350,6 +347,30 @@ module Ameba::AST::Util
     else
       false
     end
+  end
+
+  # Returns `true` if *node* represents a loop never left through its condition,
+  # i.e. `while true` or `until false`.
+  def endless_loop_condition?(node) : Bool
+    case node
+    when Crystal::While then node.cond.true_literal?
+    when Crystal::Until then node.cond.false_literal?
+    else                     false
+    end
+  end
+
+  # Returns `true` if *node* represents a loop never finishing normally,
+  # i.e. `while true`, `until false` or `loop do` without a `break` in its body.
+  def endless_loop?(node) : Bool
+    body =
+      case node
+      when Crystal::While, Crystal::Until
+        node.body if endless_loop_condition?(node)
+      when Crystal::Call
+        node.block.try(&.body) if loop?(node)
+      end
+
+    !!body && !LoopBreakVisitor.new(body).found?
   end
 
   # Returns `true` if *name* represents operator method.

@@ -492,7 +492,7 @@ module Ameba::AST
 
       # Endless loops (i.e. `while true`) are never left through
       # the condition, so the code following them is reached only by `break`.
-      cond_exit_live = endless_loop?(node) ? LiveSet.new : live
+      cond_exit_live = endless_loop_condition?(node) ? LiveSet.new : live
 
       preserving_flow_control do
         # `break` exits to post-loop code, `next` jumps to loop condition.
@@ -531,26 +531,11 @@ module Ameba::AST
         @flow.raise_live
       when exit?(node), abort?(node)
         @exit_live
-      when endless_loop_call?(node)
+      when endless_loop?(node)
         # the block might `return` (raising is handled by the caller)
         @flow.return_live
       else
         live
-      end
-    end
-
-    # Returns `true` if the *node* is a `loop do ... end` call never left by `break`.
-    private def endless_loop_call?(node : Crystal::Call) : Bool
-      return false unless loop?(node) && (block = node.block)
-
-      !LoopBreakVisitor.new(block.body).found?
-    end
-
-    # Returns `true` if the *node* is a loop never left through its condition.
-    private def endless_loop?(node : Crystal::While | Crystal::Until) : Bool
-      case node
-      in Crystal::While then node.cond.true_literal?
-      in Crystal::Until then node.cond.false_literal?
       end
     end
 
