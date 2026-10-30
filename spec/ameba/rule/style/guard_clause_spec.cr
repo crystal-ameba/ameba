@@ -359,6 +359,7 @@ module Ameba::Rule::Style
     it_reports_control_expression "next"
     it_reports_control_expression "break"
     it_reports_control_expression %(raise "error")
+    it_reports_control_expression %(raise "error", location)
 
     context "method in module" do
       it "reports an issue for instance method" do
