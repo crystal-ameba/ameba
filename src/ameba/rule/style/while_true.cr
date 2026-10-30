@@ -1,5 +1,6 @@
 module Ameba::Rule::Style
-  # A rule that disallows the use of `while true` instead of using the idiomatic `loop`
+  # A rule that disallows the use of `while true` (or `until false`)
+  # instead of using the idiomatic `loop`
   #
   # For example, this is considered invalid:
   #
@@ -19,6 +20,15 @@ module Ameba::Rule::Style
   # end
   # ```
   #
+  # The same applies to `until false`:
+  #
+  # ```
+  # until false
+  #   do_something
+  #   break if some_condition
+  # end
+  # ```
+  #
   # NOTE: The issues are not autocorrected if there are any variables declared
   # within the `while` loop and referenced after it, since these become local
   # to the `loop` block, and thus inaccessible after it.
@@ -32,29 +42,35 @@ module Ameba::Rule::Style
   class WhileTrue < Base
     properties do
       since_version "0.3.0"
-      description "Disallows `while` statements with a `true` literal as condition"
+      description "Disallows `while true` and `until false` statements"
     end
 
-    MSG = "While statement using `true` literal as condition"
+    MSG       = "While statement using `true` literal as condition"
+    MSG_UNTIL = "Until statement using `false` literal as condition"
 
     def test(source)
       AST::ScopeVisitor.new(self, source)
     end
 
     def test(source, node, scope : AST::Scope)
-      WhileTrueCollector.new(scope).nodes.each do |while_node|
-        report(source, while_node, scope)
+      WhileTrueCollector.new(scope).nodes.each do |loop_node|
+        case loop_node
+        when Crystal::While, Crystal::Until
+          report(source, loop_node, scope)
+        end
       end
     end
 
-    private def report(source, node, scope)
+    private def report(source, node : Crystal::While | Crystal::Until, scope)
       return unless location = node.location
       return unless end_location = node.cond.end_location
 
+      msg = node.is_a?(Crystal::Until) ? MSG_UNTIL : MSG
+
       if declares_variables_used_after?(node, scope)
-        issue_for(node, MSG)
+        issue_for(node, msg)
       else
-        issue_for(node, MSG) do |corrector|
+        issue_for(node, msg) do |corrector|
           corrector.replace(location, end_location, "loop do")
         end
       end
@@ -78,7 +94,7 @@ module Ameba::Rule::Style
 
   # Collects the `while true` nodes within the scope, excluding its inner scopes.
   private class WhileTrueCollector < Crystal::Visitor
-    getter nodes = [] of Crystal::While
+    getter nodes = [] of Crystal::While | Crystal::Until
 
     @inner_scope_nodes : Set(UInt64)
 
@@ -89,6 +105,11 @@ module Ameba::Rule::Style
 
     def visit(node : Crystal::While)
       @nodes << node if node.cond.true_literal?
+      true
+    end
+
+    def visit(node : Crystal::Until)
+      @nodes << node if node.cond.false_literal?
       true
     end
 

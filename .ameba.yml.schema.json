@@ -2264,7 +2264,7 @@
       "$ref": "#/$defs/BaseRule",
       "$comment": "https://crystal-ameba.org/api/master/Ameba/Rule/Style/WhileTrue.html",
       "title": "Style/WhileTrue",
-      "description": "Disallows `while` statements with a `true` literal as condition",
+      "description": "Disallows `while true` and `until false` statements",
       "properties": {
         "SinceVersion": {
           "type": "string",
