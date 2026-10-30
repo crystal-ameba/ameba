@@ -598,8 +598,19 @@ module Ameba::AST
         subject.exit?(node).should be_true
       end
 
+      it "returns true if this is a Process.exit method call" do
+        node = as_node("Process.exit 1")
+        subject.exit?(node).should be_true
+
+        node = as_node("::Process.exit")
+        subject.exit?(node).should be_true
+      end
+
       it "returns false if it has a receiver" do
         node = as_node("obj.exit")
+        subject.exit?(node).should be_false
+
+        node = as_node("Foo::Process.exit")
         subject.exit?(node).should be_false
       end
 

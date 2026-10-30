@@ -323,7 +323,7 @@ module Ameba::AST
 
     {% for type in LOOP_NODES %}
       private def propagate_through(node : Crystal::{{ type.id }}, live : LiveSet, mark = true) : LiveSet
-        # Infinite loops (i.e. `while true`) are never left through
+        # Endless loops (i.e. `while true`) are never left through
         # the condition, so the code following them is reached only by `break`.
         cond_exit_live = endless_loop?(node) ? LiveSet.new : live
 

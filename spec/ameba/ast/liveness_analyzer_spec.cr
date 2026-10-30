@@ -573,6 +573,17 @@ module Ameba::AST
         dead_store_names(scope).should eq ["a"]
       end
 
+      it "reports assignment read only after Process.exit" do
+        scope = def_scope <<-CRYSTAL
+          def foo
+            a = 1
+            Process.exit 1
+            a
+          end
+          CRYSTAL
+        dead_store_names(scope).should eq ["a"]
+      end
+
       it "reports assignment read only after exit / abort" do
         scope = def_scope <<-CRYSTAL
           def foo
