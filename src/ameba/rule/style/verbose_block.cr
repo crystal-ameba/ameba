@@ -141,7 +141,8 @@ module Ameba::Rule::Style
           args_to_s(str, node, skip_last_arg: true)
           str << "]=(" << node.args.last? << ')'
         else
-          short_block = short_block_code(source, node)
+          short_block = short_block_code(source, node) ||
+                        node.block_arg.try { |arg| "&#{arg}" }
           str << name
           if has_arguments?(node) || short_block
             str << '('
@@ -207,27 +208,24 @@ module Ameba::Rule::Style
     end
 
     private def reference_count(node, obj : Crystal::Var)
-      i = 0
-      case node
-      when Crystal::Call
-        i += reference_count(node.obj, obj)
-        i += reference_count(node.block, obj)
+      VarReferenceCounter.new(node, obj).count
+    end
+  end
 
-        node.args.each do |arg|
-          i += reference_count(arg, obj)
-        end
-        node.named_args.try &.each do |arg|
-          i += reference_count(arg.value, obj)
-        end
-      when Crystal::BinaryOp
-        i += reference_count(node.left, obj)
-        i += reference_count(node.right, obj)
-      when Crystal::Block
-        i += reference_count(node.body, obj)
-      when Crystal::Var
-        i += 1 if node == obj
-      end
-      i
+  private class VarReferenceCounter < Crystal::Visitor
+    getter count = 0
+
+    def initialize(node : Crystal::ASTNode, @var : Crystal::Var)
+      node.accept(self)
+    end
+
+    def visit(node : Crystal::Var)
+      @count += 1 if node == @var
+      false
+    end
+
+    def visit(node : Crystal::ASTNode)
+      true
     end
   end
 end
