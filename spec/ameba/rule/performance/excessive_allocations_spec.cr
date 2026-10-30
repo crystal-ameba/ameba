@@ -13,6 +13,20 @@ module Ameba::Rule::Performance
         CRYSTAL
     end
 
+    it "passes if the collection method is called without a receiver" do
+      expect_no_issues subject, <<-CRYSTAL
+        class Foo
+          def lines
+            %w[foo bar]
+          end
+
+          def bar
+            lines.each { |l| puts l }
+          end
+        end
+        CRYSTAL
+    end
+
     it "reports if there is a collection method followed by each" do
       source = expect_issue subject, <<-CRYSTAL
         "Alice".chars.each { |c| puts c }
