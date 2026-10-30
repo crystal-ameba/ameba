@@ -60,6 +60,56 @@ module Ameba
           fizz
           CRYSTAL
       end
+
+      it "works with CRLF line endings" do
+        source = Source.new("foo\r\nbar\r\nfizz\r\nbuzz")
+
+        location = Crystal::Location.new("", 2, 1)
+        end_location = Crystal::Location.new("", 3, 4)
+
+        range = Range.new(
+          source.pos(location),
+          source.pos(end_location, end: true),
+          exclusive: true,
+        )
+        source.code[range].should eq "bar\r\nfizz"
+      end
+
+      it "works with mixed line endings and multibyte characters" do
+        source = Source.new("ü\r\nbar\nbüzz")
+
+        source.pos(Crystal::Location.new("", 1, 1)).should eq 0
+        source.pos(Crystal::Location.new("", 2, 1)).should eq 3
+        source.pos(Crystal::Location.new("", 3, 2)).should eq 8
+        source.code[8].should eq 'ü'
+      end
+
+      it "works with empty lines and a trailing new line" do
+        source = Source.new("\nfoo\n")
+
+        source.pos(Crystal::Location.new("", 1, 1)).should eq 0
+        source.pos(Crystal::Location.new("", 2, 1)).should eq 1
+        source.pos(Crystal::Location.new("", 3, 1)).should eq 5
+      end
+
+      it "works with an empty code" do
+        source = Source.new
+
+        source.pos(Crystal::Location.new("", 1, 1)).should eq 0
+      end
+
+      it "works after the code is corrected" do
+        source = Source.new("foo   \nbar")
+        location = Crystal::Location.new("", 2, 1)
+
+        source.pos(location).should eq 7
+
+        Rule::Layout::TrailingWhitespace.new.catch(source)
+        source.correct!.should be_true
+        source.code.should eq "foo\nbar"
+
+        source.pos(location).should eq 4
+      end
     end
 
     describe "#correct!" do

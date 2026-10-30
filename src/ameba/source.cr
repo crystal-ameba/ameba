@@ -41,6 +41,7 @@ module Ameba
 
       @code = corrected_code
       @lines = nil
+      @line_offsets = nil
       @ast = nil
 
       true
@@ -57,6 +58,15 @@ module Ameba
     # source.lines # => ["a = 1", "b = 2"]
     # ```
     getter lines : Array(String) { code.split(/\r?\n/) }
+
+    # Positions at which the code lines start.
+    private getter line_offsets : Array(Int32) do
+      offsets = [0]
+      code.each_char_with_index do |char, index|
+        offsets << index + 1 if char == '\n'
+      end
+      offsets
+    end
 
     # Returns AST nodes constructed by `Crystal::Parser`.
     #
@@ -100,7 +110,7 @@ module Ameba
     # Converts an AST location to a string position.
     def pos(location : Crystal::Location, end end_pos = false) : Int32
       line, column = location.line_number, location.column_number
-      pos = lines[0...line - 1].sum(&.size) + line + column - 2
+      pos = line_offsets[line - 1] + column - 1
       pos += 1 if end_pos
       pos
     end
