@@ -503,6 +503,37 @@ module Ameba::Rule::Lint
           CRYSTAL
       end
 
+      it "reports when the assignment branch ends in a conditional loop which returns" do
+        expect_issue subject, <<-CRYSTAL
+          def foo
+            if cond
+              x = 1
+              while other
+                return
+              end
+            end
+
+            bar { |x| x + 1 }
+                 # ^ error: Shadowing outer local variable `x`
+          end
+          CRYSTAL
+      end
+
+      it "does not report when the assignment branch ends in an endless loop" do
+        expect_no_issues subject, <<-CRYSTAL
+          def foo
+            if cond
+              x = 1
+              loop do
+                sleep 1
+              end
+            end
+
+            bar { |x| x + 1 }
+          end
+          CRYSTAL
+      end
+
       it "reports when the assignment is reachable past a nested non-terminating branch" do
         expect_issue subject, <<-CRYSTAL
           def foo

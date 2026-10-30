@@ -170,7 +170,7 @@ module Ameba::Rule::Style
 
       case node
       when Crystal::Call
-        node if node.obj.nil? && node.name == "raise"
+        node if raise?(node)
       when Crystal::Return, Crystal::Break, Crystal::Next
         node
       end

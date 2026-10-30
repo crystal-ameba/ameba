@@ -97,6 +97,14 @@ module Ameba::Rule::Lint
         CRYSTAL
     end
 
+    it "passes if there is a `false` predicate in `until` conditional" do
+      expect_no_issues subject, <<-CRYSTAL
+        until false
+          :ok
+        end
+        CRYSTAL
+    end
+
     describe "range" do
       it "reports range with literals" do
         expect_issue subject, <<-CRYSTAL

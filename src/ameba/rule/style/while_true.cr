@@ -103,13 +103,8 @@ module Ameba::Rule::Style
       scope.node.accept(self)
     end
 
-    def visit(node : Crystal::While)
-      @nodes << node if node.cond.true_literal?
-      true
-    end
-
-    def visit(node : Crystal::Until)
-      @nodes << node if node.cond.false_literal?
+    def visit(node : Crystal::While | Crystal::Until)
+      @nodes << node if AST::Util.endless_loop_condition?(node)
       true
     end
 

@@ -45,26 +45,19 @@ module Ameba::AST
     #   a + 1 # => unreachable node
     # end
     # ```
-    def unreachable_nodes
-      unreachable_nodes = [] of Crystal::ASTNode
-
+    getter unreachable_nodes : Array(Crystal::ASTNode) do
       case current_node = node
       when Crystal::Expressions
-        control_flow_found = false
-
-        current_node.expressions.each do |exp|
-          if control_flow_found
-            unreachable_nodes << exp
-          end
-          control_flow_found ||= !loop?(exp) && flow_expression?(exp, in_loop?)
+        expressions = current_node.expressions
+        # every expression following the first flow expression is unreachable
+        if index = expressions.index { |exp| flow_expression?(exp, in_loop?) }
+          expressions[(index + 1)..]
         end
       when Crystal::BinaryOp
         if flow_expression?(current_node.left, in_loop?)
-          unreachable_nodes << current_node.right
+          [current_node.right] of Crystal::ASTNode
         end
-      end
-
-      unreachable_nodes
+      end || [] of Crystal::ASTNode
     end
   end
 end

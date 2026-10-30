@@ -308,6 +308,15 @@ module Ameba::AST
         subject.flow_expression?(node).should be_false
       end
 
+      it "returns false if this while with break inside of a loop" do
+        node = as_node <<-CRYSTAL
+          while true
+            break
+          end
+          CRYSTAL
+        subject.flow_expression?(node, true).should be_false
+      end
+
       it "returns true if this until consumed by flow expressions" do
         node = as_node <<-CRYSTAL
           until false
@@ -324,6 +333,33 @@ module Ameba::AST
           end
           CRYSTAL
         subject.flow_expression?(node).should be_false
+      end
+
+      it "returns false if this until with next inside of a loop" do
+        node = as_node <<-CRYSTAL
+          until something
+            next
+          end
+          CRYSTAL
+        subject.flow_expression?(node, true).should be_false
+      end
+
+      it "returns false if this while with a condition and a returning body" do
+        node = as_node <<-CRYSTAL
+          while something
+            return
+          end
+          CRYSTAL
+        subject.flow_expression?(node).should be_false
+      end
+
+      it "returns true if this infinite loop breaks only out of a nested block" do
+        node = as_node <<-CRYSTAL
+          loop do
+            [1, 2].each { break }
+          end
+          CRYSTAL
+        subject.flow_expression?(node).should be_true
       end
 
       it "returns true if this expressions consumed by flow expressions" do
@@ -576,12 +612,17 @@ module Ameba::AST
         subject.raise?(node).should be_true
       end
 
+      it "returns true if this is a raise method call with multiple arguments" do
+        node = as_node("raise \"message\", location")
+        subject.raise?(node).should be_true
+      end
+
       it "returns false if it has a receiver" do
         node = as_node("obj.raise e")
         subject.raise?(node).should be_false
       end
 
-      it "returns false if size of the arguments doesn't match" do
+      it "returns false if there are no arguments" do
         node = as_node("raise")
         subject.raise?(node).should be_false
       end
@@ -644,6 +685,58 @@ module Ameba::AST
       it "returns false if size of the arguments doesn't match" do
         node = as_node("abort 1, 1, 1")
         subject.abort?(node).should be_false
+      end
+    end
+
+    describe "#exhaustive_branches?" do
+      it "returns true if this is a select" do
+        node = as_node("select\nwhen x = ch.receive\nend").as(Crystal::Select)
+        subject.exhaustive_branches?(node).should be_true
+      end
+
+      it "returns true if this is an exhaustive case" do
+        node = as_node("case x\nin Int32\nend").as(Crystal::Case)
+        subject.exhaustive_branches?(node).should be_true
+      end
+
+      it "returns false if this is a non-exhaustive case" do
+        node = as_node("case x\nwhen Int32\nend").as(Crystal::Case)
+        subject.exhaustive_branches?(node).should be_false
+      end
+    end
+
+    describe "#endless_loop_condition?" do
+      it "returns true if this is a while true / until false loop" do
+        subject.endless_loop_condition?(as_node("while true; break; end")).should be_true
+        subject.endless_loop_condition?(as_node("until false; break; end")).should be_true
+      end
+
+      it "returns false if this is a loop with a condition" do
+        subject.endless_loop_condition?(as_node("while foo; end")).should be_false
+        subject.endless_loop_condition?(as_node("until true; end")).should be_false
+        subject.endless_loop_condition?(as_node("loop { }")).should be_false
+      end
+    end
+
+    describe "#endless_loop?" do
+      it "returns true if this is a loop without break" do
+        subject.endless_loop?(as_node("while true; next; end")).should be_true
+        subject.endless_loop?(as_node("until false; foo; end")).should be_true
+        subject.endless_loop?(as_node("loop { [1].each { break } }")).should be_true
+      end
+
+      it "returns false if this is a loop with break" do
+        subject.endless_loop?(as_node("while true; break if foo; end")).should be_false
+        subject.endless_loop?(as_node("loop { break }")).should be_false
+      end
+
+      it "returns false if this is a loop with a condition" do
+        subject.endless_loop?(as_node("while foo; return; end")).should be_false
+      end
+
+      it "returns false if this is not a loop" do
+        subject.endless_loop?(as_node("foo { }")).should be_false
+        subject.endless_loop?(as_node("loop(&block)")).should be_false
       end
     end
 
