@@ -437,6 +437,20 @@ module Ameba::AST
           CRYSTAL
         dead_store_names(scope).should be_empty
       end
+
+      it "does not report assignment read by the condition after next" do
+        scope = def_scope <<-CRYSTAL
+          def foo
+            x = 0
+            while x < 10
+              x = 1
+              next if bar
+              x = 2
+            end
+          end
+          CRYSTAL
+        dead_store_names(scope).should be_empty
+      end
     end
 
     context "until loops" do

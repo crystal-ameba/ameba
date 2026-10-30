@@ -374,9 +374,9 @@ module Ameba::AST
 
         converged_cond_live = entry_live
         MAX_FIXED_POINT_ITERATIONS.times do
-          @next_live = entry_live
-
           converged_cond_live = propagate_through(cond, entry_live, false)
+          @next_live = converged_cond_live
+
           body_live = propagate_through(body, converged_cond_live, false)
           new_entry = body_live | live
 
@@ -385,9 +385,9 @@ module Ameba::AST
         end
 
         # Final pass with marking enabled using the converged live set
-        @next_live = entry_live
-
         cond_live = propagate_through(cond, entry_live, mark)
+        @next_live = cond_live
+
         propagate_through(body, cond_live, mark)
 
         converged_cond_live
