@@ -288,8 +288,10 @@ module Ameba::AST::Util
       !node.op.in?("||", "&&") && flow_expression?(node.value, in_loop)
     when Crystal::MultiAssign
       node.values.any? { |value| flow_expression?(value, in_loop) }
-    else
+    when Crystal::Assign, Crystal::TypeDeclaration
       flow_expression?(node.value, in_loop)
+    else
+      false
     end
   end
 
