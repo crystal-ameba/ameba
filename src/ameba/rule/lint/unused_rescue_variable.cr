@@ -50,12 +50,10 @@ module Ameba::Rule::Lint
       analyzer.dead_stores.each do |assign|
         next unless (rescue_node = assign.node).is_a?(Crystal::Rescue)
 
-        var = assign.variable
-
         next if assign.referenced_in_preceding_inner_scope?
         next if assign.address_taken_before?
 
-        issue_for(name_location_or(rescue_node), MSG % var.name)
+        issue_for(name_location_or(rescue_node), MSG % assign.variable.name)
       end
     end
 

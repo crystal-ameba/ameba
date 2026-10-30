@@ -479,12 +479,11 @@ module Ameba::AST
         @flow = @flow.copy_with(break_live: live)
         entry_live = live
 
-        converged_cond_live = entry_live
         MAX_FIXED_POINT_ITERATIONS.times do
-          converged_cond_live = propagate_through(cond, entry_live, false)
-          @flow = @flow.copy_with(next_live: converged_cond_live)
+          cond_live = propagate_through(cond, entry_live, false)
+          @flow = @flow.copy_with(next_live: cond_live)
 
-          body_live = propagate_through(body, converged_cond_live, false)
+          body_live = propagate_through(body, cond_live, false)
           new_entry = body_live | live
 
           break if new_entry == entry_live
@@ -497,7 +496,7 @@ module Ameba::AST
 
         propagate_through(body, cond_live, mark)
 
-        converged_cond_live
+        cond_live
       end
     end
 
