@@ -6,7 +6,8 @@ module Ameba::AST
   class FlowExpressionVisitor < BaseVisitor
     include Util
 
-    @loop_stack = [] of Crystal::ASTNode
+    # Number of the loops, blocks and procs enclosing the currently visited node
+    @loop_depth = 0
 
     # Object ids of the already reported unreachable nodes
     @unreachable_node_ids = Set(UInt64).new
@@ -15,7 +16,7 @@ module Ameba::AST
     #
     # Called by `Crystal::ASTNode#accept` before `visit` for every node.
     # Returning `false` skips the node entirely (both `visit` and `end_visit`),
-    # which keeps `@loop_stack` balanced for the skipped loops and blocks.
+    # which keeps `@loop_depth` balanced for the skipped loops and blocks.
     def visit_any(node)
       # skip flow expressions nested within the already reported unreachable code
       !@unreachable_node_ids.includes?(node.object_id)
@@ -34,37 +35,20 @@ module Ameba::AST
     end
 
     # :nodoc:
-    def visit(node : Crystal::While | Crystal::Until)
-      on_loop_started(node)
+    def visit(node : Crystal::While | Crystal::Until | Crystal::Block | Crystal::ProcLiteral)
+      @loop_depth += 1
       true
     end
 
     # :nodoc:
-    def visit(node : Crystal::Block | Crystal::ProcLiteral)
-      on_loop_started(node)
-      true
+    def end_visit(node : Crystal::While | Crystal::Until | Crystal::Block | Crystal::ProcLiteral)
+      @loop_depth -= 1
     end
 
-    # :nodoc:
-    def end_visit(node : Crystal::While | Crystal::Until)
-      on_loop_ended(node)
-    end
-
-    # :nodoc:
-    def end_visit(node : Crystal::Block | Crystal::ProcLiteral)
-      on_loop_ended(node)
-    end
-
-    private def on_loop_started(node)
-      @loop_stack.push(node)
-    end
-
-    private def on_loop_ended(node)
-      @loop_stack.pop?
-    end
-
+    # Returns `true` if `break` / `next` within the currently visited node
+    # are flow commands, i.e. it's nested within a loop, block or proc.
     private def in_loop?
-      @loop_stack.present?
+      @loop_depth.positive?
     end
   end
 end
