@@ -478,6 +478,96 @@ module Ameba::AST
       end
     end
 
+    context "calls never returning" do
+      it "reports assignment read only after raise" do
+        scope = def_scope <<-CRYSTAL
+          def foo
+            a = 1
+            raise "x"
+            a
+          end
+          CRYSTAL
+        dead_store_names(scope).should eq ["a"]
+      end
+
+      it "reports assignment read only after exit / abort" do
+        scope = def_scope <<-CRYSTAL
+          def foo
+            a = 1
+            exit 1
+            a
+          end
+          CRYSTAL
+        dead_store_names(scope).should eq ["a"]
+
+        scope = def_scope <<-CRYSTAL
+          def foo
+            a = 1
+            abort "x"
+            a
+          end
+          CRYSTAL
+        dead_store_names(scope).should eq ["a"]
+      end
+
+      it "does not report assignment read by the raise arguments" do
+        scope = def_scope <<-CRYSTAL
+          def foo
+            a = 1
+            raise a.to_s
+          end
+          CRYSTAL
+        dead_store_names(scope).should be_empty
+      end
+
+      it "does not report assignment read in rescue after raise" do
+        scope = def_scope <<-CRYSTAL
+          def foo
+            a = 1
+            raise "x"
+            a
+          rescue
+            a
+          end
+          CRYSTAL
+        dead_store_names(scope).should be_empty
+      end
+
+      it "does not report assignment read in ensure after raise" do
+        scope = def_scope <<-CRYSTAL
+          def foo
+            a = 1
+            raise "x"
+          ensure
+            a
+          end
+          CRYSTAL
+        dead_store_names(scope).should be_empty
+      end
+
+      it "does not report assignment read after raise in a branch" do
+        scope = def_scope <<-CRYSTAL
+          def foo
+            a = 1
+            raise "x" if something
+            a
+          end
+          CRYSTAL
+        dead_store_names(scope).should be_empty
+      end
+
+      it "does not treat raise with a receiver as never returning" do
+        scope = def_scope <<-CRYSTAL
+          def foo
+            a = 1
+            obj.raise "x"
+            a
+          end
+          CRYSTAL
+        dead_store_names(scope).should be_empty
+      end
+    end
+
     context "exception handlers" do
       it "treats the rescue variable as assigned on entering the rescue branch" do
         scope = def_scope <<-CRYSTAL

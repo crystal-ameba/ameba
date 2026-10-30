@@ -401,6 +401,7 @@ module Ameba::AST
     end
 
     private def propagate_through(node : Crystal::Call, live : LiveSet, mark = true) : LiveSet
+      live = propagate_through_no_return(node, live)
       live = propagate_through_raise(live)
 
       live = propagate_through(node.block, live, mark)
@@ -497,6 +498,21 @@ module Ameba::AST
         propagate_through(body, cond_live, mark)
 
         cond_live
+      end
+    end
+
+    # Returns the variables live after the *node* call, which in case of
+    # the calls never returning (`raise`, `exit` and `abort`) aren't the ones
+    # read by the (unreachable) code following them, but the ones live
+    # when raising (i.e. read by `rescue` / `ensure`) or leaving the scope.
+    private def propagate_through_no_return(node : Crystal::Call, live : LiveSet) : LiveSet
+      case
+      when Util.raise?(node)
+        @flow.raise_live
+      when Util.exit?(node), Util.abort?(node)
+        @exit_live
+      else
+        live
       end
     end
 
