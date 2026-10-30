@@ -1002,6 +1002,28 @@ module Ameba::AST
           CRYSTAL
         dead_store_names(scope).should be_empty
       end
+
+      it "does not report assignment read by a call target" do
+        scope = def_scope <<-CRYSTAL
+          def foo
+            obj = Foo.new
+            obj.x, y = 1, 2
+            y
+          end
+          CRYSTAL
+        dead_store_names(scope).should be_empty
+      end
+
+      it "does not report assignment read by an index target" do
+        scope = def_scope <<-CRYSTAL
+          def foo(arr)
+            i = 1
+            arr[i], *rest = [1, 2, 3]
+            rest
+          end
+          CRYSTAL
+        dead_store_names(scope).should be_empty
+      end
     end
 
     context "top level scope" do

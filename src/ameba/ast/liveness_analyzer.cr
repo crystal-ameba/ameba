@@ -212,10 +212,13 @@ module Ameba::AST
     private def propagate_through(node : Crystal::OpAssign, live : LiveSet, mark = true) : LiveSet
       return live if inner_scope_node?(node)
 
+      # The operator (unless a logical one) is a call, which might raise
+      raising = !node.op.in?("||", "&&")
+
       target = node.target
       unless target.is_a?(Crystal::Var) && target.name.in?(@var_names)
         live = propagate_through(node.value, live, mark)
-        live = propagate_through_raise(live) unless node.op.in?("||", "&&")
+        live = propagate_through_raise(live) if raising
         return propagate_through(target, live, mark)
       end
 
@@ -224,9 +227,7 @@ module Ameba::AST
       # variable is live (since the op-assign reads the current value).
       mark_dead_store(node, target.name, live) if mark
       live = add_to_live_set(target.name, live)
-
-      # The operator (unless a logical one) is a call, which might raise
-      live = propagate_through_raise(live) unless node.op.in?("||", "&&")
+      live = propagate_through_raise(live) if raising
       propagate_through(node.value, live, mark)
     end
 
@@ -239,6 +240,9 @@ module Ameba::AST
       node.targets.reverse_each do |target|
         if (var = Util.assigned_var(target)) && var.name.in?(@var_names)
           live = remove_from_live_set(node, var.name, live, mark)
+        else
+          # Other targets (i.e. `obj.foo` or `arr[i]`) read their receivers and arguments
+          live = propagate_through(target, live, mark)
         end
       end
       live = propagate_through_raise(live) if raising
