@@ -9,6 +9,7 @@ module Ameba::AST
   # not in the live set, the assignment is marked as a dead store.
   class LivenessAnalyzer
     include Dataflow
+    include Util
 
     alias LiveSet = Set(String)
 
@@ -160,7 +161,7 @@ module Ameba::AST
     # Returns the name of the analyzed variable assigned by the *target* node,
     # or `nil` if it's not a variable (i.e. `obj.foo` or `@foo`), or not analyzed.
     private def tracked_var_name(target) : String?
-      if (var = Util.assigned_var(target)) && var.name.in?(@var_names)
+      if (var = assigned_var(target)) && var.name.in?(@var_names)
         var.name
       end
     end
@@ -526,9 +527,9 @@ module Ameba::AST
     # returning or leaving the scope.
     private def propagate_through_no_return(node : Crystal::Call, live : LiveSet) : LiveSet
       case
-      when Util.raise?(node)
+      when raise?(node)
         @flow.raise_live
-      when Util.exit?(node), Util.abort?(node)
+      when exit?(node), abort?(node)
         @exit_live
       when endless_loop_call?(node)
         # the block might `return` (raising is handled by the caller)
@@ -540,7 +541,7 @@ module Ameba::AST
 
     # Returns `true` if the *node* is a `loop do ... end` call never left by `break`.
     private def endless_loop_call?(node : Crystal::Call) : Bool
-      return false unless Util.loop?(node) && (block = node.block)
+      return false unless loop?(node) && (block = node.block)
 
       !LoopBreakVisitor.new(block.body).found?
     end
