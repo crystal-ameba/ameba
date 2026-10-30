@@ -36,6 +36,31 @@ module Ameba::Rule::Performance
         CRYSTAL
     end
 
+    it "reports and corrects short block syntax" do
+      source = expect_issue subject, <<-CRYSTAL
+        3.times.map(&.to_s).to_a
+        # ^^^^^^^^^^^^^^^^^^^^^^ error: Use `Array.new(3) {...}` instead of `3.times.map {...}.to_a`
+        3.times.map( &.to_s ).to_a
+        # ^^^^^^^^^^^^^^^^^^^^^^^^ error: Use `Array.new(3) {...}` instead of `3.times.map {...}.to_a`
+        CRYSTAL
+
+      expect_correction source, <<-CRYSTAL
+        Array.new(3, &.to_s)
+        Array.new(3, &.to_s)
+        CRYSTAL
+    end
+
+    it "preserves the original formatting of the count expression" do
+      source = expect_issue subject, <<-CRYSTAL
+        1_000.times.map { |i| i * 2 }.to_a
+        # ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ error: Use `Array.new(1000) {...}` instead of `1000.times.map {...}.to_a`
+        CRYSTAL
+
+      expect_correction source, <<-CRYSTAL
+        Array.new(1_000) { |i| i * 2 }
+        CRYSTAL
+    end
+
     it "does not report is source is a spec" do
       expect_no_issues subject, path: "source_spec.cr", code: <<-CRYSTAL
         3.times.map { |i| i * i }.to_a
