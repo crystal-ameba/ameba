@@ -54,10 +54,31 @@ module Ameba::Rule::Style
 
       return unless redundant_parentheses?(node, cond)
 
-      issue_for(cond, MSG_REDUNDANT) do |corrector|
-        corrector.remove_trailing(cond, 1)
-        corrector.remove_leading(cond, 1)
+      location, end_location =
+        cond.location, cond.end_location
+
+      unless location && end_location
+        issue_for(cond, MSG_REDUNDANT)
+        return
       end
+
+      issue_for(cond, MSG_REDUNDANT) do |corrector|
+        begin_pos, end_pos =
+          source.pos(location), source.pos(end_location)
+
+        # Guard against negative index wrapping around to the end of the code
+        preceding_char =
+          source.code[begin_pos - 1]? if begin_pos.positive?
+
+        # Parentheses might be the only thing separating the condition
+        # from the adjacent tokens, i.e. `if(foo)` or `(foo)? bar : baz`
+        corrector.replace(begin_pos...begin_pos + 1, separator(preceding_char))
+        corrector.replace(end_pos...end_pos + 1, separator(source.code[end_pos + 1]?))
+      end
+    end
+
+    private def separator(char)
+      char.nil? || char.whitespace? ? "" : " "
     end
 
     private def redundant_parentheses?(node, cond) : Bool

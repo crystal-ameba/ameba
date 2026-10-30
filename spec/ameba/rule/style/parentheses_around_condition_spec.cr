@@ -83,6 +83,55 @@ module Ameba::Rule::Style
       end
     {% end %}
 
+    it "keeps the condition separated from the adjacent tokens" do
+      source = expect_issue subject, <<-CRYSTAL
+        if(foo)
+        # ^^^^^ error: Redundant parentheses
+          :foo
+        end
+
+        while(bar)
+           # ^^^^^ error: Redundant parentheses
+        end
+
+        (baz)? 1 : 2
+        # ^^^ error: Redundant parentheses
+        CRYSTAL
+
+      expect_correction source, <<-CRYSTAL
+        if foo
+          :foo
+        end
+
+        while bar
+        end
+
+        baz ? 1 : 2
+        CRYSTAL
+    end
+
+    it "doesn't prepend a space to the condition at the start of the source" do
+      source = expect_issue subject, <<-CRYSTAL
+        (foo)? 1 : 2
+        # ^^^ error: Redundant parentheses
+        CRYSTAL
+
+      expect_correction source, <<-CRYSTAL
+        foo ? 1 : 2
+        CRYSTAL
+    end
+
+    it "corrects sources with multibyte characters" do
+      source = expect_issue subject, <<-CRYSTAL
+        "żółć" if(foo)
+               # ^^^^^ error: Redundant parentheses
+        CRYSTAL
+
+      expect_correction source, <<-CRYSTAL
+        "żółć" if foo
+        CRYSTAL
+    end
+
     context "case" do
       it "reports if redundant parentheses are found" do
         source = expect_issue subject, <<-CRYSTAL
