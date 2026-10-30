@@ -796,6 +796,15 @@ module Ameba::Rule::Lint
           CRYSTAL
       end
 
+      it "doesn't report if variable is used in a value of type declaration as a call argument" do
+        expect_no_issues subject, <<-CRYSTAL
+          def foo
+            baz = 1
+            bar bar : Int32 = baz
+          end
+          CRYSTAL
+      end
+
       it "doesn't report if variable is used inside an array literal in a call" do
         expect_no_issues subject, <<-CRYSTAL
           def method

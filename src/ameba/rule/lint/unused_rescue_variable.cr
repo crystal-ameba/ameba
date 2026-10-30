@@ -37,74 +37,43 @@ module Ameba::Rule::Lint
 
     MSG = "Unused `rescue` variable `%s`"
 
-    def test(source, node : Crystal::Rescue)
-      return unless name = node.name
-
-      visitor = VariableReferenceVisitor.new(node.body, name)
-      return if visitor.referenced?
-
-      issue_for name_location_or(node),
-        MSG % name
-    end
-  end
-
-  private class VariableReferenceVisitor < Crystal::Visitor
-    include AST::Util
-
-    getter variable_name : String
-    getter? referenced = false
-
-    def initialize(node : Crystal::ASTNode, @variable_name)
-      node.accept(self)
+    def test(source)
+      AST::ScopeVisitor.new(self, source)
     end
 
-    def visit(node : Crystal::Var)
-      @referenced ||= true if node.name == variable_name
-      true
-    end
+    def test(source, node, scope : AST::Scope)
+      captured_variables = captured_rescue_variables(scope)
+      return unless captured_variables.present? ||
+                    scope.variables.any? { |var| rescue_assigned?(var, scope) }
 
-    def visit(node : Crystal::MacroIf | Crystal::MacroFor)
-      if AST::MacroReferenceFinder.new(node, variable_name).references?
-        @referenced ||= true
+      analyzer = AST::LivenessAnalyzer.new(scope, captured_variables)
+      analyzer.dead_stores.each do |assign|
+        next unless (rescue_node = assign.node).is_a?(Crystal::Rescue)
+
+        next if assign.referenced_in_preceding_inner_scope?
+        next if assign.address_taken_before?
+
+        issue_for(name_location_or(rescue_node), MSG % assign.variable.name)
       end
-      false
     end
 
-    # Shadowed variable usage check
-    def visit(node : Crystal::Block)
-      all_block_args(node).all? { |arg| should_visit?(arg) }
+    # Returns the outer scope variables captured by the *scope*
+    # (i.e. a block), which are assigned by its `rescue` nodes.
+    private def captured_rescue_variables(scope)
+      variables = [] of AST::Variable
+
+      current_scope = scope
+      while current_scope.inherited? && (outer_scope = current_scope.outer_scope)
+        variables.concat(outer_scope.variables.select { |var| rescue_assigned?(var, scope) })
+        current_scope = outer_scope
+      end
+      variables
     end
 
-    # Shadowed variable usage check
-    def visit(node : Crystal::ProcLiteral)
-      node.def.args.all? { |arg| should_visit?(arg) }
-    end
-
-    # Shadowed variable usage check
-    def visit(node : Crystal::UninitializedVar)
-      should_visit?(node.var)
-    end
-
-    # Shadowed variable usage check
-    def visit(node : Crystal::Assign | Crystal::OpAssign)
-      should_visit?(node.target)
-    end
-
-    # Shadowed variable usage check
-    def visit(node : Crystal::MultiAssign)
-      node.targets.all? { |target| should_visit?(target) }
-    end
-
-    def visit(node : Crystal::ASTNode)
-      true
-    end
-
-    private def should_visit?(node : Crystal::Var | Crystal::Arg)
-      node.name != variable_name
-    end
-
-    private def should_visit?(node : Crystal::ASTNode)
-      true
+    private def rescue_assigned?(var, scope)
+      var.assignments.any? do |assign|
+        assign.scope.same?(scope) && assign.node.is_a?(Crystal::Rescue)
+      end
     end
   end
 end

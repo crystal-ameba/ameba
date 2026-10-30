@@ -25,6 +25,24 @@ module Ameba::AST
     def initialize(@node, @variable, @scope)
     end
 
+    # Returns `true` if the variable is referenced within an inner scope
+    # (i.e. a block) located before this assignment, since such scope might
+    # be invoked at any later point (i.e. as a stored callback), thus reading
+    # the assigned value.
+    #
+    # NOTE: The inner scopes located after the assignment are taken into account
+    #       by the liveness analysis, as reading the variable at their location.
+    def referenced_in_preceding_inner_scope? : Bool
+      return true unless assign_location = location
+
+      variable.references.any? do |ref|
+        next false unless ref.scope.nested_in?(scope)
+        next true unless ref_location = ref.scope.location
+
+        ref_location < assign_location
+      end
+    end
+
     # Returns `true` if the address of the variable is taken (i.e. via `pointerof`)
     # before this assignment, since the assigned value might be then read
     # through the pointer at any later point.

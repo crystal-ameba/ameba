@@ -44,30 +44,16 @@ module Ameba::Rule::Lint
       dead_stores = analyzer.dead_stores
 
       dead_stores.each do |assign|
+        # Unused `rescue` variables are reported by `Lint/UnusedRescueVariable`
+        next if assign.node.is_a?(Crystal::Rescue)
+
         var = assign.variable
 
         next if var.special? || var.ignored? || var.used_in_macro?
-        next if referenced_in_inner_scope_before?(scope, var, assign)
+        next if assign.referenced_in_preceding_inner_scope?
         next if assign.address_taken_before?
 
         report_issue(source, assign, var)
-      end
-    end
-
-    # Returns `true` if the *var* is referenced within an inner scope (i.e. a block)
-    # located before the *assign*, since such scope might be invoked at any later
-    # point (i.e. as a stored callback), thus reading the assigned value.
-    #
-    # NOTE: The inner scopes located after the assignment are taken into account
-    #       by the liveness analysis, as reading the variable at their location.
-    private def referenced_in_inner_scope_before?(scope, var, assign)
-      return true unless assign_location = assign.location
-
-      var.references.any? do |ref|
-        next false if ref.scope == scope
-        next true unless ref_location = ref.scope.location
-
-        ref_location < assign_location
       end
     end
 

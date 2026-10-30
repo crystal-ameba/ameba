@@ -16,6 +16,34 @@ module Ameba::AST
       dead_stores : Array(Assignment),
       entry_live_set : LiveSet
 
+    # Live sets for flow control: `break` exits to post-loop,
+    # `next` jumps to loop condition, `return` exits the scope, and a raised
+    # exception jumps to the enclosing `rescue` clauses (or exits the scope),
+    # all of them through the enclosing `ensure` clauses. Without these,
+    # assignments before break/next/return/raise would be incorrectly marked as dead.
+    private record FlowControl,
+      break_live : LiveSet,
+      next_live : LiveSet,
+      return_live : LiveSet,
+      raise_live : LiveSet
+
+    private struct FlowControl
+      # Returns the flow control with each of the live sets passed through the block.
+      def map(& : LiveSet -> LiveSet) : FlowControl
+        FlowControl.new(
+          yield(break_live),
+          yield(next_live),
+          yield(return_live),
+          yield(raise_live),
+        )
+      end
+
+      # Returns the variables live on any of the jumps.
+      def live : LiveSet
+        break_live | next_live | return_live | raise_live
+      end
+    end
+
     # Maximum iterations for fixed-point convergence in loops.
     # In practice, convergence happens in 2-3 iterations since the live set
     # can only grow monotonically and is bounded by the number of variables.
@@ -27,17 +55,27 @@ module Ameba::AST
     @inner_scope_nodes : Set(UInt64)
     @inner_scope_reads : Hash(UInt64, LiveSet)
 
-    # Live sets for loop flow control: `break` exits to post-loop,
-    # `next` jumps to loop condition. Without these, assignments
-    # before break/next would be incorrectly marked as dead.
-    @break_live : LiveSet?
-    @next_live : LiveSet?
+    @flow : FlowControl
 
-    def initialize(@scope : Scope)
-      @var_names = @scope.variables.map(&.name).to_set
-      @assignment_map = build_assignment_map
-      @inner_scope_nodes = @scope.inner_scopes.map(&.node.object_id).to_set
-      @inner_scope_reads = build_inner_scope_reads
+    # Variables live when leaving the scope, i.e. the captured variables,
+    # which might be read after the closure returns, or on its next invocation.
+    @exit_live : LiveSet
+
+    # Creates a new analyzer of the *scope*'s variables, and additionally
+    # the *captured_variables* (i.e. the outer scope variables assigned
+    # within a block), which are analyzed as long as they're assigned within
+    # the *scope*.
+    def initialize(@scope : Scope, captured_variables = [] of Variable)
+      variables = @scope.variables + captured_variables
+
+      @var_names = variables.to_set(&.name)
+      @exit_live = captured_variables
+        .select { |var| var.referenced? || var.used_in_macro? }
+        .to_set(&.name)
+      @flow = FlowControl.new(@exit_live, @exit_live, @exit_live, @exit_live)
+      @assignment_map = build_assignment_map(variables)
+      @inner_scope_nodes = @scope.inner_scopes.to_set(&.node.object_id)
+      @inner_scope_reads = build_inner_scope_reads(variables)
     end
 
     # Returns assignments where the value is never read before being
@@ -59,15 +97,15 @@ module Ameba::AST
       @dead_stores.clear
 
       body = scope_body(@scope.node)
-      entry_live = propagate_through(body, LiveSet.new)
+      entry_live = propagate_through(body, @exit_live)
 
       Result.new(@dead_stores, entry_live)
     end
 
-    private def build_assignment_map
+    private def build_assignment_map(variables)
       map = Hash(Tuple(String, UInt64), Assignment).new
 
-      @scope.variables.each do |var|
+      variables.each do |var|
         var.assignments.each do |assign|
           key = {var.name, assign.node.object_id}
           map[key] ||= assign
@@ -78,31 +116,53 @@ module Ameba::AST
 
     # Maps the nodes of the inner scopes to the names of this scope's variables
     # referenced within them (at any depth), i.e. `a` for the block in
-    # `a = 1; [1].each { puts a }`.
-    private def build_inner_scope_reads
+    # `a = 1; [1].each { puts a }`, including the references within macros,
+    # i.e. `a` for the macro in `a = 1; {% if flag?(:foo) %} puts a {% end %}`.
+    private def build_inner_scope_reads(variables)
       reads = Hash(UInt64, LiveSet).new
 
-      @scope.variables.each do |var|
+      variables.each do |var|
         var.references.each do |ref|
           next unless inner_scope = inner_scope_containing(ref.scope)
 
           reads.put_if_absent(inner_scope.node.object_id) { LiveSet.new } << var.name
         end
       end
+
+      @scope.inner_scopes.each do |inner_scope|
+        next if (names = macro_reads(inner_scope.node)).empty?
+
+        reads.put_if_absent(inner_scope.node.object_id) { LiveSet.new }.concat(names)
+      end
       reads
+    end
+
+    # Returns the names of the variables referenced within the macros of the *node*.
+    private def macro_reads(node) : LiveSet
+      @var_names.select do |name|
+        MacroReferenceFinder.new(node, name).references?
+      end.to_set
     end
 
     # Returns the inner scope of the analyzed scope, which contains (or is)
     # the given *scope*, or `nil` if there's no such scope.
     private def inner_scope_containing(scope) : Scope?
       while scope && (outer_scope = scope.outer_scope)
-        return scope if outer_scope == @scope
+        return scope if outer_scope.same?(@scope)
         scope = outer_scope
       end
     end
 
     private def inner_scope_node?(node)
       @inner_scope_nodes.includes?(node.object_id)
+    end
+
+    # Returns the name of the analyzed variable assigned by the *target* node,
+    # or `nil` if it's not a variable (i.e. `obj.foo` or `@foo`), or not analyzed.
+    private def tracked_var_name(target) : String?
+      if (var = Util.assigned_var(target)) && var.name.in?(@var_names)
+        var.name
+      end
     end
 
     private def find_assignment(node, var_name) : Assignment?
@@ -116,6 +176,15 @@ module Ameba::AST
       if assign = find_assignment(assign_node, var_name)
         @dead_stores << assign
       end
+    end
+
+    # Adds `var_name` to the live set.
+    private def add_to_live_set(var_name, live : LiveSet) : LiveSet
+      return live if var_name.in?(live)
+
+      live = live.dup
+      live.add(var_name)
+      live
     end
 
     # Removes `var_name` from the live set. When `mark` is true,
@@ -156,15 +225,15 @@ module Ameba::AST
       return live if inner_scope_node?(node)
 
       target = node.target
-      unless target.is_a?(Crystal::Var) && target.name.in?(@var_names)
+      unless name = tracked_var_name(target)
         live = propagate_through(node.value, live, mark)
         return propagate_through(target, live, mark)
       end
 
       # Only remove from live set if this assignment is tracked in the scope.
       # Untracked assignments (e.g. inside record/accessor macro args) are transparent.
-      if find_assignment(node, target.name)
-        live = remove_from_live_set(node, target.name, live, mark)
+      if find_assignment(node, name)
+        live = remove_from_live_set(node, name, live, mark)
       end
       propagate_through(node.value, live, mark)
     end
@@ -172,64 +241,75 @@ module Ameba::AST
     private def propagate_through(node : Crystal::OpAssign, live : LiveSet, mark = true) : LiveSet
       return live if inner_scope_node?(node)
 
+      # The operator (unless a logical one) is a call, which might raise
+      raising = !node.op.in?("||", "&&")
+
       target = node.target
-      unless target.is_a?(Crystal::Var) && target.name.in?(@var_names)
+      unless name = tracked_var_name(target)
         live = propagate_through(node.value, live, mark)
+        live = propagate_through_raise(live) if raising
         return propagate_through(target, live, mark)
       end
 
       # OpAssign both writes and reads the variable (x += 1 means x = x + 1).
       # Mark the dead store if the result is never read, then ensure the
       # variable is live (since the op-assign reads the current value).
-      mark_dead_store(node, target.name, live) if mark
-      unless target.name.in?(live)
-        live = live.dup
-        live.add(target.name)
-      end
+      mark_dead_store(node, name, live) if mark
+      live = add_to_live_set(name, live)
+      live = propagate_through_raise(live) if raising
       propagate_through(node.value, live, mark)
     end
 
     private def propagate_through(node : Crystal::MultiAssign, live : LiveSet, mark = true) : LiveSet
+      # A single value gets indexed for each of the targets in turn,
+      # which might raise both before and in between the assignments
+      raising = node.values.size == 1
+
+      live = propagate_through_raise(live) if raising
       node.targets.reverse_each do |target|
-        if (var = Util.assigned_var(target)) && var.name.in?(@var_names)
-          live = remove_from_live_set(node, var.name, live, mark)
+        if name = tracked_var_name(target)
+          live = remove_from_live_set(node, name, live, mark)
+        else
+          # Other targets (i.e. `obj.foo` or `arr[i]`) read their receivers and arguments
+          live = propagate_through(target, live, mark)
         end
       end
+      live = propagate_through_raise(live) if raising
       propagate_through(node.values, live, mark)
     end
 
     private def propagate_through(node : Crystal::UninitializedVar, live : LiveSet, mark = true) : LiveSet
-      var = node.var
-      if var.is_a?(Crystal::Var) && var.name.in?(@var_names)
-        live = remove_from_live_set(node, var.name, live, mark)
+      if name = tracked_var_name(node.var)
+        live = remove_from_live_set(node, name, live, mark)
+      end
+      live
+    end
+
+    private def propagate_through(node : Crystal::Out, live : LiveSet, mark = true) : LiveSet
+      # `out x` assigns the variable (rather than reading it), yet its value
+      # is often unwanted, being required only by the C function signature,
+      # so don't mark it as dead.
+      if (name = tracked_var_name(node.exp)) && find_assignment(node, name)
+        live = remove_from_live_set(node, name, live, mark: false)
       end
       live
     end
 
     private def propagate_through(node : Crystal::TypeDeclaration, live : LiveSet, mark = true) : LiveSet
-      var = node.var
-      if var.is_a?(Crystal::Var) && var.name.in?(@var_names)
-        if value = node.value
-          live = remove_from_live_set(node, var.name, live, mark)
-          live = propagate_through(value, live, mark)
-        else
-          # Type declarations without a value are type restrictions, not
-          # assignments — don't mark as dead. Since Crystal requires the
-          # variable to be previously undefined, kill it from the live set
-          # as no prior references can exist.
-          live = remove_from_live_set(node, var.name, live, mark: false)
-        end
+      if name = tracked_var_name(node.var)
+        # Type declarations without a value are type restrictions, not
+        # assignments — don't mark as dead. Since Crystal requires the
+        # variable to be previously undefined, kill it from the live set
+        # as no prior references can exist.
+        live = remove_from_live_set(node, name, live, mark && !node.value.nil?)
       end
-      live
+      propagate_through(node.value, live, mark)
     end
 
     private def propagate_through(node : Crystal::Var, live : LiveSet, mark = true) : LiveSet
-      name = node.name
-      if name.in?(@var_names) && !name.in?(live)
-        live = live.dup
-        live.add(name)
-      end
-      live
+      return live unless node.name.in?(@var_names)
+
+      add_to_live_set(node.name, live)
     end
 
     {% for type in BRANCH_NODES %}
@@ -247,28 +327,70 @@ module Ameba::AST
       end
     {% end %}
 
-    {% for type in CASE_NODES %}
-      private def propagate_through(node : Crystal::{{ type.id }}, live : LiveSet, mark = true) : LiveSet
-        propagate_through_case(node, live, mark)
+    private def propagate_through(node : Crystal::Case, live : LiveSet, mark = true) : LiveSet
+      # Each `when` conditions are evaluated only if the preceding ones
+      # didn't match, so the branches are chained as `if`/`elsif`/`else`.
+      branch_live = propagate_through(node.else, live, mark)
+
+      node.whens.reverse_each do |when_node|
+        when_live = propagate_through(when_node.body, live, mark)
+        branch_live = propagate_through(when_node.conds, when_live | branch_live, mark)
       end
-    {% end %}
+
+      propagate_through(node.cond, branch_live, mark)
+    end
+
+    private def propagate_through(node : Crystal::Select, live : LiveSet, mark = true) : LiveSet
+      # Only the `when` condition of the chosen branch completes,
+      # so the branches are alternatives to each other.
+      branch_live = propagate_through(node.else, live, mark)
+
+      node.whens.each do |when_node|
+        when_live = propagate_through(when_node.body, live, mark)
+        branch_live |= propagate_through(when_node.conds, when_live, mark)
+      end
+      branch_live
+    end
 
     private def propagate_through(node : Crystal::ExceptionHandler, live : LiveSet, mark = true) : LiveSet
-      post_ensure = propagate_through(node.ensure, live, mark)
-      after_body = propagate_through(node.else, post_ensure, mark)
-
-      # Rescue branches handle exceptions thrown at any point in the body,
-      # so collect all variables they need.
-      rescue_live = LiveSet.new
-      node.rescues.try &.each do |rescue_node|
-        rescue_live.concat(propagate_through(rescue_node.body, post_ensure, mark))
+      # The `ensure` clause is entered on every way out of the handler,
+      # so its assignments are dead stores only if dead on each of these.
+      if mark && (ensure_node = node.ensure)
+        propagate_through(ensure_node, live | @flow.live, mark)
       end
+      post_ensure = propagate_through(node.ensure, live, false)
 
-      # Body can throw at any point, so variables live in any rescue
-      # branch must also be considered live throughout the body.
-      # Union rescue_live because rescue-needed variables are live before the entire handler.
-      body_live = propagate_through(node.body, after_body | rescue_live, mark)
-      body_live | rescue_live
+      preserving_flow_control do
+        # `break`, `next`, `return` and exceptions leave the handler
+        # through the `ensure` clause, which might read the variables.
+        @flow = @flow.map do |jump_live|
+          propagate_through(node.ensure, jump_live, false)
+        end
+
+        after_body = propagate_through(node.else, post_ensure, mark)
+
+        # Rescue branches handle exceptions raised at any point in the body,
+        # so collect all variables they need.
+        rescue_live = LiveSet.new
+        node.rescues.try &.each do |rescue_node|
+          rescue_live.concat(propagate_through(rescue_node, post_ensure, mark))
+        end
+        @flow = @flow.copy_with(raise_live: @flow.raise_live | rescue_live)
+
+        # Conservatively consider the rescue-needed variables live
+        # at both ends of the body, i.e. for macro expansions.
+        propagate_through(node.body, after_body | rescue_live, mark) | rescue_live
+      end
+    end
+
+    private def propagate_through(node : Crystal::Rescue, live : LiveSet, mark = true) : LiveSet
+      live = propagate_through(node.body, live, mark)
+
+      # The rescue variable (if any) gets assigned on entering the branch
+      if (name = node.name) && find_assignment(node, name)
+        live = remove_from_live_set(node, name, live, mark)
+      end
+      live
     end
 
     private def propagate_through(node : Crystal::BinaryOp, live : LiveSet, mark = true) : LiveSet
@@ -279,37 +401,48 @@ module Ameba::AST
     end
 
     private def propagate_through(node : Crystal::Call, live : LiveSet, mark = true) : LiveSet
-      # Bare `super` and `previous_def` (without parentheses) implicitly
-      # forward all method arguments, making each argument live.
-      if node.name.in?("super", "previous_def") && !node.has_parentheses? && node.args.empty?
-        @scope.arguments.each do |arg|
-          name = arg.name
-          if name.in?(@var_names) && !name.in?(live)
-            live = live.dup
-            live.add(name)
-          end
-        end
-        return live
-      end
+      live = propagate_through_raise(live)
 
       live = propagate_through(node.block, live, mark)
       live = propagate_through(node.block_arg, live, mark)
       live = propagate_through(node.named_args, live, mark)
       live = propagate_through(node.args, live, mark)
       live = propagate_through(node.obj, live, mark)
+
+      # Bare `super` and `previous_def` (without parentheses) implicitly
+      # forward all method arguments, making each argument live.
+      if node.name.in?("super", "previous_def") && !node.has_parentheses? && node.args.empty?
+        @scope.arguments.each do |arg|
+          live = add_to_live_set(arg.name, live)
+        end
+      end
       live
     end
 
+    {% for type in RAISING_NODES %}
+      private def propagate_through(node : Crystal::{{ type.id }}, live : LiveSet, mark = true) : LiveSet
+        propagate_through_children(node, propagate_through_raise(live), mark)
+      end
+    {% end %}
+
+    {% for type in MACRO_NODES %}
+      {% unless INNER_SCOPE_NODES.includes?(type) %}
+        private def propagate_through(node : Crystal::{{ type.id }}, live : LiveSet, mark = true) : LiveSet
+          propagate_through_raise(live) | macro_reads(node)
+        end
+      {% end %}
+    {% end %}
+
     private def propagate_through(node : Crystal::Return, live : LiveSet, mark = true) : LiveSet
-      propagate_through(node.exp, LiveSet.new, mark)
+      propagate_through(node.exp, @flow.return_live, mark)
     end
 
     private def propagate_through(node : Crystal::Break, live : LiveSet, mark = true) : LiveSet
-      propagate_through(node.exp, @break_live || LiveSet.new, mark)
+      propagate_through(node.exp, @flow.break_live, mark)
     end
 
     private def propagate_through(node : Crystal::Next, live : LiveSet, mark = true) : LiveSet
-      propagate_through(node.exp, @next_live || LiveSet.new, mark)
+      propagate_through(node.exp, @flow.next_live, mark)
     end
 
     # Inner scope nodes: don't descend into nested scopes, but since they
@@ -317,6 +450,10 @@ module Ameba::AST
     # treat these as being read at the location of the inner scope
     {% for type in INNER_SCOPE_NODES %}
       private def propagate_through(node : Crystal::{{ type.id }}, live : LiveSet, mark = true) : LiveSet
+        {% if MACRO_NODES.includes?(type) %}
+          live = propagate_through_raise(live)
+        {% end %}
+
         if reads = @inner_scope_reads[node.object_id]?
           live | reads
         else
@@ -326,6 +463,10 @@ module Ameba::AST
     {% end %}
 
     private def propagate_through(node : Crystal::ASTNode, live : LiveSet, mark = true) : LiveSet
+      propagate_through_children(node, live, mark)
+    end
+
+    private def propagate_through_children(node : Crystal::ASTNode, live : LiveSet, mark) : LiveSet
       children = [] of Crystal::ASTNode
       node.accept_children(ChildCollector.new(children))
 
@@ -333,21 +474,16 @@ module Ameba::AST
     end
 
     private def propagate_through_loop(cond, body, live : LiveSet, mark) : LiveSet
-      # Save outer loop context before overwriting
-      outer_break = @break_live
-      outer_next = @next_live
-
-      begin
+      preserving_flow_control do
         # `break` exits to post-loop code, `next` jumps to loop condition.
-        @break_live = live
-        entry_live = live.dup
+        @flow = @flow.copy_with(break_live: live)
+        entry_live = live
 
-        converged_cond_live = entry_live
         MAX_FIXED_POINT_ITERATIONS.times do
-          @next_live = entry_live
+          cond_live = propagate_through(cond, entry_live, false)
+          @flow = @flow.copy_with(next_live: cond_live)
 
-          converged_cond_live = propagate_through(cond, entry_live, false)
-          body_live = propagate_through(body, converged_cond_live, false)
+          body_live = propagate_through(body, cond_live, false)
           new_entry = body_live | live
 
           break if new_entry == entry_live
@@ -355,35 +491,29 @@ module Ameba::AST
         end
 
         # Final pass with marking enabled using the converged live set
-        @next_live = entry_live
-
         cond_live = propagate_through(cond, entry_live, mark)
+        @flow = @flow.copy_with(next_live: cond_live)
+
         propagate_through(body, cond_live, mark)
 
-        converged_cond_live
-      ensure
-        @break_live = outer_break
-        @next_live = outer_next
+        cond_live
       end
     end
 
-    private def propagate_through_case(node : Crystal::Case | Crystal::Select, live : LiveSet, mark) : LiveSet
-      branch_lives = LiveSet.new
+    # Adds the variables live when an exception is raised at this point.
+    private def propagate_through_raise(live : LiveSet) : LiveSet
+      raise_live = @flow.raise_live
+      raise_live.subset_of?(live) ? live : live | raise_live
+    end
 
-      node.whens.each do |when_node|
-        when_live = propagate_through(when_node.body, live, mark)
-        when_live = propagate_through(when_node.conds, when_live, mark)
-        branch_lives.concat(when_live)
+    # Restores the flow control overwritten within the block.
+    private def preserving_flow_control(&)
+      outer = @flow
+      begin
+        yield
+      ensure
+        @flow = outer
       end
-
-      else_live = propagate_through(node.else, live, mark)
-      branch_lives.concat(else_live)
-
-      if node.is_a?(Crystal::Case) && (cond = node.cond)
-        branch_lives = propagate_through(cond, branch_lives, mark)
-      end
-
-      branch_lives
     end
   end
 end

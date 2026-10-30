@@ -437,6 +437,20 @@ module Ameba::AST
           CRYSTAL
         dead_store_names(scope).should be_empty
       end
+
+      it "does not report assignment read by the condition after next" do
+        scope = def_scope <<-CRYSTAL
+          def foo
+            x = 0
+            while x < 10
+              x = 1
+              next if bar
+              x = 2
+            end
+          end
+          CRYSTAL
+        dead_store_names(scope).should be_empty
+      end
     end
 
     context "until loops" do
@@ -465,6 +479,40 @@ module Ameba::AST
     end
 
     context "exception handlers" do
+      it "treats the rescue variable as assigned on entering the rescue branch" do
+        scope = def_scope <<-CRYSTAL
+          def foo
+            raise "x"
+          rescue ex
+          end
+          CRYSTAL
+        dead_store_names(scope).should eq ["ex"]
+      end
+
+      it "does not report the rescue variable used after the handler" do
+        scope = def_scope <<-CRYSTAL
+          def foo
+            begin
+              raise "x"
+            rescue ex
+            end
+            ex
+          end
+          CRYSTAL
+        dead_store_names(scope).should be_empty
+      end
+
+      it "treats the argument as overwritten by the rescue variable" do
+        scope = def_scope <<-CRYSTAL
+          def foo(ex)
+            raise "x"
+          rescue ex
+            ex
+          end
+          CRYSTAL
+        LivenessAnalyzer.new(scope).entry_live_set.should_not contain("ex")
+      end
+
       it "does not report assignment used in rescue" do
         scope = def_scope <<-CRYSTAL
           def foo(a)
@@ -553,6 +601,201 @@ module Ameba::AST
           CRYSTAL
         dead_store_names(scope).should be_empty
       end
+
+      it "does not report assignment followed by a raising call and used in rescue" do
+        scope = def_scope <<-CRYSTAL
+          def foo
+            begin
+              x = 1
+              bar
+              x = 2
+            rescue
+              x
+            end
+          end
+          CRYSTAL
+        dead_store_names(scope).should be_empty
+      end
+
+      it "does not report assignment followed by a raising call and used in outer rescue" do
+        scope = def_scope <<-CRYSTAL
+          def foo
+            begin
+              begin
+                x = 1
+                bar
+                x = 2
+              ensure
+                baz
+              end
+            rescue
+              x
+            end
+          end
+          CRYSTAL
+        dead_store_names(scope).should be_empty
+      end
+
+      it "does not report assignment followed by a raising call and used in ensure" do
+        scope = def_scope <<-CRYSTAL
+          def foo
+            begin
+              x = 1
+              bar
+              x = 2
+            ensure
+              x
+            end
+          end
+          CRYSTAL
+        dead_store_names(scope).should be_empty
+      end
+
+      it "does not report assignment followed by a yield and used in rescue" do
+        scope = def_scope <<-CRYSTAL
+          def foo
+            x = 1
+            yield
+            x = 2
+          rescue
+            x
+          end
+          CRYSTAL
+        dead_store_names(scope).should be_empty
+      end
+
+      it "does not report assignment followed by a cast and used in rescue" do
+        scope = def_scope <<-CRYSTAL
+          def foo(y)
+            x = 1
+            y.as(Int32)
+            x = 2
+          rescue
+            x
+          end
+          CRYSTAL
+        dead_store_names(scope).should be_empty
+      end
+
+      it "reports assignment overwritten before any raising call" do
+        scope = def_scope <<-CRYSTAL
+          def foo
+            begin
+              x = 1
+              x = 2
+              bar
+            rescue
+              x
+            end
+          end
+          CRYSTAL
+        dead_store_names(scope).should eq ["x"]
+      end
+
+      it "does not report assignment followed by an op-assignment and used in rescue" do
+        scope = def_scope <<-CRYSTAL
+          def foo(a)
+            x = 1
+            a += 1
+            x = 2
+            a
+          rescue
+            x
+          end
+          CRYSTAL
+        dead_store_names(scope).should be_empty
+      end
+
+      it "does not report assignment followed by a multi-assignment of a single value and used in rescue" do
+        scope = def_scope <<-CRYSTAL
+          def foo(a)
+            x = 1
+            b, c = a
+            x = 2
+            b + c
+          rescue
+            x
+          end
+          CRYSTAL
+        dead_store_names(scope).should be_empty
+      end
+
+      it "does not report assignment followed by a string interpolation and used in rescue" do
+        scope = def_scope <<-'CRYSTAL'
+          def foo(a)
+            x = 1
+            b = "#{a}"
+            x = 2
+            b
+          rescue
+            x
+          end
+          CRYSTAL
+        dead_store_names(scope).should be_empty
+      end
+
+      it "does not report assignment followed by a macro expansion and used in rescue" do
+        scope = def_scope <<-CRYSTAL
+          def foo
+            x = 1
+            {% if flag?(:foo) %}
+              bar
+            {% end %}
+            x = 2
+          rescue
+            x
+          end
+          CRYSTAL
+        dead_store_names(scope).should be_empty
+      end
+
+      it "reports assignment followed by a logical op-assignment and overwritten" do
+        scope = def_scope <<-CRYSTAL
+          def foo(a)
+            begin
+              x = 1
+              a ||= 1
+              x = 2
+              bar(a)
+            rescue
+              x
+            end
+          end
+          CRYSTAL
+        dead_store_names(scope).should eq ["x"]
+      end
+
+      it "does not report assignment in ensure read after next" do
+        scope = def_scope <<-CRYSTAL
+          def foo
+            x = 0
+            while x < 10
+              begin
+                next if bar
+              ensure
+                x = 1
+              end
+              x = 2
+            end
+          end
+          CRYSTAL
+        dead_store_names(scope).should be_empty
+      end
+
+      it "reports assignment in ensure overwritten on every exit" do
+        scope = def_scope <<-CRYSTAL
+          def foo
+            begin
+              bar
+            ensure
+              x = 1
+            end
+            x = 2
+            x
+          end
+          CRYSTAL
+        dead_store_names(scope).should eq ["x"]
+      end
     end
 
     context "binary operators" do
@@ -619,6 +862,35 @@ module Ameba::AST
         dead_store_names(scope).should be_empty
       end
 
+      context "select" do
+        it "does not report assignment used in a branch other than the one overwriting it" do
+          scope = def_scope <<-CRYSTAL
+            def foo(a, b)
+              v = nil
+              select
+              when v = a.receive
+                v
+              when b.receive
+                v
+              end
+            end
+            CRYSTAL
+          dead_store_names(scope).should be_empty
+        end
+
+        it "reports assignment in when condition not used in its branch" do
+          scope = def_scope <<-CRYSTAL
+            def foo(a, b)
+              select
+              when v = a.receive
+              when b.receive
+              end
+            end
+            CRYSTAL
+          dead_store_names(scope).should eq ["v"]
+        end
+      end
+
       context "when" do
         it "does not report when assignment in when condition is used" do
           scope = def_scope <<-CRYSTAL
@@ -643,6 +915,34 @@ module Ameba::AST
             end
             CRYSTAL
           dead_store_names(scope).should eq ["a", "a"]
+        end
+
+        it "does not report assignment in when condition used in a subsequent branch" do
+          scope = def_scope <<-CRYSTAL
+            def foo(a)
+              case a
+              when (b = bar)
+                1
+              when 2
+                b
+              end
+            end
+            CRYSTAL
+          dead_store_names(scope).should be_empty
+        end
+
+        it "reports assignment in when condition used only in a preceding branch" do
+          scope = def_scope <<-CRYSTAL
+            def foo(a)
+              case a
+              when 1
+                b
+              when (b = bar)
+                2
+              end
+            end
+            CRYSTAL
+          dead_store_names(scope).should eq ["b"]
         end
       end
     end
@@ -731,6 +1031,50 @@ module Ameba::AST
           CRYSTAL
         dead_store_names(scope).should be_empty
       end
+
+      it "does not report assignment read by a call target" do
+        scope = def_scope <<-CRYSTAL
+          def foo
+            obj = Foo.new
+            obj.x, y = 1, 2
+            y
+          end
+          CRYSTAL
+        dead_store_names(scope).should be_empty
+      end
+
+      it "does not report assignment read by an index target" do
+        scope = def_scope <<-CRYSTAL
+          def foo(arr)
+            i = 1
+            arr[i], *rest = [1, 2, 3]
+            rest
+          end
+          CRYSTAL
+        dead_store_names(scope).should be_empty
+      end
+    end
+
+    context "out arguments" do
+      it "reports assignment overwritten by an out argument" do
+        scope = def_scope <<-CRYSTAL
+          def foo
+            x = 1
+            LibC.bar(out x)
+            x
+          end
+          CRYSTAL
+        dead_store_names(scope).should eq ["x"]
+      end
+
+      it "does not report unused out argument" do
+        scope = def_scope <<-CRYSTAL
+          def foo
+            LibC.bar(out x)
+          end
+          CRYSTAL
+        dead_store_names(scope).should be_empty
+      end
     end
 
     context "top level scope" do
@@ -776,6 +1120,16 @@ module Ameba::AST
           def foo
             a : String?
             a
+          end
+          CRYSTAL
+        dead_store_names(scope).should be_empty
+      end
+
+      it "does not report assignment read by an instance variable type declaration" do
+        scope = def_scope <<-CRYSTAL
+          def initialize
+            a = 1
+            @b : Int32 = a
           end
           CRYSTAL
         dead_store_names(scope).should be_empty
@@ -839,6 +1193,26 @@ module Ameba::AST
           end
           CRYSTAL
         dead_store_names(scope).should eq ["b"]
+      end
+
+      it "does not report assignment read in a block of bare super" do
+        scope = def_scope <<-CRYSTAL
+          def foo
+            x = 1
+            super { puts x }
+          end
+          CRYSTAL
+        dead_store_names(scope).should be_empty
+      end
+
+      it "does not report assignment passed as a block argument of bare super" do
+        scope = def_scope <<-CRYSTAL
+          def foo
+            blk = ->(i : Int32) { i }
+            super &blk
+          end
+          CRYSTAL
+        dead_store_names(scope).should be_empty
       end
     end
 

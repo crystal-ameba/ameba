@@ -185,6 +185,19 @@ module Ameba::Rule::Lint
       {end_location.line_number, end_location.column_number}.should eq({4, 11})
     end
 
+    it "reports if the argument is shadowed by a rescue variable used in its body" do
+      expect_issue subject, <<-CRYSTAL
+        def foo(ex)
+          begin
+            raise "x"
+          rescue ex
+        # ^^^^^^^^^ error: Argument `ex` is assigned before it is used
+            puts ex
+          end
+        end
+        CRYSTAL
+    end
+
     context "branch" do
       it "doesn't report if the argument is not shadowed in a condition" do
         expect_no_issues subject, <<-CRYSTAL

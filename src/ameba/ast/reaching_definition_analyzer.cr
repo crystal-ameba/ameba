@@ -73,6 +73,10 @@ module Ameba::AST
       define(node.var, defined)
     end
 
+    private def transfer(node : Crystal::Out, defined : DefinedSet) : DefinedSet
+      define(node.exp, defined)
+    end
+
     private def transfer(node : Crystal::TypeDeclaration, defined : DefinedSet) : DefinedSet
       defined = propagate(node.value, defined)
       define(node.var, defined)
@@ -109,11 +113,15 @@ module Ameba::AST
       end
     {% end %}
 
-    {% for type in CASE_NODES %}
-      private def transfer(node : Crystal::{{ type.id }}, defined : DefinedSet) : DefinedSet
-        merge_case(node, defined)
-      end
-    {% end %}
+    # The `case` conditions are evaluated only if the preceding ones didn't match
+    private def transfer(node : Crystal::Case, defined : DefinedSet) : DefinedSet
+      merge_whens(node, propagate(node.cond, defined), chained: true)
+    end
+
+    # Only the condition of the chosen `select` branch completes
+    private def transfer(node : Crystal::Select, defined : DefinedSet) : DefinedSet
+      merge_whens(node, defined, chained: false)
+    end
 
     private def transfer(node : Crystal::ExceptionHandler, defined : DefinedSet) : DefinedSet
       body_defined = propagate(node.body, defined)
@@ -128,7 +136,9 @@ module Ameba::AST
 
       rescue_entry = defined | body_defined
       node.rescues.try &.each do |rescue_node|
-        rescue_defined = propagate(rescue_node.body, rescue_entry)
+        # The rescue variable (if any) gets assigned on entering the branch
+        rescue_defined = rescue_node.name.try { |name| define(name, rescue_entry) } || rescue_entry
+        rescue_defined = propagate(rescue_node.body, rescue_defined)
         merged = collect(merged, rescue_defined) unless terminates?(rescue_node.body)
       end
 
@@ -149,11 +159,16 @@ module Ameba::AST
       propagate(children, defined)
     end
 
-    private def define(target, defined : DefinedSet) : DefinedSet
+    private def define(target : Crystal::ASTNode, defined : DefinedSet) : DefinedSet
       return defined unless var = Util.assigned_var(target)
-      return defined if var.name.in?(defined)
 
-      defined.dup << var.name
+      define(var.name, defined)
+    end
+
+    private def define(name : String, defined : DefinedSet) : DefinedSet
+      return defined if name.in?(defined)
+
+      defined.dup << name
     end
 
     private def merge_branches(base : DefinedSet, branches) : DefinedSet
@@ -165,15 +180,12 @@ module Ameba::AST
       merged || base
     end
 
-    private def merge_case(node : Crystal::Case | Crystal::Select, defined : DefinedSet) : DefinedSet
-      base = defined
-      if node.is_a?(Crystal::Case) && (cond = node.cond)
-        base = propagate(cond, base)
-      end
-
+    private def merge_whens(node : Crystal::Case | Crystal::Select, base : DefinedSet, *, chained : Bool) : DefinedSet
       merged = nil
+
       node.whens.each do |when_node|
         when_defined = propagate(when_node.conds, base)
+        base = when_defined if chained
         when_defined = propagate(when_node.body, when_defined)
         merged = collect(merged, when_defined) unless terminates?(when_node.body)
       end
