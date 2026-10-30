@@ -416,6 +416,46 @@ module Ameba::AST
         dead_store_names(scope).should be_empty
       end
 
+      it "does not report assignment used after break within macro code" do
+        scope = def_scope <<-CRYSTAL
+          def foo
+            a = 1
+            while true
+              {% if flag?(:foo) %}
+                break
+              {% end %}
+              process
+            end
+            a
+          end
+          CRYSTAL
+        dead_store_names(scope).should be_empty
+
+        scope = def_scope <<-CRYSTAL
+          def foo
+            a = 1
+            while true
+              {{ "break".id }}
+            end
+            a
+          end
+          CRYSTAL
+        dead_store_names(scope).should be_empty
+      end
+
+      it "reports assignment read only after infinite loop with break in a block" do
+        scope = def_scope <<-CRYSTAL
+          def foo(xs)
+            a = 1
+            while true
+              xs.each { break }
+            end
+            a
+          end
+          CRYSTAL
+        dead_store_names(scope).should eq ["a"]
+      end
+
       it "reports assignment read only after infinite until loop" do
         scope = def_scope <<-CRYSTAL
           def foo

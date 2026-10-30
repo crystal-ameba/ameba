@@ -433,7 +433,7 @@ module Ameba::AST
     {% for type in MACRO_NODES %}
       {% unless INNER_SCOPE_NODES.includes?(type) %}
         private def propagate_through(node : Crystal::{{ type.id }}, live : LiveSet, mark = true) : LiveSet
-          propagate_through_raise(live) | macro_reads(node)
+          propagate_through_macro(live) | macro_reads(node)
         end
       {% end %}
     {% end %}
@@ -456,7 +456,7 @@ module Ameba::AST
     {% for type in INNER_SCOPE_NODES %}
       private def propagate_through(node : Crystal::{{ type.id }}, live : LiveSet, mark = true) : LiveSet
         {% if MACRO_NODES.includes?(type) %}
-          live = propagate_through_raise(live)
+          live = propagate_through_macro(live)
         {% end %}
 
         if reads = @inner_scope_reads[node.object_id]?
@@ -528,6 +528,13 @@ module Ameba::AST
       in Crystal::While then node.cond.true_literal?
       in Crystal::Until then node.cond.false_literal?
       end
+    end
+
+    # Adds the variables live on any of the jumps, since the (unknown) code
+    # expanded from a macro might `break`, `next`, `return` or raise at this point.
+    private def propagate_through_macro(live : LiveSet) : LiveSet
+      jump_live = @flow.live
+      jump_live.subset_of?(live) ? live : live | jump_live
     end
 
     # Adds the variables live when an exception is raised at this point.
