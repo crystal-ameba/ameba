@@ -289,32 +289,23 @@ module Ameba::AST::Util
     when Crystal::MultiAssign
       node.values.any? { |value| flow_expression?(value, in_loop) }
     else
-      !!(value = node.value) && flow_expression?(value, in_loop)
+      flow_expression?(node.value, in_loop)
     end
   end
 
   private def flow_branches?(node, in_loop)
-    if else_node = node.else
-      return false unless flow_expression?(else_node, in_loop)
-    else
-      return false unless exhaustive_branches?(node)
-    end
-
-    flow_expressions?(node.whens, in_loop)
+    flow_else = node.else ? flow_expression?(node.else, in_loop) : exhaustive_branches?(node)
+    flow_else &&
+      flow_expressions?(node.whens, in_loop)
   end
 
   private def flow_exception_handler?(node, in_loop)
-    if (ensure_node = node.ensure) && flow_expression?(ensure_node, in_loop)
-      return true
-    end
+    return true if flow_expression?(node.ensure, in_loop)
 
     # `else` is executed only if `body` completes without interruption
-    body_flow = flow_expression?(node.body, in_loop) ||
-                ((else_node = node.else) && flow_expression?(else_node, in_loop))
-    return false unless body_flow
-
-    rescues = node.rescues
-    !rescues || flow_expressions?(rescues, in_loop)
+    flow_body = flow_expression?(node.body, in_loop) || flow_expression?(node.else, in_loop)
+    flow_body &&
+      flow_expressions?(node.rescues || [] of Crystal::Rescue, in_loop)
   end
 
   # Returns `true` if node represents `raise` method call,
