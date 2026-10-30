@@ -113,11 +113,15 @@ module Ameba::AST
       end
     {% end %}
 
-    {% for type in CASE_NODES %}
-      private def transfer(node : Crystal::{{ type.id }}, defined : DefinedSet) : DefinedSet
-        merge_case(node, defined)
-      end
-    {% end %}
+    # The `case` conditions are evaluated only if the preceding ones didn't match
+    private def transfer(node : Crystal::Case, defined : DefinedSet) : DefinedSet
+      merge_whens(node, propagate(node.cond, defined), chained: true)
+    end
+
+    # Only the condition of the chosen `select` branch completes
+    private def transfer(node : Crystal::Select, defined : DefinedSet) : DefinedSet
+      merge_whens(node, defined, chained: false)
+    end
 
     private def transfer(node : Crystal::ExceptionHandler, defined : DefinedSet) : DefinedSet
       body_defined = propagate(node.body, defined)
@@ -179,18 +183,11 @@ module Ameba::AST
       merged || base
     end
 
-    private def merge_case(node : Crystal::Case | Crystal::Select, defined : DefinedSet) : DefinedSet
-      base = defined
-      if node.is_a?(Crystal::Case) && (cond = node.cond)
-        base = propagate(cond, base)
-      end
-
+    private def merge_whens(node : Crystal::Case | Crystal::Select, base : DefinedSet, *, chained : Bool) : DefinedSet
       merged = nil
       node.whens.each do |when_node|
         when_defined = propagate(when_node.conds, base)
-        # The `case` conditions are evaluated only if the preceding ones didn't
-        # match, while only the chosen one of the `select` conditions completes
-        base = when_defined if node.is_a?(Crystal::Case)
+        base = when_defined if chained
         when_defined = propagate(when_node.body, when_defined)
         merged = collect(merged, when_defined) unless terminates?(when_node.body)
       end

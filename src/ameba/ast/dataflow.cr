@@ -5,7 +5,6 @@ module Ameba::AST
   module Dataflow
     private BRANCH_NODES      = %w[If Unless]
     private LOOP_NODES        = %w[While Until]
-    private CASE_NODES        = %w[Case Select]
     private INNER_SCOPE_NODES = %w[
       Block Def ProcLiteral ClassDef ModuleDef EnumDef
       LibDef FunDef TypeDef CStructOrUnionDef TypeOf
