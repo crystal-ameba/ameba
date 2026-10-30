@@ -612,12 +612,17 @@ module Ameba::AST
         subject.raise?(node).should be_true
       end
 
+      it "returns true if this is a raise method call with multiple arguments" do
+        node = as_node("raise \"message\", location")
+        subject.raise?(node).should be_true
+      end
+
       it "returns false if it has a receiver" do
         node = as_node("obj.raise e")
         subject.raise?(node).should be_false
       end
 
-      it "returns false if size of the arguments doesn't match" do
+      it "returns false if there are no arguments" do
         node = as_node("raise")
         subject.raise?(node).should be_false
       end

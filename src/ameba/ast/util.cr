@@ -318,10 +318,11 @@ module Ameba::AST::Util
     !rescues || flow_expressions?(rescues, in_loop)
   end
 
-  # Returns `true` if node represents `raise` method call.
+  # Returns `true` if node represents `raise` method call,
+  # including the custom ones taking additional arguments (i.e. a location).
   def raise?(node)
     node.is_a?(Crystal::Call) &&
-      node.name == "raise" && node.args.size == 1 && node.obj.nil?
+      node.name == "raise" && node.args.present? && node.obj.nil?
   end
 
   # Returns `true` if node represents `exit` (or `Process.exit`) method call.
