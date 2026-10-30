@@ -1266,7 +1266,7 @@ not in the live set, the assignment is marked as a dead store.</p>
   </h2>
   
     
-      <a href="https://github.com/crystal-ameba/ameba/blob/3bc8f4d/src/ameba/ast/liveness_analyzer.cr#L10" target="_blank">
+      <a href="https://github.com/crystal-ameba/ameba/blob/99ad02b/src/ameba/ast/liveness_analyzer.cr#L10" target="_blank">
         ameba/ast/liveness_analyzer.cr
       </a>
     
@@ -1289,7 +1289,9 @@ not in the live set, the assignment is marked as a dead store.</p>
   <ul class="list-summary">
     
       <li class="entry-summary">
-        <a href="#new%28scope%3AScope%29-class-method" class="signature"><strong>.new</strong>(scope : Scope)</a>
+        <a href="#new%28scope%3AScope%2Ccaptured_variables%3D%5B%5DofVariable%29-class-method" class="signature"><strong>.new</strong>(scope : Scope, captured_variables = <span class="o">[]</span> <span class="k">of</span> <span class="t">Variable</span>)</a>
+        
+          <div class="summary"><p>Creates a new analyzer of the <em>scope</em>'s variables, and additionally the <em>captured_variables</em> (i.e.</p></div>
         
       </li>
     
@@ -1398,18 +1400,26 @@ not in the live set, the assignment is marked as a dead store.</p>
     Constructor Detail
   </h2>
   
-    <div class="entry-detail" id="new(scope:Scope)-class-method">
+    <div class="entry-detail" id="new(scope:Scope,captured_variables=[]ofVariable)-class-method">
       <div class="signature">
         
-        def self.<strong>new</strong>(scope : <a href="../../Ameba/AST/Scope.html">Scope</a>)
+        def self.<strong>new</strong>(scope : <a href="../../Ameba/AST/Scope.html">Scope</a>, captured_variables = <span class="o">[]</span> <span class="k">of</span> <span class="t">Variable</span>)
 
-        <a class="method-permalink" href="#new%28scope%3AScope%29-class-method">#</a>
+        <a class="method-permalink" href="#new%28scope%3AScope%2Ccaptured_variables%3D%5B%5DofVariable%29-class-method">#</a>
       </div>
+      
+        <div class="doc">
+          
+          <p>Creates a new analyzer of the <em>scope</em>'s variables, and additionally
+the <em>captured_variables</em> (i.e. the outer scope variables assigned
+within a block), which are analyzed as long as they're assigned within
+the <em>scope</em>.</p>
+        </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/3bc8f4d/src/ameba/ast/liveness_analyzer.cr#L36" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/99ad02b/src/ameba/ast/liveness_analyzer.cr#L68" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1447,7 +1457,7 @@ stores and the entry live set.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/3bc8f4d/src/ameba/ast/liveness_analyzer.cr#L58" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/99ad02b/src/ameba/ast/liveness_analyzer.cr#L96" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1469,7 +1479,7 @@ overwritten or the scope ends.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/3bc8f4d/src/ameba/ast/liveness_analyzer.cr#L45" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/99ad02b/src/ameba/ast/liveness_analyzer.cr#L83" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1492,7 +1502,7 @@ will be read before being overwritten.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/3bc8f4d/src/ameba/ast/liveness_analyzer.cr#L52" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/99ad02b/src/ameba/ast/liveness_analyzer.cr#L90" target="_blank">View source</a>]
         
       </div>
     </div>
