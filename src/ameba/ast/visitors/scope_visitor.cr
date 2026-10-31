@@ -119,8 +119,7 @@ module Ameba::AST
     def visit(node : Crystal::Call)
       scope = @current_scope
       case
-      when (scope.top_level? || scope.type_definition?) && record_macro?(node),
-           scope.type_definition? && accessor_macro?(node)
+      when field_macro?(node, scope)
         if @visit_field_macros
           node.args.each { |arg| visit_field_value(arg) }
           node.block.try(&.accept(self))
@@ -172,6 +171,16 @@ module Ameba::AST
         scope = scope.outer_scope
       end
       scope if scope.try(&.def?)
+    end
+
+    # Returns `true` if the *node* is a macro declaring the fields of the type
+    # defined by the *scope*, i.e. `record` or an accessor macro (`getter`).
+    private def field_macro?(node, scope)
+      case
+      when record_macro?(node)   then scope.top_level? || scope.type_definition?
+      when accessor_macro?(node) then scope.type_definition?
+      else                            false
+      end
     end
 
     private def accessor_macro?(node)
