@@ -635,6 +635,23 @@ module Ameba::Rule::Lint
           CRYSTAL
       end
 
+      it "passes if rescue variable is used in a preceding closure" do
+        expect_no_issues subject, <<-CRYSTAL
+          def foo
+            ex = nil
+            printer = -> { puts ex }
+            handler = -> do
+              begin
+                bar
+              rescue ex
+              end
+            end
+            handler.call
+            printer.call
+          end
+          CRYSTAL
+      end
+
       it "passes if rescue variable is used before the block within an enclosing loop" do
         expect_no_issues subject, <<-CRYSTAL
           ex = nil

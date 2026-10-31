@@ -121,9 +121,9 @@ module Ameba::AST
     end
 
     # Returns `true` if the captured *variable* might be read after leaving
-    # the scope, i.e. by a reference within the outermost scope enclosing it
-    # (which, like the scope itself, might be invoked again), following it,
-    # or within a loop enclosing it.
+    # the scope, i.e. by a reference within any of the inner scopes of the
+    # variable's one (which, like the scope itself, might be invoked at any
+    # later point), following the scope, or within a loop enclosing it.
     private def read_after_scope?(variable) : Bool
       return true if variable.used_in_macro?
 
@@ -135,7 +135,7 @@ module Ameba::AST
 
       loops = nil
       variable.references.any? do |ref|
-        next true if ref.scope.same?(enclosing_scope) || ref.scope.nested_in?(enclosing_scope)
+        next true unless ref.scope.same?(variable.scope)
         next true unless ref_location = ref.location
         next true if ref_location > scope_end
 
