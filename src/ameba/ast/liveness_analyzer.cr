@@ -58,6 +58,11 @@ module Ameba::AST
 
     @flow : FlowControl
 
+    # Variables live on entering an `ensure` clause, cached by the clause,
+    # the variables live on leaving it, and the flow control within it,
+    # since the clause is walked on each of the ways out of the handler.
+    @ensure_live = Hash({UInt64, LiveSet, FlowControl}, LiveSet).new
+
     # Variables live when leaving the scope, i.e. the captured variables,
     # which might be read after the closure returns, or on its next invocation.
     @exit_live : LiveSet
@@ -107,6 +112,7 @@ module Ameba::AST
     # stores and the entry live set.
     def analyze : Result
       @dead_stores.clear
+      @ensure_live.clear
 
       body = scope_body(@scope.node)
       entry_live = propagate_through(body, @exit_live)
@@ -409,13 +415,13 @@ module Ameba::AST
       if mark && (ensure_node = node.ensure)
         propagate_through(ensure_node, live | @flow.live, mark)
       end
-      post_ensure = propagate_through(node.ensure, live, false)
+      post_ensure = propagate_through_ensure(node.ensure, live)
 
       preserving_flow_control do
         # `break`, `next`, `return` and exceptions leave the handler
         # through the `ensure` clause, which might read the variables.
         @flow = @flow.map do |jump_live|
-          propagate_through(node.ensure, jump_live, false)
+          propagate_through_ensure(node.ensure, jump_live)
         end
 
         after_body = propagate_through(node.else, post_ensure, mark)
@@ -434,6 +440,16 @@ module Ameba::AST
         after_body |= rescue_live if @conservative_rescue
         propagate_through(node.body, after_body, mark) | rescue_live
       end
+    end
+
+    # Returns the variables live on entering the `ensure` clause *node*
+    # (if any), which leaves with the *live* variables, without marking
+    # the dead stores.
+    private def propagate_through_ensure(node : Crystal::ASTNode?, live : LiveSet) : LiveSet
+      return live unless node
+
+      key = {node.object_id, live, @flow}
+      @ensure_live[key]? || (@ensure_live[key] = propagate_through(node, live, false))
     end
 
     private def propagate_through(node : Crystal::Rescue, live : LiveSet, mark = true) : LiveSet
