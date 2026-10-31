@@ -651,6 +651,22 @@ module Ameba::Rule::Lint
       end
     end
 
+    it "reports if rescue variable is used only by an outer rescue" do
+      expect_issue subject, <<-CRYSTAL
+        def foo
+          begin
+            begin
+              bar
+            rescue ex
+                 # ^^ error: Unused `rescue` variable `ex`
+            end
+          rescue
+            puts ex
+          end
+        end
+        CRYSTAL
+    end
+
     it "reports if a class body rescue variable shadows a top-level variable" do
       expect_issue subject, <<-CRYSTAL
         ex = 1

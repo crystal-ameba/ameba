@@ -62,13 +62,22 @@ module Ameba::AST
     # which might be read after the closure returns, or on its next invocation.
     @exit_live : LiveSet
 
+    # Whether the variables read by the `rescue` clauses are considered live
+    # at the end of the handler body, as if it might raise after the last
+    # of its raising nodes.
+    @conservative_rescue : Bool
+
     # Creates a new analyzer of the *scope*'s variables, and additionally
     # the *captured_variables* (i.e. the outer scope variables assigned
     # within a block), which are analyzed as long as they're assigned within
     # the *scope*, and the *shadowed_variables* (i.e. the outer scope variables
     # assigned within a type definition, which doesn't see them), which are
     # analyzed as the *scope*'s own variables.
-    def initialize(@scope : Scope, captured_variables = [] of Variable, shadowed_variables = [] of Variable)
+    #
+    # When *conservative_rescue* is `true`, the variables read by the `rescue`
+    # clauses are considered live at the end of the handler body too.
+    def initialize(@scope : Scope, captured_variables = [] of Variable, shadowed_variables = [] of Variable,
+                   *, @conservative_rescue = true)
       variables = @scope.variables + captured_variables + shadowed_variables
 
       @var_names = variables.to_set(&.name)
@@ -419,9 +428,11 @@ module Ameba::AST
         end
         @flow = @flow.copy_with(raise_live: @flow.raise_live | rescue_live)
 
-        # Conservatively consider the rescue-needed variables live
-        # at both ends of the body, i.e. for macro expansions.
-        propagate_through(node.body, after_body | rescue_live, mark) | rescue_live
+        # The rescue-needed variables are made live at each of the raising
+        # nodes within the body (incl. macros), yet conservatively consider
+        # them live at its entry, and (unless disabled) its end as well.
+        after_body |= rescue_live if @conservative_rescue
+        propagate_through(node.body, after_body, mark) | rescue_live
       end
     end
 

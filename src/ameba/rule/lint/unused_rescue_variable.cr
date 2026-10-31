@@ -46,7 +46,8 @@ module Ameba::Rule::Lint
       return unless captured_variables.present? || shadowed_variables.present? ||
                     scope.variables.any? { |var| rescue_assigned?(var, scope) }
 
-      analyzer = AST::LivenessAnalyzer.new(scope, captured_variables, shadowed_variables)
+      analyzer = AST::LivenessAnalyzer.new(scope, captured_variables, shadowed_variables,
+        conservative_rescue: false)
       analyzer.dead_stores.each do |assign|
         next unless (rescue_node = assign.node).is_a?(Crystal::Rescue)
 
