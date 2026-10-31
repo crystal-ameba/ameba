@@ -64,7 +64,7 @@ module Ameba::Rule::Lint
       variables = [] of AST::Variable
 
       current_scope = scope
-      while current_scope.inherits_variables? && (outer_scope = current_scope.outer_scope)
+      while current_scope.inherited? && (outer_scope = current_scope.outer_scope)
         variables.concat(outer_scope.variables.select { |var| rescue_assigned?(var, scope) })
         current_scope = outer_scope
       end

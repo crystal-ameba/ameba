@@ -4,13 +4,14 @@ module Ameba::Rule::Lint
   describe ShadowingOuterLocalVar do
     subject = ShadowingOuterLocalVar.new
 
-    it "doesn't report if a class body block argument is named as a top level variable" do
-      expect_no_issues subject, <<-CRYSTAL
+    it "reports if a class body block argument shadows a top level variable" do
+      expect_issue subject, <<-CRYSTAL
         x = 1
         puts x
 
         class Foo
           [1].each { |x| puts x }
+                    # ^ error: Shadowing outer local variable `x`
         end
         CRYSTAL
     end

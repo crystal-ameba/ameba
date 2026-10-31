@@ -109,7 +109,7 @@ module Ameba::Rule::Style
     private def within_block?(scope)
       while scope
         return true if scope.node.is_a?(Crystal::Block)
-        break unless scope.inherits_variables?
+        break if scope.type_definition? || !scope.inherited?
 
         scope = scope.outer_scope
       end
@@ -128,7 +128,9 @@ module Ameba::Rule::Style
             vars << assign.variable.name
           end
         end
-        break unless scope.inherits_variables?
+        if scope.type_definition? || !scope.inherited?
+          break
+        end
         scope = scope.outer_scope
       end
 

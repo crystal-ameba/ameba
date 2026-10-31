@@ -168,7 +168,7 @@ module Ameba::AST
     # ```
     def find_variable(name : String)
       variables.find(&.name.==(name)) ||
-        (outer_scope.try(&.find_variable(name)) if inherits_variables?)
+        (outer_scope.try(&.find_variable(name)) if inherited?)
     end
 
     # Creates a new assignment for the variable.
@@ -203,7 +203,7 @@ module Ameba::AST
     protected def entry_definitions : Set(String)
       defined = arguments.to_set(&.name)
 
-      if inherits_variables? && (outer = outer_scope)
+      if inherited? && (outer = outer_scope)
         outer.reaching_definitions[node.object_id]?.try do |defs|
           defined.concat(defs)
         end
@@ -247,7 +247,7 @@ module Ameba::AST
     # Returns `true` if type declaration variable is assigned in this scope.
     def assigns_type_dec_variable?(name)
       type_dec_variables.any?(&.name.== name) ||
-        !!(inherits_variables? && outer_scope.try(&.assigns_type_dec_variable?(name)))
+        !!(inherited? && outer_scope.try(&.assigns_type_dec_variable?(name)))
     end
 
     # Returns `true` if and only if current scope represents some
@@ -309,20 +309,15 @@ module Ameba::AST
     end
 
     # Returns `true` if the scope inherits the context of the outer scope
-    # (i.e. the visibility), being evaluated within it, unlike a method,
-    # or an isolated value (i.e. `@foo = bar` within a type definition).
+    # (i.e. its local variables and the visibility), being evaluated within it,
+    # i.e. a block or a type definition body, unlike a method, or an isolated
+    # value (i.e. `@foo = bar` within a type definition).
     def inherited?
       !(node.is_a?(Crystal::Def) ||
         node.is_a?(Crystal::FunDef) ||
         node.is_a?(Crystal::Assign) ||
         node.is_a?(Crystal::OpAssign) ||
         node.is_a?(Crystal::TypeDeclaration))
-    end
-
-    # Returns `true` if the local variables of the outer scope are visible
-    # within this one, i.e. a block, but not a method or a type definition.
-    def inherits_variables?
-      inherited? && !type_definition?
     end
 
     # Returns `true` if var is an argument in current scope, `false` otherwise.

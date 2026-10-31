@@ -302,25 +302,6 @@ module Ameba::AST
     end
   end
 
-  describe "#inherits_variables?" do
-    it "returns true for a block" do
-      nodes = as_nodes("3.times {}")
-      scope = Scope.new(nodes.block_nodes.first)
-      scope.inherits_variables?.should be_true
-    end
-
-    it "returns false for a method" do
-      nodes = as_nodes("def foo; end")
-      scope = Scope.new(nodes.def_nodes.first)
-      scope.inherits_variables?.should be_false
-    end
-
-    it "returns false for a type definition" do
-      scope = Scope.new(as_node("class Foo; end"))
-      scope.inherits_variables?.should be_false
-    end
-  end
-
   describe "#block?" do
     it "returns true if Crystal::Block" do
       nodes = as_nodes("3.times {}")

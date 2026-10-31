@@ -684,7 +684,7 @@ module Ameba::Rule::Lint
         CRYSTAL
     end
 
-    it "reports if a class body rescue variable shadows a top-level variable" do
+    it "reports if a class body rescue variable reassigns a top-level variable not read afterwards" do
       expect_issue subject, <<-CRYSTAL
         ex = 1
         puts ex
@@ -699,19 +699,34 @@ module Ameba::Rule::Lint
         CRYSTAL
     end
 
-    it "reports if a class body rescue variable shadows a top-level pointer target" do
-      expect_issue subject, <<-CRYSTAL
+    it "passes if a class body rescue variable reassigns a top-level variable read afterwards" do
+      expect_no_issues subject, <<-CRYSTAL
         ex = 1
-        ptr = pointerof(ex)
-        puts ptr
 
         class Foo
           begin
             bar
           rescue ex
-               # ^^ error: Unused `rescue` variable `ex`
           end
         end
+
+        puts ex
+        CRYSTAL
+    end
+
+    it "passes if a class body rescue variable reassigns a top-level pointer target" do
+      expect_no_issues subject, <<-CRYSTAL
+        ex = 1
+        ptr = pointerof(ex)
+
+        class Foo
+          begin
+            bar
+          rescue ex
+          end
+        end
+
+        puts ptr.value
         CRYSTAL
     end
 

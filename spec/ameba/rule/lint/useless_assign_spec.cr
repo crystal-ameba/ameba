@@ -242,15 +242,16 @@ module Ameba::Rule::Lint
         CRYSTAL
     end
 
-    it "reports useless assignment in a class body to a top level variable name" do
-      expect_issue subject, <<-CRYSTAL
+    it "does not report assignment in a class body to a top level variable read afterwards" do
+      expect_no_issues subject, <<-CRYSTAL
         x = 1
         puts x
 
         class Foo
           x = 2
-        # ^ error: Useless assignment to variable `x`
         end
+
+        puts x
         CRYSTAL
     end
 
