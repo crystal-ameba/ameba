@@ -109,6 +109,11 @@
       
     </li>
   
+  <li class=" " data-id="ameba/Ameba/AST/EnclosingLoopVisitor" data-name="ameba::ast::enclosingloopvisitor">
+      <a href="../../Ameba/AST/EnclosingLoopVisitor.html">EnclosingLoopVisitor</a>
+      
+    </li>
+  
   <li class=" " data-id="ameba/Ameba/AST/FlowExpression" data-name="ameba::ast::flowexpression">
       <a href="../../Ameba/AST/FlowExpression.html">FlowExpression</a>
       
@@ -1273,7 +1278,7 @@ not in the live set, the assignment is marked as a dead store.</p>
   </h2>
   
     
-      <a href="https://github.com/crystal-ameba/ameba/blob/5a70751/src/ameba/ast/liveness_analyzer.cr#L10" target="_blank">
+      <a href="https://github.com/crystal-ameba/ameba/blob/9a22295/src/ameba/ast/liveness_analyzer.cr#L10" target="_blank">
         ameba/ast/liveness_analyzer.cr
       </a>
     
@@ -1296,7 +1301,7 @@ not in the live set, the assignment is marked as a dead store.</p>
   <ul class="list-summary">
     
       <li class="entry-summary">
-        <a href="#new%28scope%3AScope%2Ccaptured_variables%3D%5B%5DofVariable%29-class-method" class="signature"><strong>.new</strong>(scope : Scope, captured_variables = <span class="o">[]</span> <span class="k">of</span> <span class="t">Variable</span>)</a>
+        <a href="#new%28scope%3AScope%2Ccaptured_variables%3D%5B%5DofVariable%2C%2A%2Cconservative_rescue%3ABool%3Dtrue%29-class-method" class="signature"><strong>.new</strong>(scope : Scope, captured_variables = <span class="o">[]</span> <span class="k">of</span> <span class="t">Variable</span>, *, conservative_rescue : Bool = <span class="n">true</span>)</a>
         
           <div class="summary"><p>Creates a new analyzer of the <em>scope</em>'s variables, and additionally the <em>captured_variables</em> (i.e.</p></div>
         
@@ -1599,12 +1604,12 @@ not in the live set, the assignment is marked as a dead store.</p>
     Constructor Detail
   </h2>
   
-    <div class="entry-detail" id="new(scope:Scope,captured_variables=[]ofVariable)-class-method">
+    <div class="entry-detail" id="new(scope:Scope,captured_variables=[]ofVariable,*,conservative_rescue:Bool=true)-class-method">
       <div class="signature">
         
-        def self.<strong>new</strong>(scope : <a href="../../Ameba/AST/Scope.html">Scope</a>, captured_variables = <span class="o">[]</span> <span class="k">of</span> <span class="t">Variable</span>)
+        def self.<strong>new</strong>(scope : <a href="../../Ameba/AST/Scope.html">Scope</a>, captured_variables = <span class="o">[]</span> <span class="k">of</span> <span class="t">Variable</span>, *, conservative_rescue : Bool = <span class="n">true</span>)
 
-        <a class="method-permalink" href="#new%28scope%3AScope%2Ccaptured_variables%3D%5B%5DofVariable%29-class-method">#</a>
+        <a class="method-permalink" href="#new%28scope%3AScope%2Ccaptured_variables%3D%5B%5DofVariable%2C%2A%2Cconservative_rescue%3ABool%3Dtrue%29-class-method">#</a>
       </div>
       
         <div class="doc">
@@ -1613,12 +1618,14 @@ not in the live set, the assignment is marked as a dead store.</p>
 the <em>captured_variables</em> (i.e. the outer scope variables assigned
 within a block), which are analyzed as long as they're assigned within
 the <em>scope</em>.</p>
+<p>When <em>conservative_rescue</em> is <code>true</code>, the variables read by the <code>rescue</code>
+clauses are considered live at the end of the handler body too.</p>
         </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/5a70751/src/ameba/ast/liveness_analyzer.cr#L69" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/9a22295/src/ameba/ast/liveness_analyzer.cr#L82" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1656,7 +1663,7 @@ stores and the entry live set.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/5a70751/src/ameba/ast/liveness_analyzer.cr#L97" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/9a22295/src/ameba/ast/liveness_analyzer.cr#L110" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1678,7 +1685,7 @@ overwritten or the scope ends.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/5a70751/src/ameba/ast/liveness_analyzer.cr#L84" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/9a22295/src/ameba/ast/liveness_analyzer.cr#L97" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1701,7 +1708,7 @@ will be read before being overwritten.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/5a70751/src/ameba/ast/liveness_analyzer.cr#L91" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/9a22295/src/ameba/ast/liveness_analyzer.cr#L104" target="_blank">View source</a>]
         
       </div>
     </div>

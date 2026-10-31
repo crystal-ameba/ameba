@@ -109,6 +109,11 @@
       
     </li>
   
+  <li class=" " data-id="ameba/Ameba/AST/EnclosingLoopVisitor" data-name="ameba::ast::enclosingloopvisitor">
+      <a href="../../Ameba/AST/EnclosingLoopVisitor.html">EnclosingLoopVisitor</a>
+      
+    </li>
+  
   <li class=" " data-id="ameba/Ameba/AST/FlowExpression" data-name="ameba::ast::flowexpression">
       <a href="../../Ameba/AST/FlowExpression.html">FlowExpression</a>
       
@@ -1267,7 +1272,7 @@
   </h2>
   
     
-      <a href="https://github.com/crystal-ameba/ameba/blob/5a70751/src/ameba/ast/visitors/scope_visitor.cr#L5" target="_blank">
+      <a href="https://github.com/crystal-ameba/ameba/blob/9a22295/src/ameba/ast/visitors/scope_visitor.cr#L5" target="_blank">
         ameba/ast/visitors/scope_visitor.cr
       </a>
     
@@ -1318,7 +1323,9 @@
   <ul class="list-summary">
     
       <li class="entry-summary">
-        <a href="#new%28rule%2Csource%2Cskip%3Dnil%29-class-method" class="signature"><strong>.new</strong>(rule, source, skip = <span class="n">nil</span>)</a>
+        <a href="#new%28rule%2Csource%2Cskip%3Dnil%2Cvisit_field_macros%3ABool%3Dfalse%29-class-method" class="signature"><strong>.new</strong>(rule, source, skip = <span class="n">nil</span>, visit_field_macros : Bool = <span class="n">false</span>)</a>
+        
+          <div class="summary"><p>Creates a new visitor, skipping the scopes of the <em>skip</em> node types, and the field macros (<code>record</code> and accessor ones, i.e.</p></div>
         
       </li>
     
@@ -1630,18 +1637,26 @@
     Constructor Detail
   </h2>
   
-    <div class="entry-detail" id="new(rule,source,skip=nil)-class-method">
+    <div class="entry-detail" id="new(rule,source,skip=nil,visit_field_macros:Bool=false)-class-method">
       <div class="signature">
         
-        def self.<strong>new</strong>(rule, source, skip = <span class="n">nil</span>)
+        def self.<strong>new</strong>(rule, source, skip = <span class="n">nil</span>, visit_field_macros : Bool = <span class="n">false</span>)
 
-        <a class="method-permalink" href="#new%28rule%2Csource%2Cskip%3Dnil%29-class-method">#</a>
+        <a class="method-permalink" href="#new%28rule%2Csource%2Cskip%3Dnil%2Cvisit_field_macros%3ABool%3Dfalse%29-class-method">#</a>
       </div>
+      
+        <div class="doc">
+          
+          <p>Creates a new visitor, skipping the scopes of the <em>skip</em> node types,
+and the field macros (<code>record</code> and accessor ones, i.e. <code>getter</code>).</p>
+<p>When <em>visit_field_macros</em> is <code>true</code>, the default values and blocks
+of the field macros are visited, skipping only the field declarations.</p>
+        </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/5a70751/src/ameba/ast/visitors/scope_visitor.cr#L32" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/9a22295/src/ameba/ast/visitors/scope_visitor.cr#L37" target="_blank">View source</a>]
         
       </div>
     </div>
