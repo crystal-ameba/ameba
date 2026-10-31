@@ -312,7 +312,8 @@ module Ameba::AST
       !(node.is_a?(Crystal::Def) ||
         node.is_a?(Crystal::FunDef) ||
         node.is_a?(Crystal::Assign) ||
-        node.is_a?(Crystal::OpAssign))
+        node.is_a?(Crystal::OpAssign) ||
+        node.is_a?(Crystal::TypeDeclaration))
     end
 
     def inherited?(&)

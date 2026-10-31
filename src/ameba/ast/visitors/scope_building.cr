@@ -76,10 +76,10 @@ module Ameba::AST
 
     # :nodoc:
     def visit(node : Crystal::TypeDeclaration)
-      return unless (var = node.var).is_a?(Crystal::Var)
-
-      @current_scope.add_variable(var)
-      @current_scope.add_type_dec_variable(node)
+      if (var = node.var).is_a?(Crystal::Var)
+        @current_scope.add_variable(var)
+        @current_scope.add_type_dec_variable(node)
+      end
 
       @current_assign = node.value if node.value
       true
@@ -89,8 +89,8 @@ module Ameba::AST
     def end_visit(node : Crystal::TypeDeclaration)
       if (var = node.var).is_a?(Crystal::Var)
         on_assign_end(var, node)
-        @current_assign = nil
       end
+      @current_assign = nil
 
       on_scope_end(node) if @current_scope.eql?(node)
     end

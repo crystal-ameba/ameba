@@ -111,6 +111,24 @@ module Ameba::AST
     end
 
     # :nodoc:
+    def visit(node : Crystal::TypeDeclaration)
+      value = node.value
+      var = node.var
+
+      if value && isolated_assign_target?(var)
+        @current_assign = value
+
+        var.accept(self)
+        on_scope_enter(node)
+        value.accept(self)
+
+        return false
+      end
+
+      super
+    end
+
+    # :nodoc:
     def visit(node : Crystal::Call)
       scope = @current_scope
       case

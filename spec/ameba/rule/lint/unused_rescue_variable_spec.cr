@@ -715,6 +715,45 @@ module Ameba::Rule::Lint
         CRYSTAL
     end
 
+    it "reports unused rescue variable within an instance variable type declaration" do
+      expect_issue subject, <<-CRYSTAL
+        class Foo
+          @x : Int32 = begin
+            compute
+          rescue ex
+               # ^^ error: Unused `rescue` variable `ex`
+            0
+          end
+        end
+        CRYSTAL
+    end
+
+    it "reports unused rescue variable within a class variable type declaration" do
+      expect_issue subject, <<-CRYSTAL
+        class Foo
+          @@x : Int32 = begin
+            compute
+          rescue ex
+               # ^^ error: Unused `rescue` variable `ex`
+            0
+          end
+        end
+        CRYSTAL
+    end
+
+    it "reports unused rescue variable within an instance variable type declaration in a method" do
+      expect_issue subject, <<-CRYSTAL
+        def foo
+          @x : Int32 = begin
+            compute
+          rescue ex
+               # ^^ error: Unused `rescue` variable `ex`
+            0
+          end
+        end
+        CRYSTAL
+    end
+
     it "reports unused rescue variable within an accessor macro block" do
       expect_issue subject, <<-CRYSTAL
         class Foo
