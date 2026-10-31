@@ -73,7 +73,7 @@ module Ameba::AST
 
       @var_names = variables.to_set(&.name)
       @exit_live = captured_variables
-        .select { |var| var.referenced? || var.used_in_macro? }
+        .select { |var| read_after_scope?(var) }
         .to_set(&.name)
       @flow = FlowControl.new(@exit_live, @exit_live, @exit_live, @exit_live)
       @assignment_map = build_assignment_map(variables)
@@ -103,6 +103,33 @@ module Ameba::AST
       entry_live = propagate_through(body, @exit_live)
 
       Result.new(@dead_stores, entry_live)
+    end
+
+    # Returns `true` if the captured *variable* might be read after leaving
+    # the scope, i.e. by a reference within the outermost scope enclosing it
+    # (which, like the scope itself, might be invoked again), following it,
+    # or within a loop enclosing it.
+    private def read_after_scope?(variable) : Bool
+      return true if variable.used_in_macro?
+
+      enclosing_scope = @scope
+      while (outer_scope = enclosing_scope.outer_scope) && !outer_scope.same?(variable.scope)
+        enclosing_scope = outer_scope
+      end
+      return true unless scope_end = enclosing_scope.end_location
+
+      loops = nil
+      variable.references.any? do |ref|
+        next true if ref.scope.same?(enclosing_scope) || ref.scope.nested_in?(enclosing_scope)
+        next true unless ref_location = ref.location
+        next true if ref_location > scope_end
+
+        loops ||= EnclosingLoopVisitor.new(variable.scope.node, enclosing_scope.node).loops
+        loops.any? do |loop|
+          next true unless (loop_location = loop.location) && (loop_end = loop.end_location)
+          loop_location <= ref_location <= loop_end
+        end
+      end
     end
 
     private def build_assignment_map(variables)

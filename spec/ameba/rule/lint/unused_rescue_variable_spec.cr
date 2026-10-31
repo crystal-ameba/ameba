@@ -616,6 +616,39 @@ module Ameba::Rule::Lint
           end
           CRYSTAL
       end
+
+      it "reports if rescue variable is used only before the block" do
+        expect_issue subject, <<-CRYSTAL
+          def foo
+            ex = compute
+            puts ex
+
+            [1].each do
+              begin
+                bar
+              rescue ex
+                   # ^^ error: Unused `rescue` variable `ex`
+                puts "failed"
+              end
+            end
+          end
+          CRYSTAL
+      end
+
+      it "passes if rescue variable is used before the block within an enclosing loop" do
+        expect_no_issues subject, <<-CRYSTAL
+          ex = nil
+          while foo
+            puts ex
+            [1].each do
+              begin
+                bar
+              rescue ex
+              end
+            end
+          end
+          CRYSTAL
+      end
     end
 
     it "reports if a class body rescue variable shadows a top-level variable" do
