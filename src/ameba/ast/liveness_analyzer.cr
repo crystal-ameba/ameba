@@ -241,9 +241,6 @@ module Ameba::AST
       live
     end
 
-    # Type-specific overloads. Crystal dispatches to the most specific matching
-    # overload at runtime when the argument is a virtual type (Crystal::ASTNode+).
-
     private def propagate_through(nodes : Enumerable, live : LiveSet, mark = true) : LiveSet
       nodes.reverse_each do |node|
         live = propagate_through(node, live, mark)
@@ -251,21 +248,43 @@ module Ameba::AST
       live
     end
 
-    private def propagate_through(node : Crystal::Nop?, live : LiveSet, mark = true) : LiveSet
+    private def propagate_through(node : Nil, live : LiveSet, mark = true) : LiveSet
       live
     end
 
-    private def propagate_through(node : Crystal::Expressions, live : LiveSet, mark = true) : LiveSet
+    private def propagate_through(node : Crystal::ASTNode, live : LiveSet, mark = true) : LiveSet
+      return propagate_through_inner_scope(node, live) if inner_scope_node?(node)
+
+      transfer(node, live, mark)
+    end
+
+    # Inner scopes: don't descend into them, but since they can read the current
+    # values of the variables they reference (i.e. blocks), treat these as being
+    # read at the location of the inner scope.
+    private def propagate_through_inner_scope(node : Crystal::ASTNode, live : LiveSet) : LiveSet
+      if node.is_a?(Crystal::MacroIf) || node.is_a?(Crystal::MacroFor)
+        live = propagate_through_macro(live)
+      end
+
+      if reads = @inner_scope_reads[node.object_id]?
+        live | reads
+      else
+        live
+      end
+    end
+
+    # Type-specific transfer functions. Crystal dispatches to the most specific
+    # matching overload at runtime when the argument is a virtual type (Crystal::ASTNode+).
+
+    private def transfer(node : Crystal::Expressions, live : LiveSet, mark) : LiveSet
       propagate_through(node.expressions, live, mark)
     end
 
-    private def propagate_through(node : Crystal::NamedArgument, live : LiveSet, mark = true) : LiveSet
+    private def transfer(node : Crystal::NamedArgument, live : LiveSet, mark) : LiveSet
       propagate_through(node.value, live, mark)
     end
 
-    private def propagate_through(node : Crystal::Assign, live : LiveSet, mark = true) : LiveSet
-      return live if inner_scope_node?(node)
-
+    private def transfer(node : Crystal::Assign, live : LiveSet, mark) : LiveSet
       target = node.target
       unless name = tracked_var_name(target)
         live = propagate_through(node.value, live, mark)
@@ -280,9 +299,7 @@ module Ameba::AST
       propagate_through(node.value, live, mark)
     end
 
-    private def propagate_through(node : Crystal::OpAssign, live : LiveSet, mark = true) : LiveSet
-      return live if inner_scope_node?(node)
-
+    private def transfer(node : Crystal::OpAssign, live : LiveSet, mark) : LiveSet
       # The operator (unless a logical one) is a call, which might raise
       raising = !node.op.in?("||", "&&")
 
@@ -302,7 +319,7 @@ module Ameba::AST
       propagate_through(node.value, live, mark)
     end
 
-    private def propagate_through(node : Crystal::MultiAssign, live : LiveSet, mark = true) : LiveSet
+    private def transfer(node : Crystal::MultiAssign, live : LiveSet, mark) : LiveSet
       # A single value gets indexed for each of the targets in turn,
       # which might raise both before and in between the assignments
       raising = node.values.size == 1
@@ -320,14 +337,14 @@ module Ameba::AST
       propagate_through(node.values, live, mark)
     end
 
-    private def propagate_through(node : Crystal::UninitializedVar, live : LiveSet, mark = true) : LiveSet
+    private def transfer(node : Crystal::UninitializedVar, live : LiveSet, mark) : LiveSet
       if name = tracked_var_name(node.var)
         live = remove_from_live_set(node, name, live, mark)
       end
       live
     end
 
-    private def propagate_through(node : Crystal::Out, live : LiveSet, mark = true) : LiveSet
+    private def transfer(node : Crystal::Out, live : LiveSet, mark) : LiveSet
       # `out x` assigns the variable (rather than reading it), yet its value
       # is often unwanted, being required only by the C function signature,
       # so don't mark it as dead.
@@ -337,9 +354,7 @@ module Ameba::AST
       live
     end
 
-    private def propagate_through(node : Crystal::TypeDeclaration, live : LiveSet, mark = true) : LiveSet
-      return live if inner_scope_node?(node)
-
+    private def transfer(node : Crystal::TypeDeclaration, live : LiveSet, mark) : LiveSet
       if name = tracked_var_name(node.var)
         # Type declarations without a value are type restrictions, not
         # assignments — don't mark as dead. Since Crystal requires the
@@ -350,14 +365,14 @@ module Ameba::AST
       propagate_through(node.value, live, mark)
     end
 
-    private def propagate_through(node : Crystal::Var, live : LiveSet, mark = true) : LiveSet
+    private def transfer(node : Crystal::Var, live : LiveSet, mark) : LiveSet
       return live unless node.name.in?(@var_names)
 
       add_to_live_set(node.name, live)
     end
 
     {% for type in BRANCH_NODES %}
-      private def propagate_through(node : Crystal::{{ type.id }}, live : LiveSet, mark = true) : LiveSet
+      private def transfer(node : Crystal::{{ type.id }}, live : LiveSet, mark) : LiveSet
         then_live = propagate_through(node.then, live, mark)
         else_live = propagate_through(node.else, live, mark)
 
@@ -366,12 +381,12 @@ module Ameba::AST
     {% end %}
 
     {% for type in LOOP_NODES %}
-      private def propagate_through(node : Crystal::{{ type.id }}, live : LiveSet, mark = true) : LiveSet
+      private def transfer(node : Crystal::{{ type.id }}, live : LiveSet, mark) : LiveSet
         propagate_through_loop(node, live, mark)
       end
     {% end %}
 
-    private def propagate_through(node : Crystal::Case, live : LiveSet, mark = true) : LiveSet
+    private def transfer(node : Crystal::Case, live : LiveSet, mark) : LiveSet
       # Each `when` conditions are evaluated only if the preceding ones
       # didn't match, so the branches are chained as `if`/`elsif`/`else`.
       branch_live = propagate_through_else(node, live, mark)
@@ -384,7 +399,7 @@ module Ameba::AST
       propagate_through(node.cond, branch_live, mark)
     end
 
-    private def propagate_through(node : Crystal::Select, live : LiveSet, mark = true) : LiveSet
+    private def transfer(node : Crystal::Select, live : LiveSet, mark) : LiveSet
       # Only the `when` condition of the chosen branch completes,
       # so the branches are alternatives to each other.
       branch_live = propagate_through_else(node, live, mark)
@@ -408,7 +423,7 @@ module Ameba::AST
       node.is_a?(Crystal::Select) || node.exhaustive? ? LiveSet.new : live
     end
 
-    private def propagate_through(node : Crystal::ExceptionHandler, live : LiveSet, mark = true) : LiveSet
+    private def transfer(node : Crystal::ExceptionHandler, live : LiveSet, mark) : LiveSet
       # The `ensure` clause is entered on every way out of the handler,
       # so its assignments are dead stores only if dead on each of these.
       if mark && (ensure_node = node.ensure)
@@ -451,7 +466,7 @@ module Ameba::AST
       @ensure_live[key]? || (@ensure_live[key] = propagate_through(node, live, false))
     end
 
-    private def propagate_through(node : Crystal::Rescue, live : LiveSet, mark = true) : LiveSet
+    private def transfer(node : Crystal::Rescue, live : LiveSet, mark) : LiveSet
       live = propagate_through(node.body, live, mark)
 
       # The rescue variable (if any) gets assigned on entering the branch
@@ -461,14 +476,14 @@ module Ameba::AST
       live
     end
 
-    private def propagate_through(node : Crystal::BinaryOp, live : LiveSet, mark = true) : LiveSet
+    private def transfer(node : Crystal::BinaryOp, live : LiveSet, mark) : LiveSet
       # Right side is conditional, so union with entry state
       right_live = propagate_through(node.right, live, mark)
 
       propagate_through(node.left, right_live | live, mark)
     end
 
-    private def propagate_through(node : Crystal::Call, live : LiveSet, mark = true) : LiveSet
+    private def transfer(node : Crystal::Call, live : LiveSet, mark) : LiveSet
       live = propagate_through_no_return(node, live)
       live = propagate_through_raise(live)
 
@@ -489,49 +504,40 @@ module Ameba::AST
     end
 
     {% for type in RAISING_NODES %}
-      private def propagate_through(node : Crystal::{{ type.id }}, live : LiveSet, mark = true) : LiveSet
+      private def transfer(node : Crystal::{{ type.id }}, live : LiveSet, mark) : LiveSet
         propagate_through_children(node, propagate_through_raise(live), mark)
       end
     {% end %}
 
     {% for type in MACRO_NODES %}
       {% unless INNER_SCOPE_NODES.includes?(type) %}
-        private def propagate_through(node : Crystal::{{ type.id }}, live : LiveSet, mark = true) : LiveSet
+        private def transfer(node : Crystal::{{ type.id }}, live : LiveSet, mark) : LiveSet
           propagate_through_macro(live) | macro_reads(node)
         end
       {% end %}
     {% end %}
 
-    private def propagate_through(node : Crystal::Return, live : LiveSet, mark = true) : LiveSet
+    private def transfer(node : Crystal::Return, live : LiveSet, mark) : LiveSet
       propagate_through(node.exp, @flow.return_live, mark)
     end
 
-    private def propagate_through(node : Crystal::Break, live : LiveSet, mark = true) : LiveSet
+    private def transfer(node : Crystal::Break, live : LiveSet, mark) : LiveSet
       propagate_through(node.exp, @flow.break_live, mark)
     end
 
-    private def propagate_through(node : Crystal::Next, live : LiveSet, mark = true) : LiveSet
+    private def transfer(node : Crystal::Next, live : LiveSet, mark) : LiveSet
       propagate_through(node.exp, @flow.next_live, mark)
     end
 
-    # Inner scope nodes: don't descend into nested scopes, but since they
-    # can read the current values of the variables they reference (i.e. blocks),
-    # treat these as being read at the location of the inner scope
+    # Nodes introducing a scope, even if not one of the inner scopes
+    # (i.e. a skipped one), are never descended into
     {% for type in INNER_SCOPE_NODES %}
-      private def propagate_through(node : Crystal::{{ type.id }}, live : LiveSet, mark = true) : LiveSet
-        {% if MACRO_NODES.includes?(type) %}
-          live = propagate_through_macro(live)
-        {% end %}
-
-        if reads = @inner_scope_reads[node.object_id]?
-          live | reads
-        else
-          live
-        end
+      private def transfer(node : Crystal::{{ type.id }}, live : LiveSet, mark) : LiveSet
+        propagate_through_inner_scope(node, live)
       end
     {% end %}
 
-    private def propagate_through(node : Crystal::ASTNode, live : LiveSet, mark = true) : LiveSet
+    private def transfer(node : Crystal::ASTNode, live : LiveSet, mark) : LiveSet
       propagate_through_children(node, live, mark)
     end
 
