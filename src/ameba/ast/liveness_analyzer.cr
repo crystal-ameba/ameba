@@ -338,6 +338,8 @@ module Ameba::AST
     end
 
     private def propagate_through(node : Crystal::TypeDeclaration, live : LiveSet, mark = true) : LiveSet
+      return live if inner_scope_node?(node)
+
       if name = tracked_var_name(node.var)
         # Type declarations without a value are type restrictions, not
         # assignments — don't mark as dead. Since Crystal requires the

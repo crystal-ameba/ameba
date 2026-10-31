@@ -614,6 +614,20 @@ module Ameba::Rule::Lint
             CRYSTAL
         end
 
+        it "ivar type declaration in class body" do
+          expect_issue subject, <<-CRYSTAL
+            class Foo
+              x = 1
+            # ^ error: Useless assignment to variable `x`
+
+              @bar : Int32 = begin
+                x = 2
+                x
+              end
+            end
+            CRYSTAL
+        end
+
         it "cvar op-assign" do
           expect_issue subject, <<-CRYSTAL
             class Foo
