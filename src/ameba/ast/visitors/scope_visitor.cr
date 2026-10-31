@@ -30,9 +30,11 @@ module Ameba::AST
     @skip : Array(Crystal::ASTNode.class)?
 
     # Creates a new visitor, skipping the scopes of the *skip* node types,
-    # and the blocks of the `record` and accessor macros (i.e. `getter`),
-    # unless *visit_macro_blocks* is `true`.
-    def initialize(@rule, @source, skip = nil, @visit_macro_blocks = false)
+    # and the field macros (`record` and accessor ones, i.e. `getter`).
+    #
+    # When *visit_field_macros* is `true`, the default values and blocks
+    # of the field macros are visited, skipping only the field declarations.
+    def initialize(@rule, @source, skip = nil, @visit_field_macros = false)
       @current_scope = Scope.new(@source.ast) # top level scope
       @skip = skip.try(&.map(&.as(Crystal::ASTNode.class)))
 
@@ -134,8 +136,10 @@ module Ameba::AST
       case
       when (scope.top_level? || scope.type_definition?) && record_macro?(node),
            scope.type_definition? && accessor_macro?(node)
-        # skip the macro arguments (i.e. field declarations)
-        node.block.try(&.accept(self)) if @visit_macro_blocks
+        if @visit_field_macros
+          node.args.each { |arg| visit_field_value(arg) }
+          node.block.try(&.accept(self))
+        end
         return false
       when special_node?(node) && (def_scope = special_node_def_scope(scope))
         def_scope.arguments.each do |arg|
@@ -144,6 +148,19 @@ module Ameba::AST
         end
       end
       true
+    end
+
+    # Visits the default value of the field declaration *node* (if any)
+    # within an isolated scope, i.e. `bar` in `getter foo = bar`.
+    private def visit_field_value(node)
+      return unless node.is_a?(Crystal::Assign) || node.is_a?(Crystal::TypeDeclaration)
+      return unless value = node.value
+
+      @current_assign = value
+      on_scope_enter(node)
+      value.accept(self)
+      on_scope_end(node) if @current_scope.eql?(node)
+      @current_assign = nil
     end
 
     # Returns `true` if the *node* implicitly forwards the arguments

@@ -754,6 +754,30 @@ module Ameba::Rule::Lint
         CRYSTAL
     end
 
+    it "reports unused rescue variable within an accessor macro default value" do
+      expect_issue subject, <<-CRYSTAL
+        class Foo
+          getter bar : Int32 = begin
+            compute
+          rescue ex
+               # ^^ error: Unused `rescue` variable `ex`
+            0
+          end
+        end
+        CRYSTAL
+    end
+
+    it "reports unused rescue variable within a record macro default value" do
+      expect_issue subject, <<-CRYSTAL
+        record Foo, x = begin
+          compute
+        rescue ex
+             # ^^ error: Unused `rescue` variable `ex`
+          0
+        end
+        CRYSTAL
+    end
+
     it "reports unused rescue variable within an accessor macro block" do
       expect_issue subject, <<-CRYSTAL
         class Foo
