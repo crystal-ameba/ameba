@@ -616,6 +616,231 @@ module Ameba::Rule::Lint
           end
           CRYSTAL
       end
+
+      it "reports if rescue variable is used only before the block" do
+        expect_issue subject, <<-CRYSTAL
+          def foo
+            ex = compute
+            puts ex
+
+            [1].each do
+              begin
+                bar
+              rescue ex
+                   # ^^ error: Unused `rescue` variable `ex`
+                puts "failed"
+              end
+            end
+          end
+          CRYSTAL
+      end
+
+      it "passes if rescue variable is used in a preceding closure" do
+        expect_no_issues subject, <<-CRYSTAL
+          def foo
+            ex = nil
+            printer = -> { puts ex }
+            handler = -> do
+              begin
+                bar
+              rescue ex
+              end
+            end
+            handler.call
+            printer.call
+          end
+          CRYSTAL
+      end
+
+      it "passes if rescue variable is used before the block within an enclosing loop" do
+        expect_no_issues subject, <<-CRYSTAL
+          ex = nil
+          while foo
+            puts ex
+            [1].each do
+              begin
+                bar
+              rescue ex
+              end
+            end
+          end
+          CRYSTAL
+      end
+    end
+
+    it "reports if rescue variable is used only by an outer rescue" do
+      expect_issue subject, <<-CRYSTAL
+        def foo
+          begin
+            begin
+              bar
+            rescue ex
+                 # ^^ error: Unused `rescue` variable `ex`
+            end
+          rescue
+            puts ex
+          end
+        end
+        CRYSTAL
+    end
+
+    it "reports if a class body rescue variable reassigns a top-level variable not read afterwards" do
+      expect_issue subject, <<-CRYSTAL
+        ex = 1
+        puts ex
+
+        class Foo
+          begin
+            bar
+          rescue ex
+               # ^^ error: Unused `rescue` variable `ex`
+          end
+        end
+        CRYSTAL
+    end
+
+    it "passes if a class body rescue variable reassigns a top-level variable read afterwards" do
+      expect_no_issues subject, <<-CRYSTAL
+        ex = 1
+
+        class Foo
+          begin
+            bar
+          rescue ex
+          end
+        end
+
+        puts ex
+        CRYSTAL
+    end
+
+    it "passes if a class body rescue variable reassigns a top-level pointer target" do
+      expect_no_issues subject, <<-CRYSTAL
+        ex = 1
+        ptr = pointerof(ex)
+
+        class Foo
+          begin
+            bar
+          rescue ex
+          end
+        end
+
+        puts ptr.value
+        CRYSTAL
+    end
+
+    it "reports unused rescue variable within an instance variable type declaration" do
+      expect_issue subject, <<-CRYSTAL
+        class Foo
+          @x : Int32 = begin
+            compute
+          rescue ex
+               # ^^ error: Unused `rescue` variable `ex`
+            0
+          end
+        end
+        CRYSTAL
+    end
+
+    it "reports unused rescue variable within a class variable type declaration" do
+      expect_issue subject, <<-CRYSTAL
+        class Foo
+          @@x : Int32 = begin
+            compute
+          rescue ex
+               # ^^ error: Unused `rescue` variable `ex`
+            0
+          end
+        end
+        CRYSTAL
+    end
+
+    it "reports unused rescue variable within an instance variable type declaration in a method" do
+      expect_issue subject, <<-CRYSTAL
+        def foo
+          @x : Int32 = begin
+            compute
+          rescue ex
+               # ^^ error: Unused `rescue` variable `ex`
+            0
+          end
+        end
+        CRYSTAL
+    end
+
+    it "reports unused rescue variable within an accessor macro default value" do
+      expect_issue subject, <<-CRYSTAL
+        class Foo
+          getter bar : Int32 = begin
+            compute
+          rescue ex
+               # ^^ error: Unused `rescue` variable `ex`
+            0
+          end
+        end
+        CRYSTAL
+    end
+
+    it "reports unused rescue variable within a record macro default value" do
+      expect_issue subject, <<-CRYSTAL
+        record Foo, x = begin
+          compute
+        rescue ex
+             # ^^ error: Unused `rescue` variable `ex`
+          0
+        end
+        CRYSTAL
+    end
+
+    it "reports unused rescue variable within an accessor macro block" do
+      expect_issue subject, <<-CRYSTAL
+        class Foo
+          getter bar : Int32 do
+            begin
+              compute
+            rescue ex
+                 # ^^ error: Unused `rescue` variable `ex`
+              0
+            end
+          end
+        end
+        CRYSTAL
+    end
+
+    it "reports unused rescue variable within a record macro block" do
+      expect_issue subject, <<-CRYSTAL
+        record Foo, x : Int32 do
+          def bar
+            compute
+          rescue ex
+               # ^^ error: Unused `rescue` variable `ex`
+            0
+          end
+        end
+        CRYSTAL
+    end
+
+    it "reports unused rescue variable within a top-level multi-assignment" do
+      expect_issue subject, <<-CRYSTAL
+        a, b = begin
+          foo { 1 }
+        rescue ex
+             # ^^ error: Unused `rescue` variable `ex`
+          {1, 2}
+        end
+        CRYSTAL
+    end
+
+    it "reports unused rescue variable within a top-level type declaration" do
+      expect_issue subject, <<-CRYSTAL
+        x : Int32 = begin
+          foo { 1 }
+        rescue ex
+             # ^^ error: Unused `rescue` variable `ex`
+          1
+        end
+        CRYSTAL
     end
   end
 end

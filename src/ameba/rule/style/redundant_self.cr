@@ -128,9 +128,9 @@ module Ameba::Rule::Style
             vars << assign.variable.name
           end
         end
-        if scope.type_definition? || !scope.inherited?
-          break
-        end
+        # type definition bodies share the outer scope variables
+        break unless scope.inherited?
+
         scope = scope.outer_scope
       end
 

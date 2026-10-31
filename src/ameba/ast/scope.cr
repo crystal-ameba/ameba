@@ -168,7 +168,7 @@ module Ameba::AST
     # ```
     def find_variable(name : String)
       variables.find(&.name.==(name)) ||
-        inherited? { outer_scope.try(&.find_variable(name)) }
+        (outer_scope.try(&.find_variable(name)) if inherited?)
     end
 
     # Creates a new assignment for the variable.
@@ -247,7 +247,7 @@ module Ameba::AST
     # Returns `true` if type declaration variable is assigned in this scope.
     def assigns_type_dec_variable?(name)
       type_dec_variables.any?(&.name.== name) ||
-        !!inherited? { outer_scope.try(&.assigns_type_dec_variable?(name)) }
+        !!(inherited? && outer_scope.try(&.assigns_type_dec_variable?(name)))
     end
 
     # Returns `true` if and only if current scope represents some
@@ -290,7 +290,7 @@ module Ameba::AST
 
     # Returns visibility of the current scope (could be inherited from the outer scope).
     def visibility
-      @visibility || inherited? { outer_scope.try(&.visibility) }
+      @visibility || (outer_scope.try(&.visibility) if inherited?)
     end
 
     {% for type in %w[Def ClassDef ModuleDef EnumDef LibDef FunDef].map(&.id) %}
@@ -308,15 +308,16 @@ module Ameba::AST
       outer_scope.nil?
     end
 
+    # Returns `true` if the scope inherits the context of the outer scope
+    # (i.e. its local variables and the visibility), being evaluated within it,
+    # i.e. a block or a type definition body, unlike a method, or an isolated
+    # value (i.e. `@foo = bar` within a type definition).
     def inherited?
       !(node.is_a?(Crystal::Def) ||
         node.is_a?(Crystal::FunDef) ||
         node.is_a?(Crystal::Assign) ||
-        node.is_a?(Crystal::OpAssign))
-    end
-
-    def inherited?(&)
-      yield if inherited?
+        node.is_a?(Crystal::OpAssign) ||
+        node.is_a?(Crystal::TypeDeclaration))
     end
 
     # Returns `true` if var is an argument in current scope, `false` otherwise.

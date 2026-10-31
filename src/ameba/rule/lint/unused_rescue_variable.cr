@@ -38,7 +38,7 @@ module Ameba::Rule::Lint
     MSG = "Unused `rescue` variable `%s`"
 
     def test(source)
-      AST::ScopeVisitor.new(self, source)
+      AST::ScopeVisitor.new(self, source, visit_field_macros: true)
     end
 
     def test(source, node, scope : AST::Scope)
@@ -46,7 +46,8 @@ module Ameba::Rule::Lint
       return unless captured_variables.present? ||
                     scope.variables.any? { |var| rescue_assigned?(var, scope) }
 
-      analyzer = AST::LivenessAnalyzer.new(scope, captured_variables)
+      analyzer = AST::LivenessAnalyzer.new(scope, captured_variables,
+        conservative_rescue: false)
       analyzer.dead_stores.each do |assign|
         next unless (rescue_node = assign.node).is_a?(Crystal::Rescue)
 

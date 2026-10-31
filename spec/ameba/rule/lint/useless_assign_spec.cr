@@ -242,6 +242,19 @@ module Ameba::Rule::Lint
         CRYSTAL
     end
 
+    it "does not report assignment in a class body to a top level variable read afterwards" do
+      expect_no_issues subject, <<-CRYSTAL
+        x = 1
+        puts x
+
+        class Foo
+          x = 2
+        end
+
+        puts x
+        CRYSTAL
+    end
+
     it "does not report useless assignment of instance var" do
       expect_no_issues subject, <<-CRYSTAL
         class Cls
@@ -599,6 +612,20 @@ module Ameba::Rule::Lint
 
             puts x
             puts y
+            CRYSTAL
+        end
+
+        it "ivar type declaration in class body" do
+          expect_issue subject, <<-CRYSTAL
+            class Foo
+              x = 1
+            # ^ error: Useless assignment to variable `x`
+
+              @bar : Int32 = begin
+                x = 2
+                x
+              end
+            end
             CRYSTAL
         end
 

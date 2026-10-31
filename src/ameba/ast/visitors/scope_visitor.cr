@@ -29,7 +29,12 @@ module Ameba::AST
     @current_visibility : Crystal::Visibility?
     @skip : Array(Crystal::ASTNode.class)?
 
-    def initialize(@rule, @source, skip = nil)
+    # Creates a new visitor, skipping the scopes of the *skip* node types,
+    # and the field macros (`record` and accessor ones, i.e. `getter`).
+    #
+    # When *visit_field_macros* is `true`, the default values and blocks
+    # of the field macros are visited, skipping only the field declarations.
+    def initialize(@rule, @source, skip = nil, @visit_field_macros = false)
       @current_scope = Scope.new(@source.ast) # top level scope
       @skip = skip.try(&.map(&.as(Crystal::ASTNode.class)))
 
@@ -89,12 +94,8 @@ module Ameba::AST
       target = node.target
 
       if isolated_assign_target?(target)
-        @current_assign = node
-
         target.accept(self)
-        on_scope_enter(node)
-        node.value.accept(self)
-
+        visit_isolated_value(node, node.value)
         return false
       end
 
@@ -102,8 +103,15 @@ module Ameba::AST
     end
 
     # :nodoc:
-    def end_visit(node : Crystal::Assign | Crystal::OpAssign)
-      on_scope_end(node) if @current_scope.eql?(node)
+    def visit(node : Crystal::TypeDeclaration)
+      value, var = node.value, node.var
+
+      if value && isolated_assign_target?(var)
+        var.accept(self)
+        visit_isolated_value(node, value)
+        return false
+      end
+
       super
     end
 
@@ -111,9 +119,11 @@ module Ameba::AST
     def visit(node : Crystal::Call)
       scope = @current_scope
       case
-      when (scope.top_level? || scope.type_definition?) && record_macro?(node)
-        return false
-      when scope.type_definition? && accessor_macro?(node)
+      when field_macro?(node, scope)
+        if @visit_field_macros
+          node.args.each { |arg| visit_field_value(arg) }
+          node.block.try(&.accept(self))
+        end
         return false
       when special_node?(node) && (def_scope = special_node_def_scope(scope))
         def_scope.arguments.each do |arg|
@@ -122,6 +132,28 @@ module Ameba::AST
         end
       end
       true
+    end
+
+    # Visits the default value of the field declaration *node* (if any)
+    # within an isolated scope, i.e. `bar` in `getter foo = bar`.
+    private def visit_field_value(node)
+      case node
+      when Crystal::Assign, Crystal::TypeDeclaration
+        node.value.try { |value| visit_isolated_value(node, value) }
+      end
+    end
+
+    # Visits the *value* assigned by the *node* within an isolated scope,
+    # since it's not evaluated within the current one, i.e. `bar` in
+    # `@foo = bar` within a type definition, evaluated by the initializers.
+    private def visit_isolated_value(node, value) : Nil
+      @current_assign = node
+
+      on_scope_enter(node)
+      value.accept(self)
+      on_scope_end(node) if @current_scope.eql?(node)
+
+      @current_assign = nil
     end
 
     # Returns `true` if the *node* implicitly forwards the arguments
@@ -139,6 +171,16 @@ module Ameba::AST
         scope = scope.outer_scope
       end
       scope if scope.try(&.def?)
+    end
+
+    # Returns `true` if the *node* is a macro declaring the fields of the type
+    # defined by the *scope*, i.e. `record` or an accessor macro (`getter`).
+    private def field_macro?(node, scope)
+      case
+      when record_macro?(node)   then scope.top_level? || scope.type_definition?
+      when accessor_macro?(node) then scope.type_definition?
+      else                            false
+      end
     end
 
     private def accessor_macro?(node)

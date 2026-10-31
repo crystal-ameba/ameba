@@ -359,6 +359,107 @@ module Ameba::Rule::Style
         CRYSTAL
     end
 
+    it "reports if there is redundant `self` used in an instance variable type declaration value" do
+      source = expect_issue subject, <<-CRYSTAL
+        class Foo
+          @x : Int32 = self.bar
+                     # ^^^^ error: Redundant `self` detected
+
+          def self.bar
+            1
+          end
+        end
+        CRYSTAL
+
+      expect_correction source, <<-CRYSTAL
+        class Foo
+          @x : Int32 = bar
+
+          def self.bar
+            1
+          end
+        end
+        CRYSTAL
+    end
+
+    it "does not report if `self` is used in an instance variable type declaration value with a local variable of the same name" do
+      expect_no_issues subject, <<-CRYSTAL
+        class Foo
+          @x : Int32 = begin
+            bar = 2
+            self.bar + bar
+          end
+
+          def self.bar
+            1
+          end
+        end
+        CRYSTAL
+    end
+
+    it "does not report if `self` is used in an instance variable initializer with a type body local variable of the same name" do
+      expect_no_issues subject, <<-CRYSTAL
+        class Foo
+          bar = 2
+          puts bar
+
+          @x : Int32 = self.bar
+
+          def self.bar
+            1
+          end
+        end
+        CRYSTAL
+    end
+
+    it "does not report if `self` is used in an instance variable initializer with a top level variable of the same name" do
+      expect_no_issues subject, <<-CRYSTAL
+        bar = 2
+        puts bar
+
+        class Foo
+          @x : Int32 = self.bar
+
+          def self.bar
+            1
+          end
+        end
+        CRYSTAL
+    end
+
+    it "does not report if `self` is used in a type body with a top level variable of the same name" do
+      expect_no_issues subject, <<-CRYSTAL
+        bar = 2
+        puts bar
+
+        class Foo
+          def self.bar
+            1
+          end
+
+          puts self.bar
+        end
+        CRYSTAL
+    end
+
+    it "reports if `self` is used in a method with a top level variable of the same name" do
+      expect_issue subject, <<-CRYSTAL
+        bar = 2
+        puts bar
+
+        class Foo
+          def bar
+            1
+          end
+
+          def baz
+            self.bar
+          # ^^^^ error: Redundant `self` detected
+          end
+        end
+        CRYSTAL
+    end
+
     it "reports if there is redundant `self` used in a method body" do
       source = expect_issue subject, <<-CRYSTAL
         class Foo
