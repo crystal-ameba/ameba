@@ -617,5 +617,27 @@ module Ameba::Rule::Lint
           CRYSTAL
       end
     end
+
+    it "reports unused rescue variable within a top-level multi-assignment" do
+      expect_issue subject, <<-CRYSTAL
+        a, b = begin
+          foo { 1 }
+        rescue ex
+             # ^^ error: Unused `rescue` variable `ex`
+          {1, 2}
+        end
+        CRYSTAL
+    end
+
+    it "reports unused rescue variable within a top-level type declaration" do
+      expect_issue subject, <<-CRYSTAL
+        x : Int32 = begin
+          foo { 1 }
+        rescue ex
+             # ^^ error: Unused `rescue` variable `ex`
+          1
+        end
+        CRYSTAL
+    end
   end
 end

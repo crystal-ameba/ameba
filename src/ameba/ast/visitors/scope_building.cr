@@ -27,6 +27,10 @@ module Ameba::AST
     end
 
     # :nodoc:
+    #
+    # NOTE: The more specific `end_visit` overloads below need to do the same,
+    #       since the node might be the top level scope one (i.e. a single
+    #       expression file).
     def end_visit(node : Crystal::ASTNode)
       on_scope_end(node) if @current_scope.eql?(node)
     end
@@ -58,12 +62,16 @@ module Ameba::AST
     def end_visit(node : Crystal::MultiAssign)
       node.targets.each { |target| on_assign_end(target, node) }
       @current_assign = nil
+
+      on_scope_end(node) if @current_scope.eql?(node)
     end
 
     # :nodoc:
     def end_visit(node : Crystal::UninitializedVar)
       on_assign_end(node.var, node)
       @current_assign = nil
+
+      on_scope_end(node) if @current_scope.eql?(node)
     end
 
     # :nodoc:
@@ -79,10 +87,12 @@ module Ameba::AST
 
     # :nodoc:
     def end_visit(node : Crystal::TypeDeclaration)
-      return unless (var = node.var).is_a?(Crystal::Var)
+      if (var = node.var).is_a?(Crystal::Var)
+        on_assign_end(var, node)
+        @current_assign = nil
+      end
 
-      on_assign_end(var, node)
-      @current_assign = nil
+      on_scope_end(node) if @current_scope.eql?(node)
     end
 
     # :nodoc:
