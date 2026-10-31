@@ -618,6 +618,21 @@ module Ameba::Rule::Lint
       end
     end
 
+    it "reports if a class body rescue variable shadows a top-level variable" do
+      expect_issue subject, <<-CRYSTAL
+        ex = 1
+        puts ex
+
+        class Foo
+          begin
+            bar
+          rescue ex
+               # ^^ error: Unused `rescue` variable `ex`
+          end
+        end
+        CRYSTAL
+    end
+
     it "reports unused rescue variable within an accessor macro block" do
       expect_issue subject, <<-CRYSTAL
         class Foo
