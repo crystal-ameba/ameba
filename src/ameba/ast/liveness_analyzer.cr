@@ -75,15 +75,12 @@ module Ameba::AST
     # Creates a new analyzer of the *scope*'s variables, and additionally
     # the *captured_variables* (i.e. the outer scope variables assigned
     # within a block), which are analyzed as long as they're assigned within
-    # the *scope*, and the *shadowed_variables* (i.e. the outer scope variables
-    # assigned within a type definition, which doesn't see them), which are
-    # analyzed as the *scope*'s own variables.
+    # the *scope*.
     #
     # When *conservative_rescue* is `true`, the variables read by the `rescue`
     # clauses are considered live at the end of the handler body too.
-    def initialize(@scope : Scope, captured_variables = [] of Variable, shadowed_variables = [] of Variable,
-                   *, @conservative_rescue = true)
-      variables = @scope.variables + captured_variables + shadowed_variables
+    def initialize(@scope : Scope, captured_variables = [] of Variable, *, @conservative_rescue = true)
+      variables = @scope.variables + captured_variables
 
       @var_names = variables.to_set(&.name)
       @exit_live = captured_variables

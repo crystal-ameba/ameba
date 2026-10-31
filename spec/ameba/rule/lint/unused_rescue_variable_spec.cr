@@ -699,6 +699,22 @@ module Ameba::Rule::Lint
         CRYSTAL
     end
 
+    it "reports if a class body rescue variable shadows a top-level pointer target" do
+      expect_issue subject, <<-CRYSTAL
+        ex = 1
+        ptr = pointerof(ex)
+        puts ptr
+
+        class Foo
+          begin
+            bar
+          rescue ex
+               # ^^ error: Unused `rescue` variable `ex`
+          end
+        end
+        CRYSTAL
+    end
+
     it "reports unused rescue variable within an accessor macro block" do
       expect_issue subject, <<-CRYSTAL
         class Foo
