@@ -553,6 +553,23 @@ module Ameba::Rule::Style
         CRYSTAL
     end
 
+    it "reports without correcting multiline calls with a comment after `self`" do
+      source = expect_issue subject, <<-CRYSTAL
+        class Foo
+          property bar : String
+
+          def foo
+            self # comment
+          # ^^^^ error: Redundant `self` detected
+              .bar
+          end
+        end
+        CRYSTAL
+
+      source.issues.first.correctable?.should be_false
+      expect_no_corrections source
+    end
+
     it "reports if there is redundant `self` used in a method arguments' default values" do
       source = expect_issue subject, <<-CRYSTAL
         class Foo

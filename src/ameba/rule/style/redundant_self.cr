@@ -75,6 +75,8 @@ module Ameba::Rule::Style
 
     CRYSTAL_KEYWORDS = Crystal::Keyword.values.map(&.to_s)
 
+    SELF_RECEIVER_PATTERN = /\Aself\s*\./
+
     def test(source)
       AST::ScopeCallsWithSelfReceiverVisitor.new(self, source)
     end
@@ -95,13 +97,20 @@ module Ameba::Rule::Style
       return if shadowed?(name, scope)
       return unless node_source = node_source(node, source.lines)
 
-      if !autocorrect_in_blocks? && within_block?(scope)
-        issue_for(obj, MSG)
-      else
+      if autocorrect?(node_source, scope)
         issue_for(obj, MSG) do |corrector|
-          corrector.replace(node, node_source.sub(/\Aself\s*\./, ""))
+          corrector.replace(node, node_source.sub(SELF_RECEIVER_PATTERN, ""))
         end
+      else
+        issue_for(obj, MSG)
       end
+    end
+
+    private def autocorrect?(node_source, scope)
+      # Anything else between `self` and `.` (i.e. a comment) would need
+      # to be removed along with it, so we don't autocorrect these.
+      node_source.matches?(SELF_RECEIVER_PATTERN) &&
+        (autocorrect_in_blocks? || !within_block?(scope))
     end
 
     # Returns `true` if calling the method *name* without a receiver
