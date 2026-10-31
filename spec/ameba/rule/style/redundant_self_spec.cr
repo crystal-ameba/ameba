@@ -622,6 +622,120 @@ module Ameba::Rule::Style
       end
     {% end %}
 
+    context "with macros" do
+      it "does not report if `self` is used with a method shadowed by a macro" do
+        expect_no_issues subject, <<-CRYSTAL
+          class Foo
+            macro foo
+              2
+            end
+
+            def foo; 1; end
+
+            def bar
+              self.foo
+            end
+          end
+          CRYSTAL
+      end
+
+      it "does not report if `self` is used with a method shadowed by a macro (within a block)" do
+        expect_no_issues subject, <<-CRYSTAL
+          class Foo
+            macro foo
+              2
+            end
+
+            def foo; 1; end
+
+            def bar
+              [1].map { self.foo }
+            end
+          end
+          CRYSTAL
+      end
+
+      it "does not report if `self` is used with a method shadowed by a macro defined in another type body" do
+        expect_no_issues subject, <<-CRYSTAL
+          class Bar::Foo
+            macro foo
+              2
+            end
+          end
+
+          module Bar
+            class Foo
+              def foo; 1; end
+
+              def bar
+                self.foo
+              end
+            end
+          end
+          CRYSTAL
+      end
+
+      it "does not report if `self` is used with a method shadowed by a macro defined in another type body (global path)" do
+        expect_no_issues subject, <<-CRYSTAL
+          class Foo
+            macro foo
+              2
+            end
+          end
+
+          module Bar
+            class ::Foo
+              def foo; 1; end
+
+              def bar
+                self.foo
+              end
+            end
+          end
+          CRYSTAL
+      end
+
+      it "reports if `self` is used with a method named like a macro of a type with the same name in another namespace" do
+        expect_issue subject, <<-CRYSTAL
+          class Foo
+            macro foo
+              2
+            end
+          end
+
+          module Bar
+            class Foo
+              def foo; 1; end
+
+              def bar
+                self.foo
+              # ^^^^ error: Redundant `self` detected
+              end
+            end
+          end
+          CRYSTAL
+      end
+
+      it "reports if `self` is used with a method named like a macro of another type" do
+        expect_issue subject, <<-CRYSTAL
+          class Bar
+            macro foo
+              2
+            end
+          end
+
+          class Foo
+            def foo; 1; end
+
+            def bar
+              self.foo
+            # ^^^^ error: Redundant `self` detected
+            end
+          end
+          CRYSTAL
+      end
+    end
+
     context "with `self` type narrowing" do
       it "does not report `self` within a `responds_to?` check" do
         expect_no_issues subject, <<-CRYSTAL

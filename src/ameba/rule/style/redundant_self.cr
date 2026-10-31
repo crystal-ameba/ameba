@@ -92,7 +92,7 @@ module Ameba::Rule::Style
       return if name.in?(CRYSTAL_KEYWORDS)
       return if name.in?(allowed_method_names)
 
-      return if name.in?(visible_variable_names(scope))
+      return if shadowed?(name, scope)
       return unless node_source = node_source(node, source.lines)
 
       if !autocorrect_in_blocks? && within_block?(scope)
@@ -102,6 +102,13 @@ module Ameba::Rule::Style
           corrector.replace(node, node_source.sub(/\Aself\s*\./, ""))
         end
       end
+    end
+
+    # Returns `true` if calling the method *name* without a receiver
+    # would refer to a local variable or a macro instead.
+    private def shadowed?(name, scope)
+      name.in?(visible_variable_names(scope)) ||
+        name.in?(type_macro_names(scope))
     end
 
     # Returns `true` if the *scope* is (or is nested within) a block,
@@ -141,8 +148,67 @@ module Ameba::Rule::Style
       end
     end
 
+    # Returns names of the macros defined within (any of the definitions of)
+    # the type enclosing the *scope*, which take precedence over the methods
+    # with the same name when called without a receiver.
+    private def type_macro_names(scope)
+      names = Set(String).new
+
+      while scope && !type_body?(scope)
+        scope = scope.outer_scope
+      end
+      return names unless scope && (type_name = type_name(scope))
+
+      each_type_body(top_level_scope(scope)) do |other|
+        next unless type_name(other) == type_name
+        next unless type = type_body(other)
+
+        _, body = type
+        exps = body.is_a?(Crystal::Expressions) ? body.expressions : {body}
+        exps.each do |exp|
+          names << exp.name if exp.is_a?(Crystal::Macro)
+        end
+      end
+
+      names
+    end
+
+    private def each_type_body(scope, &block : AST::Scope ->)
+      scope.inner_scopes.each do |inner|
+        next unless type_body?(inner)
+
+        block.call(inner)
+        each_type_body(inner, &block)
+      end
+    end
+
+    # Returns the full name of the type definition the *scope* represents,
+    # resolved lexically against the enclosing type definitions.
+    private def type_name(scope) : String?
+      return unless type_body?(scope)
+
+      names = [] of String
+      while scope
+        if type = type_body(scope)
+          path, _ = type
+          names = path.names + names
+          break if path.global?
+        end
+        scope = scope.outer_scope
+      end
+      names.join("::")
+    end
+
     private def type_body?(scope)
-      scope.node.is_a?(Crystal::ClassDef | Crystal::ModuleDef)
+      !!type_body(scope)
+    end
+
+    # Returns the name and body of the type definition the *scope* represents.
+    private def type_body(scope) : {Crystal::Path, Crystal::ASTNode}?
+      case node = scope.node
+      when Crystal::ClassDef  then {node.name, node.body}
+      when Crystal::ModuleDef then {node.name, node.body}
+      end
     end
 
     private def top_level_scope(scope)
