@@ -584,6 +584,91 @@ module Ameba::Rule::Style
       end
     {% end %}
 
+    context "with `self` type narrowing" do
+      it "does not report `self` within a `responds_to?` check" do
+        expect_no_issues subject, <<-CRYSTAL
+          class Object
+            def blank?
+              if self.responds_to?(:empty?)
+                self.empty?
+              else
+                false
+              end
+            end
+          end
+          CRYSTAL
+      end
+
+      it "does not report `self` within a suffix `responds_to?` check" do
+        expect_no_issues subject, <<-CRYSTAL
+          class Object
+            def blank?
+              self.empty? if self.responds_to?(:empty?)
+            end
+          end
+          CRYSTAL
+      end
+
+      it "does not report `self` within a receiverless `is_a?` check" do
+        expect_no_issues subject, <<-CRYSTAL
+          class Object
+            def blank?
+              is_a?(String) && self.empty?
+            end
+          end
+          CRYSTAL
+      end
+
+      it "does not report `self` after a `nil?` guard clause" do
+        expect_no_issues subject, <<-CRYSTAL
+          class Object
+            def blank?
+              return true if self.nil?
+              self.to_s.empty?
+            end
+          end
+          CRYSTAL
+      end
+
+      it "does not report `self` within `case self`" do
+        expect_no_issues subject, <<-CRYSTAL
+          class Object
+            def blank?
+              case self
+              when String then self.empty?
+              end
+            end
+          end
+          CRYSTAL
+      end
+
+      it "does not report `self` within a block nested in a narrowing method" do
+        expect_no_issues subject, <<-CRYSTAL
+          class Object
+            def blank?
+              return unless self.is_a?(Array)
+              self.all? { |v| self.includes?(v) }
+            end
+          end
+          CRYSTAL
+      end
+
+      it "still reports `self` in other methods" do
+        expect_issue subject, <<-CRYSTAL
+          class Object
+            def blank?
+              self.responds_to?(:empty?) && self.empty?
+            end
+
+            def present?
+              !self.blank?
+             # ^^^^ error: Redundant `self` detected
+            end
+          end
+          CRYSTAL
+      end
+    end
+
     context "within blocks" do
       it "reports and corrects redundant `self` within a block" do
         source = expect_issue subject, <<-CRYSTAL
