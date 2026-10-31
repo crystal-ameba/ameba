@@ -262,9 +262,7 @@ module Ameba::AST
     # values of the variables they reference (i.e. blocks), treat these as being
     # read at the location of the inner scope.
     private def propagate_through_inner_scope(node : Crystal::ASTNode, live : LiveSet) : LiveSet
-      if node.is_a?(Crystal::MacroIf) || node.is_a?(Crystal::MacroFor)
-        live = propagate_through_macro(live)
-      end
+      live = propagate_through_macro(live) if macro_node?(node)
 
       if reads = @inner_scope_reads[node.object_id]?
         live | reads
@@ -613,6 +611,13 @@ module Ameba::AST
       in Crystal::While then node.cond.true_literal?
       in Crystal::Until then node.cond.false_literal?
       end
+    end
+
+    # Returns `true` if the *node* is expanded to (unknown) code.
+    private def macro_node?(node) : Bool
+      {% begin %}
+        node.is_a?({{ MACRO_NODES.map { |type| "Crystal::#{type.id}" }.join(" | ").id }})
+      {% end %}
     end
 
     # Adds the variables live on any of the jumps, since the (unknown) code
