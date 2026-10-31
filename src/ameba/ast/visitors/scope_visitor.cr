@@ -94,12 +94,8 @@ module Ameba::AST
       target = node.target
 
       if isolated_assign_target?(target)
-        @current_assign = node
-
         target.accept(self)
-        on_scope_enter(node)
-        node.value.accept(self)
-
+        visit_isolated_value(node, node.value)
         return false
       end
 
@@ -107,23 +103,12 @@ module Ameba::AST
     end
 
     # :nodoc:
-    def end_visit(node : Crystal::Assign | Crystal::OpAssign)
-      on_scope_end(node) if @current_scope.eql?(node)
-      super
-    end
-
-    # :nodoc:
     def visit(node : Crystal::TypeDeclaration)
-      value = node.value
-      var = node.var
+      value, var = node.value, node.var
 
       if value && isolated_assign_target?(var)
-        @current_assign = value
-
         var.accept(self)
-        on_scope_enter(node)
-        value.accept(self)
-
+        visit_isolated_value(node, value)
         return false
       end
 
@@ -153,13 +138,22 @@ module Ameba::AST
     # Visits the default value of the field declaration *node* (if any)
     # within an isolated scope, i.e. `bar` in `getter foo = bar`.
     private def visit_field_value(node)
-      return unless node.is_a?(Crystal::Assign) || node.is_a?(Crystal::TypeDeclaration)
-      return unless value = node.value
+      case node
+      when Crystal::Assign, Crystal::TypeDeclaration
+        node.value.try { |value| visit_isolated_value(node, value) }
+      end
+    end
 
-      @current_assign = value
+    # Visits the *value* assigned by the *node* within an isolated scope,
+    # since it's not evaluated within the current one, i.e. `bar` in
+    # `@foo = bar` within a type definition, evaluated by the initializers.
+    private def visit_isolated_value(node, value) : Nil
+      @current_assign = node
+
       on_scope_enter(node)
       value.accept(self)
       on_scope_end(node) if @current_scope.eql?(node)
+
       @current_assign = nil
     end
 

@@ -50,6 +50,8 @@ module Ameba::AST
     def end_visit(node : Crystal::Assign | Crystal::OpAssign)
       on_assign_end(node.target, node)
       @current_assign = nil
+
+      on_scope_end(node) if @current_scope.eql?(node)
     end
 
     # :nodoc:
