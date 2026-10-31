@@ -1259,7 +1259,7 @@
   </h2>
   
     
-      <a href="https://github.com/crystal-ameba/ameba/blob/9a22295/src/ameba/ast/visitors/scope_calls_with_self_receiver_visitor.cr#L2" target="_blank">
+      <a href="https://github.com/crystal-ameba/ameba/blob/a099c01/src/ameba/ast/visitors/scope_calls_with_self_receiver_visitor.cr#L2" target="_blank">
         ameba/ast/visitors/scope_calls_with_self_receiver_visitor.cr
       </a>
     
@@ -1310,12 +1310,29 @@
       </li>
     
       <li class="entry-summary">
+        <a href="#self_narrowing_scopes%3ASet%28Ameba%3A%3AAST%3A%3AScope%29-instance-method" class="signature"><strong>#self_narrowing_scopes</strong> : Set(Ameba::AST::Scope)</a>
+        
+          <div class="summary"><p>Scopes in which the type of <code>self</code> gets narrowed down (i.e.</p></div>
+        
+      </li>
+    
+      <li class="entry-summary">
         <a href="#visit%28node%3ACrystal%3A%3ABlock%7CCrystal%3A%3AProcLiteral%29-instance-method" class="signature"><strong>#visit</strong>(node : Crystal::Block | Crystal::ProcLiteral)</a>
         
       </li>
     
       <li class="entry-summary">
         <a href="#visit%28node%3ACrystal%3A%3AClassDef%7CCrystal%3A%3AModuleDef%29-instance-method" class="signature"><strong>#visit</strong>(node : Crystal::ClassDef | Crystal::ModuleDef)</a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#visit%28node%3ACrystal%3A%3AIsA%7CCrystal%3A%3ARespondsTo%29-instance-method" class="signature"><strong>#visit</strong>(node : Crystal::IsA | Crystal::RespondsTo)</a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#visit%28node%3ACrystal%3A%3ACase%29-instance-method" class="signature"><strong>#visit</strong>(node : Crystal::Case)</a>
         
       </li>
     
@@ -1414,7 +1431,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/9a22295/src/ameba/ast/visitors/scope_calls_with_self_receiver_visitor.cr#L7" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/a099c01/src/ameba/ast/visitors/scope_calls_with_self_receiver_visitor.cr#L11" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1446,7 +1463,29 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/9a22295/src/ameba/ast/visitors/scope_calls_with_self_receiver_visitor.cr#L5" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/a099c01/src/ameba/ast/visitors/scope_calls_with_self_receiver_visitor.cr#L5" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="self_narrowing_scopes:Set(Ameba::AST::Scope)-instance-method">
+      <div class="signature">
+        
+        def <strong>self_narrowing_scopes</strong> : Set(<a href="../../Ameba/AST/Scope.html">Ameba::AST::Scope</a>)
+
+        <a class="method-permalink" href="#self_narrowing_scopes%3ASet%28Ameba%3A%3AAST%3A%3AScope%29-instance-method">#</a>
+      </div>
+      
+        <div class="doc">
+          
+          <p>Scopes in which the type of <code>self</code> gets narrowed down
+(i.e. via <code>is_a?</code>, <code>responds_to?</code>, <code>nil?</code> or <code>case self</code>).</p>
+        </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/crystal-ameba/ameba/blob/a099c01/src/ameba/ast/visitors/scope_calls_with_self_receiver_visitor.cr#L9" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1462,7 +1501,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/9a22295/src/ameba/ast/visitors/scope_calls_with_self_receiver_visitor.cr#L33" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/a099c01/src/ameba/ast/visitors/scope_calls_with_self_receiver_visitor.cr#L39" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1478,7 +1517,39 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/9a22295/src/ameba/ast/visitors/scope_calls_with_self_receiver_visitor.cr#L37" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/a099c01/src/ameba/ast/visitors/scope_calls_with_self_receiver_visitor.cr#L43" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="visit(node:Crystal::IsA|Crystal::RespondsTo)-instance-method">
+      <div class="signature">
+        
+        def <strong>visit</strong>(node : Crystal::IsA | Crystal::RespondsTo)
+
+        <a class="method-permalink" href="#visit%28node%3ACrystal%3A%3AIsA%7CCrystal%3A%3ARespondsTo%29-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/crystal-ameba/ameba/blob/a099c01/src/ameba/ast/visitors/scope_calls_with_self_receiver_visitor.cr#L63" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="visit(node:Crystal::Case)-instance-method">
+      <div class="signature">
+        
+        def <strong>visit</strong>(node : Crystal::Case)
+
+        <a class="method-permalink" href="#visit%28node%3ACrystal%3A%3ACase%29-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/crystal-ameba/ameba/blob/a099c01/src/ameba/ast/visitors/scope_calls_with_self_receiver_visitor.cr#L68" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1494,7 +1565,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/9a22295/src/ameba/ast/visitors/scope_calls_with_self_receiver_visitor.cr#L41" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/a099c01/src/ameba/ast/visitors/scope_calls_with_self_receiver_visitor.cr#L73" target="_blank">View source</a>]
         
       </div>
     </div>
