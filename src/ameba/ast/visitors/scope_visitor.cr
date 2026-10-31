@@ -29,7 +29,10 @@ module Ameba::AST
     @current_visibility : Crystal::Visibility?
     @skip : Array(Crystal::ASTNode.class)?
 
-    def initialize(@rule, @source, skip = nil)
+    # Creates a new visitor, skipping the scopes of the *skip* node types,
+    # and the blocks of the `record` and accessor macros (i.e. `getter`),
+    # unless *visit_macro_blocks* is `true`.
+    def initialize(@rule, @source, skip = nil, @visit_macro_blocks = false)
       @current_scope = Scope.new(@source.ast) # top level scope
       @skip = skip.try(&.map(&.as(Crystal::ASTNode.class)))
 
@@ -111,9 +114,10 @@ module Ameba::AST
     def visit(node : Crystal::Call)
       scope = @current_scope
       case
-      when (scope.top_level? || scope.type_definition?) && record_macro?(node)
-        return false
-      when scope.type_definition? && accessor_macro?(node)
+      when (scope.top_level? || scope.type_definition?) && record_macro?(node),
+           scope.type_definition? && accessor_macro?(node)
+        # skip the macro arguments (i.e. field declarations)
+        node.block.try(&.accept(self)) if @visit_macro_blocks
         return false
       when special_node?(node) && (def_scope = special_node_def_scope(scope))
         def_scope.arguments.each do |arg|

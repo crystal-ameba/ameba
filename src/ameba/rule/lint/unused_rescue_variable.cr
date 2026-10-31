@@ -38,7 +38,7 @@ module Ameba::Rule::Lint
     MSG = "Unused `rescue` variable `%s`"
 
     def test(source)
-      AST::ScopeVisitor.new(self, source)
+      AST::ScopeVisitor.new(self, source, visit_macro_blocks: true)
     end
 
     def test(source, node, scope : AST::Scope)
