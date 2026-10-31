@@ -290,7 +290,7 @@ module Ameba::AST
 
     # Returns visibility of the current scope (could be inherited from the outer scope).
     def visibility
-      @visibility || inherited? { outer_scope.try(&.visibility) }
+      @visibility || (outer_scope.try(&.visibility) if inherited?)
     end
 
     {% for type in %w[Def ClassDef ModuleDef EnumDef LibDef FunDef].map(&.id) %}
@@ -308,16 +308,15 @@ module Ameba::AST
       outer_scope.nil?
     end
 
+    # Returns `true` if the scope inherits the context of the outer scope
+    # (i.e. the visibility), being evaluated within it, unlike a method,
+    # or an isolated value (i.e. `@foo = bar` within a type definition).
     def inherited?
       !(node.is_a?(Crystal::Def) ||
         node.is_a?(Crystal::FunDef) ||
         node.is_a?(Crystal::Assign) ||
         node.is_a?(Crystal::OpAssign) ||
         node.is_a?(Crystal::TypeDeclaration))
-    end
-
-    def inherited?(&)
-      yield if inherited?
     end
 
     # Returns `true` if the local variables of the outer scope are visible
