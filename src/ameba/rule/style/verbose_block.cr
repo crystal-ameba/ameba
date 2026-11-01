@@ -82,7 +82,7 @@ module Ameba::Rule::Style
 
     # ameba:disable Metrics/CyclomaticComplexity
     private def issue_for_valid(source, call : Crystal::Call, block : Crystal::Block, body : Crystal::Call)
-      return if exclude_calls_with_block? && body.block
+      return if exclude_calls_with_block? && literal_block?(body)
       return if exclude_multiple_line_blocks? && !same_location_lines?(call, body)
       return if exclude_prefix_operators? && prefix_operator?(body)
       return if exclude_operators? && operator_method?(body)
@@ -185,6 +185,13 @@ module Ameba::Rule::Style
       return unless block_arg = node.block_arg
 
       "&#{node_source(block_arg, source.lines) || block_arg}"
+    end
+
+    # Short blocks are expanded by the parser into
+    # blocks with a generated parameter - `__arg0`.
+    private def literal_block?(node : Crystal::Call)
+      !!(block = node.block) &&
+        !block.args.first?.try(&.name.starts_with?("__arg"))
     end
 
     private def same_location_lines?(a, b)
