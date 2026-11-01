@@ -47,11 +47,8 @@ module Ameba::AST
     # Returns `true` if the type of `self` is narrowed within the *scope*,
     # or any of its outer scopes within the enclosing method or type definition.
     private def self_narrowed?(scope)
-      while scope
-        return true if scope.in?(self_narrowing_scopes)
-        break if scope.type_definition? || !scope.inherited?
-
-        scope = scope.outer_scope
+      scope.each_scope_within_definition do |current|
+        return true if current.in?(self_narrowing_scopes)
       end
       false
     end

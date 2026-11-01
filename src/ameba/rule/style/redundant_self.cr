@@ -107,27 +107,21 @@ module Ameba::Rule::Style
     # Returns `true` if the *scope* is (or is nested within) a block,
     # within the enclosing method or type definition.
     private def within_block?(scope)
-      while scope
-        return true if scope.node.is_a?(Crystal::Block)
-        break if scope.type_definition? || !scope.inherited?
-
-        scope = scope.outer_scope
+      scope.each_scope_within_definition do |current|
+        return true if current.node.is_a?(Crystal::Block)
       end
       false
     end
 
+    # Returns names of the local variables (and arguments) visible
+    # within the *scope*.
     private def visible_variable_names(scope)
       vars = Set(String).new
 
       while scope
-        scope.arguments.each do |arg|
-          vars << arg.name
-        end
-        scope.variables.each do |var|
-          var.assignments.each do |assign|
-            vars << assign.variable.name
-          end
-        end
+        scope.arguments.each { |arg| vars << arg.name }
+        scope.variables.each { |var| vars << var.name }
+
         # type definition bodies share the outer scope variables
         break unless scope.inherited?
 
