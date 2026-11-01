@@ -340,7 +340,7 @@ module Ameba::AST::Util
   # including the custom ones taking additional arguments (i.e. a location).
   def raise?(node)
     node.is_a?(Crystal::Call) &&
-      node.name == "raise" && node.args.present? && node.obj.nil?
+      node.name == "raise" && has_arguments?(node) && node.obj.nil?
   end
 
   # Returns `true` if node represents `exit` (or `Process.exit`) method call.

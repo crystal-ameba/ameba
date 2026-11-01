@@ -647,6 +647,11 @@ module Ameba::AST
         subject.raise?(node).should be_true
       end
 
+      it "returns true if this is a raise method call with named arguments" do
+        node = as_node(%(raise(message: "boom")))
+        subject.raise?(node).should be_true
+      end
+
       it "returns false if it has a receiver" do
         node = as_node("obj.raise e")
         subject.raise?(node).should be_false
