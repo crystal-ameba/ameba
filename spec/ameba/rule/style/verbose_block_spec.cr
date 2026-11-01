@@ -43,7 +43,7 @@ module Ameba::Rule::Style
         (1..3).map { |i| i.foo({% if true %} i {% end %}) }
         (1..3).map { |i| i.foo({% begin %} i {% end %}) }
         (1..3).map { |i| i.foo({% verbatim do %} i {% end %}) }
-        (1..3).map { |i| i.foo({{ i }}) }
+        (1..3).map { |i| i.foo({{ "i".id }}) }
         CRYSTAL
     end
 
