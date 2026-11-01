@@ -70,8 +70,8 @@ class Ameba::Source
       @action_root.empty?
     end
 
-    # Combines the updates from *other* unless any of their effective ranges
-    # overlap. Returns `true` when the updates were combined.
+    # Combines the updates from *other* unless doing so would lose or fuse any
+    # of them. Returns `true` when the updates were combined.
     def merge(other : self)
       return false if @action_root.conflicts_with?(other.@action_root)
 

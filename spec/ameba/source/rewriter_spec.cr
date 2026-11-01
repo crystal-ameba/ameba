@@ -126,6 +126,59 @@ class Ameba::Source
       rewriter.process.should eq "aXdef"
     end
 
+    it "does not merge a replacement over a previously recorded insertion" do
+      rewriter = Rewriter.new("abcdef")
+      other = Rewriter.new("abcdef")
+      rewriter.insert_before(2, "Y")
+      other.replace(1, 3, "X")
+
+      rewriter.merge(other).should be_false
+      rewriter.process.should eq "abYcdef"
+    end
+
+    it "does not merge ranged insertions contained by a replacement" do
+      rewriter = Rewriter.new("abcdef")
+      before = Rewriter.new("abcdef")
+      after = Rewriter.new("abcdef")
+      rewriter.replace(1, 5, "X")
+      before.insert_before(1, 3, "Y")
+      after.insert_after(3, 5, "Y")
+
+      rewriter.merge(before).should be_false
+      rewriter.merge(after).should be_false
+      rewriter.process.should eq "aXf"
+    end
+
+    it "does not merge a replacement over contained ranged insertions" do
+      rewriter = Rewriter.new("abcdef")
+      other = Rewriter.new("abcdef")
+      rewriter.insert_before(1, 3, "Y")
+      other.replace(1, 5, "X")
+
+      rewriter.merge(other).should be_false
+      rewriter.process.should eq "aYbcdef"
+    end
+
+    it "does not merge insertions at the boundaries of a whole-source replacement" do
+      [0, 6].each do |pos|
+        rewriter = Rewriter.new("abcdef")
+        other = Rewriter.new("abcdef")
+        rewriter.replace(0, 6, "X")
+        other.insert_before(pos, "Y")
+
+        rewriter.merge(other).should be_false
+        rewriter.process.should eq "X"
+
+        rewriter = Rewriter.new("abcdef")
+        other = Rewriter.new("abcdef")
+        rewriter.insert_before(pos, "Y")
+        other.replace(0, 6, "X")
+
+        rewriter.merge(other).should be_false
+        rewriter.process.should_not eq "X"
+      end
+    end
+
     it "merges nested wraps in either order" do
       [false, true].each do |reverse|
         rewriter = Rewriter.new("abcdef")
