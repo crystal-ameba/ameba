@@ -119,95 +119,97 @@ module Ameba::Rule::Style
     end
 
     context "properties" do
-      it "#exclude_calls_with_block" do
-        rule = subject.class.new
+      context "#exclude_calls_with_block" do
+        it "excludes only literal blocks" do
+          rule = subject.class.new
 
-        rule.exclude_calls_with_block = true
-        expect_no_issues rule, <<-CRYSTAL
-          (1..3).map { |i| i.each { |j| foo(j) } }
-          (1..3).map do |i| i.each do |j| foo(j) end end
-          (1..3).map { |i| i.each { foo } }
-          CRYSTAL
+          rule.exclude_calls_with_block = true
+          expect_no_issues rule, <<-CRYSTAL
+            (1..3).map { |i| i.each { |j| foo(j) } }
+            (1..3).map do |i| i.each do |j| foo(j) end end
+            (1..3).map { |i| i.each { foo } }
+            CRYSTAL
 
-        rule.exclude_calls_with_block = false
-        source = expect_issue rule, <<-CRYSTAL
-          (1..3).in_groups_of(1) { |i| i.map(&.to_s) }
-               # ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ error: Use short block notation instead: `in_groups_of(1, &.map(&.to_s))`
-          (1..3).map { |i| i.each(&block) }
-               # ^^^^^^^^^^^^^^^^^^^^^^^^^^ error: Use short block notation instead: `map(&.each(&block))`
-          (1..3).map { |i| i.each(&->(x : Int32) { x }) }
-               # ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ error: [...] `map(&.each(&->(x : Int32) { x }))`
-          (1..3).map { |i| i.each(&->(i : Int32) { i }) }
-               # ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ error: [...] `map(&.each(&->(i : Int32) { i }))`
-          (1..3).map { |i| i.tap(&block).to_s }
-               # ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ error: [...] `map(&.tap(&block).to_s)`
-          CRYSTAL
+          rule.exclude_calls_with_block = false
+          source = expect_issue rule, <<-CRYSTAL
+            (1..3).in_groups_of(1) { |i| i.map(&.to_s) }
+                 # ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ error: Use short block notation instead: `in_groups_of(1, &.map(&.to_s))`
+            (1..3).map { |i| i.each(&block) }
+                 # ^^^^^^^^^^^^^^^^^^^^^^^^^^ error: Use short block notation instead: `map(&.each(&block))`
+            (1..3).map { |i| i.each(&->(x : Int32) { x }) }
+                 # ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ error: [...] `map(&.each(&->(x : Int32) { x }))`
+            (1..3).map { |i| i.each(&->(i : Int32) { i }) }
+                 # ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ error: [...] `map(&.each(&->(i : Int32) { i }))`
+            (1..3).map { |i| i.tap(&block).to_s }
+                 # ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ error: [...] `map(&.tap(&block).to_s)`
+            CRYSTAL
 
-        expect_correction source, <<-CRYSTAL
-          (1..3).in_groups_of(1, &.map(&.to_s))
-          (1..3).map(&.each(&block))
-          (1..3).map(&.each(&->(x : Int32) { x }))
-          (1..3).map(&.each(&->(i : Int32) { i }))
-          (1..3).map(&.tap(&block).to_s)
-          CRYSTAL
-      end
+          expect_correction source, <<-CRYSTAL
+            (1..3).in_groups_of(1, &.map(&.to_s))
+            (1..3).map(&.each(&block))
+            (1..3).map(&.each(&->(x : Int32) { x }))
+            (1..3).map(&.each(&->(i : Int32) { i }))
+            (1..3).map(&.tap(&block).to_s)
+            CRYSTAL
+        end
 
-      it "#exclude_calls_with_block (with shadowing block)" do
-        rule = subject.class.new
-        rule.exclude_calls_with_block = false
+        it "when disabled reports shadowing blocks" do
+          rule = subject.class.new
+          rule.exclude_calls_with_block = false
 
-        expect_no_issues rule, <<-CRYSTAL
-          (1..3).map { |i| i.each { |j| i + j } }
-          CRYSTAL
+          expect_no_issues rule, <<-CRYSTAL
+            (1..3).map { |i| i.each { |j| i + j } }
+            CRYSTAL
 
-        expect_issue rule, <<-CRYSTAL
-          (1..3).map { |i| i.each { |i| i } }
-               # ^^^^^^^^^^^^^^^^^^^^^^^^^^^^ error: Use short block notation instead: `map(&.each {...})`
-          (1..3).map { |i| i.each { |(i, j)| i } }
-               # ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ error: Use short block notation instead: `map(&.each {...})`
-          CRYSTAL
-      end
+          expect_issue rule, <<-CRYSTAL
+            (1..3).map { |i| i.each { |i| i } }
+                 # ^^^^^^^^^^^^^^^^^^^^^^^^^^^^ error: Use short block notation instead: `map(&.each {...})`
+            (1..3).map { |i| i.each { |(i, j)| i } }
+                 # ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ error: Use short block notation instead: `map(&.each {...})`
+            CRYSTAL
+        end
 
-      it "#exclude_calls_with_block (with index calls)" do
-        rule = subject.class.new
-        rule.exclude_calls_with_block = false
-        rule.exclude_operators = false
+        it "when disabled reports index calls" do
+          rule = subject.class.new
+          rule.exclude_calls_with_block = false
+          rule.exclude_operators = false
 
-        source = expect_issue rule, <<-CRYSTAL
-          (1..3).map { |i| i.[](1, &block) }
-               # ^^^^^^^^^^^^^^^^^^^^^^^^^^^ error: [...] `map(&.[1, &block])`
-          (1..3).map { |i| i[1, &block] }
-               # ^^^^^^^^^^^^^^^^^^^^^^^^ error: [...] `map(&.[1, &block])`
-          (1..3).map { |i| i[1, &block]? }
-               # ^^^^^^^^^^^^^^^^^^^^^^^^^ error: [...] `map(&.[1, &block]?)`
-          (1..3).map { |i| i.[](1, &.foo) }
-               # ^^^^^^^^^^^^^^^^^^^^^^^^^^ error: [...] `map(&.[1, &.foo])`
-          (1..3).map { |i| i.[]=(1, 2, &block) }
-               # ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ error: [...] `map(&.[]=(1, 2, &block))`
-          CRYSTAL
+          source = expect_issue rule, <<-CRYSTAL
+            (1..3).map { |i| i.[](1, &block) }
+                 # ^^^^^^^^^^^^^^^^^^^^^^^^^^^ error: [...] `map(&.[1, &block])`
+            (1..3).map { |i| i[1, &block] }
+                 # ^^^^^^^^^^^^^^^^^^^^^^^^ error: [...] `map(&.[1, &block])`
+            (1..3).map { |i| i[1, &block]? }
+                 # ^^^^^^^^^^^^^^^^^^^^^^^^^ error: [...] `map(&.[1, &block]?)`
+            (1..3).map { |i| i.[](1, &.foo) }
+                 # ^^^^^^^^^^^^^^^^^^^^^^^^^^ error: [...] `map(&.[1, &.foo])`
+            (1..3).map { |i| i.[]=(1, 2, &block) }
+                 # ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ error: [...] `map(&.[]=(1, 2, &block))`
+            CRYSTAL
 
-        expect_correction source, <<-CRYSTAL
-          (1..3).map(&.[1, &block])
-          (1..3).map(&.[1, &block])
-          (1..3).map(&.[1, &block]?)
-          (1..3).map(&.[1, &.foo])
-          (1..3).map(&.[]=(1, 2, &block))
-          CRYSTAL
-      end
+          expect_correction source, <<-CRYSTAL
+            (1..3).map(&.[1, &block])
+            (1..3).map(&.[1, &block])
+            (1..3).map(&.[1, &block]?)
+            (1..3).map(&.[1, &.foo])
+            (1..3).map(&.[]=(1, 2, &block))
+            CRYSTAL
+        end
 
-      it "#exclude_calls_with_block (with index calls and uncollapsible block)" do
-        rule = subject.class.new
-        rule.exclude_calls_with_block = false
-        rule.exclude_operators = false
+        it "when disabled reports index calls with uncollapsible block" do
+          rule = subject.class.new
+          rule.exclude_calls_with_block = false
+          rule.exclude_operators = false
 
-        source = expect_issue rule, <<-CRYSTAL
-          (1..3).map { |i| i.[](1) { |x| x } }
-               # ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ error: [...] `map(&.[1] {...})`
-          (1..3).map { |i| i.[]=(1, 2) { |x| x } }
-               # ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ error: [...] `map(&.[]=(1, 2) {...})`
-          CRYSTAL
+          source = expect_issue rule, <<-CRYSTAL
+            (1..3).map { |i| i.[](1) { |x| x } }
+                 # ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ error: [...] `map(&.[1] {...})`
+            (1..3).map { |i| i.[]=(1, 2) { |x| x } }
+                 # ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ error: [...] `map(&.[]=(1, 2) {...})`
+            CRYSTAL
 
-        expect_no_corrections source
+          expect_no_corrections source
+        end
       end
 
       it "#exclude_multiple_line_blocks" do
