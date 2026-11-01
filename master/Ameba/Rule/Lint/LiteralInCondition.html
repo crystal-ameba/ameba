@@ -1283,14 +1283,14 @@ replaced with either the body of the construct, or deleted entirely.</p>
   </h2>
   
     
-      <a href="https://github.com/crystal-ameba/ameba/blob/a099c01/src/ameba/rule/lint/literal_in_condition.cr#L23" target="_blank">
+      <a href="https://github.com/crystal-ameba/ameba/blob/a40e3e2/src/ameba/rule/lint/literal_in_condition.cr#L23" target="_blank">
         ameba/rule/lint/literal_in_condition.cr:23
       </a>
     
     <br/>
   
     
-      <a href="https://github.com/crystal-ameba/ameba/blob/a099c01/src/ameba/rule/lint/literal_in_condition.cr#L26" target="_blank">
+      <a href="https://github.com/crystal-ameba/ameba/blob/a40e3e2/src/ameba/rule/lint/literal_in_condition.cr#L26" target="_blank">
         ameba/rule/lint/literal_in_condition.cr:26
       </a>
     
@@ -1477,7 +1477,7 @@ replaced with either the body of the construct, or deleted entirely.</p>
       </li>
     
       <li class="entry-summary">
-        <a href="#test%28source%2Cnode%3ACrystal%3A%3AIf%7CCrystal%3A%3AUnless%7CCrystal%3A%3AUntil%29-instance-method" class="signature"><strong>#test</strong>(source, node : Crystal::If | Crystal::Unless | Crystal::Until)</a>
+        <a href="#test%28source%2Cnode%3ACrystal%3A%3AIf%7CCrystal%3A%3AUnless%29-instance-method" class="signature"><strong>#test</strong>(source, node : Crystal::If | Crystal::Unless)</a>
         
       </li>
     
@@ -1487,7 +1487,7 @@ replaced with either the body of the construct, or deleted entirely.</p>
       </li>
     
       <li class="entry-summary">
-        <a href="#test%28source%2Cnode%3ACrystal%3A%3AWhile%29-instance-method" class="signature"><strong>#test</strong>(source, node : Crystal::While)</a>
+        <a href="#test%28source%2Cnode%3ACrystal%3A%3AWhile%7CCrystal%3A%3AUntil%29-instance-method" class="signature"><strong>#test</strong>(source, node : Crystal::While | Crystal::Until)</a>
         
       </li>
     
@@ -1537,6 +1537,21 @@ replaced with either the body of the construct, or deleted entirely.</p>
     each_inline_directive</a>, 
     
   
+    <a href="../../../Ameba/AST/Util.html#endless_loop%3F%28node%29%3ABool-instance-method" class="tooltip">
+      <span>endless_loop?(node) : Bool</span>
+    endless_loop?</a>, 
+    
+  
+    <a href="../../../Ameba/AST/Util.html#endless_loop_condition%3F%28node%29%3ABool-instance-method" class="tooltip">
+      <span>endless_loop_condition?(node) : Bool</span>
+    endless_loop_condition?</a>, 
+    
+  
+    <a href="../../../Ameba/AST/Util.html#exhaustive_branches%3F%28node%3ACrystal%3A%3ACase%7CCrystal%3A%3ASelect%29%3ABool-instance-method" class="tooltip">
+      <span>exhaustive_branches?(node : Crystal::Case | Crystal::Select) : Bool</span>
+    exhaustive_branches?</a>, 
+    
+  
     <a href="../../../Ameba/AST/Util.html#exit%3F%28node%29-instance-method" class="tooltip">
       <span>exit?(node)</span>
     exit?</a>, 
@@ -1547,8 +1562,8 @@ replaced with either the body of the construct, or deleted entirely.</p>
     flow_command?</a>, 
     
   
-    <a href="../../../Ameba/AST/Util.html#flow_expression%3F%28node%2Cin_loop%3Dfalse%29-instance-method" class="tooltip">
-      <span>flow_expression?(node, in_loop = <span class="n">false</span>)</span>
+    <a href="../../../Ameba/AST/Util.html#flow_expression%3F%28node%2Cin_loop%3Dfalse%2C%2A%2Cin_type_body%3Dfalse%29-instance-method" class="tooltip">
+      <span>flow_expression?(node, in_loop = <span class="n">false</span>, *, in_type_body = <span class="n">false</span>)</span>
     flow_expression?</a>, 
     
   
@@ -1902,7 +1917,7 @@ replaced with either the body of the construct, or deleted entirely.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/a099c01/src/ameba/rule/lint/literal_in_condition.cr#L23" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/a40e3e2/src/ameba/rule/lint/literal_in_condition.cr#L23" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2212,7 +2227,7 @@ referred to by their full names, which fails for the private ones</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/a099c01/src/ameba/rule/lint/literal_in_condition.cr#L26" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/a40e3e2/src/ameba/rule/lint/literal_in_condition.cr#L26" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2237,18 +2252,18 @@ referred to by their full names, which fails for the private ones</p>
       </div>
     </div>
   
-    <div class="entry-detail" id="test(source,node:Crystal::If|Crystal::Unless|Crystal::Until)-instance-method">
+    <div class="entry-detail" id="test(source,node:Crystal::If|Crystal::Unless)-instance-method">
       <div class="signature">
         
-        def <strong>test</strong>(source, node : Crystal::If | Crystal::Unless | Crystal::Until)
+        def <strong>test</strong>(source, node : Crystal::If | Crystal::Unless)
 
-        <a class="method-permalink" href="#test%28source%2Cnode%3ACrystal%3A%3AIf%7CCrystal%3A%3AUnless%7CCrystal%3A%3AUntil%29-instance-method">#</a>
+        <a class="method-permalink" href="#test%28source%2Cnode%3ACrystal%3A%3AIf%7CCrystal%3A%3AUnless%29-instance-method">#</a>
       </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/a099c01/src/ameba/rule/lint/literal_in_condition.cr#L34" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/a40e3e2/src/ameba/rule/lint/literal_in_condition.cr#L34" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2264,23 +2279,23 @@ referred to by their full names, which fails for the private ones</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/a099c01/src/ameba/rule/lint/literal_in_condition.cr#L38" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/a40e3e2/src/ameba/rule/lint/literal_in_condition.cr#L38" target="_blank">View source</a>]
         
       </div>
     </div>
   
-    <div class="entry-detail" id="test(source,node:Crystal::While)-instance-method">
+    <div class="entry-detail" id="test(source,node:Crystal::While|Crystal::Until)-instance-method">
       <div class="signature">
         
-        def <strong>test</strong>(source, node : Crystal::While)
+        def <strong>test</strong>(source, node : Crystal::While | Crystal::Until)
 
-        <a class="method-permalink" href="#test%28source%2Cnode%3ACrystal%3A%3AWhile%29-instance-method">#</a>
+        <a class="method-permalink" href="#test%28source%2Cnode%3ACrystal%3A%3AWhile%7CCrystal%3A%3AUntil%29-instance-method">#</a>
       </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/a099c01/src/ameba/rule/lint/literal_in_condition.cr#L45" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/a40e3e2/src/ameba/rule/lint/literal_in_condition.cr#L45" target="_blank">View source</a>]
         
       </div>
     </div>
