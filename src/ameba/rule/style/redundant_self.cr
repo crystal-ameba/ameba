@@ -73,9 +73,8 @@ module Ameba::Rule::Style
 
     MSG = "Redundant `self` detected"
 
-    CRYSTAL_KEYWORDS = Crystal::Keyword.values.map(&.to_s)
-
-    SELF_RECEIVER_PATTERN = /\Aself\s*\./
+    private CRYSTAL_KEYWORDS      = Crystal::Keyword.values.map(&.to_s)
+    private SELF_RECEIVER_PATTERN = /\Aself\s*\./
 
     def test(source)
       AST::ScopeCallsWithSelfReceiverVisitor.new(self, source)
