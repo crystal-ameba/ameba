@@ -351,6 +351,39 @@ module Ameba::AST
     end
   end
 
+  describe "#each_scope_within_definition" do
+    source = <<-CRYSTAL
+      class Foo
+        def foo
+          3.times { 2.times {} }
+        end
+      end
+      CRYSTAL
+
+    it "yields scopes up to (and including) the enclosing method" do
+      nodes = as_nodes(source)
+      class_scope = Scope.new(as_node(source))
+      def_scope = Scope.new(nodes.def_nodes.first, class_scope)
+      outer_block_scope = Scope.new(nodes.block_nodes.first, def_scope)
+      inner_block_scope = Scope.new(nodes.block_nodes.last, outer_block_scope)
+
+      scopes = [] of Scope
+      inner_block_scope.each_scope_within_definition { |scope| scopes << scope }
+      scopes.should eq [inner_block_scope, outer_block_scope, def_scope]
+    end
+
+    it "yields scopes up to (and including) the enclosing type definition" do
+      nodes = as_nodes("class Foo; 3.times {}; end")
+      top_level_scope = Scope.new(as_node("nil"))
+      class_scope = Scope.new(as_node("class Foo; 3.times {}; end"), top_level_scope)
+      block_scope = Scope.new(nodes.block_nodes.first, class_scope)
+
+      scopes = [] of Scope
+      block_scope.each_scope_within_definition { |scope| scopes << scope }
+      scopes.should eq [block_scope, class_scope]
+    end
+  end
+
   describe "#in_macro?" do
     it "returns true if Crystal::Macro" do
       nodes = as_nodes <<-CRYSTAL

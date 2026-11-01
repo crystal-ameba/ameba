@@ -320,6 +320,18 @@ module Ameba::AST
         node.is_a?(Crystal::TypeDeclaration))
     end
 
+    # Yields this scope and its outer scopes, up to (and including)
+    # the enclosing method or type definition.
+    def each_scope_within_definition(& : Scope ->) : Nil
+      scope = self
+      while scope
+        yield scope
+        break if scope.type_definition? || !scope.inherited?
+
+        scope = scope.outer_scope
+      end
+    end
+
     # Returns `true` if var is an argument in current scope, `false` otherwise.
     def arg?(var)
       arguments.any?(&.node.same?(var))
