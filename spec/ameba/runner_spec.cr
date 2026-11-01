@@ -235,6 +235,33 @@ module Ameba
         end
       end
 
+      it "preserves semantics of conflicting autocorrections in either rule order" do
+        {
+          false => "if foo\n  :ok\nelse\n  :nok\nend",
+          true  => "if !foo\n  :nok\nelse\n  :ok\nend",
+        }.each do |reverse, expected|
+          rules = [
+            Rule::Style::NegatedConditionsInUnless.new,
+            Rule::Style::UnlessElse.new,
+          ] of Rule::Base
+          rules.reverse! if reverse
+          source = Source.new <<-CRYSTAL, File.tempname("source", ".cr")
+            unless !foo
+              :ok
+            else
+              :nok
+            end
+            CRYSTAL
+
+          begin
+            Runner.new(rules, [source], formatter, default_severity, autocorrect: true).run
+            source.code.should eq expected
+          ensure
+            File.delete(source.path) rescue nil
+          end
+        end
+      end
+
       it "handles rules with incompatible, conflicting autocorrect" do
         rules = [
           Rule::Performance::MinMaxAfterMap.new,
