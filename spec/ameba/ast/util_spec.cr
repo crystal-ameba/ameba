@@ -335,6 +335,36 @@ module Ameba::AST
         subject.flow_expression?(node).should be_false
       end
 
+      it "returns false if this is a constant assignment" do
+        node = as_node(%(FOO = abort "boom"))
+        subject.flow_expression?(node).should be_false
+      end
+
+      it "returns false if this is an instance or class variable type declaration" do
+        subject.flow_expression?(as_node(%(@foo : Int32 = raise "boom"))).should be_false
+        subject.flow_expression?(as_node(%(@@foo : Int32 = raise "boom"))).should be_false
+      end
+
+      it "returns true if this is a local variable type declaration" do
+        node = as_node(%(foo : Int32 = raise "boom"))
+        subject.flow_expression?(node).should be_true
+      end
+
+      it "returns true if this is an instance or class variable assignment" do
+        subject.flow_expression?(as_node(%(@foo = raise "boom"))).should be_true
+        subject.flow_expression?(as_node(%(@@foo = raise "boom"))).should be_true
+      end
+
+      it "returns false if this is an instance or class variable assignment in a type body" do
+        subject.flow_expression?(as_node(%(@foo = raise "boom")), in_type_body: true).should be_false
+        subject.flow_expression?(as_node(%(@@foo = raise "boom")), in_type_body: true).should be_false
+      end
+
+      it "returns true if this is a local variable assignment in a type body" do
+        node = as_node(%(foo = raise "boom"))
+        subject.flow_expression?(node, in_type_body: true).should be_true
+      end
+
       it "returns false if this until with next inside of a loop" do
         node = as_node <<-CRYSTAL
           until something

@@ -21,6 +21,9 @@ module Ameba::AST
     # Is true only if some of the nodes parents is a loop.
     getter? in_loop : Bool
 
+    # Is true only if the node is placed directly within a class or module body.
+    getter? in_type_body : Bool
+
     # The actual node of the flow expression.
     getter node : Crystal::ASTNode
 
@@ -32,7 +35,7 @@ module Ameba::AST
     # ```
     # FlowExpression.new(node, parent_node)
     # ```
-    def initialize(@node, @in_loop)
+    def initialize(@node, @in_loop, @in_type_body = false)
     end
 
     # Returns nodes which can't be reached because of a flow command inside.
@@ -50,7 +53,7 @@ module Ameba::AST
       when Crystal::Expressions
         expressions = current_node.expressions
         # every expression following the first flow expression is unreachable
-        if index = expressions.index { |exp| flow_expression?(exp, in_loop?) }
+        if index = expressions.index { |exp| flow_expression?(exp, in_loop?, in_type_body: in_type_body?) }
           expressions[(index + 1)..]
         end
       when Crystal::BinaryOp

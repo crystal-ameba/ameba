@@ -12,6 +12,9 @@ module Ameba::AST
     # Object ids of the already reported unreachable nodes
     @unreachable_node_ids = Set(UInt64).new
 
+    # Object ids of the expressions placed directly within a class or module body
+    @type_body_ids = Set(UInt64).new
+
     # :nodoc:
     #
     # Called by `Crystal::ASTNode#accept` before `visit` for every node.
@@ -24,13 +27,21 @@ module Ameba::AST
 
     # :nodoc:
     def visit(node)
-      if flow_expression?(node, in_loop?)
-        flow_expression = FlowExpression.new(node, in_loop?)
+      in_type_body = @type_body_ids.includes?(node.object_id)
+
+      if flow_expression?(node, in_loop?, in_type_body: in_type_body)
+        flow_expression = FlowExpression.new(node, in_loop?, in_type_body)
         flow_expression.unreachable_nodes.each do |unreachable_node|
           @unreachable_node_ids << unreachable_node.object_id
         end
         @rule.test(@source, node, flow_expression)
       end
+      true
+    end
+
+    # :nodoc:
+    def visit(node : Crystal::ClassDef | Crystal::ModuleDef)
+      mark_type_body(node.body)
       true
     end
 
@@ -49,6 +60,13 @@ module Ameba::AST
     # are flow commands, i.e. it's nested within a loop, block or proc.
     private def in_loop?
       @loop_depth.positive?
+    end
+
+    private def mark_type_body(node)
+      return unless node.is_a?(Crystal::Expressions)
+
+      @type_body_ids << node.object_id
+      node.expressions.each { |exp| mark_type_body(exp) }
     end
   end
 end

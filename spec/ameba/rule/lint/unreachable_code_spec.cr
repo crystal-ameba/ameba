@@ -658,6 +658,147 @@ module Ameba::Rule::Lint
           end
           CRYSTAL
       end
+
+      it "doesn't report code after instance variable initializers" do
+        expect_no_issues subject, <<-CRYSTAL
+          class Foo
+            @x : Int32 = raise "boom"
+            @y = raise "boom"
+
+            def bar
+              :reachable
+            end
+          end
+
+          module Bar
+            @x : Int32 = raise "boom"
+
+            def bar
+              :reachable
+            end
+          end
+          CRYSTAL
+      end
+
+      it "doesn't report code after class variable initializers" do
+        expect_no_issues subject, <<-CRYSTAL
+          class Foo
+            @@x : Int32 = raise "boom"
+            @@y = raise "boom"
+
+            def bar
+              :reachable
+            end
+          end
+          CRYSTAL
+      end
+
+      it "doesn't report code after constant initializers" do
+        expect_no_issues subject, <<-CRYSTAL
+          FOO = abort "boom"
+
+          class Foo
+            BAR = abort "boom"
+
+            def bar
+              :reachable
+            end
+          end
+
+          puts :reachable
+          CRYSTAL
+      end
+
+      it "doesn't report code after initializers nested in `begin`" do
+        expect_no_issues subject, <<-CRYSTAL
+          class Foo
+            begin
+              @x = raise "boom"
+              puts :reachable
+            end
+            puts :reachable
+          end
+          CRYSTAL
+      end
+
+      it "reports unreachable code within the initializer value" do
+        expect_issue subject, <<-CRYSTAL
+          class Foo
+            @x : Int32 = begin
+              raise "boom"
+              1
+            # ^ error: Unreachable code detected
+            end
+
+            def bar
+              :reachable
+            end
+          end
+          CRYSTAL
+      end
+
+      it "reports unreachable code after instance and class variable assignments in methods" do
+        expect_issue subject, <<-CRYSTAL
+          class Foo
+            def bar
+              @x = raise "boom"
+              :unreachable
+            # ^^^^^^^^^^^^ error: Unreachable code detected
+            end
+
+            def self.bar
+              @@x = raise "boom"
+              :unreachable
+            # ^^^^^^^^^^^^ error: Unreachable code detected
+            end
+          end
+          CRYSTAL
+      end
+
+      it "reports unreachable code after assignments evaluated in the class body" do
+        expect_issue subject, <<-CRYSTAL
+          class Foo
+            x = raise "boom"
+            :unreachable
+          # ^^^^^^^^^^^^ error: Unreachable code detected
+          end
+
+          class Bar
+            x : Int32 = raise "boom"
+            :unreachable
+          # ^^^^^^^^^^^^ error: Unreachable code detected
+          end
+
+          class Baz
+            @a, @b = 1, raise "boom"
+            :unreachable
+          # ^^^^^^^^^^^^ error: Unreachable code detected
+          end
+
+          class Bat
+            @@a : Int32 = 1
+            @@a += raise "boom"
+            :unreachable
+          # ^^^^^^^^^^^^ error: Unreachable code detected
+          end
+          CRYSTAL
+      end
+
+      it "reports unreachable code after class variable assignments in nested branches" do
+        expect_issue subject, <<-CRYSTAL
+          class Foo
+            @@x : Int32 = 1
+
+            if bar
+              @@x = raise "boom"
+            else
+              @@x = raise "boom"
+            end
+            :unreachable
+          # ^^^^^^^^^^^^ error: Unreachable code detected
+          end
+          CRYSTAL
+      end
     end
 
     context "nested" do

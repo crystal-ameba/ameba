@@ -249,7 +249,10 @@ module Ameba::AST::Util
   # ```
   #
   # That's because not all branches return(i.e. `else` is missing).
-  def flow_expression?(node, in_loop = false)
+  #
+  # Pass *in_type_body* if the *node* is placed directly within the body of
+  # a class or a module, where `@foo = bar` and `@@foo = bar` are initializers.
+  def flow_expression?(node, in_loop = false, *, in_type_body = false)
     return true if flow_command?(node, in_loop)
 
     case node
@@ -258,7 +261,7 @@ module Ameba::AST::Util
     when Crystal::BinaryOp
       flow_expression?(node.left, in_loop)
     when Crystal::Assign, Crystal::OpAssign, Crystal::MultiAssign, Crystal::TypeDeclaration
-      flow_assignment?(node, in_loop)
+      flow_assignment?(node, in_loop, in_type_body)
     when Crystal::Case, Crystal::Select
       flow_branches?(node, in_loop)
     when Crystal::ExceptionHandler
@@ -271,7 +274,7 @@ module Ameba::AST::Util
     when Crystal::Rescue, Crystal::When
       flow_expression?(node.body, in_loop)
     when Crystal::Expressions
-      node.expressions.any? { |exp| flow_expression?(exp, in_loop) }
+      node.expressions.any? { |exp| flow_expression?(exp, in_loop, in_type_body: in_type_body) }
     else
       false
     end
@@ -281,15 +284,38 @@ module Ameba::AST::Util
     nodes.all? { |exp| flow_expression?(exp, in_loop) }
   end
 
-  private def flow_assignment?(node, in_loop)
+  private def flow_assignment?(node, in_loop, in_type_body)
     case node
     when Crystal::OpAssign
       # the value of `||=` / `&&=` is evaluated conditionally
       !node.op.in?("||", "&&") && flow_expression?(node.value, in_loop)
     when Crystal::MultiAssign
       node.values.any? { |value| flow_expression?(value, in_loop) }
-    when Crystal::Assign, Crystal::TypeDeclaration
-      flow_expression?(node.value, in_loop)
+    when Crystal::Assign
+      !initializer_target?(node.target, in_type_body) && flow_expression?(node.value, in_loop)
+    when Crystal::TypeDeclaration
+      # NOTE: type declaration of an instance or a class variable is allowed
+      # only at the class level, so it's always an initializer.
+      node.var.is_a?(Crystal::Var) && flow_expression?(node.value, in_loop)
+    else
+      false
+    end
+  end
+
+  # Returns `true` if assigning to the *target* declares an initializer, which
+  # doesn't interrupt the code following it: the value of an instance variable
+  # gets evaluated within `initialize`, and the one of a constant only if it's
+  # being read.
+  #
+  # NOTE: Class variable initializers are evaluated in place, so an always raising
+  # one does stop the class body. They're exempted regardless, as reporting the
+  # declarations following them (i.e. `def`s) as unreachable would be misleading.
+  private def initializer_target?(target, in_type_body)
+    case target
+    when Crystal::Path
+      true
+    when Crystal::InstanceVar, Crystal::ClassVar
+      in_type_body
     else
       false
     end
