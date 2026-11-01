@@ -801,6 +801,78 @@ module Ameba::Rule::Lint
       end
     end
 
+    context "declarations" do
+      it "doesn't report declarations following a flow expression" do
+        expect_no_issues subject, <<-CRYSTAL
+          while true
+            server.accept
+          end
+
+          require "foo"
+
+          alias Bar = Int32
+
+          FOO = 1
+
+          def handle(client)
+          end
+
+          private def handle
+          end
+
+          macro bar
+          end
+
+          @[Foo]
+          class Foo
+            include Bar
+            extend Bar
+          end
+
+          module Baz
+          end
+
+          enum Bat
+            A
+          end
+
+          lib LibFoo
+          end
+
+          annotation Foo
+          end
+
+          fun foo : Int32
+            1
+          end
+          CRYSTAL
+      end
+
+      it "reports code following both a flow expression and a declaration" do
+        expect_issue subject, <<-CRYSTAL
+          raise "boom"
+
+          def foo
+          end
+
+          :unreachable
+          # ^^^^^^^^^^ error: Unreachable code detected
+          CRYSTAL
+      end
+
+      it "reports unreachable code within declarations following a flow expression" do
+        expect_issue subject, <<-CRYSTAL
+          raise "boom"
+
+          def foo
+            return
+            :unreachable
+          # ^^^^^^^^^^^^ error: Unreachable code detected
+          end
+          CRYSTAL
+      end
+    end
+
     context "nested" do
       it "reports unreachable code only once" do
         expect_issue subject, <<-CRYSTAL

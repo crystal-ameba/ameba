@@ -54,13 +54,30 @@ module Ameba::AST
         expressions = current_node.expressions
         # every expression following the first flow expression is unreachable
         if index = expressions.index { |exp| flow_expression?(exp, in_loop?, in_type_body: in_type_body?) }
-          expressions[(index + 1)..]
+          expressions[(index + 1)..].reject { |exp| declaration?(exp) }
         end
       when Crystal::BinaryOp
         if flow_expression?(current_node.left, in_loop?)
           [current_node.right] of Crystal::ASTNode
         end
       end || [] of Crystal::ASTNode
+    end
+
+    # Returns `true` if the *node* takes effect regardless of the flow reaching it.
+    private def declaration?(node) : Bool
+      case node
+      when Crystal::VisibilityModifier
+        declaration?(node.exp)
+      when Crystal::Assign
+        node.target.is_a?(Crystal::Path)
+      when Crystal::Def, Crystal::Macro, Crystal::FunDef,
+           Crystal::ClassDef, Crystal::ModuleDef, Crystal::EnumDef,
+           Crystal::LibDef, Crystal::AnnotationDef, Crystal::Annotation,
+           Crystal::Alias, Crystal::Include, Crystal::Extend, Crystal::Require
+        true
+      else
+        false
+      end
     end
   end
 end
