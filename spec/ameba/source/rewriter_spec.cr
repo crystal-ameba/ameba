@@ -197,6 +197,17 @@ class Ameba::Source
       end
     end
 
+    it "discards a wrap with a nested correction conflicting with a contained one" do
+      rewriter = Rewriter.new("abcdef")
+      rewriter.replace(2, 4, "X")
+
+      rewriter.transaction do
+        rewriter.wrap(1, 5, '[', ']')
+        rewriter.replace(2, 3, "Y")
+      end.should be_false
+      rewriter.process.should eq "abXef"
+    end
+
     it "keeps nested wraps in either order" do
       rewriter = Rewriter.new("abcdef")
       rewriter.wrap(1, 5, '[', ']')
