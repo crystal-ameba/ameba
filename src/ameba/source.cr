@@ -44,7 +44,7 @@ module Ameba
         issue_corrector = Corrector.new(code)
         issue.correct(issue_corrector)
 
-        if !issue_corrector.empty? && corrector.merge(issue_corrector)
+        if !issue_corrector.no_op? && corrector.merge(issue_corrector)
           corrected_issues << issue
         end
       end

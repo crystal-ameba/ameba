@@ -70,6 +70,13 @@ class Ameba::Source
       @action_root.empty?
     end
 
+    # Returns `true` if every recorded update leaves its range of the code unchanged.
+    def no_op?
+      @action_root.ordered_replacements.all? do |begin_pos, end_pos, replacement|
+        code[begin_pos...end_pos] == replacement
+      end
+    end
+
     # Combines the updates from *other* unless doing so would lose or fuse any
     # of them. Returns `true` when the updates were combined.
     def merge(other : self)

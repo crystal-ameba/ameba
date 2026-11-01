@@ -20,9 +20,9 @@ class Ameba::Source
       @rewriter.merge(other.@rewriter)
     end
 
-    # Returns `true` if no correction has been recorded.
-    def empty?
-      @rewriter.empty?
+    # Returns `true` if the recorded corrections leave the code unchanged.
+    def no_op?
+      @rewriter.no_op?
     end
 
     # Replaces the code of the given range with *content*.

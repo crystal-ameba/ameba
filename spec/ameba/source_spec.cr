@@ -145,6 +145,27 @@ module Ameba
         source.code.should eq "list.max_of(&.size)"
       end
 
+      it "does not let a correction that changes nothing block a conflicting one" do
+        source = Source.new("abcdef\n")
+        rule = DummyRule.new
+        source.add_issue(rule, {1, 1}, {1, 6}, "no-op") { |corrector| corrector.replace({1, 1}, {1, 6}, "abcdef") }
+        source.add_issue(rule, {1, 2}, {1, 3}, "fix") { |corrector| corrector.replace({1, 2}, {1, 3}, "X") }
+
+        source.correct!.try(&.map(&.message)).should eq ["fix"]
+        source.code.should eq "aXdef\n"
+      end
+
+      it "does not report issues as corrected if their corrections change nothing" do
+        source = Source.new("abcdef\n")
+        rule = DummyRule.new
+        source.add_issue(rule, {1, 1}, {1, 1}, "no-op") { |corrector| corrector.replace({1, 1}, {1, 1}, "a") }
+        source.add_issue(rule, {1, 2}, {1, 2}, "no edits") { |_| }
+        source.add_issue(rule, {1, 3}, {1, 4}, "fix") { |corrector| corrector.replace({1, 3}, {1, 4}, "X") }
+
+        source.correct!.try(&.map(&.message)).should eq ["fix"]
+        source.code.should eq "abXef\n"
+      end
+
       it "corrects enabled issues" do
         source = Source.new <<-CRYSTAL
           foo.match("bar").not_nil!
