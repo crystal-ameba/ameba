@@ -88,6 +88,17 @@ module Ameba::Rule::Style
         CRYSTAL
     end
 
+    it "reports if there is a call with a collapsible block (with block argument)" do
+      source = expect_issue subject, <<-CRYSTAL
+        (1..3).map { |i| i.each(&block) }
+             # ^^^^^^^^^^^^^^^^^^^^^^^^^^ error: Use short block notation instead: `map(&.each(&block))`
+        CRYSTAL
+
+      expect_correction source, <<-CRYSTAL
+        (1..3).map(&.each(&block))
+        CRYSTAL
+    end
+
     it "reports if the block argument is shadowed within a nested proc" do
       source = Source.new("(1..3).map { |i| i.foo(->(i : Int32) { i + 1 }) }")
       subject.catch(source).should_not be_valid
@@ -100,7 +111,7 @@ module Ameba::Rule::Style
         rule.exclude_calls_with_block = true
         expect_no_issues rule, <<-CRYSTAL
           (1..3).in_groups_of(1) { |i| i.map(&.to_s) }
-          (1..3).map { |i| i.each(&block) }
+          (1..3).map { |i| i.each { |j| foo(j) } }
           CRYSTAL
 
         rule.exclude_calls_with_block = false

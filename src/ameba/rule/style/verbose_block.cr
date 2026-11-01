@@ -82,7 +82,7 @@ module Ameba::Rule::Style
 
     # ameba:disable Metrics/CyclomaticComplexity
     private def issue_for_valid(source, call : Crystal::Call, block : Crystal::Block, body : Crystal::Call)
-      return if exclude_calls_with_block? && has_block?(body)
+      return if exclude_calls_with_block? && body.block
       return if exclude_multiple_line_blocks? && !same_location_lines?(call, body)
       return if exclude_prefix_operators? && prefix_operator?(body)
       return if exclude_operators? && operator_method?(body)
