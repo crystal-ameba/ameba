@@ -283,6 +283,44 @@ module Ameba::Rule::Style
         CRYSTAL
     end
 
+    it "does not report if `self` is used in a nested type body in the presence of a top-level variable with the same name" do
+      expect_no_issues subject, <<-CRYSTAL
+        foo = 5
+
+        module Bar
+          class Foo
+            def self.foo; end
+
+            p self.foo
+          end
+        end
+        CRYSTAL
+    end
+
+    it "does not report if `self` is used in a type body in the presence of a variable with the same name in another type body" do
+      expect_no_issues subject, <<-CRYSTAL
+        class Foo
+          foo = 5
+        end
+
+        class Foo
+          def self.foo; end
+
+          p self.foo
+        end
+        CRYSTAL
+    end
+
+    it "does not report if `self` is used at the top-level in the presence of a type body variable with the same name" do
+      expect_no_issues subject, <<-CRYSTAL
+        class Foo
+          foo = 5
+        end
+
+        p self.foo
+        CRYSTAL
+    end
+
     it "does not report if `self` is used in the presence of a splat assigned variable with the same name" do
       expect_no_issues subject, <<-CRYSTAL
         class Foo

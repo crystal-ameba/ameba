@@ -117,18 +117,39 @@ module Ameba::Rule::Style
     # within the *scope*.
     private def visible_variable_names(scope)
       vars = Set(String).new
+      outermost = scope
 
-      while scope
-        scope.arguments.each { |arg| vars << arg.name }
-        scope.variables.each { |var| vars << var.name }
+      scope.each_scope_within_definition do |current|
+        current.arguments.each { |arg| vars << arg.name }
+        current.variables.each { |var| vars << var.name }
+        outermost = current
+      end
 
-        # type definition bodies share the outer scope variables
-        break unless scope.inherited?
-
-        scope = scope.outer_scope
+      # Type definition bodies share their local variables with
+      # the top-level scope, and so with each other.
+      if outermost.top_level? || type_body?(outermost)
+        add_type_body_variable_names(top_level_scope(outermost), vars)
       end
 
       vars
+    end
+
+    private def add_type_body_variable_names(scope, vars)
+      scope.variables.each { |var| vars << var.name }
+      scope.inner_scopes.each do |inner|
+        add_type_body_variable_names(inner, vars) if type_body?(inner)
+      end
+    end
+
+    private def type_body?(scope)
+      scope.node.is_a?(Crystal::ClassDef | Crystal::ModuleDef)
+    end
+
+    private def top_level_scope(scope)
+      while outer = scope.outer_scope
+        scope = outer
+      end
+      scope
     end
   end
 end
