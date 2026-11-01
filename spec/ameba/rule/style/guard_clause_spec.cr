@@ -359,6 +359,20 @@ module Ameba::Rule::Style
     it_reports_control_expression "next"
     it_reports_control_expression "break"
     it_reports_control_expression %(raise "error")
+    it_reports_control_expression %(raise "error", location)
+
+    it "reports an issue for `raise` with named arguments only" do
+      expect_issue subject, <<-CRYSTAL
+        def func
+          if something
+        # ^^ error: Use a guard clause (`raise(message: "error") if something`) instead of [...]
+            raise(message: "error")
+          else
+            work
+          end
+        end
+        CRYSTAL
+    end
 
     context "method in module" do
       it "reports an issue for instance method" do

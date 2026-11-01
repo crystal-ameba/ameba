@@ -249,7 +249,10 @@ module Ameba::AST::Util
   # ```
   #
   # That's because not all branches return(i.e. `else` is missing).
-  def flow_expression?(node, in_loop = false)
+  #
+  # Pass *in_type_body* if the *node* is placed directly within the body of
+  # a class or a module, where `@foo = bar` and `@@foo = bar` are initializers.
+  def flow_expression?(node, in_loop = false, *, in_type_body = false)
     return true if flow_command?(node, in_loop)
 
     case node
@@ -257,14 +260,21 @@ module Ameba::AST::Util
       flow_expressions?([node.then, node.else], in_loop)
     when Crystal::BinaryOp
       flow_expression?(node.left, in_loop)
+    when Crystal::Assign, Crystal::OpAssign, Crystal::MultiAssign, Crystal::TypeDeclaration
+      flow_assignment?(node, in_loop, in_type_body)
     when Crystal::Case, Crystal::Select
-      flow_expressions?([node.whens, node.else].flatten, in_loop)
+      flow_branches?(node, in_loop)
     when Crystal::ExceptionHandler
-      flow_expressions?([node.else || node.body, node.rescues].flatten, in_loop)
-    when Crystal::While, Crystal::Until, Crystal::Rescue, Crystal::When
+      flow_exception_handler?(node, in_loop)
+    when Crystal::While, Crystal::Until, Crystal::Call
+      # NOTE: `break` / `next` within the body are consumed by the loop itself,
+      # so the body itself being a flow expression doesn't make the loop one,
+      # since the loop body might be never executed.
+      endless_loop?(node)
+    when Crystal::Rescue, Crystal::When
       flow_expression?(node.body, in_loop)
     when Crystal::Expressions
-      node.expressions.any? { |exp| flow_expression?(exp, in_loop) }
+      node.expressions.any? { |exp| flow_expression?(exp, in_loop, in_type_body: in_type_body) }
     else
       false
     end
@@ -274,10 +284,63 @@ module Ameba::AST::Util
     nodes.all? { |exp| flow_expression?(exp, in_loop) }
   end
 
-  # Returns `true` if node represents `raise` method call.
+  private def flow_assignment?(node, in_loop, in_type_body)
+    case node
+    when Crystal::OpAssign
+      # the value of `||=` / `&&=` is evaluated conditionally
+      !node.op.in?("||", "&&") && flow_expression?(node.value, in_loop)
+    when Crystal::MultiAssign
+      node.values.any? { |value| flow_expression?(value, in_loop) }
+    when Crystal::Assign
+      !initializer_target?(node.target, in_type_body) && flow_expression?(node.value, in_loop)
+    when Crystal::TypeDeclaration
+      # NOTE: type declaration of an instance or a class variable is allowed
+      # only at the class level, so it's always an initializer.
+      node.var.is_a?(Crystal::Var) && flow_expression?(node.value, in_loop)
+    else
+      false
+    end
+  end
+
+  # Returns `true` if assigning to the *target* declares an initializer, which
+  # doesn't interrupt the code following it: the value of an instance variable
+  # gets evaluated within `initialize`, and the one of a constant only if it's
+  # being read.
+  #
+  # NOTE: Class variable initializers are evaluated in place, so an always raising
+  # one does stop the class body. They're exempted regardless, as reporting the
+  # declarations following them (i.e. `def`s) as unreachable would be misleading.
+  private def initializer_target?(target, in_type_body)
+    case target
+    when Crystal::Path
+      true
+    when Crystal::InstanceVar, Crystal::ClassVar
+      in_type_body
+    else
+      false
+    end
+  end
+
+  private def flow_branches?(node, in_loop)
+    flow_else = node.else ? flow_expression?(node.else, in_loop) : exhaustive_branches?(node)
+    flow_else &&
+      flow_expressions?(node.whens, in_loop)
+  end
+
+  private def flow_exception_handler?(node, in_loop)
+    return true if flow_expression?(node.ensure, in_loop)
+
+    # `else` is executed only if `body` completes without interruption
+    flow_body = flow_expression?(node.body, in_loop) || flow_expression?(node.else, in_loop)
+    flow_body &&
+      flow_expressions?(node.rescues || [] of Crystal::Rescue, in_loop)
+  end
+
+  # Returns `true` if node represents `raise` method call,
+  # including the custom ones taking additional arguments (i.e. a location).
   def raise?(node)
     node.is_a?(Crystal::Call) &&
-      node.name == "raise" && node.args.size == 1 && node.obj.nil?
+      node.name == "raise" && has_arguments?(node) && node.obj.nil?
   end
 
   # Returns `true` if node represents `exit` (or `Process.exit`) method call.
@@ -303,6 +366,37 @@ module Ameba::AST::Util
     else
       false
     end
+  end
+
+  # Returns `true` if *node* (`case` or `select`) always executes one of its
+  # `when` branches when it has no `else`, i.e. `select` blocking until one of
+  # them gets executed, or exhaustive `case ... in` covering all of the values.
+  def exhaustive_branches?(node : Crystal::Case | Crystal::Select) : Bool
+    node.is_a?(Crystal::Select) || node.exhaustive?
+  end
+
+  # Returns `true` if *node* represents a loop never left through its condition,
+  # i.e. `while true` or `until false`.
+  def endless_loop_condition?(node) : Bool
+    case node
+    when Crystal::While then node.cond.true_literal?
+    when Crystal::Until then node.cond.false_literal?
+    else                     false
+    end
+  end
+
+  # Returns `true` if *node* represents a loop never finishing normally,
+  # i.e. `while true`, `until false` or `loop do` without a `break` in its body.
+  def endless_loop?(node) : Bool
+    body =
+      case node
+      when Crystal::While, Crystal::Until
+        node.body if endless_loop_condition?(node)
+      when Crystal::Call
+        node.block.try(&.body) if loop?(node)
+      end
+
+    !!body && !LoopBreakVisitor.new(body).found?
   end
 
   # Returns `true` if *name* represents operator method.
