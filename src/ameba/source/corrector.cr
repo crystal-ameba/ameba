@@ -14,15 +14,11 @@ class Ameba::Source
       @rewriter = Rewriter.new(code)
     end
 
-    # Combines the corrections from *other* if they do not conflict with any
-    # corrections already scheduled.
-    def merge(other : self)
-      @rewriter.merge(other.@rewriter)
-    end
-
-    # Returns `true` if the recorded corrections leave the code unchanged.
-    def no_op?
-      @rewriter.no_op?
+    # Keeps the corrections made by the block only if they change the code and
+    # don't conflict with the ones already scheduled. Returns `true` when they
+    # were kept.
+    def transaction(&) : Bool
+      @rewriter.transaction { yield }
     end
 
     # Replaces the code of the given range with *content*.

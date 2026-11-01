@@ -34,19 +34,12 @@ module Ameba
     # Returns the corrected issues, or `nil` if the code was unchanged.
     def correct! : Array(Issue)?
       corrector = Corrector.new(code)
-      corrected_issues = [] of Issue
 
-      issues.each do |issue|
-        next unless issue.enabled? && issue.correctable?
-
-        # Build each correction against the same source snapshot. Conflicting
-        # issues are deferred until Runner reinspects the corrected source.
-        issue_corrector = Corrector.new(code)
-        issue.correct(issue_corrector)
-
-        if !issue_corrector.no_op? && corrector.merge(issue_corrector)
-          corrected_issues << issue
-        end
+      # Corrections all apply to the same source snapshot. Conflicting issues
+      # are deferred until Runner reinspects the corrected source.
+      corrected_issues = issues.select do |issue|
+        issue.enabled? && issue.correctable? &&
+          corrector.transaction { issue.correct(corrector) }
       end
 
       corrected_code = corrector.process

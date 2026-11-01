@@ -86,152 +86,166 @@ class Ameba::Source
       rewriter.process.should eq "puts(:hi)"
     end
 
-    it "merges non-overlapping corrections" do
+    it "keeps non-conflicting corrections recorded in a transaction" do
       rewriter = Rewriter.new(code)
-      other = Rewriter.new(code)
       rewriter.replace(*hello, ":hi")
-      other.replace(*world, ":everybody")
 
-      rewriter.merge(other).should be_true
+      rewriter.transaction { rewriter.replace(*world, ":everybody") }.should be_true
       rewriter.process.should eq "puts(:hi, :everybody)"
     end
 
-    it "does not merge overlapping corrections" do
+    it "discards overlapping corrections recorded in a transaction" do
       rewriter = Rewriter.new(code)
-      other = Rewriter.new(code)
       rewriter.replace(*hello, ":hi")
-      other.replace(hello[0], world[1], ":greeting")
 
-      rewriter.merge(other).should be_false
+      rewriter.transaction { rewriter.replace(hello[0], world[1], ":greeting") }.should be_false
       rewriter.process.should eq "puts(:hi, :world)"
     end
 
-    it "merges insertions at the boundary of a replacement" do
+    it "discards every correction of a conflicting transaction" do
       rewriter = Rewriter.new("abcdef")
-      other = Rewriter.new("abcdef")
-      rewriter.replace(1, 3, "X")
-      other.insert_before(3, "Y")
+      rewriter.replace(1, 2, "X")
 
-      rewriter.merge(other).should be_true
+      rewriter.transaction do
+        rewriter.replace(4, 5, "Y")
+        rewriter.replace(1, 3, "Z")
+      end.should be_false
+      rewriter.process.should eq "aXcdef"
+    end
+
+    it "discards a transaction without corrections" do
+      rewriter = Rewriter.new("abcdef")
+
+      rewriter.transaction { }.should be_false
+      rewriter.empty?.should be_true
+    end
+
+    it "discards a transaction leaving the code unchanged" do
+      rewriter = Rewriter.new("abcdef")
+
+      rewriter.transaction { rewriter.replace(1, 3, "bc") }.should be_false
+      rewriter.empty?.should be_true
+    end
+
+    it "keeps earlier corrections if a transaction raises" do
+      rewriter = Rewriter.new("abcdef")
+      rewriter.replace(1, 2, "X")
+
+      expect_raises(IndexError) do
+        rewriter.transaction do
+          rewriter.replace(3, 4, "Y")
+          rewriter.replace(0, 100, "Z")
+        end
+      end
+      rewriter.process.should eq "aXcdef"
+    end
+
+    it "keeps insertions at the boundary of a replacement" do
+      rewriter = Rewriter.new("abcdef")
+      rewriter.replace(1, 3, "X")
+
+      rewriter.transaction { rewriter.insert_before(3, "Y") }.should be_true
       rewriter.process.should eq "aXYdef"
     end
 
-    it "does not merge insertions inside a replacement" do
+    it "discards insertions inside a replacement" do
       rewriter = Rewriter.new("abcdef")
-      other = Rewriter.new("abcdef")
       rewriter.replace(1, 3, "X")
-      other.insert_before(2, "Y")
 
-      rewriter.merge(other).should be_false
+      rewriter.transaction { rewriter.insert_before(2, "Y") }.should be_false
       rewriter.process.should eq "aXdef"
     end
 
-    it "does not merge a replacement over a previously recorded insertion" do
+    it "discards a replacement over a previously recorded insertion" do
       rewriter = Rewriter.new("abcdef")
-      other = Rewriter.new("abcdef")
       rewriter.insert_before(2, "Y")
-      other.replace(1, 3, "X")
 
-      rewriter.merge(other).should be_false
+      rewriter.transaction { rewriter.replace(1, 3, "X") }.should be_false
       rewriter.process.should eq "abYcdef"
     end
 
-    it "does not merge ranged insertions contained by a replacement" do
+    it "discards ranged insertions contained by a replacement" do
       rewriter = Rewriter.new("abcdef")
-      before = Rewriter.new("abcdef")
-      after = Rewriter.new("abcdef")
       rewriter.replace(1, 5, "X")
-      before.insert_before(1, 3, "Y")
-      after.insert_after(3, 5, "Y")
 
-      rewriter.merge(before).should be_false
-      rewriter.merge(after).should be_false
+      rewriter.transaction { rewriter.insert_before(1, 3, "Y") }.should be_false
+      rewriter.transaction { rewriter.insert_after(3, 5, "Y") }.should be_false
       rewriter.process.should eq "aXf"
     end
 
-    it "does not merge a replacement over contained ranged insertions" do
+    it "discards a replacement over contained ranged insertions" do
       rewriter = Rewriter.new("abcdef")
-      other = Rewriter.new("abcdef")
       rewriter.insert_before(1, 3, "Y")
-      other.replace(1, 5, "X")
 
-      rewriter.merge(other).should be_false
+      rewriter.transaction { rewriter.replace(1, 5, "X") }.should be_false
       rewriter.process.should eq "aYbcdef"
     end
 
-    it "does not merge insertions at the boundaries of a whole-source replacement" do
+    it "discards insertions at the boundaries of a whole-source replacement" do
       [0, 6].each do |pos|
         rewriter = Rewriter.new("abcdef")
-        other = Rewriter.new("abcdef")
         rewriter.replace(0, 6, "X")
-        other.insert_before(pos, "Y")
 
-        rewriter.merge(other).should be_false
+        rewriter.transaction { rewriter.insert_before(pos, "Y") }.should be_false
         rewriter.process.should eq "X"
 
         rewriter = Rewriter.new("abcdef")
-        other = Rewriter.new("abcdef")
         rewriter.insert_before(pos, "Y")
-        other.replace(0, 6, "X")
 
-        rewriter.merge(other).should be_false
+        rewriter.transaction { rewriter.replace(0, 6, "X") }.should be_false
         rewriter.process.should_not eq "X"
       end
     end
 
-    it "merges nested wraps in either order" do
-      [false, true].each do |reverse|
-        rewriter = Rewriter.new("abcdef")
-        other = Rewriter.new("abcdef")
-        rewriter.wrap(1, 5, '[', ']')
-        other.wrap(2, 4, '(', ')')
-        rewriter, other = other, rewriter if reverse
+    it "keeps nested wraps in either order" do
+      rewriter = Rewriter.new("abcdef")
+      rewriter.wrap(1, 5, '[', ']')
 
-        rewriter.merge(other).should be_true
-        rewriter.process.should eq "a[b(cd)e]f"
-      end
+      rewriter.transaction { rewriter.wrap(2, 4, '(', ')') }.should be_true
+      rewriter.process.should eq "a[b(cd)e]f"
+
+      rewriter = Rewriter.new("abcdef")
+      rewriter.wrap(2, 4, '(', ')')
+
+      rewriter.transaction { rewriter.wrap(1, 5, '[', ']') }.should be_true
+      rewriter.process.should eq "a[b(cd)e]f"
     end
 
-    it "merges wraps at the same range" do
+    it "keeps wraps at the same range" do
       rewriter = Rewriter.new("abcdef")
-      other = Rewriter.new("abcdef")
       rewriter.wrap(1, 4, '[', ']')
-      other.wrap(1, 4, '(', ')')
 
-      rewriter.merge(other).should be_true
+      rewriter.transaction { rewriter.wrap(1, 4, '(', ')') }.should be_true
       rewriter.process.should eq "a([bcd])ef"
     end
 
-    it "merges a wrap with a contained replacement in either order" do
-      [false, true].each do |reverse|
-        rewriter = Rewriter.new("abcdef")
-        other = Rewriter.new("abcdef")
-        rewriter.wrap(1, 5, '[', ']')
-        other.replace(2, 4, "X")
-        rewriter, other = other, rewriter if reverse
+    it "keeps a wrap with a contained replacement in either order" do
+      rewriter = Rewriter.new("abcdef")
+      rewriter.wrap(1, 5, '[', ']')
 
-        rewriter.merge(other).should be_true
-        rewriter.process.should eq "a[bXe]f"
-      end
+      rewriter.transaction { rewriter.replace(2, 4, "X") }.should be_true
+      rewriter.process.should eq "a[bXe]f"
+
+      rewriter = Rewriter.new("abcdef")
+      rewriter.replace(2, 4, "X")
+
+      rewriter.transaction { rewriter.wrap(1, 5, '[', ']') }.should be_true
+      rewriter.process.should eq "a[bXe]f"
     end
 
-    it "does not merge crossing wraps" do
+    it "discards crossing wraps" do
       rewriter = Rewriter.new("abcdef")
-      other = Rewriter.new("abcdef")
       rewriter.wrap(1, 4, '[', ']')
-      other.wrap(2, 5, '(', ')')
 
-      rewriter.merge(other).should be_false
+      rewriter.transaction { rewriter.wrap(2, 5, '(', ')') }.should be_false
       rewriter.process.should eq "a[bcd]ef"
     end
 
-    it "does not merge replacements at the same empty range" do
+    it "discards replacements at the same empty range" do
       rewriter = Rewriter.new("abcdef")
-      other = Rewriter.new("abcdef")
       rewriter.replace(2, 2, 'x')
-      other.replace(2, 2, 'y')
 
-      rewriter.merge(other).should be_false
+      rewriter.transaction { rewriter.replace(2, 2, 'y') }.should be_false
       rewriter.process.should eq "abxcdef"
     end
 
