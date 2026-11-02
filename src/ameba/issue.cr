@@ -41,5 +41,10 @@ module Ameba
     def correct(corrector)
       @block.try(&.call(corrector))
     end
+
+    # Returns the same issue, but without the means of correcting it.
+    def without_correction : self
+      self.class.new(code, rule, location, end_location, message, status)
+    end
   end
 end

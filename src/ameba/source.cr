@@ -45,12 +45,16 @@ module Ameba
       corrected_code = corrector.process
       return if code == corrected_code
 
-      @code = corrected_code
+      self.code = corrected_code
+
+      corrected_issues
+    end
+
+    # Replaces `code` and drops everything derived from it.
+    def code=(@code : String)
       @lines = nil
       @line_offsets = nil
       @ast = nil
-
-      corrected_issues
     end
 
     # Returns lines of code split by new line character.
