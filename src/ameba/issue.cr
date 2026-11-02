@@ -42,8 +42,9 @@ module Ameba
       @block.try(&.call(corrector))
     end
 
-    # Returns the same issue, but without the means of correcting it.
-    def without_correction : self
+    # Returns the same issue with the given *message*, but without the means
+    # of correcting it.
+    def without_correction(message = @message) : self
       self.class.new(code, rule, location, end_location, message, status)
     end
   end

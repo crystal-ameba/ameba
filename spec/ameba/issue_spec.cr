@@ -23,6 +23,16 @@ module Ameba
       uncorrectable.disabled?.should be_true
     end
 
+    it "#without_correction accepts a new message" do
+      issue = Issue.new code: "",
+        rule: DummyRule.new,
+        location: nil,
+        end_location: nil,
+        message: "Blah"
+
+      issue.without_correction("Foo").message.should eq "Foo"
+    end
+
     it "accepts rule and message" do
       issue = Issue.new code: "",
         rule: DummyRule.new,
