@@ -27,6 +27,64 @@ module Ameba::Rule::Style
         CRYSTAL
     end
 
+    it "doesn't correct return with arguments in parentheses" do
+      source = expect_issue subject, <<-CRYSTAL
+        def foo(a)
+          return(a)
+        # ^^^^^^ error: Redundant `return` detected
+        end
+
+        def bar(a)
+          return(nil) if a
+        # ^^^^^^ error: Redundant `return` detected
+        end
+        CRYSTAL
+
+      expect_no_corrections source
+    end
+
+    it "doesn't correct multiline return with arguments in parentheses" do
+      source = expect_issue subject, <<-CRYSTAL
+        def foo
+          return(
+        # ^^^^^^ error: Redundant `return` detected
+            1
+          )
+        end
+        CRYSTAL
+
+      expect_no_corrections source
+    end
+
+    it "doesn't correct tuple literal returned in parentheses" do
+      rule = RedundantReturn.new
+      rule.allow_multi_return = false
+
+      source = expect_issue rule, <<-CRYSTAL
+        def foo
+          return(1, 2)
+        # ^^^^^^ error: Redundant `return` detected
+        end
+        CRYSTAL
+
+      expect_no_corrections source
+    end
+
+    it "corrects return followed by an expression in parentheses" do
+      source = expect_issue subject, <<-CRYSTAL
+        def foo
+          return (1)
+        # ^^^^^^ error: Redundant `return` detected
+        end
+        CRYSTAL
+
+      expect_correction source, <<-CRYSTAL
+        def foo
+          (1)
+        end
+        CRYSTAL
+    end
+
     it "doesn't report if it returns tuple literal" do
       expect_no_issues subject, <<-CRYSTAL
         def foo(a)

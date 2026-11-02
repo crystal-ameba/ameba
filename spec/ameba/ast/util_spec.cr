@@ -985,6 +985,19 @@ module Ameba::AST
         exp_code.should eq "{1, 2}"
       end
 
+      it "returns nil if arguments are in parentheses" do
+        ["return(1)", "return( 1 )", "return(1, 2)", "next(1)", "return((1))"].each do |code|
+          node = as_node(code).as Crystal::ControlExpression
+          subject.control_exp_code(node, [code]).should be_nil
+        end
+      end
+
+      it "returns the parentheses of an expression following a space" do
+        s = "return (1)"
+        node = as_node(s).as Crystal::ControlExpression
+        subject.control_exp_code(node, [s]).should eq "(1)"
+      end
+
       it "accepts explicit tuple literal" do
         s = "return {1, 2}"
         node = as_node(s).as Crystal::ControlExpression

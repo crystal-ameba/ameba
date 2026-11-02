@@ -481,6 +481,9 @@ module Ameba::AST::Util
   # Wraps implicit tuple literal with curly brackets (e.g. multi-return).
   def control_exp_code(node : Crystal::ControlExpression, code_lines)
     return unless exp = node.exp
+    # `return(1)`: the node ends before the closing parenthesis, which
+    # would be left behind if the node was replaced by its expression.
+    return if node_source(node, code_lines).try(&.matches?(/\A\w+\(/))
     return unless exp_code = node_source(exp, code_lines)
     return exp_code unless exp.is_a?(Crystal::TupleLiteral) && exp_code[0] != '{'
     return unless exp_start = exp.elements.first.location
