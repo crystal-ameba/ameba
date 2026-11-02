@@ -992,6 +992,12 @@ module Ameba::AST
         end
       end
 
+      it "returns the exp code of a call with arguments in parentheses" do
+        s = "return foo(1)"
+        node = as_node(s).as Crystal::ControlExpression
+        subject.control_exp_code(node, [s]).should eq "foo(1)"
+      end
+
       it "returns the parentheses of an expression following a space" do
         s = "return (1)"
         node = as_node(s).as Crystal::ControlExpression
