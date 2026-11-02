@@ -985,11 +985,76 @@ module Ameba::AST
         exp_code.should eq "{1, 2}"
       end
 
-      it "returns nil if arguments are in parentheses" do
-        ["return(1)", "return( 1 )", "return(1, 2)", "next(1)", "return((1))"].each do |code|
+      {
+        "return(1)"            => "1",
+        "return( 1 )"          => "1",
+        "return(1,)"           => "1",
+        "next(1)"              => "1",
+        "return(nil)"          => "nil",
+        "return(a)"            => "a",
+        "return(@a)"           => "@a",
+        "return(:a)"           => ":a",
+        %(return("a"))         => %("a"),
+        "return(A::B)"         => "A::B",
+        "return([1, 2])"       => "[1, 2]",
+        "return({1, 2})"       => "{1, 2}",
+        "return(a.b)"          => "a.b",
+        "return(a.b?)"         => "a.b?",
+        "return(foo(1))"       => "foo(1)",
+        "return(a.b(1, 2))"    => "a.b(1, 2)",
+        "return((1))"          => "(1)",
+        "return(1, 2)"         => "{1, 2}",
+        "return(1, 2,)"        => "{1, 2}",
+        "return(\n  1\n)"      => "1",
+        "return(1 + 2)"        => "(1 + 2)",
+        "return(a ? 1 : 2)"    => "(a ? 1 : 2)",
+        "return(a = 1)"        => "(a = 1)",
+        "return(a || b)"       => "(a || b)",
+        "return(!a)"           => "(!a)",
+        "return(foo 1)"        => "(foo 1)",
+        "return(a.b 1)"        => "(a.b 1)",
+        "return(foo a: 1)"     => "(foo a: 1)",
+        "return(a[1])"         => "(a[1])",
+        "return(foo &block)"   => "(foo &block)",
+        "return(foo { 1 })"    => "(foo { 1 })",
+        "return(foo do end)"   => "(foo do end)",
+        "return(foo(1) { 2 })" => "(foo(1) { 2 })",
+      }.each do |code, expected|
+        it "returns `#{expected.inspect}` for `#{code.inspect}`" do
           node = as_node(code).as Crystal::ControlExpression
-          subject.control_exp_code(node, [code]).should be_nil
+          subject.control_exp_code(node, code.split('\n')).should eq expected
         end
+      end
+
+      [
+        "return(1 # comment\n)",
+        "return( # comment\n  1\n)",
+        "return(1, # comment\n)",
+        "return()",
+        "return(<<-TEXT)\n  a\n  TEXT",
+      ].each do |code|
+        it "returns nil for `#{code.inspect}`" do
+          node = as_node(code).as Crystal::ControlExpression
+          subject.control_exp_code(node, code.split('\n')).should be_nil
+        end
+      end
+
+      it "returns heredoc followed by the closing parenthesis" do
+        code = "return(<<-TEXT\n  a\n  TEXT\n)"
+        node = as_node(code).as Crystal::ControlExpression
+        subject.control_exp_code(node, code.split('\n')).should eq "<<-TEXT\n  a\n  TEXT"
+      end
+
+      it "keeps comments within the argument" do
+        code = "return(1, # comment\n  2\n)"
+        node = as_node(code).as Crystal::ControlExpression
+        subject.control_exp_code(node, code.split('\n')).should eq "{1, # comment\n  2}"
+      end
+
+      it "doesn't mistake `#` within the argument for a comment" do
+        code = %(return("#"))
+        node = as_node(code).as Crystal::ControlExpression
+        subject.control_exp_code(node, [code]).should eq %("#")
       end
 
       it "returns the exp code of a call with arguments in parentheses" do

@@ -27,47 +27,113 @@ module Ameba::Rule::Style
         CRYSTAL
     end
 
-    it "doesn't correct return with arguments in parentheses" do
-      source = expect_issue subject, <<-CRYSTAL
-        def foo(a)
-          return(a)
-        # ^^^^^^ error: Redundant `return` detected
-        end
+    context "arguments in parentheses" do
+      it "corrects to the argument" do
+        source = expect_issue subject, <<-CRYSTAL
+          def foo(a)
+            return(a)
+          # ^^^^^^ error: Redundant `return` detected
+          end
 
-        def bar(a)
-          return(nil) if a
-        # ^^^^^^ error: Redundant `return` detected
-        end
-        CRYSTAL
+          def bar(a)
+            return( nil ) if a
+          # ^^^^^^ error: Redundant `return` detected
+          end
+          CRYSTAL
 
-      expect_no_corrections source
-    end
+        expect_correction source, <<-CRYSTAL
+          def foo(a)
+            a
+          end
 
-    it "doesn't correct multiline return with arguments in parentheses" do
-      source = expect_issue subject, <<-CRYSTAL
-        def foo
-          return(
-        # ^^^^^^ error: Redundant `return` detected
+          def bar(a)
+            nil if a
+          end
+          CRYSTAL
+      end
+
+      it "corrects multiline arguments" do
+        source = expect_issue subject, <<-CRYSTAL
+          def foo
+            return(
+          # ^^^^^^ error: Redundant `return` detected
+              1
+            )
+          end
+          CRYSTAL
+
+        expect_correction source, <<-CRYSTAL
+          def foo
             1
-          )
-        end
-        CRYSTAL
+          end
+          CRYSTAL
+      end
 
-      expect_no_corrections source
-    end
+      it "keeps the parentheses if the argument could bind differently without them" do
+        source = expect_issue subject, <<-CRYSTAL
+          def foo(a, b)
+            a || return(b ? 1 : 2)
+               # ^^^^^^ error: Redundant `return` detected
+          end
+          CRYSTAL
 
-    it "doesn't correct tuple literal returned in parentheses" do
-      rule = RedundantReturn.new
-      rule.allow_multi_return = false
+        expect_correction source, <<-CRYSTAL
+          def foo(a, b)
+            a || (b ? 1 : 2)
+          end
+          CRYSTAL
+      end
 
-      source = expect_issue rule, <<-CRYSTAL
-        def foo
-          return(1, 2)
-        # ^^^^^^ error: Redundant `return` detected
-        end
-        CRYSTAL
+      it "corrects tuple literal" do
+        rule = RedundantReturn.new
+        rule.allow_multi_return = false
 
-      expect_no_corrections source
+        source = expect_issue rule, <<-CRYSTAL
+          def foo
+            return(1, 2)
+          # ^^^^^^ error: Redundant `return` detected
+          end
+          CRYSTAL
+
+        expect_correction source, <<-CRYSTAL
+          def foo
+            {1, 2}
+          end
+          CRYSTAL
+      end
+
+      it "doesn't correct if the closing parenthesis can't be found" do
+        source = expect_issue subject, <<-CRYSTAL
+          def foo
+            return(<<-TEXT)
+          # ^^^^^^ error: Redundant `return` detected
+              a
+              TEXT
+          end
+          CRYSTAL
+
+        expect_no_corrections source
+      end
+
+      it "doesn't correct if that would lose a comment" do
+        source = expect_issue subject, <<-CRYSTAL
+          def foo
+            return(
+          # ^^^^^^ error: Redundant `return` detected
+              1 # one
+            )
+          end
+
+          def bar
+            return( # one
+          # ^^^^^^ error: Redundant `return` detected
+              1
+            )
+          end
+          CRYSTAL
+
+        expect_no_corrections source
+      end
     end
 
     it "corrects return followed by an expression in parentheses" do

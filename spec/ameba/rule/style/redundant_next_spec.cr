@@ -4,11 +4,27 @@ module Ameba::Rule::Style
   describe RedundantNext do
     subject = RedundantNext.new
 
-    it "doesn't correct next with arguments in parentheses" do
+    it "corrects next with arguments in parentheses" do
       source = expect_issue subject, <<-CRYSTAL
         foo do |a|
           next(a)
         # ^^^^ error: Redundant `next` detected
+        end
+        CRYSTAL
+
+      expect_correction source, <<-CRYSTAL
+        foo do |a|
+          a
+        end
+        CRYSTAL
+    end
+
+    it "doesn't correct next with arguments in parentheses if that would lose a comment" do
+      source = expect_issue subject, <<-CRYSTAL
+        foo do |a|
+          next(a # comment
+        # ^^^^ error: Redundant `next` detected
+          )
         end
         CRYSTAL
 

@@ -479,17 +479,60 @@ module Ameba::AST::Util
 
   # Returns the exp code of a control expression.
   # Wraps implicit tuple literal with curly brackets (e.g. multi-return).
+  #
+  # Arguments in parentheses (e.g. `return(1)`) keep them, unless they're
+  # not needed to preserve the meaning of the code. Returns `nil` if the
+  # closing parenthesis can't be found, or dropping it would drop a comment.
   def control_exp_code(node : Crystal::ControlExpression, code_lines)
     return unless exp = node.exp
-    # The closing parenthesis would be left behind if the node was replaced
-    # by its expression. See `#control_exp_end_location`.
-    return if control_exp_parenthesized?(node, code_lines)
+    return unless exp_code = control_exp_value_code(exp, code_lines)
+    return exp_code unless control_exp_parenthesized?(node, code_lines)
+    return if control_exp_end_location(node, code_lines) == node.end_location
+    return if control_exp_comment?(node, exp, code_lines)
+
+    binds_tightly?(exp) ? exp_code : "(#{exp_code})"
+  end
+
+  private def control_exp_value_code(exp, code_lines)
     return unless exp_code = node_source(exp, code_lines)
     return exp_code unless exp.is_a?(Crystal::TupleLiteral) && exp_code[0] != '{'
     return unless exp_start = exp.elements.first.location
     return unless exp_end = exp.end_location
 
     "{#{source_between(exp_start, exp_end, code_lines)}}"
+  end
+
+  # Returns `true` if there is a comment between the
+  # parentheses and the argument of a control expression.
+  private def control_exp_comment?(node, exp, code_lines) : Bool
+    location, exp_start, exp_end = node.location, exp.location, exp.end_location
+    end_location = control_exp_end_location(node, code_lines)
+
+    return true unless location && exp_start && exp_end && end_location
+
+    {
+      source_between(location, exp_start, code_lines),
+      source_between(exp_end, end_location, code_lines),
+    }.any? { |code| code.nil? || code.includes?('#') }
+  end
+
+  # Returns `true` if *exp* means the same regardless of the surrounding code.
+  private def binds_tightly?(exp) : Bool
+    case exp
+    when Crystal::Call
+      return false if exp.block || exp.block_arg
+
+      exp.has_parentheses? || (exp.args.empty? && !exp.named_args)
+    when Crystal::NilLiteral, Crystal::BoolLiteral, Crystal::NumberLiteral,
+         Crystal::CharLiteral, Crystal::StringLiteral, Crystal::StringInterpolation,
+         Crystal::SymbolLiteral, Crystal::RegexLiteral, Crystal::ArrayLiteral,
+         Crystal::HashLiteral, Crystal::TupleLiteral, Crystal::NamedTupleLiteral,
+         Crystal::Var, Crystal::InstanceVar, Crystal::ClassVar, Crystal::Global,
+         Crystal::Path, Crystal::Expressions
+      true
+    else
+      false
+    end
   end
 
   # Returns `true` if the arguments of a control expression
