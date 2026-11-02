@@ -1012,6 +1012,77 @@ module Ameba::AST
       end
     end
 
+    describe "#control_exp_parenthesized?" do
+      it "returns true if parentheses directly follow the keyword" do
+        ["return(1)", "return()", "return(1, 2)", "next(1)", "break(1)", "return(\n1\n)"].each do |code|
+          node = as_node(code).as Crystal::ControlExpression
+          subject.control_exp_parenthesized?(node, code.split('\n')).should be_true
+        end
+      end
+
+      it "returns false otherwise" do
+        ["return", "return 1", "return (1)", "return foo(1)", "return (1), 2"].each do |code|
+          node = as_node(code).as Crystal::ControlExpression
+          subject.control_exp_parenthesized?(node, [code]).should be_false
+        end
+      end
+    end
+
+    describe "#control_exp_end_location" do
+      {
+        "return"               => {1, 6},
+        "return 1"             => {1, 8},
+        "return (1)"           => {1, 10},
+        "return foo(1)"        => {1, 13},
+        "return(1)"            => {1, 9},
+        "return( 1 )"          => {1, 11},
+        "return((1))"          => {1, 11},
+        "return(foo(1))"       => {1, 14},
+        "return(1, 2)"         => {1, 12},
+        "return(1,)"           => {1, 10},
+        "return(1 ,)"          => {1, 11},
+        "return(1, # c\n)"     => {2, 1},
+        "return(1, 2,)"        => {1, 13},
+        "return(\")\")"        => {1, 11},
+        "return(é)"            => {1, 9},
+        "return()"             => {1, 8},
+        "return( )"            => {1, 9},
+        "return(\n)"           => {2, 1},
+        "return(\n  1\n)"      => {3, 1},
+        "return(1 # )\n  )"    => {2, 3},
+        "return(1 # a\n# b\n)" => {3, 1},
+        "next(1)"              => {1, 7},
+        "break(1)"             => {1, 8},
+      }.each do |code, (line, column)|
+        it "returns the end location of `#{code.inspect}`" do
+          node = as_node(code).as Crystal::ControlExpression
+          location = subject.control_exp_end_location(node, code.split('\n')).should_not be_nil
+          {location.line_number, location.column_number}.should eq({line, column})
+        end
+      end
+
+      it "ignores what follows the closing parenthesis" do
+        code = "return(1) # )"
+        node = as_node(code).as Crystal::ControlExpression
+        subject.control_exp_end_location(node, [code]).try(&.column_number).should eq 9
+      end
+
+      it "falls back to the end location of the node" do
+        code = "return(<<-TEXT)\n  a\n  TEXT"
+        node = as_node(code).as Crystal::ControlExpression
+        subject.control_exp_end_location(node, code.split('\n')).should eq node.end_location
+      end
+
+      it "returns a location usable to get the whole source" do
+        code = "return(\n  1\n)"
+        lines = code.split('\n')
+        node = as_node(code).as Crystal::ControlExpression
+        location = node.location.should_not be_nil
+        end_location = subject.control_exp_end_location(node, lines).should_not be_nil
+        subject.source_between(location, end_location, lines).should eq code
+      end
+    end
+
     describe "#name_location_or" do
       it "adjusts location column number by a given value" do
         node = as_node("def foo; end").as Crystal::Def

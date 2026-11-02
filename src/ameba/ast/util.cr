@@ -481,15 +481,50 @@ module Ameba::AST::Util
   # Wraps implicit tuple literal with curly brackets (e.g. multi-return).
   def control_exp_code(node : Crystal::ControlExpression, code_lines)
     return unless exp = node.exp
-    # `return(1)`: the node ends before the closing parenthesis, which
-    # would be left behind if the node was replaced by its expression.
-    return if node_source(node, code_lines).try(&.matches?(/\A\w+\(/))
+    # The closing parenthesis would be left behind if the node was replaced
+    # by its expression. See `#control_exp_end_location`.
+    return if control_exp_parenthesized?(node, code_lines)
     return unless exp_code = node_source(exp, code_lines)
     return exp_code unless exp.is_a?(Crystal::TupleLiteral) && exp_code[0] != '{'
     return unless exp_start = exp.elements.first.location
     return unless exp_end = exp.end_location
 
     "{#{source_between(exp_start, exp_end, code_lines)}}"
+  end
+
+  # Returns `true` if the arguments of a control expression
+  # are in parentheses directly following its keyword (e.g. `return(1)`).
+  def control_exp_parenthesized?(node : Crystal::ControlExpression, code_lines) : Bool
+    return false unless location = node.location
+    return false unless line = code_lines[location.line_number - 1]?
+
+    !!line[(location.column_number - 1)..]?.try(&.matches?(/\A\w+\(/))
+  end
+
+  # Returns the end location of a control expression, including the closing
+  # parenthesis of `return(1)`, which `node.end_location` leaves out.
+  #
+  # Falls back to `node.end_location` if the parenthesis can't be found,
+  # which is the case for heredocs (e.g. `return(<<-TEXT)`).
+  def control_exp_end_location(node : Crystal::ControlExpression, code_lines) : Crystal::Location?
+    return unless end_location = node.end_location
+    return end_location unless control_exp_parenthesized?(node, code_lines)
+
+    following_code =
+      code_lines[(end_location.line_number - 1)..].join('\n')[end_location.column_number..]? || ""
+
+    # An opening parenthesis follows the node when there are no arguments
+    match = following_code.match(/\A\(?(?:\s|#[^\n]*)*,?(?:\s|#[^\n]*)*\)/)
+    return end_location unless match
+
+    closing_code = match[0]
+
+    if newline_index = closing_code.rindex('\n')
+      end_location.adjust(line_number: closing_code.count('\n'))
+        .with(column_number: closing_code.size - newline_index - 1)
+    else
+      end_location.adjust(column_number: closing_code.size)
+    end
   end
 
   def name_location_or(node : Crystal::ASTNode, *, adjust_location_column_number = nil)

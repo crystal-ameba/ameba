@@ -179,7 +179,13 @@ module Ameba::Rule::Style
     private def guard_clause_source(source, guard_clause, parent)
       node = parent.is_a?(Crystal::BinaryOp) ? parent : guard_clause
 
-      node_source(node, source.lines)
+      unless guard_clause.is_a?(Crystal::ControlExpression)
+        return node_source(node, source.lines)
+      end
+      return unless location = node.location
+      return unless end_location = control_exp_end_location(guard_clause, source.lines)
+
+      source_between(location, end_location, source.lines)
     end
   end
 end

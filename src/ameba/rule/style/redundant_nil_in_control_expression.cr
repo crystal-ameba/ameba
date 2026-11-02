@@ -45,7 +45,7 @@ module Ameba::Rule::Style
         node_source(node, source.lines) || node.to_s
 
       # `return(nil)`
-      if node_code.includes?('(')
+      if control_exp_parenthesized?(node, source.lines)
         issue_for(exp, MSG)
       else
         issue_for(exp, MSG) do |corrector|
