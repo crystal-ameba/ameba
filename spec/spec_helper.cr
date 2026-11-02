@@ -14,6 +14,23 @@ module Ameba
     end
   end
 
+  # A rule correcting `foo` to `bar`, and `bar` to code which doesn't parse.
+  class BreakingCorrectionRule < Rule::Base
+    properties do
+      description "Corrects code into invalid syntax"
+      enabled false
+    end
+
+    def test(source)
+      case
+      when source.code.includes?("foo")
+        source.add_issue(self, {1, 1}, {1, 3}, "foo") { |corrector| corrector.replace({1, 1}, {1, 3}, "bar") }
+      when source.code.includes?("bar")
+        source.add_issue(self, {1, 1}, {1, 3}, "bar") { |corrector| corrector.replace({1, 1}, {1, 3}, "bar)") }
+      end
+    end
+  end
+
   @[Rule::Deprecated("This rule is deprecated")]
   class DeprecatedRule < Rule::Base
     properties do

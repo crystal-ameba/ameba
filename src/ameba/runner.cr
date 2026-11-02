@@ -143,9 +143,7 @@ module Ameba
       # corrections are made (because automatic corrections can introduce new
       # issues). In the normal case the loop is only executed once.
       loop_unless_infinite(source, corrected_issues) do
-        # We have to reprocess the source to pick up any changes. Since a
-        # change could (theoretically) introduce syntax errors, we break the
-        # loop if we find any.
+        # There's nothing to inspect or correct in a source with syntax errors.
         @syntax_rule.test(source)
         break unless source.valid?
 
@@ -162,8 +160,18 @@ module Ameba
         check_unneeded_directives(source, excluded_rules)
         break unless autocorrect?
 
+        previous_code = source.code
+
         applied_issues = source.correct!
         break unless applied_issues
+
+        # A correction must never leave the source unparsable. Go back to the
+        # last valid code and report this inspection's issues as uncorrected.
+        unless parsable?(source)
+          source.code = previous_code
+          source.issues.map!(&.without_correction)
+          break
+        end
 
         # The issues that couldn't be corrected will be found again so we
         # only keep the corrected ones in order to avoid duplicate reporting.
@@ -184,6 +192,13 @@ module Ameba
         }
       end
       @formatter.source_finished(source)
+    end
+
+    private def parsable?(source)
+      source.ast
+      true
+    rescue Crystal::SyntaxException
+      false
     end
 
     # Explains an issue at a specified *location*.

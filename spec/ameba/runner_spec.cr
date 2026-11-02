@@ -213,6 +213,42 @@ module Ameba
         end
       end
 
+      it "discards corrections leaving the source unparsable" do
+        rules = [BreakingCorrectionRule.new.tap(&.enabled = true)] of Rule::Base
+        path = File.tempname("source", ".cr")
+        File.write(path, "bar\n")
+        source = Source.new("bar\n", path)
+
+        begin
+          Runner.new(rules, [source], formatter, default_severity, autocorrect: true).run
+          source.code.should eq "bar\n"
+          source.lines.should eq ["bar", ""]
+          source.ast.should_not be_nil
+          File.read(path).should eq "bar\n"
+          source.issues.map(&.message).should eq ["bar"]
+          source.issues.map(&.correctable?).should eq [false]
+        ensure
+          File.delete(path) rescue nil
+        end
+      end
+
+      it "keeps earlier corrections if a later one leaves the source unparsable" do
+        rules = [BreakingCorrectionRule.new.tap(&.enabled = true)] of Rule::Base
+        path = File.tempname("source", ".cr")
+        File.write(path, "foo\n")
+        source = Source.new("foo\n", path)
+
+        begin
+          Runner.new(rules, [source], formatter, default_severity, autocorrect: true).run
+          source.code.should eq "bar\n"
+          File.read(path).should eq "bar\n"
+          source.issues.map(&.message).should eq ["foo", "bar"]
+          source.issues.map(&.correctable?).should eq [true, false]
+        ensure
+          File.delete(path) rescue nil
+        end
+      end
+
       it "handles rules with incompatible autocorrect" do
         rules = [Rule::Performance::MinMaxAfterMap.new, Rule::Style::VerboseBlock.new]
         source = Source.new <<-CRYSTAL, File.tempname("source", ".cr")
