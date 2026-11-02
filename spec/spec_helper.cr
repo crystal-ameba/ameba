@@ -31,6 +31,21 @@ module Ameba
     end
   end
 
+  # A rule whose corrections for `x = 1\n2` only break the syntax when combined.
+  class IncompatibleCorrectionsRule < Rule::Base
+    properties do
+      description "Corrects code into invalid syntax by combining corrections"
+      enabled false
+    end
+
+    def test(source)
+      return unless source.code == "x = 1\n2\n"
+
+      source.add_issue(self, {1, 1}, {1, 5}, "continue") { |corrector| corrector.insert_after({1, 5}, " +") }
+      source.add_issue(self, {2, 1}, {2, 1}, "remove") { |corrector| corrector.remove({2, 1}, {2, 1}) }
+    end
+  end
+
   @[Rule::Deprecated("This rule is deprecated")]
   class DeprecatedRule < Rule::Base
     properties do
