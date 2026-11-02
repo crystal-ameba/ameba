@@ -205,6 +205,122 @@ module Ameba::Rule::Style
         CRYSTAL
     end
 
+    it "fails if there is a redundant block in a method with multiple args with nested parentheses" do
+      source = expect_issue subject, <<-CRYSTAL
+        def method(a = foo(1),
+                   b = (2))
+          begin
+        # ^^^^^ error: Redundant `begin` block detected
+            open_file
+          ensure
+            close_file
+          end
+        end
+        CRYSTAL
+
+      expect_correction source, <<-CRYSTAL
+        def method(a = foo(1),
+                   b = (2))
+         #{trailing_whitespace}
+            open_file
+          ensure
+            close_file
+         #{trailing_whitespace}
+        end
+        CRYSTAL
+    end
+
+    {
+      "def method(a = \")\")",
+      "def method(a = \"(\")",
+      "def method(a = \"\\n\")",
+      "def method(a = \"can't\")",
+      "def method(a = /\\)/)",
+      "def method(a = \"\#{1}\")",
+      "def method(a = \"# \")",
+      "def method(a : Int32 -> Int32)",
+      "def method(&block : Int32 -> _)",
+      "def method(a = \")\",\n           b = 1)",
+      "def method(a = \")\",\n           begin b = 1)",
+      "def method(a = <<-TEXT)\n  foo\n  TEXT",
+      "foo do |a,\n        b|",
+    }.each do |header|
+      it "fails if there is a redundant block after header: #{header.inspect}" do
+        source = expect_issue subject, <<-CRYSTAL
+          #{header}
+            begin
+          # ^^^^^ error: Redundant `begin` block detected
+              open_file
+            ensure
+              close_file
+            end
+          end
+          CRYSTAL
+
+        expect_correction source, <<-CRYSTAL
+          #{header}
+           #{trailing_whitespace}
+              open_file
+            ensure
+              close_file
+           #{trailing_whitespace}
+          end
+          CRYSTAL
+      end
+    end
+
+    it "removes the matching `end` if a redundant block is followed by other expressions" do
+      source = expect_issue subject, <<-CRYSTAL
+        def method
+          begin
+        # ^^^^^ error: Redundant `begin` block detected
+            open_file
+          end
+          if foo
+            bar
+          end
+        rescue
+          close_file
+        end
+        CRYSTAL
+
+      expect_correction source, <<-CRYSTAL
+        def method
+         #{trailing_whitespace}
+            open_file
+         #{trailing_whitespace}
+          if foo
+            bar
+          end
+        rescue
+          close_file
+        end
+        CRYSTAL
+    end
+
+    it "doesn't report a block followed by a suffix handler" do
+      expect_no_issues subject, <<-CRYSTAL
+        def method
+          begin
+            open_file
+            read_file
+          end rescue close_file
+        end
+        CRYSTAL
+    end
+
+    it "doesn't report if the block doesn't start the line" do
+      expect_no_issues subject, <<-CRYSTAL
+        def method(a,
+                   b); begin; rescue; end; end
+
+        foo do |x| begin
+          bar
+        rescue
+        end end
+        CRYSTAL
+    end
+
     it "doesn't report if there is an inner redundant block" do
       expect_no_issues subject, <<-CRYSTAL
         def method

@@ -66,28 +66,42 @@ module Ameba::Rule::Style
     MSG = "Redundant `begin` block detected"
 
     def test(source, node : Crystal::Def | Crystal::Block)
-      return unless def_loc = node.location
+      return unless begin_node = redundant_begin_node(node.body)
 
-      case body = node.body
-      when Crystal::ExceptionHandler
-        return if begin_exprs_in_handler?(body) || inner_handler?(body)
-      when Crystal::Expressions
-        return unless redundant_begin_in_expressions?(body)
-      else
-        return
-      end
+      return unless begin_loc = begin_node.location
+      return unless end_end_loc = begin_node.end_location
 
-      return unless begin_range = def_redundant_begin_range(source, node)
+      return unless starts_line?(source, begin_loc)
+      return unless exception_handler_allowed?(source, node)
 
-      begin_loc, end_loc = begin_range
-      begin_loc, end_loc = def_loc.seek(begin_loc), def_loc.seek(end_loc)
       begin_end_loc = begin_loc.adjust(column_number: {{ "begin".size - 1 }})
-      end_end_loc = end_loc.adjust(column_number: {{ "end".size - 1 }})
+      end_loc = end_end_loc.adjust(column_number: -{{ "end".size - 1 }})
 
       issue_for(begin_loc, begin_end_loc, MSG) do |corrector|
         corrector.remove(begin_loc, begin_end_loc)
         corrector.remove(end_loc, end_end_loc)
       end
+    end
+
+    private def redundant_begin_node(body)
+      case body
+      when Crystal::ExceptionHandler
+        return if begin_exprs_in_handler?(body) || inner_handler?(body)
+        return if body.suffix
+        return body unless body.implicit
+
+        first_begin_expression(body.body)
+      when Crystal::Expressions
+        body if redundant_begin_in_expressions?(body)
+      end
+    end
+
+    private def first_begin_expression(node)
+      return unless node.is_a?(Crystal::Expressions)
+      return node if redundant_begin_in_expressions?(node)
+
+      first = node.expressions.first?
+      first if first.is_a?(Crystal::Expressions) && redundant_begin_in_expressions?(first)
     end
 
     private def redundant_begin_in_expressions?(node)
@@ -103,57 +117,20 @@ module Ameba::Rule::Style
       body.expressions.first?.is_a?(Crystal::ExceptionHandler)
     end
 
-    private def def_redundant_begin_range(source, node)
-      return unless code = node_source(node, source.lines)
-
-      # Blocks using curly braces cannot have exception handlers
-      return if node.is_a?(Crystal::Block) && code.starts_with?('{')
-
-      lexer = Crystal::Lexer.new(code)
-      return unless begin_loc = def_redundant_begin_loc(lexer)
-      return unless end_loc = def_redundant_end_loc(lexer)
-
-      {begin_loc, end_loc}
+    private def starts_line?(source, location)
+      line = source.lines[location.line_number - 1]
+      line[...location.column_number - 1].blank?
     end
 
-    private def def_redundant_begin_loc(lexer)
-      in_body = in_argument_list = false
-
-      loop do
-        token = lexer.next_token
-
-        case token.type
-        when .eof?, .op_minus_gt?
-          break
-        when .ident?
-          next unless in_body
-          return unless token.value == Crystal::Keyword::BEGIN
-          return token.location
-        when .op_lparen?
-          in_argument_list = true
-        when .op_rparen?
-          in_argument_list = false
-        when .newline?
-          in_body = true unless in_argument_list
-        when .space?
-          # ignore
-        else
-          return if in_body
-        end
+    private def exception_handler_allowed?(source, node)
+      case node
+      in Crystal::Def
+        # Proc literals are represented as a `Def` named `->`
+        node.name != "->"
+      in Crystal::Block
+        # Blocks using curly braces cannot have exception handlers
+        !!node_source(node, source.lines).try { |code| !code.starts_with?('{') }
       end
-    end
-
-    private def def_redundant_end_loc(lexer)
-      end_loc = def_end_loc = nil
-
-      Tokenizer.new(lexer).run do |token|
-        next unless token.type.ident?
-        next unless token.value == Crystal::Keyword::END
-
-        end_loc, def_end_loc = def_end_loc, token.location
-      end
-
-      end_loc
     end
   end
 end
