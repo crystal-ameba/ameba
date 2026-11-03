@@ -73,6 +73,19 @@ module Ameba::Rule::Style
           CRYSTAL
       end
 
+      it "doesn't correct if a heredoc would have to be wrapped in parentheses" do
+        source = expect_issue subject, <<-CRYSTAL
+          def foo(a)
+            a || return foo <<-TEXT
+               # ^^^^^^ error: Redundant `return` detected
+              a
+              TEXT
+          end
+          CRYSTAL
+
+        expect_no_corrections source
+      end
+
       it "doesn't add parentheses around a value binding tightly" do
         source = expect_issue subject, <<-CRYSTAL
           def foo(a, b)
@@ -227,6 +240,20 @@ module Ameba::Rule::Style
           # ^^^^^^ error: Redundant `return` detected
               a
               TEXT
+          end
+          CRYSTAL
+
+        expect_no_corrections source
+      end
+
+      it "doesn't correct if the argument contains a heredoc" do
+        source = expect_issue subject, <<-CRYSTAL
+          def foo(a)
+            return(<<-TEXT
+          # ^^^^^^ error: Redundant `return` detected
+              a
+              TEXT
+            ) if a
           end
           CRYSTAL
 

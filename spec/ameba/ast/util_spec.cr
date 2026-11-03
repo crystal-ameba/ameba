@@ -1036,6 +1036,9 @@ module Ameba::AST
         "return(1, # comment\n)",
         "return()",
         "return(<<-TEXT)\n  a\n  TEXT",
+        "return(<<-TEXT\n  a\n  TEXT\n)",
+        "return(\"a\" + <<-TEXT\n  a\n  TEXT\n)",
+        "return(foo(<<-TEXT\n  a\n  TEXT\n))",
       ].each do |code|
         it "returns nil for `#{code.inspect}`" do
           node = as_node(code).as Crystal::ControlExpression
@@ -1043,10 +1046,16 @@ module Ameba::AST
         end
       end
 
-      it "returns heredoc followed by the closing parenthesis" do
-        code = "return(<<-TEXT\n  a\n  TEXT\n)"
+      it "returns the code of a tightly binding heredoc if it's an operand" do
+        code = "return <<-TEXT\n  a\n  TEXT"
         node = as_node(code).as Crystal::ControlExpression
-        subject.control_exp_code(node, code.split('\n')).should eq "<<-TEXT\n  a\n  TEXT"
+        subject.control_exp_code(node, code.split('\n'), operand: true).should eq "<<-TEXT\n  a\n  TEXT"
+      end
+
+      it "returns nil if a heredoc would have to be wrapped in parentheses" do
+        code = "return foo <<-TEXT\n  a\n  TEXT"
+        node = as_node(code).as Crystal::ControlExpression
+        subject.control_exp_code(node, code.split('\n'), operand: true).should be_nil
       end
 
       it "wraps loosely binding code if it's an operand" do
