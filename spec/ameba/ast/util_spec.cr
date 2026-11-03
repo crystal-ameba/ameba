@@ -970,6 +970,18 @@ module Ameba::AST
       end
     end
 
+    describe "#balanced_parentheses?" do
+      it "returns true if the parentheses match" do
+        code = "[] of (Foo)"
+        subject.balanced_parentheses?(as_node(code), [code]).should be_true
+      end
+
+      it "returns false if the closing one is left out of the node" do
+        code = "[] of (Foo ->)"
+        subject.balanced_parentheses?(as_node(code), [code]).should be_false
+      end
+    end
+
     describe "#control_exp_code" do
       it "returns the exp code of a control expression" do
         s = "return 1"

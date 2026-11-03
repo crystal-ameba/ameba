@@ -208,6 +208,14 @@ module Ameba::AST::Util
     node_lines.join('\n')
   end
 
+  # Returns `true` if the source of the node has as many
+  # opening parentheses as closing ones, `false` otherwise.
+  def balanced_parentheses?(node, code_lines) : Bool
+    return false unless code = node_source(node, code_lines)
+
+    code.count('(') == code.count(')')
+  end
+
   # Returns `true` if node is a flow command, `false` otherwise.
   # Node represents a flow command if it is a control expression,
   # or special call node that interrupts execution (i.e. raise, exit, abort).
