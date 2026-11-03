@@ -147,17 +147,42 @@ class Ameba::Source
       String.build do |io|
         last_end = 0
         @action_root.ordered_replacements.each do |begin_pos, end_pos, replacement|
-          io << code[last_end...begin_pos] << replacement
+          io << code_between(last_end, begin_pos) << replacement
           last_end = end_pos
         end
-        io << code[last_end...code.size]
+        io << code_between(last_end, code.size)
       end
     end
 
     private def no_op?(action)
       action.ordered_replacements.all? do |begin_pos, end_pos, replacement|
-        code[begin_pos...end_pos] == replacement
+        code_between(begin_pos, end_pos) == replacement
       end
+    end
+
+    # Same as `code[begin_pos...end_pos]`, which would have to walk the
+    # string from its start every time, unless it consists of ASCII only.
+    private def code_between(begin_pos, end_pos)
+      if code.size == code.bytesize
+        return code.byte_slice(begin_pos, end_pos - begin_pos)
+      end
+
+      begin_offset, end_offset =
+        byte_offsets[begin_pos], byte_offsets[end_pos]
+
+      code.byte_slice(begin_offset, end_offset - begin_offset)
+    end
+
+    # Positions at which the code characters start, in bytes.
+    private getter byte_offsets : Array(Int32) do
+      offsets = Array(Int32).new(code.size + 1)
+      offset = 0
+
+      code.each_char do |char|
+        offsets << offset
+        offset += char.bytesize
+      end
+      offsets << offset
     end
 
     protected def combine(begin_pos, end_pos, **attributes)
