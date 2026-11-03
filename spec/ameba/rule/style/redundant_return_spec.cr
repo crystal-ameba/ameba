@@ -158,6 +158,102 @@ module Ameba::Rule::Style
       end
     end
 
+    context "ternary branches" do
+      it "keeps the code parsable with an assignment" do
+        source = expect_issue subject, <<-CRYSTAL
+          def foo(a)
+            a ? 1 : return b = 2
+                  # ^^^^^^ error: Redundant `return` detected
+          end
+          CRYSTAL
+
+        expect_correction source, <<-CRYSTAL
+          def foo(a)
+            a ? 1 : (b = 2)
+          end
+          CRYSTAL
+      end
+
+      it "corrects both branches" do
+        source = expect_issue subject, <<-CRYSTAL
+          def foo(a, b)
+            a ? (return b) : (return b ? 1 : 2)
+               # ^^^^^^ error: Redundant `return` detected
+                            # ^^^^^^ error: Redundant `return` detected
+          end
+          CRYSTAL
+
+        expect_correction source, <<-CRYSTAL
+          def foo(a, b)
+            a ? (b) : (b ? 1 : 2)
+          end
+          CRYSTAL
+      end
+
+      it "doesn't add parentheses around a value binding tightly" do
+        source = expect_issue subject, <<-CRYSTAL
+          def foo(a, b)
+            a ? 1 : return b + 1
+                  # ^^^^^^ error: Redundant `return` detected
+          end
+          CRYSTAL
+
+        expect_correction source, <<-CRYSTAL
+          def foo(a, b)
+            a ? 1 : b + 1
+          end
+          CRYSTAL
+      end
+
+      it "doesn't add parentheses to a return following a ternary" do
+        source = expect_issue subject, <<-CRYSTAL
+          def foo(a, b)
+            if a
+              a ? 1 : return 2
+                    # ^^^^^^ error: Redundant `return` detected
+            else
+              return b ? 1 : 2
+            # ^^^^^^ error: Redundant `return` detected
+            end
+          end
+          CRYSTAL
+
+        expect_correction source, <<-CRYSTAL
+          def foo(a, b)
+            if a
+              a ? 1 : 2
+            else
+              b ? 1 : 2
+            end
+          end
+          CRYSTAL
+      end
+
+      it "doesn't add parentheses in the branches of a regular conditional" do
+        source = expect_issue subject, <<-CRYSTAL
+          def foo(a, b)
+            if a
+              return b = 1
+            # ^^^^^^ error: Redundant `return` detected
+            else
+              return b ? 1 : 2
+            # ^^^^^^ error: Redundant `return` detected
+            end
+          end
+          CRYSTAL
+
+        expect_correction source, <<-CRYSTAL
+          def foo(a, b)
+            if a
+              b = 1
+            else
+              b ? 1 : 2
+            end
+          end
+          CRYSTAL
+      end
+    end
+
     context "arguments in parentheses" do
       it "corrects to the argument" do
         source = expect_issue subject, <<-CRYSTAL
