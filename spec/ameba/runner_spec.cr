@@ -103,14 +103,115 @@ module Ameba
       end
 
       context "exception in rule" do
-        it "raises an exception raised in fiber while running a rule" do
+        it "reports an exception raised while running a rule" do
           rule = RaiseRule.new
           rule.should_raise = true
           rules = [rule] of Rule::Base
           source = Source.new(path: "source.cr")
 
-          expect_raises(Exception, "something went wrong") do
-            Runner.new(rules, [source], formatter, default_severity).run
+          runner = Runner.new(rules, [source], formatter, default_severity).run
+
+          runner.success?.should be_false
+          source.issues.size.should eq 1
+          source.issues.first.rule.should eq rule
+          source.issues.first.message.should contain "something went wrong"
+          source.issues.first.location.try(&.line_number).should eq 1
+        end
+
+        it "can't be disabled by an inline directive" do
+          rule = RaiseRule.new
+          rule.should_raise = true
+          source = Source.new("a = 1 # ameba:disable #{RaiseRule.rule_name}\n", "source.cr")
+
+          Runner.new([rule] of Rule::Base, [source], formatter, default_severity).run
+
+          source.issues.first.enabled?.should be_true
+        end
+
+        it "keeps running the other rules" do
+          rule = RaiseRule.new
+          rule.should_raise = true
+          rules = [rule, ErrorRule.new] of Rule::Base
+          source = Source.new(path: "source.cr")
+
+          Runner.new(rules, [source], formatter, default_severity).run
+
+          source.issues.map(&.rule.class).should contain ErrorRule
+          source.issues.map(&.rule.class).should contain RaiseRule
+        end
+
+        it "keeps inspecting and correcting the other sources" do
+          rule = RaiseRule.new
+          rule.should_raise = true
+          rules = [rule, Rule::Lint::NotNilAfterNoBang.new] of Rule::Base
+          paths = {File.tempname("source", ".cr"), File.tempname("source", ".cr")}
+          code = "foo.match(/x/).not_nil!\n"
+          paths.each { |path| File.write(path, code) }
+          sources = paths.map { |path| Source.new(code, path) }.to_a
+
+          begin
+            runner = Runner.new(rules, sources, formatter, default_severity, autocorrect: true).run
+
+            runner.success?.should be_false
+            paths.each { |path| File.read(path).should eq "foo.match!(/x/)\n" }
+          ensure
+            paths.each { |path| File.delete(path) rescue nil }
+          end
+        end
+
+        it "still raises on an infinite correction loop" do
+          rules = [AtoB.new, BtoA.new] of Rule::Base
+          source = Source.new("class A; end", File.tempname("source", ".cr"))
+
+          begin
+            expect_raises(Runner::InfiniteCorrectionLoopError) do
+              Runner.new(rules, [source], formatter, default_severity, autocorrect: true).run
+            end
+          ensure
+            File.delete(source.path) rescue nil
+          end
+        end
+      end
+
+      context "exception in correction" do
+        it "reports the issue as uncorrected, keeping the other corrections" do
+          rules = [RaisingCorrectionRule.new.tap(&.enabled = true), Rule::Lint::NotNilAfterNoBang.new] of Rule::Base
+          path = File.tempname("source", ".cr")
+          code = "foo\nbar.match(/x/).not_nil!\n"
+          File.write(path, code)
+          source = Source.new(code, path)
+
+          begin
+            runner = Runner.new(rules, [source], formatter, default_severity, autocorrect: true).run
+
+            File.read(path).should eq "foo\nbar.match!(/x/)\n"
+            runner.success?.should be_false
+
+            issue = source.issues.find!(&.rule.is_a?(RaisingCorrectionRule))
+            issue.correctable?.should be_false
+            issue.corrected?.should be_false
+            issue.message.should contain "correction went wrong"
+          ensure
+            File.delete(path) rescue nil
+          end
+        end
+
+        it "keeps inspecting and correcting the other sources" do
+          rules = [RaisingCorrectionRule.new.tap(&.enabled = true), Rule::Lint::NotNilAfterNoBang.new] of Rule::Base
+          raising_path, other_path = File.tempname("source", ".cr"), File.tempname("source", ".cr")
+          raising_code, other_code = "foo\n", "bar.match(/x/).not_nil!\n"
+          File.write(raising_path, raising_code)
+          File.write(other_path, other_code)
+          sources = [Source.new(raising_code, raising_path), Source.new(other_code, other_path)]
+
+          begin
+            Runner.new(rules, sources, formatter, default_severity, autocorrect: true).run
+
+            File.read(raising_path).should eq raising_code
+            File.read(other_path).should eq "bar.match!(/x/)\n"
+          ensure
+            File.delete(raising_path) rescue nil
+            File.delete(other_path) rescue nil
           end
         end
       end

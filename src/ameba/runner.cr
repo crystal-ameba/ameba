@@ -154,7 +154,7 @@ module Ameba
             excluded_rules << rule.name
             next
           end
-          rule.test(source)
+          report_exception(source, rule) { rule.test(source) }
         end
 
         check_unneeded_directives(source, excluded_rules)
@@ -253,7 +253,17 @@ module Ameba
       return unless rule.enabled?
       return if rule.excluded?(source, root)
 
-      rule.test(source, excluded_rules)
+      report_exception(source, rule) { rule.test(source, excluded_rules) }
+    end
+
+    # Reports an exception raised by a *rule* as an issue, so that it fails the
+    # run without stopping the other rules and sources from being inspected.
+    private def report_exception(source, rule, &)
+      yield
+    rescue ex
+      message = "Rule raised an exception: #{ex.message} (#{ex.class})"
+
+      source.add_issue(rule, {1, 1}, message, status: :enabled)
     end
   end
 end

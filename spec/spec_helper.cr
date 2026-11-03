@@ -210,6 +210,20 @@ module Ameba
     end
   end
 
+  # A rule whose correction raises for the code including `foo`.
+  class RaisingCorrectionRule < Rule::Base
+    properties do
+      description "Internal rule with a correction that raises"
+      enabled false
+    end
+
+    def test(source)
+      return unless source.code.includes?("foo")
+
+      source.add_issue(self, {1, 1}, {1, 3}, "foo") { |_| raise IndexError.new("correction went wrong") }
+    end
+  end
+
   class PerfRule < Rule::Performance::Base
     properties do
       description "Sample performance rule"
