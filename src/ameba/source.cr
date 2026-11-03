@@ -61,14 +61,17 @@ module Ameba
 
       # Retry without the corrections breaking the syntax on their own
       self.code = previous_code
-      breaking_issues = breaking_issues(issues.select(&.unresolved?))
-      drop_corrections { |issue| breaking_issues.includes?(issue) }
+
+      if breaking_issues = breaking_issues?(issues.select(&.unresolved?))
+        drop_corrections { |issue| breaking_issues.includes?(issue) }
+      end
 
       corrected_issues = correct!
       return corrected_issues if !corrected_issues || parsable?
 
       # The remaining corrections break the syntax only when combined
       self.code = previous_code
+
       drop_corrections { true }
 
       nil
@@ -93,7 +96,9 @@ module Ameba
       issues.map! do |issue|
         next issue unless issue.correctable? && yield issue
 
-        issue.without_correction("#{issue.message} (not corrected: would produce invalid syntax)")
+        issue.without_correction(
+          "#{issue.message} (not corrected: would produce invalid syntax)"
+        )
       end
     end
 
@@ -101,16 +106,22 @@ module Ameba
     #
     # Bisects them, since parsing the outcome of each one separately would take
     # too long for a source with many issues.
-    private def breaking_issues(candidates) : Array(Issue)
-      return [] of Issue if candidates.empty?
+    private def breaking_issues?(candidates) : Array(Issue)?
+      return if candidates.empty?
 
       probe = self.class.new(code, path)
       probe.issues.concat(candidates)
-      return [] of Issue if !probe.correct! || probe.parsable?
+
+      return if !probe.correct! || probe.parsable?
       return candidates if candidates.size == 1
 
       half = candidates.size // 2
       breaking_issues(candidates[0...half]) + breaking_issues(candidates[half..])
+    end
+
+    # :ditto:
+    private def breaking_issues(candidates) : Array(Issue)
+      breaking_issues?(candidates) || [] of Issue
     end
 
     # Returns lines of code split by new line character.
