@@ -84,7 +84,7 @@ module Ameba
     # Runner reinspects the corrected source, as all corrections apply to the
     # same source snapshot.
     private def corrections(candidates) : {String, Array(Issue)}
-      corrector = Corrector.new(code)
+      corrector = Corrector.new(code, line_offsets)
 
       corrected_issues = candidates.select do |issue|
         issue.unresolved? &&
@@ -146,7 +146,10 @@ module Ameba
     getter lines : Array(String) { code.split(/\r?\n/) }
 
     # Positions at which the code lines start.
-    private getter line_offsets : Array(Int32) do
+    private getter line_offsets : Array(Int32) { self.class.line_offsets(code) }
+
+    # Returns positions at which lines of the given *code* start.
+    def self.line_offsets(code : String) : Array(Int32)
       offsets = [0]
       code.each_char_with_index do |char, index|
         offsets << index + 1 if char == '\n'
