@@ -208,6 +208,18 @@ module Ameba
       @sources.all?(&.valid?)
     end
 
+    # Indicates whether any rule or correction raised an
+    # exception during the last inspection.
+    #
+    # ```
+    # runner = Ameba::Runner.new(config)
+    # runner.run
+    # runner.crashed? # => true or false
+    # ```
+    def crashed?
+      @sources.any?(&.issues.any?(&.crashed?))
+    end
+
     private MAX_ITERATIONS = 200
 
     private def loop_unless_infinite(source, corrected_issues, &)
@@ -263,7 +275,8 @@ module Ameba
     rescue ex
       message = "Rule raised an exception: #{ex.message} (#{ex.class})"
 
-      source.add_issue(rule, {1, 1}, message, status: :enabled)
+      issue = source.add_issue(rule, {1, 1}, message, status: :enabled)
+      source.issues[-1] = issue.as_crashed
     end
   end
 end
