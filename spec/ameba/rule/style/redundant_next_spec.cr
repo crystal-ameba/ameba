@@ -229,6 +229,20 @@ module Ameba::Rule::Style
     end
 
     context "exception handler" do
+      it "doesn't report next in body if there is an else branch" do
+        expect_no_issues subject, <<-CRYSTAL
+          foo do
+            begin
+              next 1
+            rescue
+              2
+            else
+              3
+            end
+          end
+          CRYSTAL
+      end
+
       it "reports if there is redundant next in exception handler" do
         source = expect_issue subject, <<-CRYSTAL
           block do |v|
