@@ -50,7 +50,7 @@ module Ameba
       return corrected_issues if adopt_parsable(corrected_code)
 
       # Retry without the corrections breaking the syntax on their own
-      if breaking_issues = breaking_issues?(issues.select(&.unresolved?))
+      if breaking_issues = breaking_issues?(issues)
         drop_corrections { |issue| breaking_issues.includes?(issue) }
       end
 
@@ -87,7 +87,7 @@ module Ameba
       corrector = Corrector.new(code)
 
       corrected_issues = candidates.select do |issue|
-        issue.unresolved? && issue.correctable? &&
+        issue.unresolved? &&
           corrector.transaction { issue.correct(corrector) }
       end
 
