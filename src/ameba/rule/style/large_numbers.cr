@@ -55,7 +55,7 @@ module Ameba::Rule::Style
     end
 
     private def decimal?(value)
-      value !~ /^0(x|b|o)/
+      value !~ /^[+-]?0(x|b|o)/
     end
 
     private def allowed?(_sign, value, fraction, _suffix)

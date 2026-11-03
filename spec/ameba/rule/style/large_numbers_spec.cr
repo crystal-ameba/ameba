@@ -20,6 +20,17 @@ module Ameba::Rule::Style
   describe LargeNumbers do
     subject = LargeNumbers.new
 
+    it "passes for signed non-decimal numbers" do
+      expect_no_issues subject, <<-CRYSTAL
+        -0x80000000
+        +0x80000000
+        -0x80000000_i32
+        -0x80000000_00000000_00000000_00000000_i128
+        -0b10000000000
+        -0o1000000
+        CRYSTAL
+    end
+
     it "passes if large number does not require underscore" do
       expect_no_issues subject, <<-CRYSTAL
         1 2 3 4 5 6 7 8 9 10 11 12 13 14 15
