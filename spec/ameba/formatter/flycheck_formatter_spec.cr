@@ -9,6 +9,18 @@ module Ameba::Formatter
       output.clear
     end
 
+    context "correctable issues" do
+      it "reports only the ones left" do
+        source = Source.new("a = 1", "source.cr")
+        Ameba.add_correctable_issues(source)
+
+        subject.source_finished(source)
+
+        output.to_s.should_not contain "fixed one"
+        output.to_s.should contain "left one"
+      end
+    end
+
     context "problems not found" do
       it "reports nothing" do
         subject.source_finished(Source.new)

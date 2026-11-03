@@ -28,6 +28,25 @@ module Ameba
       FileUtils.rm_rf(CONFIG_PATH)
     end
 
+    context "correctable issues" do
+      it "excludes only the sources with issues left" do
+        with_formatter do |formatter|
+          corrected = Source.new("a = 1", "corrected.cr")
+          corrected.add_issue(DummyRule.new, {1, 1}, {1, 1}, "fixed one") { |_| }
+          corrected.issues[-1] = corrected.issues[-1].as_corrected
+
+          left = Source.new("a = 1", "left.cr")
+          left.add_issue(DummyRule.new, {1, 1}, {1, 1}, "left one") { |_| }
+
+          formatter.finished([corrected, left])
+
+          todo = File.read(CONFIG_PATH)
+          todo.should contain "left.cr"
+          todo.should_not contain "corrected.cr"
+        end
+      end
+    end
+
     context "problems not found" do
       it "does not create file" do
         with_formatter do |formatter|

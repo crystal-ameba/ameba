@@ -165,7 +165,7 @@ module Ameba
 
         # The issues that couldn't be corrected will be found again so we
         # only keep the corrected ones in order to avoid duplicate reporting.
-        corrected_issues << applied_issues
+        corrected_issues << applied_issues.map(&.as_corrected)
         source.issues.clear
       end
 

@@ -46,6 +46,25 @@ module Ameba
     end
   end
 
+  # A rule whose correction doesn't change anything.
+  class UselessCorrectionRule < Rule::Base
+    properties do
+      description "Corrects code into the same code"
+      enabled false
+    end
+
+    def test(source)
+      source.add_issue(self, {1, 1}, {1, 1}, "useless") { |_| }
+    end
+  end
+
+  # Adds an issue marked as corrected, and a correctable one which is not.
+  def self.add_correctable_issues(source)
+    source.add_issue(DummyRule.new, {1, 1}, {1, 1}, "fixed one") { |_| }
+    source.issues[-1] = source.issues[-1].as_corrected
+    source.add_issue(DummyRule.new, {1, 2}, {1, 2}, "left one") { |_| }
+  end
+
   @[Rule::Deprecated("This rule is deprecated")]
   class DeprecatedRule < Rule::Base
     properties do
