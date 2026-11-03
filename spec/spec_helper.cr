@@ -167,12 +167,16 @@ module Ameba
     @[YAML::Field(ignore: true)]
     getter nodes = [] of Crystal::ASTNode
 
+    @[YAML::Field(ignore: true)]
+    getter operands = [] of Bool
+
     properties do
       description "Internal rule to test redundant control expressions"
     end
 
-    def test(source, node, visitor : AST::RedundantControlExpressionVisitor)
+    def test(source, node, visitor : AST::RedundantControlExpressionVisitor, operand : Bool)
       nodes << node
+      operands << operand
     end
   end
 
