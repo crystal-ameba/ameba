@@ -394,6 +394,24 @@ module Ameba
         end
       end
 
+      it "leaves nothing to correct on the source afterwards" do
+        rules = [Rule::Lint::NotNilAfterNoBang.new] of Rule::Base
+        path = File.tempname("source", ".cr")
+        code = "aaa.match(/x/).not_nil!\nbbb.match(/x/).not_nil!\n"
+        File.write(path, code)
+        source = Source.new(code, path)
+
+        begin
+          Runner.new(rules, [source], formatter, default_severity, autocorrect: true).run
+
+          corrected_code = source.code
+          source.correct!.should be_nil
+          source.code.should eq corrected_code
+        ensure
+          File.delete(path) rescue nil
+        end
+      end
+
       it "marks only the issues which got corrected" do
         rules = [BreakingCorrectionRule.new.tap(&.enabled = true)] of Rule::Base
         path = File.tempname("source", ".cr")
