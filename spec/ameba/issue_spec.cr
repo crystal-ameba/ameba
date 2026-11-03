@@ -23,6 +23,35 @@ module Ameba
       uncorrectable.disabled?.should be_true
     end
 
+    it "#as_corrected marks only a copy, keeping the rest" do
+      issue = Issue.new code: "code",
+        rule: DummyRule.new,
+        location: nil,
+        end_location: nil,
+        message: "Blah",
+        status: :disabled,
+        block: ->(_corrector : Source::Corrector) { }
+      issue.corrected?.should be_false
+
+      corrected = issue.as_corrected
+      corrected.corrected?.should be_true
+      corrected.correctable?.should be_true
+      corrected.code.should eq "code"
+      corrected.message.should eq "Blah"
+      corrected.disabled?.should be_true
+      issue.corrected?.should be_false
+    end
+
+    it "#without_correction drops the corrected mark" do
+      issue = Issue.new code: "",
+        rule: DummyRule.new,
+        location: nil,
+        end_location: nil,
+        message: "Blah"
+
+      issue.as_corrected.without_correction.corrected?.should be_false
+    end
+
     it "#without_correction accepts a new message" do
       issue = Issue.new code: "",
         rule: DummyRule.new,

@@ -37,12 +37,11 @@ module Ameba::Formatter
           next if (location = issue.location).nil?
 
           output.print location.colorize(:cyan)
-          if issue.correctable?
-            if config[:autocorrect]?
-              output.print " [Corrected]".colorize(:green)
-            else
-              output.print " [Correctable]".colorize(:yellow)
-            end
+          case
+          when issue.corrected?
+            output.print " [Corrected]".colorize(:green)
+          when issue.correctable?
+            output.print " [Correctable]".colorize(:yellow)
           end
           output.puts
           output.puts ("[%s] %s: %s" % {

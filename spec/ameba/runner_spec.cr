@@ -336,6 +336,45 @@ module Ameba
         end
       end
 
+      it "marks only the issues which got corrected" do
+        rules = [BreakingCorrectionRule.new.tap(&.enabled = true)] of Rule::Base
+        path = File.tempname("source", ".cr")
+        File.write(path, "foo\n")
+        source = Source.new("foo\n", path)
+
+        begin
+          Runner.new(rules, [source], formatter, default_severity, autocorrect: true).run
+          source.issues.map(&.corrected?).should eq [true, false]
+        ensure
+          File.delete(path) rescue nil
+        end
+      end
+
+      it "doesn't mark issues whose correction doesn't change anything" do
+        rules = [UselessCorrectionRule.new.tap(&.enabled = true)] of Rule::Base
+        path = File.tempname("source", ".cr")
+        File.write(path, "foo\n")
+        source = Source.new("foo\n", path)
+
+        begin
+          Runner.new(rules, [source], formatter, default_severity, autocorrect: true).run
+          source.issues.map(&.corrected?).should eq [false]
+          source.issues.map(&.correctable?).should eq [true]
+        ensure
+          File.delete(path) rescue nil
+        end
+      end
+
+      it "doesn't mark issues without autocorrect" do
+        rules = [BreakingCorrectionRule.new.tap(&.enabled = true)] of Rule::Base
+        source = Source.new("foo\n", "source.cr")
+
+        Runner.new(rules, [source], formatter, default_severity).run
+
+        source.issues.map(&.corrected?).should eq [false]
+        source.issues.map(&.correctable?).should eq [true]
+      end
+
       it "handles rules with incompatible autocorrect" do
         rules = [Rule::Performance::MinMaxAfterMap.new, Rule::Style::VerboseBlock.new]
         source = Source.new <<-CRYSTAL, File.tempname("source", ".cr")
