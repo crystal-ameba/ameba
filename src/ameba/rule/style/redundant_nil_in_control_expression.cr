@@ -41,18 +41,24 @@ module Ameba::Rule::Style
     def test(source, node : Crystal::ControlExpression)
       return unless (exp = node.exp).is_a?(Crystal::NilLiteral)
 
-      node_code =
-        node_source(node, source.lines) || node.to_s
+      location = node.location
+      end_location = control_exp_end_location(node, source.lines)
 
-      # `return(nil)`
-      if control_exp_parenthesized?(node, source.lines)
-        issue_for(exp, MSG)
-      else
+      if location && end_location && correctable?(node, source)
+        # Keep just the keyword (`return`, `next`, `break`)
+        keyword = (node_source(node, source.lines) || node.to_s)[/\A\w+/]
+
         issue_for(exp, MSG) do |corrector|
-          # Keep just the keyword (`return`, `next`, `break`)
-          corrector.replace(node, node_code[/\A\w+/])
+          corrector.replace(location, end_location, keyword)
         end
+      else
+        issue_for(exp, MSG)
       end
+    end
+
+    private def correctable?(node, source)
+      !control_exp_parenthesized?(node, source.lines) ||
+        control_exp_parentheses_removable?(node, source.lines)
     end
   end
 end

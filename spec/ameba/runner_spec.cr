@@ -311,6 +311,31 @@ module Ameba
         end
       end
 
+      it "handles `Style/RedundantReturn` conflicting over `return(nil)` in either rule order" do
+        {
+          false => "def foo\n  return\nend\n",
+          true  => "def foo\n  nil\nend\n",
+        }.each do |reverse, expected|
+          rules = [
+            Rule::Style::RedundantNilInControlExpression.new,
+            Rule::Style::RedundantReturn.new,
+          ] of Rule::Base
+          rules.reverse! if reverse
+          path = File.tempname("source", ".cr")
+          code = "def foo\n  return(nil)\nend\n"
+          File.write(path, code)
+          source = Source.new(code, path)
+
+          begin
+            Runner.new(rules, [source], formatter, default_severity, autocorrect: true).run
+            source.code.should eq expected
+            File.read(path).should eq expected
+          ensure
+            File.delete(path) rescue nil
+          end
+        end
+      end
+
       it "handles rules with incompatible autocorrect" do
         rules = [Rule::Performance::MinMaxAfterMap.new, Rule::Style::VerboseBlock.new]
         source = Source.new <<-CRYSTAL, File.tempname("source", ".cr")
