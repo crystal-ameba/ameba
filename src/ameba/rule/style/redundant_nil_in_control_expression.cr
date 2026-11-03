@@ -44,7 +44,7 @@ module Ameba::Rule::Style
       location = node.location
       end_location = control_exp_end_location(node, source.lines)
 
-      if location && end_location && correctable?(node, source)
+      if location && end_location && control_exp_replaceable?(node, source.lines)
         # Keep just the keyword (`return`, `next`, `break`)
         keyword = (node_source(node, source.lines) || node.to_s)[/\A\w+/]
 
@@ -54,11 +54,6 @@ module Ameba::Rule::Style
       else
         issue_for(exp, MSG)
       end
-    end
-
-    private def correctable?(node, source)
-      !control_exp_parenthesized?(node, source.lines) ||
-        control_exp_parentheses_removable?(node, source.lines)
     end
   end
 end

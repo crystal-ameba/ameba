@@ -1127,8 +1127,12 @@ module Ameba::AST
       end
     end
 
-    describe "#control_exp_parentheses_removable?" do
+    describe "#control_exp_replaceable?" do
       {
+        "return 1"                     => true,
+        "return (1)"                   => true,
+        "return 1, 2"                  => true,
+        "return"                       => false,
         "return(1)"                    => true,
         "return( 1, )"                 => true,
         "return(\n  1\n)"              => true,
@@ -1140,12 +1144,12 @@ module Ameba::AST
       }.each do |code, expected|
         it "returns #{expected} for `#{code.inspect}`" do
           node = as_node(code).as Crystal::ControlExpression
-          subject.control_exp_parentheses_removable?(node, code.split('\n')).should eq expected
+          subject.control_exp_replaceable?(node, code.split('\n')).should eq expected
         end
       end
     end
 
-    describe "#control_exp_parentheses_removable? with code following" do
+    describe "#control_exp_replaceable? with code following" do
       {
         "return(a) if b"    => true,
         "return(a)if b"     => false,
@@ -1158,7 +1162,43 @@ module Ameba::AST
           node = node.then if node.is_a?(Crystal::If | Crystal::Unless)
           node = node.body if node.is_a?(Crystal::ExceptionHandler)
 
-          subject.control_exp_parentheses_removable?(node.as(Crystal::ControlExpression), [code]).should eq expected
+          subject.control_exp_replaceable?(node.as(Crystal::ControlExpression), [code]).should eq expected
+        end
+      end
+    end
+
+    describe "#control_exp_replacement" do
+      {
+        "return 1"          => {1, 8, "1"},
+        "return(1)"         => {1, 9, "1"},
+        "return( 1 + 2 )"   => {1, 15, "1 + 2"},
+        "return(\n  1\n)"   => {3, 1, "1"},
+        "return(a ? 1 : 2)" => {1, 17, "(a ? 1 : 2)"},
+        "return 1, 2"       => {1, 11, "{1, 2}"},
+        "next(1)"           => {1, 7, "1"},
+      }.each do |code, (line, column, expected)|
+        it "returns the range and the code for `#{code.inspect}`" do
+          node = as_node(code).as Crystal::ControlExpression
+          replacement = subject.control_exp_replacement(node, code.split('\n')).should_not be_nil
+
+          replacement[0].should eq node.location
+          {replacement[1].line_number, replacement[1].column_number}.should eq({line, column})
+          replacement[2].should eq expected
+        end
+      end
+
+      it "wraps the code if it's an operand" do
+        code = "return a ? 1 : 2"
+        node = as_node(code).as Crystal::ControlExpression
+        replacement = subject.control_exp_replacement(node, [code], operand: true).should_not be_nil
+
+        replacement[2].should eq "(a ? 1 : 2)"
+      end
+
+      ["return", "return()", "return(1 # comment\n)", "return(<<-TEXT)\n  a\n  TEXT"].each do |code|
+        it "returns nil for `#{code.inspect}`" do
+          node = as_node(code).as Crystal::ControlExpression
+          subject.control_exp_replacement(node, code.split('\n')).should be_nil
         end
       end
     end
