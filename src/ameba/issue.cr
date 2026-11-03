@@ -53,13 +53,17 @@ module Ameba
 
     # Returns the same issue, marked as corrected in the source.
     def as_corrected : self
-      self.class.new(code, rule, location, end_location, message, status, @block, corrected: true)
+      copy_with(corrected: true)
     end
 
     # Returns the same issue with the given *message*, but without the means
     # of correcting it.
     def without_correction(message = @message) : self
-      self.class.new(code, rule, location, end_location, message, status)
+      copy_with(message: message, block: nil, corrected: false)
+    end
+
+    private def copy_with(*, message = @message, block = @block, corrected = @corrected)
+      self.class.new(code, rule, location, end_location, message, status, block, corrected: corrected)
     end
   end
 end
