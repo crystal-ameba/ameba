@@ -160,7 +160,7 @@ module Ameba
         check_unneeded_directives(source, excluded_rules)
         break unless autocorrect?
 
-        applied_issues = correct_source(source)
+        applied_issues = source.correct_safely!
         break unless applied_issues
 
         # The issues that couldn't be corrected will be found again so we
@@ -182,52 +182,6 @@ module Ameba
         }
       end
       @formatter.source_finished(source)
-    end
-
-    # Corrects the *source*, making sure it stays parsable. Corrections breaking
-    # the syntax are dropped, which leaves their issues reported as uncorrected.
-    # Returns the corrected issues, or `nil` if the code was unchanged.
-    private def correct_source(source)
-      previous_code = source.code
-
-      applied_issues = source.correct!
-      return applied_issues if !applied_issues || parsable?(source)
-
-      # Retry without the corrections breaking the syntax on their own
-      source.code = previous_code
-      drop_corrections(source) { |issue| !correction_parsable?(source, issue) }
-
-      applied_issues = source.correct!
-      return applied_issues if !applied_issues || parsable?(source)
-
-      # The remaining corrections break the syntax only when combined
-      source.code = previous_code
-      drop_corrections(source) { true }
-
-      nil
-    end
-
-    private def drop_corrections(source, &)
-      source.issues.map! do |issue|
-        next issue unless issue.correctable? && yield issue
-
-        issue.without_correction("#{issue.message} (not corrected: would produce invalid syntax)")
-      end
-    end
-
-    # Returns `true` if correcting only the given *issue* keeps *source* parsable.
-    private def correction_parsable?(source, issue)
-      probe = Source.new(source.code, source.path)
-      probe.issues << issue
-
-      !probe.correct! || parsable?(probe)
-    end
-
-    private def parsable?(source)
-      source.ast
-      true
-    rescue Crystal::SyntaxException
-      false
     end
 
     # Explains an issue at a specified *location*.

@@ -112,6 +112,67 @@ module Ameba
       end
     end
 
+    describe "#parsable?" do
+      it "returns true for valid syntax" do
+        Source.new("a = 1").parsable?.should be_true
+      end
+
+      it "returns false for invalid syntax" do
+        Source.new("a = (").parsable?.should be_false
+      end
+    end
+
+    describe "#correct_safely!" do
+      it "behaves the same as #correct! if the source stays parsable" do
+        source = Source.new("foo\n")
+        BreakingCorrectionRule.new.catch(source)
+
+        source.correct_safely!.try(&.map(&.message)).should eq ["foo"]
+        source.code.should eq "bar\n"
+        source.parsable?.should be_true
+      end
+
+      it "returns nil and keeps the code if the only correction breaks the syntax" do
+        source = Source.new("bar\n")
+        BreakingCorrectionRule.new.catch(source)
+
+        source.correct_safely!.should be_nil
+        source.code.should eq "bar\n"
+        source.lines.should eq ["bar", ""]
+        source.parsable?.should be_true
+        source.issues.first.correctable?.should be_false
+        source.issues.first.message.should contain "invalid syntax"
+      end
+
+      it "drops only the correction breaking the syntax" do
+        source = Source.new("bar\nbaz.match(/x/).not_nil!\n")
+        BreakingCorrectionRule.new.catch(source)
+        Rule::Lint::NotNilAfterNoBang.new.catch(source)
+
+        source.correct_safely!.try(&.map(&.rule.name)).should eq ["Lint/NotNilAfterNoBang"]
+        source.code.should eq "bar\nbaz.match!(/x/)\n"
+      end
+
+      it "drops all corrections if they break the syntax only when combined" do
+        source = Source.new("x = 1\n2\n")
+        IncompatibleCorrectionsRule.new.catch(source)
+
+        source.correct_safely!.should be_nil
+        source.code.should eq "x = 1\n2\n"
+        source.issues.map(&.correctable?).should eq [false, false]
+      end
+
+      it "doesn't annotate issues without a correction" do
+        source = Source.new("x = 1\n2\n")
+        IncompatibleCorrectionsRule.new.catch(source)
+        source.add_issue(DummyRule.new, {1, 1}, "plain")
+
+        source.correct_safely!
+
+        source.issues.last.message.should eq "plain"
+      end
+    end
+
     describe "#correct!" do
       it "skips disabled issues" do
         source = Source.new <<-CRYSTAL
