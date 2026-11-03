@@ -123,6 +123,40 @@ module Ameba
     end
 
     describe "#correct_safely!" do
+      it "drops a correction which raises, keeping the other ones" do
+        source = Source.new("foo\nbar.match(/x/).not_nil!\n")
+        RaisingCorrectionRule.new.catch(source)
+        Rule::Lint::NotNilAfterNoBang.new.catch(source)
+
+        source.correct_safely!.try(&.map(&.rule.name)).should eq ["Lint/NotNilAfterNoBang"]
+        source.code.should eq "foo\nbar.match!(/x/)\n"
+
+        issue = source.issues.first
+        issue.correctable?.should be_false
+        issue.message.should start_with "foo"
+        issue.message.should contain "correction went wrong"
+        issue.message.should contain "IndexError"
+      end
+
+      it "doesn't annotate the other issues if a correction raises" do
+        source = Source.new("foo\n")
+        RaisingCorrectionRule.new.catch(source)
+        source.add_issue(DummyRule.new, {1, 1}, {1, 3}, "no-op") { |corrector| corrector.replace({1, 1}, {1, 3}, "foo") }
+
+        source.correct_safely!.should be_nil
+        source.issues.last.message.should eq "no-op"
+        source.issues.last.correctable?.should be_true
+      end
+
+      it "returns nil if the only correction raises" do
+        source = Source.new("foo\n")
+        RaisingCorrectionRule.new.catch(source)
+
+        source.correct_safely!.should be_nil
+        source.code.should eq "foo\n"
+        source.issues.first.correctable?.should be_false
+      end
+
       it "behaves the same as #correct! if the source stays parsable" do
         source = Source.new("foo\n")
         BreakingCorrectionRule.new.catch(source)
@@ -213,6 +247,14 @@ module Ameba
     end
 
     describe "#correct!" do
+      it "raises if a correction raises" do
+        source = Source.new("foo\n")
+        RaisingCorrectionRule.new.catch(source)
+
+        expect_raises(IndexError, "correction went wrong") { source.correct! }
+        source.code.should eq "foo\n"
+      end
+
       it "skips issues which got corrected already" do
         source = Source.new("foo\n")
         source.add_issue(DummyRule.new, {1, 1}, {1, 3}, "fixed") { |corrector| corrector.replace({1, 1}, {1, 3}, "bar") }

@@ -33,7 +33,7 @@ module Ameba
     # Corrects any correctable issues and updates `code`.
     # Returns the corrected issues, or `nil` if the code was unchanged.
     def correct! : Array(Issue)?
-      corrected_code, corrected_issues = corrections(issues)
+      corrected_code, corrected_issues = corrections(issues) { |_, ex| raise ex }
       return if code == corrected_code
 
       self.code = corrected_code
@@ -42,10 +42,20 @@ module Ameba
     end
 
     # Same as `#correct!`, but makes sure the source stays parsable. Corrections
-    # breaking the syntax are dropped, which leaves their issues reported as
-    # uncorrected.
+    # breaking the syntax or raising an exception are dropped, which leaves their
+    # issues reported as uncorrected.
     def correct_safely! : Array(Issue)?
-      corrected_code, corrected_issues = corrections(issues)
+      failures = [] of {Issue, Exception}
+
+      corrected_code, corrected_issues = corrections(issues) do |issue, ex|
+        failures << {issue, ex}
+      end
+
+      failures.each do |failed_issue, ex|
+        reason = "correction raised an exception: #{ex.message} (#{ex.class})"
+        drop_corrections(reason) { |issue| issue == failed_issue }
+      end
+
       return if code == corrected_code
       return corrected_issues if adopt_parsable(corrected_code)
 
@@ -54,7 +64,7 @@ module Ameba
         drop_corrections { |issue| breaking_issues.includes?(issue) }
       end
 
-      corrected_code, corrected_issues = corrections(issues)
+      corrected_code, corrected_issues = corrections(issues) { }
       return if code == corrected_code
       return corrected_issues if adopt_parsable(corrected_code)
 
@@ -82,13 +92,16 @@ module Ameba
     # Returns the code with corrections of the given *candidates* applied, along
     # with the ones which got applied. Conflicting issues are deferred until
     # Runner reinspects the corrected source, as all corrections apply to the
-    # same source snapshot.
-    private def corrections(candidates) : {String, Array(Issue)}
+    # same source snapshot. Yields the issues whose corrections raised an exception.
+    private def corrections(candidates, &) : {String, Array(Issue)}
       corrector = Corrector.new(code, line_offsets)
 
       corrected_issues = candidates.select do |issue|
         issue.unresolved? &&
           corrector.transaction { issue.correct(corrector) }
+      rescue ex
+        yield issue, ex
+        false
       end
 
       {corrector.process, corrected_issues}
@@ -104,12 +117,12 @@ module Ameba
       true
     end
 
-    private def drop_corrections(&)
+    private def drop_corrections(reason = "would produce invalid syntax", &)
       issues.map! do |issue|
         next issue unless issue.correctable? && yield issue
 
         issue.without_correction(
-          "#{issue.message} (not corrected: would produce invalid syntax)"
+          "#{issue.message} (not corrected: #{reason})"
         )
       end
     end
@@ -121,7 +134,7 @@ module Ameba
     private def breaking_issues?(candidates) : Array(Issue)?
       return if candidates.empty?
 
-      return if parse?(corrections(candidates).first)
+      return if parse?(corrections(candidates) { }.first)
       return candidates if candidates.size == 1
 
       half = candidates.size // 2
