@@ -12,6 +12,9 @@ module Ameba::AST
     # A node to run traversal on.
     getter node : Crystal::ASTNode
 
+    # Whether the reached control expression is an operand of a binary operator.
+    getter? operand = false
+
     def initialize(@rule, @source, @node)
       traverse_node(node)
     end
@@ -48,7 +51,9 @@ module Ameba::AST
     end
 
     private def traverse_binary_op(node)
+      @operand = node.right.is_a?(Crystal::ControlExpression)
       traverse_node(node.right)
+      @operand = false
     end
 
     private def traverse_exception_handler(node)

@@ -27,6 +27,124 @@ module Ameba::Rule::Style
         CRYSTAL
     end
 
+    context "right side of a binary operator" do
+      it "keeps the meaning of a ternary" do
+        source = expect_issue subject, <<-CRYSTAL
+          def foo(a, b)
+            a || return b ? 1 : 2
+               # ^^^^^^ error: Redundant `return` detected
+          end
+          CRYSTAL
+
+        expect_correction source, <<-CRYSTAL
+          def foo(a, b)
+            a || (b ? 1 : 2)
+          end
+          CRYSTAL
+      end
+
+      it "keeps the meaning of a lower precedence operator" do
+        source = expect_issue subject, <<-CRYSTAL
+          def foo(a, b, c)
+            a && return b || c
+               # ^^^^^^ error: Redundant `return` detected
+          end
+          CRYSTAL
+
+        expect_correction source, <<-CRYSTAL
+          def foo(a, b, c)
+            a && (b || c)
+          end
+          CRYSTAL
+      end
+
+      it "keeps the code parsable with an assignment" do
+        source = expect_issue subject, <<-CRYSTAL
+          def foo(a)
+            a || return b = 1
+               # ^^^^^^ error: Redundant `return` detected
+          end
+          CRYSTAL
+
+        expect_correction source, <<-CRYSTAL
+          def foo(a)
+            a || (b = 1)
+          end
+          CRYSTAL
+      end
+
+      it "doesn't add parentheses around a value binding tightly" do
+        source = expect_issue subject, <<-CRYSTAL
+          def foo(a, b)
+            a || return b
+               # ^^^^^^ error: Redundant `return` detected
+          end
+          CRYSTAL
+
+        expect_correction source, <<-CRYSTAL
+          def foo(a, b)
+            a || b
+          end
+          CRYSTAL
+      end
+
+      it "doesn't add parentheses to a return following an operand" do
+        source = expect_issue subject, <<-CRYSTAL
+          def foo(a, b)
+            if a
+              a || return b
+                 # ^^^^^^ error: Redundant `return` detected
+            else
+              return b ? 1 : 2
+            # ^^^^^^ error: Redundant `return` detected
+            end
+          end
+          CRYSTAL
+
+        expect_correction source, <<-CRYSTAL
+          def foo(a, b)
+            if a
+              a || b
+            else
+              b ? 1 : 2
+            end
+          end
+          CRYSTAL
+      end
+
+      it "doesn't add parentheses to the same expression elsewhere" do
+        source = expect_issue subject, <<-CRYSTAL
+          def foo(a, b)
+            return b ? 1 : 2 if a
+          # ^^^^^^ error: Redundant `return` detected
+          end
+
+          def bar(a, b, c)
+            a || begin
+              if b
+                return b ? 1 : 2
+              # ^^^^^^ error: Redundant `return` detected
+              end
+            end
+          end
+          CRYSTAL
+
+        expect_correction source, <<-CRYSTAL
+          def foo(a, b)
+            b ? 1 : 2 if a
+          end
+
+          def bar(a, b, c)
+            a || begin
+              if b
+                b ? 1 : 2
+              end
+            end
+          end
+          CRYSTAL
+      end
+    end
+
     context "arguments in parentheses" do
       it "corrects to the argument" do
         source = expect_issue subject, <<-CRYSTAL

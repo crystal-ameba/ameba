@@ -4,6 +4,21 @@ module Ameba::Rule::Style
   describe RedundantNext do
     subject = RedundantNext.new
 
+    it "keeps the meaning of an expression on the right side of a binary operator" do
+      source = expect_issue subject, <<-CRYSTAL
+        foo do |a, b|
+          a || next b ? 1 : 2
+             # ^^^^ error: Redundant `next` detected
+        end
+        CRYSTAL
+
+      expect_correction source, <<-CRYSTAL
+        foo do |a, b|
+          a || (b ? 1 : 2)
+        end
+        CRYSTAL
+    end
+
     it "corrects next with arguments in parentheses" do
       source = expect_issue subject, <<-CRYSTAL
         foo do |a|

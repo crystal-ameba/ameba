@@ -117,7 +117,7 @@ module Ameba::Rule::Style
       location = node.location
       end_location = location.try(&.adjust(column_number: {{ "return".size - 1 }}))
 
-      exp_code = control_exp_code(node, source.lines)
+      exp_code = control_exp_code(node, source.lines, operand: visitor.operand?)
       exp_end_location = control_exp_end_location(node, source.lines)
 
       if location && exp_code && exp_end_location

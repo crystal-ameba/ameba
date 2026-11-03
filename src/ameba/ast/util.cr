@@ -483,12 +483,20 @@ module Ameba::AST::Util
   # Arguments in parentheses (e.g. `return(1)`) keep them, unless they're
   # not needed to preserve the meaning of the code. Returns `nil` if the
   # closing parenthesis can't be found, or dropping it would drop a comment.
-  def control_exp_code(node : Crystal::ControlExpression, code_lines)
+  #
+  # Code which replaces an *operand* of a binary operator gets wrapped in
+  # parentheses if needed, since `a || return b ? 1 : 2` differs from `a || b ? 1 : 2`.
+  def control_exp_code(node : Crystal::ControlExpression, code_lines, *, operand = false)
     return unless exp = node.exp
     return unless exp_code = control_exp_value_code(exp, code_lines)
-    return exp_code unless control_exp_parenthesized?(node, code_lines)
-    return if control_exp_end_location(node, code_lines) == node.end_location
-    return if control_exp_comment?(node, exp, code_lines)
+
+    case
+    when control_exp_parenthesized?(node, code_lines)
+      return if control_exp_end_location(node, code_lines) == node.end_location
+      return if control_exp_comment?(node, exp, code_lines)
+    when !operand
+      return exp_code
+    end
 
     binds_tightly?(exp) ? exp_code : "(#{exp_code})"
   end
@@ -516,13 +524,20 @@ module Ameba::AST::Util
     }.any? { |code| code.nil? || code.includes?('#') }
   end
 
-  # Returns `true` if *exp* means the same regardless of the surrounding code.
+  # Operators binding tighter than `&&` and `||`, and the rest of the
+  # code which can surround a control expression being replaced.
+  private TIGHT_BINDING_OPERATORS = %w[
+    + - * / // % ** &+ &- &* &** << >> & | ^ == != === =~ !~ < <= > >= <=>
+  ]
+
+  # Returns `true` if *exp* means the same in place of a control expression.
   private def binds_tightly?(exp) : Bool
     case exp
     when Crystal::Call
       return false if exp.block || exp.block_arg
+      return true if exp.has_parentheses? || (exp.args.empty? && !exp.named_args)
 
-      exp.has_parentheses? || (exp.args.empty? && !exp.named_args)
+      exp.args.size == 1 && exp.name.in?(TIGHT_BINDING_OPERATORS)
     when Crystal::NilLiteral, Crystal::BoolLiteral, Crystal::NumberLiteral,
          Crystal::CharLiteral, Crystal::StringLiteral, Crystal::StringInterpolation,
          Crystal::SymbolLiteral, Crystal::RegexLiteral, Crystal::ArrayLiteral,
