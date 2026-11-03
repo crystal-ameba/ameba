@@ -41,6 +41,12 @@ module Ameba
       !@block.nil?
     end
 
+    # Returns `true` if the issue still needs attention,
+    # which is to say it's neither disabled nor corrected.
+    def unresolved?
+      enabled? && !corrected?
+    end
+
     def correct(corrector)
       @block.try(&.call(corrector))
     end

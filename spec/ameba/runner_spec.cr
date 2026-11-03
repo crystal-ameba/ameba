@@ -351,6 +351,49 @@ module Ameba
         end
       end
 
+      it "succeeds if every issue got corrected" do
+        rules = [Rule::Lint::NotNilAfterNoBang.new] of Rule::Base
+        path = File.tempname("source", ".cr")
+        code = "foo.match(/x/).not_nil!\n"
+        File.write(path, code)
+        source = Source.new(code, path)
+
+        begin
+          runner = Runner.new(rules, [source], formatter, default_severity, autocorrect: true).run
+          source.issues.size.should eq 1
+          runner.success?.should be_true
+        ensure
+          File.delete(path) rescue nil
+        end
+      end
+
+      it "fails if any issue is left uncorrected" do
+        rules = [Rule::Lint::NotNilAfterNoBang.new, ErrorRule.new] of Rule::Base
+        path = File.tempname("source", ".cr")
+        code = "foo.match(/x/).not_nil!\n"
+        File.write(path, code)
+        source = Source.new(code, path)
+
+        begin
+          Runner.new(rules, [source], formatter, default_severity, autocorrect: true).run.success?.should be_false
+        ensure
+          File.delete(path) rescue nil
+        end
+      end
+
+      it "fails if a correction left an issue behind" do
+        rules = [UselessCorrectionRule.new.tap(&.enabled = true)] of Rule::Base
+        path = File.tempname("source", ".cr")
+        File.write(path, "foo\n")
+        source = Source.new("foo\n", path)
+
+        begin
+          Runner.new(rules, [source], formatter, default_severity, autocorrect: true).run.success?.should be_false
+        ensure
+          File.delete(path) rescue nil
+        end
+      end
+
       it "marks only the issues which got corrected" do
         rules = [BreakingCorrectionRule.new.tap(&.enabled = true)] of Rule::Base
         path = File.tempname("source", ".cr")

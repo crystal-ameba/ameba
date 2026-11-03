@@ -199,7 +199,7 @@ module Ameba
     end
 
     # Indicates whether the last inspection successful or not.
-    # It returns `true` if no issues are found, `false` otherwise.
+    # It returns `true` if no issues are left, `false` otherwise.
     #
     # ```
     # runner = Ameba::Runner.new(config)
@@ -207,7 +207,7 @@ module Ameba
     # runner.success? # => true or false
     # ```
     def success?
-      @sources.all?(&.issues.none?(&.enabled?))
+      @sources.all?(&.valid?)
     end
 
     private MAX_ITERATIONS = 200

@@ -17,6 +17,30 @@ module Ameba::Formatter
     end
 
     context "correctable issues" do
+      it "counts only the issues left as failures" do
+        source = Source.new("a = 1", "source.cr")
+        Ameba.add_correctable_issues(source)
+
+        subject.finished([source])
+
+        output.to_s.should contain "1 inspected, 1 failure"
+      end
+
+      it "treats a fully corrected source as successful, but still lists its issues" do
+        source = Source.new("a = 1", "source.cr")
+        source.add_issue(DummyRule.new, {1, 1}, {1, 1}, "fixed one") { |_| }
+        source.issues[-1] = source.issues[-1].as_corrected
+
+        subject.source_finished(source)
+        output.to_s.should contain "."
+        output.to_s.should_not contain "F"
+
+        subject.finished([source])
+        output.to_s.should contain "[Corrected]"
+        output.to_s.should contain "fixed one"
+        output.to_s.should contain "1 inspected, 0 failures"
+      end
+
       it "tells corrected issues from the ones left" do
         source = Source.new("a = 1", "source.cr")
         Ameba.add_correctable_issues(source)
