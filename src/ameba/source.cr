@@ -53,7 +53,7 @@ module Ameba
 
       failures.each do |failed_issue, ex|
         reason = "correction raised an exception: #{ex.message} (#{ex.class})"
-        drop_corrections(reason) { |issue| issue == failed_issue }
+        drop_corrections(reason, crashed: true) { |issue| issue == failed_issue }
       end
 
       return if code == corrected_code
@@ -117,13 +117,14 @@ module Ameba
       true
     end
 
-    private def drop_corrections(reason = "would produce invalid syntax", &)
+    private def drop_corrections(reason = "would produce invalid syntax", *, crashed = false, &)
       issues.map! do |issue|
         next issue unless issue.correctable? && yield issue
 
-        issue.without_correction(
+        dropped_issue = issue.without_correction(
           "#{issue.message} (not corrected: #{reason})"
         )
+        crashed ? dropped_issue.as_crashed : dropped_issue
       end
     end
 

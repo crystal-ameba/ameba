@@ -5,6 +5,65 @@ module Ameba
   root = Path[__DIR__, "..", "..", "fixtures"].expand
 
   describe CLI do
+    describe "ExitCode" do
+      it "has the documented values" do
+        CLI::ExitCode::Success.value.should eq 0
+        CLI::ExitCode::Issues.value.should eq 1
+        CLI::ExitCode::Crash.value.should eq 2
+        CLI::ExitCode::Aborted.value.should eq 255
+      end
+    end
+
+    describe ".exit_code" do
+      it "is zero if there are no issues" do
+        CLI.exit_code(["-f", "silent", "--only", "Lint/ComparisonToBoolean", __FILE__]).should eq CLI::ExitCode::Success
+      end
+
+      it "is one if some issues are left" do
+        CLI.exit_code(["-f", "silent", "--only", "Ameba/ErrorRule", __FILE__]).should eq CLI::ExitCode::Issues
+      end
+
+      it "is two if a correction raised, even with other issues left" do
+        path = File.tempname("source", ".cr")
+        File.write(path, "foo\n")
+
+        begin
+          args = ["-f", "silent", "--fix", "--only", "Ameba/RaisingCorrectionRule,Ameba/ErrorRule", path]
+          CLI.exit_code(args).should eq CLI::ExitCode::Crash
+        ensure
+          File.delete(path) rescue nil
+        end
+      end
+
+      it "is zero if every issue got corrected" do
+        path = File.tempname("source", ".cr")
+        File.write(path, "foo.match(/x/).not_nil!\n")
+
+        begin
+          args = ["-f", "silent", "--fix", "--only", "Lint/NotNilAfterNoBang", path]
+          CLI.exit_code(args).should eq CLI::ExitCode::Success
+          File.read(path).should eq "foo.match!(/x/)\n"
+        ensure
+          File.delete(path) rescue nil
+        end
+      end
+
+      it "is zero when showing the version" do
+        CLI.exit_code(["--version"], IO::Memory.new).should eq CLI::ExitCode::Success
+      end
+
+      it "is what `.run` is based on" do
+        path = File.tempname("source", ".cr")
+        File.write(path, "foo\n")
+
+        begin
+          CLI.run(["-f", "silent", "--fix", "--only", "Ameba/RaisingCorrectionRule", path]).should be_false
+        ensure
+          File.delete(path) rescue nil
+        end
+      end
+    end
+
     describe ".run" do
       it "runs ameba" do
         r = CLI.run(["-f", "silent", "--only", "Lint/ComparisonToBoolean", __FILE__])

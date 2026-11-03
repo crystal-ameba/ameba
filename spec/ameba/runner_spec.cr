@@ -102,6 +102,46 @@ module Ameba
         end
       end
 
+      context "#crashed?" do
+        it "is false if nothing raised" do
+          source = Source.new(path: "source.cr")
+
+          Runner.new([ErrorRule.new] of Rule::Base, [source], formatter, default_severity).run
+            .crashed?.should be_false
+        end
+
+        it "is true if a rule raised" do
+          rule = RaiseRule.new
+          rule.should_raise = true
+          source = Source.new(path: "source.cr")
+
+          Runner.new([rule] of Rule::Base, [source], formatter, default_severity).run
+            .crashed?.should be_true
+        end
+
+        it "is true if any of the sources has a correction which raised" do
+          rules = [RaisingCorrectionRule.new.tap(&.enabled = true)] of Rule::Base
+          path = File.tempname("source", ".cr")
+          File.write(path, "foo\n")
+          sources = [Source.new("bar\n", "other.cr"), Source.new("foo\n", path)]
+
+          begin
+            Runner.new(rules, sources, formatter, default_severity, autocorrect: true).run
+              .crashed?.should be_true
+          ensure
+            File.delete(path) rescue nil
+          end
+        end
+
+        it "is false if a correction would raise but autocorrect is off" do
+          rules = [RaisingCorrectionRule.new.tap(&.enabled = true)] of Rule::Base
+          source = Source.new("foo\n", "source.cr")
+
+          Runner.new(rules, [source], formatter, default_severity).run
+            .crashed?.should be_false
+        end
+      end
+
       context "exception in rule" do
         it "reports an exception raised while running a rule" do
           rule = RaiseRule.new
