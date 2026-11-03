@@ -61,7 +61,8 @@ module Ameba
 
       # Retry without the corrections breaking the syntax on their own
       self.code = previous_code
-      drop_corrections { |issue| !correction_parsable?(issue) }
+      breaking_issues = breaking_issues(issues.select(&.unresolved?))
+      drop_corrections { |issue| breaking_issues.includes?(issue) }
 
       corrected_issues = correct!
       return corrected_issues if !corrected_issues || parsable?
@@ -96,12 +97,20 @@ module Ameba
       end
     end
 
-    # Returns `true` if correcting only the given *issue* keeps the source parsable.
-    private def correction_parsable?(issue)
-      probe = self.class.new(code, path)
-      probe.issues << issue
+    # Returns the *candidates* whose corrections break the syntax on their own.
+    #
+    # Bisects them, since parsing the outcome of each one separately would take
+    # too long for a source with many issues.
+    private def breaking_issues(candidates) : Array(Issue)
+      return [] of Issue if candidates.empty?
 
-      !probe.correct! || probe.parsable?
+      probe = self.class.new(code, path)
+      probe.issues.concat(candidates)
+      return [] of Issue if !probe.correct! || probe.parsable?
+      return candidates if candidates.size == 1
+
+      half = candidates.size // 2
+      breaking_issues(candidates[0...half]) + breaking_issues(candidates[half..])
     end
 
     # Returns lines of code split by new line character.
