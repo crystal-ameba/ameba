@@ -38,7 +38,7 @@ module Ameba
       # Corrections all apply to the same source snapshot. Conflicting issues
       # are deferred until Runner reinspects the corrected source.
       corrected_issues = issues.select do |issue|
-        issue.enabled? && issue.correctable? &&
+        issue.unresolved? && issue.correctable? &&
           corrector.transaction { issue.correct(corrector) }
       end
 

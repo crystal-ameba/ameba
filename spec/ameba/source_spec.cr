@@ -213,6 +213,15 @@ module Ameba
     end
 
     describe "#correct!" do
+      it "skips issues which got corrected already" do
+        source = Source.new("foo\n")
+        source.add_issue(DummyRule.new, {1, 1}, {1, 3}, "fixed") { |corrector| corrector.replace({1, 1}, {1, 3}, "bar") }
+        source.issues[-1] = source.issues[-1].as_corrected
+
+        source.correct!.should be_nil
+        source.code.should eq "foo\n"
+      end
+
       it "skips disabled issues" do
         source = Source.new <<-CRYSTAL
           foo.match("bar").not_nil! # ameba:disable Lint/NotNilAfterNoBang
