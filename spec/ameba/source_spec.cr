@@ -153,6 +153,45 @@ module Ameba
         source.code.should eq "bar\nbaz.match!(/x/)\n"
       end
 
+      it "drops every correction breaking the syntax" do
+        source = Source.new("bar\nbaz.match(/x/).not_nil!\nqux\n")
+        BreakingCorrectionRule.new.catch(source)
+        Rule::Lint::NotNilAfterNoBang.new.catch(source)
+        source.add_issue(DummyRule.new, {3, 1}, {3, 3}, "bad too") { |corrector| corrector.replace({3, 1}, {3, 3}, "qux)") }
+
+        source.correct_safely!.try(&.map(&.rule.name)).should eq ["Lint/NotNilAfterNoBang"]
+        source.code.should eq "bar\nbaz.match!(/x/)\nqux\n"
+        source.issues.count(&.correctable?).should eq 1
+      end
+
+      it "doesn't try corrections of disabled issues" do
+        source = Source.new("bar\nbaz\n")
+        BreakingCorrectionRule.new.catch(source)
+        source.add_issue(DummyRule.new, {2, 1}, {2, 3}, "disabled", status: :disabled) { |corrector| corrector.replace({2, 1}, {2, 3}, "baz)") }
+
+        source.correct_safely!.should be_nil
+        source.issues.last.correctable?.should be_true
+      end
+
+      it "finds a correction breaking the syntax among many others" do
+        lines = Array.new(64) { |i| "foo#{i}.match(/x/).not_nil!" }
+        source = Source.new("bar\n#{lines.join('\n')}\n")
+        BreakingCorrectionRule.new.catch(source)
+        Rule::Lint::NotNilAfterNoBang.new.catch(source)
+
+        source.correct_safely!.try(&.size).should eq 64
+        source.lines.first.should eq "bar"
+      end
+
+      it "finds a correction breaking the syntax deferred by a conflict" do
+        source = Source.new("qux\nbar\n")
+        source.add_issue(DummyRule.new, {1, 1}, {1, 3}, "bad") { |corrector| corrector.replace({1, 1}, {1, 3}, "qux)") }
+        source.add_issue(DummyRule.new, {1, 1}, {1, 3}, "good") { |corrector| corrector.replace({1, 1}, {1, 3}, "good") }
+
+        source.correct_safely!.try(&.map(&.message)).should eq ["good"]
+        source.code.should eq "good\nbar\n"
+      end
+
       it "drops all corrections if they break the syntax only when combined" do
         source = Source.new("x = 1\n2\n")
         IncompatibleCorrectionsRule.new.catch(source)
