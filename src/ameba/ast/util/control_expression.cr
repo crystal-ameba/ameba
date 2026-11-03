@@ -34,11 +34,13 @@ module Ameba::AST::Util
 
   private def control_exp_value_code(exp, code_lines)
     return unless exp_code = node_source(exp, code_lines)
-    return exp_code unless exp.is_a?(Crystal::TupleLiteral) && exp_code[0] != '{'
-    return unless exp_start = exp.elements.first.location
-    return unless exp_end = exp.end_location
+    # An explicit tuple literal starts before its first element
+    return exp_code unless exp.is_a?(Crystal::TupleLiteral) && exp.location == exp.elements.first.location
+    # The terminator of a heredoc has to stay on its own line
+    return if exp_code.includes?("<<-") && exp_code.includes?('\n')
 
-    "{#{source_between(exp_start, exp_end, code_lines)}}"
+    # A space keeps two opening braces from being taken for a macro expression
+    exp_code.starts_with?('{') ? "{ #{exp_code} }" : "{#{exp_code}}"
   end
 
   # Returns `true` if there is a comment between the
