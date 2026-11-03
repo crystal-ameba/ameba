@@ -24,7 +24,25 @@ module Ameba
       end
     end
 
+    describe "#unresolved_issues" do
+      it "returns only the issues which still need attention" do
+        source = Source.new("a = 1", "source.cr")
+        Ameba.add_correctable_issues(source)
+        source.add_issue(DummyRule.new, {1, 3}, "disabled one", status: :disabled)
+
+        source.unresolved_issues.map(&.message).should eq ["left one"]
+      end
+    end
+
     describe "#valid?" do
+      it "returns true if all issues got corrected" do
+        source = Source.new(path: "source.cr")
+        source.add_issue(DummyRule.new, {1, 1}, {1, 1}, "fixed one") { |_| }
+        source.issues[-1] = source.issues[-1].as_corrected
+
+        source.should be_valid
+      end
+
       it "returns true if no issues added" do
         source = Source.new(path: "source.cr")
         source.should be_valid

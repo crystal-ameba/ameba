@@ -29,9 +29,8 @@ module Ameba::Formatter
       output << "\n\n"
 
       show_affected_code = !config[:without_affected_code]?
-      failed_sources = sources.reject(&.valid?)
 
-      failed_sources.each do |source|
+      sources.each do |source|
         source.issues.each do |issue|
           next if issue.disabled?
           next if (location = issue.location).nil?
@@ -59,7 +58,7 @@ module Ameba::Formatter
       end
 
       output.puts finished_in_message(@started_at)
-      output.puts final_message(sources, failed_sources)
+      output.puts final_message(sources)
     end
 
     private def started_message(size)
@@ -72,9 +71,9 @@ module Ameba::Formatter
       "Finished in #{to_human(started.elapsed)}".colorize(:default)
     end
 
-    private def final_message(sources, failed_sources)
+    private def final_message(sources)
       total = sources.size
-      failures = failed_sources.sum(&.issues.count(&.enabled?))
+      failures = sources.sum(&.unresolved_issues.size)
       color = failures == 0 ? :green : :red
 
       "#{total} inspected, #{failures} #{pluralize(failures, "failure")}".colorize(color)
