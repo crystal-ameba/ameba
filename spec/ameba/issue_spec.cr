@@ -41,6 +41,31 @@ module Ameba
       disabled.unresolved?.should be_false
     end
 
+    it "#as_crashed marks only a copy, keeping the rest" do
+      issue = Issue.new code: "code",
+        rule: DummyRule.new,
+        location: nil,
+        end_location: nil,
+        message: "Blah"
+      issue.crashed?.should be_false
+
+      crashed = issue.as_crashed
+      crashed.crashed?.should be_true
+      crashed.message.should eq "Blah"
+      issue.crashed?.should be_false
+    end
+
+    it "keeps being crashed through other copies" do
+      issue = Issue.new code: "",
+        rule: DummyRule.new,
+        location: nil,
+        end_location: nil,
+        message: "Blah"
+
+      issue.as_crashed.without_correction("Foo").crashed?.should be_true
+      issue.as_crashed.as_corrected.crashed?.should be_true
+    end
+
     it "#as_corrected marks only a copy, keeping the rest" do
       issue = Issue.new code: "code",
         rule: DummyRule.new,

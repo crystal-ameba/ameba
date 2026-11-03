@@ -27,10 +27,13 @@ module Ameba
     # Whether the issue has been corrected in the source.
     getter? corrected : Bool
 
+    # Whether the issue reports an exception raised by its rule or correction.
+    getter? crashed : Bool
+
     delegate :enabled?, :disabled?,
       to: status
 
-    def initialize(@code, @rule, @location, @end_location, @message, @status : Status = :enabled, @block : (Source::Corrector ->)? = nil, *, @corrected = false)
+    def initialize(@code, @rule, @location, @end_location, @message, @status : Status = :enabled, @block : (Source::Corrector ->)? = nil, *, @corrected = false, @crashed = false)
     end
 
     def syntax?
@@ -56,14 +59,19 @@ module Ameba
       copy_with(corrected: true)
     end
 
+    # Returns the same issue, marked as reporting a raised exception.
+    def as_crashed : self
+      copy_with(crashed: true)
+    end
+
     # Returns the same issue with the given *message*, but without the means
     # of correcting it.
     def without_correction(message = @message) : self
       copy_with(message: message, block: nil, corrected: false)
     end
 
-    private def copy_with(*, message = @message, block = @block, corrected = @corrected)
-      self.class.new(code, rule, location, end_location, message, status, block, corrected: corrected)
+    private def copy_with(*, message = @message, block = @block, corrected = @corrected, crashed = @crashed)
+      self.class.new(code, rule, location, end_location, message, status, block, corrected: corrected, crashed: crashed)
     end
   end
 end

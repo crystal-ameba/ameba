@@ -138,6 +138,17 @@ module Ameba
         issue.message.should contain "IndexError"
       end
 
+      it "marks only the issues whose corrections raised as crashed" do
+        source = Source.new("foo\nbar\n")
+        RaisingCorrectionRule.new.catch(source)
+        source.add_issue(DummyRule.new, {2, 1}, {2, 3}, "bad") { |corrector| corrector.replace({2, 1}, {2, 3}, "bar)") }
+
+        source.correct_safely!
+
+        source.issues.map(&.crashed?).should eq [true, false]
+        source.issues.map(&.correctable?).should eq [false, false]
+      end
+
       it "doesn't annotate the other issues if a correction raises" do
         source = Source.new("foo\n")
         RaisingCorrectionRule.new.catch(source)
