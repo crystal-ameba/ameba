@@ -46,6 +46,17 @@ module Ameba::Rule::Style
       expect_no_corrections source
     end
 
+    it "doesn't correct next with arguments in parentheses if that would glue it to what follows" do
+      source = expect_issue subject, <<-CRYSTAL
+        foo do |a, b|
+          next(a)if b
+        # ^^^^ error: Redundant `next` detected
+        end
+        CRYSTAL
+
+      expect_no_corrections source
+    end
+
     it "corrects next followed by an expression in parentheses" do
       source = expect_issue subject, <<-CRYSTAL
         foo do

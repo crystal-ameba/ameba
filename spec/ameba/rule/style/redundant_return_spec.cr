@@ -233,6 +233,22 @@ module Ameba::Rule::Style
         expect_no_corrections source
       end
 
+      it "doesn't correct if that would glue the argument to what follows" do
+        source = expect_issue subject, <<-CRYSTAL
+          def foo(a, b)
+            return(a)if b
+          # ^^^^^^ error: Redundant `return` detected
+          end
+
+          def bar(a, b)
+            return(a + 1)unless b
+          # ^^^^^^ error: Redundant `return` detected
+          end
+          CRYSTAL
+
+        expect_no_corrections source
+      end
+
       it "doesn't correct if that would lose a comment" do
         source = expect_issue subject, <<-CRYSTAL
           def foo

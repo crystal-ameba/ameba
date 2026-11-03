@@ -492,8 +492,7 @@ module Ameba::AST::Util
 
     case
     when control_exp_parenthesized?(node, code_lines)
-      return if control_exp_end_location(node, code_lines) == node.end_location
-      return if control_exp_comment?(node, exp, code_lines)
+      return unless control_exp_parentheses_removable?(node, code_lines)
     when !operand
       return exp_code
     end
@@ -557,6 +556,20 @@ module Ameba::AST::Util
     return false unless line = code_lines[location.line_number - 1]?
 
     !!line[(location.column_number - 1)..]?.try(&.matches?(/\A\w+\(/))
+  end
+
+  # Returns `true` if the parentheses of a control expression's arguments can
+  # be removed, which requires finding the closing one, not losing a comment,
+  # and not gluing the code to what follows (e.g. `return(a)if b` to `aif b`).
+  def control_exp_parentheses_removable?(node : Crystal::ControlExpression, code_lines) : Bool
+    return false unless exp = node.exp
+    return false unless end_location = control_exp_end_location(node, code_lines)
+    return false if end_location == node.end_location
+
+    following_char = code_lines[end_location.line_number - 1]?.try(&.[end_location.column_number]?)
+    return false if following_char.try(&.letter?)
+
+    !control_exp_comment?(node, exp, code_lines)
   end
 
   # Returns the end location of a control expression, including the closing

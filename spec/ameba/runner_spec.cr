@@ -296,6 +296,21 @@ module Ameba
         end
       end
 
+      it "corrects `return(a)if b` once it has been formatted" do
+        rules = [Rule::Lint::Formatting.new, Rule::Style::RedundantReturn.new] of Rule::Base
+        path = File.tempname("source", ".cr")
+        code = "def foo(a, b)\n  return(a)if b\nend\n"
+        File.write(path, code)
+        source = Source.new(code, path)
+
+        begin
+          Runner.new(rules, [source], formatter, default_severity, autocorrect: true).run
+          source.code.should eq "def foo(a, b)\n  a if b\nend\n"
+        ensure
+          File.delete(path) rescue nil
+        end
+      end
+
       it "handles rules with incompatible autocorrect" do
         rules = [Rule::Performance::MinMaxAfterMap.new, Rule::Style::VerboseBlock.new]
         source = Source.new <<-CRYSTAL, File.tempname("source", ".cr")
