@@ -4,13 +4,9 @@ class Ameba::Source
   # This class takes source code and rewrites it based
   # on the different correction actions supplied.
   class Corrector
-    # Positions at which the code lines start.
-    @line_offsets = [0]
-
-    def initialize(@code : String)
-      code.each_char_with_index do |char, index|
-        @line_offsets << index + 1 if char == '\n'
-      end
+    # Creates a corrector of the given *code*, with *line_offsets*
+    # being the positions at which its lines start.
+    def initialize(@code : String, @line_offsets = Source.line_offsets(code))
       @rewriter = Rewriter.new(code)
     end
 
