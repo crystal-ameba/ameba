@@ -87,9 +87,9 @@ module Ameba::Rule::Style
       return if accepted_form?(source, node, ending: false)
 
       case
-      when guard_clause = guard_clause(node.then)
+      when guard_clause = guard_clause(source, node.then)
         parent, conditional_keyword = node.then, keyword(node)
-      when guard_clause = guard_clause(node.else)
+      when guard_clause = guard_clause(source, node.else)
         parent, conditional_keyword = node.else, opposite_keyword(node)
       end
 
@@ -162,11 +162,18 @@ module Ameba::Rule::Style
       end
     end
 
-    private def guard_clause(node)
+    private def guard_clause(source, node)
       node = node.right if node.is_a?(Crystal::BinaryOp)
 
+      end_location =
+        if node.is_a?(Crystal::ControlExpression)
+          control_exp_end_location(node, source.lines)
+        else
+          node.end_location
+        end
+
       return unless location = node.location
-      return unless location.same_line?(node.end_location)
+      return unless location.same_line?(end_location)
 
       case node
       when Crystal::Call
