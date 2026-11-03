@@ -169,9 +169,7 @@ module Ameba
         source.issues.clear
       end
 
-      corrected_issues.flatten.reverse_each do |issue|
-        source.issues.unshift(issue)
-      end
+      source.issues[0, 0] = corrected_issues.flatten
 
       File.write(source.path, source.code) unless corrected_issues.empty?
     ensure
