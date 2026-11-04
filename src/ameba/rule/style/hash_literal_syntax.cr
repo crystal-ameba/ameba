@@ -20,6 +20,8 @@ module Ameba::Rule::Style
   #   Enabled: true
   # ```
   class HashLiteralSyntax < Base
+    include AST::Util
+
     properties do
       since_version "1.7.0"
       enabled false
@@ -34,6 +36,11 @@ module Ameba::Rule::Style
 
     def test(source, node : Crystal::HashLiteral)
       return unless node.entries.empty? && (hash_type = node.of)
+
+      # `{} of Foo => (Bar ->)`: the node ends before the closing parenthesis
+      unless balanced_parentheses?(node, source.lines)
+        return issue_for(node, MSG % {hash_type.key, hash_type.value})
+      end
 
       issue_for(node, MSG % {hash_type.key, hash_type.value}) do |corrector|
         corrector.replace(node, "Hash(#{hash_type.key}, #{hash_type.value}).new")

@@ -4,6 +4,15 @@ module Ameba::Rule::Style
   describe HashLiteralSyntax do
     subject = HashLiteralSyntax.new
 
+    it "reports without a correction if the type ends with a closing parenthesis left out of the node" do
+      source = expect_issue subject, <<-CRYSTAL
+        a = {} of Foo => (Bar ->)
+          # ^^^^^^^^^^^^^^^^^^^^ error: Use `Hash(Foo, (Bar ->)).new` for creating an empty hash
+        CRYSTAL
+
+      expect_no_corrections source
+    end
+
     it "passes for an hash literal with elements" do
       expect_no_issues subject, <<-CRYSTAL
         {1 => 2, 3 => 4} of Int32 => Int32
