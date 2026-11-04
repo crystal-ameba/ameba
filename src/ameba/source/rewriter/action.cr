@@ -60,6 +60,29 @@ class Ameba::Source::Rewriter
         (replacement && !replacement.empty?)
     end
 
+    # Returns `true` if `#combine` would lose or fuse an edit when placing
+    # *action* in this tree. It follows the same structural decisions.
+    def conflicts_with?(action : self) : Bool
+      if action.begin_pos == @begin_pos && action.end_pos == @end_pos
+        return true if action.replacement && (@replacement || !@children.empty?)
+        return action.children.any? { |child| conflicts_with?(child) }
+      end
+      # A replacement swallows everything placed inside of it
+      return true if @replacement
+
+      family = analyze_hierarchy(action)
+      return true if family[:fusible]
+
+      case
+      when parent = family[:parent]
+        parent.conflicts_with?(action)
+      when action.replacement
+        family[:contained].size > 0
+      else
+        action.children.any? { |child| conflicts_with?(child) }
+      end
+    end
+
     protected def with(*,
                        begin_pos = @begin_pos,
                        end_pos = @end_pos,
@@ -73,26 +96,33 @@ class Ameba::Source::Rewriter
 
     protected def place_in_hierarchy(action)
       family = analyze_hierarchy(action)
-      sibling_left, sibling_right = family[:sibling_left], family[:sibling_right]
+      left_index, right_index = family[:left_index], family[:right_index]
 
-      if fusible = family[:fusible]
-        child = family[:child]
-        child ||= [] of Action
-        fuse_deletions(action, fusible, sibling_left + child + sibling_right)
+      if family[:fusible]
+        contained = family[:contained]
+
+        fusible = [] of Action
+        fusible << @children[left_index] if contained.begin > left_index
+        fusible << @children[right_index - 1] if contained.end < right_index
+
+        fuse_deletions(action, fusible,
+          @children[0...left_index] + @children[contained] + @children[right_index..])
       else
         extra_sibling =
           case
           when parent = family[:parent]
             # action should be a descendant of one of the children
             parent.combine(action)
-          when child = family[:child]
+          when family[:contained].size > 0
             # or it should become the parent of some of the children,
-            action.with(children: child).combine_children(action.children)
+            action.with(children: @children[family[:contained]]).combine_children(action.children)
           else
             # or else it should become an additional child
             action
           end
-        self.with(children: sibling_left + [extra_sibling] + sibling_right)
+        children = @children.dup
+        children[left_index, right_index - left_index] = extra_sibling
+        self.with(children: children)
       end
     end
 
@@ -123,11 +153,11 @@ class Ameba::Source::Rewriter
       (from...size).bsearch { |i| yield @children[i] } || size
     end
 
-    # Returns the children in a hierarchy with respect to *action*:
+    # Returns the position of children in a hierarchy with respect to *action*:
     #
-    # - `:sibling_left`, `:sibling_right` (for those that are disjoint from *action*)
+    # - `:left_index`, `:right_index` (the children outside of those are disjoint from *action*)
     # - `:parent` (in case one of our children contains *action*)
-    # - `:child` (in case *action* strictly contains some of our children)
+    # - `:contained` (the indices of children *action* strictly contains)
     # - `:fusible` (in case *action* overlaps some children but they can be fused in one deletion)
     #
     # In case a child has equal range to *action*, it is returned as `:parent`
@@ -145,6 +175,9 @@ class Ameba::Source::Rewriter
         child.begin_pos >= action.end_pos
       end
 
+      contained = left_index...left_index
+      fusible = false
+
       case center = right_index - left_index
       when 0
         # All children are disjoint from action, nothing else to do
@@ -157,37 +190,33 @@ class Ameba::Source::Rewriter
         right_index += 1 # considered as a sibling (both left and right!)
 
         parent = @children[left_index]
+        contained = left_index...left_index
       else
         overlap_left = @children[left_index].begin_pos <=> action.begin_pos
         overlap_right = @children[right_index - 1].end_pos <=> action.end_pos
-
-        raise "Unable to compare begin pos" unless overlap_left
-        raise "Unable to compare end pos" unless overlap_right
 
         # For one child to be the parent of action, we must have:
         if center == 1 && overlap_left <= 0 && overlap_right >= 0
           parent = @children[left_index]
         else
           # Otherwise consider all non disjoint elements (center) to be contained...
-          contained = @children[left_index...right_index]
-
-          fusible = [] of Action
-          fusible << contained.shift if overlap_left < 0 # ... but check first and last one
-          fusible << contained.pop if overlap_right > 0  # ... for overlaps
-          fusible = nil if fusible.empty?
+          first = overlap_left < 0 ? left_index + 1 : left_index   # ... but check first and last one
+          last = overlap_right > 0 ? right_index - 1 : right_index # ... for overlaps
+          contained = first...last
+          fusible = first != left_index || last != right_index
         end
       end
 
       {
-        parent:        parent,
-        sibling_left:  @children[0...left_index],
-        sibling_right: @children[right_index...@children.size],
-        fusible:       fusible,
-        child:         contained,
+        parent:      parent,
+        left_index:  left_index,
+        right_index: right_index,
+        contained:   contained,
+        fusible:     fusible,
       }
     end
 
-    # Assumes *action* has the exact same range and has no children
+    # Assumes *action* has the exact same range
     protected def merge(action)
       self.with(
         insert_before: "#{action.insert_before}#{insert_before}",

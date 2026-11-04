@@ -31,20 +31,26 @@ module Ameba
     end
 
     # Corrects any correctable issues and updates `code`.
-    # Returns `false` if no issues were corrected.
-    def correct!
+    # Returns the corrected issues, or `nil` if the code was unchanged.
+    def correct! : Array(Issue)?
       corrector = Corrector.new(code)
-      issues.each { |issue| issue.correct(corrector) if issue.enabled? }
+
+      # Corrections all apply to the same source snapshot. Conflicting issues
+      # are deferred until Runner reinspects the corrected source.
+      corrected_issues = issues.select do |issue|
+        issue.enabled? && issue.correctable? &&
+          corrector.transaction { issue.correct(corrector) }
+      end
 
       corrected_code = corrector.process
-      return false if code == corrected_code
+      return if code == corrected_code
 
       @code = corrected_code
       @lines = nil
       @line_offsets = nil
       @ast = nil
 
-      true
+      corrected_issues
     end
 
     # Returns lines of code split by new line character.

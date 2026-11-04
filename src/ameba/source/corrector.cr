@@ -14,6 +14,13 @@ class Ameba::Source
       @rewriter = Rewriter.new(code)
     end
 
+    # Keeps the corrections made by the block only if they change the code and
+    # don't conflict with the ones already scheduled. Returns `true` when they
+    # were kept.
+    def transaction(&) : Bool
+      @rewriter.transaction { yield }
+    end
+
     # Replaces the code of the given range with *content*.
     def replace(location, end_location, content)
       @rewriter.replace(loc_to_pos(location), loc_to_pos(end_location) + 1, content)
