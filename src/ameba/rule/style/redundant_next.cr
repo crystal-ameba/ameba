@@ -113,19 +113,16 @@ module Ameba::Rule::Style
       AST::RedundantControlExpressionVisitor.new(self, source, node.body)
     end
 
-    def test(source, node : Crystal::Next, visitor : AST::RedundantControlExpressionVisitor)
+    def test(source, node : Crystal::Next, visitor : AST::RedundantControlExpressionVisitor, operand : Bool)
       return if allow_multi_next? && node.exp.is_a?(Crystal::TupleLiteral)
       return if allow_empty_next? && (node.exp.nil? || node.exp.try(&.nop?))
 
       location = node.location
       end_location = location.try(&.adjust(column_number: {{ "next".size - 1 }}))
 
-      exp_code = control_exp_code(node, source.lines, operand: visitor.operand?)
-      exp_end_location = control_exp_end_location(node, source.lines)
-
-      if location && exp_code && exp_end_location
+      if replacement = control_exp_replacement(node, source.lines, operand: operand)
         issue_for(location, end_location, MSG) do |corrector|
-          corrector.replace(location, exp_end_location, exp_code)
+          corrector.replace(*replacement)
         end
       else
         issue_for(location, end_location, MSG)
