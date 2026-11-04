@@ -764,6 +764,46 @@ module Ameba
       end
     end
 
+    describe "#run when the corrected code can't be written" do
+      # A file within a missing directory can't be written on any platform
+      unwritable_path = Path[Dir.tempdir, "ameba-missing-#{Process.pid}", "source.cr"]
+      code = "foo.match(/x/).not_nil!\n"
+
+      it "keeps raising the error" do
+        source = Source.new(code, unwritable_path)
+        rules = [Rule::Lint::NotNilAfterNoBang.new] of Rule::Base
+
+        expect_raises(File::Error) do
+          Runner.new(rules, [source], formatter, default_severity, autocorrect: true).run
+        end
+      end
+
+      it "doesn't report the issues as corrected" do
+        source = Source.new(code, unwritable_path)
+        rules = [Rule::Lint::NotNilAfterNoBang.new] of Rule::Base
+
+        expect_raises(File::Error) do
+          Runner.new(rules, [source], formatter, default_severity, autocorrect: true).run
+        end
+
+        source.issues.size.should eq 1
+        source.issues.first.corrected?.should be_false
+        source.issues.first.correctable?.should be_true
+        source.should_not be_valid
+      end
+
+      it "goes back to the code on disk" do
+        source = Source.new(code, unwritable_path)
+        rules = [Rule::Lint::NotNilAfterNoBang.new] of Rule::Base
+
+        expect_raises(File::Error) do
+          Runner.new(rules, [source], formatter, default_severity, autocorrect: true).run
+        end
+
+        source.code.should eq code
+      end
+    end
+
     describe "#run with an infinite correction loop" do
       rules = [AtoB.new, BtoA.new] of Rule::Base
 
