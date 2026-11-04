@@ -19,6 +19,21 @@ module Ameba::Rule::Style
         CRYSTAL
     end
 
+    it "keeps the code parsable with an assignment in a ternary branch" do
+      source = expect_issue subject, <<-CRYSTAL
+        foo do |a|
+          a ? 1 : next b = 2
+                # ^^^^ error: Redundant `next` detected
+        end
+        CRYSTAL
+
+      expect_correction source, <<-CRYSTAL
+        foo do |a|
+          a ? 1 : (b = 2)
+        end
+        CRYSTAL
+    end
+
     it "corrects next with arguments in parentheses" do
       source = expect_issue subject, <<-CRYSTAL
         foo do |a|

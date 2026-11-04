@@ -484,7 +484,7 @@ module Ameba::AST::Util
   # not needed to preserve the meaning of the code. Returns `nil` if the
   # closing parenthesis can't be found, or dropping it would drop a comment.
   #
-  # Code which replaces an *operand* of a binary operator gets wrapped in
+  # Code which replaces an *operand* of an operator gets wrapped in
   # parentheses if needed, since `a || return b ? 1 : 2` differs from `a || b ? 1 : 2`.
   def control_exp_code(node : Crystal::ControlExpression, code_lines, *, operand = false)
     return unless exp = node.exp

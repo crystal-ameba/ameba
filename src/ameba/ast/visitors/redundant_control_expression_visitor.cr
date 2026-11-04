@@ -12,7 +12,7 @@ module Ameba::AST
     # A node to run traversal on.
     getter node : Crystal::ASTNode
 
-    # Whether the reached control expression is an operand of a binary operator.
+    # Whether the reached control expression is an operand of a binary or ternary operator.
     getter? operand = false
 
     def initialize(@rule, @source, @node)
@@ -39,8 +39,13 @@ module Ameba::AST
     end
 
     private def traverse_condition(node)
-      traverse_node(node.then)
-      traverse_node(node.else)
+      if node.is_a?(Crystal::If) && node.ternary?
+        traverse_operand(node.then)
+        traverse_operand(node.else)
+      else
+        traverse_node(node.then)
+        traverse_node(node.else)
+      end
     end
 
     private def traverse_case(node)
@@ -51,8 +56,12 @@ module Ameba::AST
     end
 
     private def traverse_binary_op(node)
-      @operand = node.right.is_a?(Crystal::ControlExpression)
-      traverse_node(node.right)
+      traverse_operand(node.right)
+    end
+
+    private def traverse_operand(node)
+      @operand = node.is_a?(Crystal::ControlExpression)
+      traverse_node(node)
       @operand = false
     end
 
