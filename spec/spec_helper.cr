@@ -448,6 +448,19 @@ def as_nodes(source, *, wants_doc = false)
   Ameba::TestNodeVisitor.new(as_node(source, wants_doc: wants_doc))
 end
 
+# Yields paths to temporary source files, deleting whatever got created there.
+def with_temp_files(count, &)
+  paths = Array.new(count) { File.tempname("source", ".cr") }
+  yield paths
+ensure
+  paths.try(&.each { |path| File.delete(path) rescue nil })
+end
+
+# :ditto:
+def with_temp_file(&)
+  with_temp_files(1) { |paths| yield paths.first }
+end
+
 def trailing_whitespace
   ' '
 end
