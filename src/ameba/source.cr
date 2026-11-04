@@ -30,12 +30,24 @@ module Ameba
       @project_path = Path[project_path]
     end
 
+    # Creates a new source from the file at the given *path*. If it can't
+    # be read, the source has no code and reports that as an issue.
+    def self.from_file(path : Path | String, project_path : Path | String = path) : self
+      new(File.read(path), path, project_path)
+    rescue ex : IO::Error
+      new(path: path, project_path: project_path).tap do |source|
+        source.add_crash_issue Rule::Lint::Syntax.new,
+          "Could not read the file: #{ex.message}"
+      end
+    end
+
     # Corrects any correctable issues and updates `code`.
     # Returns the corrected issues, or `nil` if the code was unchanged.
     def correct! : Array(Issue)?
-      corrected_code, corrected_issues = corrections(issues) { |_, ex| raise ex }
-      return if code == corrected_code
+      corrected_code, corrected_issues =
+        corrections(issues) { |_, ex| raise ex }
 
+      return if code == corrected_code
       self.code = corrected_code
 
       corrected_issues

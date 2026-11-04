@@ -145,6 +145,13 @@ module Ameba
       add_issue(rule, location, end_location, message, status, block)
     end
 
+    # Adds an issue reporting a failure which isn't about the code itself. It
+    # can't be disabled, as nothing else would tell that something went wrong.
+    def add_crash_issue(rule, message : String) : Nil
+      issue = add_issue(rule, {1, 1}, message, status: :enabled)
+      issues[-1] = issue.as_crashed
+    end
+
     # Returns the issues which still need attention.
     def unresolved_issues
       issues.select(&.unresolved?)
