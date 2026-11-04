@@ -198,6 +198,20 @@ module Ameba
         end
       end
 
+      it "renames a spec file" do
+        rules = [Rule::Lint::SpecFilename.new] of Rule::Base
+
+        with_spec_file("a = 1\n") do |source|
+          path = source.path
+
+          Runner.new(rules, [source], formatter, default_severity, autocorrect: true).run
+
+          File.exists?(path).should be_false
+          File.read(path.sibling("foo_spec.cr")).should eq "a = 1\n"
+          source.issues.map(&.rule.name).should eq rules.map(&.name)
+        end
+      end
+
       it "renames a spec file once when other issues are corrected as well" do
         rules = [
           Rule::Lint::SpecFilename.new,

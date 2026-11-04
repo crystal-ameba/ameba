@@ -169,6 +169,15 @@ module Ameba
         source.code.should eq "aXdef\n"
       end
 
+      it "reports issues as corrected if their corrections rename the source" do
+        source = Source.new("abcdef\n", "spec/foo.cr")
+        source.add_issue(DummyRule.new, {1, 1}, {1, 1}, "rename") { |_| source.basename = "foo_spec.cr" }
+
+        source.correct!.should eq source.issues
+        source.path.should eq Path["spec", "foo_spec.cr"]
+        source.code.should eq "abcdef\n"
+      end
+
       it "does not report issues as corrected if their corrections change nothing" do
         source = Source.new("abcdef\n")
         rule = DummyRule.new
