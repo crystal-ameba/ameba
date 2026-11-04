@@ -74,6 +74,7 @@ module Ameba::Rule::Style
 
       # we bail out if the block node include the block argument
       return if reference_count(body, arg) > 1
+      return if AST::MacroReferenceFinder.new(body, arg.name).references?
 
       # add issue if the given nodes pass all of the checks
       issue_for_valid(source, node, block, body)
@@ -81,7 +82,7 @@ module Ameba::Rule::Style
 
     # ameba:disable Metrics/CyclomaticComplexity
     private def issue_for_valid(source, call : Crystal::Call, block : Crystal::Block, body : Crystal::Call)
-      return if exclude_calls_with_block? && body.block
+      return if exclude_calls_with_block? && literal_block?(body)
       return if exclude_multiple_line_blocks? && !same_location_lines?(call, body)
       return if exclude_prefix_operators? && prefix_operator?(body)
       return if exclude_operators? && operator_method?(body)
@@ -126,30 +127,29 @@ module Ameba::Rule::Style
     end
 
     private def node_to_s(source, node : Crystal::Call)
+      name = node.name
+      block_code = short_block_code(source, node) || block_arg_code(source, node)
+
       String.build do |str|
-        case name = node.name
-        when "[]"
+        case
+        when name.in?("[]", "[]?")
           str << '['
-          args_to_s(str, node)
-          str << ']'
-        when "[]?"
-          str << '['
-          args_to_s(str, node)
-          str << "]?"
-        when "[]="
+          args_to_s(str, node, block_code)
+          str << name.lchop('[')
+        when name == "[]=" && !has_block?(node)
           str << '['
           args_to_s(str, node, skip_last_arg: true)
           str << "]=(" << node.args.last? << ')'
         else
-          short_block = short_block_code(source, node)
+          # `[]=` with a block has no valid index form, i.e. `&.[1]=(2, &block)`
           str << name
-          if has_arguments?(node) || short_block
+          if has_arguments?(node) || block_code
             str << '('
-            args_to_s(str, node, short_block)
+            args_to_s(str, node, block_code)
             str << ')'
           end
-          str << " {...}" if node.block && short_block.nil?
         end
+        str << " {...}" if node.block && block_code.nil?
       end
     end
 
@@ -181,6 +181,19 @@ module Ameba::Rule::Style
       block_code if block_code.try(&.starts_with?("&."))
     end
 
+    private def block_arg_code(source, node : Crystal::Call)
+      return unless block_arg = node.block_arg
+
+      "&#{node_source(block_arg, source.lines) || block_arg}"
+    end
+
+    # Short blocks are expanded by the parser into
+    # blocks with a generated parameter - `__arg0`.
+    private def literal_block?(node : Crystal::Call)
+      !!(block = node.block) &&
+        !block.args.first?.try(&.name.starts_with?("__arg"))
+    end
+
     private def same_location_lines?(a, b)
       name_location(a).try(&.same_line?(b.location))
     end
@@ -207,27 +220,36 @@ module Ameba::Rule::Style
     end
 
     private def reference_count(node, obj : Crystal::Var)
-      i = 0
-      case node
-      when Crystal::Call
-        i += reference_count(node.obj, obj)
-        i += reference_count(node.block, obj)
+      VarReferenceCounter.new(node, obj).count
+    end
+  end
 
-        node.args.each do |arg|
-          i += reference_count(arg, obj)
-        end
-        node.named_args.try &.each do |arg|
-          i += reference_count(arg.value, obj)
-        end
-      when Crystal::BinaryOp
-        i += reference_count(node.left, obj)
-        i += reference_count(node.right, obj)
-      when Crystal::Block
-        i += reference_count(node.body, obj)
-      when Crystal::Var
-        i += 1 if node == obj
-      end
-      i
+  private class VarReferenceCounter < Crystal::Visitor
+    include AST::Util
+
+    getter count = 0
+
+    def initialize(node : Crystal::ASTNode, @var : Crystal::Var)
+      node.accept(self)
+    end
+
+    def visit(node : Crystal::Var)
+      @count += 1 if node == @var
+      false
+    end
+
+    # Skips the nested scopes rebinding the variable, as references
+    # within them don't point to the one we're counting
+    def visit(node : Crystal::Block)
+      all_block_args(node).none?(&.name.== @var.name)
+    end
+
+    def visit(node : Crystal::ProcLiteral)
+      node.def.args.none?(&.name.== @var.name)
+    end
+
+    def visit(node : Crystal::ASTNode)
+      true
     end
   end
 end
