@@ -8,17 +8,21 @@ class Ameba::Source::Rewriter
   class Action
     getter begin_pos : Int32
     getter end_pos : Int32
+
     getter replacement : String?
     getter insert_before : String
     getter insert_after : String
+
     protected getter children : Array(Action)
 
-    def initialize(@begin_pos,
-                   @end_pos,
-                   @insert_before = "",
-                   @replacement = nil,
-                   @insert_after = "",
-                   @children = [] of Action)
+    def initialize(
+      @begin_pos,
+      @end_pos,
+      @insert_before = "",
+      @replacement = nil,
+      @insert_after = "",
+      @children = [] of Action,
+    )
     end
 
     def combine(action)
@@ -56,7 +60,7 @@ class Ameba::Source::Rewriter
     # *action* in this tree. It follows the same structural decisions.
     def conflicts_with?(action : self) : Bool
       if action.begin_pos == @begin_pos && action.end_pos == @end_pos
-        return true if action.replacement && (@replacement || !@children.empty?)
+        return true if action.replacement && (@replacement || @children.present?)
         return action.children.any? { |child| conflicts_with?(child) }
       end
       # A replacement swallows everything placed inside of it
@@ -69,26 +73,30 @@ class Ameba::Source::Rewriter
       when parent = family[:parent]
         parent.conflicts_with?(action)
       when action.replacement
-        family[:contained].size > 0
+        family[:contained].present?
       else
         action.children.any? { |child| conflicts_with?(child) }
       end
     end
 
-    protected def with(*,
-                       begin_pos = @begin_pos,
-                       end_pos = @end_pos,
-                       insert_before = @insert_before,
-                       replacement = @replacement,
-                       insert_after = @insert_after,
-                       children = @children)
+    protected def with(
+      *,
+      begin_pos = @begin_pos,
+      end_pos = @end_pos,
+      insert_before = @insert_before,
+      replacement = @replacement,
+      insert_after = @insert_after,
+      children = @children,
+    )
       children = [] of Action if replacement
       self.class.new(begin_pos, end_pos, insert_before, replacement, insert_after, children)
     end
 
     protected def place_in_hierarchy(action)
       family = analyze_hierarchy(action)
-      left_index, right_index = family[:left_index], family[:right_index]
+
+      left_index, right_index =
+        family[:left_index], family[:right_index]
 
       if family[:fusible]
         contained = family[:contained]
@@ -105,15 +113,19 @@ class Ameba::Source::Rewriter
           when parent = family[:parent]
             # action should be a descendant of one of the children
             parent.combine(action)
-          when family[:contained].size > 0
+          when family[:contained].present?
             # or it should become the parent of some of the children,
-            action.with(children: @children[family[:contained]]).combine_children(action.children)
+            action
+              .with(children: @children[family[:contained]])
+              .combine_children(action.children)
           else
             # or else it should become an additional child
             action
           end
+
         children = @children.dup
         children[left_index, right_index - left_index] = extra_sibling
+
         self.with(children: children)
       end
     end
