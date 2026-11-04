@@ -1036,6 +1036,9 @@ module Ameba::AST
         "return(1, # comment\n)",
         "return()",
         "return(<<-TEXT)\n  a\n  TEXT",
+        "return(<<-TEXT\n  a\n  TEXT\n)",
+        "return(\"a\" + <<-TEXT\n  a\n  TEXT\n)",
+        "return(foo(<<-TEXT\n  a\n  TEXT\n))",
       ].each do |code|
         it "returns nil for `#{code.inspect}`" do
           node = as_node(code).as Crystal::ControlExpression
@@ -1043,10 +1046,16 @@ module Ameba::AST
         end
       end
 
-      it "returns heredoc followed by the closing parenthesis" do
-        code = "return(<<-TEXT\n  a\n  TEXT\n)"
+      it "returns the code of a tightly binding heredoc if it's an operand" do
+        code = "return <<-TEXT\n  a\n  TEXT"
         node = as_node(code).as Crystal::ControlExpression
-        subject.control_exp_code(node, code.split('\n')).should eq "<<-TEXT\n  a\n  TEXT"
+        subject.control_exp_code(node, code.split('\n'), operand: true).should eq "<<-TEXT\n  a\n  TEXT"
+      end
+
+      it "returns nil if a heredoc would have to be wrapped in parentheses" do
+        code = "return foo <<-TEXT\n  a\n  TEXT"
+        node = as_node(code).as Crystal::ControlExpression
+        subject.control_exp_code(node, code.split('\n'), operand: true).should be_nil
       end
 
       it "wraps loosely binding code if it's an operand" do
@@ -1114,6 +1123,42 @@ module Ameba::AST
         ["return", "return 1", "return (1)", "return foo(1)", "return (1), 2"].each do |code|
           node = as_node(code).as Crystal::ControlExpression
           subject.control_exp_parenthesized?(node, [code]).should be_false
+        end
+      end
+    end
+
+    describe "#control_exp_parentheses_removable?" do
+      {
+        "return(1)"                    => true,
+        "return( 1, )"                 => true,
+        "return(\n  1\n)"              => true,
+        "return(1, 2)"                 => true,
+        "return(1 # comment\n)"        => false,
+        "return( # comment\n  1)"      => false,
+        "return(<<-TEXT)\n  a\n  TEXT" => false,
+        "return()"                     => false,
+      }.each do |code, expected|
+        it "returns #{expected} for `#{code.inspect}`" do
+          node = as_node(code).as Crystal::ControlExpression
+          subject.control_exp_parentheses_removable?(node, code.split('\n')).should eq expected
+        end
+      end
+    end
+
+    describe "#control_exp_parentheses_removable? with code following" do
+      {
+        "return(a) if b"    => true,
+        "return(a)if b"     => false,
+        "return(a)unless b" => false,
+        "return(1)if b"     => false,
+        "return(a)rescue b" => false,
+      }.each do |code, expected|
+        it "returns #{expected} for `#{code}`" do
+          node = Crystal::Parser.new(code).parse
+          node = node.then if node.is_a?(Crystal::If | Crystal::Unless)
+          node = node.body if node.is_a?(Crystal::ExceptionHandler)
+
+          subject.control_exp_parentheses_removable?(node.as(Crystal::ControlExpression), [code]).should eq expected
         end
       end
     end
