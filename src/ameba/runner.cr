@@ -10,21 +10,6 @@ module Ameba
   # runner.run.success? # => true or false
   # ```
   class Runner
-    # An error indicating that the inspection loop got stuck correcting
-    # issues back and forth. It gets reported as an issue on the affected source.
-    class InfiniteCorrectionLoopError < RuntimeError
-      def initialize(path, issues_by_iteration, loop_start = -1)
-        root_cause =
-          issues_by_iteration[loop_start..-1]
-            .join(" -> ", &.map(&.rule.name).uniq!.join(", "))
-
-        message =
-          "Infinite loop in #{path} caused by #{root_cause}"
-
-        super message
-      end
-    end
-
     # A list of rules to do inspection based on.
     @rules : Array(Rule::Base)
 
@@ -139,24 +124,24 @@ module Ameba
       corrected_issues = [] of Array(Issue)
       original_code = source.code
 
-      begin
-        # When running with --fix, we need to inspect the source until no more
-        # corrections are made (because automatic corrections can introduce new
-        # issues). In the normal case the loop is only executed once.
-        loop_unless_infinite(source, corrected_issues) do
-          break unless inspect_source(source)
-          break unless autocorrect?
+      # When running with --fix, we need to inspect the source until no more
+      # corrections are made (because automatic corrections can introduce new
+      # issues). In the normal case the loop is only executed once.
+      loop_message = loop_unless_infinite(source, corrected_issues) do
+        break unless inspect_source(source)
+        break unless autocorrect?
 
-          applied_issues = source.correct_safely!
-          break unless applied_issues
+        applied_issues = source.correct_safely!
+        break unless applied_issues
 
-          # The issues that couldn't be corrected will be found again so we
-          # only keep the corrected ones in order to avoid duplicate reporting.
-          corrected_issues << applied_issues.map(&.as_corrected)
-          source.issues.clear
-        end
-      rescue ex : InfiniteCorrectionLoopError
-        return report_infinite_loop(source, original_code, corrected_issues, ex)
+        # The issues that couldn't be corrected will be found again so we
+        # only keep the corrected ones in order to avoid duplicate reporting.
+        corrected_issues << applied_issues.map(&.as_corrected)
+        source.issues.clear
+      end
+
+      if loop_message
+        return report_infinite_loop(source, original_code, corrected_issues, loop_message)
       end
 
       begin
@@ -216,7 +201,9 @@ module Ameba
 
     private MAX_ITERATIONS = 200
 
-    private def loop_unless_infinite(source, corrected_issues, &)
+    # Runs the block until it breaks out, which returns `nil`, or until
+    # it gets stuck, which returns a message describing what caused that.
+    private def loop_unless_infinite(source, corrected_issues, &) : String?
       # Keep track of the state of the source. If a rule modifies the source
       # and another rule undoes it producing identical source we have an
       # infinite loop.
@@ -228,30 +215,26 @@ module Ameba
       iterations = 0
 
       loop do
-        check_for_infinite_loop(source, corrected_issues, processed_sources)
+        checksum = source.code.hash
+
+        if loop_start = processed_sources.index(checksum)
+          return infinite_loop_message(source, corrected_issues[loop_start..])
+        end
+        processed_sources << checksum
 
         if (iterations += 1) > MAX_ITERATIONS
-          raise InfiniteCorrectionLoopError.new(source.path, corrected_issues)
+          return infinite_loop_message(source, corrected_issues.last(1))
         end
 
         yield
       end
     end
 
-    # Check whether a run created source identical to a previous run, which
-    # means that we definitely have an infinite loop.
-    private def check_for_infinite_loop(source, corrected_issues, processed_sources)
-      checksum = source.code.hash
+    private def infinite_loop_message(source, issues_by_iteration)
+      root_cause =
+        issues_by_iteration.join(" -> ", &.map(&.rule.name).uniq!.join(", "))
 
-      if loop_start = processed_sources.index(checksum)
-        raise InfiniteCorrectionLoopError.new(
-          source.path,
-          corrected_issues,
-          loop_start: loop_start,
-        )
-      end
-
-      processed_sources << checksum
+      "Infinite loop in #{source.path} caused by #{root_cause}"
     end
 
     # Goes back to the code on disk, so that nothing gets reported as corrected.
@@ -286,11 +269,11 @@ module Ameba
 
     # Leaves the code as it was, since going in circles says nothing about which
     # state of it is the right one, and reports the loop along with its issues.
-    private def report_infinite_loop(source, original_code, corrected_issues, ex) : Nil
+    private def report_infinite_loop(source, original_code, corrected_issues, message) : Nil
       source.revert_to(original_code)
       inspect_source(source)
 
-      source.add_crash_issue(corrected_issues.last.first.rule, ex.message.to_s)
+      source.add_crash_issue(corrected_issues.last.first.rule, message)
     end
 
     private def check_unneeded_directives(source, excluded_rules = Set(String).new)
