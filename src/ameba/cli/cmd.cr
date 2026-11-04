@@ -45,11 +45,6 @@ module Ameba::CLI
   end
 
   private class ExitException < Exception
-    getter code : ExitCode
-
-    def initialize(@code = :success)
-      super("Exit with code #{code.value}")
-    end
   end
 
   # Runs ameba, returning `true` if it succeeded, `false` otherwise.
@@ -103,8 +98,8 @@ module Ameba::CLI
 
       exit_code_of(runner)
     end
-  rescue ex : ExitException
-    ex.code
+  rescue ExitException
+    ExitCode::Success
   end
 
   private def exit_code_of(runner)
