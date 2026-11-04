@@ -249,7 +249,7 @@ module Ameba
             issue = source.issues.find!(&.rule.is_a?(RaisingCorrectionRule))
             issue.correctable?.should be_false
             issue.corrected?.should be_false
-            issue.message.should contain "correction went wrong"
+            issue.message.should contain "Correction went wrong"
           end
         end
 

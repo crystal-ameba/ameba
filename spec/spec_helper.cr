@@ -229,7 +229,9 @@ module Ameba
     def test(source)
       return unless source.code.includes?("foo")
 
-      source.add_issue(self, {1, 1}, {1, 3}, "foo") { |_| raise IndexError.new("correction went wrong") }
+      source.add_issue(self, {1, 1}, {1, 3}, "foo") do
+        raise IndexError.new("Correction went wrong")
+      end
     end
   end
 

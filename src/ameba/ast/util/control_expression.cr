@@ -25,6 +25,7 @@ module Ameba::AST::Util
     return unless exp = node.exp
     return unless exp_code = control_exp_value_code(exp, code_lines)
     return unless control_exp_replaceable?(node, code_lines)
+
     return exp_code if binds_tightly?(exp)
     return exp_code unless operand || control_exp_parenthesized?(node, code_lines)
 
@@ -34,8 +35,12 @@ module Ameba::AST::Util
 
   private def control_exp_value_code(exp, code_lines)
     return unless exp_code = node_source(exp, code_lines)
+
     # An explicit tuple literal starts before its first element
-    return exp_code unless exp.is_a?(Crystal::TupleLiteral) && exp.location == exp.elements.first.location
+    unless exp.is_a?(Crystal::TupleLiteral) && exp.location == exp.elements.first.location
+      return exp_code
+    end
+
     # The terminator of a heredoc has to stay on its own line
     return if exp_code.includes?("<<-") && exp_code.includes?('\n')
 
@@ -46,7 +51,8 @@ module Ameba::AST::Util
   # Returns `true` if there is a comment between the
   # parentheses and the argument of a control expression.
   private def control_exp_comment?(node, exp, end_location, code_lines) : Bool
-    location, exp_start, exp_end = node.location, exp.location, exp.end_location
+    location, exp_start, exp_end =
+      node.location, exp.location, exp.end_location
 
     return true unless location && exp_start && exp_end
 
@@ -105,7 +111,9 @@ module Ameba::AST::Util
     # The terminator of a heredoc has to stay on its own line
     return false if node_source(exp, code_lines).try(&.includes?("<<-"))
 
-    following_char = code_lines[end_location.line_number - 1]?.try(&.[end_location.column_number]?)
+    following_char =
+      code_lines[end_location.line_number - 1]?.try(&.[end_location.column_number]?)
+
     return false if following_char.try(&.letter?)
 
     !control_exp_comment?(node, exp, end_location, code_lines)

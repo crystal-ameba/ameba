@@ -178,7 +178,7 @@ module Ameba
         issue = source.issues.first
         issue.correctable?.should be_false
         issue.message.should start_with "foo"
-        issue.message.should contain "correction went wrong"
+        issue.message.should contain "Correction went wrong"
         issue.message.should contain "IndexError"
       end
 
@@ -306,7 +306,7 @@ module Ameba
         source = Source.new("foo\n")
         RaisingCorrectionRule.new.catch(source)
 
-        expect_raises(IndexError, "correction went wrong") { source.correct! }
+        expect_raises(IndexError, "Correction went wrong") { source.correct! }
         source.code.should eq "foo\n"
       end
 
