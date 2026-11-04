@@ -449,6 +449,38 @@ module Ameba::Rule::Style
           CRYSTAL
       end
 
+      it "doesn't report if the closing parenthesis is on another line" do
+        expect_no_issues subject, <<-CRYSTAL
+          def foo
+            if something
+              work
+              work
+            else
+              return(1
+              )
+            end
+          end
+
+          def bar
+            if something
+              work || return(1 # comment
+              )
+            else
+              work
+            end
+          end
+
+          def baz
+            if something
+              work
+            else
+              return(1,
+              )
+            end
+          end
+          CRYSTAL
+      end
+
       it "doesn't change examples of expressions in parentheses" do
         expect_issue subject, <<-CRYSTAL
           def func
