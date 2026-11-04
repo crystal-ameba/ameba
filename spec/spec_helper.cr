@@ -14,6 +14,15 @@ module Ameba
     end
   end
 
+  # A formatter failing for the source with a given path.
+  class RaisingFormatter < Formatter::BaseFormatter
+    property failing_path = ""
+
+    def source_started(source : Source) : Nil
+      raise "formatter went wrong" if source.path.to_s == failing_path
+    end
+  end
+
   # A rule correcting `foo` to `bar`, and `bar` to code which doesn't parse.
   class BreakingCorrectionRule < Rule::Base
     properties do
