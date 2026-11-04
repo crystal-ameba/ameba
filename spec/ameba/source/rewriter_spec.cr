@@ -260,6 +260,31 @@ class Ameba::Source
       rewriter.process.should eq "abxcdef"
     end
 
+    it "handles code with multi-byte characters" do
+      rewriter = Rewriter.new("zażółć gęślą jaźń")
+      rewriter.replace(2, 5, "X")
+      rewriter.insert_before(7, "<")
+      rewriter.insert_after(12, ">")
+      rewriter.remove(13, 15)
+
+      rewriter.process.should eq "zaXć <gęślą> źń"
+    end
+
+    it "handles replacing everything in code with multi-byte characters" do
+      rewriter = Rewriter.new("żółć")
+      rewriter.replace(0, 4, "X")
+
+      rewriter.process.should eq "X"
+    end
+
+    it "discards a transaction leaving code with multi-byte characters unchanged" do
+      rewriter = Rewriter.new("żółć")
+
+      rewriter.transaction { rewriter.replace(1, 3, "ół") }.should be_false
+      rewriter.transaction { rewriter.replace(1, 3, "ÓŁ") }.should be_true
+      rewriter.process.should eq "żÓŁć"
+    end
+
     it "rejects out-of-range ranges" do
       rewriter = Rewriter.new(code)
       expect_raises(IndexError) { rewriter.insert_before(0, 100, "hola") }
