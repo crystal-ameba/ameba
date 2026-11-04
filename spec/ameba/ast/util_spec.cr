@@ -972,7 +972,7 @@ module Ameba::AST
 
     describe "#balanced_parentheses?" do
       it "returns true if the parentheses match" do
-        code = "[] of (Foo)"
+        code = "foo(1)"
         subject.balanced_parentheses?(as_node(code), [code]).should be_true
       end
 

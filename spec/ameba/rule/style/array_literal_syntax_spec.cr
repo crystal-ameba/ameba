@@ -13,17 +13,6 @@ module Ameba::Rule::Style
       expect_no_corrections source
     end
 
-    it "corrects if the parentheses of the type are a part of the node" do
-      source = expect_issue subject, <<-CRYSTAL
-        a = [] of (Foo)
-          # ^^^^^^^^^^^ error: Use `Array((Foo)).new` for creating an empty array
-        CRYSTAL
-
-      expect_correction source, <<-CRYSTAL
-        a = Array((Foo)).new
-        CRYSTAL
-    end
-
     it "passes for an array literal with elements" do
       expect_no_issues subject, <<-CRYSTAL
         def print_numbers

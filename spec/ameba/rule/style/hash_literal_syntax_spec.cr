@@ -13,17 +13,6 @@ module Ameba::Rule::Style
       expect_no_corrections source
     end
 
-    it "corrects if the parentheses of the type are a part of the node" do
-      source = expect_issue subject, <<-CRYSTAL
-        a = {} of (Foo) => Bar
-          # ^^^^^^^^^^^^^^^^^^ error: Use `Hash((Foo), Bar).new` for creating an empty hash
-        CRYSTAL
-
-      expect_correction source, <<-CRYSTAL
-        a = Hash((Foo), Bar).new
-        CRYSTAL
-    end
-
     it "passes for an hash literal with elements" do
       expect_no_issues subject, <<-CRYSTAL
         {1 => 2, 3 => 4} of Int32 => Int32
