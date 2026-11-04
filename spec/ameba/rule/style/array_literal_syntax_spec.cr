@@ -54,5 +54,19 @@ module Ameba::Rule::Style
         end
         CRYSTAL
     end
+
+    it "keeps the original type code" do
+      source = expect_issue subject, <<-CRYSTAL
+        a = [] of Int32 -> String
+          # ^^^^^^^^^^^^^^^^^^^^^ error: Use `Array(Int32 -> String).new` for creating an empty array
+        b = [] of {Int32, String}
+          # ^^^^^^^^^^^^^^^^^^^^^ error: Use `Array({Int32, String}).new` for creating an empty array
+        CRYSTAL
+
+      expect_correction source, <<-CRYSTAL
+        a = Array(Int32 -> String).new
+        b = Array({Int32, String}).new
+        CRYSTAL
+    end
   end
 end

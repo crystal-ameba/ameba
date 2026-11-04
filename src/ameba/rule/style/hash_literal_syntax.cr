@@ -20,6 +20,8 @@ module Ameba::Rule::Style
   #   Enabled: true
   # ```
   class HashLiteralSyntax < Base
+    include AST::Util
+
     properties do
       since_version "1.7.0"
       enabled false
@@ -35,8 +37,11 @@ module Ameba::Rule::Style
     def test(source, node : Crystal::HashLiteral)
       return unless node.entries.empty? && (hash_type = node.of)
 
-      issue_for(node, MSG % {hash_type.key, hash_type.value}) do |corrector|
-        corrector.replace(node, "Hash(#{hash_type.key}, #{hash_type.value}).new")
+      key_type = node_source(hash_type.key, source.lines) || hash_type.key
+      value_type = node_source(hash_type.value, source.lines) || hash_type.value
+
+      issue_for(node, MSG % {key_type, value_type}) do |corrector|
+        corrector.replace(node, "Hash(#{key_type}, #{value_type}).new")
       end
     end
   end
