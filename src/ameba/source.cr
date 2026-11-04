@@ -161,10 +161,9 @@ module Ameba
     end
 
     # Returns lines of code split by new line character.
-    # Since `code` is immutable and can't be changed, this
-    # method caches lines in an instance variable, so calling
-    # it a second time will not perform a split, but will return
-    # lines instantly.
+    # This method caches lines in an instance variable until
+    # `code` changes, so calling it a second time will not
+    # perform a split, but will return lines instantly.
     #
     # ```
     # source = Ameba::Source.new("a = 1\nb = 2", path)
