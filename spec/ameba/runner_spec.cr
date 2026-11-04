@@ -753,6 +753,7 @@ module Ameba
         begin
           runner = Runner.new(rules, sources, formatter, default_severity, autocorrect: true).run
           runner.success?.should be_false
+          runner.crashed?.should be_false
 
           sources.first.issues.first.syntax?
             .should be_true
@@ -768,39 +769,93 @@ module Ameba
       # A file within a missing directory can't be written on any platform
       unwritable_path = Path[Dir.tempdir, "ameba-missing-#{Process.pid}", "source.cr"]
       code = "foo.match(/x/).not_nil!\n"
+      rules = [Rule::Lint::NotNilAfterNoBang.new] of Rule::Base
 
-      it "keeps raising the error" do
+      it "reports it as a crash, failing the run" do
         source = Source.new(code, unwritable_path)
-        rules = [Rule::Lint::NotNilAfterNoBang.new] of Rule::Base
 
-        expect_raises(File::Error) do
-          Runner.new(rules, [source], formatter, default_severity, autocorrect: true).run
-        end
+        runner = Runner.new(rules, [source], formatter, default_severity, autocorrect: true).run
+
+        runner.success?.should be_false
+        runner.crashed?.should be_true
+
+        issue = source.issues.find!(&.crashed?)
+        issue.message.should contain "Could not write the corrected code"
+        issue.message.should contain unwritable_path.basename
       end
 
       it "doesn't report the issues as corrected" do
         source = Source.new(code, unwritable_path)
-        rules = [Rule::Lint::NotNilAfterNoBang.new] of Rule::Base
 
-        expect_raises(File::Error) do
-          Runner.new(rules, [source], formatter, default_severity, autocorrect: true).run
-        end
+        Runner.new(rules, [source], formatter, default_severity, autocorrect: true).run
 
-        source.issues.size.should eq 1
-        source.issues.first.corrected?.should be_false
-        source.issues.first.correctable?.should be_true
-        source.should_not be_valid
+        issue = source.issues.reject(&.crashed?).first
+        issue.corrected?.should be_false
+        issue.correctable?.should be_true
+        source.issues.size.should eq 2
       end
 
       it "goes back to the code on disk" do
         source = Source.new(code, unwritable_path)
-        rules = [Rule::Lint::NotNilAfterNoBang.new] of Rule::Base
 
-        expect_raises(File::Error) do
-          Runner.new(rules, [source], formatter, default_severity, autocorrect: true).run
-        end
+        Runner.new(rules, [source], formatter, default_severity, autocorrect: true).run
 
         source.code.should eq code
+      end
+
+      it "keeps correcting the other sources" do
+        path = File.tempname("source", ".cr")
+        File.write(path, code)
+        sources = [Source.new(code, unwritable_path), Source.new(code, path)]
+
+        begin
+          Runner.new(rules, sources, formatter, default_severity, autocorrect: true).run
+
+          File.read(path).should eq "foo.match!(/x/)\n"
+        ensure
+          File.delete(path) rescue nil
+        end
+      end
+    end
+
+    describe "#run with a source which can't be read" do
+      it "reports it as a crash, without aborting the run" do
+        path = File.tempname("source", ".cr")
+        code = "foo.match(/x/).not_nil!\n"
+        File.write(path, code)
+        missing_path = Path[Dir.tempdir, "ameba-missing-#{Process.pid}", "source.cr"]
+        sources = [Source.from_file(missing_path), Source.new(code, path)]
+        rules = [Rule::Lint::NotNilAfterNoBang.new] of Rule::Base
+
+        begin
+          runner = Runner.new(rules, sources, formatter, default_severity, autocorrect: true).run
+
+          runner.crashed?.should be_true
+          sources.first.issues.map(&.message).first.should contain "Could not read"
+          File.read(path).should eq "foo.match!(/x/)\n"
+        ensure
+          File.delete(path) rescue nil
+        end
+      end
+    end
+
+    describe "#run with an unexpected failure" do
+      it "processes the other sources before raising it" do
+        path = File.tempname("source", ".cr")
+        code = "foo.match(/x/).not_nil!\n"
+        File.write(path, code)
+        sources = [Source.new("a = 1\n", "/failing.cr"), Source.new(code, path)]
+        rules = [Rule::Lint::NotNilAfterNoBang.new] of Rule::Base
+
+        begin
+          expect_raises(Exception, "formatter went wrong") do
+            Runner.new(rules, sources, RaisingFormatter.new.tap(&.failing_path = "/failing.cr"), default_severity, autocorrect: true).run
+          end
+
+          File.read(path).should eq "foo.match!(/x/)\n"
+        ensure
+          File.delete(path) rescue nil
+        end
       end
     end
 

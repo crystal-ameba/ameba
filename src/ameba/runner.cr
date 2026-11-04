@@ -122,9 +122,8 @@ module Ameba
         end
       end
 
-      channels.each do |chan|
-        chan.receive.try { |ex| raise ex }
-      end
+      # Let the other sources finish first, as they might get corrected on disk
+      channels.compact_map(&.receive).first?.try { |ex| raise ex }
 
       self
     ensure
@@ -160,7 +159,11 @@ module Ameba
         return report_infinite_loop(source, original_code, corrected_issues, ex)
       end
 
-      write_corrections(source, original_code) unless corrected_issues.empty?
+      begin
+        File.write(source.path, source.code) unless corrected_issues.empty?
+      rescue ex
+        return report_write_failure(source, original_code, corrected_issues, ex)
+      end
 
       source.issues[0, 0] = corrected_issues.flatten
     ensure
@@ -251,15 +254,13 @@ module Ameba
       processed_sources << checksum
     end
 
-    # Writes the corrected code. On failure, goes back to the code on disk, so
-    # that nothing gets reported as corrected, and passes the error on.
-    private def write_corrections(source, original_code) : Nil
-      File.write(source.path, source.code)
-    rescue ex
+    # Goes back to the code on disk, so that nothing gets reported as corrected.
+    private def report_write_failure(source, original_code, corrected_issues, ex) : Nil
       source.revert_to(original_code)
       inspect_source(source)
 
-      raise ex
+      source.add_crash_issue corrected_issues.last.first.rule,
+        "Could not write the corrected code: #{ex.message}"
     end
 
     # Inspects the source, returning `false` if it has syntax errors,
@@ -289,7 +290,7 @@ module Ameba
       source.revert_to(original_code)
       inspect_source(source)
 
-      add_crash_issue(source, corrected_issues.last.first.rule, ex.message.to_s)
+      source.add_crash_issue(corrected_issues.last.first.rule, ex.message.to_s)
     end
 
     private def check_unneeded_directives(source, excluded_rules = Set(String).new)
@@ -307,12 +308,7 @@ module Ameba
     rescue ex
       message = "Rule raised an exception: #{ex.message} (#{ex.class})"
 
-      add_crash_issue(source, rule, message)
-    end
-
-    private def add_crash_issue(source, rule, message) : Nil
-      issue = source.add_issue(rule, {1, 1}, message, status: :enabled)
-      source.issues[-1] = issue.as_crashed
+      source.add_crash_issue(rule, message)
     end
   end
 end

@@ -89,7 +89,7 @@ $ ameba --fix
 | ----- | ------- |
 | `0`   | No issues left, including when `--fix` corrected all of them |
 | `1`   | Some issues are left |
-| `2`   | A rule or a correction raised an exception, or corrections got stuck in an infinite loop, leaving the file untouched. Either is reported as an issue, and the other rules and files were processed as usual |
+| `2`   | A rule or a correction raised an exception, corrections got stuck in an infinite loop, or a file couldn't be read or written. Any of these is reported as an issue, and the other rules and files were processed as usual |
 | `255` | The run was aborted, e.g. because of an invalid configuration |
 
 ### Explain issues
