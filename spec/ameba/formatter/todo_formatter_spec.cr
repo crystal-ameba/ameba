@@ -32,8 +32,7 @@ module Ameba
       it "doesn't generate the file if there's nothing else to exclude" do
         with_formatter do |formatter, io|
           source = Source.new("a = 1", "crashed.cr")
-          issue = source.add_issue(DummyRule.new, {1, 1}, "boom")
-          source.issues[-1] = issue.as_crashed
+          source.add_crash_issue(DummyRule.new, "boom")
 
           File.write(CONFIG_PATH, "existing config")
           formatter.finished([source])
@@ -46,8 +45,7 @@ module Ameba
       it "doesn't exclude the source, so that the crash stays visible" do
         with_formatter do |formatter|
           source = Source.new("a = 1", "crashed.cr")
-          issue = source.add_issue(DummyRule.new, {1, 1}, "boom")
-          source.issues[-1] = issue.as_crashed
+          source.add_crash_issue(DummyRule.new, "boom")
 
           other = Source.new("a = 1", "other.cr")
           other.add_issue(DummyRule.new, {1, 1}, "regular")
