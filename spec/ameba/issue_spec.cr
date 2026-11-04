@@ -55,15 +55,17 @@ module Ameba
       issue.crashed?.should be_false
     end
 
-    it "keeps being crashed through other copies" do
+    it "has a single outcome" do
       issue = Issue.new code: "",
         rule: DummyRule.new,
         location: nil,
         end_location: nil,
         message: "Blah"
 
-      issue.as_crashed.without_correction("Foo").crashed?.should be_true
-      issue.as_crashed.as_corrected.crashed?.should be_true
+      issue.outcome.should eq Issue::Outcome::Pending
+      issue.as_corrected.outcome.should eq Issue::Outcome::Corrected
+      issue.as_crashed.outcome.should eq Issue::Outcome::Crashed
+      issue.as_corrected.as_crashed.corrected?.should be_false
     end
 
     it "#as_corrected marks only a copy, keeping the rest" do
