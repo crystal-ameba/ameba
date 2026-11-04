@@ -24,6 +24,11 @@ module Ameba::Formatter
         return
       end
 
+      if issues.select(&.unresolved?).all?(&.crashed?)
+        output.puts "Crashes can't be excluded. File is not generated."
+        return
+      end
+
       issues.sort_by! do |issue|
         location = issue.location
         {
@@ -67,7 +72,7 @@ module Ameba::Formatter
     private def rule_issues_map(issues)
       Hash(Rule::Base, Array(Issue)).new.tap do |hash|
         issues.each do |issue|
-          next if !issue.unresolved? || issue.syntax?
+          next if !issue.unresolved? || issue.syntax? || issue.crashed?
 
           (hash[issue.rule] ||= Array(Issue).new) << issue
         end
