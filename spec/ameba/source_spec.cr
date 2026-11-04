@@ -114,17 +114,14 @@ module Ameba
 
     describe ".from_file" do
       it "reads the code from the file" do
-        path = File.tempname("source", ".cr")
-        File.write(path, "a = 1\n")
+        with_temp_file do |path|
+          File.write(path, "a = 1\n")
 
-        begin
           source = Source.from_file(path, "project.cr")
           source.code.should eq "a = 1\n"
           source.path.should eq Path[path]
           source.project_path.should eq Path["project.cr"]
           source.issues.should be_empty
-        ensure
-          File.delete(path) rescue nil
         end
       end
 
