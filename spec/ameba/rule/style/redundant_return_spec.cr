@@ -158,6 +158,39 @@ module Ameba::Rule::Style
       end
     end
 
+    context "implicit tuple literals" do
+      rule = RedundantReturn.new
+      rule.allow_multi_return = false
+
+      it "corrects the ones starting with a brace" do
+        source = expect_issue rule, <<-CRYSTAL
+          def foo
+            return {1, 2}, 3
+          # ^^^^^^ error: Redundant `return` detected
+          end
+          CRYSTAL
+
+        expect_correction source, <<-CRYSTAL
+          def foo
+            { {1, 2}, 3 }
+          end
+          CRYSTAL
+      end
+
+      it "doesn't correct the ones ending with a heredoc" do
+        source = expect_issue rule, <<-CRYSTAL
+          def foo
+            return 1, <<-TEXT
+          # ^^^^^^ error: Redundant `return` detected
+              a
+              TEXT
+          end
+          CRYSTAL
+
+        expect_no_corrections source
+      end
+    end
+
     context "ternary branches" do
       it "keeps the code parsable with an assignment" do
         source = expect_issue subject, <<-CRYSTAL

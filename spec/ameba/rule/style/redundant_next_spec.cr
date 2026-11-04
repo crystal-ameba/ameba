@@ -34,6 +34,24 @@ module Ameba::Rule::Style
         CRYSTAL
     end
 
+    it "corrects implicit tuple literals starting with a brace" do
+      rule = RedundantNext.new
+      rule.allow_multi_next = false
+
+      source = expect_issue rule, <<-CRYSTAL
+        foo do
+          next {1, 2}, 3
+        # ^^^^ error: Redundant `next` detected
+        end
+        CRYSTAL
+
+      expect_correction source, <<-CRYSTAL
+        foo do
+          { {1, 2}, 3 }
+        end
+        CRYSTAL
+    end
+
     it "corrects next with arguments in parentheses" do
       source = expect_issue subject, <<-CRYSTAL
         foo do |a|

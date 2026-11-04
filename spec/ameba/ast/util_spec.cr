@@ -1079,6 +1079,28 @@ module Ameba::AST
         subject.control_exp_code(node, [s], operand: true).should eq "(a ? 1 : 2)"
       end
 
+      {
+        "return {1, 2}, 3"               => "{ {1, 2}, 3 }",
+        "return({1, 2}, 3)"              => "{ {1, 2}, 3 }",
+        "return {a: 1}, 2"               => "{ {a: 1}, 2 }",
+        "return {1, 2}, {3, 4}"          => "{ {1, 2}, {3, 4} }",
+        "return 1, {2, 3}"               => "{1, {2, 3}}",
+        "return {1, 2}"                  => "{1, 2}",
+        "return({1, 2})"                 => "{1, 2}",
+        "return <<-TEXT, 1\n  a\n  TEXT" => "{<<-TEXT, 1}",
+      }.each do |code, expected|
+        it "tells implicit tuple literals from explicit ones in `#{code.inspect}`" do
+          node = as_node(code).as Crystal::ControlExpression
+          subject.control_exp_code(node, code.split('\n')).should eq expected
+        end
+      end
+
+      it "returns nil if a heredoc ending an implicit tuple literal would have to be wrapped" do
+        code = "return 1, <<-TEXT\n  a\n  TEXT"
+        node = as_node(code).as Crystal::ControlExpression
+        subject.control_exp_code(node, code.split('\n')).should be_nil
+      end
+
       it "keeps comments within the argument" do
         code = "return(1, # comment\n  2\n)"
         node = as_node(code).as Crystal::ControlExpression
