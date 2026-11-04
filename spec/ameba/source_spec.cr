@@ -112,6 +112,35 @@ module Ameba
       end
     end
 
+    describe ".from_file" do
+      it "reads the code from the file" do
+        path = File.tempname("source", ".cr")
+        File.write(path, "a = 1\n")
+
+        begin
+          source = Source.from_file(path, "project.cr")
+          source.code.should eq "a = 1\n"
+          source.path.should eq Path[path]
+          source.project_path.should eq Path["project.cr"]
+          source.issues.should be_empty
+        ensure
+          File.delete(path) rescue nil
+        end
+      end
+
+      it "reports a file which can't be read as a crash" do
+        path = Path[Dir.tempdir, "ameba-missing-#{Process.pid}", "source.cr"]
+        source = Source.from_file(path)
+
+        source.code.should be_empty
+        source.should_not be_valid
+        source.issues.size.should eq 1
+        source.issues.first.crashed?.should be_true
+        source.issues.first.message.should contain "Could not read the file"
+        source.issues.first.location.try(&.line_number).should eq 1
+      end
+    end
+
     describe "#parsable?" do
       it "returns true for valid syntax" do
         Source.new("a = 1").parsable?.should be_true

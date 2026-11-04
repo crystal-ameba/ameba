@@ -4,6 +4,16 @@ module Ameba::Rule::Lint
   describe Syntax do
     subject = Syntax.new
 
+    it "reports invalid UTF-8" do
+      source = Source.new("# text \xFF\na = 1\n", "source.cr")
+      subject.catch(source).should_not be_valid
+
+      issue = source.issues.first
+      issue.rule.should eq subject
+      issue.message.should contain "malformed UTF-8"
+      issue.location.to_s.should eq "source.cr:1:1"
+    end
+
     it "passes if there is no invalid syntax" do
       expect_no_issues subject, <<-CRYSTAL
         def hello
