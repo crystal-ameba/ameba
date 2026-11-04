@@ -4,6 +4,15 @@ module Ameba::Rule::Style
   describe ArrayLiteralSyntax do
     subject = ArrayLiteralSyntax.new
 
+    it "reports without a correction if the type ends with a closing parenthesis left out of the node" do
+      source = expect_issue subject, <<-CRYSTAL
+        a = [] of (Foo ->)
+          # ^^^^^^^^^^^^^ error: Use `Array((Foo ->)).new` for creating an empty array
+        CRYSTAL
+
+      expect_no_corrections source
+    end
+
     it "passes for an array literal with elements" do
       expect_no_issues subject, <<-CRYSTAL
         def print_numbers

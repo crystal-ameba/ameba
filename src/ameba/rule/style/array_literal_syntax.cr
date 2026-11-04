@@ -20,6 +20,8 @@ module Ameba::Rule::Style
   #   Enabled: true
   # ```
   class ArrayLiteralSyntax < Base
+    include AST::Util
+
     properties do
       since_version "1.7.0"
       enabled false
@@ -34,6 +36,11 @@ module Ameba::Rule::Style
 
     def test(source, node : Crystal::ArrayLiteral)
       return unless node.elements.empty? && (array_type = node.of)
+
+      # `[] of (Foo ->)`: the node ends before the closing parenthesis
+      unless balanced_parentheses?(node, source.lines)
+        return issue_for(node, MSG % array_type)
+      end
 
       issue_for(node, MSG % array_type) do |corrector|
         corrector.replace(node, "Array(#{array_type}).new")
