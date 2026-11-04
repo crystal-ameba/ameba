@@ -120,7 +120,7 @@ module Ameba
 
       # This variable is a 2D array used to track corrected issues after each
       # inspection iteration. This is used to output meaningful infinite loop
-      # error message.
+      # error message, and to choose the rule to report a failure under.
       corrected_issues = [] of Array(Issue)
       original_code = source.code
 
