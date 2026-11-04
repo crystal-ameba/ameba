@@ -57,33 +57,19 @@ module Ameba
     # breaking the syntax or raising an exception are dropped, which leaves their
     # issues reported as uncorrected.
     def correct_safely! : Array(Issue)?
-      failures = [] of {Issue, Exception}
+      adopt_corrections do
+        # Retry without the corrections breaking the syntax on their own
+        if breaking_issues = breaking_issues?(issues)
+          drop_corrections { |issue| breaking_issues.includes?(issue) }
+        end
 
-      corrected_code, corrected_issues = corrections(issues) do |issue, ex|
-        failures << {issue, ex}
+        adopt_corrections do
+          # The remaining corrections break the syntax only when combined
+          drop_corrections { true }
+
+          nil
+        end
       end
-
-      failures.each do |failed_issue, ex|
-        reason = "correction raised an exception: #{ex.message} (#{ex.class})"
-        drop_corrections(reason, crashed: true) { |issue| issue == failed_issue }
-      end
-
-      return if code == corrected_code
-      return corrected_issues if adopt_parsable(corrected_code)
-
-      # Retry without the corrections breaking the syntax on their own
-      if breaking_issues = breaking_issues?(issues)
-        drop_corrections { |issue| breaking_issues.includes?(issue) }
-      end
-
-      corrected_code, corrected_issues = corrections(issues) { }
-      return if code == corrected_code
-      return corrected_issues if adopt_parsable(corrected_code)
-
-      # The remaining corrections break the syntax only when combined
-      drop_corrections { true }
-
-      nil
     end
 
     # Goes back to the given *code*, forgetting about the issues of the current one.
@@ -125,14 +111,31 @@ module Ameba
       {corrector.process, corrected_issues}
     end
 
-    # Replaces `code` with the given one, unless it has syntax errors.
-    private def adopt_parsable(new_code) : Bool
-      return false unless new_ast = parse?(new_code)
+    # Replaces `code` with the corrected one, dropping the corrections which raise.
+    # Returns the corrected issues, `nil` if the code was unchanged, or the result
+    # of the block if the corrected code has syntax errors.
+    private def adopt_corrections(&) : Array(Issue)?
+      failures = [] of {Issue, Exception}
 
-      self.code = new_code
-      @ast = new_ast
+      corrected_code, corrected_issues = corrections(issues) do |issue, ex|
+        failures << {issue, ex}
+      end
 
-      true
+      failures.each do |failed_issue, ex|
+        reason = "correction raised an exception: #{ex.message} (#{ex.class})"
+        drop_corrections(reason, crashed: true) { |issue| issue == failed_issue }
+      end
+
+      return if code == corrected_code
+
+      if new_ast = parse?(corrected_code)
+        self.code = corrected_code
+        @ast = new_ast
+
+        return corrected_issues
+      end
+
+      yield
     end
 
     private def drop_corrections(reason = "would produce invalid syntax", *, crashed = false, &)
