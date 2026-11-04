@@ -122,6 +122,24 @@ module Ameba
       end
     end
 
+    describe "#revert_to" do
+      it "goes back to the given code, forgetting about the current one" do
+        source = Source.new("foo\n")
+        source.lines.should eq ["foo", ""]
+        source.ast.to_s.should eq "foo"
+
+        BreakingCorrectionRule.new.catch(source)
+
+        source.correct!
+        source.revert_to("foo\n")
+
+        source.code.should eq "foo\n"
+        source.lines.should eq ["foo", ""]
+        source.ast.to_s.should eq "foo"
+        source.issues.should be_empty
+      end
+    end
+
     describe "#correct_safely!" do
       it "drops a correction which raises, keeping the other ones" do
         source = Source.new("foo\nbar.match(/x/).not_nil!\n")

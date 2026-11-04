@@ -27,7 +27,8 @@ module Ameba
     # Whether the issue has been corrected in the source.
     getter? corrected : Bool
 
-    # Whether the issue reports an exception raised by its rule or correction.
+    # Whether the issue reports an exception raised by its rule
+    # or correction, or corrections getting stuck in a loop.
     getter? crashed : Bool
 
     delegate :enabled?, :disabled?,
