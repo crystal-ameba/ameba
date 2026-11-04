@@ -224,6 +224,74 @@ module Ameba::Rule::Style
     end
 
     context "exception handler" do
+      it "doesn't report return in body if there is an else branch" do
+        expect_no_issues subject, <<-CRYSTAL
+          def foo
+            begin
+              return 1
+            rescue
+              2
+            else
+              3
+              4
+            end
+          ensure
+            5
+          end
+
+          def bar
+            return 1
+          rescue
+            2
+          else
+            3
+          end
+          CRYSTAL
+      end
+
+      it "reports return in the rescue and else branches if there is an else branch" do
+        source = expect_issue subject, <<-CRYSTAL
+          def foo
+            1
+          rescue
+            return 2
+          # ^^^^^^ error: Redundant `return` detected
+          else
+            return 3
+          # ^^^^^^ error: Redundant `return` detected
+          end
+          CRYSTAL
+
+        expect_correction source, <<-CRYSTAL
+          def foo
+            1
+          rescue
+            2
+          else
+            3
+          end
+          CRYSTAL
+      end
+
+      it "reports return in body if there is only an ensure branch" do
+        source = expect_issue subject, <<-CRYSTAL
+          def foo
+            return 1
+          # ^^^^^^ error: Redundant `return` detected
+          ensure
+            2
+          end
+          CRYSTAL
+
+        expect_correction source, <<-CRYSTAL
+          def foo
+            1
+          ensure
+            2
+          end
+          CRYSTAL
+      end
+
       it "reports if there are returns in body" do
         source = expect_issue subject, <<-CRYSTAL
           def foo(a)

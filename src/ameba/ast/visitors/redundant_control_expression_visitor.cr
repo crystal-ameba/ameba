@@ -52,7 +52,9 @@ module Ameba::AST
     end
 
     private def traverse_exception_handler(node)
-      traverse_node(node.body)
+      # The value of the handler comes from its `else` branch, if there is any,
+      # which a control expression in the body prevents from being executed.
+      traverse_node(node.body) unless node.else
       traverse_node(node.else)
 
       node.rescues.try &.each do |rescue_node|
