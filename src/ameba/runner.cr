@@ -141,13 +141,14 @@ module Ameba
       end
 
       if loop_message
-        return report_infinite_loop(source, original_code, corrected_issues, loop_message)
+        return report_failure(source, original_code, corrected_issues, loop_message)
       end
 
       begin
         File.write(source.path, source.code) unless corrected_issues.empty?
       rescue ex
-        return report_write_failure(source, original_code, corrected_issues, ex)
+        message = "Could not write the corrected code: #{ex.message}"
+        return report_failure(source, original_code, corrected_issues, message)
       end
 
       source.issues[0, 0] = corrected_issues.flatten
@@ -237,15 +238,6 @@ module Ameba
       "Infinite loop in #{source.path} caused by #{root_cause}"
     end
 
-    # Goes back to the code on disk, so that nothing gets reported as corrected.
-    private def report_write_failure(source, original_code, corrected_issues, ex) : Nil
-      source.revert_to(original_code)
-      inspect_source(source)
-
-      source.add_crash_issue corrected_issues.last.first.rule,
-        "Could not write the corrected code: #{ex.message}"
-    end
-
     # Inspects the source, returning `false` if it has syntax errors,
     # in which case there's nothing to inspect or correct.
     private def inspect_source(source) : Bool
@@ -270,9 +262,9 @@ module Ameba
       true
     end
 
-    # Leaves the code as it was, since going in circles says nothing about which
-    # state of it is the right one, and reports the loop along with its issues.
-    private def report_infinite_loop(source, original_code, corrected_issues, message) : Nil
+    # Goes back to the original code, so that nothing gets reported as corrected,
+    # and reports the failure along with the issues of that code.
+    private def report_failure(source, original_code, corrected_issues, message) : Nil
       source.revert_to(original_code)
       inspect_source(source)
 
