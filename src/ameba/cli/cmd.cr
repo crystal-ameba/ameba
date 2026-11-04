@@ -36,7 +36,7 @@ module Ameba::CLI
     # Some issues are left.
     Issues = 1
 
-    # A rule or a correction raised an exception.
+    # A rule or a correction raised an exception, or corrections got stuck in a loop.
     Crash = 2
 
     # The run was aborted.
