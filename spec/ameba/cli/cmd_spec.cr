@@ -35,6 +35,19 @@ module Ameba
         end
       end
 
+      it "is two if corrections got stuck in a loop" do
+        path = File.tempname("source", ".cr")
+        File.write(path, "class A; end\n")
+
+        begin
+          args = ["-f", "silent", "--fix", "--only", "Ameba/AtoB,Ameba/BtoA", path]
+          CLI.exit_code(args).should eq CLI::ExitCode::Crash
+          File.read(path).should eq "class A; end\n"
+        ensure
+          File.delete(path) rescue nil
+        end
+      end
+
       it "is zero if every issue got corrected" do
         path = File.tempname("source", ".cr")
         File.write(path, "foo.match(/x/).not_nil!\n")

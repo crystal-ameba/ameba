@@ -74,6 +74,12 @@ module Ameba
       nil
     end
 
+    # Goes back to the given *code*, forgetting about the issues of the current one.
+    def revert_to(code : String) : Nil
+      self.code = code
+      issues.clear
+    end
+
     # Returns `true` if `code` has no syntax errors.
     def parsable? : Bool
       ast

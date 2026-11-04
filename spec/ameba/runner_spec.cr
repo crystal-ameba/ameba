@@ -92,14 +92,14 @@ module Ameba
         Runner.new(all_rules, [source], formatter, default_severity).run.success?.should be_true
       end
 
-      it "aborts because of an infinite loop" do
+      it "reports an infinite loop" do
         rules = [AtoAA.new] of Rule::Base
         source = Source.new("class A; end", "source.cr")
         message = "Infinite loop in source.cr caused by Ameba/AtoAA"
 
-        expect_raises(Runner::InfiniteCorrectionLoopError, message) do
-          Runner.new(rules, [source], formatter, default_severity, autocorrect: true).run
-        end
+        Runner.new(rules, [source], formatter, default_severity, autocorrect: true).run
+
+        source.issues.find!(&.crashed?).message.should eq message
       end
 
       context "#crashed?" do
@@ -196,19 +196,6 @@ module Ameba
             paths.each { |path| File.read(path).should eq "foo.match!(/x/)\n" }
           ensure
             paths.each { |path| File.delete(path) rescue nil }
-          end
-        end
-
-        it "still raises on an infinite correction loop" do
-          rules = [AtoB.new, BtoA.new] of Rule::Base
-          source = Source.new("class A; end", File.tempname("source", ".cr"))
-
-          begin
-            expect_raises(Runner::InfiniteCorrectionLoopError) do
-              Runner.new(rules, [source], formatter, default_severity, autocorrect: true).run
-            end
-          ensure
-            File.delete(source.path) rescue nil
           end
         end
       end
@@ -735,22 +722,109 @@ module Ameba
       end
     end
 
+    describe "#run with an infinite correction loop" do
+      rules = [AtoB.new, BtoA.new] of Rule::Base
+
+      it "doesn't touch the file" do
+        path = File.tempname("source", ".cr")
+        code = "class A; end\n"
+        File.write(path, code)
+        source = Source.new(code, path)
+
+        begin
+          Runner.new(rules, [source], formatter, default_severity, autocorrect: true).run
+
+          File.read(path).should eq code
+          source.code.should eq code
+        ensure
+          File.delete(path) rescue nil
+        end
+      end
+
+      it "reports the issues of the original code as uncorrected" do
+        source = Source.new("class A; end\n", "source.cr")
+
+        Runner.new(rules, [source], formatter, default_severity, autocorrect: true).run
+
+        issue = source.issues.find!(&.message.== "A to B")
+        issue.corrected?.should be_false
+        issue.correctable?.should be_true
+        source.issues.map(&.message).should_not contain "B to A"
+      end
+
+      it "reports the loop only once, on the first line" do
+        source = Source.new("\n\nclass A; end\n", "source.cr")
+
+        Runner.new(rules, [source], formatter, default_severity, autocorrect: true).run
+
+        crashed = source.issues.select(&.crashed?)
+        crashed.size.should eq 1
+        crashed.first.location.try(&.line_number).should eq 1
+        crashed.first.rule.should be_a Rule::Base
+      end
+
+      it "fails the run" do
+        source = Source.new("class A; end\n", "source.cr")
+
+        runner = Runner.new(rules, [source], formatter, default_severity, autocorrect: true).run
+
+        runner.success?.should be_false
+        runner.crashed?.should be_true
+      end
+
+      it "keeps inspecting and correcting the other sources" do
+        looping_path, other_path = File.tempname("source", ".cr"), File.tempname("source", ".cr")
+        looping_code, other_code = "class A; end\n", "foo.match(/x/).not_nil!\n"
+        File.write(looping_path, looping_code)
+        File.write(other_path, other_code)
+        sources = [Source.new(looping_code, looping_path), Source.new(other_code, other_path)]
+        all_rules = rules + [Rule::Lint::NotNilAfterNoBang.new] of Rule::Base
+
+        begin
+          Runner.new(all_rules, sources, formatter, default_severity, autocorrect: true).run
+
+          File.read(looping_path).should eq looping_code
+          File.read(other_path).should eq "foo.match!(/x/)\n"
+        ensure
+          File.delete(looping_path) rescue nil
+          File.delete(other_path) rescue nil
+        end
+      end
+
+      it "drops corrections made before getting stuck, along with their issues" do
+        rules_with_fix = rules + [Rule::Lint::NotNilAfterNoBang.new] of Rule::Base
+        code = "class A; end\nfoo.match(/x/).not_nil!\n"
+        source = Source.new(code, "source.cr")
+
+        Runner.new(rules_with_fix, [source], formatter, default_severity, autocorrect: true).run
+
+        source.code.should eq code
+        source.issues.none?(&.corrected?).should be_true
+      end
+
+      it "doesn't mark anything as crashed for a clean run" do
+        source = Source.new("class C; end\n", "source.cr")
+
+        Runner.new(rules, [source], formatter, default_severity, autocorrect: true).run.crashed?.should be_false
+      end
+    end
+
     describe "#run with rules autocorrecting each other" do
       context "with two conflicting rules" do
         context "if there is an offense in an inspected file" do
-          it "aborts because of an infinite loop" do
+          it "reports an infinite loop" do
             rules = [AtoB.new, BtoA.new]
             source = Source.new("class A; end", "source.cr")
             message = "Infinite loop in source.cr caused by Ameba/AtoB -> Ameba/BtoA"
 
-            expect_raises(Runner::InfiniteCorrectionLoopError, message) do
-              Runner.new(rules, [source], formatter, default_severity, autocorrect: true).run
-            end
+            Runner.new(rules, [source], formatter, default_severity, autocorrect: true).run
+
+            source.issues.find!(&.crashed?).message.should eq message
           end
         end
 
         context "if there are multiple offenses in an inspected file" do
-          it "aborts because of an infinite loop" do
+          it "reports an infinite loop" do
             rules = [AtoB.new, BtoA.new]
             source = Source.new <<-CRYSTAL, "source.cr"
               class A; end
@@ -758,34 +832,34 @@ module Ameba
               CRYSTAL
             message = "Infinite loop in source.cr caused by Ameba/AtoB -> Ameba/BtoA"
 
-            expect_raises(Runner::InfiniteCorrectionLoopError, message) do
-              Runner.new(rules, [source], formatter, default_severity, autocorrect: true).run
-            end
+            Runner.new(rules, [source], formatter, default_severity, autocorrect: true).run
+
+            source.issues.find!(&.crashed?).message.should eq message
           end
         end
       end
 
       context "with two pairs of conflicting rules" do
-        it "aborts because of an infinite loop" do
+        it "reports an infinite loop" do
           rules = [ClassToModule.new, ModuleToClass.new, AtoB.new, BtoA.new]
           source = Source.new("class A_A; end", "source.cr")
           message = "Infinite loop in source.cr caused by Ameba/ClassToModule, Ameba/AtoB -> Ameba/ModuleToClass, Ameba/BtoA"
 
-          expect_raises(Runner::InfiniteCorrectionLoopError, message) do
-            Runner.new(rules, [source], formatter, default_severity, autocorrect: true).run
-          end
+          Runner.new(rules, [source], formatter, default_severity, autocorrect: true).run
+
+          source.issues.find!(&.crashed?).message.should eq message
         end
       end
 
       context "with three rule cycle" do
-        it "aborts because of an infinite loop" do
+        it "reports an infinite loop" do
           rules = [AtoB.new, BtoC.new, CtoA.new]
           source = Source.new("class A; end", "source.cr")
           message = "Infinite loop in source.cr caused by Ameba/AtoB -> Ameba/BtoC -> Ameba/CtoA"
 
-          expect_raises(Runner::InfiniteCorrectionLoopError, message) do
-            Runner.new(rules, [source], formatter, default_severity, autocorrect: true).run
-          end
+          Runner.new(rules, [source], formatter, default_severity, autocorrect: true).run
+
+          source.issues.find!(&.crashed?).message.should eq message
         end
       end
     end
