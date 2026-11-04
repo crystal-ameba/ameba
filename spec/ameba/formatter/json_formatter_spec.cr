@@ -13,6 +13,17 @@ end
 
 module Ameba::Formatter
   describe JSONFormatter do
+    context "correctable issues" do
+      it "reports only the ones left" do
+        source = Source.new("a = 1", "source.cr")
+        Ameba.add_correctable_issues(source)
+
+        issues = get_result([source])["sources"][0]["issues"].as_a
+
+        issues.map(&.["message"].as_s).should eq ["left one"]
+      end
+    end
+
     context "metadata" do
       it "shows ameba version" do
         get_result["metadata"]["ameba_version"].should eq Ameba.version.to_s

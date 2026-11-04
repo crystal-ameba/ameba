@@ -28,6 +28,69 @@ module Ameba
       FileUtils.rm_rf(CONFIG_PATH)
     end
 
+    context "crashed issues" do
+      it "doesn't generate the file if there's nothing else to exclude" do
+        with_formatter do |formatter, io|
+          source = Source.new("a = 1", "crashed.cr")
+          source.add_crash_issue(DummyRule.new, "boom")
+
+          File.write(CONFIG_PATH, "existing config")
+          formatter.finished([source])
+
+          io.to_s.should contain "Crashes can't be excluded. File is not generated."
+          File.read(CONFIG_PATH).should eq "existing config"
+        end
+      end
+
+      it "doesn't exclude the source, so that the crash stays visible" do
+        with_formatter do |formatter|
+          source = Source.new("a = 1", "crashed.cr")
+          source.add_crash_issue(DummyRule.new, "boom")
+
+          other = Source.new("a = 1", "other.cr")
+          other.add_issue(DummyRule.new, {1, 1}, "regular")
+
+          formatter.finished([source, other])
+
+          todo = File.read(CONFIG_PATH)
+          todo.should contain "other.cr"
+          todo.should_not contain "crashed.cr"
+        end
+      end
+    end
+
+    context "correctable issues" do
+      it "doesn't generate the file if all of them got corrected" do
+        with_formatter do |formatter, io|
+          source = Source.new("a = 1", "source.cr")
+          source.add_issue(DummyRule.new, {1, 1}, {1, 1}, "fixed one") { |_| }
+          source.issues[-1] = source.issues[-1].as_corrected
+
+          formatter.finished([source])
+
+          io.to_s.should contain "No issues found. File is not generated."
+          File.exists?(CONFIG_PATH).should be_false
+        end
+      end
+
+      it "excludes only the sources with issues left" do
+        with_formatter do |formatter|
+          corrected = Source.new("a = 1", "corrected.cr")
+          corrected.add_issue(DummyRule.new, {1, 1}, {1, 1}, "fixed one") { |_| }
+          corrected.issues[-1] = corrected.issues[-1].as_corrected
+
+          left = Source.new("a = 1", "left.cr")
+          left.add_issue(DummyRule.new, {1, 1}, {1, 1}, "left one") { |_| }
+
+          formatter.finished([corrected, left])
+
+          todo = File.read(CONFIG_PATH)
+          todo.should contain "left.cr"
+          todo.should_not contain "corrected.cr"
+        end
+      end
+    end
+
     context "problems not found" do
       it "does not create file" do
         with_formatter do |formatter|

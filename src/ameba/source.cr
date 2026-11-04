@@ -30,28 +30,55 @@ module Ameba
       @project_path = Path[project_path]
     end
 
+    # Creates a new source from the file at the given *path*. If it can't
+    # be read, the source has no code and reports that as an issue.
+    def self.from_file(path : Path | String, project_path : Path | String = path) : self
+      new(File.read(path), path, project_path)
+    rescue ex : IO::Error
+      new(path: path, project_path: project_path).tap do |source|
+        source.add_crash_issue Rule::Lint::Syntax.new,
+          "Could not read the file: #{ex.message}"
+      end
+    end
+
     # Corrects any correctable issues and updates `code`.
-    # Returns `false` if no issues were corrected.
-    def correct!
-      corrector = Corrector.new(code)
-      issues.each { |issue| issue.correct(corrector) if issue.enabled? }
+    # Returns the corrected issues, or `nil` if the code was unchanged.
+    def correct! : Array(Issue)?
+      Correction.new(self).apply
+    end
 
-      corrected_code = corrector.process
-      return false if code == corrected_code
+    # Same as `#correct!`, but makes sure the source stays parsable. Corrections
+    # breaking the syntax or raising an exception are dropped, which leaves their
+    # issues reported as uncorrected.
+    def correct_safely! : Array(Issue)?
+      Correction.new(self).apply_safely
+    end
 
-      @code = corrected_code
+    # Goes back to the given *code*, forgetting about the issues of the current one.
+    def revert_to(code : String) : Nil
+      replace_code(code)
+      issues.clear
+    end
+
+    # Returns `true` if `code` has no syntax errors.
+    def parsable? : Bool
+      ast
+      true
+    rescue Crystal::SyntaxException
+      false
+    end
+
+    # Replaces `code` and drops everything derived from it,
+    # unless it comes with the *ast* already parsed from that code.
+    protected def replace_code(@code, @ast = nil) : Nil
       @lines = nil
       @line_offsets = nil
-      @ast = nil
-
-      true
     end
 
     # Returns lines of code split by new line character.
-    # Since `code` is immutable and can't be changed, this
-    # method caches lines in an instance variable, so calling
-    # it a second time will not perform a split, but will return
-    # lines instantly.
+    # This method caches lines in an instance variable until
+    # `code` changes, so calling it a second time will not
+    # perform a split, but will return lines instantly.
     #
     # ```
     # source = Ameba::Source.new("a = 1\nb = 2", path)
@@ -60,7 +87,10 @@ module Ameba
     getter lines : Array(String) { code.split(/\r?\n/) }
 
     # Positions at which the code lines start.
-    private getter line_offsets : Array(Int32) do
+    protected getter line_offsets : Array(Int32) { self.class.line_offsets(code) }
+
+    # Returns positions at which lines of the given *code* start.
+    def self.line_offsets(code : String) : Array(Int32)
       offsets = [0]
       code.each_char_with_index do |char, index|
         offsets << index + 1 if char == '\n'
@@ -74,9 +104,9 @@ module Ameba
     # source = Ameba::Source.new(code, path)
     # source.ast
     # ```
-    getter ast : Crystal::ASTNode do
-      code = @code
+    getter ast : Crystal::ASTNode { parse(code) }
 
+    private def parse(code) : Crystal::ASTNode
       if ecr?
         begin
           code = ECR.process_string(code, path.to_s)
@@ -95,6 +125,12 @@ module Ameba
         .tap(&.wants_doc = true)
         .tap(&.filename = path.to_s)
         .parse
+    end
+
+    protected def parse?(code) : Crystal::ASTNode?
+      parse(code)
+    rescue Crystal::SyntaxException
+      nil
     end
 
     # Returns `true` if the source is a spec file, `false` otherwise.

@@ -86,6 +86,205 @@ class Ameba::Source
       rewriter.process.should eq "puts(:hi)"
     end
 
+    it "keeps non-conflicting corrections recorded in a transaction" do
+      rewriter = Rewriter.new(code)
+      rewriter.replace(*hello, ":hi")
+
+      rewriter.transaction { rewriter.replace(*world, ":everybody") }.should be_true
+      rewriter.process.should eq "puts(:hi, :everybody)"
+    end
+
+    it "discards overlapping corrections recorded in a transaction" do
+      rewriter = Rewriter.new(code)
+      rewriter.replace(*hello, ":hi")
+
+      rewriter.transaction { rewriter.replace(hello[0], world[1], ":greeting") }.should be_false
+      rewriter.process.should eq "puts(:hi, :world)"
+    end
+
+    it "discards every correction of a conflicting transaction" do
+      rewriter = Rewriter.new("abcdef")
+      rewriter.replace(1, 2, "X")
+
+      rewriter.transaction do
+        rewriter.replace(4, 5, "Y")
+        rewriter.replace(1, 3, "Z")
+      end.should be_false
+      rewriter.process.should eq "aXcdef"
+    end
+
+    it "discards a transaction without corrections" do
+      rewriter = Rewriter.new("abcdef")
+
+      rewriter.transaction { }.should be_false
+      rewriter.process.should eq "abcdef"
+    end
+
+    it "discards a transaction leaving the code unchanged" do
+      rewriter = Rewriter.new("abcdef")
+
+      rewriter.transaction { rewriter.replace(1, 3, "bc") }.should be_false
+      rewriter.process.should eq "abcdef"
+    end
+
+    it "keeps earlier corrections if a transaction raises" do
+      rewriter = Rewriter.new("abcdef")
+      rewriter.replace(1, 2, "X")
+
+      expect_raises(IndexError) do
+        rewriter.transaction do
+          rewriter.replace(3, 4, "Y")
+          rewriter.replace(0, 100, "Z")
+        end
+      end
+      rewriter.process.should eq "aXcdef"
+    end
+
+    it "keeps insertions at the boundary of a replacement" do
+      rewriter = Rewriter.new("abcdef")
+      rewriter.replace(1, 3, "X")
+
+      rewriter.transaction { rewriter.insert_before(3, "Y") }.should be_true
+      rewriter.process.should eq "aXYdef"
+    end
+
+    it "discards insertions inside a replacement" do
+      rewriter = Rewriter.new("abcdef")
+      rewriter.replace(1, 3, "X")
+
+      rewriter.transaction { rewriter.insert_before(2, "Y") }.should be_false
+      rewriter.process.should eq "aXdef"
+    end
+
+    it "discards a replacement over a previously recorded insertion" do
+      rewriter = Rewriter.new("abcdef")
+      rewriter.insert_before(2, "Y")
+
+      rewriter.transaction { rewriter.replace(1, 3, "X") }.should be_false
+      rewriter.process.should eq "abYcdef"
+    end
+
+    it "discards ranged insertions contained by a replacement" do
+      rewriter = Rewriter.new("abcdef")
+      rewriter.replace(1, 5, "X")
+
+      rewriter.transaction { rewriter.insert_before(1, 3, "Y") }.should be_false
+      rewriter.transaction { rewriter.insert_after(3, 5, "Y") }.should be_false
+      rewriter.process.should eq "aXf"
+    end
+
+    it "discards a replacement over contained ranged insertions" do
+      rewriter = Rewriter.new("abcdef")
+      rewriter.insert_before(1, 3, "Y")
+
+      rewriter.transaction { rewriter.replace(1, 5, "X") }.should be_false
+      rewriter.process.should eq "aYbcdef"
+    end
+
+    it "discards insertions at the boundaries of a whole-source replacement" do
+      [0, 6].each do |pos|
+        rewriter = Rewriter.new("abcdef")
+        rewriter.replace(0, 6, "X")
+
+        rewriter.transaction { rewriter.insert_before(pos, "Y") }.should be_false
+        rewriter.process.should eq "X"
+
+        rewriter = Rewriter.new("abcdef")
+        rewriter.insert_before(pos, "Y")
+
+        rewriter.transaction { rewriter.replace(0, 6, "X") }.should be_false
+        rewriter.process.should_not eq "X"
+      end
+    end
+
+    it "discards a wrap with a nested correction conflicting with a contained one" do
+      rewriter = Rewriter.new("abcdef")
+      rewriter.replace(2, 4, "X")
+
+      rewriter.transaction do
+        rewriter.wrap(1, 5, '[', ']')
+        rewriter.replace(2, 3, "Y")
+      end.should be_false
+      rewriter.process.should eq "abXef"
+    end
+
+    it "keeps nested wraps in either order" do
+      rewriter = Rewriter.new("abcdef")
+      rewriter.wrap(1, 5, '[', ']')
+
+      rewriter.transaction { rewriter.wrap(2, 4, '(', ')') }.should be_true
+      rewriter.process.should eq "a[b(cd)e]f"
+
+      rewriter = Rewriter.new("abcdef")
+      rewriter.wrap(2, 4, '(', ')')
+
+      rewriter.transaction { rewriter.wrap(1, 5, '[', ']') }.should be_true
+      rewriter.process.should eq "a[b(cd)e]f"
+    end
+
+    it "keeps wraps at the same range" do
+      rewriter = Rewriter.new("abcdef")
+      rewriter.wrap(1, 4, '[', ']')
+
+      rewriter.transaction { rewriter.wrap(1, 4, '(', ')') }.should be_true
+      rewriter.process.should eq "a([bcd])ef"
+    end
+
+    it "keeps a wrap with a contained replacement in either order" do
+      rewriter = Rewriter.new("abcdef")
+      rewriter.wrap(1, 5, '[', ']')
+
+      rewriter.transaction { rewriter.replace(2, 4, "X") }.should be_true
+      rewriter.process.should eq "a[bXe]f"
+
+      rewriter = Rewriter.new("abcdef")
+      rewriter.replace(2, 4, "X")
+
+      rewriter.transaction { rewriter.wrap(1, 5, '[', ']') }.should be_true
+      rewriter.process.should eq "a[bXe]f"
+    end
+
+    it "discards crossing wraps" do
+      rewriter = Rewriter.new("abcdef")
+      rewriter.wrap(1, 4, '[', ']')
+
+      rewriter.transaction { rewriter.wrap(2, 5, '(', ')') }.should be_false
+      rewriter.process.should eq "a[bcd]ef"
+    end
+
+    it "discards replacements at the same empty range" do
+      rewriter = Rewriter.new("abcdef")
+      rewriter.replace(2, 2, 'x')
+
+      rewriter.transaction { rewriter.replace(2, 2, 'y') }.should be_false
+      rewriter.process.should eq "abxcdef"
+    end
+
+    it "handles code with multi-byte characters" do
+      rewriter = Rewriter.new("zażółć gęślą jaźń")
+      rewriter.replace(2, 5, "X")
+      rewriter.insert_before(7, "<")
+      rewriter.insert_after(12, ">")
+      rewriter.remove(13, 15)
+
+      rewriter.process.should eq "zaXć <gęślą> źń"
+    end
+
+    it "handles replacing everything in code with multi-byte characters" do
+      rewriter = Rewriter.new("żółć")
+      rewriter.replace(0, 4, "X")
+
+      rewriter.process.should eq "X"
+    end
+
+    it "discards a transaction leaving code with multi-byte characters unchanged" do
+      rewriter = Rewriter.new("żółć")
+
+      rewriter.transaction { rewriter.replace(1, 3, "ół") }.should be_false
+      rewriter.transaction { rewriter.replace(1, 3, "ÓŁ") }.should be_true
+      rewriter.process.should eq "żÓŁć"
+    end
+
     it "rejects out-of-range ranges" do
       rewriter = Rewriter.new(code)
       expect_raises(IndexError) { rewriter.insert_before(0, 100, "hola") }
@@ -93,18 +292,17 @@ class Ameba::Source
 
     it "ignores trivial actions" do
       rewriter = Rewriter.new(code)
-      rewriter.empty?.should be_true
 
       # This is a trivial wrap
       rewriter.wrap(2, 5, "", "")
-      rewriter.empty?.should be_true
+      rewriter.process.should eq code
 
       # This is a trivial deletion
       rewriter.remove(2, 2)
-      rewriter.empty?.should be_true
+      rewriter.process.should eq code
 
       rewriter.remove(2, 5)
-      rewriter.empty?.should be_false
+      rewriter.process.should_not eq code
     end
   end
 end

@@ -17,9 +17,7 @@ module Ameba::Formatter
 
     # Reports a result of the inspection of a corresponding source.
     def source_finished(source : Source) : Nil
-      source.issues.each do |issue|
-        next if issue.disabled?
-
+      source.unresolved_issues.each do |issue|
         @mutex.synchronize do
           output << "::"
           output << command_name(issue.rule.severity)
@@ -62,7 +60,7 @@ module Ameba::Formatter
     private def summary(sources, time_elapsed)
       failed_sources = sources.reject(&.valid?)
       total = sources.size
-      failures = failed_sources.sum(&.issues.count(&.enabled?))
+      failures = failed_sources.sum(&.unresolved_issues.size)
 
       String.build do |output|
         output << "## Ameba Results %s\n\n" % {
@@ -73,7 +71,7 @@ module Ameba::Formatter
           output << "### Issues found\n\n"
 
           failed_sources.each do |source|
-            issues = source.issues.select(&.enabled?)
+            issues = source.unresolved_issues
 
             if issues.present?
               output << "#### `%s` (**%d** %s)\n\n" % {

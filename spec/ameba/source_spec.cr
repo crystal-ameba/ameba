@@ -105,14 +105,220 @@ module Ameba
         source.pos(location).should eq 7
 
         Rule::Layout::TrailingWhitespace.new.catch(source)
-        source.correct!.should be_true
+        source.correct!.should eq source.issues
         source.code.should eq "foo\nbar"
 
         source.pos(location).should eq 4
       end
     end
 
+    describe ".from_file" do
+      it "reads the code from the file" do
+        with_temp_file do |path|
+          File.write(path, "a = 1\n")
+
+          source = Source.from_file(path, "project.cr")
+          source.code.should eq "a = 1\n"
+          source.path.should eq Path[path]
+          source.project_path.should eq Path["project.cr"]
+          source.issues.should be_empty
+        end
+      end
+
+      it "reports a file which can't be read as a crash" do
+        path = Path[Dir.tempdir, "ameba-missing-#{Process.pid}", "source.cr"]
+        source = Source.from_file(path)
+
+        source.code.should be_empty
+        source.should_not be_valid
+        source.issues.size.should eq 1
+        source.issues.first.crashed?.should be_true
+        source.issues.first.message.should contain "Could not read the file"
+        source.issues.first.location.try(&.line_number).should eq 1
+      end
+    end
+
+    describe "#parsable?" do
+      it "returns true for valid syntax" do
+        Source.new("a = 1").parsable?.should be_true
+      end
+
+      it "returns false for invalid syntax" do
+        Source.new("a = (").parsable?.should be_false
+      end
+    end
+
+    describe "#revert_to" do
+      it "goes back to the given code, forgetting about the current one" do
+        source = Source.new("foo\n")
+        source.lines.should eq ["foo", ""]
+        source.ast.to_s.should eq "foo"
+
+        BreakingCorrectionRule.new.catch(source)
+
+        source.correct!
+        source.revert_to("foo\n")
+
+        source.code.should eq "foo\n"
+        source.lines.should eq ["foo", ""]
+        source.ast.to_s.should eq "foo"
+        source.issues.should be_empty
+      end
+    end
+
+    describe "#correct_safely!" do
+      it "drops a correction which raises, keeping the other ones" do
+        source = Source.new("foo\nbar.match(/x/).not_nil!\n")
+        RaisingCorrectionRule.new.catch(source)
+        Rule::Lint::NotNilAfterNoBang.new.catch(source)
+
+        source.correct_safely!.try(&.map(&.rule.name)).should eq ["Lint/NotNilAfterNoBang"]
+        source.code.should eq "foo\nbar.match!(/x/)\n"
+
+        issue = source.issues.first
+        issue.correctable?.should be_false
+        issue.message.should start_with "foo"
+        issue.message.should contain "Correction went wrong"
+        issue.message.should contain "IndexError"
+      end
+
+      it "marks only the issues whose corrections raised as crashed" do
+        source = Source.new("foo\nbar\n")
+        RaisingCorrectionRule.new.catch(source)
+        source.add_issue(DummyRule.new, {2, 1}, {2, 3}, "bad") { |corrector| corrector.replace({2, 1}, {2, 3}, "bar)") }
+
+        source.correct_safely!
+
+        source.issues.map(&.crashed?).should eq [true, false]
+        source.issues.map(&.correctable?).should eq [false, false]
+      end
+
+      it "doesn't annotate the other issues if a correction raises" do
+        source = Source.new("foo\n")
+        RaisingCorrectionRule.new.catch(source)
+        source.add_issue(DummyRule.new, {1, 1}, {1, 3}, "no-op") { |corrector| corrector.replace({1, 1}, {1, 3}, "foo") }
+
+        source.correct_safely!.should be_nil
+        source.issues.last.message.should eq "no-op"
+        source.issues.last.correctable?.should be_true
+      end
+
+      it "returns nil if the only correction raises" do
+        source = Source.new("foo\n")
+        RaisingCorrectionRule.new.catch(source)
+
+        source.correct_safely!.should be_nil
+        source.code.should eq "foo\n"
+        source.issues.first.correctable?.should be_false
+      end
+
+      it "behaves the same as #correct! if the source stays parsable" do
+        source = Source.new("foo\n")
+        BreakingCorrectionRule.new.catch(source)
+
+        source.correct_safely!.try(&.map(&.message)).should eq ["foo"]
+        source.code.should eq "bar\n"
+        source.parsable?.should be_true
+      end
+
+      it "returns nil and keeps the code if the only correction breaks the syntax" do
+        source = Source.new("bar\n")
+        BreakingCorrectionRule.new.catch(source)
+
+        source.correct_safely!.should be_nil
+        source.code.should eq "bar\n"
+        source.lines.should eq ["bar", ""]
+        source.parsable?.should be_true
+        source.issues.first.correctable?.should be_false
+        source.issues.first.message.should contain "invalid syntax"
+      end
+
+      it "drops only the correction breaking the syntax" do
+        source = Source.new("bar\nbaz.match(/x/).not_nil!\n")
+        BreakingCorrectionRule.new.catch(source)
+        Rule::Lint::NotNilAfterNoBang.new.catch(source)
+
+        source.correct_safely!.try(&.map(&.rule.name)).should eq ["Lint/NotNilAfterNoBang"]
+        source.code.should eq "bar\nbaz.match!(/x/)\n"
+      end
+
+      it "drops every correction breaking the syntax" do
+        source = Source.new("bar\nbaz.match(/x/).not_nil!\nqux\n")
+        BreakingCorrectionRule.new.catch(source)
+        Rule::Lint::NotNilAfterNoBang.new.catch(source)
+        source.add_issue(DummyRule.new, {3, 1}, {3, 3}, "bad too") { |corrector| corrector.replace({3, 1}, {3, 3}, "qux)") }
+
+        source.correct_safely!.try(&.map(&.rule.name)).should eq ["Lint/NotNilAfterNoBang"]
+        source.code.should eq "bar\nbaz.match!(/x/)\nqux\n"
+        source.issues.count(&.correctable?).should eq 1
+      end
+
+      it "doesn't try corrections of disabled issues" do
+        source = Source.new("bar\nbaz\n")
+        BreakingCorrectionRule.new.catch(source)
+        source.add_issue(DummyRule.new, {2, 1}, {2, 3}, "disabled", status: :disabled) { |corrector| corrector.replace({2, 1}, {2, 3}, "baz)") }
+
+        source.correct_safely!.should be_nil
+        source.issues.last.correctable?.should be_true
+      end
+
+      it "finds a correction breaking the syntax among many others" do
+        lines = Array.new(64) { |i| "foo#{i}.match(/x/).not_nil!" }
+        source = Source.new("bar\n#{lines.join('\n')}\n")
+        BreakingCorrectionRule.new.catch(source)
+        Rule::Lint::NotNilAfterNoBang.new.catch(source)
+
+        source.correct_safely!.try(&.size).should eq 64
+        source.lines.first.should eq "bar"
+      end
+
+      it "finds a correction breaking the syntax deferred by a conflict" do
+        source = Source.new("qux\nbar\n")
+        source.add_issue(DummyRule.new, {1, 1}, {1, 3}, "bad") { |corrector| corrector.replace({1, 1}, {1, 3}, "qux)") }
+        source.add_issue(DummyRule.new, {1, 1}, {1, 3}, "good") { |corrector| corrector.replace({1, 1}, {1, 3}, "good") }
+
+        source.correct_safely!.try(&.map(&.message)).should eq ["good"]
+        source.code.should eq "good\nbar\n"
+      end
+
+      it "drops all corrections if they break the syntax only when combined" do
+        source = Source.new("x = 1\n2\n")
+        IncompatibleCorrectionsRule.new.catch(source)
+
+        source.correct_safely!.should be_nil
+        source.code.should eq "x = 1\n2\n"
+        source.issues.map(&.correctable?).should eq [false, false]
+      end
+
+      it "doesn't annotate issues without a correction" do
+        source = Source.new("x = 1\n2\n")
+        IncompatibleCorrectionsRule.new.catch(source)
+        source.add_issue(DummyRule.new, {1, 1}, "plain")
+
+        source.correct_safely!
+
+        source.issues.last.message.should eq "plain"
+      end
+    end
+
     describe "#correct!" do
+      it "raises if a correction raises" do
+        source = Source.new("foo\n")
+        RaisingCorrectionRule.new.catch(source)
+
+        expect_raises(IndexError, "Correction went wrong") { source.correct! }
+        source.code.should eq "foo\n"
+      end
+
+      it "skips issues which got corrected already" do
+        source = Source.new("foo\n")
+        source.add_issue(DummyRule.new, {1, 1}, {1, 3}, "fixed") { |corrector| corrector.replace({1, 1}, {1, 3}, "bar") }
+        source.issues[-1] = source.issues[-1].as_corrected
+
+        source.correct!.should be_nil
+        source.code.should eq "foo\n"
+      end
+
       it "skips disabled issues" do
         source = Source.new <<-CRYSTAL
           foo.match("bar").not_nil! # ameba:disable Lint/NotNilAfterNoBang
@@ -123,8 +329,47 @@ module Ameba
 
         source.issues.size.should eq 1
         source.issues.first.enabled?.should be_false
-        source.correct!.should be_false
+        source.correct!.should be_nil
         source.code.should contain ".not_nil!"
+      end
+
+      it "defers conflicting issues until the corrected source is reinspected" do
+        source = Source.new("list.map { |i| i.size }.max")
+        rules = [Rule::Performance::MinMaxAfterMap.new, Rule::Style::VerboseBlock.new]
+        rules.each(&.catch(source))
+
+        source.issues.size.should eq 2
+        applied_issue = source.issues.first
+        source.correct!.should eq [applied_issue]
+        source.code.should eq "list.max_of { |i| i.size }"
+
+        source.issues.clear
+        rules.each(&.catch(source))
+
+        source.issues.map(&.rule).should eq [rules.last]
+        source.correct!.should eq source.issues
+        source.code.should eq "list.max_of(&.size)"
+      end
+
+      it "does not let a correction that changes nothing block a conflicting one" do
+        source = Source.new("abcdef\n")
+        rule = DummyRule.new
+        source.add_issue(rule, {1, 1}, {1, 6}, "no-op") { |corrector| corrector.replace({1, 1}, {1, 6}, "abcdef") }
+        source.add_issue(rule, {1, 2}, {1, 3}, "fix") { |corrector| corrector.replace({1, 2}, {1, 3}, "X") }
+
+        source.correct!.try(&.map(&.message)).should eq ["fix"]
+        source.code.should eq "aXdef\n"
+      end
+
+      it "does not report issues as corrected if their corrections change nothing" do
+        source = Source.new("abcdef\n")
+        rule = DummyRule.new
+        source.add_issue(rule, {1, 1}, {1, 1}, "no-op") { |corrector| corrector.replace({1, 1}, {1, 1}, "a") }
+        source.add_issue(rule, {1, 2}, {1, 2}, "no edits") { |_| }
+        source.add_issue(rule, {1, 3}, {1, 4}, "fix") { |corrector| corrector.replace({1, 3}, {1, 4}, "X") }
+
+        source.correct!.try(&.map(&.message)).should eq ["fix"]
+        source.code.should eq "abXef\n"
       end
 
       it "corrects enabled issues" do
@@ -137,7 +382,7 @@ module Ameba
 
         source.issues.size.should eq 1
         source.issues.first.enabled?.should be_true
-        source.correct!.should be_true
+        source.correct!.should eq source.issues
         source.code.should_not contain ".not_nil!"
       end
     end

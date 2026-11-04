@@ -3,10 +3,7 @@ module Ameba::Formatter
     @mutex = Mutex.new
 
     def source_finished(source : Source) : Nil
-      source.issues.each do |issue|
-        next if issue.disabled?
-        next if issue.correctable? && config[:autocorrect]?
-
+      source.unresolved_issues.each do |issue|
         next unless loc = issue.location
 
         @mutex.synchronize do

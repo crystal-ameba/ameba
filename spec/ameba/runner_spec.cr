@@ -92,25 +92,179 @@ module Ameba
         Runner.new(all_rules, [source], formatter, default_severity).run.success?.should be_true
       end
 
-      it "aborts because of an infinite loop" do
+      it "reports an infinite loop" do
         rules = [AtoAA.new] of Rule::Base
         source = Source.new("class A; end", "source.cr")
         message = "Infinite loop in source.cr caused by Ameba/AtoAA"
 
-        expect_raises(Runner::InfiniteCorrectionLoopError, message) do
-          Runner.new(rules, [source], formatter, default_severity, autocorrect: true).run
+        Runner.new(rules, [source], formatter, default_severity, autocorrect: true).run
+
+        source.issues.find!(&.crashed?).message.should eq message
+      end
+
+      context "#crashed?" do
+        it "is false if nothing raised" do
+          source = Source.new(path: "source.cr")
+
+          Runner.new([ErrorRule.new] of Rule::Base, [source], formatter, default_severity).run
+            .crashed?.should be_false
+        end
+
+        it "is true if a rule raised" do
+          rule = RaiseRule.new
+          rule.should_raise = true
+          source = Source.new(path: "source.cr")
+
+          Runner.new([rule] of Rule::Base, [source], formatter, default_severity).run
+            .crashed?.should be_true
+        end
+
+        it "is true if any of the sources has a correction which raised" do
+          rules = [RaisingCorrectionRule.new.tap(&.enabled = true)] of Rule::Base
+          with_temp_file do |path|
+            File.write(path, "foo\n")
+            sources = [Source.new("bar\n", "other.cr"), Source.new("foo\n", path)]
+
+            Runner.new(rules, sources, formatter, default_severity, autocorrect: true).run
+              .crashed?.should be_true
+          end
+        end
+
+        it "is false if a correction would raise but autocorrect is off" do
+          rules = [RaisingCorrectionRule.new.tap(&.enabled = true)] of Rule::Base
+          source = Source.new("foo\n", "source.cr")
+
+          Runner.new(rules, [source], formatter, default_severity).run
+            .crashed?.should be_false
         end
       end
 
       context "exception in rule" do
-        it "raises an exception raised in fiber while running a rule" do
+        it "reports an exception raised while running a rule" do
           rule = RaiseRule.new
           rule.should_raise = true
           rules = [rule] of Rule::Base
           source = Source.new(path: "source.cr")
 
-          expect_raises(Exception, "something went wrong") do
-            Runner.new(rules, [source], formatter, default_severity).run
+          runner = Runner.new(rules, [source], formatter, default_severity).run
+
+          runner.success?.should be_false
+          source.issues.size.should eq 1
+          source.issues.first.rule.should eq rule
+          source.issues.first.message.should contain "something went wrong"
+          source.issues.first.location.try(&.line_number).should eq 1
+        end
+
+        it "can't be disabled by an inline directive" do
+          rule = RaiseRule.new
+          rule.should_raise = true
+          source = Source.new("a = 1 # ameba:disable #{RaiseRule.rule_name}\n", "source.cr")
+
+          Runner.new([rule] of Rule::Base, [source], formatter, default_severity).run
+
+          source.issues.first.enabled?.should be_true
+        end
+
+        it "doesn't report the directive disabling it as unneeded" do
+          rule = RaiseRule.new
+          rule.should_raise = true
+          rules = [rule, Rule::Lint::UnneededDisableDirective.new] of Rule::Base
+          source = Source.new("a = 1 # ameba:disable #{RaiseRule.rule_name}\n", "source.cr")
+
+          Runner.new(rules, [source], formatter, default_severity).run
+
+          source.issues.map(&.rule.class).should eq [RaiseRule]
+        end
+
+        it "doesn't remove the directive disabling it" do
+          rule = RaiseRule.new
+          rule.should_raise = true
+          rules = [rule, Rule::Lint::UnneededDisableDirective.new] of Rule::Base
+          code = "a = 1 # ameba:disable #{RaiseRule.rule_name}\n"
+
+          with_temp_file do |path|
+            File.write(path, code)
+            source = Source.new(code, path)
+
+            Runner.new(rules, [source], formatter, default_severity, autocorrect: true).run
+
+            source.code.should eq code
+            File.read(path).should eq code
+          end
+        end
+
+        it "still reports other unneeded directives" do
+          rule = RaiseRule.new
+          rule.should_raise = true
+          rules = [rule, ErrorRule.new, Rule::Lint::UnneededDisableDirective.new] of Rule::Base
+          source = Source.new("\na = 1 # ameba:disable #{ErrorRule.rule_name}\n", "source.cr")
+
+          Runner.new(rules, [source], formatter, default_severity).run
+
+          source.issues.map(&.rule.class).should contain Rule::Lint::UnneededDisableDirective
+        end
+
+        it "keeps running the other rules" do
+          rule = RaiseRule.new
+          rule.should_raise = true
+          rules = [rule, ErrorRule.new] of Rule::Base
+          source = Source.new(path: "source.cr")
+
+          Runner.new(rules, [source], formatter, default_severity).run
+
+          source.issues.map(&.rule.class).should contain ErrorRule
+          source.issues.map(&.rule.class).should contain RaiseRule
+        end
+
+        it "keeps inspecting and correcting the other sources" do
+          rule = RaiseRule.new
+          rule.should_raise = true
+          rules = [rule, Rule::Lint::NotNilAfterNoBang.new] of Rule::Base
+          with_temp_files(2) do |paths|
+            code = "foo.match(/x/).not_nil!\n"
+            paths.each { |path| File.write(path, code) }
+            sources = paths.map { |path| Source.new(code, path) }.to_a
+
+            runner = Runner.new(rules, sources, formatter, default_severity, autocorrect: true).run
+
+            runner.success?.should be_false
+            paths.each { |path| File.read(path).should eq "foo.match!(/x/)\n" }
+          end
+        end
+      end
+
+      context "exception in correction" do
+        it "reports the issue as uncorrected, keeping the other corrections" do
+          rules = [RaisingCorrectionRule.new.tap(&.enabled = true), Rule::Lint::NotNilAfterNoBang.new] of Rule::Base
+          with_temp_file do |path|
+            code = "foo\nbar.match(/x/).not_nil!\n"
+            File.write(path, code)
+            source = Source.new(code, path)
+
+            runner = Runner.new(rules, [source], formatter, default_severity, autocorrect: true).run
+
+            File.read(path).should eq "foo\nbar.match!(/x/)\n"
+            runner.success?.should be_false
+
+            issue = source.issues.find!(&.rule.is_a?(RaisingCorrectionRule))
+            issue.correctable?.should be_false
+            issue.corrected?.should be_false
+            issue.message.should contain "Correction went wrong"
+          end
+        end
+
+        it "keeps inspecting and correcting the other sources" do
+          rules = [RaisingCorrectionRule.new.tap(&.enabled = true), Rule::Lint::NotNilAfterNoBang.new] of Rule::Base
+          with_temp_files(2) do |(raising_path, other_path)|
+            raising_code, other_code = "foo\n", "bar.match(/x/).not_nil!\n"
+            File.write(raising_path, raising_code)
+            File.write(other_path, other_code)
+            sources = [Source.new(raising_code, raising_path), Source.new(other_code, other_path)]
+
+            Runner.new(rules, sources, formatter, default_severity, autocorrect: true).run
+
+            File.read(raising_path).should eq raising_code
+            File.read(other_path).should eq "bar.match!(/x/)\n"
           end
         end
       end
@@ -198,12 +352,279 @@ module Ameba
         end
       end
 
-      pending "handles rules with incompatible autocorrect" do
-        rules = [Rule::Performance::MinMaxAfterMap.new, Rule::Style::VerboseBlock.new]
-        source = Source.new("list.map { |i| i.size }.max", File.tempname("source", ".cr"))
+      it "discards corrections leaving the source unparsable" do
+        rules = [BreakingCorrectionRule.new.tap(&.enabled = true)] of Rule::Base
+        with_temp_file do |path|
+          File.write(path, "bar\n")
+          source = Source.new("bar\n", path)
 
-        Runner.new(rules, [source], formatter, default_severity, autocorrect: true).run
-        source.code.should eq "list.max_of(&.size)"
+          Runner.new(rules, [source], formatter, default_severity, autocorrect: true).run
+          source.code.should eq "bar\n"
+          source.lines.should eq ["bar", ""]
+          source.ast.should_not be_nil
+          File.read(path).should eq "bar\n"
+          source.issues.size.should eq 1
+          source.issues.first.message.should start_with "bar"
+          source.issues.first.message.should contain "invalid syntax"
+          source.issues.first.correctable?.should be_false
+        end
+      end
+
+      it "keeps earlier corrections if a later one leaves the source unparsable" do
+        rules = [BreakingCorrectionRule.new.tap(&.enabled = true)] of Rule::Base
+        with_temp_file do |path|
+          File.write(path, "foo\n")
+          source = Source.new("foo\n", path)
+
+          Runner.new(rules, [source], formatter, default_severity, autocorrect: true).run
+          source.code.should eq "bar\n"
+          File.read(path).should eq "bar\n"
+          source.issues.map(&.message.split.first).should eq ["foo", "bar"]
+          source.issues.map(&.correctable?).should eq [true, false]
+        end
+      end
+
+      it "keeps other corrections when one of them leaves the source unparsable" do
+        [false, true].each do |reverse|
+          rules = [
+            BreakingCorrectionRule.new.tap(&.enabled = true),
+            Rule::Lint::NotNilAfterNoBang.new,
+          ] of Rule::Base
+          rules.reverse! if reverse
+          with_temp_file do |path|
+            code = "bar\nbaz.match(/x/).not_nil!\n"
+            File.write(path, code)
+            source = Source.new(code, path)
+
+            Runner.new(rules, [source], formatter, default_severity, autocorrect: true).run
+            source.code.should eq "bar\nbaz.match!(/x/)\n"
+            File.read(path).should eq source.code
+            source.issues.map(&.correctable?).should eq [false, true]
+            source.issues.first.rule.should eq rules.find(&.is_a?(BreakingCorrectionRule))
+            source.issues.first.message.should contain "invalid syntax"
+            source.issues.last.message.should_not contain "invalid syntax"
+          end
+        end
+      end
+
+      it "discards corrections leaving the source unparsable only when combined" do
+        rules = [IncompatibleCorrectionsRule.new.tap(&.enabled = true)] of Rule::Base
+        with_temp_file do |path|
+          code = "x = 1\n2\n"
+          File.write(path, code)
+          source = Source.new(code, path)
+
+          Runner.new(rules, [source], formatter, default_severity, autocorrect: true).run
+          source.code.should eq code
+          File.read(path).should eq code
+          source.issues.map(&.correctable?).should eq [false, false]
+          source.issues.each(&.message.should contain "invalid syntax")
+        end
+      end
+
+      it "does not annotate issues without a correction when discarding corrections" do
+        rules = [IncompatibleCorrectionsRule.new.tap(&.enabled = true), ErrorRule.new] of Rule::Base
+        with_temp_file do |path|
+          code = "x = 1\n2\n"
+          File.write(path, code)
+          source = Source.new(code, path)
+
+          Runner.new(rules, [source], formatter, default_severity, autocorrect: true).run
+          source.issues.find!(&.rule.is_a?(IncompatibleCorrectionsRule)).message.should contain "invalid syntax"
+          source.issues.find!(&.rule.is_a?(ErrorRule)).message.should_not contain "invalid syntax"
+        end
+      end
+
+      it "corrects `return(a)if b` once it has been formatted" do
+        rules = [Rule::Lint::Formatting.new, Rule::Style::RedundantReturn.new] of Rule::Base
+        with_temp_file do |path|
+          code = "def foo(a, b)\n  return(a)if b\nend\n"
+          File.write(path, code)
+          source = Source.new(code, path)
+
+          Runner.new(rules, [source], formatter, default_severity, autocorrect: true).run
+          source.code.should eq "def foo(a, b)\n  a if b\nend\n"
+        end
+      end
+
+      it "handles `Style/RedundantReturn` conflicting over `return(nil)` in either rule order" do
+        {
+          false => "def foo\n  return\nend\n",
+          true  => "def foo\n  nil\nend\n",
+        }.each do |reverse, expected|
+          rules = [
+            Rule::Style::RedundantNilInControlExpression.new,
+            Rule::Style::RedundantReturn.new,
+          ] of Rule::Base
+          rules.reverse! if reverse
+          with_temp_file do |path|
+            code = "def foo\n  return(nil)\nend\n"
+            File.write(path, code)
+            source = Source.new(code, path)
+
+            Runner.new(rules, [source], formatter, default_severity, autocorrect: true).run
+            source.code.should eq expected
+            File.read(path).should eq expected
+          end
+        end
+      end
+
+      it "succeeds if every issue got corrected" do
+        rules = [Rule::Lint::NotNilAfterNoBang.new] of Rule::Base
+        with_temp_file do |path|
+          code = "foo.match(/x/).not_nil!\n"
+          File.write(path, code)
+          source = Source.new(code, path)
+
+          runner = Runner.new(rules, [source], formatter, default_severity, autocorrect: true).run
+          source.issues.size.should eq 1
+          runner.success?.should be_true
+        end
+      end
+
+      it "fails if any issue is left uncorrected" do
+        rules = [Rule::Lint::NotNilAfterNoBang.new, ErrorRule.new] of Rule::Base
+        with_temp_file do |path|
+          code = "foo.match(/x/).not_nil!\n"
+          File.write(path, code)
+          source = Source.new(code, path)
+
+          Runner.new(rules, [source], formatter, default_severity, autocorrect: true).run.success?.should be_false
+        end
+      end
+
+      it "fails if a correction left an issue behind" do
+        rules = [UselessCorrectionRule.new.tap(&.enabled = true)] of Rule::Base
+        with_temp_file do |path|
+          File.write(path, "foo\n")
+          source = Source.new("foo\n", path)
+
+          Runner.new(rules, [source], formatter, default_severity, autocorrect: true).run.success?.should be_false
+        end
+      end
+
+      it "leaves nothing to correct on the source afterwards" do
+        rules = [Rule::Lint::NotNilAfterNoBang.new] of Rule::Base
+        with_temp_file do |path|
+          code = "aaa.match(/x/).not_nil!\nbbb.match(/x/).not_nil!\n"
+          File.write(path, code)
+          source = Source.new(code, path)
+
+          Runner.new(rules, [source], formatter, default_severity, autocorrect: true).run
+
+          corrected_code = source.code
+          source.correct!.should be_nil
+          source.code.should eq corrected_code
+        end
+      end
+
+      it "marks only the issues which got corrected" do
+        rules = [BreakingCorrectionRule.new.tap(&.enabled = true)] of Rule::Base
+        with_temp_file do |path|
+          File.write(path, "foo\n")
+          source = Source.new("foo\n", path)
+
+          Runner.new(rules, [source], formatter, default_severity, autocorrect: true).run
+          source.issues.map(&.corrected?).should eq [true, false]
+        end
+      end
+
+      it "doesn't mark issues whose correction doesn't change anything" do
+        rules = [UselessCorrectionRule.new.tap(&.enabled = true)] of Rule::Base
+        with_temp_file do |path|
+          File.write(path, "foo\n")
+          source = Source.new("foo\n", path)
+
+          Runner.new(rules, [source], formatter, default_severity, autocorrect: true).run
+          source.issues.map(&.corrected?).should eq [false]
+          source.issues.map(&.correctable?).should eq [true]
+        end
+      end
+
+      it "doesn't mark issues without autocorrect" do
+        rules = [BreakingCorrectionRule.new.tap(&.enabled = true)] of Rule::Base
+        source = Source.new("foo\n", "source.cr")
+
+        Runner.new(rules, [source], formatter, default_severity).run
+
+        source.issues.map(&.corrected?).should eq [false]
+        source.issues.map(&.correctable?).should eq [true]
+      end
+
+      it "handles rules with incompatible autocorrect" do
+        rules = [Rule::Performance::MinMaxAfterMap.new, Rule::Style::VerboseBlock.new]
+        with_temp_file do |path|
+          source = Source.new <<-CRYSTAL, path
+            list.map { |i| i.size }.max
+            CRYSTAL
+
+          Runner.new(rules, [source], formatter, default_severity, autocorrect: true).run
+          source.code.should eq "list.max_of(&.size)"
+          source.issues.map(&.rule).should eq rules
+        end
+      end
+
+      it "handles deeply nested conflicting autocorrections in either rule order" do
+        [false, true].each do |reverse|
+          rules = [
+            Rule::Performance::MinMaxAfterMap.new,
+            Rule::Style::VerboseBlock.new
+              .tap(&.exclude_calls_with_block = false),
+          ]
+          rules.reverse! if reverse
+          with_temp_file do |path|
+            source = Source.new <<-CRYSTAL, path
+              list.map { |group| group.map { |arr| arr.map(&.size).max }.max }.max
+              CRYSTAL
+
+            Runner.new(rules, [source], formatter, default_severity, autocorrect: true).run
+            source.code.should eq "list.max_of(&.max_of(&.max_of(&.size)))"
+            File.read(source.path).should eq source.code
+          end
+        end
+      end
+
+      it "preserves semantics of conflicting autocorrections in either rule order" do
+        {
+          false => "if foo\n  :ok\nelse\n  :nok\nend",
+          true  => "if !foo\n  :nok\nelse\n  :ok\nend",
+        }.each do |reverse, expected|
+          rules = [
+            Rule::Style::NegatedConditionsInUnless.new,
+            Rule::Style::UnlessElse.new,
+          ] of Rule::Base
+          rules.reverse! if reverse
+          with_temp_file do |path|
+            source = Source.new <<-CRYSTAL, path
+              unless !foo
+                :ok
+              else
+                :nok
+              end
+              CRYSTAL
+
+            Runner.new(rules, [source], formatter, default_severity, autocorrect: true).run
+            source.code.should eq expected
+          end
+        end
+      end
+
+      it "handles rules with incompatible, conflicting autocorrect" do
+        rules = [
+          Rule::Performance::MinMaxAfterMap.new,
+          # The default excludes bodies with short blocks, including the nested `max` call.
+          Rule::Style::VerboseBlock.new
+            .tap(&.exclude_calls_with_block = false),
+        ]
+        with_temp_file do |path|
+          source = Source.new <<-CRYSTAL, path
+            list.map { |arr| arr.map(&.size).max }.max
+            CRYSTAL
+
+          Runner.new(rules, [source], formatter, default_severity, autocorrect: true).run
+          source.code.should eq "list.max_of(&.max_of(&.size))"
+          source.issues.map(&.rule).should eq [rules.first, rules.last, rules.first]
+        end
       end
     end
 
@@ -280,22 +701,205 @@ module Ameba
       end
     end
 
+    describe "#run when the corrected code can't be written" do
+      # A file within a missing directory can't be written on any platform
+      unwritable_path = Path[Dir.tempdir, "ameba-missing-#{Process.pid}", "source.cr"]
+      code = "foo.match(/x/).not_nil!\n"
+      rules = [Rule::Lint::NotNilAfterNoBang.new] of Rule::Base
+
+      it "reports it as a crash, failing the run" do
+        source = Source.new(code, unwritable_path)
+
+        runner = Runner.new(rules, [source], formatter, default_severity, autocorrect: true).run
+
+        runner.success?.should be_false
+        runner.crashed?.should be_true
+
+        issue = source.issues.find!(&.crashed?)
+        issue.message.should contain "Could not write the corrected code"
+        issue.message.should contain unwritable_path.basename
+      end
+
+      it "doesn't report the issues as corrected" do
+        source = Source.new(code, unwritable_path)
+
+        Runner.new(rules, [source], formatter, default_severity, autocorrect: true).run
+
+        issue = source.issues.reject(&.crashed?).first
+        issue.corrected?.should be_false
+        issue.correctable?.should be_true
+        source.issues.size.should eq 2
+      end
+
+      it "goes back to the code on disk" do
+        source = Source.new(code, unwritable_path)
+
+        Runner.new(rules, [source], formatter, default_severity, autocorrect: true).run
+
+        source.code.should eq code
+      end
+
+      it "keeps correcting the other sources" do
+        with_temp_file do |path|
+          File.write(path, code)
+          sources = [Source.new(code, unwritable_path), Source.new(code, path)]
+
+          Runner.new(rules, sources, formatter, default_severity, autocorrect: true).run
+
+          File.read(path).should eq "foo.match!(/x/)\n"
+        end
+      end
+    end
+
+    describe "#run with a source which can't be read" do
+      it "reports it as a crash, without aborting the run" do
+        with_temp_file do |path|
+          code = "foo.match(/x/).not_nil!\n"
+          File.write(path, code)
+          missing_path = Path[Dir.tempdir, "ameba-missing-#{Process.pid}", "source.cr"]
+          sources = [Source.from_file(missing_path), Source.new(code, path)]
+          rules = [Rule::Lint::NotNilAfterNoBang.new] of Rule::Base
+
+          runner = Runner.new(rules, sources, formatter, default_severity, autocorrect: true).run
+
+          runner.crashed?.should be_true
+          sources.first.issues.map(&.message).first.should contain "Could not read"
+          File.read(path).should eq "foo.match!(/x/)\n"
+        end
+      end
+    end
+
+    describe "#run with invalid UTF-8" do
+      it "reports it as a syntax issue, without aborting the run" do
+        with_temp_file do |path|
+          code = "foo.match(/x/).not_nil!\n"
+          File.write(path, code)
+          sources = [Source.new("# text \xFF\n", "invalid.cr"), Source.new(code, path)]
+          rules = [Rule::Lint::NotNilAfterNoBang.new] of Rule::Base
+
+          runner = Runner.new(rules, sources, formatter, default_severity, autocorrect: true).run
+
+          runner.success?.should be_false
+          runner.crashed?.should be_false
+          sources.first.issues.first.syntax?.should be_true
+          File.read(path).should eq "foo.match!(/x/)\n"
+        end
+      end
+    end
+
+    describe "#run with an unexpected failure" do
+      it "processes the other sources before raising it" do
+        with_temp_file do |path|
+          code = "foo.match(/x/).not_nil!\n"
+          File.write(path, code)
+          sources = [Source.new("a = 1\n", "/failing.cr"), Source.new(code, path)]
+          rules = [Rule::Lint::NotNilAfterNoBang.new] of Rule::Base
+
+          expect_raises(Exception, "formatter went wrong") do
+            Runner.new(rules, sources, RaisingFormatter.new.tap(&.failing_path = "/failing.cr"), default_severity, autocorrect: true).run
+          end
+
+          File.read(path).should eq "foo.match!(/x/)\n"
+        end
+      end
+    end
+
+    describe "#run with an infinite correction loop" do
+      rules = [AtoB.new, BtoA.new] of Rule::Base
+
+      it "doesn't touch the file" do
+        with_temp_file do |path|
+          code = "class A; end\n"
+          File.write(path, code)
+          source = Source.new(code, path)
+
+          Runner.new(rules, [source], formatter, default_severity, autocorrect: true).run
+
+          File.read(path).should eq code
+          source.code.should eq code
+        end
+      end
+
+      it "reports the issues of the original code as uncorrected" do
+        source = Source.new("class A; end\n", "source.cr")
+
+        Runner.new(rules, [source], formatter, default_severity, autocorrect: true).run
+
+        issue = source.issues.find!(&.message.== "A to B")
+        issue.corrected?.should be_false
+        issue.correctable?.should be_true
+        source.issues.map(&.message).should_not contain "B to A"
+      end
+
+      it "reports the loop only once, on the first line" do
+        source = Source.new("\n\nclass A; end\n", "source.cr")
+
+        Runner.new(rules, [source], formatter, default_severity, autocorrect: true).run
+
+        crashed = source.issues.select(&.crashed?)
+        crashed.size.should eq 1
+        crashed.first.location.try(&.line_number).should eq 1
+        crashed.first.rule.should be_a Rule::Base
+      end
+
+      it "fails the run" do
+        source = Source.new("class A; end\n", "source.cr")
+
+        runner = Runner.new(rules, [source], formatter, default_severity, autocorrect: true).run
+
+        runner.success?.should be_false
+        runner.crashed?.should be_true
+      end
+
+      it "keeps inspecting and correcting the other sources" do
+        with_temp_files(2) do |(looping_path, other_path)|
+          looping_code, other_code = "class A; end\n", "foo.match(/x/).not_nil!\n"
+          File.write(looping_path, looping_code)
+          File.write(other_path, other_code)
+          sources = [Source.new(looping_code, looping_path), Source.new(other_code, other_path)]
+          all_rules = rules + [Rule::Lint::NotNilAfterNoBang.new] of Rule::Base
+
+          Runner.new(all_rules, sources, formatter, default_severity, autocorrect: true).run
+
+          File.read(looping_path).should eq looping_code
+          File.read(other_path).should eq "foo.match!(/x/)\n"
+        end
+      end
+
+      it "drops corrections made before getting stuck, along with their issues" do
+        rules_with_fix = rules + [Rule::Lint::NotNilAfterNoBang.new] of Rule::Base
+        code = "class A; end\nfoo.match(/x/).not_nil!\n"
+        source = Source.new(code, "source.cr")
+
+        Runner.new(rules_with_fix, [source], formatter, default_severity, autocorrect: true).run
+
+        source.code.should eq code
+        source.issues.none?(&.corrected?).should be_true
+      end
+
+      it "doesn't mark anything as crashed for a clean run" do
+        source = Source.new("class C; end\n", "source.cr")
+
+        Runner.new(rules, [source], formatter, default_severity, autocorrect: true).run.crashed?.should be_false
+      end
+    end
+
     describe "#run with rules autocorrecting each other" do
       context "with two conflicting rules" do
         context "if there is an offense in an inspected file" do
-          it "aborts because of an infinite loop" do
+          it "reports an infinite loop" do
             rules = [AtoB.new, BtoA.new]
             source = Source.new("class A; end", "source.cr")
             message = "Infinite loop in source.cr caused by Ameba/AtoB -> Ameba/BtoA"
 
-            expect_raises(Runner::InfiniteCorrectionLoopError, message) do
-              Runner.new(rules, [source], formatter, default_severity, autocorrect: true).run
-            end
+            Runner.new(rules, [source], formatter, default_severity, autocorrect: true).run
+
+            source.issues.find!(&.crashed?).message.should eq message
           end
         end
 
         context "if there are multiple offenses in an inspected file" do
-          it "aborts because of an infinite loop" do
+          it "reports an infinite loop" do
             rules = [AtoB.new, BtoA.new]
             source = Source.new <<-CRYSTAL, "source.cr"
               class A; end
@@ -303,34 +907,46 @@ module Ameba
               CRYSTAL
             message = "Infinite loop in source.cr caused by Ameba/AtoB -> Ameba/BtoA"
 
-            expect_raises(Runner::InfiniteCorrectionLoopError, message) do
-              Runner.new(rules, [source], formatter, default_severity, autocorrect: true).run
-            end
+            Runner.new(rules, [source], formatter, default_severity, autocorrect: true).run
+
+            source.issues.find!(&.crashed?).message.should eq message
           end
+        end
+      end
+
+      context "with a correction leading to a loop" do
+        it "names only the rules going in circles" do
+          rules = [CtoA.new, AtoB.new, BtoA.new]
+          source = Source.new("class C; end", "source.cr")
+          message = "Infinite loop in source.cr caused by Ameba/AtoB -> Ameba/BtoA"
+
+          Runner.new(rules, [source], formatter, default_severity, autocorrect: true).run
+
+          source.issues.find!(&.crashed?).message.should eq message
         end
       end
 
       context "with two pairs of conflicting rules" do
-        it "aborts because of an infinite loop" do
+        it "reports an infinite loop" do
           rules = [ClassToModule.new, ModuleToClass.new, AtoB.new, BtoA.new]
           source = Source.new("class A_A; end", "source.cr")
           message = "Infinite loop in source.cr caused by Ameba/ClassToModule, Ameba/AtoB -> Ameba/ModuleToClass, Ameba/BtoA"
 
-          expect_raises(Runner::InfiniteCorrectionLoopError, message) do
-            Runner.new(rules, [source], formatter, default_severity, autocorrect: true).run
-          end
+          Runner.new(rules, [source], formatter, default_severity, autocorrect: true).run
+
+          source.issues.find!(&.crashed?).message.should eq message
         end
       end
 
       context "with three rule cycle" do
-        it "aborts because of an infinite loop" do
+        it "reports an infinite loop" do
           rules = [AtoB.new, BtoC.new, CtoA.new]
           source = Source.new("class A; end", "source.cr")
           message = "Infinite loop in source.cr caused by Ameba/AtoB -> Ameba/BtoC -> Ameba/CtoA"
 
-          expect_raises(Runner::InfiniteCorrectionLoopError, message) do
-            Runner.new(rules, [source], formatter, default_severity, autocorrect: true).run
-          end
+          Runner.new(rules, [source], formatter, default_severity, autocorrect: true).run
+
+          source.issues.find!(&.crashed?).message.should eq message
         end
       end
     end

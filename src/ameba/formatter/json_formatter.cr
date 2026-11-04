@@ -73,10 +73,7 @@ module Ameba::Formatter
     def source_finished(source : Source) : Nil
       json_source = AsJSON::Source.new(source.path)
 
-      source.issues.each do |issue|
-        next if issue.disabled?
-        next if issue.correctable? && config[:autocorrect]?
-
+      source.unresolved_issues.each do |issue|
         json_source.issues << AsJSON::Issue.new(
           issue.rule.name,
           issue.rule.severity.to_s,

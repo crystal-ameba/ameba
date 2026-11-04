@@ -29,6 +29,8 @@ module Ameba::Rule::Lint
       source.ast
     rescue ex : Crystal::SyntaxException
       issue_for({ex.line_number, ex.column_number}, ex.message.to_s)
+    rescue ex : InvalidByteSequenceError
+      issue_for({1, 1}, ex.message.to_s)
     end
   end
 end

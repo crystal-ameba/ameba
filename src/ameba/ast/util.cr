@@ -208,6 +208,14 @@ module Ameba::AST::Util
     node_lines.join('\n')
   end
 
+  # Returns `true` if the source of the node has as many
+  # opening parentheses as closing ones, `false` otherwise.
+  def balanced_parentheses?(node, code_lines) : Bool
+    return false unless code = node_source(node, code_lines)
+
+    code.count('(') == code.count(')')
+  end
+
   # Returns `true` if node is a flow command, `false` otherwise.
   # Node represents a flow command if it is a control expression,
   # or special call node that interrupts execution (i.e. raise, exit, abort).
@@ -477,18 +485,6 @@ module Ameba::AST::Util
       source.code[source.pos(location), 3]? == "<<-"
   end
 
-  # Returns the exp code of a control expression.
-  # Wraps implicit tuple literal with curly brackets (e.g. multi-return).
-  def control_exp_code(node : Crystal::ControlExpression, code_lines)
-    return unless exp = node.exp
-    return unless exp_code = node_source(exp, code_lines)
-    return exp_code unless exp.is_a?(Crystal::TupleLiteral) && exp_code[0] != '{'
-    return unless exp_start = exp.elements.first.location
-    return unless exp_end = exp.end_location
-
-    "{#{source_between(exp_start, exp_end, code_lines)}}"
-  end
-
   def name_location_or(node : Crystal::ASTNode, *, adjust_location_column_number = nil)
     name = node.name if node.responds_to?(:name)
 
@@ -557,3 +553,5 @@ module Ameba::AST::Util
     loc.adjust(column_number: size - 1)
   end
 end
+
+require "./util/control_expression"

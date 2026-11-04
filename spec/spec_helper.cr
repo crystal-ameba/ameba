@@ -14,6 +14,66 @@ module Ameba
     end
   end
 
+  # A formatter failing for the source with a given path.
+  class RaisingFormatter < Formatter::BaseFormatter
+    property failing_path = ""
+
+    def source_started(source : Source) : Nil
+      raise "formatter went wrong" if source.path.to_s == failing_path
+    end
+  end
+
+  # A rule correcting `foo` to `bar`, and `bar` to code which doesn't parse.
+  class BreakingCorrectionRule < Rule::Base
+    properties do
+      description "Corrects code into invalid syntax"
+      enabled false
+    end
+
+    def test(source)
+      case
+      when source.code.includes?("foo")
+        source.add_issue(self, {1, 1}, {1, 3}, "foo") { |corrector| corrector.replace({1, 1}, {1, 3}, "bar") }
+      when source.code.includes?("bar")
+        source.add_issue(self, {1, 1}, {1, 3}, "bar") { |corrector| corrector.replace({1, 1}, {1, 3}, "bar)") }
+      end
+    end
+  end
+
+  # A rule whose corrections for `x = 1\n2` only break the syntax when combined.
+  class IncompatibleCorrectionsRule < Rule::Base
+    properties do
+      description "Corrects code into invalid syntax by combining corrections"
+      enabled false
+    end
+
+    def test(source)
+      return unless source.code == "x = 1\n2\n"
+
+      source.add_issue(self, {1, 1}, {1, 5}, "continue") { |corrector| corrector.insert_after({1, 5}, " +") }
+      source.add_issue(self, {2, 1}, {2, 1}, "remove") { |corrector| corrector.remove({2, 1}, {2, 1}) }
+    end
+  end
+
+  # A rule whose correction doesn't change anything.
+  class UselessCorrectionRule < Rule::Base
+    properties do
+      description "Corrects code into the same code"
+      enabled false
+    end
+
+    def test(source)
+      source.add_issue(self, {1, 1}, {1, 1}, "useless") { |_| }
+    end
+  end
+
+  # Adds an issue marked as corrected, and a correctable one which is not.
+  def self.add_correctable_issues(source)
+    source.add_issue(DummyRule.new, {1, 1}, {1, 1}, "fixed one") { |_| }
+    source.issues[-1] = source.issues[-1].as_corrected
+    source.add_issue(DummyRule.new, {1, 2}, {1, 2}, "left one") { |_| }
+  end
+
   @[Rule::Deprecated("This rule is deprecated")]
   class DeprecatedRule < Rule::Base
     properties do
@@ -116,12 +176,16 @@ module Ameba
     @[YAML::Field(ignore: true)]
     getter nodes = [] of Crystal::ASTNode
 
+    @[YAML::Field(ignore: true)]
+    getter operands = [] of Bool
+
     properties do
       description "Internal rule to test redundant control expressions"
     end
 
-    def test(source, node, visitor : AST::RedundantControlExpressionVisitor)
+    def test(source, node, visitor : AST::RedundantControlExpressionVisitor, operand : Bool)
       nodes << node
+      operands << operand
     end
   end
 
@@ -152,6 +216,22 @@ module Ameba
 
     def test(source)
       should_raise? && raise "something went wrong"
+    end
+  end
+
+  # A rule whose correction raises for the code including `foo`.
+  class RaisingCorrectionRule < Rule::Base
+    properties do
+      description "Internal rule with a correction that raises"
+      enabled false
+    end
+
+    def test(source)
+      return unless source.code.includes?("foo")
+
+      source.add_issue(self, {1, 1}, {1, 3}, "foo") do
+        raise IndexError.new("Correction went wrong")
+      end
     end
   end
 
@@ -368,6 +448,19 @@ end
 
 def as_nodes(source, *, wants_doc = false)
   Ameba::TestNodeVisitor.new(as_node(source, wants_doc: wants_doc))
+end
+
+# Yields paths to temporary source files, deleting whatever got created there.
+def with_temp_files(count, &)
+  paths = Array.new(count) { File.tempname("source", ".cr") }
+  yield paths
+ensure
+  paths.try(&.each { |path| File.delete(path) rescue nil })
+end
+
+# :ditto:
+def with_temp_file(&)
+  with_temp_files(1) { |paths| yield paths.first }
 end
 
 def trailing_whitespace

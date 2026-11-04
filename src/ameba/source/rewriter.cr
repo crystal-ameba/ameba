@@ -54,6 +54,20 @@ class Ameba::Source
   # A containing replacement will swallow the contained rewriting actions
   # and `:hello, :world` will be replaced by `:hi`.
   #
+  # ## Transactions:
+  #
+  # Unlike the above, `#transaction` doesn't let updates override each other.
+  # It keeps the updates made by its block only if they change the code, and
+  # none of them, nor the ones recorded before, would be lost or fused. Otherwise
+  # it discards all of them, so here the order they were given in does matter.
+  #
+  # * replace `:hello` by `:hi`
+  # * in a transaction, replace `:world` by `:everybody`
+  # * in another one, replace `:hello, :world` by `:greeting`
+  #
+  # The first transaction is kept and the second one is discarded, since it
+  # conflicts with both replacements. The result is `puts(:hi, :everybody)`.
+  #
   # ## Implementation
   #
   # The updates are organized in a tree, according to the ranges they act on
@@ -65,9 +79,24 @@ class Ameba::Source
       @action_root = Rewriter::Action.new(0, code.size)
     end
 
-    # Returns `true` if no (non trivial) update has been recorded
-    def empty?
-      @action_root.empty?
+    # Records the updates made by the block in isolation and keeps them only if
+    # they change the code and combining them with the updates recorded so far
+    # wouldn't lose or fuse any of them. Returns `true` when they were kept.
+    def transaction(&) : Bool
+      committed, @action_root = @action_root, Rewriter::Action.new(0, code.size)
+
+      pending =
+        begin
+          yield
+          @action_root
+        ensure
+          @action_root = committed
+        end
+
+      return false if no_op?(pending) || committed.conflicts_with?(pending)
+
+      @action_root = committed.combine(pending)
+      true
     end
 
     # Replaces the code of the given range with *content*.
@@ -113,11 +142,42 @@ class Ameba::Source
       String.build do |io|
         last_end = 0
         @action_root.ordered_replacements.each do |begin_pos, end_pos, replacement|
-          io << code[last_end...begin_pos] << replacement
+          io << code_between(last_end, begin_pos) << replacement
           last_end = end_pos
         end
-        io << code[last_end...code.size]
+        io << code_between(last_end, code.size)
       end
+    end
+
+    private def no_op?(action)
+      action.ordered_replacements.all? do |begin_pos, end_pos, replacement|
+        code_between(begin_pos, end_pos) == replacement
+      end
+    end
+
+    # Same as `code[begin_pos...end_pos]`, which would have to walk the
+    # string from its start every time, unless it consists of ASCII only.
+    private def code_between(begin_pos, end_pos)
+      if code.size == code.bytesize
+        return code.byte_slice(begin_pos, end_pos - begin_pos)
+      end
+
+      begin_offset, end_offset =
+        byte_offsets[begin_pos], byte_offsets[end_pos]
+
+      code.byte_slice(begin_offset, end_offset - begin_offset)
+    end
+
+    # Positions at which the code characters start, in bytes.
+    private getter byte_offsets : Array(Int32) do
+      offsets = Array(Int32).new(code.size + 1)
+      offset = 0
+
+      code.each_char do |char|
+        offsets << offset
+        offset += char.bytesize
+      end
+      offsets << offset
     end
 
     protected def combine(begin_pos, end_pos, **attributes)

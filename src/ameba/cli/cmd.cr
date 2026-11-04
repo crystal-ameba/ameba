@@ -28,15 +28,32 @@ module Ameba::CLI
     property? autocorrect = false
   end
 
-  private class ExitException < Exception
-    getter code : Int32
+  # Codes to exit the process with.
+  enum ExitCode
+    # No issues left.
+    Success = 0
 
-    def initialize(@code = 0)
-      super("Exit with code #{code}")
-    end
+    # Some issues are left.
+    Issues = 1
+
+    # A rule or a correction raised an exception, corrections got
+    # stuck in a loop, or a file couldn't be read or written.
+    Crash = 2
+
+    # The run was aborted.
+    Aborted = 255
   end
 
+  private class ExitException < Exception
+  end
+
+  # Runs ameba, returning `true` if it succeeded, `false` otherwise.
   def run(args = ARGV, output : IO = STDOUT) : Bool
+    exit_code(args, output).success?
+  end
+
+  # Runs ameba, returning a code suitable for exiting the process with.
+  def exit_code(args = ARGV, output : IO = STDOUT) : ExitCode
     safe_colorize_toggle do
       opts = parse_args(args, output: output)
 
@@ -54,12 +71,12 @@ module Ameba::CLI
 
       if opts.rules?
         print_rules(config.rules, output)
-        return true
+        return ExitCode::Success
       end
 
       if opts.rule_versions?
         print_rule_versions(config.rules, output)
-        return true
+        return ExitCode::Success
       end
 
       if describe_rule_name = opts.describe_rule
@@ -67,7 +84,7 @@ module Ameba::CLI
           raise "Rule `#{describe_rule_name}` does not exist"
         end
         describe_rule(rule, output)
-        return true
+        return ExitCode::Success
       end
 
       validate_globs(opts)
@@ -76,13 +93,21 @@ module Ameba::CLI
 
       if location_to_explain
         runner.explain(location_to_explain, output)
-        return true
+        return ExitCode::Success
       end
 
-      runner.success?
+      exit_code_of(runner)
     end
-  rescue ex : ExitException
-    ex.code.zero?
+  rescue ExitException
+    ExitCode::Success
+  end
+
+  private def exit_code_of(runner)
+    case
+    when runner.crashed? then ExitCode::Crash
+    when runner.success? then ExitCode::Success
+    else                      ExitCode::Issues
+    end
   end
 
   private def safe_colorize_toggle(&)
@@ -320,7 +345,6 @@ module Ameba::CLI
     if name = opts.formatter
       config.formatter = name
     end
-    config.formatter.config[:autocorrect] = opts.autocorrect?
     config.formatter.config[:without_affected_code] =
       opts.without_affected_code?
   end

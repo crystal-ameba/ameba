@@ -14,13 +14,18 @@ module Ameba::Formatter
 
       issues = sources.flat_map(&.issues)
 
-      if issues.none?(&.enabled?)
+      if issues.none?(&.unresolved?)
         output.puts "No issues found. File is not generated."
         return
       end
 
       if issues.any?(&.syntax?)
         output.puts "Unable to generate TODO file. Please fix syntax issues."
+        return
+      end
+
+      if issues.select(&.unresolved?).all?(&.crashed?)
+        output.puts "Crashes can't be excluded. File is not generated."
         return
       end
 
@@ -67,8 +72,7 @@ module Ameba::Formatter
     private def rule_issues_map(issues)
       Hash(Rule::Base, Array(Issue)).new.tap do |hash|
         issues.each do |issue|
-          next if issue.disabled? || issue.syntax?
-          next if issue.correctable? && config[:autocorrect]?
+          next if !issue.unresolved? || issue.syntax? || issue.crashed?
 
           (hash[issue.rule] ||= Array(Issue).new) << issue
         end
