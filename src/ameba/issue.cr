@@ -72,15 +72,10 @@ module Ameba
       copy_with(outcome: :corrected)
     end
 
-    # Returns the same issue, marked as reporting a raised exception.
-    def as_crashed : self
-      copy_with(outcome: :crashed)
-    end
-
-    # Returns the same issue with the given *message*, but without the means
-    # of correcting it.
-    def without_correction(message = @message) : self
-      copy_with(message: message, block: nil, outcome: :pending)
+    # Returns the same issue with the given *message* and *outcome*, but without
+    # the means of correcting it.
+    def without_correction(message = @message, *, outcome : Outcome = :pending) : self
+      copy_with(message: message, block: nil, outcome: outcome)
     end
 
     private def copy_with(*, message = @message, block = @block, outcome : Outcome = @outcome)
