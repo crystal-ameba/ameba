@@ -141,14 +141,14 @@ module Ameba
       end
 
       if loop_message
-        return report_failure(source, original_code, corrected_issues, loop_message)
+        return report_failure(source, original_code, corrected_issues.last.first.rule, loop_message)
       end
 
       begin
         File.write(source.path, source.code) unless corrected_issues.empty?
       rescue ex
         message = "Could not write the corrected code: #{ex.message}"
-        return report_failure(source, original_code, corrected_issues, message)
+        return report_failure(source, original_code, corrected_issues.last.first.rule, message)
       end
 
       source.issues[0, 0] = corrected_issues.flatten
@@ -264,11 +264,11 @@ module Ameba
 
     # Goes back to the original code, so that nothing gets reported as corrected,
     # and reports the failure along with the issues of that code.
-    private def report_failure(source, original_code, corrected_issues, message) : Nil
+    private def report_failure(source, original_code, rule, message) : Nil
       source.revert_to(original_code)
       inspect_source(source)
 
-      source.add_crash_issue(corrected_issues.last.first.rule, message)
+      source.add_crash_issue(rule, message)
     end
 
     private def check_unneeded_directives(source, excluded_rules = Set(String).new)
