@@ -59,9 +59,8 @@ module Ameba
     def correct_safely! : Array(Issue)?
       adopt_corrections do
         # Retry without the corrections breaking the syntax on their own
-        if breaking_issues = breaking_issues?(issues)
-          drop_corrections { |issue| breaking_issues.includes?(issue) }
-        end
+        breaking_issues = breaking_issues(issues)
+        drop_corrections(&.in?(breaking_issues))
 
         adopt_corrections do
           # The remaining corrections break the syntax only when combined
@@ -153,19 +152,12 @@ module Ameba
     #
     # Bisects them, since parsing the outcome of each one separately would take
     # too long for a source with many issues.
-    private def breaking_issues?(candidates) : Array(Issue)?
-      return if candidates.empty?
-
-      return if parse?(corrections(candidates) { }.first)
+    private def breaking_issues(candidates) : Array(Issue)
+      return [] of Issue if parse?(corrections(candidates) { }.first)
       return candidates if candidates.size == 1
 
       half = candidates.size // 2
       breaking_issues(candidates[0...half]) + breaking_issues(candidates[half..])
-    end
-
-    # :ditto:
-    private def breaking_issues(candidates) : Array(Issue)
-      breaking_issues?(candidates) || [] of Issue
     end
 
     # Returns lines of code split by new line character.
