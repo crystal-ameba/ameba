@@ -1294,6 +1294,22 @@ supersedes the former and <code>:hello</code> will be replaced by <code>:hey</co
 </ul>
 <p>A containing replacement will swallow the contained rewriting actions
 and <code>:hello, :world</code> will be replaced by <code>:hi</code>.</p>
+<h2><a id="transactions" class="anchor" href="#transactions">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>Transactions:</h2>
+<p>Unlike the above, <code><a href="../../Ameba/Source/Rewriter.html#transaction%28%26%29%3ABool-instance-method">#transaction</a></code> doesn't let updates override each other.
+It keeps the updates made by its block only if they change the code, and
+none of them, nor the ones recorded before, would be lost or fused. Otherwise
+it discards all of them, so here the order they were given in does matter.</p>
+<ul>
+<li>replace <code>:hello</code> by <code>:hi</code></li>
+<li>in a transaction, replace <code>:world</code> by <code>:everybody</code></li>
+<li>in another one, replace <code>:hello, :world</code> by <code>:greeting</code></li>
+</ul>
+<p>The first transaction is kept and the second one is discarded, since it
+conflicts with both replacements. The result is <code>puts(:hi, :everybody)</code>.</p>
 <h2><a id="implementation" class="anchor" href="#implementation">
   <svg class="octicon-link" aria-hidden="true">
     <use href="#octicon-link"/>
@@ -1327,14 +1343,14 @@ and <code>:hello, :world</code> will be replaced by <code>:hi</code>.</p>
   </h2>
   
     
-      <a href="https://github.com/crystal-ameba/ameba/blob/6125f8c/src/ameba/source/rewriter.cr#L61" target="_blank">
+      <a href="https://github.com/crystal-ameba/ameba/blob/1e5676d/src/ameba/source/rewriter.cr#L75" target="_blank">
         ameba/source/rewriter.cr
       </a>
     
     <br/>
   
     
-      <a href="https://github.com/crystal-ameba/ameba/blob/6125f8c/src/ameba/source/rewriter/action.cr#L1" target="_blank">
+      <a href="https://github.com/crystal-ameba/ameba/blob/1e5676d/src/ameba/source/rewriter/action.cr#L1" target="_blank">
         ameba/source/rewriter/action.cr
       </a>
     
@@ -1441,6 +1457,13 @@ and <code>:hello, :world</code> will be replaced by <code>:hi</code>.</p>
       </li>
     
       <li class="entry-summary">
+        <a href="#transaction%28%26%29%3ABool-instance-method" class="signature"><strong>#transaction</strong>(&) : Bool</a>
+        
+          <div class="summary"><p>Records the updates made by the block in isolation and keeps them only if they change the code and combining them with the updates recorded so far wouldn't lose or fuse any of them.</p></div>
+        
+      </li>
+    
+      <li class="entry-summary">
         <a href="#wrap%28begin_pos%2Cend_pos%2Cinsert_before%2Cinsert_after%29-instance-method" class="signature"><strong>#wrap</strong>(begin_pos, end_pos, insert_before, insert_after)</a>
         
           <div class="summary"><p>Inserts the given strings before and after the given range.</p></div>
@@ -1502,7 +1525,7 @@ and <code>:hello, :world</code> will be replaced by <code>:hi</code>.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/6125f8c/src/ameba/source/rewriter.cr#L64" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/1e5676d/src/ameba/source/rewriter.cr#L78" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1534,7 +1557,7 @@ and <code>:hello, :world</code> will be replaced by <code>:hi</code>.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/6125f8c/src/ameba/source/rewriter.cr#L62" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/1e5676d/src/ameba/source/rewriter.cr#L76" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1555,7 +1578,7 @@ and <code>:hello, :world</code> will be replaced by <code>:hi</code>.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/6125f8c/src/ameba/source/rewriter.cr#L69" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/1e5676d/src/ameba/source/rewriter.cr#L83" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1576,7 +1599,7 @@ and <code>:hello, :world</code> will be replaced by <code>:hi</code>.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/6125f8c/src/ameba/source/rewriter.cr#L97" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/1e5676d/src/ameba/source/rewriter.cr#L131" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1597,7 +1620,7 @@ and <code>:hello, :world</code> will be replaced by <code>:hi</code>.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/6125f8c/src/ameba/source/rewriter.cr#L107" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/1e5676d/src/ameba/source/rewriter.cr#L141" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1618,7 +1641,7 @@ and <code>:hello, :world</code> will be replaced by <code>:hi</code>.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/6125f8c/src/ameba/source/rewriter.cr#L92" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/1e5676d/src/ameba/source/rewriter.cr#L126" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1639,7 +1662,7 @@ and <code>:hello, :world</code> will be replaced by <code>:hi</code>.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/6125f8c/src/ameba/source/rewriter.cr#L102" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/1e5676d/src/ameba/source/rewriter.cr#L136" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1660,7 +1683,7 @@ and <code>:hello, :world</code> will be replaced by <code>:hi</code>.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/6125f8c/src/ameba/source/rewriter.cr#L112" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/1e5676d/src/ameba/source/rewriter.cr#L146" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1681,7 +1704,7 @@ and <code>:hello, :world</code> will be replaced by <code>:hi</code>.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/6125f8c/src/ameba/source/rewriter.cr#L87" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/1e5676d/src/ameba/source/rewriter.cr#L121" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1702,7 +1725,30 @@ and <code>:hello, :world</code> will be replaced by <code>:hi</code>.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/6125f8c/src/ameba/source/rewriter.cr#L74" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/1e5676d/src/ameba/source/rewriter.cr#L108" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="transaction(&amp;):Bool-instance-method">
+      <div class="signature">
+        
+        def <strong>transaction</strong>(&) : Bool
+
+        <a class="method-permalink" href="#transaction%28%26%29%3ABool-instance-method">#</a>
+      </div>
+      
+        <div class="doc">
+          
+          <p>Records the updates made by the block in isolation and keeps them only if
+they change the code and combining them with the updates recorded so far
+wouldn't lose or fuse any of them. Returns <code>true</code> when they were kept.</p>
+        </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/crystal-ameba/ameba/blob/1e5676d/src/ameba/source/rewriter.cr#L90" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1723,7 +1769,7 @@ and <code>:hello, :world</code> will be replaced by <code>:hi</code>.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/6125f8c/src/ameba/source/rewriter.cr#L80" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/1e5676d/src/ameba/source/rewriter.cr#L114" target="_blank">View source</a>]
         
       </div>
     </div>
