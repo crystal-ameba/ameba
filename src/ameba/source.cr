@@ -14,6 +14,13 @@ module Ameba
     # Absolute path to the source file.
     getter fullpath : Path { path.expand }
 
+    # Changes the filename of the source, keeping its directory.
+    def basename=(basename : String)
+      @path = @path.sibling(basename)
+      @project_path = @project_path.sibling(basename)
+      @fullpath = nil
+    end
+
     # Crystal code (content of a source file).
     getter code : String
 

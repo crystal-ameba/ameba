@@ -44,10 +44,10 @@ module Ameba::Rule::Lint
       expected = "#{name}_spec"
 
       issue_for(LOCATION, MSG % {expected, name}) do
-        new_path =
-          path.sibling(expected + path.extension)
+        new_basename = expected + path.extension
 
-        FileUtils.mv(path, new_path)
+        FileUtils.mv(path, path.sibling(new_basename))
+        source.basename = new_basename
       end
     end
   end

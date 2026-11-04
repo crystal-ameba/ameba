@@ -1,4 +1,5 @@
 require "spec"
+require "file_utils"
 require "../src/ameba"
 require "../src/ameba/spec/support"
 
@@ -358,6 +359,19 @@ def with_presenter(klass, *args, deansify = true, **kwargs, &)
   output = Ameba::Formatter::Util.deansify(output).to_s if deansify
 
   yield presenter, output
+end
+
+# Yields a source backed by a real `spec/foo.cr` file in a temporary
+# project directory, which is removed afterwards.
+def with_spec_file(code = "", &)
+  dir = Path[File.tempname("ameba")]
+  Dir.mkdir_p(dir / "spec")
+  path = dir / "spec" / "foo.cr"
+  File.write(path, code)
+
+  yield Ameba::Source.new(code, path, "spec/foo.cr")
+ensure
+  FileUtils.rm_rf(dir) if dir
 end
 
 def as_node(source, *, wants_doc = false)
