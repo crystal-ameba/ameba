@@ -160,9 +160,9 @@ module Ameba
         return report_infinite_loop(source, original_code, corrected_issues, ex)
       end
 
-      source.issues[0, 0] = corrected_issues.flatten
+      write_corrections(source, original_code) unless corrected_issues.empty?
 
-      File.write(source.path, source.code) unless corrected_issues.empty?
+      source.issues[0, 0] = corrected_issues.flatten
     ensure
       source.issues.sort_by! do |issue|
         {
@@ -249,6 +249,17 @@ module Ameba
       end
 
       processed_sources << checksum
+    end
+
+    # Writes the corrected code. On failure, goes back to the code on disk, so
+    # that nothing gets reported as corrected, and passes the error on.
+    private def write_corrections(source, original_code) : Nil
+      File.write(source.path, source.code)
+    rescue ex
+      source.revert_to(original_code)
+      inspect_source(source)
+
+      raise ex
     end
 
     # Inspects the source, returning `false` if it has syntax errors,
