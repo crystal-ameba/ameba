@@ -180,6 +180,45 @@ module Ameba
           source.issues.first.enabled?.should be_true
         end
 
+        it "doesn't report the directive disabling it as unneeded" do
+          rule = RaiseRule.new
+          rule.should_raise = true
+          rules = [rule, Rule::Lint::UnneededDisableDirective.new] of Rule::Base
+          source = Source.new("a = 1 # ameba:disable #{RaiseRule.rule_name}\n", "source.cr")
+
+          Runner.new(rules, [source], formatter, default_severity).run
+
+          source.issues.map(&.rule.class).should eq [RaiseRule]
+        end
+
+        it "doesn't remove the directive disabling it" do
+          rule = RaiseRule.new
+          rule.should_raise = true
+          rules = [rule, Rule::Lint::UnneededDisableDirective.new] of Rule::Base
+          code = "a = 1 # ameba:disable #{RaiseRule.rule_name}\n"
+
+          with_temp_file do |path|
+            File.write(path, code)
+            source = Source.new(code, path)
+
+            Runner.new(rules, [source], formatter, default_severity, autocorrect: true).run
+
+            source.code.should eq code
+            File.read(path).should eq code
+          end
+        end
+
+        it "still reports other unneeded directives" do
+          rule = RaiseRule.new
+          rule.should_raise = true
+          rules = [rule, ErrorRule.new, Rule::Lint::UnneededDisableDirective.new] of Rule::Base
+          source = Source.new("\na = 1 # ameba:disable #{ErrorRule.rule_name}\n", "source.cr")
+
+          Runner.new(rules, [source], formatter, default_severity).run
+
+          source.issues.map(&.rule.class).should contain Rule::Lint::UnneededDisableDirective
+        end
+
         it "keeps running the other rules" do
           rule = RaiseRule.new
           rule.should_raise = true
