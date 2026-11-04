@@ -111,6 +111,27 @@ module Ameba::AST::Util
     !control_exp_comment?(node, exp, end_location, code_lines)
   end
 
+  # Returns the code following *end_location*, up to and including the closing
+  # parenthesis, only looking at the lines which can come before it.
+  private def control_exp_closing_code(end_location, code_lines) : String?
+    line_index = end_location.line_number
+    code = code_lines[line_index - 1]?.try(&.[end_location.column_number..]?) || ""
+
+    loop do
+      # An opening parenthesis follows the node when there are no arguments
+      if match = code.match(/\A\(?(?:\s|#[^\n]*\n)*,?(?:\s|#[^\n]*\n)*\)/)
+        return match[0]
+      end
+      return unless line = code_lines[line_index]?
+
+      first_char = line.lstrip[0]?
+      return if first_char && !first_char.in?('#', ',', ')')
+
+      code = "#{code}\n#{line}"
+      line_index += 1
+    end
+  end
+
   # Returns the end location of a control expression, including the closing
   # parenthesis of `return(1)`, which `node.end_location` leaves out.
   #
@@ -118,16 +139,9 @@ module Ameba::AST::Util
   # which is the case for heredocs (e.g. `return(<<-TEXT)`).
   def control_exp_end_location(node : Crystal::ControlExpression, code_lines) : Crystal::Location?
     return unless end_location = node.end_location
+
     return end_location unless control_exp_parenthesized?(node, code_lines)
-
-    following_code =
-      code_lines[(end_location.line_number - 1)..].join('\n')[end_location.column_number..]? || ""
-
-    # An opening parenthesis follows the node when there are no arguments
-    match = following_code.match(/\A\(?(?:\s|#[^\n]*)*,?(?:\s|#[^\n]*)*\)/)
-    return end_location unless match
-
-    closing_code = match[0]
+    return end_location unless closing_code = control_exp_closing_code(end_location, code_lines)
 
     if newline_index = closing_code.rindex('\n')
       end_location.adjust(line_number: closing_code.count('\n'))

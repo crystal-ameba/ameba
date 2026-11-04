@@ -1270,6 +1270,19 @@ module Ameba::AST
         end
       end
 
+      it "finds the closing parenthesis past blank lines and comments" do
+        code = "return(1\n\n  # a\n\n  # )\n)"
+        node = as_node(code).as Crystal::ControlExpression
+        location = subject.control_exp_end_location(node, code.split('\n')).should_not be_nil
+        {location.line_number, location.column_number}.should eq({6, 1})
+      end
+
+      it "stops looking at the first line which can't come before the closing parenthesis" do
+        code = "return(<<-TEXT)\n  a\n  TEXT\nfoo)"
+        node = as_node("return(<<-TEXT)\n  a\n  TEXT").as Crystal::ControlExpression
+        subject.control_exp_end_location(node, code.split('\n')).should eq node.end_location
+      end
+
       it "ignores what follows the closing parenthesis" do
         code = "return(1) # )"
         node = as_node(code).as Crystal::ControlExpression
