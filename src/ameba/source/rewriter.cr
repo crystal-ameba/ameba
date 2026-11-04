@@ -54,6 +54,20 @@ class Ameba::Source
   # A containing replacement will swallow the contained rewriting actions
   # and `:hello, :world` will be replaced by `:hi`.
   #
+  # ## Transactions:
+  #
+  # Unlike the above, `#transaction` doesn't let updates override each other.
+  # It keeps the updates made by its block only if they change the code, and
+  # none of them, nor the ones recorded before, would be lost or fused. Otherwise
+  # it discards all of them, so here the order they were given in does matter.
+  #
+  # * replace `:hello` by `:hi`
+  # * in a transaction, replace `:world` by `:everybody`
+  # * in another one, replace `:hello, :world` by `:greeting`
+  #
+  # The first transaction is kept and the second one is discarded, since it
+  # conflicts with both replacements. The result is `puts(:hi, :everybody)`.
+  #
   # ## Implementation
   #
   # The updates are organized in a tree, according to the ranges they act on

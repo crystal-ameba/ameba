@@ -210,7 +210,7 @@ class Ameba::Source::Rewriter
       }
     end
 
-    # Assumes *action* has the exact same range and has no children
+    # Assumes *action* has the exact same range
     protected def merge(action)
       self.with(
         insert_before: "#{action.insert_before}#{insert_before}",
