@@ -479,14 +479,95 @@ module Ameba::AST::Util
 
   # Returns the exp code of a control expression.
   # Wraps implicit tuple literal with curly brackets (e.g. multi-return).
+  #
+  # Arguments in parentheses (e.g. `return(1)`) keep them, unless they're
+  # not needed to preserve the meaning of the code. Returns `nil` if the
+  # closing parenthesis can't be found, or dropping it would drop a comment.
   def control_exp_code(node : Crystal::ControlExpression, code_lines)
     return unless exp = node.exp
+    return unless exp_code = control_exp_value_code(exp, code_lines)
+    return exp_code unless control_exp_parenthesized?(node, code_lines)
+    return if control_exp_end_location(node, code_lines) == node.end_location
+    return if control_exp_comment?(node, exp, code_lines)
+
+    binds_tightly?(exp) ? exp_code : "(#{exp_code})"
+  end
+
+  private def control_exp_value_code(exp, code_lines)
     return unless exp_code = node_source(exp, code_lines)
     return exp_code unless exp.is_a?(Crystal::TupleLiteral) && exp_code[0] != '{'
     return unless exp_start = exp.elements.first.location
     return unless exp_end = exp.end_location
 
     "{#{source_between(exp_start, exp_end, code_lines)}}"
+  end
+
+  # Returns `true` if there is a comment between the
+  # parentheses and the argument of a control expression.
+  private def control_exp_comment?(node, exp, code_lines) : Bool
+    location, exp_start, exp_end = node.location, exp.location, exp.end_location
+    end_location = control_exp_end_location(node, code_lines)
+
+    return true unless location && exp_start && exp_end && end_location
+
+    {
+      source_between(location, exp_start, code_lines),
+      source_between(exp_end, end_location, code_lines),
+    }.any? { |code| code.nil? || code.includes?('#') }
+  end
+
+  # Returns `true` if *exp* means the same regardless of the surrounding code.
+  private def binds_tightly?(exp) : Bool
+    case exp
+    when Crystal::Call
+      return false if exp.block || exp.block_arg
+
+      exp.has_parentheses? || (exp.args.empty? && !exp.named_args)
+    when Crystal::NilLiteral, Crystal::BoolLiteral, Crystal::NumberLiteral,
+         Crystal::CharLiteral, Crystal::StringLiteral, Crystal::StringInterpolation,
+         Crystal::SymbolLiteral, Crystal::RegexLiteral, Crystal::ArrayLiteral,
+         Crystal::HashLiteral, Crystal::TupleLiteral, Crystal::NamedTupleLiteral,
+         Crystal::Var, Crystal::InstanceVar, Crystal::ClassVar, Crystal::Global,
+         Crystal::Path, Crystal::Expressions
+      true
+    else
+      false
+    end
+  end
+
+  # Returns `true` if the arguments of a control expression
+  # are in parentheses directly following its keyword (e.g. `return(1)`).
+  def control_exp_parenthesized?(node : Crystal::ControlExpression, code_lines) : Bool
+    return false unless location = node.location
+    return false unless line = code_lines[location.line_number - 1]?
+
+    !!line[(location.column_number - 1)..]?.try(&.matches?(/\A\w+\(/))
+  end
+
+  # Returns the end location of a control expression, including the closing
+  # parenthesis of `return(1)`, which `node.end_location` leaves out.
+  #
+  # Falls back to `node.end_location` if the parenthesis can't be found,
+  # which is the case for heredocs (e.g. `return(<<-TEXT)`).
+  def control_exp_end_location(node : Crystal::ControlExpression, code_lines) : Crystal::Location?
+    return unless end_location = node.end_location
+    return end_location unless control_exp_parenthesized?(node, code_lines)
+
+    following_code =
+      code_lines[(end_location.line_number - 1)..].join('\n')[end_location.column_number..]? || ""
+
+    # An opening parenthesis follows the node when there are no arguments
+    match = following_code.match(/\A\(?(?:\s|#[^\n]*)*,?(?:\s|#[^\n]*)*\)/)
+    return end_location unless match
+
+    closing_code = match[0]
+
+    if newline_index = closing_code.rindex('\n')
+      end_location.adjust(line_number: closing_code.count('\n'))
+        .with(column_number: closing_code.size - newline_index - 1)
+    else
+      end_location.adjust(column_number: closing_code.size)
+    end
   end
 
   def name_location_or(node : Crystal::ASTNode, *, adjust_location_column_number = nil)
