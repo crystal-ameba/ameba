@@ -259,7 +259,10 @@ module Ameba
           excluded_rules << rule.name
           next
         end
-        report_exception(source, rule) { rule.test(source) }
+        # Whether its directives are needed is unknown if the rule hasn't finished
+        if report_exception(source, rule) { rule.test(source) }
+          excluded_rules << rule.name
+        end
       end
 
       check_unneeded_directives(source, excluded_rules)
@@ -286,12 +289,15 @@ module Ameba
 
     # Reports an exception raised by a *rule* as an issue, so that it fails the
     # run without stopping the other rules and sources from being inspected.
-    private def report_exception(source, rule, &)
+    # Returns `true` if that happened.
+    private def report_exception(source, rule, &) : Bool
       yield
+      false
     rescue ex
       message = "Rule raised an exception: #{ex.message} (#{ex.class})"
 
       source.add_crash_issue(rule, message)
+      true
     end
   end
 end
