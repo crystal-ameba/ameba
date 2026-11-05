@@ -16,6 +16,19 @@ module Ameba::Formatter
       end
     end
 
+    context "correctable issues" do
+      it "tells corrected issues from the ones left" do
+        source = Source.new("a = 1", "source.cr")
+        Ameba.add_correctable_issues(source)
+
+        subject.finished([source])
+
+        lines = output.to_s.lines
+        lines[lines.index!(&.includes?("fixed one")) - 1].should contain "[Corrected]"
+        lines[lines.index!(&.includes?("left one")) - 1].should contain "[Correctable]"
+      end
+    end
+
     describe "#source_finished" do
       it "writes valid source" do
         subject.source_finished(Source.new)

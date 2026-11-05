@@ -45,12 +45,63 @@ module Ameba
       corrected_code = corrector.process
       return if code == corrected_code
 
-      @code = corrected_code
+      self.code = corrected_code
+
+      corrected_issues
+    end
+
+    # Same as `#correct!`, but makes sure the source stays parsable. Corrections
+    # breaking the syntax are dropped, which leaves their issues reported as
+    # uncorrected.
+    def correct_safely! : Array(Issue)?
+      previous_code = code
+
+      corrected_issues = correct!
+      return corrected_issues if !corrected_issues || parsable?
+
+      # Retry without the corrections breaking the syntax on their own
+      self.code = previous_code
+      drop_corrections { |issue| !correction_parsable?(issue) }
+
+      corrected_issues = correct!
+      return corrected_issues if !corrected_issues || parsable?
+
+      # The remaining corrections break the syntax only when combined
+      self.code = previous_code
+      drop_corrections { true }
+
+      nil
+    end
+
+    # Returns `true` if `code` has no syntax errors.
+    def parsable? : Bool
+      ast
+      true
+    rescue Crystal::SyntaxException
+      false
+    end
+
+    # Replaces `code` and drops everything derived from it.
+    private def code=(@code : String)
       @lines = nil
       @line_offsets = nil
       @ast = nil
+    end
 
-      corrected_issues
+    private def drop_corrections(&)
+      issues.map! do |issue|
+        next issue unless issue.correctable? && yield issue
+
+        issue.without_correction("#{issue.message} (not corrected: would produce invalid syntax)")
+      end
+    end
+
+    # Returns `true` if correcting only the given *issue* keeps the source parsable.
+    private def correction_parsable?(issue)
+      probe = self.class.new(code, path)
+      probe.issues << issue
+
+      !probe.correct! || probe.parsable?
     end
 
     # Returns lines of code split by new line character.

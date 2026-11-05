@@ -143,9 +143,7 @@ module Ameba
       # corrections are made (because automatic corrections can introduce new
       # issues). In the normal case the loop is only executed once.
       loop_unless_infinite(source, corrected_issues) do
-        # We have to reprocess the source to pick up any changes. Since a
-        # change could (theoretically) introduce syntax errors, we break the
-        # loop if we find any.
+        # There's nothing to inspect or correct in a source with syntax errors.
         @syntax_rule.test(source)
         break unless source.valid?
 
@@ -162,12 +160,12 @@ module Ameba
         check_unneeded_directives(source, excluded_rules)
         break unless autocorrect?
 
-        applied_issues = source.correct!
+        applied_issues = source.correct_safely!
         break unless applied_issues
 
         # The issues that couldn't be corrected will be found again so we
         # only keep the corrected ones in order to avoid duplicate reporting.
-        corrected_issues << applied_issues
+        corrected_issues << applied_issues.map(&.as_corrected)
         source.issues.clear
       end
 

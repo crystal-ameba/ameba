@@ -68,7 +68,7 @@ module Ameba::Formatter
       Hash(Rule::Base, Array(Issue)).new.tap do |hash|
         issues.each do |issue|
           next if issue.disabled? || issue.syntax?
-          next if issue.correctable? && config[:autocorrect]?
+          next if issue.corrected?
 
           (hash[issue.rule] ||= Array(Issue).new) << issue
         end
