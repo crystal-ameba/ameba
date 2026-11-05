@@ -1273,28 +1273,28 @@ Has path, lines of code and issues reported by rules.</p>
   </h2>
   
     
-      <a href="https://github.com/crystal-ameba/ameba/blob/1e5676d/src/ameba/source.cr#L4" target="_blank">
+      <a href="https://github.com/crystal-ameba/ameba/blob/09084ce/src/ameba/source.cr#L4" target="_blank">
         ameba/source.cr
       </a>
     
     <br/>
   
     
-      <a href="https://github.com/crystal-ameba/ameba/blob/1e5676d/src/ameba/source/corrector.cr#L3" target="_blank">
+      <a href="https://github.com/crystal-ameba/ameba/blob/09084ce/src/ameba/source/corrector.cr#L3" target="_blank">
         ameba/source/corrector.cr
       </a>
     
     <br/>
   
     
-      <a href="https://github.com/crystal-ameba/ameba/blob/1e5676d/src/ameba/source/rewriter.cr#L1" target="_blank">
+      <a href="https://github.com/crystal-ameba/ameba/blob/09084ce/src/ameba/source/rewriter.cr#L1" target="_blank">
         ameba/source/rewriter.cr
       </a>
     
     <br/>
   
     
-      <a href="https://github.com/crystal-ameba/ameba/blob/1e5676d/src/ameba/spec/support.cr#L8" target="_blank">
+      <a href="https://github.com/crystal-ameba/ameba/blob/09084ce/src/ameba/spec/support.cr#L8" target="_blank">
         ameba/spec/support.cr
       </a>
     
@@ -1484,9 +1484,29 @@ Has path, lines of code and issues reported by rules.</p>
     block_args_at</a>, 
     
   
-    <a href="../Ameba/AST/Util.html#control_exp_code%28node%3ACrystal%3A%3AControlExpression%2Ccode_lines%29-instance-method" class="tooltip">
-      <span>control_exp_code(node : Crystal::ControlExpression, code_lines)</span>
+    <a href="../Ameba/AST/Util.html#control_exp_code%28node%3ACrystal%3A%3AControlExpression%2Ccode_lines%2C%2A%2Coperand%3Dfalse%29-instance-method" class="tooltip">
+      <span>control_exp_code(node : Crystal::ControlExpression, code_lines, *, operand = <span class="n">false</span>)</span>
     control_exp_code</a>, 
+    
+  
+    <a href="../Ameba/AST/Util.html#control_exp_end_location%28node%3ACrystal%3A%3AControlExpression%2Ccode_lines%29%3ACrystal%3A%3ALocation%7CNil-instance-method" class="tooltip">
+      <span>control_exp_end_location(node : Crystal::ControlExpression, code_lines) : Crystal::Location | Nil</span>
+    control_exp_end_location</a>, 
+    
+  
+    <a href="../Ameba/AST/Util.html#control_exp_parenthesized%3F%28node%3ACrystal%3A%3AControlExpression%2Ccode_lines%29%3ABool-instance-method" class="tooltip">
+      <span>control_exp_parenthesized?(node : Crystal::ControlExpression, code_lines) : Bool</span>
+    control_exp_parenthesized?</a>, 
+    
+  
+    <a href="../Ameba/AST/Util.html#control_exp_replaceable%3F%28node%3ACrystal%3A%3AControlExpression%2Ccode_lines%29%3ABool-instance-method" class="tooltip">
+      <span>control_exp_replaceable?(node : Crystal::ControlExpression, code_lines) : Bool</span>
+    control_exp_replaceable?</a>, 
+    
+  
+    <a href="../Ameba/AST/Util.html#control_exp_replacement%28node%3ACrystal%3A%3AControlExpression%2Ccode_lines%2C%2A%2Coperand%3Dfalse%29-instance-method" class="tooltip">
+      <span>control_exp_replacement(node : Crystal::ControlExpression, code_lines, *, operand = <span class="n">false</span>)</span>
+    control_exp_replacement</a>, 
     
   
     <a href="../Ameba/AST/Util.html#dynamic_literal%3F%28node%29%3ABool-instance-method" class="tooltip">
@@ -1755,7 +1775,7 @@ Has path, lines of code and issues reported by rules.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/1e5676d/src/ameba/source.cr#L28" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/09084ce/src/ameba/source.cr#L28" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1771,7 +1791,7 @@ Has path, lines of code and issues reported by rules.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/1e5676d/src/ameba/spec/support.cr#L9" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/09084ce/src/ameba/spec/support.cr#L9" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1810,7 +1830,7 @@ source.ast</code></pre>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/1e5676d/src/ameba/source.cr#L83" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/09084ce/src/ameba/source.cr#L83" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1831,7 +1851,7 @@ source.ast</code></pre>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/1e5676d/src/ameba/source.cr#L18" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/09084ce/src/ameba/source.cr#L18" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1853,7 +1873,7 @@ Returns the corrected issues, or <code>nil</code> if the code was unchanged.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/1e5676d/src/ameba/source.cr#L35" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/09084ce/src/ameba/source.cr#L35" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1874,7 +1894,7 @@ Returns the corrected issues, or <code>nil</code> if the code was unchanged.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/1e5676d/src/ameba/source.cr#L112" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/09084ce/src/ameba/source.cr#L112" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1895,7 +1915,7 @@ Returns the corrected issues, or <code>nil</code> if the code was unchanged.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/1e5676d/src/ameba/source.cr#L15" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/09084ce/src/ameba/source.cr#L15" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1922,7 +1942,7 @@ source.lines <span class="c"># =&gt; [&quot;a = 1&quot;, &quot;b = 2&quot;]</spa
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/1e5676d/src/ameba/source.cr#L66" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/09084ce/src/ameba/source.cr#L66" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1943,7 +1963,7 @@ source.lines <span class="c"># =&gt; [&quot;a = 1&quot;, &quot;b = 2&quot;]</spa
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/1e5676d/src/ameba/source.cr#L9" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/09084ce/src/ameba/source.cr#L9" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1964,7 +1984,7 @@ source.lines <span class="c"># =&gt; [&quot;a = 1&quot;, &quot;b = 2&quot;]</spa
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/1e5676d/src/ameba/source.cr#L117" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/09084ce/src/ameba/source.cr#L117" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1985,7 +2005,7 @@ source.lines <span class="c"># =&gt; [&quot;a = 1&quot;, &quot;b = 2&quot;]</spa
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/1e5676d/src/ameba/source.cr#L12" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/09084ce/src/ameba/source.cr#L12" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2006,7 +2026,7 @@ source.lines <span class="c"># =&gt; [&quot;a = 1&quot;, &quot;b = 2&quot;]</spa
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/1e5676d/src/ameba/source.cr#L107" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/09084ce/src/ameba/source.cr#L107" target="_blank">View source</a>]
         
       </div>
     </div>

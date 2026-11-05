@@ -1343,14 +1343,14 @@ without arguments. Sometimes such statements are used to yield the <code>nil</co
   </h2>
   
     
-      <a href="https://github.com/crystal-ameba/ameba/blob/1e5676d/src/ameba/rule/style/redundant_next.cr#L99" target="_blank">
+      <a href="https://github.com/crystal-ameba/ameba/blob/09084ce/src/ameba/rule/style/redundant_next.cr#L99" target="_blank">
         ameba/rule/style/redundant_next.cr:99
       </a>
     
     <br/>
   
     
-      <a href="https://github.com/crystal-ameba/ameba/blob/1e5676d/src/ameba/rule/style/redundant_next.cr#L102" target="_blank">
+      <a href="https://github.com/crystal-ameba/ameba/blob/09084ce/src/ameba/rule/style/redundant_next.cr#L102" target="_blank">
         ameba/rule/style/redundant_next.cr:102
       </a>
     
@@ -1565,7 +1565,7 @@ without arguments. Sometimes such statements are used to yield the <code>nil</co
       </li>
     
       <li class="entry-summary">
-        <a href="#test%28source%2Cnode%3ACrystal%3A%3ANext%2Cvisitor%3AAST%3A%3ARedundantControlExpressionVisitor%29-instance-method" class="signature"><strong>#test</strong>(source, node : Crystal::Next, visitor : AST::RedundantControlExpressionVisitor)</a>
+        <a href="#test%28source%2Cnode%3ACrystal%3A%3ANext%2Cvisitor%3AAST%3A%3ARedundantControlExpressionVisitor%2Coperand%3ABool%29-instance-method" class="signature"><strong>#test</strong>(source, node : Crystal::Next, visitor : AST::RedundantControlExpressionVisitor, operand : Bool)</a>
         
       </li>
     
@@ -1610,9 +1610,29 @@ without arguments. Sometimes such statements are used to yield the <code>nil</co
     block_args_at</a>, 
     
   
-    <a href="../../../Ameba/AST/Util.html#control_exp_code%28node%3ACrystal%3A%3AControlExpression%2Ccode_lines%29-instance-method" class="tooltip">
-      <span>control_exp_code(node : Crystal::ControlExpression, code_lines)</span>
+    <a href="../../../Ameba/AST/Util.html#control_exp_code%28node%3ACrystal%3A%3AControlExpression%2Ccode_lines%2C%2A%2Coperand%3Dfalse%29-instance-method" class="tooltip">
+      <span>control_exp_code(node : Crystal::ControlExpression, code_lines, *, operand = <span class="n">false</span>)</span>
     control_exp_code</a>, 
+    
+  
+    <a href="../../../Ameba/AST/Util.html#control_exp_end_location%28node%3ACrystal%3A%3AControlExpression%2Ccode_lines%29%3ACrystal%3A%3ALocation%7CNil-instance-method" class="tooltip">
+      <span>control_exp_end_location(node : Crystal::ControlExpression, code_lines) : Crystal::Location | Nil</span>
+    control_exp_end_location</a>, 
+    
+  
+    <a href="../../../Ameba/AST/Util.html#control_exp_parenthesized%3F%28node%3ACrystal%3A%3AControlExpression%2Ccode_lines%29%3ABool-instance-method" class="tooltip">
+      <span>control_exp_parenthesized?(node : Crystal::ControlExpression, code_lines) : Bool</span>
+    control_exp_parenthesized?</a>, 
+    
+  
+    <a href="../../../Ameba/AST/Util.html#control_exp_replaceable%3F%28node%3ACrystal%3A%3AControlExpression%2Ccode_lines%29%3ABool-instance-method" class="tooltip">
+      <span>control_exp_replaceable?(node : Crystal::ControlExpression, code_lines) : Bool</span>
+    control_exp_replaceable?</a>, 
+    
+  
+    <a href="../../../Ameba/AST/Util.html#control_exp_replacement%28node%3ACrystal%3A%3AControlExpression%2Ccode_lines%2C%2A%2Coperand%3Dfalse%29-instance-method" class="tooltip">
+      <span>control_exp_replacement(node : Crystal::ControlExpression, code_lines, *, operand = <span class="n">false</span>)</span>
+    control_exp_replacement</a>, 
     
   
     <a href="../../../Ameba/AST/Util.html#dynamic_literal%3F%28node%29%3ABool-instance-method" class="tooltip">
@@ -2065,7 +2085,7 @@ without arguments. Sometimes such statements are used to yield the <code>nil</co
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/1e5676d/src/ameba/rule/style/redundant_next.cr#L99" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/09084ce/src/ameba/rule/style/redundant_next.cr#L99" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2455,7 +2475,7 @@ referred to by their full names, which fails for the private ones</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/1e5676d/src/ameba/rule/style/redundant_next.cr#L102" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/09084ce/src/ameba/rule/style/redundant_next.cr#L102" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2480,18 +2500,18 @@ referred to by their full names, which fails for the private ones</p>
       </div>
     </div>
   
-    <div class="entry-detail" id="test(source,node:Crystal::Next,visitor:AST::RedundantControlExpressionVisitor)-instance-method">
+    <div class="entry-detail" id="test(source,node:Crystal::Next,visitor:AST::RedundantControlExpressionVisitor,operand:Bool)-instance-method">
       <div class="signature">
         
-        def <strong>test</strong>(source, node : Crystal::Next, visitor : <a href="../../../Ameba/AST/RedundantControlExpressionVisitor.html">AST::RedundantControlExpressionVisitor</a>)
+        def <strong>test</strong>(source, node : Crystal::Next, visitor : <a href="../../../Ameba/AST/RedundantControlExpressionVisitor.html">AST::RedundantControlExpressionVisitor</a>, operand : Bool)
 
-        <a class="method-permalink" href="#test%28source%2Cnode%3ACrystal%3A%3ANext%2Cvisitor%3AAST%3A%3ARedundantControlExpressionVisitor%29-instance-method">#</a>
+        <a class="method-permalink" href="#test%28source%2Cnode%3ACrystal%3A%3ANext%2Cvisitor%3AAST%3A%3ARedundantControlExpressionVisitor%2Coperand%3ABool%29-instance-method">#</a>
       </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/1e5676d/src/ameba/rule/style/redundant_next.cr#L116" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/09084ce/src/ameba/rule/style/redundant_next.cr#L116" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2507,7 +2527,7 @@ referred to by their full names, which fails for the private ones</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/1e5676d/src/ameba/rule/style/redundant_next.cr#L112" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/09084ce/src/ameba/rule/style/redundant_next.cr#L112" target="_blank">View source</a>]
         
       </div>
     </div>
