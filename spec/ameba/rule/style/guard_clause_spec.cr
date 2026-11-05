@@ -374,6 +374,127 @@ module Ameba::Rule::Style
         CRYSTAL
     end
 
+    context "control expression with arguments in parentheses" do
+      it "includes the closing parenthesis in the `then` branch example" do
+        source = expect_issue subject, <<-CRYSTAL
+          def func
+            if something
+          # ^^ error: Use a guard clause (`return(1) if something`) instead of [...]
+              return(1)
+            else
+              work
+            end
+          end
+          CRYSTAL
+
+        expect_no_corrections source
+      end
+
+      it "includes the closing parenthesis in the `else` branch example" do
+        expect_issue subject, <<-CRYSTAL
+          def func
+            if something
+          # ^^ error: Use a guard clause (`return( 1, 2 ) unless something`) instead of [...]
+              work
+            else
+              return( 1, 2 )
+            end
+          end
+          CRYSTAL
+      end
+
+      it "includes the closing parenthesis after a binary operator" do
+        expect_issue subject, <<-CRYSTAL
+          def func
+            if something
+          # ^^ error: Use a guard clause (`work || return(1) if something`) instead of [...]
+              work || return(1)
+            else
+              test
+            end
+          end
+          CRYSTAL
+      end
+
+      it "includes empty parentheses" do
+        expect_issue subject, <<-CRYSTAL
+          def func
+            if something
+          # ^^ error: Use a guard clause (`return() if something`) instead of [...]
+              return()
+            else
+              work
+            end
+          end
+          CRYSTAL
+      end
+
+      it "works with `next` and `break`" do
+        expect_issue subject, <<-CRYSTAL
+          foo do
+            if something
+          # ^^ error: Use a guard clause (`next(1) if something`) instead of [...]
+              next(1)
+            else
+              work
+            end
+
+            if something
+          # ^^ error: Use a guard clause (`break(1) if something`) instead of [...]
+              break(1)
+            else
+              work
+            end
+          end
+          CRYSTAL
+      end
+
+      it "doesn't report if the closing parenthesis is on another line" do
+        expect_no_issues subject, <<-CRYSTAL
+          def foo
+            if something
+              work
+              work
+            else
+              return(1
+              )
+            end
+          end
+
+          def bar
+            if something
+              work || return(1 # comment
+              )
+            else
+              work
+            end
+          end
+
+          def baz
+            if something
+              work
+            else
+              return(1,
+              )
+            end
+          end
+          CRYSTAL
+      end
+
+      it "doesn't change examples of expressions in parentheses" do
+        expect_issue subject, <<-CRYSTAL
+          def func
+            if something
+          # ^^ error: Use a guard clause (`return (1) if something`) instead of [...]
+              return (1)
+            else
+              work
+            end
+          end
+          CRYSTAL
+      end
+    end
+
     context "method in module" do
       it "reports an issue for instance method" do
         source = expect_issue subject, <<-CRYSTAL

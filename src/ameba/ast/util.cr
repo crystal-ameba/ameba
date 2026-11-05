@@ -485,18 +485,6 @@ module Ameba::AST::Util
       source.code[source.pos(location), 3]? == "<<-"
   end
 
-  # Returns the exp code of a control expression.
-  # Wraps implicit tuple literal with curly brackets (e.g. multi-return).
-  def control_exp_code(node : Crystal::ControlExpression, code_lines)
-    return unless exp = node.exp
-    return unless exp_code = node_source(exp, code_lines)
-    return exp_code unless exp.is_a?(Crystal::TupleLiteral) && exp_code[0] != '{'
-    return unless exp_start = exp.elements.first.location
-    return unless exp_end = exp.end_location
-
-    "{#{source_between(exp_start, exp_end, code_lines)}}"
-  end
-
   def name_location_or(node : Crystal::ASTNode, *, adjust_location_column_number = nil)
     name = node.name if node.responds_to?(:name)
 
@@ -565,3 +553,5 @@ module Ameba::AST::Util
     loc.adjust(column_number: size - 1)
   end
 end
+
+require "./util/control_expression"

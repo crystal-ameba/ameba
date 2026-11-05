@@ -2,6 +2,9 @@ module Ameba::AST
   # A class that utilizes a logic to traverse AST nodes and
   # fire a source test callback if a redundant `Crystal::ControlExpression`
   # is reached.
+  #
+  # The callback gets told whether the control expression
+  # is an operand of a binary or ternary operator.
   class RedundantControlExpressionVisitor
     # A corresponding rule that uses this visitor.
     getter rule : Rule::Base
@@ -16,13 +19,13 @@ module Ameba::AST
       traverse_node(node)
     end
 
-    private def traverse_control_expression(node)
-      @rule.test(@source, node, self)
+    private def traverse_control_expression(node, operand)
+      @rule.test(@source, node, self, operand)
     end
 
-    private def traverse_node(node)
+    private def traverse_node(node, *, operand = false)
       case node
-      when Crystal::ControlExpression     then traverse_control_expression(node)
+      when Crystal::ControlExpression     then traverse_control_expression(node, operand)
       when Crystal::Expressions           then traverse_expressions(node)
       when Crystal::If, Crystal::Unless   then traverse_condition(node)
       when Crystal::Case, Crystal::Select then traverse_case(node)
@@ -36,8 +39,10 @@ module Ameba::AST
     end
 
     private def traverse_condition(node)
-      traverse_node(node.then)
-      traverse_node(node.else)
+      operand = node.is_a?(Crystal::If) && node.ternary?
+
+      traverse_node(node.then, operand: operand)
+      traverse_node(node.else, operand: operand)
     end
 
     private def traverse_case(node)
@@ -48,11 +53,13 @@ module Ameba::AST
     end
 
     private def traverse_binary_op(node)
-      traverse_node(node.right)
+      traverse_node(node.right, operand: true)
     end
 
     private def traverse_exception_handler(node)
-      traverse_node(node.body)
+      # The value of the handler comes from its `else` branch, if there is any,
+      # which a control expression in the body prevents from being executed.
+      traverse_node(node.body) unless node.else
       traverse_node(node.else)
 
       node.rescues.try &.each do |rescue_node|

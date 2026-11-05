@@ -4,6 +4,107 @@ module Ameba::Rule::Style
   describe RedundantNext do
     subject = RedundantNext.new
 
+    it "keeps the meaning of an expression on the right side of a binary operator" do
+      source = expect_issue subject, <<-CRYSTAL
+        foo do |a, b|
+          a || next b ? 1 : 2
+             # ^^^^ error: Redundant `next` detected
+        end
+        CRYSTAL
+
+      expect_correction source, <<-CRYSTAL
+        foo do |a, b|
+          a || (b ? 1 : 2)
+        end
+        CRYSTAL
+    end
+
+    it "keeps the code parsable with an assignment in a ternary branch" do
+      source = expect_issue subject, <<-CRYSTAL
+        foo do |a|
+          a ? 1 : next b = 2
+                # ^^^^ error: Redundant `next` detected
+        end
+        CRYSTAL
+
+      expect_correction source, <<-CRYSTAL
+        foo do |a|
+          a ? 1 : (b = 2)
+        end
+        CRYSTAL
+    end
+
+    it "corrects implicit tuple literals starting with a brace" do
+      rule = RedundantNext.new
+      rule.allow_multi_next = false
+
+      source = expect_issue rule, <<-CRYSTAL
+        foo do
+          next {1, 2}, 3
+        # ^^^^ error: Redundant `next` detected
+        end
+        CRYSTAL
+
+      expect_correction source, <<-CRYSTAL
+        foo do
+          { {1, 2}, 3 }
+        end
+        CRYSTAL
+    end
+
+    it "corrects next with arguments in parentheses" do
+      source = expect_issue subject, <<-CRYSTAL
+        foo do |a|
+          next(a)
+        # ^^^^ error: Redundant `next` detected
+        end
+        CRYSTAL
+
+      expect_correction source, <<-CRYSTAL
+        foo do |a|
+          a
+        end
+        CRYSTAL
+    end
+
+    it "doesn't correct next with arguments in parentheses if that would lose a comment" do
+      source = expect_issue subject, <<-CRYSTAL
+        foo do |a|
+          next(a # comment
+        # ^^^^ error: Redundant `next` detected
+          )
+        end
+        CRYSTAL
+
+      expect_no_corrections source
+    end
+
+    it "doesn't correct next with arguments in parentheses if that would glue it to what follows" do
+      source = expect_issue subject, <<-CRYSTAL
+        foo do |a, b|
+          next(a)if b
+        # ^^^^ error: Redundant `next` detected
+        end
+        CRYSTAL
+
+      expect_no_corrections source
+    end
+
+    it "corrects next followed by an expression in parentheses" do
+      source = expect_issue subject, <<-CRYSTAL
+        foo do
+          next (1)
+        # ^^^^ error: Redundant `next` detected
+        end
+        CRYSTAL
+
+      expect_correction source, <<-CRYSTAL
+        foo do
+          (1)
+        end
+        CRYSTAL
+    end
+
     it "does not report if there is no redundant next" do
       expect_no_issues subject, <<-CRYSTAL
         array.map { |x| x + 1 }
@@ -161,6 +262,20 @@ module Ameba::Rule::Style
     end
 
     context "exception handler" do
+      it "doesn't report next in body if there is an else branch" do
+        expect_no_issues subject, <<-CRYSTAL
+          foo do
+            begin
+              next 1
+            rescue
+              2
+            else
+              3
+            end
+          end
+          CRYSTAL
+      end
+
       it "reports if there is redundant next in exception handler" do
         source = expect_issue subject, <<-CRYSTAL
           block do |v|
