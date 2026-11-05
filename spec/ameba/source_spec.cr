@@ -12,6 +12,20 @@ module Ameba
       end
     end
 
+    describe "#basename=" do
+      it "changes the filename keeping the directory" do
+        path = Path["foo", "spec", "bar.cr"]
+        source = Source.new("", path, Path["spec", "bar.cr"])
+        source.fullpath.should eq path.expand
+
+        source.basename = "bar_spec.cr"
+
+        source.path.should eq Path["foo", "spec", "bar_spec.cr"]
+        source.project_path.should eq Path["spec", "bar_spec.cr"]
+        source.fullpath.should eq Path["foo", "spec", "bar_spec.cr"].expand
+      end
+    end
+
     describe "#fullpath" do
       it "returns an absolute path of the source" do
         path = Path["source_spec.cr"]
@@ -153,6 +167,15 @@ module Ameba
 
         source.correct!.try(&.map(&.message)).should eq ["fix"]
         source.code.should eq "aXdef\n"
+      end
+
+      it "reports issues as corrected if their corrections rename the source" do
+        source = Source.new("abcdef\n", "spec/foo.cr")
+        source.add_issue(DummyRule.new, {1, 1}, {1, 1}, "rename") { |_| source.basename = "foo_spec.cr" }
+
+        source.correct!.should eq source.issues
+        source.path.should eq Path["spec", "foo_spec.cr"]
+        source.code.should eq "abcdef\n"
       end
 
       it "does not report issues as corrected if their corrections change nothing" do

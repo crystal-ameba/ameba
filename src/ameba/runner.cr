@@ -239,7 +239,7 @@ module Ameba
     # Check whether a run created source identical to a previous run, which
     # means that we definitely have an infinite loop.
     private def check_for_infinite_loop(source, corrected_issues, processed_sources)
-      checksum = source.code.hash
+      checksum = {source.path, source.code}.hash
 
       if loop_start = processed_sources.index(checksum)
         raise InfiniteCorrectionLoopError.new(

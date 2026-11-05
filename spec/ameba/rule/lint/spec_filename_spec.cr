@@ -26,6 +26,22 @@ module Ameba::Rule::Lint
         CRYSTAL
     end
 
+    context "autocorrect" do
+      it "renames the file and updates the source path" do
+        with_spec_file do |source|
+          path = source.path
+          renamed = path.sibling("foo_spec.cr")
+
+          subject.catch(source).should_not be_valid
+          source.correct!
+
+          File.exists?(path).should be_false
+          File.exists?(renamed).should be_true
+          source.path.should eq renamed
+        end
+      end
+    end
+
     context "properties" do
       context "#ignored_paths" do
         it "provide sane defaults" do

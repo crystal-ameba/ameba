@@ -14,6 +14,13 @@ module Ameba
     # Absolute path to the source file.
     getter fullpath : Path { path.expand }
 
+    # Changes the filename of the source, keeping its directory.
+    def basename=(basename : String)
+      @path = @path.sibling(basename)
+      @project_path = @project_path.sibling(basename)
+      @fullpath = nil
+    end
+
     # Crystal code (content of a source file).
     getter code : String
 
@@ -31,26 +38,29 @@ module Ameba
     end
 
     # Corrects any correctable issues and updates `code`.
-    # Returns the corrected issues, or `nil` if the code was unchanged.
+    # Returns the corrected issues, or `nil` if nothing was corrected.
     def correct! : Array(Issue)?
       corrector = Corrector.new(code)
 
       # Corrections all apply to the same source snapshot. Conflicting issues
       # are deferred until Runner reinspects the corrected source.
       corrected_issues = issues.select do |issue|
-        issue.enabled? && issue.correctable? &&
-          corrector.transaction { issue.correct(corrector) }
+        issue.enabled? && issue.correctable? && correct(issue, corrector)
       end
+      return if corrected_issues.empty?
 
-      corrected_code = corrector.process
-      return if code == corrected_code
-
-      @code = corrected_code
+      @code = corrector.process
       @lines = nil
       @line_offsets = nil
       @ast = nil
 
       corrected_issues
+    end
+
+    # Returns `true` if the correction changes the code or renames the source.
+    private def correct(issue, corrector) : Bool
+      path_before = path
+      corrector.transaction { issue.correct(corrector) } || path != path_before
     end
 
     # Returns lines of code split by new line character.
