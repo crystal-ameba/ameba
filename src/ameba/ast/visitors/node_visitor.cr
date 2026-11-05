@@ -33,6 +33,7 @@ module Ameba::AST
       InstanceVar,
       IsA,
       LibDef,
+      Macro,
       MacroExpression,
       ModuleDef,
       MultiAssign,
