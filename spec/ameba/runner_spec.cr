@@ -609,6 +609,33 @@ module Ameba
       end
     end
 
+    describe "#run with invalid UTF-8" do
+      it "reports it as a syntax issue, without aborting the run" do
+        path = File.tempname("source", ".cr")
+        code = "foo.match(/x/).not_nil!\n"
+
+        File.write(path, code)
+
+        sources = [
+          Source.new("# text \xFF\n", "invalid.cr"),
+          Source.new(code, path),
+        ]
+        rules = [Rule::Lint::NotNilAfterNoBang.new] of Rule::Base
+
+        begin
+          runner = Runner.new(rules, sources, formatter, default_severity, autocorrect: true).run
+          runner.success?.should be_false
+
+          sources.first.issues.first.syntax?
+            .should be_true
+
+          File.read(path).should eq "foo.match!(/x/)\n"
+        ensure
+          File.delete(path) rescue nil
+        end
+      end
+    end
+
     describe "#run with rules autocorrecting each other" do
       context "with two conflicting rules" do
         context "if there is an offense in an inspected file" do
