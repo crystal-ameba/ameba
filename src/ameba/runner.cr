@@ -186,8 +186,9 @@ module Ameba
       @sources.all?(&.valid?)
     end
 
-    # Indicates whether any rule or correction raised an exception,
-    # or corrections got stuck in a loop during the last inspection.
+    # Indicates whether any rule or correction raised an exception, corrections
+    # got stuck in a loop, or a file couldn't be read or written during the last
+    # inspection.
     #
     # ```
     # runner = Ameba::Runner.new(config)
