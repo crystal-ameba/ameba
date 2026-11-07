@@ -290,6 +290,15 @@ module Ameba
         source.issues.map(&.correctable?).should eq [false, false]
       end
 
+      it "keeps a correction deferred by the ones breaking the syntax when combined" do
+        source = Source.new("x = 1\n2\n")
+        IncompatibleCorrectionsRule.new.catch(source)
+        source.add_issue(DummyRule.new, {2, 1}, {2, 1}, "deferred") { |corrector| corrector.replace({2, 1}, {2, 1}, "3") }
+
+        source.correct_safely!.try(&.map(&.message)).should eq ["deferred"]
+        source.code.should eq "x = 1\n3\n"
+      end
+
       it "doesn't annotate issues without a correction" do
         source = Source.new("x = 1\n2\n")
         IncompatibleCorrectionsRule.new.catch(source)

@@ -20,17 +20,22 @@ class Ameba::Source
     # breaking the syntax or raising an exception are dropped, which leaves their
     # issues reported as uncorrected.
     def apply_safely : Array(Issue)?
-      adopt_corrections do
-        # Retry without the corrections breaking the syntax on their own
-        breaking_issues = breaking_issues(issues)
-        drop_corrections(&.in?(breaking_issues))
+      loop do
+        corrected_code, corrected_issues = attempt_corrections
+        return if @source.code == corrected_code
 
-        adopt_corrections do
-          # The remaining corrections break the syntax only when combined
-          drop_corrections { true }
-
-          nil
+        if new_ast = @source.parse?(corrected_code)
+          @source.replace_code(corrected_code, new_ast)
+          return corrected_issues
         end
+
+        # Retry without the corrections breaking the syntax on their own, or
+        # else without all of the applied ones, which break it only when combined.
+        # The deferred ones get their turn, as each retry drops at least one.
+        breaking_issues = breaking_issues(corrected_issues)
+        breaking_issues = corrected_issues if breaking_issues.empty?
+
+        drop_corrections(&.in?(breaking_issues))
       end
     end
 
@@ -56,13 +61,12 @@ class Ameba::Source
       {corrector.process, corrected_issues}
     end
 
-    # Replaces the code with the corrected one, dropping the corrections which raise.
-    # Returns the corrected issues, `nil` if the code was unchanged, or the result
-    # of the block if the corrected code has syntax errors.
-    private def adopt_corrections(&) : Array(Issue)?
+    # Same as `#corrections` of all the issues, but drops the corrections
+    # which raise an exception.
+    private def attempt_corrections : {String, Array(Issue)}
       failures = [] of {Issue, Exception}
 
-      corrected_code, corrected_issues = corrections(issues) do |issue, ex|
+      result = corrections(issues) do |issue, ex|
         failures << {issue, ex}
       end
 
@@ -71,15 +75,7 @@ class Ameba::Source
         drop_corrections(reason, outcome: :crashed) { |issue| issue == failed_issue }
       end
 
-      return if @source.code == corrected_code
-
-      if new_ast = @source.parse?(corrected_code)
-        @source.replace_code(corrected_code, new_ast)
-
-        return corrected_issues
-      end
-
-      yield
+      result
     end
 
     private def drop_corrections(reason = "would produce invalid syntax", *, outcome : Issue::Outcome = :pending, &)
