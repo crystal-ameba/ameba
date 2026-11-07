@@ -1256,7 +1256,7 @@
   </h2>
   
     
-      <a href="https://github.com/crystal-ameba/ameba/blob/09084ce/src/ameba/issue.cr#L3" target="_blank">
+      <a href="https://github.com/crystal-ameba/ameba/blob/7527524/src/ameba/issue.cr#L3" target="_blank">
         ameba/issue.cr
       </a>
     
@@ -1279,7 +1279,7 @@
   <ul class="list-summary">
     
       <li class="entry-summary">
-        <a href="#new%28code%3AString%2Crule%3AAmeba%3A%3ARule%3A%3ABase%2Clocation%3ANil%7CCrystal%3A%3ALocation%2Cend_location%3ANil%7CCrystal%3A%3ALocation%2Cmessage%3AString%2Cstatus%3AStatus%3D%3Aenabled%2Cblock%3ASource%3A%3ACorrector-%3E%7CNil%3Dnil%29-class-method" class="signature"><strong>.new</strong>(code : String, rule : Ameba::Rule::Base, location : Nil | Crystal::Location, end_location : Nil | Crystal::Location, message : String, status : Status = <span class="n">:enabled</span>, block : Source::Corrector ->  | Nil = <span class="n">nil</span>)</a>
+        <a href="#new%28code%3AString%2Crule%3AAmeba%3A%3ARule%3A%3ABase%2Clocation%3ANil%7CCrystal%3A%3ALocation%2Cend_location%3ANil%7CCrystal%3A%3ALocation%2Cmessage%3AString%2Cstatus%3AStatus%3D%3Aenabled%2Cblock%3ASource%3A%3ACorrector-%3E%7CNil%3Dnil%2C%2A%2Ccorrected%3ABool%3Dfalse%29-class-method" class="signature"><strong>.new</strong>(code : String, rule : Ameba::Rule::Base, location : Nil | Crystal::Location, end_location : Nil | Crystal::Location, message : String, status : Status = <span class="n">:enabled</span>, block : Source::Corrector ->  | Nil = <span class="n">nil</span>, *, corrected : Bool = <span class="n">false</span>)</a>
         
       </li>
     
@@ -1302,6 +1302,13 @@
   <ul class="list-summary">
     
       <li class="entry-summary">
+        <a href="#as_corrected%3Aself-instance-method" class="signature"><strong>#as_corrected</strong> : <span class="k">self</span></a>
+        
+          <div class="summary"><p>Returns the same issue, marked as corrected in the source.</p></div>
+        
+      </li>
+    
+      <li class="entry-summary">
         <a href="#code%3AString-instance-method" class="signature"><strong>#code</strong> : String</a>
         
           <div class="summary"><p>The source code that triggered this issue.</p></div>
@@ -1315,6 +1322,13 @@
     
       <li class="entry-summary">
         <a href="#correctable%3F-instance-method" class="signature"><strong>#correctable?</strong></a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#corrected%3F%3ABool-instance-method" class="signature"><strong>#corrected?</strong> : Bool</a>
+        
+          <div class="summary"><p>Whether the issue has been corrected in the source.</p></div>
         
       </li>
     
@@ -1378,6 +1392,13 @@
         
       </li>
     
+      <li class="entry-summary">
+        <a href="#without_correction%28message%3D%40message%29%3Aself-instance-method" class="signature"><strong>#without_correction</strong>(message = @message) : <span class="k">self</span></a>
+        
+          <div class="summary"><p>Returns the same issue with the given <em>message</em>, but without the means of correcting it.</p></div>
+        
+      </li>
+    
   </ul>
 
 
@@ -1435,18 +1456,18 @@
     Constructor Detail
   </h2>
   
-    <div class="entry-detail" id="new(code:String,rule:Ameba::Rule::Base,location:Nil|Crystal::Location,end_location:Nil|Crystal::Location,message:String,status:Status=:enabled,block:Source::Corrector-&gt;|Nil=nil)-class-method">
+    <div class="entry-detail" id="new(code:String,rule:Ameba::Rule::Base,location:Nil|Crystal::Location,end_location:Nil|Crystal::Location,message:String,status:Status=:enabled,block:Source::Corrector-&gt;|Nil=nil,*,corrected:Bool=false)-class-method">
       <div class="signature">
         
-        def self.<strong>new</strong>(code : String, rule : <a href="../Ameba/Rule/Base.html">Ameba::Rule::Base</a>, location : Nil | <a href="../Crystal/Location.html">Crystal::Location</a>, end_location : Nil | <a href="../Crystal/Location.html">Crystal::Location</a>, message : String, status : <a href="../Ameba/Issue/Status.html">Status</a> = <span class="n">:enabled</span>, block : <a href="../Ameba/Source/Corrector.html">Source::Corrector</a> ->  | Nil = <span class="n">nil</span>)
+        def self.<strong>new</strong>(code : String, rule : <a href="../Ameba/Rule/Base.html">Ameba::Rule::Base</a>, location : Nil | <a href="../Crystal/Location.html">Crystal::Location</a>, end_location : Nil | <a href="../Crystal/Location.html">Crystal::Location</a>, message : String, status : <a href="../Ameba/Issue/Status.html">Status</a> = <span class="n">:enabled</span>, block : <a href="../Ameba/Source/Corrector.html">Source::Corrector</a> ->  | Nil = <span class="n">nil</span>, *, corrected : Bool = <span class="n">false</span>)
 
-        <a class="method-permalink" href="#new%28code%3AString%2Crule%3AAmeba%3A%3ARule%3A%3ABase%2Clocation%3ANil%7CCrystal%3A%3ALocation%2Cend_location%3ANil%7CCrystal%3A%3ALocation%2Cmessage%3AString%2Cstatus%3AStatus%3D%3Aenabled%2Cblock%3ASource%3A%3ACorrector-%3E%7CNil%3Dnil%29-class-method">#</a>
+        <a class="method-permalink" href="#new%28code%3AString%2Crule%3AAmeba%3A%3ARule%3A%3ABase%2Clocation%3ANil%7CCrystal%3A%3ALocation%2Cend_location%3ANil%7CCrystal%3A%3ALocation%2Cmessage%3AString%2Cstatus%3AStatus%3D%3Aenabled%2Cblock%3ASource%3A%3ACorrector-%3E%7CNil%3Dnil%2C%2A%2Ccorrected%3ABool%3Dfalse%29-class-method">#</a>
       </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/09084ce/src/ameba/issue.cr#L30" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/7527524/src/ameba/issue.cr#L33" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1467,6 +1488,27 @@
     Instance Method Detail
   </h2>
   
+    <div class="entry-detail" id="as_corrected:self-instance-method">
+      <div class="signature">
+        
+        def <strong>as_corrected</strong> : <span class="k">self</span>
+
+        <a class="method-permalink" href="#as_corrected%3Aself-instance-method">#</a>
+      </div>
+      
+        <div class="doc">
+          
+          <p>Returns the same issue, marked as corrected in the source.</p>
+        </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/crystal-ameba/ameba/blob/7527524/src/ameba/issue.cr#L49" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
     <div class="entry-detail" id="code:String-instance-method">
       <div class="signature">
         
@@ -1483,7 +1525,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/09084ce/src/ameba/issue.cr#L10" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/7527524/src/ameba/issue.cr#L10" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1499,7 +1541,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/09084ce/src/ameba/issue.cr#L41" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/7527524/src/ameba/issue.cr#L44" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1515,7 +1557,28 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/09084ce/src/ameba/issue.cr#L37" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/7527524/src/ameba/issue.cr#L40" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="corrected?:Bool-instance-method">
+      <div class="signature">
+        
+        def <strong>corrected?</strong> : Bool
+
+        <a class="method-permalink" href="#corrected%3F%3ABool-instance-method">#</a>
+      </div>
+      
+        <div class="doc">
+          
+          <p>Whether the issue has been corrected in the source.</p>
+        </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/crystal-ameba/ameba/blob/7527524/src/ameba/issue.cr#L28" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1531,7 +1594,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/09084ce/src/ameba/issue.cr#L27" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/7527524/src/ameba/issue.cr#L30" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1547,7 +1610,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/09084ce/src/ameba/issue.cr#L27" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/7527524/src/ameba/issue.cr#L30" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1563,7 +1626,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/09084ce/src/ameba/issue.cr#L27" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/7527524/src/ameba/issue.cr#L30" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1579,7 +1642,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/09084ce/src/ameba/issue.cr#L27" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/7527524/src/ameba/issue.cr#L30" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1600,7 +1663,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/09084ce/src/ameba/issue.cr#L19" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/7527524/src/ameba/issue.cr#L19" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1621,7 +1684,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/09084ce/src/ameba/issue.cr#L16" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/7527524/src/ameba/issue.cr#L16" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1642,7 +1705,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/09084ce/src/ameba/issue.cr#L22" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/7527524/src/ameba/issue.cr#L22" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1663,7 +1726,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/09084ce/src/ameba/issue.cr#L13" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/7527524/src/ameba/issue.cr#L13" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1684,7 +1747,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/09084ce/src/ameba/issue.cr#L25" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/7527524/src/ameba/issue.cr#L25" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1700,7 +1763,29 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/09084ce/src/ameba/issue.cr#L33" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/7527524/src/ameba/issue.cr#L36" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="without_correction(message=@message):self-instance-method">
+      <div class="signature">
+        
+        def <strong>without_correction</strong>(message = @message) : <span class="k">self</span>
+
+        <a class="method-permalink" href="#without_correction%28message%3D%40message%29%3Aself-instance-method">#</a>
+      </div>
+      
+        <div class="doc">
+          
+          <p>Returns the same issue with the given <em>message</em>, but without the means
+of correcting it.</p>
+        </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/crystal-ameba/ameba/blob/7527524/src/ameba/issue.cr#L55" target="_blank">View source</a>]
         
       </div>
     </div>

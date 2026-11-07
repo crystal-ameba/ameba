@@ -1273,28 +1273,28 @@ Has path, lines of code and issues reported by rules.</p>
   </h2>
   
     
-      <a href="https://github.com/crystal-ameba/ameba/blob/09084ce/src/ameba/source.cr#L4" target="_blank">
+      <a href="https://github.com/crystal-ameba/ameba/blob/7527524/src/ameba/source.cr#L4" target="_blank">
         ameba/source.cr
       </a>
     
     <br/>
   
     
-      <a href="https://github.com/crystal-ameba/ameba/blob/09084ce/src/ameba/source/corrector.cr#L3" target="_blank">
+      <a href="https://github.com/crystal-ameba/ameba/blob/7527524/src/ameba/source/corrector.cr#L3" target="_blank">
         ameba/source/corrector.cr
       </a>
     
     <br/>
   
     
-      <a href="https://github.com/crystal-ameba/ameba/blob/09084ce/src/ameba/source/rewriter.cr#L1" target="_blank">
+      <a href="https://github.com/crystal-ameba/ameba/blob/7527524/src/ameba/source/rewriter.cr#L1" target="_blank">
         ameba/source/rewriter.cr
       </a>
     
     <br/>
   
     
-      <a href="https://github.com/crystal-ameba/ameba/blob/09084ce/src/ameba/spec/support.cr#L8" target="_blank">
+      <a href="https://github.com/crystal-ameba/ameba/blob/7527524/src/ameba/spec/support.cr#L8" target="_blank">
         ameba/spec/support.cr
       </a>
     
@@ -1368,6 +1368,13 @@ Has path, lines of code and issues reported by rules.</p>
       </li>
     
       <li class="entry-summary">
+        <a href="#correct_safely%21%3AArray%28Issue%29%7CNil-instance-method" class="signature"><strong>#correct_safely!</strong> : Array(Issue) | Nil</a>
+        
+          <div class="summary"><p>Same as <code><a href="../Ameba/Source.html#correct%21%3AArray%28Issue%29%7CNil-instance-method">#correct!</a></code>, but makes sure the source stays parsable.</p></div>
+        
+      </li>
+    
+      <li class="entry-summary">
         <a href="#ecr%3F-instance-method" class="signature"><strong>#ecr?</strong></a>
         
           <div class="summary"><p>Returns <code>true</code> if the source is an ECR template, <code>false</code> otherwise.</p></div>
@@ -1385,6 +1392,13 @@ Has path, lines of code and issues reported by rules.</p>
         <a href="#lines%3AArray%28String%29-instance-method" class="signature"><strong>#lines</strong> : Array(String)</a>
         
           <div class="summary"><p>Returns lines of code split by new line character.</p></div>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#parsable%3F%3ABool-instance-method" class="signature"><strong>#parsable?</strong> : Bool</a>
+        
+          <div class="summary"><p>Returns <code>true</code> if <code><a href="../Ameba/Source.html#code%3AString-instance-method">#code</a></code> has no syntax errors.</p></div>
         
       </li>
     
@@ -1775,7 +1789,7 @@ Has path, lines of code and issues reported by rules.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/09084ce/src/ameba/source.cr#L28" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/7527524/src/ameba/source.cr#L28" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1791,7 +1805,7 @@ Has path, lines of code and issues reported by rules.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/09084ce/src/ameba/spec/support.cr#L9" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/7527524/src/ameba/spec/support.cr#L9" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1830,7 +1844,7 @@ source.ast</code></pre>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/09084ce/src/ameba/source.cr#L83" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/7527524/src/ameba/source.cr#L134" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1851,7 +1865,7 @@ source.ast</code></pre>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/09084ce/src/ameba/source.cr#L18" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/7527524/src/ameba/source.cr#L18" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1873,7 +1887,30 @@ Returns the corrected issues, or <code>nil</code> if the code was unchanged.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/09084ce/src/ameba/source.cr#L35" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/7527524/src/ameba/source.cr#L35" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="correct_safely!:Array(Issue)|Nil-instance-method">
+      <div class="signature">
+        
+        def <strong>correct_safely!</strong> : Array(<a href="../Ameba/Issue.html">Issue</a>) | Nil
+
+        <a class="method-permalink" href="#correct_safely%21%3AArray%28Issue%29%7CNil-instance-method">#</a>
+      </div>
+      
+        <div class="doc">
+          
+          <p>Same as <code><a href="../Ameba/Source.html#correct%21%3AArray%28Issue%29%7CNil-instance-method">#correct!</a></code>, but makes sure the source stays parsable. Corrections
+breaking the syntax are dropped, which leaves their issues reported as
+uncorrected.</p>
+        </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/crystal-ameba/ameba/blob/7527524/src/ameba/source.cr#L56" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1894,7 +1931,7 @@ Returns the corrected issues, or <code>nil</code> if the code was unchanged.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/09084ce/src/ameba/source.cr#L112" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/7527524/src/ameba/source.cr#L163" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1915,7 +1952,7 @@ Returns the corrected issues, or <code>nil</code> if the code was unchanged.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/09084ce/src/ameba/source.cr#L15" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/7527524/src/ameba/source.cr#L15" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1942,7 +1979,28 @@ source.lines <span class="c"># =&gt; [&quot;a = 1&quot;, &quot;b = 2&quot;]</spa
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/09084ce/src/ameba/source.cr#L66" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/7527524/src/ameba/source.cr#L117" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="parsable?:Bool-instance-method">
+      <div class="signature">
+        
+        def <strong>parsable?</strong> : Bool
+
+        <a class="method-permalink" href="#parsable%3F%3ABool-instance-method">#</a>
+      </div>
+      
+        <div class="doc">
+          
+          <p>Returns <code>true</code> if <code><a href="../Ameba/Source.html#code%3AString-instance-method">#code</a></code> has no syntax errors.</p>
+        </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/crystal-ameba/ameba/blob/7527524/src/ameba/source.cr#L77" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1963,7 +2021,7 @@ source.lines <span class="c"># =&gt; [&quot;a = 1&quot;, &quot;b = 2&quot;]</spa
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/09084ce/src/ameba/source.cr#L9" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/7527524/src/ameba/source.cr#L9" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1984,7 +2042,7 @@ source.lines <span class="c"># =&gt; [&quot;a = 1&quot;, &quot;b = 2&quot;]</spa
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/09084ce/src/ameba/source.cr#L117" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/7527524/src/ameba/source.cr#L168" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2005,7 +2063,7 @@ source.lines <span class="c"># =&gt; [&quot;a = 1&quot;, &quot;b = 2&quot;]</spa
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/09084ce/src/ameba/source.cr#L12" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/7527524/src/ameba/source.cr#L12" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2026,7 +2084,7 @@ source.lines <span class="c"># =&gt; [&quot;a = 1&quot;, &quot;b = 2&quot;]</spa
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/09084ce/src/ameba/source.cr#L107" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/7527524/src/ameba/source.cr#L158" target="_blank">View source</a>]
         
       </div>
     </div>
