@@ -745,6 +745,14 @@ module Ameba
         issue.message.should contain unwritable_path.basename
       end
 
+      it "reports it under `Lint/Syntax`, like failing to read the file" do
+        source = Source.new(code, unwritable_path)
+
+        Runner.new(rules, [source], formatter, default_severity, autocorrect: true).run
+
+        source.issues.find!(&.crashed?).rule.should be_a Rule::Lint::Syntax
+      end
+
       it "doesn't report the issues as corrected" do
         source = Source.new(code, unwritable_path)
 
