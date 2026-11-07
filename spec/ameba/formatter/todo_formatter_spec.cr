@@ -57,6 +57,31 @@ module Ameba
           todo.should_not contain "crashed.cr"
         end
       end
+
+      it "doesn't take a file which couldn't be read for a syntax issue" do
+        with_formatter do |formatter, io|
+          source = Source.from_file(File.tempname("missing", ".cr"))
+          source.issues.first.syntax?.should be_true
+
+          formatter.finished([source])
+
+          io.to_s.should_not contain "Please fix syntax issues"
+          io.to_s.should contain "Crashes can't be excluded. File is not generated."
+        end
+      end
+
+      it "excludes the other issues if a file couldn't be read" do
+        with_formatter do |formatter|
+          source = Source.from_file(File.tempname("missing", ".cr"))
+
+          other = Source.new("a = 1", "other.cr")
+          other.add_issue(DummyRule.new, {1, 1}, "regular")
+
+          formatter.finished([source, other])
+
+          File.read(CONFIG_PATH).should contain "other.cr"
+        end
+      end
     end
 
     context "correctable issues" do

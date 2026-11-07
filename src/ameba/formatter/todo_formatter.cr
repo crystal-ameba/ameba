@@ -19,12 +19,13 @@ module Ameba::Formatter
         return
       end
 
-      if issues.any?(&.syntax?)
+      # A file which couldn't be read is reported under `Lint/Syntax` as well
+      if issues.any? { |issue| issue.syntax? && !issue.crashed? }
         output.puts "Unable to generate TODO file. Please fix syntax issues."
         return
       end
 
-      if issues.select(&.unresolved?).all?(&.crashed?)
+      if issues.all? { |issue| !issue.unresolved? || issue.crashed? }
         output.puts "Crashes can't be excluded. File is not generated."
         return
       end
