@@ -29,6 +29,30 @@ module Ameba::Rule::Lint
       source.ast
     rescue ex : Crystal::SyntaxException
       issue_for({ex.line_number, ex.column_number}, ex.message.to_s)
+    rescue ex : InvalidByteSequenceError
+      issue_for(invalid_byte_location(source.code), ex.message.to_s)
+    end
+
+    # Returns the line and column of the first byte in *code* which
+    # isn't valid UTF-8, counting the characters before it. Falls back to
+    # the start of the code if there's no such byte.
+    private def invalid_byte_location(code) : {Int32, Int32}
+      reader = Char::Reader.new(code)
+      line_number = column_number = 1
+
+      while reader.has_next?
+        return {line_number, column_number} if reader.error
+
+        if reader.current_char == '\n'
+          line_number += 1
+          column_number = 1
+        else
+          column_number += 1
+        end
+        reader.next_char
+      end
+
+      {1, 1}
     end
   end
 end
