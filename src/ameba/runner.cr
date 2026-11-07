@@ -140,14 +140,7 @@ module Ameba
         source.issues.clear
       end
 
-      if loop_message
-        return report_failure(source, original_code, corrected_issues.last.first.rule, loop_message)
-      end
-
-      begin
-        File.write(source.path, source.code) unless corrected_issues.empty?
-      rescue ex
-        message = "Could not write the corrected code: #{ex.message}"
+      if message = loop_message || write_corrected_code(source, corrected_issues)
         return report_failure(source, original_code, corrected_issues.last.first.rule, message)
       end
 
@@ -260,6 +253,17 @@ module Ameba
       check_unneeded_directives(source, excluded_rules)
 
       true
+    end
+
+    # Writes the corrected code to the file, unless nothing got corrected.
+    # Returns a message describing the failure if that didn't work out.
+    private def write_corrected_code(source, corrected_issues) : String?
+      if corrected_issues.present?
+        File.write(source.path, source.code)
+      end
+      nil
+    rescue ex
+      "Could not write the corrected code: #{ex.message}"
     end
 
     # Goes back to the original code, so that nothing gets reported as corrected,
