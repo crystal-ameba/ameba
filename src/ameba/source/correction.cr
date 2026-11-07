@@ -34,8 +34,11 @@ class Ameba::Source
         # The deferred ones get their turn, as each retry drops at least one.
         breaking_issues = breaking_issues(corrected_issues)
         breaking_issues = corrected_issues if breaking_issues.empty?
+        breaking_issues = breaking_issues.to_set
 
-        drop_corrections(&.in?(breaking_issues))
+        drop_corrections do |issue|
+          "would produce invalid syntax" if issue.in?(breaking_issues)
+        end
       end
     end
 
@@ -64,23 +67,28 @@ class Ameba::Source
     # Same as `#corrections` of all the issues, but drops the corrections
     # which raise an exception.
     private def attempt_corrections : {String, Array(Issue)}
-      failures = [] of {Issue, Exception}
+      failures = {} of Issue => Exception
 
       result = corrections(issues) do |issue, ex|
-        failures << {issue, ex}
+        failures[issue] = ex
       end
 
-      failures.each do |failed_issue, ex|
-        reason = "correction raised an exception: #{ex.message} (#{ex.class})"
-        drop_corrections(reason, outcome: :crashed) { |issue| issue == failed_issue }
+      unless failures.empty?
+        drop_corrections(outcome: :crashed) do |issue|
+          next unless ex = failures[issue]?
+          "correction raised an exception: #{ex.message} (#{ex.class})"
+        end
       end
 
       result
     end
 
-    private def drop_corrections(reason = "would produce invalid syntax", *, outcome : Issue::Outcome = :pending, &)
+    # Drops the corrections of the issues for which the block returns
+    # the reason for doing so.
+    private def drop_corrections(*, outcome : Issue::Outcome = :pending, & : Issue -> String?)
       issues.map! do |issue|
-        next issue unless issue.correctable? && yield issue
+        next issue unless issue.correctable?
+        next issue unless reason = yield issue
 
         issue.without_correction(
           "#{issue.message} (not corrected: #{reason})",
