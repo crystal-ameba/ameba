@@ -97,16 +97,20 @@ class Ameba::Source
       end
     end
 
-    # Returns the *candidates* whose corrections break the syntax on their own.
+    # Returns the *candidates* whose corrections break the syntax on their own,
+    # given that combined they do break it.
     #
     # Bisects them, since parsing the outcome of each one separately would take
     # too long for a source with many issues.
     private def breaking_issues(candidates) : Array(Issue)
-      return [] of Issue if @source.parse?(corrections(candidates) { }.first)
       return candidates if candidates.size == 1
 
       half = candidates.size // 2
-      breaking_issues(candidates[0...half]) + breaking_issues(candidates[half..])
+
+      {candidates[0...half], candidates[half..]}.flat_map do |part|
+        next [] of Issue if @source.parse?(corrections(part) { }.first)
+        breaking_issues(part)
+      end
     end
   end
 end
