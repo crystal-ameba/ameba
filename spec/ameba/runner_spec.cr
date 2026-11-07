@@ -311,6 +311,46 @@ module Ameba
         end
       end
 
+      it "corrects `return(a)if b` once it has been formatted" do
+        rules = [Rule::Lint::Formatting.new, Rule::Style::RedundantReturn.new] of Rule::Base
+        path = File.tempname("source", ".cr")
+        code = "def foo(a, b)\n  return(a)if b\nend\n"
+        File.write(path, code)
+        source = Source.new(code, path)
+
+        begin
+          Runner.new(rules, [source], formatter, default_severity, autocorrect: true).run
+          source.code.should eq "def foo(a, b)\n  a if b\nend\n"
+        ensure
+          File.delete(path) rescue nil
+        end
+      end
+
+      it "handles `Style/RedundantReturn` conflicting over `return(nil)` in either rule order" do
+        {
+          false => "def foo\n  return\nend\n",
+          true  => "def foo\n  nil\nend\n",
+        }.each do |reverse, expected|
+          rules = [
+            Rule::Style::RedundantNilInControlExpression.new,
+            Rule::Style::RedundantReturn.new,
+          ] of Rule::Base
+          rules.reverse! if reverse
+          path = File.tempname("source", ".cr")
+          code = "def foo\n  return(nil)\nend\n"
+          File.write(path, code)
+          source = Source.new(code, path)
+
+          begin
+            Runner.new(rules, [source], formatter, default_severity, autocorrect: true).run
+            source.code.should eq expected
+            File.read(path).should eq expected
+          ensure
+            File.delete(path) rescue nil
+          end
+        end
+      end
+
       it "marks only the issues which got corrected" do
         rules = [BreakingCorrectionRule.new.tap(&.enabled = true)] of Rule::Base
         path = File.tempname("source", ".cr")
