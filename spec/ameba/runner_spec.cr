@@ -213,6 +213,143 @@ module Ameba
         end
       end
 
+      it "discards corrections leaving the source unparsable" do
+        rules = [BreakingCorrectionRule.new.tap(&.enabled = true)] of Rule::Base
+        path = File.tempname("source", ".cr")
+        File.write(path, "bar\n")
+        source = Source.new("bar\n", path)
+
+        begin
+          Runner.new(rules, [source], formatter, default_severity, autocorrect: true).run
+          source.code.should eq "bar\n"
+          source.lines.should eq ["bar", ""]
+          source.ast.should_not be_nil
+          File.read(path).should eq "bar\n"
+          source.issues.size.should eq 1
+          source.issues.first.message.should start_with "bar"
+          source.issues.first.message.should contain "invalid syntax"
+          source.issues.first.correctable?.should be_false
+        ensure
+          File.delete(path) rescue nil
+        end
+      end
+
+      it "keeps earlier corrections if a later one leaves the source unparsable" do
+        rules = [BreakingCorrectionRule.new.tap(&.enabled = true)] of Rule::Base
+        path = File.tempname("source", ".cr")
+        File.write(path, "foo\n")
+        source = Source.new("foo\n", path)
+
+        begin
+          Runner.new(rules, [source], formatter, default_severity, autocorrect: true).run
+          source.code.should eq "bar\n"
+          File.read(path).should eq "bar\n"
+          source.issues.map(&.message.split.first).should eq ["foo", "bar"]
+          source.issues.map(&.correctable?).should eq [true, false]
+        ensure
+          File.delete(path) rescue nil
+        end
+      end
+
+      it "keeps other corrections when one of them leaves the source unparsable" do
+        [false, true].each do |reverse|
+          rules = [
+            BreakingCorrectionRule.new.tap(&.enabled = true),
+            Rule::Lint::NotNilAfterNoBang.new,
+          ] of Rule::Base
+          rules.reverse! if reverse
+          path = File.tempname("source", ".cr")
+          code = "bar\nbaz.match(/x/).not_nil!\n"
+          File.write(path, code)
+          source = Source.new(code, path)
+
+          begin
+            Runner.new(rules, [source], formatter, default_severity, autocorrect: true).run
+            source.code.should eq "bar\nbaz.match!(/x/)\n"
+            File.read(path).should eq source.code
+            source.issues.map(&.correctable?).should eq [false, true]
+            source.issues.first.rule.should eq rules.find(&.is_a?(BreakingCorrectionRule))
+            source.issues.first.message.should contain "invalid syntax"
+            source.issues.last.message.should_not contain "invalid syntax"
+          ensure
+            File.delete(path) rescue nil
+          end
+        end
+      end
+
+      it "discards corrections leaving the source unparsable only when combined" do
+        rules = [IncompatibleCorrectionsRule.new.tap(&.enabled = true)] of Rule::Base
+        path = File.tempname("source", ".cr")
+        code = "x = 1\n2\n"
+        File.write(path, code)
+        source = Source.new(code, path)
+
+        begin
+          Runner.new(rules, [source], formatter, default_severity, autocorrect: true).run
+          source.code.should eq code
+          File.read(path).should eq code
+          source.issues.map(&.correctable?).should eq [false, false]
+          source.issues.each(&.message.should contain "invalid syntax")
+        ensure
+          File.delete(path) rescue nil
+        end
+      end
+
+      it "does not annotate issues without a correction when discarding corrections" do
+        rules = [IncompatibleCorrectionsRule.new.tap(&.enabled = true), ErrorRule.new] of Rule::Base
+        path = File.tempname("source", ".cr")
+        code = "x = 1\n2\n"
+        File.write(path, code)
+        source = Source.new(code, path)
+
+        begin
+          Runner.new(rules, [source], formatter, default_severity, autocorrect: true).run
+          source.issues.find!(&.rule.is_a?(IncompatibleCorrectionsRule)).message.should contain "invalid syntax"
+          source.issues.find!(&.rule.is_a?(ErrorRule)).message.should_not contain "invalid syntax"
+        ensure
+          File.delete(path) rescue nil
+        end
+      end
+
+      it "marks only the issues which got corrected" do
+        rules = [BreakingCorrectionRule.new.tap(&.enabled = true)] of Rule::Base
+        path = File.tempname("source", ".cr")
+        File.write(path, "foo\n")
+        source = Source.new("foo\n", path)
+
+        begin
+          Runner.new(rules, [source], formatter, default_severity, autocorrect: true).run
+          source.issues.map(&.corrected?).should eq [true, false]
+        ensure
+          File.delete(path) rescue nil
+        end
+      end
+
+      it "doesn't mark issues whose correction doesn't change anything" do
+        rules = [UselessCorrectionRule.new.tap(&.enabled = true)] of Rule::Base
+        path = File.tempname("source", ".cr")
+        File.write(path, "foo\n")
+        source = Source.new("foo\n", path)
+
+        begin
+          Runner.new(rules, [source], formatter, default_severity, autocorrect: true).run
+          source.issues.map(&.corrected?).should eq [false]
+          source.issues.map(&.correctable?).should eq [true]
+        ensure
+          File.delete(path) rescue nil
+        end
+      end
+
+      it "doesn't mark issues without autocorrect" do
+        rules = [BreakingCorrectionRule.new.tap(&.enabled = true)] of Rule::Base
+        source = Source.new("foo\n", "source.cr")
+
+        Runner.new(rules, [source], formatter, default_severity).run
+
+        source.issues.map(&.corrected?).should eq [false]
+        source.issues.map(&.correctable?).should eq [true]
+      end
+
       it "handles rules with incompatible autocorrect" do
         rules = [Rule::Performance::MinMaxAfterMap.new, Rule::Style::VerboseBlock.new]
         source = Source.new <<-CRYSTAL, File.tempname("source", ".cr")

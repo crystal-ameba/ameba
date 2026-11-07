@@ -5,7 +5,7 @@ module Ameba::Formatter
     def source_finished(source : Source) : Nil
       source.issues.each do |issue|
         next if issue.disabled?
-        next if issue.correctable? && config[:autocorrect]?
+        next if issue.corrected?
 
         next unless loc = issue.location
 

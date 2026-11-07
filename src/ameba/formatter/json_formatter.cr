@@ -75,7 +75,7 @@ module Ameba::Formatter
 
       source.issues.each do |issue|
         next if issue.disabled?
-        next if issue.correctable? && config[:autocorrect]?
+        next if issue.corrected?
 
         json_source.issues << AsJSON::Issue.new(
           issue.rule.name,

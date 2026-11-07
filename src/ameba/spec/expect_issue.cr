@@ -128,17 +128,28 @@ module Ameba::Spec::ExpectIssue
   end
 
   def expect_correction(source, correction, *, file = __FILE__, line = __LINE__, **replacements)
+    parsable_before = source.parsable?
+
     raise "Use `expect_no_corrections` if the code will not change" unless source.correct!
 
     correction = format_issue(correction, **replacements)
-    return if correction == source.code
+
+    unless correction == source.code
+      fail <<-MSG, file, line
+        Expected correction:
+
+        #{correction}
+
+        Got:
+
+        #{source.code}
+        MSG
+    end
+
+    return if !parsable_before || source.parsable?
 
     fail <<-MSG, file, line
-      Expected correction:
-
-      #{correction}
-
-      Got:
+      Expected correction to keep the code parsable, but got:
 
       #{source.code}
       MSG
