@@ -120,7 +120,7 @@ module Ameba
 
       # This variable is a 2D array used to track corrected issues after each
       # inspection iteration. This is used to output meaningful infinite loop
-      # error message, and to choose the rule to report a failure under.
+      # error message, and to choose the rule to report such a loop under.
       corrected_issues = [] of Array(Issue)
       original_code = source.code
 
@@ -140,8 +140,13 @@ module Ameba
         source.issues.clear
       end
 
-      if message = loop_message || write_corrected_code(source, corrected_issues)
+      if message = loop_message
         return report_failure(source, original_code, corrected_issues.last.first.rule, message)
+      end
+
+      # Like failing to read the file, it isn't about any rule in particular
+      if message = write_corrected_code(source, corrected_issues)
+        return report_failure(source, original_code, Rule::Lint::Syntax.new, message)
       end
 
       source.issues[0, 0] = corrected_issues.flatten
