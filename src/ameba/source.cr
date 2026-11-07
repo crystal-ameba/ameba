@@ -60,11 +60,11 @@ module Ameba
       issues.clear
     end
 
-    # Returns `true` if `code` has no syntax errors.
+    # Returns `true` if `code` has no syntax errors, nor invalid UTF-8.
     def parsable? : Bool
       ast
       true
-    rescue Crystal::SyntaxException
+    rescue Crystal::SyntaxException | InvalidByteSequenceError
       false
     end
 
@@ -129,7 +129,7 @@ module Ameba
 
     protected def parse?(code) : Crystal::ASTNode?
       parse(code)
-    rescue Crystal::SyntaxException
+    rescue Crystal::SyntaxException | InvalidByteSequenceError
       nil
     end
 

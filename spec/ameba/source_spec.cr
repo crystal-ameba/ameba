@@ -146,6 +146,10 @@ module Ameba
       it "returns false for invalid syntax" do
         Source.new("a = (").parsable?.should be_false
       end
+
+      it "returns false for invalid UTF-8" do
+        Source.new("a = 1 \xFF").parsable?.should be_false
+      end
     end
 
     describe "#revert_to" do
@@ -251,6 +255,16 @@ module Ameba
         source.correct_safely!.try(&.map(&.rule.name)).should eq ["Lint/NotNilAfterNoBang"]
         source.code.should eq "bar\nbaz.match!(/x/)\nqux\n"
         source.issues.count(&.correctable?).should eq 1
+      end
+
+      it "drops a correction producing invalid UTF-8" do
+        source = Source.new("foo\nbar\n")
+        source.add_issue(DummyRule.new, {1, 1}, {1, 3}, "bad bytes") { |corrector| corrector.replace({1, 1}, {1, 3}, "foo \xFF") }
+        source.add_issue(DummyRule.new, {2, 1}, {2, 3}, "good") { |corrector| corrector.replace({2, 1}, {2, 3}, "baz") }
+
+        source.correct_safely!.try(&.map(&.message)).should eq ["good"]
+        source.code.should eq "foo\nbaz\n"
+        source.issues.first.message.should contain "invalid syntax"
       end
 
       it "doesn't try corrections of disabled issues" do
