@@ -52,14 +52,6 @@ class Ameba::Source::Rewriter
       reps
     end
 
-    def insertion?
-      replacement = @replacement
-
-      !@insert_before.empty? ||
-        !@insert_after.empty? ||
-        (replacement && !replacement.empty?)
-    end
-
     # Returns `true` if `#combine` would lose or fuse an edit when placing
     # *action* in this tree. It follows the same structural decisions.
     def conflicts_with?(action : self) : Bool

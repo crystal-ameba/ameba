@@ -169,9 +169,7 @@ module Ameba
         source.issues.clear
       end
 
-      corrected_issues.flatten.reverse_each do |issue|
-        source.issues.unshift(issue)
-      end
+      source.issues[0, 0] = corrected_issues.flatten
 
       File.write(source.path, source.code) unless corrected_issues.empty?
     ensure
@@ -199,7 +197,7 @@ module Ameba
     end
 
     # Indicates whether the last inspection successful or not.
-    # It returns `true` if no issues are found, `false` otherwise.
+    # It returns `true` if no issues are left, `false` otherwise.
     #
     # ```
     # runner = Ameba::Runner.new(config)
@@ -207,7 +205,7 @@ module Ameba
     # runner.success? # => true or false
     # ```
     def success?
-      @sources.all?(&.issues.none?(&.enabled?))
+      @sources.all?(&.valid?)
     end
 
     private MAX_ITERATIONS = 200

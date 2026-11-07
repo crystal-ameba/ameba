@@ -145,9 +145,14 @@ module Ameba
       add_issue(rule, location, end_location, message, status, block)
     end
 
-    # Returns `true` if the list of not disabled issues is empty, `false` otherwise.
+    # Returns the issues which still need attention.
+    def unresolved_issues
+      issues.select(&.unresolved?)
+    end
+
+    # Returns `true` if no issue needs attention anymore, `false` otherwise.
     def valid?
-      issues.none?(&.enabled?)
+      issues.none?(&.unresolved?)
     end
   end
 end

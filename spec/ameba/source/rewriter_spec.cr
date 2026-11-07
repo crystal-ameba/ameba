@@ -117,14 +117,14 @@ class Ameba::Source
       rewriter = Rewriter.new("abcdef")
 
       rewriter.transaction { }.should be_false
-      rewriter.empty?.should be_true
+      rewriter.process.should eq "abcdef"
     end
 
     it "discards a transaction leaving the code unchanged" do
       rewriter = Rewriter.new("abcdef")
 
       rewriter.transaction { rewriter.replace(1, 3, "bc") }.should be_false
-      rewriter.empty?.should be_true
+      rewriter.process.should eq "abcdef"
     end
 
     it "keeps earlier corrections if a transaction raises" do
@@ -292,18 +292,17 @@ class Ameba::Source
 
     it "ignores trivial actions" do
       rewriter = Rewriter.new(code)
-      rewriter.empty?.should be_true
 
       # This is a trivial wrap
       rewriter.wrap(2, 5, "", "")
-      rewriter.empty?.should be_true
+      rewriter.process.should eq code
 
       # This is a trivial deletion
       rewriter.remove(2, 2)
-      rewriter.empty?.should be_true
+      rewriter.process.should eq code
 
       rewriter.remove(2, 5)
-      rewriter.empty?.should be_false
+      rewriter.process.should_not eq code
     end
   end
 end

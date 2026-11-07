@@ -9,6 +9,46 @@ module Ameba::Formatter
       output.clear
     end
 
+    context "correctable issues" do
+      it "summarizes only the ones left" do
+        prev_summary = ENV["GITHUB_STEP_SUMMARY"]?
+        summary_filename = File.tempname("ameba", ".md")
+        ENV["GITHUB_STEP_SUMMARY"] = summary_filename
+
+        begin
+          source = Source.new("a = 1", "source.cr")
+          Ameba.add_correctable_issues(source)
+
+          subject.finished([source])
+
+          summary = File.read(summary_filename)
+          summary.should contain "(**1** issue)"
+          summary.should contain "**1** failure"
+          summary.should contain "left one"
+          summary.should_not contain "fixed one"
+
+          source.issues.pop
+
+          File.delete(summary_filename)
+          subject.finished([source])
+          File.read(summary_filename).should contain ":green_heart:"
+        ensure
+          ENV["GITHUB_STEP_SUMMARY"] = prev_summary
+          File.delete(summary_filename) rescue nil
+        end
+      end
+
+      it "annotates only the ones left" do
+        source = Source.new("a = 1", "source.cr")
+        Ameba.add_correctable_issues(source)
+
+        subject.source_finished(source)
+
+        output.to_s.should_not contain "fixed one"
+        output.to_s.should contain "left one"
+      end
+    end
+
     describe "#source_finished" do
       it "writes valid source" do
         source = Source.new(path: "/path/to/file.cr")

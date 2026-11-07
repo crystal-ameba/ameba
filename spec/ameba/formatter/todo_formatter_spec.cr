@@ -29,6 +29,19 @@ module Ameba
     end
 
     context "correctable issues" do
+      it "doesn't generate the file if all of them got corrected" do
+        with_formatter do |formatter, io|
+          source = Source.new("a = 1", "source.cr")
+          source.add_issue(DummyRule.new, {1, 1}, {1, 1}, "fixed one") { |_| }
+          source.issues[-1] = source.issues[-1].as_corrected
+
+          formatter.finished([source])
+
+          io.to_s.should contain "No issues found. File is not generated."
+          File.exists?(CONFIG_PATH).should be_false
+        end
+      end
+
       it "excludes only the sources with issues left" do
         with_formatter do |formatter|
           corrected = Source.new("a = 1", "corrected.cr")

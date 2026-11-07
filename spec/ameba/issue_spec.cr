@@ -23,6 +23,24 @@ module Ameba
       uncorrectable.disabled?.should be_true
     end
 
+    it "#unresolved? tells whether the issue still needs attention" do
+      issue = Issue.new code: "",
+        rule: DummyRule.new,
+        location: nil,
+        end_location: nil,
+        message: "Blah"
+      disabled = Issue.new code: "",
+        rule: DummyRule.new,
+        location: nil,
+        end_location: nil,
+        message: "Blah",
+        status: :disabled
+
+      issue.unresolved?.should be_true
+      issue.as_corrected.unresolved?.should be_false
+      disabled.unresolved?.should be_false
+    end
+
     it "#as_corrected marks only a copy, keeping the rest" do
       issue = Issue.new code: "code",
         rule: DummyRule.new,

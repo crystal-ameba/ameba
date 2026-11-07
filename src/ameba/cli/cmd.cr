@@ -320,7 +320,6 @@ module Ameba::CLI
     if name = opts.formatter
       config.formatter = name
     end
-    config.formatter.config[:autocorrect] = opts.autocorrect?
     config.formatter.config[:without_affected_code] =
       opts.without_affected_code?
   end

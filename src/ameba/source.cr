@@ -33,16 +33,7 @@ module Ameba
     # Corrects any correctable issues and updates `code`.
     # Returns the corrected issues, or `nil` if the code was unchanged.
     def correct! : Array(Issue)?
-      corrector = Corrector.new(code)
-
-      # Corrections all apply to the same source snapshot. Conflicting issues
-      # are deferred until Runner reinspects the corrected source.
-      corrected_issues = issues.select do |issue|
-        issue.enabled? && issue.correctable? &&
-          corrector.transaction { issue.correct(corrector) }
-      end
-
-      corrected_code = corrector.process
+      corrected_code, corrected_issues = corrections(issues)
       return if code == corrected_code
 
       self.code = corrected_code
@@ -54,20 +45,20 @@ module Ameba
     # breaking the syntax are dropped, which leaves their issues reported as
     # uncorrected.
     def correct_safely! : Array(Issue)?
-      previous_code = code
-
-      corrected_issues = correct!
-      return corrected_issues if !corrected_issues || parsable?
+      corrected_code, corrected_issues = corrections(issues)
+      return if code == corrected_code
+      return corrected_issues if adopt_parsable(corrected_code)
 
       # Retry without the corrections breaking the syntax on their own
-      self.code = previous_code
-      drop_corrections { |issue| !correction_parsable?(issue) }
+      if breaking_issues = breaking_issues?(issues)
+        drop_corrections { |issue| breaking_issues.includes?(issue) }
+      end
 
-      corrected_issues = correct!
-      return corrected_issues if !corrected_issues || parsable?
+      corrected_code, corrected_issues = corrections(issues)
+      return if code == corrected_code
+      return corrected_issues if adopt_parsable(corrected_code)
 
       # The remaining corrections break the syntax only when combined
-      self.code = previous_code
       drop_corrections { true }
 
       nil
@@ -88,20 +79,58 @@ module Ameba
       @ast = nil
     end
 
+    # Returns the code with corrections of the given *candidates* applied, along
+    # with the ones which got applied. Conflicting issues are deferred until
+    # Runner reinspects the corrected source, as all corrections apply to the
+    # same source snapshot.
+    private def corrections(candidates) : {String, Array(Issue)}
+      corrector = Corrector.new(code, line_offsets)
+
+      corrected_issues = candidates.select do |issue|
+        issue.unresolved? &&
+          corrector.transaction { issue.correct(corrector) }
+      end
+
+      {corrector.process, corrected_issues}
+    end
+
+    # Replaces `code` with the given one, unless it has syntax errors.
+    private def adopt_parsable(new_code) : Bool
+      return false unless new_ast = parse?(new_code)
+
+      self.code = new_code
+      @ast = new_ast
+
+      true
+    end
+
     private def drop_corrections(&)
       issues.map! do |issue|
         next issue unless issue.correctable? && yield issue
 
-        issue.without_correction("#{issue.message} (not corrected: would produce invalid syntax)")
+        issue.without_correction(
+          "#{issue.message} (not corrected: would produce invalid syntax)"
+        )
       end
     end
 
-    # Returns `true` if correcting only the given *issue* keeps the source parsable.
-    private def correction_parsable?(issue)
-      probe = self.class.new(code, path)
-      probe.issues << issue
+    # Returns the *candidates* whose corrections break the syntax on their own.
+    #
+    # Bisects them, since parsing the outcome of each one separately would take
+    # too long for a source with many issues.
+    private def breaking_issues?(candidates) : Array(Issue)?
+      return if candidates.empty?
 
-      !probe.correct! || probe.parsable?
+      return if parse?(corrections(candidates).first)
+      return candidates if candidates.size == 1
+
+      half = candidates.size // 2
+      breaking_issues(candidates[0...half]) + breaking_issues(candidates[half..])
+    end
+
+    # :ditto:
+    private def breaking_issues(candidates) : Array(Issue)
+      breaking_issues?(candidates) || [] of Issue
     end
 
     # Returns lines of code split by new line character.
@@ -117,7 +146,10 @@ module Ameba
     getter lines : Array(String) { code.split(/\r?\n/) }
 
     # Positions at which the code lines start.
-    private getter line_offsets : Array(Int32) do
+    private getter line_offsets : Array(Int32) { self.class.line_offsets(code) }
+
+    # Returns positions at which lines of the given *code* start.
+    def self.line_offsets(code : String) : Array(Int32)
       offsets = [0]
       code.each_char_with_index do |char, index|
         offsets << index + 1 if char == '\n'
@@ -131,9 +163,9 @@ module Ameba
     # source = Ameba::Source.new(code, path)
     # source.ast
     # ```
-    getter ast : Crystal::ASTNode do
-      code = @code
+    getter ast : Crystal::ASTNode { parse(code) }
 
+    private def parse(code) : Crystal::ASTNode
       if ecr?
         begin
           code = ECR.process_string(code, path.to_s)
@@ -152,6 +184,12 @@ module Ameba
         .tap(&.wants_doc = true)
         .tap(&.filename = path.to_s)
         .parse
+    end
+
+    private def parse?(code) : Crystal::ASTNode?
+      parse(code)
+    rescue Crystal::SyntaxException
+      nil
     end
 
     # Returns `true` if the source is a spec file, `false` otherwise.

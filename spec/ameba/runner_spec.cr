@@ -311,6 +311,107 @@ module Ameba
         end
       end
 
+      it "corrects `return(a)if b` once it has been formatted" do
+        rules = [Rule::Lint::Formatting.new, Rule::Style::RedundantReturn.new] of Rule::Base
+        path = File.tempname("source", ".cr")
+        code = "def foo(a, b)\n  return(a)if b\nend\n"
+        File.write(path, code)
+        source = Source.new(code, path)
+
+        begin
+          Runner.new(rules, [source], formatter, default_severity, autocorrect: true).run
+          source.code.should eq "def foo(a, b)\n  a if b\nend\n"
+        ensure
+          File.delete(path) rescue nil
+        end
+      end
+
+      it "handles `Style/RedundantReturn` conflicting over `return(nil)` in either rule order" do
+        {
+          false => "def foo\n  return\nend\n",
+          true  => "def foo\n  nil\nend\n",
+        }.each do |reverse, expected|
+          rules = [
+            Rule::Style::RedundantNilInControlExpression.new,
+            Rule::Style::RedundantReturn.new,
+          ] of Rule::Base
+          rules.reverse! if reverse
+          path = File.tempname("source", ".cr")
+          code = "def foo\n  return(nil)\nend\n"
+          File.write(path, code)
+          source = Source.new(code, path)
+
+          begin
+            Runner.new(rules, [source], formatter, default_severity, autocorrect: true).run
+            source.code.should eq expected
+            File.read(path).should eq expected
+          ensure
+            File.delete(path) rescue nil
+          end
+        end
+      end
+
+      it "succeeds if every issue got corrected" do
+        rules = [Rule::Lint::NotNilAfterNoBang.new] of Rule::Base
+        path = File.tempname("source", ".cr")
+        code = "foo.match(/x/).not_nil!\n"
+        File.write(path, code)
+        source = Source.new(code, path)
+
+        begin
+          runner = Runner.new(rules, [source], formatter, default_severity, autocorrect: true).run
+          source.issues.size.should eq 1
+          runner.success?.should be_true
+        ensure
+          File.delete(path) rescue nil
+        end
+      end
+
+      it "fails if any issue is left uncorrected" do
+        rules = [Rule::Lint::NotNilAfterNoBang.new, ErrorRule.new] of Rule::Base
+        path = File.tempname("source", ".cr")
+        code = "foo.match(/x/).not_nil!\n"
+        File.write(path, code)
+        source = Source.new(code, path)
+
+        begin
+          Runner.new(rules, [source], formatter, default_severity, autocorrect: true).run.success?.should be_false
+        ensure
+          File.delete(path) rescue nil
+        end
+      end
+
+      it "fails if a correction left an issue behind" do
+        rules = [UselessCorrectionRule.new.tap(&.enabled = true)] of Rule::Base
+        path = File.tempname("source", ".cr")
+        File.write(path, "foo\n")
+        source = Source.new("foo\n", path)
+
+        begin
+          Runner.new(rules, [source], formatter, default_severity, autocorrect: true).run.success?.should be_false
+        ensure
+          File.delete(path) rescue nil
+        end
+      end
+
+      it "leaves nothing to correct on the source afterwards" do
+        rules = [Rule::Lint::NotNilAfterNoBang.new] of Rule::Base
+        path = File.tempname("source", ".cr")
+        code = "aaa.match(/x/).not_nil!\nbbb.match(/x/).not_nil!\n"
+        File.write(path, code)
+        source = Source.new(code, path)
+
+        begin
+          Runner.new(rules, [source], formatter, default_severity, autocorrect: true).run
+
+          corrected_code = source.code
+          source.correct!.should be_nil
+          source.code.should eq corrected_code
+        ensure
+          File.delete(path) rescue nil
+        end
+      end
+
       it "marks only the issues which got corrected" do
         rules = [BreakingCorrectionRule.new.tap(&.enabled = true)] of Rule::Base
         path = File.tempname("source", ".cr")
