@@ -88,6 +88,27 @@ module Ameba::Rule::Typing
       {% end %}
     end
 
+    it "fails if a public method instance/class variable parameter doesn't have a type restriction" do
+      # https://github.com/crystal-lang/crystal/pull/17896
+      {% if compare_versions(Crystal::VERSION, "1.23.0-dev") >= 0 %}
+        expect_issue subject, <<-CRYSTAL
+          def foo(@bar, ext @baz, @@qux)
+                 # ^^^ error: Method parameter should have a type restriction
+                           # ^^^ error: Method parameter should have a type restriction
+                                  # ^^^ error: Method parameter should have a type restriction
+          end
+          CRYSTAL
+      {% else %}
+        expect_issue subject, <<-CRYSTAL
+          def foo(@bar, ext @baz, @@qux)
+                # ^^^ error: Method parameter should have a type restriction
+                      # ^^^ error: Method parameter should have a type restriction
+                                # ^^^ error: Method parameter should have a type restriction
+          end
+          CRYSTAL
+      {% end %}
+    end
+
     it "passes if a method parameter with a default value doesn't have a type restriction" do
       expect_no_issues subject, <<-CRYSTAL
         def foo(bar = "baz")

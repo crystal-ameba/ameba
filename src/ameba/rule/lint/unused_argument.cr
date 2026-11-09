@@ -71,7 +71,14 @@ module Ameba::Rule::Lint
 
         node = argument.node
 
-        location = node.location
+        location = node.name_location
+        {% if compare_versions(Crystal::VERSION, "1.23.0-dev") >= 0 %}
+          location ||= node.location
+        {% else %}
+          # Prior to Crystal 1.23 the location of the internal name is unknown
+          # for parameters with an external name, so we can't correct them
+          location ||= node.location unless external_name?(node)
+        {% end %}
         name_end_location = location.try(&.adjust(column_number: argument.name.size - 1))
 
         if node.responds_to?(:restriction)
@@ -96,6 +103,16 @@ module Ameba::Rule::Lint
         end
       end
     end
+
+    {% unless compare_versions(Crystal::VERSION, "1.23.0-dev") >= 0 %}
+      # Returns `true` if the *node* is a parameter with an external name
+      # different from its internal one (i.e. `bar` in `def foo(bar baz)`).
+      private def external_name?(node)
+        node.is_a?(Crystal::Arg) &&
+          node.external_name.presence &&
+          node.external_name != node.name
+      end
+    {% end %}
 
     # Returns `true` if the *node* is a method parameter, which can be passed
     # by name, and has no explicit external name (i.e. `bar` in `def foo(bar)`).

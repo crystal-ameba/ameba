@@ -55,6 +55,35 @@ module Ameba::Rule::Lint
         CRYSTAL
     end
 
+    it "reports if method argument with an external name is unused" do
+      # https://github.com/crystal-lang/crystal/pull/17721
+      {% if compare_versions(Crystal::VERSION, "1.23.0-dev") >= 0 %}
+        source = expect_issue subject, <<-CRYSTAL
+          def method(foo, bar baz : Symbol, "qux" quux)
+                            # ^^^^^^^^^^^^ error: Unused argument `baz`. [...]
+                                                # ^^^^ error: Unused argument `quux`. [...]
+            foo
+          end
+          CRYSTAL
+
+        expect_correction source, <<-CRYSTAL
+          def method(foo, bar _baz : Symbol, "qux" _quux)
+            foo
+          end
+          CRYSTAL
+      {% else %}
+        source = expect_issue subject, <<-CRYSTAL
+          def method(foo, bar baz : Symbol, "qux" quux)
+                        # ^ error: Unused argument `baz`. [...]
+                                          # ^ error: Unused argument `quux`. [...]
+            foo
+          end
+          CRYSTAL
+
+        expect_no_corrections source
+      {% end %}
+    end
+
     it "reports if block argument is unused" do
       source = expect_issue subject, <<-CRYSTAL
         [1, 2].each_with_index do |foo, bar|
