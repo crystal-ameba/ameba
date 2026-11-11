@@ -304,5 +304,55 @@ class Ameba::Source
       rewriter.remove(2, 5)
       rewriter.process.should_not eq code
     end
+
+    describe "#each_replacement" do
+      it "yields nothing without changes" do
+        rewriter = Rewriter.new(code)
+        replacements = [] of {Int32, Int32, String}
+        rewriter.each_replacement { |*replacement| replacements << replacement }
+        replacements.should be_empty
+      end
+
+      it "yields the changes in the order they're applied" do
+        rewriter = Rewriter.new(code)
+        rewriter.insert_after(*world, "!")
+        rewriter.replace(*hello, ":hi")
+        rewriter.wrap(*comma_space, "<", ">")
+        rewriter.remove(19, 20)
+
+        replacements = [] of {Int32, Int32, String}
+        rewriter.each_replacement { |*replacement| replacements << replacement }
+        replacements.should eq [
+          {5, 11, ":hi"},
+          {11, 11, "<"},
+          {13, 13, ">"},
+          {19, 19, "!"},
+          {19, 20, ""},
+        ]
+      end
+
+      it "yields the changes nested within a wrap between its insertions" do
+        rewriter = Rewriter.new(code)
+        rewriter.wrap(5, 19, "[", "]")
+        rewriter.replace(*hello, ":hi")
+
+        replacements = [] of {Int32, Int32, String}
+        rewriter.each_replacement { |*replacement| replacements << replacement }
+        replacements.should eq [
+          {5, 5, "["},
+          {5, 11, ":hi"},
+          {19, 19, "]"},
+        ]
+      end
+
+      it "counts positions in characters" do
+        rewriter = Rewriter.new("żółć")
+        rewriter.replace(1, 3, "X")
+
+        replacements = [] of {Int32, Int32, String}
+        rewriter.each_replacement { |*replacement| replacements << replacement }
+        replacements.should eq [{1, 3, "X"}]
+      end
+    end
   end
 end

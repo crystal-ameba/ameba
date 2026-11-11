@@ -199,6 +199,15 @@ class Ameba::Source
       node.end_location || raise "Missing end location"
     end
 
+    # Yields each scheduled change, in the order `#process` applies them.
+    #
+    # See `Rewriter#each_replacement`.
+    def each_replacement(& : Int32, Int32, String ->) : Nil
+      @rewriter.each_replacement do |begin_pos, end_pos, replacement|
+        yield begin_pos, end_pos, replacement
+      end
+    end
+
     # Applies all scheduled changes and returns modified source as a new string.
     def process
       @rewriter.process
