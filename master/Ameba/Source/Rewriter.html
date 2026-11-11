@@ -1343,14 +1343,14 @@ conflicts with both replacements. The result is <code>puts(:hi, :everybody)</cod
   </h2>
   
     
-      <a href="https://github.com/crystal-ameba/ameba/blob/fcee882/src/ameba/source/rewriter.cr#L75" target="_blank">
+      <a href="https://github.com/crystal-ameba/ameba/blob/73572f6/src/ameba/source/rewriter.cr#L75" target="_blank">
         ameba/source/rewriter.cr
       </a>
     
     <br/>
   
     
-      <a href="https://github.com/crystal-ameba/ameba/blob/fcee882/src/ameba/source/rewriter/action.cr#L1" target="_blank">
+      <a href="https://github.com/crystal-ameba/ameba/blob/73572f6/src/ameba/source/rewriter/action.cr#L1" target="_blank">
         ameba/source/rewriter/action.cr
       </a>
     
@@ -1397,6 +1397,13 @@ conflicts with both replacements. The result is <code>puts(:hi, :everybody)</cod
     
       <li class="entry-summary">
         <a href="#code%3AString-instance-method" class="signature"><strong>#code</strong> : String</a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#each_replacement%28%26%3AInt32%2CInt32%2CString-%3E%29%3ANil-instance-method" class="signature"><strong>#each_replacement</strong>(& : Int32, Int32, String -> ) : Nil</a>
+        
+          <div class="summary"><p>Yields each scheduled change, in the order <code><a href="../../Ameba/Source/Rewriter.html#process-instance-method">#process</a></code> applies them, as the begin and (exclusive) end positions of the replaced code, counted in characters of the original code, along with the text replacing it.</p></div>
         
       </li>
     
@@ -1518,7 +1525,7 @@ conflicts with both replacements. The result is <code>puts(:hi, :everybody)</cod
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/fcee882/src/ameba/source/rewriter.cr#L78" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/73572f6/src/ameba/source/rewriter.cr#L78" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1550,7 +1557,39 @@ conflicts with both replacements. The result is <code>puts(:hi, :everybody)</cod
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/fcee882/src/ameba/source/rewriter.cr#L76" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/73572f6/src/ameba/source/rewriter.cr#L76" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="each_replacement(&amp;:Int32,Int32,String-&gt;):Nil-instance-method">
+      <div class="signature">
+        
+        def <strong>each_replacement</strong>(& : Int32, Int32, String -> ) : Nil
+
+        <a class="method-permalink" href="#each_replacement%28%26%3AInt32%2CInt32%2CString-%3E%29%3ANil-instance-method">#</a>
+      </div>
+      
+        <div class="doc">
+          
+          <p>Yields each scheduled change, in the order <code><a href="../../Ameba/Source/Rewriter.html#process-instance-method">#process</a></code> applies them, as
+the begin and (exclusive) end positions of the replaced code, counted in
+characters of the original code, along with the text replacing it.</p>
+<p>Insertions have the same begin and end positions. Several changes might
+share the same position, in which case they must be applied in this order.</p>
+<pre><code class="language-crystal">rewriter <span class="o">=</span> <span class="t">Ameba</span><span class="t">::</span><span class="t">Source</span><span class="t">::</span><span class="t">Rewriter</span>.new(<span class="s">&quot;foo(bar)&quot;</span>)
+rewriter.wrap(<span class="n">4</span>, <span class="n">7</span>, <span class="s">&quot;[&quot;</span>, <span class="s">&quot;]&quot;</span>)
+rewriter.each_replacement <span class="k">do</span> <span class="o">|</span>begin_pos, end_pos, replacement<span class="o">|</span>
+  puts({begin_pos, end_pos, replacement})
+<span class="k">end</span>
+<span class="c"># =&gt; {4, 4, &quot;[&quot;}</span>
+<span class="c"># =&gt; {7, 7, &quot;]&quot;}</span></code></pre>
+        </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/crystal-ameba/ameba/blob/73572f6/src/ameba/source/rewriter.cr#L156" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1571,7 +1610,7 @@ conflicts with both replacements. The result is <code>puts(:hi, :everybody)</cod
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/fcee882/src/ameba/source/rewriter.cr#L126" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/73572f6/src/ameba/source/rewriter.cr#L126" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1592,7 +1631,7 @@ conflicts with both replacements. The result is <code>puts(:hi, :everybody)</cod
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/fcee882/src/ameba/source/rewriter.cr#L136" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/73572f6/src/ameba/source/rewriter.cr#L136" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1613,7 +1652,7 @@ conflicts with both replacements. The result is <code>puts(:hi, :everybody)</cod
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/fcee882/src/ameba/source/rewriter.cr#L121" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/73572f6/src/ameba/source/rewriter.cr#L121" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1634,7 +1673,7 @@ conflicts with both replacements. The result is <code>puts(:hi, :everybody)</cod
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/fcee882/src/ameba/source/rewriter.cr#L131" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/73572f6/src/ameba/source/rewriter.cr#L131" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1655,7 +1694,7 @@ conflicts with both replacements. The result is <code>puts(:hi, :everybody)</cod
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/fcee882/src/ameba/source/rewriter.cr#L141" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/73572f6/src/ameba/source/rewriter.cr#L163" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1676,7 +1715,7 @@ conflicts with both replacements. The result is <code>puts(:hi, :everybody)</cod
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/fcee882/src/ameba/source/rewriter.cr#L116" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/73572f6/src/ameba/source/rewriter.cr#L116" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1697,7 +1736,7 @@ conflicts with both replacements. The result is <code>puts(:hi, :everybody)</cod
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/fcee882/src/ameba/source/rewriter.cr#L103" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/73572f6/src/ameba/source/rewriter.cr#L103" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1720,7 +1759,7 @@ wouldn't lose or fuse any of them. Returns <code>true</code> when they were kept
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/fcee882/src/ameba/source/rewriter.cr#L85" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/73572f6/src/ameba/source/rewriter.cr#L85" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1741,7 +1780,7 @@ wouldn't lose or fuse any of them. Returns <code>true</code> when they were kept
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/fcee882/src/ameba/source/rewriter.cr#L109" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/73572f6/src/ameba/source/rewriter.cr#L109" target="_blank">View source</a>]
         
       </div>
     </div>
