@@ -153,6 +153,28 @@ module Ameba
       end
     end
 
+    describe ".find_config_path" do
+      fixtures_dir = Path[CONFIG_SAMPLE].parent
+      filename = Config::Loader::FILENAME
+
+      it "returns the given path if the config file exists" do
+        Config.find_config_path(fixtures_dir / filename)
+          .should eq fixtures_dir / filename
+      end
+
+      it "returns the closest config file in a parent directory" do
+        Config.find_config_path(fixtures_dir / "foo" / filename)
+          .should eq fixtures_dir / filename
+        Config.find_config_path(AMEBA_ROOT / "spec" / filename)
+          .should eq AMEBA_ROOT / filename
+      end
+
+      it "accepts a string" do
+        Config.find_config_path((AMEBA_ROOT / "src" / filename).to_s)
+          .should eq AMEBA_ROOT / filename
+      end
+    end
+
     describe "#globs, #globs=" do
       it "holds source globs" do
         config = load_config

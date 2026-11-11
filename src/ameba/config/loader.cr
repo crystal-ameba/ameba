@@ -116,7 +116,19 @@ class Ameba::Config
         File.exists?(path / "shard.yml")
     end
 
-    protected def find_config_path(path : Path)
+    # Returns the path of the config file that applies to *path*, which should
+    # point to a config file. Looks for a `.ameba.yml` file in the directories
+    # of *path*, from the closest one up to the root directory, then in the
+    # user’s global config locations (see `DEFAULT_PATHS`).
+    #
+    # Returns `nil` if there's no such file.
+    #
+    # ```
+    # Ameba::Config.find_config_path("/path/to/project/.ameba.yml") # => Path["/path/to/.ameba.yml"]
+    # ```
+    def find_config_path(path : Path | String) : Path?
+      path = Path[path]
+
       path.parents.reverse_each do |search_path|
         config_path =
           search_path / FILENAME
