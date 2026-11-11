@@ -122,6 +122,37 @@ module Ameba
       end
     end
 
+    describe ".find_root_path" do
+      fixtures_dir = Path[CONFIG_SAMPLE].parent.expand
+
+      it "returns the directory itself if it contains a config file" do
+        Config.find_root_path(fixtures_dir).should eq fixtures_dir
+      end
+
+      it "returns the directory of a file if it contains a config file" do
+        Config.find_root_path(fixtures_dir / "foo.cr").should eq fixtures_dir
+      end
+
+      it "returns the closest directory containing a `shard.yml`" do
+        Config.find_root_path(__FILE__).should eq AMEBA_ROOT
+        Config.find_root_path(Path[__DIR__]).should eq AMEBA_ROOT
+      end
+
+      it "accepts a string" do
+        Config.find_root_path(__DIR__).should eq AMEBA_ROOT
+      end
+
+      it "expands the found directory" do
+        Dir.cd(AMEBA_ROOT) do
+          Config.find_root_path("spec/ameba/config_spec.cr").should eq AMEBA_ROOT
+        end
+      end
+
+      it "returns nil if there's no such directory" do
+        Config.find_root_path(Path[Dir.tempdir, "foo.cr"]).should be_nil
+      end
+    end
+
     describe "#globs, #globs=" do
       it "holds source globs" do
         config = load_config

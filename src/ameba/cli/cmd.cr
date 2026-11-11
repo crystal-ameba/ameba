@@ -275,29 +275,11 @@ module Ameba::CLI
   end
 
   private def root_path_from_globs(globs) : Path?
-    dynasty =
-      case
-      when path = find_as_path(globs, &->File.directory?(String))
-        path.parents + [path]
-      when path = find_as_path(globs, &->File.file?(String))
-        path.parents
-      end
+    path =
+      globs.find(&->File.directory?(String)) ||
+        globs.find(&->File.file?(String))
 
-    dynasty
-      .try &.reverse!
-        .find(&->root_path?(Path))
-        .try(&.expand(home: true))
-  end
-
-  private def find_as_path(globs, &) : Path?
-    globs
-      .find { |glob| yield glob }
-      .try(&->Path.new(String))
-  end
-
-  private def root_path?(path : Path) : Bool
-    File.exists?(path / Config::Loader::FILENAME) ||
-      File.exists?(path / "shard.yml")
+    path.try { |found| Config.find_root_path(found) }
   end
 
   private def configure_rules(config, opts) : Nil
