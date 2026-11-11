@@ -137,11 +137,33 @@ class Ameba::Source
       insert_after(pos, pos, content)
     end
 
+    # Yields each scheduled change, in the order `#process` applies them, as
+    # the begin and (exclusive) end positions of the replaced code, counted in
+    # characters of the original code, along with the text replacing it.
+    #
+    # Insertions have the same begin and end positions. Several changes might
+    # share the same position, in which case they must be applied in this order.
+    #
+    # ```
+    # rewriter = Ameba::Source::Rewriter.new("foo(bar)")
+    # rewriter.wrap(4, 7, "[", "]")
+    # rewriter.each_replacement do |begin_pos, end_pos, replacement|
+    #   puts({begin_pos, end_pos, replacement})
+    # end
+    # # => {4, 4, "["}
+    # # => {7, 7, "]"}
+    # ```
+    def each_replacement(& : Int32, Int32, String ->) : Nil
+      @action_root.ordered_replacements.each do |begin_pos, end_pos, replacement|
+        yield begin_pos, end_pos, replacement
+      end
+    end
+
     # Applies all scheduled changes and returns modified source as a new string.
     def process
       String.build do |io|
         last_end = 0
-        @action_root.ordered_replacements.each do |begin_pos, end_pos, replacement|
+        each_replacement do |begin_pos, end_pos, replacement|
           io << code_between(last_end, begin_pos) << replacement
           last_end = end_pos
         end

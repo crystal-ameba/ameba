@@ -121,5 +121,14 @@ class Ameba::Source
         corrector.process.should eq "foo\n"
       end
     end
+
+    it "#each_replacement yields the scheduled changes" do
+      corrector = Corrector.new("foo\nbär(baz)")
+      corrector.wrap({2, 5}, {2, 7}, "[", "]")
+
+      replacements = [] of {Int32, Int32, String}
+      corrector.each_replacement { |*replacement| replacements << replacement }
+      replacements.should eq [{8, 8, "["}, {11, 11, "]"}]
+    end
   end
 end
