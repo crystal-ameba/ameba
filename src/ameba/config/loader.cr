@@ -91,6 +91,31 @@ class Ameba::Config
       end
     end
 
+    # Returns the closest directory containing either a config file or a `shard.yml`,
+    # starting from *path* if it's a directory, or from its parent otherwise.
+    #
+    # Returns `nil` if there's no such directory.
+    #
+    # ```
+    # Ameba::Config.find_root_path("/path/to/project/src/foo.cr") # => Path["/path/to/project"]
+    # ```
+    def find_root_path(path : Path | String) : Path?
+      path = Path[path]
+
+      search_paths = path.parents
+      search_paths << path if File.directory?(path)
+
+      search_paths
+        .reverse_each
+        .find(&->root_path?(Path))
+        .try(&.expand(home: true))
+    end
+
+    private def root_path?(path : Path) : Bool
+      File.exists?(path / FILENAME) ||
+        File.exists?(path / "shard.yml")
+    end
+
     protected def find_config_path(path : Path)
       path.parents.reverse_each do |search_path|
         config_path =
