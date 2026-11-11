@@ -1290,7 +1290,7 @@ then it will use the config as specified inside the first of the following files
   </h2>
   
     
-      <a href="https://github.com/crystal-ameba/ameba/blob/2d0978e/src/ameba/config/loader.cr#L26" target="_blank">
+      <a href="https://github.com/crystal-ameba/ameba/blob/355e8c8/src/ameba/config/loader.cr#L26" target="_blank">
         ameba/config/loader.cr
       </a>
     
@@ -1353,6 +1353,13 @@ then it will use the config as specified inside the first of the following files
   <ul class="list-summary">
     
       <li class="entry-summary">
+        <a href="#find_config_path%28path%3APath%7CString%29%3APath%7CNil-instance-method" class="signature"><strong>#find_config_path</strong>(path : Path | String) : Path | Nil</a>
+        
+          <div class="summary"><p>Returns the path of the config file that applies to <em>path</em>, which should point to a config file.</p></div>
+        
+      </li>
+    
+      <li class="entry-summary">
         <a href="#find_root_path%28path%3APath%7CString%29%3APath%7CNil-instance-method" class="signature"><strong>#find_root_path</strong>(path : Path | String) : Path | Nil</a>
         
           <div class="summary"><p>Returns the closest directory containing either a config file or a <code>shard.yml</code>, starting from <em>path</em> if it's a directory, or from its parent otherwise.</p></div>
@@ -1390,6 +1397,32 @@ then it will use the config as specified inside the first of the following files
     Instance Method Detail
   </h2>
   
+    <div class="entry-detail" id="find_config_path(path:Path|String):Path|Nil-instance-method">
+      <div class="signature">
+        
+        def <strong>find_config_path</strong>(path : Path | String) : Path | Nil
+
+        <a class="method-permalink" href="#find_config_path%28path%3APath%7CString%29%3APath%7CNil-instance-method">#</a>
+      </div>
+      
+        <div class="doc">
+          
+          <p>Returns the path of the config file that applies to <em>path</em>, which should
+point to a config file. Looks for a <code>.ameba.yml</code> file in the directories
+of <em>path</em>, from the closest one up to the root directory, then in the
+user’s global config locations (see <code><a href="../../Ameba/Config/Loader.html#DEFAULT_PATHS">DEFAULT_PATHS</a></code>).</p>
+<p>Returns <code>nil</code> if there's no such file.</p>
+<pre><code class="language-crystal"><span class="t">Ameba</span><span class="t">::</span><span class="t">Config</span>.find_config_path(<span class="s">&quot;/path/to/project/.ameba.yml&quot;</span>) <span class="c"># =&gt; Path[&quot;/path/to/.ameba.yml&quot;]</span></code></pre>
+        </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/crystal-ameba/ameba/blob/355e8c8/src/ameba/config/loader.cr#L129" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
     <div class="entry-detail" id="find_root_path(path:Path|String):Path|Nil-instance-method">
       <div class="signature">
         
@@ -1409,7 +1442,7 @@ starting from <em>path</em> if it's a directory, or from its parent otherwise.</
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/2d0978e/src/ameba/config/loader.cr#L102" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/355e8c8/src/ameba/config/loader.cr#L102" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1431,7 +1464,7 @@ starting from <em>path</em> if it's a directory, or from its parent otherwise.</
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/2d0978e/src/ameba/config/loader.cr#L63" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/355e8c8/src/ameba/config/loader.cr#L63" target="_blank">View source</a>]
         
       </div>
     </div>
