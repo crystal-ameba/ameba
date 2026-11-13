@@ -6,6 +6,19 @@ module Ameba
       Disabled
     end
 
+    # What became of the issue, once the source got processed.
+    enum Outcome
+      # The issue still awaits being dealt with.
+      Pending
+
+      # The issue has been corrected in the source.
+      Corrected
+
+      # The issue reports an exception raised by its rule or correction, corrections
+      # getting stuck in a loop, or a file which can't be read or written.
+      Crashed
+    end
+
     # The source code that triggered this issue.
     getter code : String
 
@@ -24,13 +37,16 @@ module Ameba
     # Issue status.
     getter status : Status
 
-    # Whether the issue has been corrected in the source.
-    getter? corrected : Bool
+    # What became of the issue.
+    getter outcome : Outcome
 
     delegate :enabled?, :disabled?,
       to: status
 
-    def initialize(@code, @rule, @location, @end_location, @message, @status : Status = :enabled, @block : (Source::Corrector ->)? = nil, *, @corrected = false)
+    delegate :corrected?, :crashed?,
+      to: outcome
+
+    def initialize(@code, @rule, @location, @end_location, @message, @status : Status = :enabled, @block : (Source::Corrector ->)? = nil, *, @outcome = :pending)
     end
 
     def syntax?
@@ -53,17 +69,17 @@ module Ameba
 
     # Returns the same issue, marked as corrected in the source.
     def as_corrected : self
-      copy_with(corrected: true)
+      copy_with(outcome: :corrected)
     end
 
-    # Returns the same issue with the given *message*, but without the means
-    # of correcting it.
-    def without_correction(message = @message) : self
-      copy_with(message: message, block: nil, corrected: false)
+    # Returns the same issue with the given *message* and *outcome*, but without
+    # the means of correcting it.
+    def without_correction(message = @message, *, outcome : Outcome = :pending) : self
+      copy_with(message: message, block: nil, outcome: outcome)
     end
 
-    private def copy_with(*, message = @message, block = @block, corrected = @corrected)
-      self.class.new(code, rule, location, end_location, message, status, block, corrected: corrected)
+    private def copy_with(*, message = @message, block = @block, outcome : Outcome = @outcome)
+      self.class.new(code, rule, location, end_location, message, status, block, outcome: outcome)
     end
   end
 end

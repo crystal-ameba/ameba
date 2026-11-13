@@ -19,8 +19,14 @@ module Ameba::Formatter
         return
       end
 
-      if issues.any?(&.syntax?)
+      # A file which couldn't be read is reported under `Lint/Syntax` as well
+      if issues.any? { |issue| issue.syntax? && !issue.crashed? }
         output.puts "Unable to generate TODO file. Please fix syntax issues."
+        return
+      end
+
+      if issues.all? { |issue| !issue.unresolved? || issue.crashed? }
+        output.puts "Crashes can't be excluded. File is not generated."
         return
       end
 
@@ -67,7 +73,7 @@ module Ameba::Formatter
     private def rule_issues_map(issues)
       Hash(Rule::Base, Array(Issue)).new.tap do |hash|
         issues.each do |issue|
-          next if !issue.unresolved? || issue.syntax?
+          next if !issue.unresolved? || issue.syntax? || issue.crashed?
 
           (hash[issue.rule] ||= Array(Issue).new) << issue
         end

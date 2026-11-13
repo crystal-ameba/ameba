@@ -149,7 +149,7 @@ class Ameba::Config
     else
       files.map do |path|
         project_path = Path[path].expand.relative_to(root)
-        Source.new(File.read(path), path, project_path)
+        Source.from_file(path, project_path)
       end
     end
   end

@@ -202,6 +202,28 @@ module Ameba
     end
 
     describe "#sources" do
+      it "reports a file which can't be read, instead of raising" do
+        with_temp_file do |path|
+          File.write(path, "a = 1\n")
+          File.chmod(path, 0o000)
+
+          begin
+            # Permissions don't apply on some platforms and for some users
+            next if File::Info.readable?(path)
+
+            config = Config.load(skip_reading_config: true)
+            config.globs = Set{path}
+
+            issue = config.sources.first.issues.first
+            issue.crashed?.should be_true
+            issue.message.should contain "Could not read the file"
+          ensure
+            # Lets the file get deleted on any platform
+            File.chmod(path, 0o644)
+          end
+        end
+      end
+
       config = load_config(root: AMEBA_ROOT)
 
       after_each do

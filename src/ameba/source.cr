@@ -30,114 +30,55 @@ module Ameba
       @project_path = Path[project_path]
     end
 
+    # Creates a new source from the file at the given *path*. If it can't
+    # be read, the source has no code and reports that as an issue.
+    def self.from_file(path : Path | String, project_path : Path | String = path) : self
+      new(File.read(path), path, project_path)
+    rescue ex : IO::Error
+      new(path: path, project_path: project_path).tap do |source|
+        source.add_crash_issue Rule::Lint::Syntax.new,
+          "Could not read the file: #{ex.message}"
+      end
+    end
+
     # Corrects any correctable issues and updates `code`.
     # Returns the corrected issues, or `nil` if the code was unchanged.
     def correct! : Array(Issue)?
-      corrected_code, corrected_issues = corrections(issues)
-      return if code == corrected_code
-
-      self.code = corrected_code
-
-      corrected_issues
+      Correction.new(self).apply
     end
 
     # Same as `#correct!`, but makes sure the source stays parsable. Corrections
-    # breaking the syntax are dropped, which leaves their issues reported as
-    # uncorrected.
+    # breaking the syntax or raising an exception are dropped, which leaves their
+    # issues reported as uncorrected.
     def correct_safely! : Array(Issue)?
-      corrected_code, corrected_issues = corrections(issues)
-      return if code == corrected_code
-      return corrected_issues if adopt_parsable(corrected_code)
-
-      # Retry without the corrections breaking the syntax on their own
-      if breaking_issues = breaking_issues?(issues)
-        drop_corrections { |issue| breaking_issues.includes?(issue) }
-      end
-
-      corrected_code, corrected_issues = corrections(issues)
-      return if code == corrected_code
-      return corrected_issues if adopt_parsable(corrected_code)
-
-      # The remaining corrections break the syntax only when combined
-      drop_corrections { true }
-
-      nil
+      Correction.new(self).apply_safely
     end
 
-    # Returns `true` if `code` has no syntax errors.
+    # Goes back to the given *code*, forgetting about the issues of the current one.
+    def revert_to(code : String) : Nil
+      replace_code(code)
+      issues.clear
+    end
+
+    # Returns `true` if `code` has no syntax errors, nor invalid UTF-8.
     def parsable? : Bool
       ast
       true
-    rescue Crystal::SyntaxException
+    rescue Crystal::SyntaxException | InvalidByteSequenceError
       false
     end
 
-    # Replaces `code` and drops everything derived from it.
-    private def code=(@code : String)
+    # Replaces `code` and drops everything derived from it,
+    # unless it comes with the *ast* already parsed from that code.
+    protected def replace_code(@code, @ast = nil) : Nil
       @lines = nil
       @line_offsets = nil
-      @ast = nil
-    end
-
-    # Returns the code with corrections of the given *candidates* applied, along
-    # with the ones which got applied. Conflicting issues are deferred until
-    # Runner reinspects the corrected source, as all corrections apply to the
-    # same source snapshot.
-    private def corrections(candidates) : {String, Array(Issue)}
-      corrector = Corrector.new(code, line_offsets)
-
-      corrected_issues = candidates.select do |issue|
-        issue.unresolved? &&
-          corrector.transaction { issue.correct(corrector) }
-      end
-
-      {corrector.process, corrected_issues}
-    end
-
-    # Replaces `code` with the given one, unless it has syntax errors.
-    private def adopt_parsable(new_code) : Bool
-      return false unless new_ast = parse?(new_code)
-
-      self.code = new_code
-      @ast = new_ast
-
-      true
-    end
-
-    private def drop_corrections(&)
-      issues.map! do |issue|
-        next issue unless issue.correctable? && yield issue
-
-        issue.without_correction(
-          "#{issue.message} (not corrected: would produce invalid syntax)"
-        )
-      end
-    end
-
-    # Returns the *candidates* whose corrections break the syntax on their own.
-    #
-    # Bisects them, since parsing the outcome of each one separately would take
-    # too long for a source with many issues.
-    private def breaking_issues?(candidates) : Array(Issue)?
-      return if candidates.empty?
-
-      return if parse?(corrections(candidates).first)
-      return candidates if candidates.size == 1
-
-      half = candidates.size // 2
-      breaking_issues(candidates[0...half]) + breaking_issues(candidates[half..])
-    end
-
-    # :ditto:
-    private def breaking_issues(candidates) : Array(Issue)
-      breaking_issues?(candidates) || [] of Issue
     end
 
     # Returns lines of code split by new line character.
-    # Since `code` is immutable and can't be changed, this
-    # method caches lines in an instance variable, so calling
-    # it a second time will not perform a split, but will return
-    # lines instantly.
+    # This method caches lines in an instance variable until
+    # `code` changes, so calling it a second time will not
+    # perform a split, but will return lines instantly.
     #
     # ```
     # source = Ameba::Source.new("a = 1\nb = 2", path)
@@ -146,7 +87,7 @@ module Ameba
     getter lines : Array(String) { code.split(/\r?\n/) }
 
     # Positions at which the code lines start.
-    private getter line_offsets : Array(Int32) { self.class.line_offsets(code) }
+    protected getter line_offsets : Array(Int32) { self.class.line_offsets(code) }
 
     # Returns positions at which lines of the given *code* start.
     def self.line_offsets(code : String) : Array(Int32)
@@ -186,9 +127,9 @@ module Ameba
         .parse
     end
 
-    private def parse?(code) : Crystal::ASTNode?
+    protected def parse?(code) : Crystal::ASTNode?
       parse(code)
-    rescue Crystal::SyntaxException
+    rescue Crystal::SyntaxException | InvalidByteSequenceError
       nil
     end
 

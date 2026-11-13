@@ -7,8 +7,8 @@ require "./ameba/cli/cmd"
 {% end %}
 
 begin
-  exit Ameba::CLI.run ? 0 : 1
+  exit Ameba::CLI.exit_code.value
 rescue ex
   STDERR.puts "Error: #{ex.message}"
-  exit 255
+  exit Ameba::CLI::ExitCode::Aborted.value
 end

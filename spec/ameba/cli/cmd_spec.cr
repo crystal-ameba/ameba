@@ -5,6 +5,66 @@ module Ameba
   root = Path[__DIR__, "..", "..", "fixtures"].expand
 
   describe CLI do
+    describe "ExitCode" do
+      it "has the documented values" do
+        CLI::ExitCode::Success.value.should eq 0
+        CLI::ExitCode::Issues.value.should eq 1
+        CLI::ExitCode::Crash.value.should eq 2
+        CLI::ExitCode::Aborted.value.should eq 255
+      end
+    end
+
+    describe ".exit_code" do
+      it "is zero if there are no issues" do
+        CLI.exit_code(["-f", "silent", "--only", "Lint/ComparisonToBoolean", __FILE__]).should eq CLI::ExitCode::Success
+      end
+
+      it "is one if some issues are left" do
+        CLI.exit_code(["-f", "silent", "--only", "Ameba/ErrorRule", __FILE__]).should eq CLI::ExitCode::Issues
+      end
+
+      it "is two if a correction raised, even with other issues left" do
+        with_temp_file do |path|
+          File.write(path, "foo\n")
+
+          args = ["-f", "silent", "--fix", "--only", "Ameba/RaisingCorrectionRule,Ameba/ErrorRule", path]
+          CLI.exit_code(args).should eq CLI::ExitCode::Crash
+        end
+      end
+
+      it "is two if corrections got stuck in a loop" do
+        with_temp_file do |path|
+          File.write(path, "class A; end\n")
+
+          args = ["-f", "silent", "--fix", "--only", "Ameba/AtoB,Ameba/BtoA", path]
+          CLI.exit_code(args).should eq CLI::ExitCode::Crash
+          File.read(path).should eq "class A; end\n"
+        end
+      end
+
+      it "is zero if every issue got corrected" do
+        with_temp_file do |path|
+          File.write(path, "foo.match(/x/).not_nil!\n")
+
+          args = ["-f", "silent", "--fix", "--only", "Lint/NotNilAfterNoBang", path]
+          CLI.exit_code(args).should eq CLI::ExitCode::Success
+          File.read(path).should eq "foo.match!(/x/)\n"
+        end
+      end
+
+      it "is zero when showing the version" do
+        CLI.exit_code(["--version"], IO::Memory.new).should eq CLI::ExitCode::Success
+      end
+
+      it "is what `.run` is based on" do
+        with_temp_file do |path|
+          File.write(path, "foo\n")
+
+          CLI.run(["-f", "silent", "--fix", "--only", "Ameba/RaisingCorrectionRule", path]).should be_false
+        end
+      end
+    end
+
     describe ".run" do
       it "runs ameba" do
         r = CLI.run(["-f", "silent", "--only", "Lint/ComparisonToBoolean", __FILE__])

@@ -14,6 +14,15 @@ module Ameba
     end
   end
 
+  # A formatter failing for the source with a given path.
+  class RaisingFormatter < Formatter::BaseFormatter
+    property failing_path = ""
+
+    def source_started(source : Source) : Nil
+      raise "formatter went wrong" if source.path.to_s == failing_path
+    end
+  end
+
   # A rule correcting `foo` to `bar`, and `bar` to code which doesn't parse.
   class BreakingCorrectionRule < Rule::Base
     properties do
@@ -207,6 +216,22 @@ module Ameba
 
     def test(source)
       should_raise? && raise "something went wrong"
+    end
+  end
+
+  # A rule whose correction raises for the code including `foo`.
+  class RaisingCorrectionRule < Rule::Base
+    properties do
+      description "Internal rule with a correction that raises"
+      enabled false
+    end
+
+    def test(source)
+      return unless source.code.includes?("foo")
+
+      source.add_issue(self, {1, 1}, {1, 3}, "foo") do
+        raise IndexError.new("Correction went wrong")
+      end
     end
   end
 
@@ -423,6 +448,19 @@ end
 
 def as_nodes(source, *, wants_doc = false)
   Ameba::TestNodeVisitor.new(as_node(source, wants_doc: wants_doc))
+end
+
+# Yields paths to temporary source files, deleting whatever got created there.
+def with_temp_files(count, &)
+  paths = Array.new(count) { File.tempname("source", ".cr") }
+  yield paths
+ensure
+  paths.try(&.each { |path| File.delete(path) rescue nil })
+end
+
+# :ditto:
+def with_temp_file(&)
+  with_temp_files(1) { |paths| yield paths.first }
 end
 
 def trailing_whitespace

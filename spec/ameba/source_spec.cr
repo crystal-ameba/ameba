@@ -112,6 +112,32 @@ module Ameba
       end
     end
 
+    describe ".from_file" do
+      it "reads the code from the file" do
+        with_temp_file do |path|
+          File.write(path, "a = 1\n")
+
+          source = Source.from_file(path, "project.cr")
+          source.code.should eq "a = 1\n"
+          source.path.should eq Path[path]
+          source.project_path.should eq Path["project.cr"]
+          source.issues.should be_empty
+        end
+      end
+
+      it "reports a file which can't be read as a crash" do
+        path = Path[Dir.tempdir, "ameba-missing-#{Process.pid}", "source.cr"]
+        source = Source.from_file(path)
+
+        source.code.should be_empty
+        source.should_not be_valid
+        source.issues.size.should eq 1
+        source.issues.first.crashed?.should be_true
+        source.issues.first.message.should contain "Could not read the file"
+        source.issues.first.location.try(&.line_number).should eq 1
+      end
+    end
+
     describe "#parsable?" do
       it "returns true for valid syntax" do
         Source.new("a = 1").parsable?.should be_true
@@ -120,9 +146,76 @@ module Ameba
       it "returns false for invalid syntax" do
         Source.new("a = (").parsable?.should be_false
       end
+
+      it "returns false for invalid UTF-8" do
+        Source.new("a = 1 \xFF").parsable?.should be_false
+      end
+    end
+
+    describe "#revert_to" do
+      it "goes back to the given code, forgetting about the current one" do
+        source = Source.new("foo\n")
+        source.lines.should eq ["foo", ""]
+        source.ast.to_s.should eq "foo"
+
+        BreakingCorrectionRule.new.catch(source)
+
+        source.correct!
+        source.revert_to("foo\n")
+
+        source.code.should eq "foo\n"
+        source.lines.should eq ["foo", ""]
+        source.ast.to_s.should eq "foo"
+        source.issues.should be_empty
+      end
     end
 
     describe "#correct_safely!" do
+      it "drops a correction which raises, keeping the other ones" do
+        source = Source.new("foo\nbar.match(/x/).not_nil!\n")
+        RaisingCorrectionRule.new.catch(source)
+        Rule::Lint::NotNilAfterNoBang.new.catch(source)
+
+        source.correct_safely!.try(&.map(&.rule.name)).should eq ["Lint/NotNilAfterNoBang"]
+        source.code.should eq "foo\nbar.match!(/x/)\n"
+
+        issue = source.issues.first
+        issue.correctable?.should be_false
+        issue.message.should start_with "foo"
+        issue.message.should contain "Correction went wrong"
+        issue.message.should contain "IndexError"
+      end
+
+      it "marks only the issues whose corrections raised as crashed" do
+        source = Source.new("foo\nbar\n")
+        RaisingCorrectionRule.new.catch(source)
+        source.add_issue(DummyRule.new, {2, 1}, {2, 3}, "bad") { |corrector| corrector.replace({2, 1}, {2, 3}, "bar)") }
+
+        source.correct_safely!
+
+        source.issues.map(&.crashed?).should eq [true, false]
+        source.issues.map(&.correctable?).should eq [false, false]
+      end
+
+      it "doesn't annotate the other issues if a correction raises" do
+        source = Source.new("foo\n")
+        RaisingCorrectionRule.new.catch(source)
+        source.add_issue(DummyRule.new, {1, 1}, {1, 3}, "no-op") { |corrector| corrector.replace({1, 1}, {1, 3}, "foo") }
+
+        source.correct_safely!.should be_nil
+        source.issues.last.message.should eq "no-op"
+        source.issues.last.correctable?.should be_true
+      end
+
+      it "returns nil if the only correction raises" do
+        source = Source.new("foo\n")
+        RaisingCorrectionRule.new.catch(source)
+
+        source.correct_safely!.should be_nil
+        source.code.should eq "foo\n"
+        source.issues.first.correctable?.should be_false
+      end
+
       it "behaves the same as #correct! if the source stays parsable" do
         source = Source.new("foo\n")
         BreakingCorrectionRule.new.catch(source)
@@ -164,6 +257,16 @@ module Ameba
         source.issues.count(&.correctable?).should eq 1
       end
 
+      it "drops a correction producing invalid UTF-8" do
+        source = Source.new("foo\nbar\n")
+        source.add_issue(DummyRule.new, {1, 1}, {1, 3}, "bad bytes") { |corrector| corrector.replace({1, 1}, {1, 3}, "foo \xFF") }
+        source.add_issue(DummyRule.new, {2, 1}, {2, 3}, "good") { |corrector| corrector.replace({2, 1}, {2, 3}, "baz") }
+
+        source.correct_safely!.try(&.map(&.message)).should eq ["good"]
+        source.code.should eq "foo\nbaz\n"
+        source.issues.first.message.should contain "invalid syntax"
+      end
+
       it "doesn't try corrections of disabled issues" do
         source = Source.new("bar\nbaz\n")
         BreakingCorrectionRule.new.catch(source)
@@ -201,6 +304,15 @@ module Ameba
         source.issues.map(&.correctable?).should eq [false, false]
       end
 
+      it "keeps a correction deferred by the ones breaking the syntax when combined" do
+        source = Source.new("x = 1\n2\n")
+        IncompatibleCorrectionsRule.new.catch(source)
+        source.add_issue(DummyRule.new, {2, 1}, {2, 1}, "deferred") { |corrector| corrector.replace({2, 1}, {2, 1}, "3") }
+
+        source.correct_safely!.try(&.map(&.message)).should eq ["deferred"]
+        source.code.should eq "x = 1\n3\n"
+      end
+
       it "doesn't annotate issues without a correction" do
         source = Source.new("x = 1\n2\n")
         IncompatibleCorrectionsRule.new.catch(source)
@@ -213,6 +325,14 @@ module Ameba
     end
 
     describe "#correct!" do
+      it "raises if a correction raises" do
+        source = Source.new("foo\n")
+        RaisingCorrectionRule.new.catch(source)
+
+        expect_raises(IndexError, "Correction went wrong") { source.correct! }
+        source.code.should eq "foo\n"
+      end
+
       it "skips issues which got corrected already" do
         source = Source.new("foo\n")
         source.add_issue(DummyRule.new, {1, 1}, {1, 3}, "fixed") { |corrector| corrector.replace({1, 1}, {1, 3}, "bar") }
