@@ -330,7 +330,11 @@ module Ameba::AST
     private def start_regex_literal : Bool
       return false unless literal_allowed?
 
-      @contexts << Context.new(:literal, '/', interpolates: true, escapes: true, regex: true)
+      @contexts << Context.new(:literal, '/',
+        interpolates: true,
+        escapes: true,
+        regex: true,
+      )
       true
     end
 
@@ -394,7 +398,8 @@ module Ameba::AST
 
       # `foo /a/` vs `a / b`, `a /= b`, `a // b`
       next_char = @reader.peek_next_char
-      !next_char.whitespace? && !next_char.in?('=', '/', '\0')
+      !next_char.whitespace? &&
+        !next_char.in?('=', '/', '\0')
     end
 
     # Returns `true` if the operator at the reader's position is used
@@ -408,11 +413,13 @@ module Ameba::AST
     private def after_def_keyword? : Bool
       string = @reader.string
       index = @reader.pos - 1
+
       while index >= 0 && string.byte_at(index).unsafe_chr.in?(' ', '\t')
         index -= 1
       end
-      return false unless index >= 2 && string.byte_slice?(index - 2, 3) == "def"
-
+      unless index >= 2 && string.byte_slice?(index - 2, 3) == "def"
+        return false
+      end
       index < 3 || !ident_part?(string.byte_at(index - 3).unsafe_chr)
     end
 
@@ -445,8 +452,9 @@ module Ameba::AST
     #
     # NOTE: Skipped characters are considered to be blanked out.
     private def advance : Bool
-      return false unless @reader.pos + @reader.current_char_width < @reader.string.bytesize
-
+      unless @reader.pos + @reader.current_char_width < @reader.string.bytesize
+        return false
+      end
       @reader.next_char
       true
     end
