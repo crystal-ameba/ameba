@@ -7,8 +7,16 @@ module Ameba::AST
 
     def initialize(node, reference : String)
       # Matches *reference* as a whole identifier, so that i.e. `b` isn't
-      # found within `blk`, `@b`, or `b?`, but still within `b.foo` or `b != c`
-      @reference = /(?<![\p{L}\p{N}_@$])#{Regex.escape(reference)}(?![\p{L}\p{N}_?]|!(?![=~]))/
+      # found within `blk`, `@b`, or `b?`, but still within `b.foo` or `b != c`.
+      #
+      # Method names (`a.b`, `a&.b`, `def b`, `macro b`), named arguments
+      # (`a(b: 1)`) and named-tuple keys (`{b: 1}`) are skipped, while
+      # ranges (`1..b`) and paths (`b::C`) aren't.
+      @reference = /
+        (?<![\p{L}\p{N}_@$]|[^.]\.|^\.|\bdef\s|\bmacro\s)
+        #{Regex.escape(reference)}
+        (?![\p{L}\p{N}_?]|!(?![=~])|:(?!:))
+        /x
       node.accept(self)
     end
 
