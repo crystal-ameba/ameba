@@ -1535,6 +1535,34 @@ module Ameba::Rule::Lint
           CRYSTAL
       end
 
+      it "reports if assignment is referenced only as a parameter of a macro" do
+        expect_issue subject, <<-CRYSTAL
+          macro def_getter(name)
+            def {{ name.id }}
+              @{{ name.id }}
+            end
+          end
+
+          def foo
+            name = 1
+          # ^^^^ error: Useless assignment to variable `name`
+          end
+          CRYSTAL
+      end
+
+      it "doesn't report if assignment is referenced as a string in a macro with a parameter of the same name" do
+        expect_no_issues subject, <<-CRYSTAL
+          macro print_name(name)
+            puts {{ "name".id }}
+          end
+
+          def foo
+            name = 1
+            print_name(:bar)
+          end
+          CRYSTAL
+      end
+
       it "doesn't report if assignment is referenced in a macro defined within a macro code" do
         expect_no_issues subject, <<-CRYSTAL
           class Foo
@@ -1584,6 +1612,18 @@ module Ameba::Rule::Lint
               a = 1
             # ^ error: Useless assignment to variable `a`
             end
+          end
+          CRYSTAL
+      end
+
+      it "reports if assignment is referenced only as a symbol in a macro condition" do
+        expect_issue subject, <<-CRYSTAL
+          def foo
+            debug = 1
+          # ^^^^^ error: Useless assignment to variable `debug`
+            {% if flag?(:debug) %}
+              puts "debug"
+            {% end %}
           end
           CRYSTAL
       end

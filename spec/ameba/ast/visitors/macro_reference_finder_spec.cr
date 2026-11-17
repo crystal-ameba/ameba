@@ -4,30 +4,32 @@ module Ameba::AST
   describe MacroReferenceFinder do
     describe "#references?" do
       {
-        "{{ foo }}",
-        "{{ foo.id }}",
-        "{{ [foo] }}",
         %({{ "foo".id }}),
-        "{% if foo != 1 %}{% end %}",
-        "{% if foo!=1 %}{% end %}",
-        "{% for x in foo %}{% end %}",
-        "{% if true %}{% else %}{{ foo }}{% end %}",
+        "{{ :foo.id }}",
+        %({{ ["foo"].first.id }}),
+        %({{ "bar(foo)".id }}),
+        %({{ "foo.bar".id }}),
+        %({{ ("a" + "foo").id }}),
+        %({{ x.gsub(/x/, "foo").id }}),
+        "{% for x in %w[foo] %}{% end %}",
+        %({% if true %}{% else %}{{ "foo".id }}{% end %}),
+        "{% begin %}\n  foo != 1\n{% end %}",
+        "{% begin %}\n  foo!=1\n{% end %}",
+        "{% begin %}\n  foo!~1\n{% end %}",
         "{% begin %}\n  # comment\n  foo\n{% end %}",
         "{% begin %}\n  bar # comment\n  foo\n{% end %}",
-        "{% begin %}\n  # {{ foo }}\n{% end %}",
+        %({% begin %}\n  # {{ "foo".id }}\n{% end %}),
         %({% begin %}\n  "\#{foo}"\n{% end %}),
         %({% begin %}\n  "{{ 1 }}\#{foo}"\n{% end %}),
         %({% begin %}\n  "\#{ {a: foo}[:a] }"\n{% end %}),
-        %({% begin %}\n  "{{ foo }}"\n{% end %}),
+        %({% begin %}\n  "{{ :foo.id }}"\n{% end %}),
         %({% begin %}\n  "bar" + foo\n{% end %}),
         %({% begin %}\n  '"'; foo\n{% end %}),
         %({% begin %}\n  {foo: foo}\n{% end %}),
         %({% begin %}\n  bar ? foo : baz\n{% end %}),
         %({% begin %}\n  bar ? baz : foo\n{% end %}),
         %({% begin %}\n  Bar::Baz.bar(foo)\n{% end %}),
-        "{{ bar(foo) }}",
-        "{{ bar(baz: foo) }}",
-        "{{ foo.bar }}",
+        %({{ "bar(baz: foo)".id }}),
         "{% begin %}\n  1..foo\n{% end %}",
         "{% begin %}\n  1...foo\n{% end %}",
         "{% begin %}\n  foo.bar\n{% end %}",
@@ -108,11 +110,23 @@ module Ameba::AST
         "{% begin %}\n  `echo foo`\n{% end %}",
         "{% begin %}\n  %x(echo foo)\n{% end %}",
         "{% begin %}{% if bar %}\"{% else %}\"{% end %}foo\"{% end %}",
-        "{{ bar.foo }}",
-        "{{ bar(foo: 1) }}",
-        "{{ {foo: 1} }}",
-        "{% if bar.foo %}{% end %}",
-        "{% for x in bar.foo %}{% end %}",
+        "{{ foo }}",
+        "{{ foo.id }}",
+        "{{ [foo] }}",
+        "{{ bar(foo) }}",
+        "{{ foo.bar }}",
+        "{% if foo != 1 %}{% end %}",
+        "{% for x in foo %}{% end %}",
+        "{% if true %}{% else %}{{ foo }}{% end %}",
+        "{% begin %}\n  # {{ foo }}\n{% end %}",
+        %({{ "bar.foo".id }}),
+        %({{ "bar(foo: 1)".id }}),
+        "{{ :bar.id }}",
+        "{% if flag?(:foo) %}{% end %}",
+        "{% if @type.has_method?(:foo) %}{% end %}",
+        %({% if x == "foo" %}{% end %}),
+        %({% if "foo".id == x %}{% end %}),
+        %({% if "foo" != x || x =~ /foo/ %}{% end %}),
         "{% begin %}\n  bar.foo\n{% end %}",
         "{% begin %}\n  bar&.foo\n{% end %}",
         "{% begin %}\n  Bar.foo\n{% end %}",
@@ -175,6 +189,32 @@ module Ameba::AST
         it "handles literals split by macro nodes in #{code.inspect}" do
           node = Crystal::Parser.new(code).parse
           MacroReferenceFinder.new(node, "foo").references?.should be_true
+        end
+      end
+    end
+
+    context "within macro definitions" do
+      {
+        "macro bar\n  puts foo\nend",
+        "macro bar(foo)\n  puts foo\nend",
+        "macro bar\n  {{ \"foo\".id }}\nend",
+        "macro bar\n  {% for x in %w[foo] %}{{ x.id }}{% end %}\nend",
+      }.each do |code|
+        it "returns true for #{code.inspect}" do
+          node = Crystal::Parser.new(code).parse
+          MacroReferenceFinder.new(node, "foo").references?.should be_true
+        end
+      end
+
+      {
+        "macro bar(foo)\n  {{ foo }}\nend",
+        "macro bar(*foo, **baz, &qux)\n  {{ foo }} {{ baz }} {{ qux.body }}\nend",
+        "macro bar\n  {% for foo in [1] %}{{ foo }}{% end %}\nend",
+        "macro bar\n  {% foo = 1 %}{{ foo }}\nend",
+      }.each do |code|
+        it "returns false for #{code.inspect}" do
+          node = Crystal::Parser.new(code).parse
+          MacroReferenceFinder.new(node, "foo").references?.should be_false
         end
       end
     end
