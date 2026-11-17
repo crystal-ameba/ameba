@@ -72,6 +72,9 @@ module Ameba::AST
         "{% begin %}\n  <<-EOS # bar\n    baz\n    EOS\n  foo\n{% end %}",
         "{% begin %}\n  <<-EOS\n    EOSX\n    EOS\n  foo\n{% end %}",
         "{% begin %}\n  bar << foo\n{% end %}",
+        "{% begin %}\n  def /(other)\n    foo / other\n  end\n{% end %}",
+        "{% begin %}\n  def `(command)\n    foo\n  end\n{% end %}",
+        "{% begin %}\n  bar.reduce(:/)\n  foo / 2\n{% end %}",
         "{% begin %}\n  bar <<-1 + foo\n{% end %}",
       }.each do |code|
         it "returns true for #{code.inspect}" do

@@ -196,16 +196,17 @@ module Ameba::AST
     # returns `true` if it's a part of the code
     private def scan_code(char : Char) : Bool
       case char
-      when '#'            then @contexts << Context.new(:comment)
-      when '"', '\'', '`' then @contexts << quoted_literal(char)
-      when ':'            then return !start_symbol_literal
-      when '%'            then return !start_percent_literal
-      when '/'            then return !start_regex_literal
-      when '<'            then return !start_heredoc
-      when '{'            then return scan_opening_brace
-      when '}'            then return scan_closing_brace
-      when '\n'           then return open_pending_heredoc || true
-      else                     return true
+      when '#'       then @contexts << Context.new(:comment)
+      when '"', '\'' then @contexts << quoted_literal(char)
+      when '`'       then return !start_command_literal
+      when ':'       then return !start_symbol_literal
+      when '%'       then return !start_percent_literal
+      when '/'       then return !start_regex_literal
+      when '<'       then return !start_heredoc
+      when '{'       then return scan_opening_brace
+      when '}'       then return scan_closing_brace
+      when '\n'      then return open_pending_heredoc || true
+      else                return true
       end
       false
     end
@@ -300,6 +301,15 @@ module Ameba::AST
       true
     end
 
+    # Returns `false` if the `` ` `` at the reader's position isn't
+    # a start of a command literal (i.e. ``def `(command)``).
+    private def start_command_literal : Bool
+      return false if operator_name?
+
+      @contexts << quoted_literal('`')
+      true
+    end
+
     # Returns `false` if the `/` at the reader's position isn't
     # a start of a regex literal (i.e. `a / b`).
     private def start_regex_literal : Bool
@@ -355,9 +365,13 @@ module Ameba::AST
 
     # Returns `true` if a `/` or `%` at the reader's position starts
     # a literal, rather than being a binary operator.
+    #
+    # NOTE: When in doubt, it's not a literal, as the code mistaken for
+    # a literal would be blanked out, while a literal mistaken for the code
+    # is merely searched for the references.
     private def literal_allowed? : Bool
       # `a //b`
-      return false if @prev_char == '/'
+      return false if @prev_char == '/' || operator_name?
       # `(/a/)`, `= /a/`, `a ? /b/ : c`
       return true unless after_value?
       # `a/b`, `(a) / b`, `"a" % b`, `a? / b`
@@ -366,6 +380,25 @@ module Ameba::AST
       # `foo /a/` vs `a / b`, `a /= b`, `a // b`
       next_char = @reader.peek_next_char
       !next_char.whitespace? && !next_char.in?('=', '/', '\0')
+    end
+
+    # Returns `true` if the operator at the reader's position is used
+    # as a name: of a symbol (`:/`), a method being called (`a./(b)`)
+    # or defined (`def /(other)`).
+    private def operator_name? : Bool
+      @prev_char.in?(':', '.') || after_def_keyword?
+    end
+
+    # Returns `true` if the reader's position follows a `def` keyword
+    private def after_def_keyword? : Bool
+      string = @reader.string
+      index = @reader.pos - 1
+      while index >= 0 && string.byte_at(index).unsafe_chr.in?(' ', '\t')
+        index -= 1
+      end
+      return false unless index >= 2 && string.byte_slice?(index - 2, 3) == "def"
+
+      index < 3 || !ident_part?(string.byte_at(index - 3).unsafe_chr)
     end
 
     # Returns `true` if the last non-blank character ends a value,

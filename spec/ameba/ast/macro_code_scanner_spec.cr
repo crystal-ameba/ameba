@@ -66,6 +66,16 @@ module Ameba::AST
         scan("a // b").should eq ["a // b"]
       end
 
+      it "keeps operators used as names" do
+        scan("def /(other)\n  a / other / b\nend").should eq ["def /(other)\n  a / other / b\nend"]
+        scan("def %(other); end").should eq ["def %(other); end"]
+        scan("def `(command); end").should eq ["def `(command); end"]
+        scan("def self./(other); a / b; end").should eq ["def self./(other); a / b; end"]
+        scan("reduce(:/) + a / b").should eq ["reduce(:/) + a / b"]
+        scan("a./(b) + c / d").should eq ["a./(b) + c / d"]
+        scan("undef_foo /a/").should eq ["undef_foo    "]
+      end
+
       it "blanks out heredocs" do
         scan("foo(<<-A, <<-'B')\n  a\n  A\n  \#{b}\n  B\nbar\n")
           .should eq ["foo(    ,       )\n   \n   \n      \n   \nbar\n"]
