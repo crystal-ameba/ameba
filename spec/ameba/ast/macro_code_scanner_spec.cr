@@ -5,6 +5,46 @@ private def scan(*literals : String) : Array(String)
   literals.to_a { |literal| scanner.scan(literal) }
 end
 
+# Collects the local variables, skipping the macro code
+private class LocalVariables < Crystal::Visitor
+  getter vars = [] of Crystal::Var
+
+  def visit(node : Crystal::Var)
+    @vars << node
+    true
+  end
+
+  def visit(node : Crystal::Macro | Crystal::MacroExpression | Crystal::MacroIf | Crystal::MacroFor | Crystal::MacroVerbatim)
+    false
+  end
+
+  def visit(node : Crystal::ASTNode)
+    true
+  end
+end
+
+# Returns the locations of the local variables within *source*
+# blanked out by the scanner, when scanned as a single macro literal
+private def blanked_variables(source : String) : Array(String)
+  lines = source.lines
+  scanned = Ameba::AST::MacroCodeScanner.new.scan(source).lines
+
+  visitor = LocalVariables.new
+  Crystal::Parser.new(source).parse.accept(visitor)
+
+  visitor.vars.compact_map do |var|
+    next unless location = var.location
+
+    line_index, column_index = location.line_number - 1, location.column_number - 1
+    name = var.name
+    # Skips the variables, whose (byte-based) column doesn't match the code
+    next unless lines[line_index]?.try(&.[column_index, name.size]?) == name
+    next if scanned[line_index]?.try(&.[column_index, name.size]?) == name
+
+    "#{location.line_number}:#{location.column_number} `#{name}`"
+  end
+end
+
 module Ameba::AST
   describe MacroCodeScanner do
     describe "#scan" do
@@ -112,6 +152,19 @@ module Ameba::AST
         scanner.clone.scan(%(bar" baz)).should eq "     baz"
         scanner.scan(%(qux" quux)).should eq "     quux"
       end
+    end
+
+    # Ameba's own sources serve as a corpus of real-world code, which no local
+    # variable should be blanked out of - that would hide its references
+    it "keeps the local variables of the Ameba sources intact" do
+      # Glob patterns require `/` as a path separator, also on Windows
+      files = Dir.glob(Path[__DIR__, "..", "..", "..", "src", "**", "*.cr"].expand.to_posix)
+      files.should_not be_empty
+
+      blanked = files.flat_map do |file|
+        blanked_variables(File.read(file)).map { |var| "#{Path[file].relative_to(Dir.current)}:#{var}" }
+      end
+      blanked.should be_empty
     end
   end
 end
