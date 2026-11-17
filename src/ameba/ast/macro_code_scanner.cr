@@ -269,9 +269,24 @@ module Ameba::AST
         while ident_part?(@reader.peek_next_char)
           advance
         end
+        skip_symbol_suffix
         true
       else
         false
+      end
+    end
+
+    # Advances the reader past the method name suffix of a symbol literal
+    # (`:foo?`, `:foo!`, `:foo=`), unless it's a part of an operator
+    # following it (i.e. `:foo!= x`, `{:foo=>1}`).
+    private def skip_symbol_suffix : Nil
+      after_suffix = char_at(@reader.pos + @reader.current_char_width + 1)
+
+      case @reader.peek_next_char
+      when '?', '!'
+        advance unless after_suffix == '='
+      when '='
+        advance unless after_suffix.in?('=', '~', '>')
       end
     end
 

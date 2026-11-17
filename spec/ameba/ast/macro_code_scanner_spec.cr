@@ -81,6 +81,8 @@ module Ameba::AST
 
       it "blanks out symbol literals" do
         scan(%(:foo + :"bar" + baz)).should eq ["     +        + baz"]
+        scan(":foo? + :foo! + :foo= + baz").should eq ["      +       +       + baz"]
+        scan("{:foo=>a, :bar==b, :baz!=c}").should eq ["{    =>a,     ==b,     !=c}"]
       end
 
       it "keeps paths, named arguments and ternaries" do
