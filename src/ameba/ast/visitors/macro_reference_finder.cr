@@ -3,6 +3,7 @@ module Ameba::AST
     property? references = false
 
     @reference : Regex
+    @scanner = MacroCodeScanner.new
 
     def initialize(node, reference : String)
       # Matches *reference* as a whole identifier, so that i.e. `b` isn't
@@ -17,22 +18,31 @@ module Ameba::AST
     end
 
     def visit(node : Crystal::MacroLiteral)
-      !(@references ||= includes_reference?(node.value))
+      !(@references ||= includes_reference?(@scanner.scan(node.value)))
     end
 
     def visit(node : Crystal::MacroExpression)
+      @scanner.after_value! if node.output?
+
       !(@references ||= includes_reference?(node.exp))
     end
 
     def visit(node : Crystal::MacroFor)
-      !(@references ||= includes_reference?(node.exp) ||
-                        includes_reference?(node.body))
+      !(@references ||= includes_reference?(node.exp))
     end
 
     def visit(node : Crystal::MacroIf)
-      !(@references ||= includes_reference?(node.cond) ||
-                        includes_reference?(node.then) ||
-                        includes_reference?(node.else))
+      return false if @references ||= includes_reference?(node.cond)
+
+      # Both branches start in the same lexical state
+      scanner = @scanner.clone
+      node.then.accept(self)
+
+      unless node.else.is_a?(Crystal::Nop)
+        @scanner = scanner
+        node.else.accept(self)
+      end
+      false
     end
 
     def visit(node : Crystal::ASTNode)
