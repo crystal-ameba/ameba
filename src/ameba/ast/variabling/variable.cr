@@ -170,16 +170,19 @@ module Ameba::AST
       end
     end
 
-    # Matches the text of the macro literals within a node against a regex
+    # Matches the code of the macro literals within a node (that is,
+    # without comments and literals) against a regex
     private class MacroLiteralsMatcher < Crystal::Visitor
       getter? matches = false
+
+      @scanner = MacroCodeScanner.new
 
       def initialize(node, @regex : Regex)
         node.accept(self)
       end
 
       def visit(node : Crystal::MacroLiteral)
-        !(@matches ||= node.value.matches?(@regex))
+        !(@matches ||= @scanner.scan(node.value).matches?(@regex))
       end
 
       def visit(node : Crystal::ASTNode)

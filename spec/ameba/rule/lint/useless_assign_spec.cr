@@ -1628,6 +1628,24 @@ module Ameba::Rule::Lint
           CRYSTAL
       end
 
+      it "reports if assignment is referenced only in a macro code mentioning a macro in a comment" do
+        expect_issue subject, <<-CRYSTAL
+          class Foo
+            {% for name in %w[foo bar] %}
+              # Defines a method, not a macro print_{{ name.id }}
+              def print_{{ name.id }}
+                puts a
+              end
+            {% end %}
+
+            def foo
+              a = 1
+            # ^ error: Useless assignment to variable `a`
+            end
+          end
+          CRYSTAL
+      end
+
       it "reports if assignment is referenced in a macro code of a different method" do
         expect_issue subject, <<-CRYSTAL
           def foo
