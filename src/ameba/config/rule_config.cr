@@ -194,6 +194,23 @@ class Ameba::Config
           end
         end
       end
+
+      def sarif_parameters
+        NamedTuple.new(
+          {% for name, _ in properties %}
+            {% unless {"description", "enabled", "severity", "since_version"}.includes?(name.stringify) %}
+              {{ name }}: @{{ name }},
+            {% end %}
+          {% end %}
+        )
+      end
+
+      def sarif_configuration_changed? : Bool
+        default = self.class.new
+        enabled? != default.enabled? ||
+          severity != default.severity ||
+          sarif_parameters != default.sarif_parameters
+      end
     end
 
     macro included

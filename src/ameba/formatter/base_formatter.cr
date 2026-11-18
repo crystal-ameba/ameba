@@ -9,6 +9,7 @@ module Ameba::Formatter
     # TODO: allow other IOs
     getter output : IO::FileDescriptor | IO::Memory
     getter config = {} of Symbol => String | Bool
+    property rules : Array(Rule::Base)?
 
     def initialize(@output = STDOUT)
     end
