@@ -195,20 +195,21 @@ class Ameba::Config
         end
       end
 
-      def self.to_sarif(builder : JSON::Builder) : Nil
-        {%
-          serializable_props = properties.to_a.reject do |(key, prop)|
-            !prop[:default] || {"description", "enabled", "severity", "since_version"}.includes?(key.stringify)
-          end
-        %}
-
-        builder.object do
-          {% for prop in serializable_props %}
-            {% prop_name, prop = prop %}
-
-            builder.field({{ prop_name.stringify }}, {{ prop[:default] }})
+      def sarif_parameters
+        NamedTuple.new(
+          {% for name, _ in properties %}
+            {% unless {"description", "enabled", "severity", "since_version"}.includes?(name.stringify) %}
+              {{ name }}: @{{ name }},
+            {% end %}
           {% end %}
-        end
+        )
+      end
+
+      def sarif_configuration_changed? : Bool
+        default = self.class.new
+        enabled? != default.enabled? ||
+          severity != default.severity ||
+          sarif_parameters != default.sarif_parameters
       end
     end
 

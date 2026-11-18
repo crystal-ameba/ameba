@@ -1,8 +1,9 @@
 require "../../spec_helper"
 
-private def get_sarif_result(sources = [Ameba::Source.new])
+private def get_sarif_result(sources = [Ameba::Source.new], *, rules : Array(Ameba::Rule::Base)? = nil)
   output = IO::Memory.new
   formatter = Ameba::Formatter::SARIFFormatter.new output
+  formatter.rules = rules
 
   formatter.started sources
   sources.each { |source| formatter.source_finished source }
@@ -158,7 +159,7 @@ module Ameba::Formatter
         region["startColumn"].should eq 5
       end
 
-      it "includes end location" do
+      it "includes an exclusive end column for a multiline range" do
         source = Source.new <<-CRYSTAL
           a = 1
           b = 2
@@ -174,7 +175,28 @@ module Ameba::Formatter
         region["startLine"].should eq 2
         region["startColumn"].should eq 3
         region["endLine"].should eq 3
-        region["endColumn"].should eq 4
+        region["endColumn"].should eq 5
+      end
+
+      it "uses Unicode code points and spans a single-character issue" do
+        source = Source.new %(puts "😀"; a = 1), "source.cr"
+        Rule::Lint::UselessAssign.new.test(source)
+
+        run = get_sarif_result([source])["runs"][0]
+        run["columnKind"].should eq "unicodeCodePoints"
+        region = run["results"][0]["locations"][0]["physicalLocation"]["region"]
+        region["startColumn"].should eq 11
+        region["endColumn"].should eq 12
+      end
+
+      it "preserves a point location at the end of the file" do
+        source = Source.new "a", "source.cr"
+        source.add_issue DummyRule.new, {1, 2}, "message"
+
+        result = get_sarif_result [source]
+        region = result["runs"][0]["results"][0]["locations"][0]["physicalLocation"]["region"]
+        region["startColumn"].should eq 2
+        region["endColumn"].should eq 2
       end
     end
 
@@ -365,6 +387,15 @@ module Ameba::Formatter
         uri = result["runs"][0]["results"][0]["locations"][0]["physicalLocation"]["artifactLocation"]["uri"]
         uri.should eq "src/foo/bar.cr"
       end
+
+      it "encodes special characters in paths while preserving separators" do
+        source = Source.new path: "src/nested dir/café #1?%.cr"
+        source.add_issue DummyRule.new, {1, 1}, "message"
+
+        result = get_sarif_result [source]
+        location = result["runs"][0]["results"][0]["locations"][0]["physicalLocation"]
+        location["artifactLocation"]["uri"].should eq "src/nested%20dir/caf%C3%A9%20%231%3F%25.cr"
+      end
     end
 
     context "invocations" do
@@ -400,6 +431,33 @@ module Ameba::Formatter
         result = JSON.parse(output.to_s)
         invocations = result["runs"][0]["invocations"].as_a
         invocations[0]["ruleConfigurationOverrides"].as_a.should be_empty
+      end
+
+      it "explicitly enables a rule that is disabled by default" do
+        rule = Rule::Layout::LineLength.new
+        rule.enabled = true
+
+        run = get_sarif_result(rules: [rule] of Rule::Base)["runs"][0]
+        override = run["invocations"][0]["ruleConfigurationOverrides"].as_a
+        override.size.should eq 1
+        descriptor = override[0]["descriptor"]
+        descriptor["id"].should eq "Layout/LineLength"
+        run["tool"]["driver"]["rules"][descriptor["index"].as_i]["defaultConfiguration"]["enabled"].should be_false
+        override[0]["configuration"]["enabled"].should be_true
+      end
+
+      it "records configured parameters for a parameter-only override" do
+        rule = Rule::Layout::LineLength.new
+        rule.max_length = 3
+
+        run = get_sarif_result(rules: [rule] of Rule::Base)["runs"][0]
+        override = run["invocations"][0]["ruleConfigurationOverrides"].as_a
+        override.size.should eq 1
+        descriptor = override[0]["descriptor"]
+        descriptor["id"].should eq "Layout/LineLength"
+        defaults = run["tool"]["driver"]["rules"][descriptor["index"].as_i]["defaultConfiguration"]
+        defaults["parameters"]["max_length"].should eq 140
+        override[0]["configuration"]["parameters"]["max_length"].should eq 3
       end
 
       it "includes invocations when rule is disabled" do

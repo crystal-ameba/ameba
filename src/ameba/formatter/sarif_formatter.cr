@@ -21,11 +21,7 @@ module Ameba::Formatter
           full_description: full_description,
           help: help_text,
           help_uri: rule.class.documentation_url,
-          default_configuration: AsSARIF::ReportingConfiguration.new(
-            enabled: rule.enabled?,
-            level: AsSARIF::Level.from_severity(rule.severity),
-            rule_class: rule.class
-          ),
+          default_configuration: AsSARIF::ReportingConfiguration.new(rule),
         )
       end
 
@@ -54,15 +50,15 @@ module Ameba::Formatter
           next if issue.disabled?
 
           start_location = issue.location || issue.end_location || Crystal::Location.new(source.path, 1, 1)
-          end_location = issue.end_location || start_location
+          end_line = (issue.end_location || start_location).line_number
 
           # Calculate context bounds (2 lines before/after, clamped to file)
           context_start_line = {1, start_location.line_number - 2}.max
-          context_end_line = {source.lines.size, end_location.line_number + 2}.min
+          context_end_line = {source.lines.size, end_line + 2}.min
 
           # Only create contextRegion if it's a proper superset of region
           if context_start_line < start_location.line_number ||
-             context_end_line > end_location.line_number
+             context_end_line > end_line
             context_snippet = source.lines[(context_start_line - 1)...context_end_line].join('\n')
             context_region = AsSARIF::ContextRegion.new(
               start_line: context_start_line,
@@ -78,10 +74,10 @@ module Ameba::Formatter
             rule_index: sarif_rules.index!(&.id.== issue.rule.name),
             level: AsSARIF::Level.from_severity(issue.rule.severity),
             locations: [AsSARIF::Location.new(
-              uri: Path[source.path].to_posix.to_s,
+              uri: URI.encode_path(Path[source.path].to_posix.to_s),
               context_region: context_region,
               start_location: start_location,
-              end_location: end_location
+              end_location: issue.end_location
             )]
           )
         end
@@ -97,28 +93,16 @@ module Ameba::Formatter
       overrides = [] of AsSARIF::ConfigurationOverride
 
       configured_rules.each do |configured_rule|
-        default_rule = configured_rule.class.new
+        next unless configured_rule.sarif_configuration_changed?
 
-        # Check if enabled or severity differs from default
-        enabled_differs = configured_rule.enabled? != default_rule.enabled?
-        severity_differs = configured_rule.severity != default_rule.severity
-
-        if enabled_differs || severity_differs
-          # Find the rule index in sarif_rules array
-          rule_index = sarif_rules.index!(&.id.== configured_rule.name)
-
-          overrides << AsSARIF::ConfigurationOverride.new(
-            descriptor: AsSARIF::ReportingDescriptorReference.new(
-              id: configured_rule.name,
-              index: rule_index
-            ),
-            configuration: AsSARIF::ReportingConfiguration.new(
-              enabled: configured_rule.enabled?,
-              level: AsSARIF::Level.from_severity(configured_rule.severity),
-              rule_class: configured_rule.class
-            )
-          )
-        end
+        rule_index = sarif_rules.index!(&.id.== configured_rule.name)
+        overrides << AsSARIF::ConfigurationOverride.new(
+          descriptor: AsSARIF::ReportingDescriptorReference.new(
+            id: configured_rule.name,
+            index: rule_index
+          ),
+          configuration: AsSARIF::ReportingConfiguration.new(configured_rule, override: true)
+        )
       end
 
       overrides
@@ -144,6 +128,8 @@ module Ameba::Formatter
       property tool : Tool
       property results : Array(RunResult)
       property invocations : Array(Invocation)?
+      @[JSON::Field(key: "columnKind")]
+      property column_kind = "unicodeCodePoints"
 
       def initialize(@tool, @results = Array(RunResult).new, @invocations = nil)
       end
@@ -175,7 +161,7 @@ module Ameba::Formatter
 
     struct Location
       property uri : String
-      property start_location : Crystal::Location?
+      property start_location : Crystal::Location
       property end_location : Crystal::Location?
       property context_region : ContextRegion?
 
@@ -183,20 +169,19 @@ module Ameba::Formatter
       end
 
       def to_json(json)
-        region_data = Hash(String, Int32).new
-
-        if start_loc = start_location
-          region_data["startLine"] = start_loc.line_number
-          region_data["startColumn"] = start_loc.column_number
-        else
-          region_data["startLine"] = 1
-          region_data["startColumn"] = 1
-        end
-
+        end_line = start_location.line_number
+        end_column = start_location.column_number
         if end_loc = end_location
-          region_data["endLine"] = end_loc.line_number
-          region_data["endColumn"] = end_loc.column_number
+          end_line = end_loc.line_number
+          end_column = end_loc.column_number + 1
         end
+
+        region_data = {
+          startLine:   start_location.line_number,
+          startColumn: start_location.column_number,
+          endLine:     end_line,
+          endColumn:   end_column,
+        }
 
         json.object do
           json.field "physicalLocation" do
@@ -305,20 +290,14 @@ module Ameba::Formatter
     end
 
     struct ReportingConfiguration
-      getter? enabled : Bool
-      getter level : Level
-      getter rule_class : Rule::Base.class
-
-      def initialize(@enabled, @level, @rule_class)
+      def initialize(@rule : Rule::Base, *, @override = false)
       end
 
       def to_json(json)
         json.object do
-          json.field("enabled", false) unless enabled?
-          json.field("level", level)
-          json.field("parameters") do
-            rule_class.to_sarif(json)
-          end
+          json.field("enabled", @rule.enabled?) if @override || !@rule.enabled?
+          json.field("level", Level.from_severity(@rule.severity))
+          json.field("parameters", @rule.sarif_parameters)
         end
       end
     end
