@@ -380,6 +380,20 @@ module Ameba::Rule::Lint
           CRYSTAL
       end
 
+      it "doesn't report block args referenced in a macro with an interpolated name" do
+        expect_no_issues subject, <<-CRYSTAL
+          {% for name in %w[emit] %}
+            macro {{ name.id }}
+              puts value
+            end
+          {% end %}
+
+          [42].each do |value|
+            emit
+          end
+          CRYSTAL
+      end
+
       it "doesn't report used args in macro literals" do
         expect_no_issues subject, <<-CRYSTAL
           def print(f : Array(U)) forall U

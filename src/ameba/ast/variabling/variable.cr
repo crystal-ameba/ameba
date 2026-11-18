@@ -137,8 +137,9 @@ module Ameba::AST
     # Collects the macro definitions (`macro foo ... end`), including
     # the macro code defining them (i.e. `{% for %} macro foo ... {% end %}`)
     private class MacroDefinitionsFinder < Crystal::Visitor
-      # Matches a macro definition within the macro literal
-      MACRO_DEFINITION = /(?<![\p{L}\p{N}_.:@$])macro\s+[\p{L}_]/
+      # Matches a macro definition within the macro literal, also one
+      # with an interpolated name (i.e. `macro {{ name.id }}`)
+      MACRO_DEFINITION = /(?<![\p{L}\p{N}_.:@$])macro(?:\s+[\p{L}_]|[ \t]+\z)/
 
       getter macros = [] of Crystal::ASTNode
 
