@@ -37,6 +37,9 @@ module Ameba::AST
       # within an interpolation
       property nesting = 0
 
+      def_equals_and_hash @kind, @opening, @closing, @interpolates, @escapes,
+        @regex, @heredoc_end, @nesting
+
       def initialize(@kind, closing = '\0', opening = closing, *,
                      @interpolates = false, @escapes = false, @regex = false,
                      @heredoc_end = nil)
@@ -93,6 +96,9 @@ module Ameba::AST
 
     # Reader of the currently scanned macro literal
     @reader = Char::Reader.new("")
+
+    # Scanners in the same lexical state are equal
+    def_equals_and_hash @contexts, @heredocs, @prev_char, @last_char, @before_last_char
 
     # Returns a deep copy of the scanner, i.e. to scan alternative
     # macro branches starting from the same lexical state.

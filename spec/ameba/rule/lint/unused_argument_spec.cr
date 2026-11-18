@@ -394,6 +394,32 @@ module Ameba::Rule::Lint
           CRYSTAL
       end
 
+      it "doesn't report block args referenced after a skipped macro branch" do
+        expect_no_issues subject, <<-CRYSTAL
+          macro emit
+            {% if false %}
+              # dangling comment{% end %}puts value
+          end
+
+          [42].each do |value|
+            emit
+          end
+          CRYSTAL
+      end
+
+      it "doesn't report block args referenced after a skipped macro loop" do
+        expect_no_issues subject, <<-CRYSTAL
+          macro emit
+            {% for x in [] of Nil %}
+              # dangling comment{% end %}puts value
+          end
+
+          [42].each do |value|
+            emit
+          end
+          CRYSTAL
+      end
+
       it "doesn't report used args in macro literals" do
         expect_no_issues subject, <<-CRYSTAL
           def print(f : Array(U)) forall U

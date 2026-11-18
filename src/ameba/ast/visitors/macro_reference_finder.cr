@@ -38,7 +38,11 @@ module Ameba::AST
     property? references = false
 
     @reference : Regex
-    @scanner = MacroCodeScanner.new
+
+    # Scanners in each of the lexical states the macro code might be in,
+    # as the macro branches and loops might leave it in different ones
+    # (i.e. `{% if foo %}# bar{% end %}baz`)
+    @scanners = [MacroCodeScanner.new]
 
     def initialize(node, reference : String)
       # Matches *reference* as a whole identifier, so that i.e. `b` isn't
@@ -66,30 +70,43 @@ module Ameba::AST
     end
 
     def visit(node : Crystal::MacroLiteral)
-      !(@references ||= includes_reference?(@scanner.scan(node.value)))
+      !(@references ||= @scanners.any? { |scanner| includes_reference?(scanner.scan(node.value)) })
     end
 
     def visit(node : Crystal::MacroExpression)
-      @scanner.after_value! if node.output?
+      @scanners.each(&.after_value!) if node.output?
 
       !(@references ||= macro_code_references?(node.exp))
     end
 
     def visit(node : Crystal::MacroFor)
-      !(@references ||= macro_code_references?(node.exp))
+      return false if @references ||= macro_code_references?(node.exp)
+
+      # The loop body might be expanded no times at all
+      visit_alternatives(node.body, Crystal::Nop.new)
     end
 
     def visit(node : Crystal::MacroIf)
       return false if @references ||= macro_code_references?(node.cond)
 
-      # Both branches start in the same lexical state
-      scanner = @scanner.clone
-      node.then.accept(self)
+      visit_alternatives(node.then, node.else)
+    end
 
-      unless node.else.is_a?(Crystal::Nop)
-        @scanner = scanner
-        node.else.accept(self)
+    # Visits each of the alternative *nodes* starting in the current lexical
+    # states, continuing in any of the states they end in. Returns `false`.
+    private def visit_alternatives(*nodes : Crystal::ASTNode) : Bool
+      initial_scanners = @scanners
+      final_scanners = [] of MacroCodeScanner
+
+      nodes.each_with_index do |node, index|
+        # The last alternative can take over the initial scanners
+        @scanners = index == nodes.size - 1 ? initial_scanners : initial_scanners.map(&.clone)
+        node.accept(self)
+        return false if @references
+
+        final_scanners.concat(@scanners)
       end
+      @scanners = final_scanners.uniq
       false
     end
 

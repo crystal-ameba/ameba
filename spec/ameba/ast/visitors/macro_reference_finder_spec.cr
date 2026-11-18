@@ -78,6 +78,8 @@ module Ameba::AST
         "{% begin %}\n  bar <<-1 + foo\n{% end %}",
         "{% begin %}\n  bar /foo\n{% end %}",
         "{% begin %}\n  bar /foo / 2\n{% end %}",
+        "{% begin %}{% if bar %}# baz{% end %}foo{% end %}",
+        "{% begin %}{% if bar %}\"{% end %}foo\"{% end %}",
       }.each do |code|
         it "returns true for #{code.inspect}" do
           node = Crystal::Parser.new(code).parse
@@ -115,6 +117,7 @@ module Ameba::AST
         "{% begin %}\n  `echo foo`\n{% end %}",
         "{% begin %}\n  %x(echo foo)\n{% end %}",
         "{% begin %}{% if bar %}\"{% else %}\"{% end %}foo\"{% end %}",
+        "{% begin %}{% if bar %}# baz{% else %}\"{% end %}foo{% end %}",
         "{{ foo }}",
         "{{ foo.id }}",
         "{{ [foo] }}",
