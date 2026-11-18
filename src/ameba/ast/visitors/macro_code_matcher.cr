@@ -5,7 +5,13 @@ module Ameba::AST
   # As the macro branches and loops might leave the code in different
   # lexical states (i.e. `{% if foo %}# bar{% end %}baz`), the code following
   # them is scanned in each of these, matching if it does in any of them.
+  #
+  # NOTE: Beyond `MAX_STATES` lexical states, the code is assumed to match,
+  # as their number might grow exponentially with the number of branches.
   class MacroCodeMatcher < Crystal::Visitor
+    # Maximum number of the lexical states followed
+    MAX_STATES = 64
+
     getter? matches = false
 
     # Scanners in each of the lexical states the macro code might be in
@@ -64,8 +70,25 @@ module Ameba::AST
 
     def visit(node : Crystal::MacroIf)
       return false if @matches ||= macro_code_matches?(node.cond)
+      return visit_alternatives(node.then, node.else) unless taken = static_branch(node)
 
-      visit_alternatives(node.then, node.else)
+      # A branch never taken (i.e. `{% if false %}`, or the `else` of
+      # `{% begin %}`) is still searched, but the code following it
+      # continues only in the lexical states of the other one
+      skipped = taken.same?(node.then) ? node.else : node.then
+      scanners, @scanners = @scanners, @scanners.map(&.clone)
+      skipped.accept(self)
+      @scanners = scanners
+      taken.accept(self) unless @matches
+      false
+    end
+
+    # Returns the branch taken if the condition is a literal
+    private def static_branch(node : Crystal::MacroIf) : Crystal::ASTNode?
+      case cond = node.cond
+      when Crystal::BoolLiteral then cond.value ? node.then : node.else
+      when Crystal::NilLiteral  then node.else
+      end
     end
 
     # Visits each of the alternative *nodes* starting in the current lexical
@@ -83,6 +106,7 @@ module Ameba::AST
         final_scanners.concat(@scanners)
       end
       @scanners = final_scanners.uniq
+      @matches = true if @scanners.size > MAX_STATES
       false
     end
 

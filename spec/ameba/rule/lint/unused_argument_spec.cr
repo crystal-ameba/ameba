@@ -444,6 +444,18 @@ module Ameba::Rule::Lint
           CRYSTAL
       end
 
+      it "reports unused block args following many skipped macro branches" do
+        branches = (0...16).join { |i| "{% if false %}; puts <<-H#{i}{% end %}" }
+
+        expect_issue subject, <<-CRYSTAL
+          [0].each do |unused|
+                     # ^^^^^^ error: Unused argument `unused`. [...]
+          {% begin %}nil#{branches}
+          {% end %}
+          end
+          CRYSTAL
+      end
+
       it "doesn't report used args in macro literals" do
         expect_no_issues subject, <<-CRYSTAL
           def print(f : Array(U)) forall U
