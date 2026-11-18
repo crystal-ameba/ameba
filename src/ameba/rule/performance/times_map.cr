@@ -103,16 +103,38 @@ module Ameba::Rule::Performance
                       block.as?(Crystal::Block).try(&.body.end_location)
 
       count_end_pos = source.pos(count_end_location, end: true)
-      block_range = source.pos(block_location)...source.pos(block_end_location, end: true)
+      block_pos = source.pos(block_location)
+      block_end_pos = source.pos(block_end_location, end: true)
       end_pos = source.pos(end_location, end: true)
 
       # the code around the block holds no literals (only `.times.map(`,
       # `).to_a` and alike), so any `#` found there starts a comment
-      return if source.code[count_end_pos...block_range.begin].includes?('#') ||
-                source.code[block_range.end...end_pos].includes?('#')
+      return if source.code[count_end_pos...block_pos].includes?('#') ||
+                source.code[block_end_pos...end_pos].includes?('#')
 
-      code = source.code[block_range]
+      unless block.end_location
+        # the short block body's end location can stop short of the block's
+        # actual end (e.g. `&.foo=(42)` ends at `42`), so extend it up to
+        # the closing parenthesis of the `map` call
+        return unless block_end_pos = short_block_end_pos(source, map_call, block_end_pos)
+      end
+
+      code = source.code[block_pos...block_end_pos]
       map_call.block_arg ? "&#{code}" : code
+    end
+
+    # Returns the position right after the last character of the short block,
+    # passed within the parentheses of the `map` call, the trailing whitespace
+    # and line continuations (`\`) before the closing parenthesis excluded.
+    private def short_block_end_pos(source, map_call, body_end_pos) : Int32?
+      return unless map_end_location = map_call.end_location
+
+      map_end_pos = source.pos(map_end_location)
+      return unless map_end_pos >= body_end_pos
+      return unless source.code[map_end_pos]? == ')'
+
+      body_end_pos +
+        source.code[body_end_pos...map_end_pos].rstrip(" \t\r\n\\").size
     end
 
     # Returns `true` if the block is passed as an argument

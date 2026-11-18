@@ -50,6 +50,44 @@ module Ameba::Rule::Performance
         CRYSTAL
     end
 
+    it "reports and corrects short block syntax with a setter call" do
+      source = expect_issue subject, <<-CRYSTAL
+        3.times.map(&.example=(42)).to_a
+        # ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ error: Use `Array.new(3, &...)` instead of `3.times.map(&...).to_a`
+        3.times.map( &.example=(42) ).to_a
+        # ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ error: Use `Array.new(3, &...)` instead of `3.times.map(&...).to_a`
+        3.times.map(&.[1]).to_a
+        # ^^^^^^^^^^^^^^^^^^^^^ error: Use `Array.new(3, &...)` instead of `3.times.map(&...).to_a`
+        CRYSTAL
+
+      expect_correction source, <<-CRYSTAL
+        Array.new(3, &.example=(42))
+        Array.new(3, &.example=(42))
+        Array.new(3, &.[1])
+        CRYSTAL
+    end
+
+    it "reports and corrects multi-line short block syntax" do
+      source = expect_issue subject, <<-CRYSTAL
+        3.times.map(
+        # ^^^^^^^^^^ error: Use `Array.new(3, &...)` instead of `3.times.map(&...).to_a`
+          &.example=(42)
+        ).to_a
+        3.times.map(&.to_s \\
+        # ^^^^^^^^^^^^^^^^^^ error: Use `Array.new(3, &...)` instead of `3.times.map(&...).to_a`
+        ).to_a
+        3.times.map(&.example=(42) \\
+        # ^^^^^^^^^^^^^^^^^^^^^^^^^^ error: Use `Array.new(3, &...)` instead of `3.times.map(&...).to_a`
+        ).to_a
+        CRYSTAL
+
+      expect_correction source, <<-CRYSTAL
+        Array.new(3, &.example=(42))
+        Array.new(3, &.to_s)
+        Array.new(3, &.example=(42))
+        CRYSTAL
+    end
+
     it "reports and corrects empty argument parentheses followed by a block" do
       source = expect_issue subject, <<-CRYSTAL
         3.times.map() { |i| i * 2 }.to_a
@@ -96,6 +134,10 @@ module Ameba::Rule::Performance
         # ^^^^^^^^^^^^^^^ error: Use `Array.new(3, &...)` instead of `3.times.map(&...).to_a`
           .map(&.to_s)
           .to_a
+        3.times.map(
+        # ^^^^^^^^^^ error: Use `Array.new(3, &...)` instead of `3.times.map(&...).to_a`
+          &.example=(42) # comment
+        ).to_a
         CRYSTAL
 
       expect_no_corrections source
