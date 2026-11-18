@@ -434,6 +434,16 @@ module Ameba::Rule::Lint
           CRYSTAL
       end
 
+      it "doesn't report block args referenced in a regex interpolation in a macro" do
+        expect_no_issues subject, <<-'CRYSTAL'
+          [6].each do |value|
+            {% begin %}
+              puts /a#{value}b/
+            {% end %}
+          end
+          CRYSTAL
+      end
+
       it "doesn't report used args in macro literals" do
         expect_no_issues subject, <<-CRYSTAL
           def print(f : Array(U)) forall U

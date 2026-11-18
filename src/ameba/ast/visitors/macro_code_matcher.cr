@@ -22,7 +22,31 @@ module Ameba::AST
     end
 
     def visit(node : Crystal::MacroLiteral)
-      !(@matches ||= @scanners.any?(&.scan(node.value).matches?(@regex)))
+      scan(node.value)
+      false
+    end
+
+    # Scans the subsequent macro literals as a whole, as the macro lexer
+    # splits them i.e. at each `#`, while a regex literal isn't known
+    # to be one before its end (`/a#{b}c/` is split into `/a`, `#`, `{b}c/`).
+    def visit(node : Crystal::Expressions)
+      literals = [] of String
+
+      node.expressions.each do |exp|
+        if exp.is_a?(Crystal::MacroLiteral)
+          literals << exp.value
+          next
+        end
+        scan(literals.join) unless literals.empty?
+        literals.clear
+        exp.accept(self) unless @matches
+      end
+      scan(literals.join) unless literals.empty?
+      false
+    end
+
+    private def scan(code : String) : Nil
+      @matches ||= @scanners.any?(&.scan(code).matches?(@regex))
     end
 
     def visit(node : Crystal::MacroExpression)
