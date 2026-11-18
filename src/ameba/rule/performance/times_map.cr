@@ -56,7 +56,7 @@ module Ameba::Rule::Performance
 
       message = (block_arg ? MSG_BLOCK_ARG : MSG) % single_line(count, count_code)
 
-      if count_code && (block_code = block_code(source, count, map_call, end_location))
+      if count_code && (block_code = block_code(source, count, map_call, end_location, block_arg))
         corrected_code =
           if block_arg
             "Array.new(%s, %s)" % {count_code, block_code}
@@ -93,26 +93,24 @@ module Ameba::Rule::Performance
 
     # Returns the original code of the `map` block, or `nil`
     # if moving it would lose the comments around it.
-    private def block_code(source, count, map_call, end_location) : String?
+    private def block_code(source, count, map_call, end_location, block_arg) : String?
       return unless count_end_location = count.end_location
       return unless block = map_call.block_arg || map_call.block
       return unless block_location = block.location
+
       # short blocks (`&.foo`) have no end location of their own
+      short_block = map_call.block if block_arg
       return unless block_end_location =
-                      block.end_location ||
-                      block.as?(Crystal::Block).try(&.body.end_location)
+                      short_block ? short_block.body.end_location : block.end_location
 
       count_end_pos = source.pos(count_end_location, end: true)
       block_pos = source.pos(block_location)
       block_end_pos = source.pos(block_end_location, end: true)
       end_pos = source.pos(end_location, end: true)
 
-      # the code around the block holds no literals (only `.times.map(`,
-      # `).to_a` and alike), so any `#` found there starts a comment
-      return if source.code[count_end_pos...block_pos].includes?('#') ||
-                source.code[block_end_pos...end_pos].includes?('#')
+      return if comments_around?(source, count_end_pos...block_pos, block_end_pos...end_pos)
 
-      unless block.end_location
+      if short_block
         # the short block body's end location can stop short of the block's
         # actual end (e.g. `&.foo=(42)` ends at `42`), so extend it up to
         # the closing parenthesis of the `map` call
@@ -121,6 +119,13 @@ module Ameba::Rule::Performance
 
       code = source.code[block_pos...block_end_pos]
       map_call.block_arg ? "&#{code}" : code
+    end
+
+    # Returns `true` if any of the given *ranges* of the code around the block
+    # contains a comment. These hold no literals (only `.times.map(`, `).to_a`
+    # and alike), so any `#` found there starts a comment.
+    private def comments_around?(source, *ranges) : Bool
+      ranges.any? { |range| source.code[range].includes?('#') }
     end
 
     # Returns the position right after the last character of the short block,
