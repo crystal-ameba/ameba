@@ -37,7 +37,8 @@ module Ameba::Rule::Performance
       description "Identifies usage of `times.map { ... }.to_a` calls"
     end
 
-    MSG = "Use `Array.new(%1$s) {...}` instead of `%1$s.times.map {...}.to_a`"
+    MSG           = "Use `Array.new(%1$s) {...}` instead of `%1$s.times.map {...}.to_a`"
+    MSG_BLOCK_ARG = "Use `Array.new(%1$s, &...)` instead of `%1$s.times.map(&...).to_a`"
 
     def test(source)
       AST::NodeVisitor.new(self, source, skip: :macro)
@@ -59,8 +60,7 @@ module Ameba::Rule::Performance
       return unless end_location = node.end_location
 
       count_code = node_source(obj3, source.lines) || obj3.to_s
-      # keep the issue message on a single line
-      message = MSG % (count_code.includes?('\n') ? obj3 : count_code)
+      message = (block_arg?(obj) ? MSG_BLOCK_ARG : MSG) % single_line(obj3, count_code)
 
       if corrected_code = corrected_code(source, location, end_location, count_code, obj)
         issue_for(location, end_location, message) do |corrector|
@@ -87,11 +87,33 @@ module Ameba::Rule::Performance
 
       block_code = "&#{block_code}" if map_call.block_arg
 
-      if block_code.starts_with?('&')
-        "Array.new(%s, %s)" % {count_code, block_code}
-      else
-        "Array.new(%s) %s" % {count_code, block_code}
+      corrected_code =
+        if block_arg?(map_call)
+          "Array.new(%s, %s)" % {count_code, block_code}
+        else
+          "Array.new(%s) %s" % {count_code, block_code}
+        end
+
+      # `source_between` joins lines with LF, keep the original line endings
+      if source.code.includes?("\r\n")
+        corrected_code = corrected_code.gsub('\n', "\r\n")
       end
+      corrected_code
+    end
+
+    # Returns `true` if the block is passed as an argument
+    # (`&block`) or using the short block syntax (`&.foo`).
+    private def block_arg?(map_call)
+      !!(map_call.block_arg || map_call.block.try(&.end_location.nil?))
+    end
+
+    # Keeps the issue message on a single line.
+    private def single_line(node, code)
+      return code unless code.includes?('\n')
+
+      node.to_s
+        .gsub(/\s*\n\s*(?=\.)/, "")
+        .gsub(/\s*\n\s*/, " ")
     end
 
     private def comments_between?(location, end_location, source)
