@@ -407,6 +407,20 @@ module Ameba::Rule::Lint
           CRYSTAL
       end
 
+      it "doesn't report block args referenced in a macro defined after a skipped macro branch" do
+        expect_no_issues subject, <<-CRYSTAL
+          {% for name in %w[emit] %}
+            {% if false %}# dangling comment{% end %}macro {{ name.id }}
+              puts value
+            end
+          {% end %}
+
+          [42].each do |value|
+            emit
+          end
+          CRYSTAL
+      end
+
       it "doesn't report block args referenced after a skipped macro loop" do
         expect_no_issues subject, <<-CRYSTAL
           macro emit

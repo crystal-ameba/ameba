@@ -6,7 +6,7 @@ module Ameba::AST
   # can reference a variable only via an identifier built from a string or
   # a symbol (i.e. `{{ "foo".id }}`), while the rest of the macro body
   # is a plain code (i.e. `{% if flag?(:foo) %} foo {% end %}`).
-  class MacroReferenceFinder < Crystal::Visitor
+  class MacroReferenceFinder < MacroCodeMatcher
     # Collects the values of string and symbol literals, which might end up
     # being an identifier (i.e. via `#id` method)
     private class StringValues < Crystal::Visitor
@@ -35,15 +35,6 @@ module Ameba::AST
       end
     end
 
-    property? references = false
-
-    @reference : Regex
-
-    # Scanners in each of the lexical states the macro code might be in,
-    # as the macro branches and loops might leave it in different ones
-    # (i.e. `{% if foo %}# bar{% end %}baz`)
-    @scanners = [MacroCodeScanner.new]
-
     def initialize(node, reference : String)
       # Matches *reference* as a whole identifier, so that i.e. `b` isn't
       # found within `blk`, `@b`, or `b?`, but still within `b.foo` or `b != c`.
@@ -51,67 +42,21 @@ module Ameba::AST
       # Method names (`a.b`, `a&.b`, `def b`, `macro b`), named arguments
       # (`a(b: 1)`) and named-tuple keys (`{b: 1}`) are skipped, while
       # ranges (`1..b`) and paths (`b::C`) aren't.
-      @reference = /
+      super(node, /
         (?<![\p{L}\p{N}_@$]|[^.]\.|^\.|\bdef\s|\bmacro\s)
         #{Regex.escape(reference)}
         (?![\p{L}\p{N}_?]|!(?![=~])|:(?!:))
-        /x
-      node.accept(self)
+        /x)
     end
 
-    @[AlwaysInline]
-    private def includes_reference?(code : String) : Bool
-      code.matches?(@reference)
+    # Returns `true` if the variable is referenced within the node
+    def references? : Bool
+      matches?
     end
 
     # Returns `true` if the macro code *node* references the variable
-    private def macro_code_references?(node : Crystal::ASTNode) : Bool
-      StringValues.new(node).values.any? { |value| includes_reference?(value) }
-    end
-
-    def visit(node : Crystal::MacroLiteral)
-      !(@references ||= @scanners.any? { |scanner| includes_reference?(scanner.scan(node.value)) })
-    end
-
-    def visit(node : Crystal::MacroExpression)
-      @scanners.each(&.after_value!) if node.output?
-
-      !(@references ||= macro_code_references?(node.exp))
-    end
-
-    def visit(node : Crystal::MacroFor)
-      return false if @references ||= macro_code_references?(node.exp)
-
-      # The loop body might be expanded no times at all
-      visit_alternatives(node.body, Crystal::Nop.new)
-    end
-
-    def visit(node : Crystal::MacroIf)
-      return false if @references ||= macro_code_references?(node.cond)
-
-      visit_alternatives(node.then, node.else)
-    end
-
-    # Visits each of the alternative *nodes* starting in the current lexical
-    # states, continuing in any of the states they end in. Returns `false`.
-    private def visit_alternatives(*nodes : Crystal::ASTNode) : Bool
-      initial_scanners = @scanners
-      final_scanners = [] of MacroCodeScanner
-
-      nodes.each_with_index do |node, index|
-        # The last alternative can take over the initial scanners
-        @scanners = index == nodes.size - 1 ? initial_scanners : initial_scanners.map(&.clone)
-        node.accept(self)
-        return false if @references
-
-        final_scanners.concat(@scanners)
-      end
-      @scanners = final_scanners.uniq
-      false
-    end
-
-    def visit(node : Crystal::ASTNode)
-      true
+    protected def macro_code_matches?(node : Crystal::ASTNode) : Bool
+      StringValues.new(node).values.any?(&.matches?(@regex))
     end
   end
 end

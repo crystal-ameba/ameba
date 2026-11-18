@@ -167,27 +167,7 @@ module Ameba::AST
       end
 
       private def defines_macro?(node) : Bool
-        MacroLiteralsMatcher.new(node, MACRO_DEFINITION).matches?
-      end
-    end
-
-    # Matches the code of the macro literals within a node (that is,
-    # without comments and literals) against a regex
-    private class MacroLiteralsMatcher < Crystal::Visitor
-      getter? matches = false
-
-      @scanner = MacroCodeScanner.new
-
-      def initialize(node, @regex : Regex)
-        node.accept(self)
-      end
-
-      def visit(node : Crystal::MacroLiteral)
-        !(@matches ||= @scanner.scan(node.value).matches?(@regex))
-      end
-
-      def visit(node : Crystal::ASTNode)
-        !@matches
+        MacroCodeMatcher.new(node, MACRO_DEFINITION).matches?
       end
     end
 
