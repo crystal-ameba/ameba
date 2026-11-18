@@ -99,14 +99,95 @@ module Ameba::AST
 
     # Returns `true` if current variable potentially referenced in a macro,
     # `false` if not.
-    def used_in_macro?(scope = @scope)
-      scope.inner_scopes.each do |inner_scope|
-        return true if MacroReferenceFinder.new(inner_scope.node, node.name).references?
-      end
+    #
+    # That is, in a macro code within the variable's scope (including
+    # its inner scopes), or in any macro defined within the source, which
+    # might be called (and expanded) within the variable's scope - either
+    # directly, or i.e. via inheritance, module inclusion, or a receiver:
+    #
+    # ```
+    # macro print_a
+    #   puts a
+    # end
+    #
+    # def foo
+    #   a = 1 # used in macro
+    #   print_a
+    # end
+    # ```
+    #
+    # NOTE: Macro code (`{{ ... }}`, `{% ... %}`) outside of the variable's
+    # scope, but not within a macro definition, is expanded in place,
+    # hence it can't reference the variable.
+    def used_in_macro?(scope = @scope) : Bool
       return true if MacroReferenceFinder.new(scope.node, node.name).references?
-      return true if (outer_scope = scope.outer_scope) && used_in_macro?(outer_scope)
 
-      false
+      # The whole source has been searched already
+      return false unless outer_scope = scope.outer_scope
+
+      while outer_scope
+        scope, outer_scope = outer_scope, outer_scope.outer_scope
+      end
+
+      MacroDefinitionsFinder.new(scope.node).macros.any? do |macro_node|
+        MacroReferenceFinder.new(macro_node, node.name).references?
+      end
+    end
+
+    # Collects the macro definitions (`macro foo ... end`), including
+    # the macro code defining them (i.e. `{% for %} macro foo ... {% end %}`)
+    private class MacroDefinitionsFinder < Crystal::Visitor
+      # Matches a macro definition within the macro literal
+      MACRO_DEFINITION = /(?<![\p{L}\p{N}_.:@$])macro\s+[\p{L}_]/
+
+      getter macros = [] of Crystal::ASTNode
+
+      def initialize(node)
+        node.accept(self)
+      end
+
+      def visit(node : Crystal::Macro)
+        @macros << node
+        false
+      end
+
+      def visit(node : Crystal::MacroIf | Crystal::MacroFor | Crystal::MacroVerbatim)
+        @macros << node if defines_macro?(node)
+        false
+      end
+
+      # Macros can't be defined within methods
+      def visit(node : Crystal::Def)
+        false
+      end
+
+      def visit(node : Crystal::ASTNode)
+        true
+      end
+
+      private def defines_macro?(node) : Bool
+        MacroLiteralsMatcher.new(node, MACRO_DEFINITION).matches?
+      end
+    end
+
+    # Matches the code of the macro literals within a node (that is,
+    # without comments and literals) against a regex
+    private class MacroLiteralsMatcher < Crystal::Visitor
+      getter? matches = false
+
+      @scanner = MacroCodeScanner.new
+
+      def initialize(node, @regex : Regex)
+        node.accept(self)
+      end
+
+      def visit(node : Crystal::MacroLiteral)
+        !(@matches ||= @scanner.scan(node.value).matches?(@regex))
+      end
+
+      def visit(node : Crystal::ASTNode)
+        !@matches
+      end
     end
 
     # Returns `true` if the variable is a target (on the left) of the assignment,

@@ -342,6 +342,33 @@ module Ameba::Rule::Lint
           CRYSTAL
       end
 
+      it "reports unused block args referenced in a macro code of a different method" do
+        expect_issue subject, <<-CRYSTAL
+          def foo
+            [1].each_with_index { |a, i| puts a }
+                                    # ^ error: Unused argument `i`. [...]
+          end
+
+          def bar
+            {% for i in 1..2 %}
+              puts {{ i }}
+            {% end %}
+          end
+          CRYSTAL
+      end
+
+      it "doesn't report block args referenced in a macro defined in an outer scope" do
+        expect_no_issues subject, <<-CRYSTAL
+          macro print_i
+            puts i
+          end
+
+          def foo
+            [1].each_with_index { |a, i| print_i; puts a }
+          end
+          CRYSTAL
+      end
+
       it "doesn't report used args in macro literals" do
         expect_no_issues subject, <<-CRYSTAL
           def print(f : Array(U)) forall U

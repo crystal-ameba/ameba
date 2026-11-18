@@ -1465,6 +1465,201 @@ module Ameba::Rule::Lint
           CRYSTAL
       end
 
+      it "doesn't report if assignment is referenced in a macro defined in an outer namespace" do
+        expect_no_issues subject, <<-CRYSTAL
+          module Foo
+            macro macro_call
+              puts a
+            end
+
+            class Bar
+              def bar
+                a = 1
+                macro_call
+              end
+            end
+          end
+          CRYSTAL
+      end
+
+      it "doesn't report if assignment is referenced in an inherited macro" do
+        expect_no_issues subject, <<-CRYSTAL
+          class Foo
+            macro macro_call
+              puts a
+            end
+          end
+
+          class Bar < Foo
+            def bar
+              a = 1
+              macro_call
+            end
+          end
+          CRYSTAL
+      end
+
+      it "doesn't report if assignment is referenced in an included macro" do
+        expect_no_issues subject, <<-CRYSTAL
+          module Foo
+            macro macro_call
+              puts a
+            end
+          end
+
+          class Bar
+            include Foo
+
+            def bar
+              a = 1
+              macro_call
+            end
+          end
+          CRYSTAL
+      end
+
+      it "doesn't report if assignment is referenced in a macro called with a receiver" do
+        expect_no_issues subject, <<-CRYSTAL
+          class Foo
+            def foo
+              a = 1
+              Bar.macro_call
+            end
+          end
+
+          class Bar
+            macro macro_call
+              puts a
+            end
+          end
+          CRYSTAL
+      end
+
+      it "reports if assignment is referenced only as a parameter of a macro" do
+        expect_issue subject, <<-CRYSTAL
+          macro def_getter(name)
+            def {{ name.id }}
+              @{{ name.id }}
+            end
+          end
+
+          def foo
+            name = 1
+          # ^^^^ error: Useless assignment to variable `name`
+          end
+          CRYSTAL
+      end
+
+      it "doesn't report if assignment is referenced as a string in a macro with a parameter of the same name" do
+        expect_no_issues subject, <<-CRYSTAL
+          macro print_name(name)
+            puts {{ "name".id }}
+          end
+
+          def foo
+            name = 1
+            print_name(:bar)
+          end
+          CRYSTAL
+      end
+
+      it "doesn't report if assignment is referenced in a macro defined within a macro code" do
+        expect_no_issues subject, <<-CRYSTAL
+          class Foo
+            {% if true %}
+              {% begin %}
+                macro macro_call
+                  puts a
+                end
+              {% end %}
+            {% end %}
+
+            def foo
+              a = 1
+              macro_call
+            end
+          end
+          CRYSTAL
+      end
+
+      it "doesn't report if assignment is referenced in a macro defined by a macro loop" do
+        expect_no_issues subject, <<-CRYSTAL
+          class Foo
+            {% for name in %w[foo bar] %}
+              macro print_{{ name.id }}
+                puts a
+              end
+            {% end %}
+
+            def foo
+              a = 1
+              print_foo
+            end
+          end
+          CRYSTAL
+      end
+
+      it "reports if assignment is referenced only in a macro code not defining macros" do
+        expect_issue subject, <<-CRYSTAL
+          class Foo
+            {% for name in %w[foo bar] %}
+              def print_{{ name.id }}
+                puts a
+              end
+            {% end %}
+
+            def foo
+              a = 1
+            # ^ error: Useless assignment to variable `a`
+            end
+          end
+          CRYSTAL
+      end
+
+      it "reports if assignment is referenced only as a symbol in a macro condition" do
+        expect_issue subject, <<-CRYSTAL
+          def foo
+            debug = 1
+          # ^^^^^ error: Useless assignment to variable `debug`
+            {% if flag?(:debug) %}
+              puts "debug"
+            {% end %}
+          end
+          CRYSTAL
+      end
+
+      it "reports if assignment is referenced only in a macro code mentioning a macro in a comment" do
+        expect_issue subject, <<-CRYSTAL
+          class Foo
+            {% for name in %w[foo bar] %}
+              # Defines a method, not a macro print_{{ name.id }}
+              def print_{{ name.id }}
+                puts a
+              end
+            {% end %}
+
+            def foo
+              a = 1
+            # ^ error: Useless assignment to variable `a`
+            end
+          end
+          CRYSTAL
+      end
+
+      it "reports if assignment is referenced in a macro code of a different method" do
+        expect_issue subject, <<-CRYSTAL
+          def foo
+            a = 1
+          # ^ error: Useless assignment to variable `a`
+          end
+
+          def bar
+            # a
+            {{ "a".id }}
+          end
+          CRYSTAL
+      end
+
       it "doesn't report if assignment is referenced in a macro expression as string" do
         expect_no_issues subject, <<-CRYSTAL
           foo = 1
