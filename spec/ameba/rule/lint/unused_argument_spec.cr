@@ -369,6 +369,17 @@ module Ameba::Rule::Lint
           CRYSTAL
       end
 
+      it "doesn't report block args referenced after a division operator in a macro" do
+        expect_no_issues subject, <<-CRYSTAL
+          [3].each do |divisor|
+            numerator = 12
+            {% begin %}
+              puts numerator /divisor
+            {% end %}
+          end
+          CRYSTAL
+      end
+
       it "doesn't report used args in macro literals" do
         expect_no_issues subject, <<-CRYSTAL
           def print(f : Array(U)) forall U

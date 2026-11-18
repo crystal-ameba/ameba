@@ -56,6 +56,26 @@ module Ameba::AST
       '|' => '|',
     }
 
+    # Kinds of the operand preceding a `/` or `%` (i.e. `a /b`)
+    private enum Operand
+      # A literal, a constant, or a variable (but a local one), followed
+      # by an operator (`1 /a`, `(a) /b`, `A /b`, `@a /b`, `self /a`)
+      Value
+      # A method call or a keyword, followed by a literal
+      # (`a.b /c/`, `A::b /c/`, `a? /b/`, `when /a/`)
+      Call
+      # Either a local variable or a method call (`a /b`)
+      Unknown
+    end
+
+    # Keywords followed by an expression, i.e. by a regex literal (`when /a/`)
+    private EXPRESSION_KEYWORDS = %w[
+      if unless elsif when while until return next break yield then else do begin case
+    ]
+
+    # Keywords being a value, i.e. followed by an operator (`self /a`)
+    private VALUE_KEYWORDS = %w[self nil true false]
+
     # Stack of the opened lexical contexts (an empty stack means plain code)
     @contexts = [] of Context
 
@@ -393,13 +413,73 @@ module Ameba::AST
       return false if @prev_char == '/' || operator_name?
       # `(/a/)`, `= /a/`, `a ? /b/ : c`
       return true unless after_value?
-      # `a/b`, `(a) / b`, `"a" % b`, `a? / b`
-      return false unless @prev_char.in?(' ', '\t') && ident_part?(@last_char)
+      # `a/b`, `a?/b`
+      return false unless @prev_char.in?(' ', '\t')
 
       # `foo /a/` vs `a / b`, `a /= b`, `a // b`
       next_char = @reader.peek_next_char
-      !next_char.whitespace? &&
-        !next_char.in?('=', '/', '\0')
+      return false if next_char.whitespace? || next_char.in?('=', '/', '\0')
+
+      case preceding_operand
+      in .value? then false
+      in .call?  then true
+      in .unknown?
+        # `foo /a/` vs `a /b` - a regex only if `foo` isn't a local variable,
+        # which can't be told from the macro code
+        @reader.current_char != '/' || regex_closed_on_line?
+      end
+    end
+
+    # Returns the kind of the operand preceding the reader's position
+    private def preceding_operand : Operand
+      # Local variables can't end with `?` or `!`
+      return Operand::Call if char_at(skip_blanks_back(@reader.pos - 1)).in?('?', '!')
+
+      word, index = preceding_identifier
+      prefix = char_at(index)
+
+      case
+      when word.empty?                   then Operand::Value
+      when word[0].ascii_number?         then Operand::Value
+      when word[0].uppercase?            then Operand::Value
+      when prefix.in?('@', '$')          then Operand::Value
+      when prefix == ':'                 then char_at(index - 1) == ':' ? Operand::Call : Operand::Value
+      when prefix == '.'                 then char_at(index - 1) == '.' ? Operand::Unknown : Operand::Call
+      when word.in?(VALUE_KEYWORDS)      then Operand::Value
+      when word.in?(EXPRESSION_KEYWORDS) then Operand::Call
+      else                                    Operand::Unknown
+      end
+    end
+
+    # Returns the identifier preceding the reader's position (skipping
+    # the blanks in between), along with the byte index preceding it.
+    private def preceding_identifier : {String, Int32}
+      index = skip_blanks_back(@reader.pos - 1)
+      word_end = index + 1
+
+      while index >= 0 && ident_byte?(index)
+        index -= 1
+      end
+      {@reader.string.byte_slice(index + 1, word_end - index - 1), index}
+    end
+
+    # Returns `true` if the `/` at the reader's position is followed
+    # by an unescaped `/` on the same line, which might close a regex,
+    # unless it's surrounded by blanks, as a division operator (`a /b / c`).
+    private def regex_closed_on_line? : Bool
+      index = @reader.pos + 1
+
+      while index < @reader.string.bytesize
+        case char_at(index)
+        when '\n' then return false
+        when '\\' then index += 1
+        when '/'
+          return true unless char_at(index - 1).in?(' ', '\t') &&
+                             char_at(index + 1).in?(' ', '\t')
+        end
+        index += 1
+      end
+      false
     end
 
     # Returns `true` if the operator at the reader's position is used
@@ -411,16 +491,7 @@ module Ameba::AST
 
     # Returns `true` if the reader's position follows a `def` keyword
     private def after_def_keyword? : Bool
-      string = @reader.string
-      index = @reader.pos - 1
-
-      while index >= 0 && string.byte_at(index).unsafe_chr.in?(' ', '\t')
-        index -= 1
-      end
-      unless index >= 2 && string.byte_slice?(index - 2, 3) == "def"
-        return false
-      end
-      index < 3 || !ident_part?(string.byte_at(index - 3).unsafe_chr)
+      preceding_identifier[0] == "def"
     end
 
     # Returns `true` if the last non-blank character ends a value,
@@ -440,9 +511,27 @@ module Ameba::AST
       char.alphanumeric? || char == '_'
     end
 
+    # Returns the byte index of the last non-blank character at or before
+    # the given byte *index* of the scanned macro literal (`-1` if none)
+    private def skip_blanks_back(index : Int32) : Int32
+      while char_at(index).in?(' ', '\t')
+        index -= 1
+      end
+      index
+    end
+
+    # Returns `true` if the byte at the given *index* of the scanned macro
+    # literal is a part of an identifier (including the non-ASCII ones)
+    private def ident_byte?(index : Int32) : Bool
+      byte = @reader.string.byte_at(index)
+      byte >= 0x80 || ident_part?(byte.unsafe_chr)
+    end
+
     # Returns the character at the given byte *index* of the scanned
     # macro literal (`'\0'` if there's none, or it's not an ASCII one).
     private def char_at(index : Int32) : Char
+      return '\0' if index.negative?
+
       byte = @reader.string.byte_at?(index)
       byte && byte < 0x80 ? byte.unsafe_chr : '\0'
     end

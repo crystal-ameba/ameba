@@ -108,6 +108,43 @@ module Ameba::AST
         scan("a // b").should eq ["a // b"]
       end
 
+      it "keeps the division operator following an identifier" do
+        scan("a /b").should eq ["a /b"]
+        scan("a /b\nc / d").should eq ["a /b\nc / d"]
+        scan("a /b / c").should eq ["a /b / c"]
+      end
+
+      it "blanks out regex literals following an identifier" do
+        scan("foo /a/").should eq ["foo    "]
+        scan("foo /a\\/b/").should eq ["foo       "]
+      end
+
+      it "keeps the operators following a value" do
+        scan("@a /b/ c").should eq ["@a /b/ c"]
+        scan("@@a /b/ c").should eq ["@@a /b/ c"]
+        scan("$a /b/ c").should eq ["$a /b/ c"]
+        scan("A /b/ c").should eq ["A /b/ c"]
+        scan("A::B /b/ c").should eq ["A::B /b/ c"]
+        scan("1.5 /b/ c").should eq ["1.5 /b/ c"]
+        scan(":a /b/ c").should eq ["   /b/ c"]
+        scan("@a %(b) c").should eq ["@a %(b) c"]
+        scan("self /b/ c").should eq ["self /b/ c"]
+        scan("nil %(b) c").should eq ["nil %(b) c"]
+        scan("(a) /b/ c").should eq ["(a) /b/ c"]
+        scan(%("a" /b/ c)).should eq ["    /b/ c"]
+      end
+
+      it "blanks out the literals following a method call or a keyword" do
+        scan("a.b /c / d").should eq ["a.b      d"]
+        scan("a&.b /c/").should eq ["a&.b    "]
+        scan("A::b /c/").should eq ["A::b    "]
+        scan("a.split /, / if b\nc").should eq ["a.split      if b\nc"]
+        scan("when /a / then b").should eq ["when      then b"]
+        scan("1..a /b").should eq ["1..a /b"]
+        scan("a? /b/").should eq ["a?    "]
+        scan("a.b! %(c)").should eq ["a.b!     "]
+      end
+
       it "keeps operators used as names" do
         scan("def /(other)\n  a / other / b\nend").should eq ["def /(other)\n  a / other / b\nend"]
         scan("def %(other); end").should eq ["def %(other); end"]

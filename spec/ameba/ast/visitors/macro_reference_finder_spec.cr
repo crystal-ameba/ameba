@@ -76,6 +76,8 @@ module Ameba::AST
         "{% begin %}\n  def `(command)\n    foo\n  end\n{% end %}",
         "{% begin %}\n  bar.reduce(:/)\n  foo / 2\n{% end %}",
         "{% begin %}\n  bar <<-1 + foo\n{% end %}",
+        "{% begin %}\n  bar /foo\n{% end %}",
+        "{% begin %}\n  bar /foo / 2\n{% end %}",
       }.each do |code|
         it "returns true for #{code.inspect}" do
           node = Crystal::Parser.new(code).parse
