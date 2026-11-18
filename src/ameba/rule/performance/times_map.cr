@@ -59,10 +59,10 @@ module Ameba::Rule::Performance
       return unless location = obj3.location
       return unless end_location = node.end_location
 
-      count_code = node_source(obj3, source.lines) || obj3.to_s
-      message = (block_arg?(obj) ? MSG_BLOCK_ARG : MSG) % single_line(obj3, count_code)
+      count_code = code_between(source, location, obj3.end_location) || obj3.to_s
+      message = (block_arg?(source, obj) ? MSG_BLOCK_ARG : MSG) % single_line(obj3, count_code)
 
-      if corrected_code = corrected_code(source, location, end_location, count_code, obj)
+      if corrected_code = corrected_code(source, obj3, obj, end_location)
         issue_for(location, end_location, message) do |corrector|
           corrector.replace(location, end_location, corrected_code)
         end
@@ -71,7 +71,9 @@ module Ameba::Rule::Performance
       end
     end
 
-    private def corrected_code(source, location, end_location, count_code, map_call)
+    private def corrected_code(source, count, map_call, end_location)
+      return unless count_location = count.location
+      return unless count_end_location = count.end_location
       return unless block = map_call.block_arg || map_call.block
       return unless block_location = block.location
       # short blocks (`&.foo`) have no end location of their own
@@ -79,32 +81,41 @@ module Ameba::Rule::Performance
                       block.end_location ||
                       block.as?(Crystal::Block).try(&.body.end_location)
 
-      # comments outside of the block would be lost
-      return if comments_between?(location, block_location, source) ||
-                comments_between?(block_end_location.adjust(column_number: 1), end_location, source)
+      # slicing the original code keeps its line endings intact
+      count_range = source.pos(count_location)...source.pos(count_end_location, end: true)
+      block_range = source.pos(block_location)...source.pos(block_end_location, end: true)
+      end_pos = source.pos(end_location, end: true)
 
-      return unless block_code = source_between(block_location, block_end_location, source.lines)
+      # comments outside of the count and the block would be lost
+      return if comments?(source.code[count_range.end...block_range.begin]) ||
+                comments?(source.code[block_range.end...end_pos])
+
+      count_code = source.code[count_range]
+      block_code = source.code[block_range]
 
       block_code = "&#{block_code}" if map_call.block_arg
 
-      corrected_code =
-        if block_arg?(map_call)
-          "Array.new(%s, %s)" % {count_code, block_code}
-        else
-          "Array.new(%s) %s" % {count_code, block_code}
-        end
-
-      # `source_between` joins lines with LF, keep the original line endings
-      if source.code.includes?("\r\n")
-        corrected_code = corrected_code.gsub('\n', "\r\n")
+      if block_arg?(source, map_call)
+        "Array.new(%s, %s)" % {count_code, block_code}
+      else
+        "Array.new(%s) %s" % {count_code, block_code}
       end
-      corrected_code
     end
 
     # Returns `true` if the block is passed as an argument
     # (`&block`) or using the short block syntax (`&.foo`).
-    private def block_arg?(map_call)
-      !!(map_call.block_arg || map_call.block.try(&.end_location.nil?))
+    private def block_arg?(source, map_call) : Bool
+      return true if map_call.block_arg
+      return false unless location = map_call.block.try(&.location)
+
+      source.code[source.pos(location)]? == '&'
+    end
+
+    # Returns the original code between *location* and *end_location* (inclusive).
+    private def code_between(source, location, end_location) : String?
+      return unless location && end_location
+
+      source.code[source.pos(location)...source.pos(end_location, end: true)]?
     end
 
     # Keeps the issue message on a single line.
@@ -116,9 +127,7 @@ module Ameba::Rule::Performance
         .gsub(/\s*\n\s*/, " ")
     end
 
-    private def comments_between?(location, end_location, source)
-      return false unless code = source_between(location, end_location, source.lines)
-
+    private def comments?(code)
       lexer = Crystal::Lexer.new(code).tap(&.comments_enabled = true)
       comments = false
 

@@ -150,6 +150,31 @@ module Ameba::Rule::Performance
       source.code.should eq "Array.new(foo\r\n  .bar, &.to_s)\r\n"
     end
 
+    it "reports and corrects keeping mixed line endings" do
+      source = Source.new("foo\n  .bar.times.map(&.to_s).to_a\r\nbaz\r\n")
+      subject.catch(source).should_not be_valid
+
+      source.correct!.should_not be_nil
+      source.code.should eq "Array.new(foo\n  .bar, &.to_s)\r\nbaz\r\n"
+    end
+
+    it "reports and corrects comments within the count expression" do
+      source = expect_issue subject, <<-CRYSTAL
+        [
+        # ^{} error: Use `Array.new([1, 2].size) {...}` instead of `[1, 2].size.times.map {...}.to_a`
+          1, # one
+          2,
+        ].size.times.map { |i| i * 2 }.to_a
+        CRYSTAL
+
+      expect_correction source, <<-CRYSTAL
+        Array.new([
+          1, # one
+          2,
+        ].size) { |i| i * 2 }
+        CRYSTAL
+    end
+
     it "reports and corrects block arguments" do
       source = expect_issue subject, <<-CRYSTAL
         3.times.map(&block).to_a
