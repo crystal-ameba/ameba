@@ -210,12 +210,18 @@ module Ameba
   class RaiseRule < Rule::Base
     property? should_raise = false
 
+    # Makes it raise only for the code including the given string.
+    property raise_for : String?
+
     properties do
       description "Internal rule that always raises"
     end
 
     def test(source)
-      should_raise? && raise "something went wrong"
+      return unless should_raise?
+      return if (raise_for = @raise_for) && !source.code.includes?(raise_for)
+
+      raise "something went wrong"
     end
   end
 

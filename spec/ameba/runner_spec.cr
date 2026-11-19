@@ -209,6 +209,39 @@ module Ameba
           end
         end
 
+        it "keeps reporting it once a correction removed its cause" do
+          rule = RaiseRule.new
+          rule.should_raise = true
+          rule.raise_for = ".not_nil!"
+          rules = [rule, Rule::Lint::NotNilAfterNoBang.new] of Rule::Base
+
+          with_temp_file do |path|
+            File.write(path, "foo.match(/x/).not_nil!\n")
+            source = Source.new(File.read(path), path)
+
+            runner = Runner.new(rules, [source], formatter, default_severity, autocorrect: true).run
+
+            runner.crashed?.should be_true
+            source.issues.select(&.crashed?).map(&.rule).should eq [rule]
+            File.read(path).should eq "foo.match!(/x/)\n"
+          end
+        end
+
+        it "reports it once if it raised on every correction pass" do
+          rule = RaiseRule.new
+          rule.should_raise = true
+          rules = [rule, Rule::Lint::NotNilAfterNoBang.new] of Rule::Base
+
+          with_temp_file do |path|
+            File.write(path, "foo.match(/x/).not_nil!\n")
+            source = Source.new(File.read(path), path)
+
+            Runner.new(rules, [source], formatter, default_severity, autocorrect: true).run
+
+            source.issues.count(&.crashed?).should eq 1
+          end
+        end
+
         it "still reports other unneeded directives" do
           rule = RaiseRule.new
           rule.should_raise = true
