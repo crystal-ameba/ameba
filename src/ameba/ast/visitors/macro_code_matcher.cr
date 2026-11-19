@@ -86,8 +86,18 @@ module Ameba::AST
     # Returns the branch taken if the condition is a literal
     private def static_branch(node : Crystal::MacroIf) : Crystal::ASTNode?
       case cond = node.cond
-      when Crystal::BoolLiteral then cond.value ? node.then : node.else
-      when Crystal::NilLiteral  then node.else
+      when Crystal::BoolLiteral
+        cond.value ? node.then : node.else
+      when Crystal::NilLiteral
+        node.else
+      when Crystal::NumberLiteral, Crystal::CharLiteral,
+           Crystal::StringLiteral, Crystal::StringInterpolation,
+           Crystal::SymbolLiteral, Crystal::RegexLiteral,
+           Crystal::ArrayLiteral, Crystal::TupleLiteral,
+           Crystal::HashLiteral, Crystal::NamedTupleLiteral,
+           Crystal::RangeLiteral
+        # Any other literal is truthy
+        node.then
       end
     end
 
