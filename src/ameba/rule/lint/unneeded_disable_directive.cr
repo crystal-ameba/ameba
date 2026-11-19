@@ -49,9 +49,26 @@ module Ameba::Rule::Lint
         location = name_location_or(token, token.value)
 
         issue_for(*location, message) do |corrector|
-          corrector.remove(*location)
+          # Keeps the rules which are needed, or whose need is unknown.
+          # Other words, like a reason following the rules, are dropped.
+          kept_rules = (rules - names).select(&->known_rule?(String))
+
+          if kept_rules.empty?
+            corrector.remove(*location)
+          else
+            corrector.replace(*location, disable_directive(token.value.to_s, kept_rules))
+          end
         end
       end
+    end
+
+    private def disable_directive(comment, rules)
+      comment.sub(InlineComments::COMMENT_DIRECTIVE_REGEX,
+        "# ameba:disable #{rules.join(", ")}")
+    end
+
+    private def known_rule?(rule_name)
+      Rule.rules.any?(&.rule_name.== rule_name)
     end
 
     private def unneeded_disables(source, rules, location, excluded_rules)
@@ -59,8 +76,7 @@ module Ameba::Rule::Lint
         next true if rule_name == name
 
         next if rule_name.in?(excluded_rules)
-        # skip non-existent rules
-        next if Rule.rules.none?(&.rule_name.== rule_name)
+        next unless known_rule?(rule_name)
 
         source.issues.none? do |issue|
           issue.rule.name == rule_name &&

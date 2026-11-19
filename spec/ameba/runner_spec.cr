@@ -193,6 +193,22 @@ module Ameba
           end
         end
 
+        it "keeps it in the directive disabling also unneeded rules" do
+          rule = RaiseRule.new
+          rule.should_raise = true
+          rules = [rule, Rule::Lint::UnneededDisableDirective.new] of Rule::Base
+          code = "a = 1 # ameba:disable #{RaiseRule.rule_name}, Lint/ComparisonToBoolean\n"
+
+          with_temp_file do |path|
+            File.write(path, code)
+            source = Source.new(code, path)
+
+            Runner.new(rules, [source], formatter, default_severity, autocorrect: true).run
+
+            File.read(path).should eq "a = 1 # ameba:disable #{RaiseRule.rule_name}\n"
+          end
+        end
+
         it "still reports other unneeded directives" do
           rule = RaiseRule.new
           rule.should_raise = true
