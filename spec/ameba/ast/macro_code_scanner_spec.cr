@@ -195,7 +195,7 @@ module Ameba::AST
         scanner = MacroCodeScanner.new
 
         # the line of `a /b` might continue after a macro expression
-        {"a /b / c", "a /b"}.each do |literal|
+        {"a /b / c", "a /b", "a /", "a.b /"}.each do |literal|
           scanner.scan(literal)
           scanner.ambiguous?.should be_true
         end

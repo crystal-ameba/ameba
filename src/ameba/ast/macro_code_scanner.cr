@@ -108,7 +108,7 @@ module Ameba::AST
     # Returns `true` if the last scanned macro literal has any `/` read
     # as the division operator, which might start a regex literal as well,
     # i.e. `a /b / c` (`a` being a local variable) vs `foo /a / if b`,
-    # or `a /b{{ c }}` vs `foo /a{{ b }}/`.
+    # `a /b{{ c }}` vs `foo /a{{ b }}/`, or `a.b /{{ c }}` vs `a.b /{{ c }}/`.
     getter? ambiguous = false
 
     # Scanners in the same lexical state are equal
@@ -461,24 +461,35 @@ module Ameba::AST
 
       # `foo /a/` vs `a / b`, `a /= b`, `a // b`
       next_char = @reader.peek_next_char
-      return false if next_char.whitespace? || next_char.in?('=', '/', '\0')
+      return false if next_char.whitespace? || next_char.in?('=', '/')
+      return false if (operand = preceding_operand).value?
 
-      case preceding_operand
-      in .value? then false
-      in .call?  then true
-      in .unknown?
-        # `foo %(a)` is a literal, even if `foo` is a local variable
-        return true unless @reader.current_char == '/'
+      # `foo %(a)` is a literal, even if `foo` is a local variable
+      @reader.current_char != '/' || regex_allowed?(operand, next_char)
+    end
 
-        # `foo /a/` vs `a /b` - a regex only if `foo` isn't a local variable,
-        # which can't be told from the macro code
-        return true if regex_closed_on_line?
-        return false unless regex_closed_on_line?(possibly: true)
+    # Returns `true` if the `/` at the reader's position, following
+    # a method call or an unknown *operand*, starts a regex literal.
+    private def regex_allowed?(operand : Operand, next_char : Char) : Bool
+      # `a.b /{{ c }}/` vs `a.b /{{ c }}` - the character following
+      # the `/` is an output of the macro expression (if any)
+      return ambiguous_regex if next_char == '\0'
+      return true if operand.call?
 
-        # `a /b / c` vs `foo /a / if b`
-        @ambiguous = true
-        @flipped
-      end
+      # `foo /a/` vs `a /b` - a regex only if `foo` isn't a local variable,
+      # which can't be told from the macro code
+      return true if regex_closed_on_line?
+      return false unless regex_closed_on_line?(possibly: true)
+
+      # `a /b / c` vs `foo /a / if b`
+      ambiguous_regex
+    end
+
+    # Marks the scanned macro literal as `#ambiguous?`, returns `true`
+    # if the `/` at the reader's position is read as a regex literal
+    private def ambiguous_regex : Bool
+      @ambiguous = true
+      @flipped
     end
 
     # Returns the kind of the operand preceding the reader's position,
