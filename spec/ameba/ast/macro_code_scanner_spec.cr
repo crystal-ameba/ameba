@@ -145,6 +145,13 @@ module Ameba::AST
         scan("a.b! %(c)").should eq ["a.b!     "]
       end
 
+      it "tells the operand apart from the previously scanned literals" do
+        scan("puts", %( %r{a\#{b}})).should eq ["puts", "       b  "]
+        scan("puts", " /a/").should eq ["puts", "    "]
+        scan("@a", " /b/ c").should eq ["@a", " /b/ c"]
+        scan("a.b", " ", " /c/").should eq ["a.b", " ", "    "]
+      end
+
       it "keeps operators used as names" do
         scan("def /(other)\n  a / other / b\nend").should eq ["def /(other)\n  a / other / b\nend"]
         scan("def %(other); end").should eq ["def %(other); end"]

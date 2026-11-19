@@ -94,11 +94,16 @@ module Ameba::AST
     # Character preceding the `@last_char`
     @before_last_char = '\0'
 
+    # Kind of the operand ending the previously scanned macro literals,
+    # i.e. `puts` in `puts{% if foo %}{% end %} /a/`
+    @last_operand = Operand::Value
+
     # Reader of the currently scanned macro literal
     @reader = Char::Reader.new("")
 
     # Scanners in the same lexical state are equal
-    def_equals_and_hash @contexts, @heredocs, @prev_char, @last_char, @before_last_char
+    def_equals_and_hash @contexts, @heredocs, @prev_char, @last_char,
+      @before_last_char, @last_operand
 
     # Returns a deep copy of the scanner, i.e. to scan alternative
     # macro branches starting from the same lexical state.
@@ -116,6 +121,7 @@ module Ameba::AST
     # `/` or `%` are treated as operators, not literal delimiters.
     def after_value! : Nil
       @prev_char = @last_char = ')'
+      @last_operand = Operand::Value
     end
 
     # Returns the macro *literal* with all of the comments, string, char,
@@ -147,6 +153,10 @@ module Ameba::AST
             @before_last_char, @last_char = before_char, @prev_char
           end
           @reader.next_char
+        end
+
+        unless skip_blanks_back(literal.bytesize - 1).negative?
+          @last_operand = operand_before(literal.bytesize)
         end
       end
     end
@@ -436,12 +446,21 @@ module Ameba::AST
       end
     end
 
-    # Returns the kind of the operand preceding the reader's position
+    # Returns the kind of the operand preceding the reader's position,
+    # also one ending the previously scanned macro literals
     private def preceding_operand : Operand
-      # Local variables can't end with `?` or `!`
-      return Operand::Call if char_at(skip_blanks_back(@reader.pos - 1)).in?('?', '!')
+      return @last_operand if skip_blanks_back(@reader.pos - 1).negative?
 
-      word, index = preceding_identifier
+      operand_before(@reader.pos)
+    end
+
+    # Returns the kind of the operand preceding the given byte *index*
+    # (skipping the blanks in between)
+    private def operand_before(index : Int32) : Operand
+      # Local variables can't end with `?` or `!`
+      return Operand::Call if char_at(skip_blanks_back(index - 1)).in?('?', '!')
+
+      word, index = preceding_identifier(index)
       prefix = char_at(index)
 
       case
@@ -457,10 +476,10 @@ module Ameba::AST
       end
     end
 
-    # Returns the identifier preceding the reader's position (skipping
+    # Returns the identifier preceding the given byte *index* (skipping
     # the blanks in between), along with the byte index preceding it.
-    private def preceding_identifier : {String, Int32}
-      index = skip_blanks_back(@reader.pos - 1)
+    private def preceding_identifier(index : Int32 = @reader.pos) : {String, Int32}
+      index = skip_blanks_back(index - 1)
       word_end = index + 1
 
       while index >= 0 && ident_byte?(index)
