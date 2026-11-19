@@ -5,6 +5,8 @@ module Ameba::AST
   # As the macro branches and loops might leave the code in different
   # lexical states (i.e. `{% if foo %}# bar{% end %}baz`), the code following
   # them is scanned in each of these, matching if it does in any of them.
+  # The same goes for the ambiguous `/` and `%` (see `MacroCodeScanner#ambiguous?`),
+  # which are followed in both of their readings.
   #
   # NOTE: Beyond `MAX_STATES` lexical states, the code following them
   # is also matched as is (that is, with the comments and literals), as
@@ -58,7 +60,19 @@ module Ameba::AST
     private def scan(code : String) : Nil
       return if @matches ||= @overflown && code.matches?(@regex)
 
-      @matches ||= @scanners.any?(&.scan(code).matches?(@regex))
+      scanners = [] of MacroCodeScanner
+
+      @scanners.each do |scanner|
+        flipped = scanner.flipped
+        scanners << scanner
+        return if @matches ||= scanner.scan(code).matches?(@regex)
+
+        # Follows the other reading of the ambiguous `/` and `%`
+        next unless scanner.ambiguous?
+        scanners << flipped
+        return if @matches ||= flipped.scan(code).matches?(@regex)
+      end
+      self.scanners = scanners
     end
 
     private def scanners=(scanners : Array(MacroCodeScanner)) : Nil

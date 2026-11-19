@@ -101,6 +101,15 @@ module Ameba::AST
     # Reader of the currently scanned macro literal
     @reader = Char::Reader.new("")
 
+    # Whether the ambiguous `/` are read the other way round
+    # (see `#flipped`) within the currently scanned macro literal
+    @flipped = false
+
+    # Returns `true` if the last scanned macro literal has any `/` read
+    # as the division operator, which might start a regex literal as well,
+    # i.e. `a /b / c` (`a` being a local variable) vs `foo /a / if b`.
+    getter? ambiguous = false
+
     # Scanners in the same lexical state are equal
     def_equals_and_hash @contexts, @heredocs, @prev_char, @last_char,
       @before_last_char, @last_operand
@@ -114,6 +123,17 @@ module Ameba::AST
     protected def copy_contexts! : Nil
       @contexts = @contexts.map(&.dup)
       @heredocs = @heredocs.map(&.dup)
+    end
+
+    # Returns a copy of the scanner, which reads the ambiguous `/`
+    # (see `#ambiguous?`) of the next scanned macro literal as regex
+    # literals, i.e. to follow both of their readings.
+    def flipped : self
+      clone.tap(&.flip!)
+    end
+
+    protected def flip! : Nil
+      @flipped = true
     end
 
     # Marks the end of a value placed in between the scanned macro literals,
@@ -132,6 +152,8 @@ module Ameba::AST
     # as *literal*, as the blanked out characters (but newlines) are
     # replaced with spaces.
     def scan(literal : String) : String
+      @ambiguous = false
+
       String.build(literal.bytesize) do |io|
         @reader = Char::Reader.new(literal)
 
@@ -159,6 +181,8 @@ module Ameba::AST
           @last_operand = operand_before(literal.bytesize)
         end
       end
+    ensure
+      @flipped = false
     end
 
     private def blank(char : Char) : Char
@@ -423,7 +447,9 @@ module Ameba::AST
     #
     # NOTE: When in doubt, it's not a literal, as the code mistaken for
     # a literal would be blanked out, while a literal mistaken for the code
-    # is merely searched for the references.
+    # is merely searched for the references - unless it'd make the rest
+    # of the literal a comment (`foo /a#{b} /`), in which case the scanned
+    # literal is marked as `#ambiguous?`, to follow both of the readings.
     private def literal_allowed? : Bool
       # `a //b`
       return false if @prev_char == '/' || operator_name?
@@ -440,9 +466,17 @@ module Ameba::AST
       in .value? then false
       in .call?  then true
       in .unknown?
+        # `foo %(a)` is a literal, even if `foo` is a local variable
+        return true unless @reader.current_char == '/'
+
         # `foo /a/` vs `a /b` - a regex only if `foo` isn't a local variable,
         # which can't be told from the macro code
-        @reader.current_char != '/' || regex_closed_on_line?
+        return true if regex_closed_on_line?
+        return false unless regex_closed_on_line?(spaced: true)
+
+        # `a /b / c` vs `foo /a / if b`
+        @ambiguous = true
+        @flipped
       end
     end
 
@@ -490,8 +524,9 @@ module Ameba::AST
 
     # Returns `true` if the `/` at the reader's position is followed
     # by an unescaped `/` on the same line, which might close a regex,
-    # unless it's surrounded by blanks, as a division operator (`a /b / c`).
-    private def regex_closed_on_line? : Bool
+    # unless it's surrounded by blanks, as a division operator (`a /b / c`)
+    # - also then, if *spaced* is `true`.
+    private def regex_closed_on_line?(*, spaced = false) : Bool
       index = @reader.pos + 1
 
       while index < @reader.string.bytesize
@@ -499,8 +534,8 @@ module Ameba::AST
         when '\n' then return false
         when '\\' then index += 1
         when '/'
-          return true unless char_at(index - 1).in?(' ', '\t') &&
-                             char_at(index + 1).in?(' ', '\t')
+          return true if spaced || !(char_at(index - 1).in?(' ', '\t') &&
+                         char_at(index + 1).in?(' ', '\t'))
         end
         index += 1
       end

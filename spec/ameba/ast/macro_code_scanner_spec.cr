@@ -190,6 +190,29 @@ module Ameba::AST
       end
     end
 
+    describe "#ambiguous?" do
+      it "returns true if the literal has a division operator, which might start a regex" do
+        scanner = MacroCodeScanner.new
+        scanner.scan("a /b / c")
+        scanner.ambiguous?.should be_true
+
+        {"a /b", "a /b/ c", "a %(b)", "a.b /c / d", "@a /b / c", "a / b / c"}.each do |literal|
+          scanner.scan(literal)
+          scanner.ambiguous?.should be_false
+        end
+      end
+    end
+
+    describe "#flipped" do
+      it "reads the ambiguous `/` of the next literal as regex literals" do
+        scanner = MacroCodeScanner.new
+        flipped = scanner.flipped
+        flipped.scan("foo /a\#{b} / c").should eq "foo     b    c"
+        flipped.scan("d /e / f").should eq "d /e / f"
+        scanner.scan("foo /a\#{b} / c").should eq "foo /a        "
+      end
+    end
+
     describe "#clone" do
       it "doesn't share the state with the original scanner" do
         scanner = MacroCodeScanner.new

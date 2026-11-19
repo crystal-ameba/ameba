@@ -504,6 +504,16 @@ module Ameba::Rule::Lint
           CRYSTAL
       end
 
+      it "doesn't report block args referenced in an ambiguous regex interpolation in a macro" do
+        expect_no_issues subject, <<-'CRYSTAL'
+          [6].each do |value|
+            {% begin %}
+              puts /a#{value} / if true
+            {% end %}
+          end
+          CRYSTAL
+      end
+
       it "reports unused block args following many skipped macro branches" do
         branches = (0...16).join { |i| "{% if false %}; puts <<-H#{i}{% end %}" }
 
