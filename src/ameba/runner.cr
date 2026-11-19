@@ -122,6 +122,7 @@ module Ameba
       # inspection iteration. This is used to output meaningful infinite loop
       # error message, and to choose the rule to report such a loop under.
       corrected_issues = [] of Array(Issue)
+      crashed_issues = [] of Issue
       original_code = source.code
 
       # When running with --fix, we need to inspect the source until no more
@@ -137,19 +138,23 @@ module Ameba
         # The issues that couldn't be corrected will be found again so we
         # only keep the corrected ones in order to avoid duplicate reporting.
         corrected_issues << applied_issues.map(&.as_corrected)
+        # Crashes are kept though, as the corrections might have removed their cause
+        crashed_issues.concat(source.issues.select(&.crashed?))
+
         source.issues.clear
       end
 
-      if message = loop_message
-        return report_failure(source, original_code, corrected_issues.last.first.rule, message)
+      case
+      when message = loop_message
+        report_failure(source, original_code, corrected_issues.last.first.rule, message)
+      when message = write_corrected_code(source, corrected_issues)
+        # Like failing to read the file, it isn't about any rule in particular
+        report_failure(source, original_code, Rule::Lint::Syntax.new, message)
+      else
+        source.issues[0, 0] = corrected_issues.flatten
       end
 
-      # Like failing to read the file, it isn't about any rule in particular
-      if message = write_corrected_code(source, corrected_issues)
-        return report_failure(source, original_code, Rule::Lint::Syntax.new, message)
-      end
-
-      source.issues[0, 0] = corrected_issues.flatten
+      add_earlier_crashes(source, crashed_issues)
     ensure
       source.issues.sort_by! do |issue|
         {
@@ -279,6 +284,19 @@ module Ameba
       inspect_source(source)
 
       source.add_crash_issue(rule, message)
+    end
+
+    # Adds the crashes from the earlier inspection passes,
+    # unless the same ones got reported again.
+    private def add_earlier_crashes(source, crashed_issues) : Nil
+      crash_key = ->(issue : Issue) { {issue.rule.name, issue.message} }
+
+      reported = source.issues.select(&.crashed?).map(&crash_key).to_set
+      crashed_issues.uniq!(&crash_key).reject! do |issue|
+        crash_key.call(issue).in?(reported)
+      end
+
+      source.issues.concat(crashed_issues)
     end
 
     private def check_unneeded_directives(source, excluded_rules = Set(String).new)
