@@ -94,8 +94,7 @@ module Ameba::AST
 
       case iterations = static_iterations(node)
       when nil
-        # The loop body might be expanded no times at all
-        visit_alternatives(node.body, Crystal::Nop.new)
+        visit_repeatedly(node.body)
       when 0
         visit_skipped(node.body)
       else
@@ -155,6 +154,30 @@ module Ameba::AST
       @scanners = @scanners.map(&.clone)
       node.accept(self)
       @scanners, @overflown = scanners, overflown
+    end
+
+    # Visits the *node* expanded any number of times (no times at all
+    # included), starting in the current lexical states, until it leaves
+    # the code in no new ones - the code following it continues in any of them.
+    private def visit_repeatedly(node : Crystal::ASTNode) : Nil
+      states = @scanners.to_set
+      expanded = @scanners
+
+      until expanded.empty?
+        @scanners = expanded.map(&.clone)
+        node.accept(self)
+        return if @matches
+
+        expanded = @scanners.select { |scanner| states.add?(scanner) }
+        next unless states.size > MAX_STATES
+
+        # The lexical states left unfollowed are covered by
+        # matching the node as is
+        @overflown = true
+        node.accept(self)
+        break
+      end
+      self.scanners = states.to_a unless @matches
     end
 
     # Visits each of the alternative *nodes* starting in the current lexical
