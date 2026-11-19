@@ -481,6 +481,19 @@ module Ameba::Rule::Lint
           CRYSTAL
       end
 
+      it "reports unused block args following a skipped macro branch with many lexical states" do
+        branches = (0...7).join { |i| "{% if flag?(:foo) %}; puts <<-H#{i}{% end %}" }
+
+        expect_issue subject, <<-CRYSTAL
+          [6].each do |value|
+                     # ^^^^^ error: Unused argument `value`. [...]
+            {% begin %}
+              {% if false %}#{branches}{% end %} nil
+            {% end %}
+          end
+          CRYSTAL
+      end
+
       it "reports unused block args following many skipped macro branches" do
         branches = (0...16).join { |i| "{% if false %}; puts <<-H#{i}{% end %}" }
 

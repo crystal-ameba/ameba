@@ -44,11 +44,26 @@ module Ameba::AST
       end
     end
 
-    it "assumes a match beyond the maximum number of lexical states" do
+    context "beyond the maximum number of lexical states" do
       branches = (0...16).join { |i| "{% if bar %}; <<-H#{i}{% end %}" }
-      node = Crystal::Parser.new("{% begin %}nil#{branches}{% end %}").parse
 
-      MacroCodeMatcher.new(node, /\bfoo\b/).matches?.should be_true
+      it "matches the following code as is" do
+        node = Crystal::Parser.new("{% begin %}nil#{branches}\nfoo\n{% end %}").parse
+        MacroCodeMatcher.new(node, /\bfoo\b/).matches?.should be_true
+
+        node = Crystal::Parser.new("{% begin %}nil#{branches} # foo{% end %}").parse
+        MacroCodeMatcher.new(node, /\bfoo\b/).matches?.should be_true
+      end
+
+      it "doesn't match if there's no match" do
+        node = Crystal::Parser.new("{% begin %}nil#{branches}\nbar\n{% end %}").parse
+        MacroCodeMatcher.new(node, /\bfoo\b/).matches?.should be_false
+      end
+
+      it "doesn't match the code following the skipped branch" do
+        node = Crystal::Parser.new("{% begin %}{% if false %}#{branches}{% end %} # foo{% end %}").parse
+        MacroCodeMatcher.new(node, /\bfoo\b/).matches?.should be_false
+      end
     end
   end
 end

@@ -6,8 +6,9 @@ module Ameba::AST
   # lexical states (i.e. `{% if foo %}# bar{% end %}baz`), the code following
   # them is scanned in each of these, matching if it does in any of them.
   #
-  # NOTE: Beyond `MAX_STATES` lexical states, the code is assumed to match,
-  # as their number might grow exponentially with the number of branches.
+  # NOTE: Beyond `MAX_STATES` lexical states, the code following them
+  # is also matched as is (that is, with the comments and literals), as
+  # their number might grow exponentially with the number of branches.
   class MacroCodeMatcher < Crystal::Visitor
     # Maximum number of the lexical states followed
     MAX_STATES = 64
@@ -16,6 +17,9 @@ module Ameba::AST
 
     # Scanners in each of the lexical states the macro code might be in
     @scanners = [MacroCodeScanner.new]
+
+    # Whether there were more lexical states than `MAX_STATES`
+    @overflown = false
 
     def initialize(node, @regex : Regex)
       node.accept(self)
@@ -52,7 +56,17 @@ module Ameba::AST
     end
 
     private def scan(code : String) : Nil
+      return if @matches ||= @overflown && code.matches?(@regex)
+
       @matches ||= @scanners.any?(&.scan(code).matches?(@regex))
+    end
+
+    private def scanners=(scanners : Array(MacroCodeScanner)) : Nil
+      @scanners = scanners.uniq
+      return unless @scanners.size > MAX_STATES
+
+      @scanners = @scanners.first(MAX_STATES)
+      @overflown = true
     end
 
     def visit(node : Crystal::MacroExpression)
@@ -123,10 +137,10 @@ module Ameba::AST
     # or the `else` of `{% begin %}`) - it's still searched, but the code
     # following it continues in the current lexical states.
     private def visit_skipped(node : Crystal::ASTNode) : Nil
-      scanners = @scanners
+      scanners, overflown = @scanners, @overflown
       @scanners = @scanners.map(&.clone)
       node.accept(self)
-      @scanners = scanners
+      @scanners, @overflown = scanners, overflown
     end
 
     # Visits each of the alternative *nodes* starting in the current lexical
@@ -143,8 +157,7 @@ module Ameba::AST
 
         final_scanners.concat(@scanners)
       end
-      @scanners = final_scanners.uniq
-      @matches = true if @scanners.size > MAX_STATES
+      self.scanners = final_scanners
       false
     end
 
