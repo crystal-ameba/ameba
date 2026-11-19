@@ -64,21 +64,39 @@ module Ameba::AST
     def visit(node : Crystal::MacroFor)
       return false if @matches ||= macro_code_matches?(node.exp)
 
-      # The loop body might be expanded no times at all
-      visit_alternatives(node.body, Crystal::Nop.new)
+      case iterations = static_iterations(node)
+      when nil
+        # The loop body might be expanded no times at all
+        visit_alternatives(node.body, Crystal::Nop.new)
+      when 0
+        visit_skipped(node.body)
+      else
+        iterations.times do
+          scanners = @scanners.map(&.clone)
+          node.body.accept(self)
+          # Each of the following iterations would end in the same states
+          break if @matches || @scanners == scanners
+        end
+      end
+      false
+    end
+
+    # Returns the number of the loop iterations if it iterates over
+    # a literal (i.e. `{% for x in [1, 2] %}`)
+    private def static_iterations(node : Crystal::MacroFor) : Int32?
+      case exp = node.exp
+      when Crystal::ArrayLiteral, Crystal::TupleLiteral
+        exp.elements.size unless exp.elements.any?(Crystal::Splat)
+      when Crystal::HashLiteral, Crystal::NamedTupleLiteral
+        exp.entries.size
+      end
     end
 
     def visit(node : Crystal::MacroIf)
       return false if @matches ||= macro_code_matches?(node.cond)
       return visit_alternatives(node.then, node.else) unless taken = static_branch(node)
 
-      # A branch never taken (i.e. `{% if false %}`, or the `else` of
-      # `{% begin %}`) is still searched, but the code following it
-      # continues only in the lexical states of the other one
-      skipped = taken.same?(node.then) ? node.else : node.then
-      scanners, @scanners = @scanners, @scanners.map(&.clone)
-      skipped.accept(self)
-      @scanners = scanners
+      visit_skipped(taken.same?(node.then) ? node.else : node.then)
       taken.accept(self) unless @matches
       false
     end
@@ -99,6 +117,16 @@ module Ameba::AST
         # Any other literal is truthy
         node.then
       end
+    end
+
+    # Visits the *node* never expanded (i.e. the branch of `{% if false %}`,
+    # or the `else` of `{% begin %}`) - it's still searched, but the code
+    # following it continues in the current lexical states.
+    private def visit_skipped(node : Crystal::ASTNode) : Nil
+      scanners = @scanners
+      @scanners = @scanners.map(&.clone)
+      node.accept(self)
+      @scanners = scanners
     end
 
     # Visits each of the alternative *nodes* starting in the current lexical

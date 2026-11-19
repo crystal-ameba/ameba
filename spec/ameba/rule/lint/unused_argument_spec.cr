@@ -470,6 +470,17 @@ module Ameba::Rule::Lint
           CRYSTAL
       end
 
+      it "reports unused block args commented out by a macro loop over a literal" do
+        expect_issue subject, <<-CRYSTAL
+          [6].each do |value|
+                     # ^^^^^ error: Unused argument `value`. [...]
+            {% begin %}
+              {% for i in [0] %}# hidden{% end %}puts value
+            {% end %}
+          end
+          CRYSTAL
+      end
+
       it "reports unused block args following many skipped macro branches" do
         branches = (0...16).join { |i| "{% if false %}; puts <<-H#{i}{% end %}" }
 

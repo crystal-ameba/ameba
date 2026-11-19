@@ -14,6 +14,7 @@ module Ameba::AST
         "{% begin %}{% if false %}\"{% end %}foo{% end %}",
         "{% begin %}{% if true %}{% else %}\"{% end %}foo{% end %}",
         "{% if false %}foo{% end %}",
+        "{% begin %}{% for x in [1, 2] %}\"{% end %}foo{% end %}",
       }.each do |code|
         it "returns true for #{code.inspect}" do
           node = Crystal::Parser.new(code).parse
@@ -31,6 +32,10 @@ module Ameba::AST
         "{% begin %}{% if true %}\"{% end %}foo\"{% end %}",
         "{% begin %}{% if 1 %}# bar{% end %}foo{% end %}",
         "{% begin %}{% if :bar %}# baz{% else %}qux{% end %}foo{% end %}",
+        "{% begin %}{% for x in [1] %}# bar{% end %}foo{% end %}",
+        "{% begin %}{% for x in {a: 1} %}# bar{% end %}foo{% end %}",
+        "{% begin %}{% for x in [1, 2, 3] %}\"{% end %}foo\"{% end %}",
+        "{% begin %}{% for x in [] of Nil %}\"{% end %}# foo{% end %}",
       }.each do |code|
         it "returns false for #{code.inspect}" do
           node = Crystal::Parser.new(code).parse
