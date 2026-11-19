@@ -369,6 +369,185 @@ module Ameba::Rule::Lint
           CRYSTAL
       end
 
+      it "doesn't report block args referenced after a division operator in a macro" do
+        expect_no_issues subject, <<-CRYSTAL
+          [3].each do |divisor|
+            numerator = 12
+            {% begin %}
+              puts numerator /divisor
+            {% end %}
+          end
+          CRYSTAL
+      end
+
+      it "doesn't report block args referenced in a macro with an interpolated name" do
+        expect_no_issues subject, <<-CRYSTAL
+          {% for name in %w[emit] %}
+            macro {{ name.id }}
+              puts value
+            end
+          {% end %}
+
+          [42].each do |value|
+            emit
+          end
+          CRYSTAL
+      end
+
+      it "doesn't report block args referenced after a skipped macro branch" do
+        expect_no_issues subject, <<-CRYSTAL
+          macro emit
+            {% if false %}
+              # dangling comment{% end %}puts value
+          end
+
+          [42].each do |value|
+            emit
+          end
+          CRYSTAL
+      end
+
+      it "doesn't report block args referenced in a macro defined after a skipped macro branch" do
+        expect_no_issues subject, <<-CRYSTAL
+          {% for name in %w[emit] %}
+            {% if false %}# dangling comment{% end %}macro {{ name.id }}
+              puts value
+            end
+          {% end %}
+
+          [42].each do |value|
+            emit
+          end
+          CRYSTAL
+      end
+
+      it "doesn't report block args referenced after a skipped macro loop" do
+        expect_no_issues subject, <<-CRYSTAL
+          macro emit
+            {% for x in [] of Nil %}
+              # dangling comment{% end %}puts value
+          end
+
+          [42].each do |value|
+            emit
+          end
+          CRYSTAL
+      end
+
+      it "doesn't report block args referenced in a regex interpolation in a macro" do
+        expect_no_issues subject, <<-'CRYSTAL'
+          [6].each do |value|
+            {% begin %}
+              puts /a#{value}b/
+            {% end %}
+          end
+          CRYSTAL
+      end
+
+      it "reports unused block args if a method named `macro` references a local variable" do
+        expect_issue subject, <<-CRYSTAL
+          {% begin %}
+            def macro {% if true %}{% end %}
+              value = 1
+              puts value
+            end
+          {% end %}
+
+          [6].each do |value|
+                     # ^^^^^ error: Unused argument `value`. [...]
+          end
+          CRYSTAL
+      end
+
+      it "reports unused block args commented out by a macro branch with a literal condition" do
+        expect_issue subject, <<-CRYSTAL
+          [6].each do |value|
+                     # ^^^^^ error: Unused argument `value`. [...]
+            {% begin %}
+              {% if 1 %}# hidden{% end %}puts value
+            {% end %}
+          end
+          CRYSTAL
+      end
+
+      it "reports unused block args commented out by a macro loop over a literal" do
+        expect_issue subject, <<-CRYSTAL
+          [6].each do |value|
+                     # ^^^^^ error: Unused argument `value`. [...]
+            {% begin %}
+              {% for i in [0] %}# hidden{% end %}puts value
+            {% end %}
+          end
+          CRYSTAL
+      end
+
+      it "reports unused block args following a skipped macro branch with many lexical states" do
+        branches = (0...7).join { |i| "{% if flag?(:foo) %}; puts <<-H#{i}{% end %}" }
+
+        expect_issue subject, <<-CRYSTAL
+          [6].each do |value|
+                     # ^^^^^ error: Unused argument `value`. [...]
+            {% begin %}
+              {% if false %}#{branches}{% end %} nil
+            {% end %}
+          end
+          CRYSTAL
+      end
+
+      it "doesn't report block args referenced in a regex interpolation followed by a macro expression" do
+        expect_no_issues subject, <<-'CRYSTAL'
+          [6].each do |value|
+            {% begin %}
+              puts /a#{value}{{ "b" }}/
+            {% end %}
+          end
+          CRYSTAL
+      end
+
+      it "doesn't report block args referenced in a regex interpolation following a macro expression" do
+        expect_no_issues subject, <<-'CRYSTAL'
+          [6].each do |value|
+            {% begin %}
+              case "a6"
+              when /{{ "a" }}#{value}/ then puts 1
+              end
+            {% end %}
+          end
+          CRYSTAL
+      end
+
+      it "doesn't report block args referenced in a percent literal following a macro control in a macro" do
+        expect_no_issues subject, <<-'CRYSTAL'
+          [6].each do |value|
+            {% begin %}
+              puts{% if true %}{% end %} %r{a#{value}}
+            {% end %}
+          end
+          CRYSTAL
+      end
+
+      it "doesn't report block args referenced in an ambiguous regex interpolation in a macro" do
+        expect_no_issues subject, <<-'CRYSTAL'
+          [6].each do |value|
+            {% begin %}
+              puts /a#{value} / if true
+            {% end %}
+          end
+          CRYSTAL
+      end
+
+      it "reports unused block args following many skipped macro branches" do
+        branches = (0...16).join { |i| "{% if false %}; puts <<-H#{i}{% end %}" }
+
+        expect_issue subject, <<-CRYSTAL
+          [0].each do |unused|
+                     # ^^^^^^ error: Unused argument `unused`. [...]
+          {% begin %}nil#{branches}
+          {% end %}
+          end
+          CRYSTAL
+      end
+
       it "doesn't report used args in macro literals" do
         expect_no_issues subject, <<-CRYSTAL
           def print(f : Array(U)) forall U

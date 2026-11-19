@@ -37,6 +37,9 @@ module Ameba::AST
       # within an interpolation
       property nesting = 0
 
+      def_equals_and_hash @kind, @opening, @closing, @interpolates, @escapes,
+        @regex, @heredoc_end, @nesting
+
       def initialize(@kind, closing = '\0', opening = closing, *,
                      @interpolates = false, @escapes = false, @regex = false,
                      @heredoc_end = nil)
@@ -56,6 +59,26 @@ module Ameba::AST
       '|' => '|',
     }
 
+    # Kinds of the operand preceding a `/` or `%` (i.e. `a /b`)
+    private enum Operand
+      # A literal, a constant, or a variable (but a local one), followed
+      # by an operator (`1 /a`, `(a) /b`, `A /b`, `@a /b`, `self /a`)
+      Value
+      # A method call or a keyword, followed by a literal
+      # (`a.b /c/`, `A::b /c/`, `a? /b/`, `when /a/`)
+      Call
+      # Either a local variable or a method call (`a /b`)
+      Unknown
+    end
+
+    # Keywords followed by an expression, i.e. by a regex literal (`when /a/`)
+    private EXPRESSION_KEYWORDS = %w[
+      if unless elsif when while until return next break yield then else do begin case
+    ]
+
+    # Keywords being a value, i.e. followed by an operator (`self /a`)
+    private VALUE_KEYWORDS = %w[self nil true false]
+
     # Stack of the opened lexical contexts (an empty stack means plain code)
     @contexts = [] of Context
 
@@ -71,8 +94,26 @@ module Ameba::AST
     # Character preceding the `@last_char`
     @before_last_char = '\0'
 
+    # Kind of the operand ending the previously scanned macro literals,
+    # i.e. `puts` in `puts{% if foo %}{% end %} /a/`
+    @last_operand = Operand::Value
+
     # Reader of the currently scanned macro literal
     @reader = Char::Reader.new("")
+
+    # Whether the ambiguous `/` are read the other way round
+    # (see `#flipped`) within the currently scanned macro literal
+    @flipped = false
+
+    # Returns `true` if the last scanned macro literal has any `/` read
+    # as the division operator, which might start a regex literal as well,
+    # i.e. `a /b / c` (`a` being a local variable) vs `foo /a / if b`,
+    # `a /b{{ c }}` vs `foo /a{{ b }}/`, or `a.b /{{ c }}` vs `a.b /{{ c }}/`.
+    getter? ambiguous = false
+
+    # Scanners in the same lexical state are equal
+    def_equals_and_hash @contexts, @heredocs, @prev_char, @last_char,
+      @before_last_char, @last_operand
 
     # Returns a deep copy of the scanner, i.e. to scan alternative
     # macro branches starting from the same lexical state.
@@ -85,11 +126,23 @@ module Ameba::AST
       @heredocs = @heredocs.map(&.dup)
     end
 
+    # Returns a copy of the scanner, which reads the ambiguous `/`
+    # (see `#ambiguous?`) of the next scanned macro literal as regex
+    # literals, i.e. to follow both of their readings.
+    def flipped : self
+      clone.tap(&.flip!)
+    end
+
+    protected def flip! : Nil
+      @flipped = true
+    end
+
     # Marks the end of a value placed in between the scanned macro literals,
     # i.e. the output of a `{{ ... }}` macro expression, so that the following
     # `/` or `%` are treated as operators, not literal delimiters.
     def after_value! : Nil
       @prev_char = @last_char = ')'
+      @last_operand = Operand::Value
     end
 
     # Returns the macro *literal* with all of the comments, string, char,
@@ -100,6 +153,8 @@ module Ameba::AST
     # as *literal*, as the blanked out characters (but newlines) are
     # replaced with spaces.
     def scan(literal : String) : String
+      @ambiguous = false
+
       String.build(literal.bytesize) do |io|
         @reader = Char::Reader.new(literal)
 
@@ -122,7 +177,13 @@ module Ameba::AST
           end
           @reader.next_char
         end
+
+        unless skip_blanks_back(literal.bytesize - 1).negative?
+          @last_operand = operand_before(literal.bytesize)
+        end
       end
+    ensure
+      @flipped = false
     end
 
     private def blank(char : Char) : Char
@@ -387,19 +448,113 @@ module Ameba::AST
     #
     # NOTE: When in doubt, it's not a literal, as the code mistaken for
     # a literal would be blanked out, while a literal mistaken for the code
-    # is merely searched for the references.
+    # is merely searched for the references - unless it'd make the rest
+    # of the literal a comment (`foo /a#{b} /`), in which case the scanned
+    # literal is marked as `#ambiguous?`, to follow both of the readings.
     private def literal_allowed? : Bool
       # `a //b`
       return false if @prev_char == '/' || operator_name?
       # `(/a/)`, `= /a/`, `a ? /b/ : c`
       return true unless after_value?
-      # `a/b`, `(a) / b`, `"a" % b`, `a? / b`
-      return false unless @prev_char.in?(' ', '\t') && ident_part?(@last_char)
+      # `a/b`, `a?/b`
+      return false unless @prev_char.in?(' ', '\t')
 
       # `foo /a/` vs `a / b`, `a /= b`, `a // b`
       next_char = @reader.peek_next_char
-      !next_char.whitespace? &&
-        !next_char.in?('=', '/', '\0')
+      return false if next_char.whitespace? || next_char.in?('=', '/')
+      return false if (operand = preceding_operand).value?
+
+      # `foo %(a)` is a literal, even if `foo` is a local variable
+      @reader.current_char != '/' || regex_allowed?(operand, next_char)
+    end
+
+    # Returns `true` if the `/` at the reader's position, following
+    # a method call or an unknown *operand*, starts a regex literal.
+    private def regex_allowed?(operand : Operand, next_char : Char) : Bool
+      # `a.b /{{ c }}/` vs `a.b /{{ c }}` - the character following
+      # the `/` is an output of the macro expression (if any)
+      return ambiguous_regex if next_char == '\0'
+      return true if operand.call?
+
+      # `foo /a/` vs `a /b` - a regex only if `foo` isn't a local variable,
+      # which can't be told from the macro code
+      return true if regex_closed_on_line?
+      return false unless regex_closed_on_line?(possibly: true)
+
+      # `a /b / c` vs `foo /a / if b`
+      ambiguous_regex
+    end
+
+    # Marks the scanned macro literal as `#ambiguous?`, returns `true`
+    # if the `/` at the reader's position is read as a regex literal
+    private def ambiguous_regex : Bool
+      @ambiguous = true
+      @flipped
+    end
+
+    # Returns the kind of the operand preceding the reader's position,
+    # also one ending the previously scanned macro literals
+    private def preceding_operand : Operand
+      return @last_operand if skip_blanks_back(@reader.pos - 1).negative?
+
+      operand_before(@reader.pos)
+    end
+
+    # Returns the kind of the operand preceding the given byte *index*
+    # (skipping the blanks in between)
+    private def operand_before(index : Int32) : Operand
+      # Local variables can't end with `?` or `!`
+      return Operand::Call if char_at(skip_blanks_back(index - 1)).in?('?', '!')
+
+      word, index = preceding_identifier(index)
+      prefix = char_at(index)
+
+      case
+      when word.empty?                   then Operand::Value
+      when word[0].ascii_number?         then Operand::Value
+      when word[0].uppercase?            then Operand::Value
+      when prefix.in?('@', '$')          then Operand::Value
+      when prefix == ':'                 then char_at(index - 1) == ':' ? Operand::Call : Operand::Value
+      when prefix == '.'                 then char_at(index - 1) == '.' ? Operand::Unknown : Operand::Call
+      when word.in?(VALUE_KEYWORDS)      then Operand::Value
+      when word.in?(EXPRESSION_KEYWORDS) then Operand::Call
+      else                                    Operand::Unknown
+      end
+    end
+
+    # Returns the identifier preceding the given byte *index* (skipping
+    # the blanks in between), along with the byte index preceding it.
+    private def preceding_identifier(index : Int32 = @reader.pos) : {String, Int32}
+      index = skip_blanks_back(index - 1)
+      word_end = index + 1
+
+      while index >= 0 && ident_byte?(index)
+        index -= 1
+      end
+      {@reader.string.byte_slice(index + 1, word_end - index - 1), index}
+    end
+
+    # Returns `true` if the `/` at the reader's position is followed
+    # by an unescaped `/` on the same line, which might close a regex,
+    # unless it's surrounded by blanks, as a division operator (`a /b / c`).
+    #
+    # If *possibly* is `true`, it returns `true` also for a `/` surrounded
+    # by blanks, and if the line continues past the end of the macro literal,
+    # i.e. after a macro expression (`foo /a{{ b }}/`).
+    private def regex_closed_on_line?(*, possibly = false) : Bool
+      index = @reader.pos + 1
+
+      while index < @reader.string.bytesize
+        case char_at(index)
+        when '\n' then return false
+        when '\\' then index += 1
+        when '/'
+          return true if possibly || !(char_at(index - 1).in?(' ', '\t') &&
+                         char_at(index + 1).in?(' ', '\t'))
+        end
+        index += 1
+      end
+      possibly
     end
 
     # Returns `true` if the operator at the reader's position is used
@@ -411,16 +566,7 @@ module Ameba::AST
 
     # Returns `true` if the reader's position follows a `def` keyword
     private def after_def_keyword? : Bool
-      string = @reader.string
-      index = @reader.pos - 1
-
-      while index >= 0 && string.byte_at(index).unsafe_chr.in?(' ', '\t')
-        index -= 1
-      end
-      unless index >= 2 && string.byte_slice?(index - 2, 3) == "def"
-        return false
-      end
-      index < 3 || !ident_part?(string.byte_at(index - 3).unsafe_chr)
+      preceding_identifier[0] == "def"
     end
 
     # Returns `true` if the last non-blank character ends a value,
@@ -440,9 +586,27 @@ module Ameba::AST
       char.alphanumeric? || char == '_'
     end
 
+    # Returns the byte index of the last non-blank character at or before
+    # the given byte *index* of the scanned macro literal (`-1` if none)
+    private def skip_blanks_back(index : Int32) : Int32
+      while char_at(index).in?(' ', '\t')
+        index -= 1
+      end
+      index
+    end
+
+    # Returns `true` if the byte at the given *index* of the scanned macro
+    # literal is a part of an identifier (including the non-ASCII ones)
+    private def ident_byte?(index : Int32) : Bool
+      byte = @reader.string.byte_at(index)
+      byte >= 0x80 || ident_part?(byte.unsafe_chr)
+    end
+
     # Returns the character at the given byte *index* of the scanned
     # macro literal (`'\0'` if there's none, or it's not an ASCII one).
     private def char_at(index : Int32) : Char
+      return '\0' if index.negative?
+
       byte = @reader.string.byte_at?(index)
       byte && byte < 0x80 ? byte.unsafe_chr : '\0'
     end
