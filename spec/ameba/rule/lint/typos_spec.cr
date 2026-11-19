@@ -31,5 +31,16 @@ module Ameba::Rule::Lint
         end
         CRYSTAL
     end
+
+    it "reports and corrects a typo after a multibyte character" do
+      check_typos_bin!
+
+      source = expect_issue subject, <<-CRYSTAL
+        # café arugments
+             # ^^^^^^^^^ error: Typo found: `arugments` -> `arguments`
+        CRYSTAL
+
+      expect_correction source, "# café arguments"
+    end
   end
 end
