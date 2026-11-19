@@ -494,6 +494,16 @@ module Ameba::Rule::Lint
           CRYSTAL
       end
 
+      it "doesn't report block args referenced in a regex interpolation followed by a macro expression" do
+        expect_no_issues subject, <<-'CRYSTAL'
+          [6].each do |value|
+            {% begin %}
+              puts /a#{value}{{ "b" }}/
+            {% end %}
+          end
+          CRYSTAL
+      end
+
       it "doesn't report block args referenced in a percent literal following a macro control in a macro" do
         expect_no_issues subject, <<-'CRYSTAL'
           [6].each do |value|

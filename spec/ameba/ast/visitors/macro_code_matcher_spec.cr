@@ -17,6 +17,7 @@ module Ameba::AST
         "{% begin %}{% for x in [1, 2] %}\"{% end %}foo{% end %}",
         "{% begin %}\n  bar{% if baz %}{% end %} %r{a\#{foo}}\n{% end %}",
         "{% begin %}\n  bar /a\#{foo} / if baz\n{% end %}",
+        "{% begin %}\n  bar /a\#{foo}{{ baz }}/\n{% end %}",
       }.each do |code|
         it "returns true for #{code.inspect}" do
           node = Crystal::Parser.new(code).parse

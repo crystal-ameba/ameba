@@ -107,7 +107,8 @@ module Ameba::AST
 
     # Returns `true` if the last scanned macro literal has any `/` read
     # as the division operator, which might start a regex literal as well,
-    # i.e. `a /b / c` (`a` being a local variable) vs `foo /a / if b`.
+    # i.e. `a /b / c` (`a` being a local variable) vs `foo /a / if b`,
+    # or `a /b{{ c }}` vs `foo /a{{ b }}/`.
     getter? ambiguous = false
 
     # Scanners in the same lexical state are equal
@@ -472,7 +473,7 @@ module Ameba::AST
         # `foo /a/` vs `a /b` - a regex only if `foo` isn't a local variable,
         # which can't be told from the macro code
         return true if regex_closed_on_line?
-        return false unless regex_closed_on_line?(spaced: true)
+        return false unless regex_closed_on_line?(possibly: true)
 
         # `a /b / c` vs `foo /a / if b`
         @ambiguous = true
@@ -524,9 +525,12 @@ module Ameba::AST
 
     # Returns `true` if the `/` at the reader's position is followed
     # by an unescaped `/` on the same line, which might close a regex,
-    # unless it's surrounded by blanks, as a division operator (`a /b / c`)
-    # - also then, if *spaced* is `true`.
-    private def regex_closed_on_line?(*, spaced = false) : Bool
+    # unless it's surrounded by blanks, as a division operator (`a /b / c`).
+    #
+    # If *possibly* is `true`, it returns `true` also for a `/` surrounded
+    # by blanks, and if the line continues past the end of the macro literal,
+    # i.e. after a macro expression (`foo /a{{ b }}/`).
+    private def regex_closed_on_line?(*, possibly = false) : Bool
       index = @reader.pos + 1
 
       while index < @reader.string.bytesize
@@ -534,12 +538,12 @@ module Ameba::AST
         when '\n' then return false
         when '\\' then index += 1
         when '/'
-          return true if spaced || !(char_at(index - 1).in?(' ', '\t') &&
+          return true if possibly || !(char_at(index - 1).in?(' ', '\t') &&
                          char_at(index + 1).in?(' ', '\t'))
         end
         index += 1
       end
-      false
+      possibly
     end
 
     # Returns `true` if the operator at the reader's position is used

@@ -193,10 +193,14 @@ module Ameba::AST
     describe "#ambiguous?" do
       it "returns true if the literal has a division operator, which might start a regex" do
         scanner = MacroCodeScanner.new
-        scanner.scan("a /b / c")
-        scanner.ambiguous?.should be_true
 
-        {"a /b", "a /b/ c", "a %(b)", "a.b /c / d", "@a /b / c", "a / b / c"}.each do |literal|
+        # the line of `a /b` might continue after a macro expression
+        {"a /b / c", "a /b"}.each do |literal|
+          scanner.scan(literal)
+          scanner.ambiguous?.should be_true
+        end
+
+        {"a /b\n", "a /b/ c", "a %(b)", "a.b /c / d", "@a /b / c", "a / b / c"}.each do |literal|
           scanner.scan(literal)
           scanner.ambiguous?.should be_false
         end
