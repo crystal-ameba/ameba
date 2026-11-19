@@ -5,15 +5,25 @@ module Ameba::AST
   # As the macro branches and loops might leave the code in different
   # lexical states (i.e. `{% if foo %}# bar{% end %}baz`), the code following
   # them is scanned in each of these, matching if it does in any of them.
-  # The same goes for the ambiguous `/` and `%` (see `MacroCodeScanner#ambiguous?`),
-  # which are followed in both of their readings.
+  # The same goes for the ambiguous `/` (see `MacroCodeScanner#ambiguous?`),
+  # which is followed in both of its readings.
   #
   # NOTE: Beyond `MAX_STATES` lexical states, the code following them
   # is also matched as is (that is, with the comments and literals), as
   # their number might grow exponentially with the number of branches.
+  # The same goes for the code following `MAX_SCANNED_BYTES` bytes scanned
+  # (in all of the lexical states), as the nested loops are expanded
+  # repeatedly - beyond it the lexical states aren't followed anymore.
   class MacroCodeMatcher < Crystal::Visitor
     # Maximum number of the lexical states followed
     MAX_STATES = 64
+
+    # Maximum number of bytes scanned, in all of the lexical states
+    MAX_SCANNED_BYTES = 256 * 1024
+
+    # Number of bytes each scan is counted as on top of the scanned ones,
+    # as its overhead outweighs the scanning of a short macro literal
+    SCAN_OVERHEAD_BYTES = 64
 
     getter? matches = false
 
@@ -22,6 +32,10 @@ module Ameba::AST
 
     # Whether there were more lexical states than `MAX_STATES`
     @overflown = false
+
+    # Number of bytes left to scan, before the lexical states
+    # aren't followed anymore
+    @scan_budget = MAX_SCANNED_BYTES
 
     def initialize(node, @regex : Regex)
       node.accept(self)
@@ -58,7 +72,9 @@ module Ameba::AST
     end
 
     private def scan(code : String) : Nil
-      return if @matches ||= @overflown && code.matches?(@regex)
+      @scan_budget -= (code.bytesize + SCAN_OVERHEAD_BYTES) * @scanners.size unless exhausted?
+      return if @matches ||= (@overflown || exhausted?) && code.matches?(@regex)
+      return if exhausted?
 
       # Only a `/` might be ambiguous
       return scan_unambiguous(code) unless code.includes?('/')
@@ -81,6 +97,11 @@ module Ameba::AST
     private def scan_unambiguous(code : String) : Nil
       @matches ||= @scanners.any?(&.scan(code).matches?(@regex))
       self.scanners = @scanners
+    end
+
+    # Returns `true` if the lexical states aren't followed anymore
+    private def exhausted? : Bool
+      @scan_budget.negative?
     end
 
     private def scanners=(scanners : Array(MacroCodeScanner)) : Nil
@@ -110,7 +131,7 @@ module Ameba::AST
           scanners = @scanners.map(&.clone)
           node.body.accept(self)
           # Each of the following iterations would end in the same states
-          break if @matches || @scanners == scanners
+          break if @matches || exhausted? || @scanners == scanners
         end
       end
       false
@@ -174,7 +195,7 @@ module Ameba::AST
       until expanded.empty?
         @scanners = expanded.map(&.clone)
         node.accept(self)
-        return if @matches
+        return if @matches || exhausted?
 
         expanded = @scanners.select { |scanner| states.add?(scanner) }
         next unless states.size > MAX_STATES

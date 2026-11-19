@@ -50,6 +50,20 @@ module Ameba::AST
       end
     end
 
+    context "beyond the maximum number of bytes scanned" do
+      loops = "{% for x in [#{(0...99).join(", ")}] %}" * 3
+
+      it "matches the following code as is" do
+        node = Crystal::Parser.new("{% begin %}#{loops}\"{% end %}{% end %}{% end %} # foo{% end %}").parse
+        MacroCodeMatcher.new(node, /\bfoo\b/).matches?.should be_true
+      end
+
+      it "doesn't match if there's no match" do
+        node = Crystal::Parser.new("{% begin %}#{loops}\"{% end %}{% end %}{% end %} # bar{% end %}").parse
+        MacroCodeMatcher.new(node, /\bfoo\b/).matches?.should be_false
+      end
+    end
+
     context "beyond the maximum number of lexical states" do
       branches = (0...16).join { |i| "{% if bar %}; <<-H#{i}{% end %}" }
 
