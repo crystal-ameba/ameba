@@ -60,6 +60,9 @@ module Ameba::AST
     private def scan(code : String) : Nil
       return if @matches ||= @overflown && code.matches?(@regex)
 
+      # Only a `/` might be ambiguous
+      return scan_unambiguous(code) unless code.includes?('/')
+
       scanners = [] of MacroCodeScanner
 
       @scanners.each do |scanner|
@@ -67,12 +70,17 @@ module Ameba::AST
         scanners << scanner
         return if @matches ||= scanner.scan(code).matches?(@regex)
 
-        # Follows the other reading of the ambiguous `/` and `%`
+        # Follows the other reading of the ambiguous `/`
         next unless scanner.ambiguous?
         scanners << flipped
         return if @matches ||= flipped.scan(code).matches?(@regex)
       end
       self.scanners = scanners
+    end
+
+    private def scan_unambiguous(code : String) : Nil
+      @matches ||= @scanners.any?(&.scan(code).matches?(@regex))
+      self.scanners = @scanners
     end
 
     private def scanners=(scanners : Array(MacroCodeScanner)) : Nil
