@@ -444,6 +444,21 @@ module Ameba::Rule::Lint
           CRYSTAL
       end
 
+      it "reports unused block args if a method named `macro` references a local variable" do
+        expect_issue subject, <<-CRYSTAL
+          {% begin %}
+            def macro {% if true %}{% end %}
+              value = 1
+              puts value
+            end
+          {% end %}
+
+          [6].each do |value|
+                     # ^^^^^ error: Unused argument `value`. [...]
+          end
+          CRYSTAL
+      end
+
       it "reports unused block args following many skipped macro branches" do
         branches = (0...16).join { |i| "{% if false %}; puts <<-H#{i}{% end %}" }
 
