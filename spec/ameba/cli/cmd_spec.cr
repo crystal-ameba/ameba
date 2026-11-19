@@ -52,6 +52,27 @@ module Ameba
         end
       end
 
+      it "is two when explaining an issue of a file which can't be read" do
+        with_temp_file do |path|
+          File.write(path, "a = 1\n")
+          File.chmod(path, 0o000)
+
+          begin
+            # Permissions don't apply on some platforms and for some users
+            next if File::Info.readable?(path)
+
+            output = IO::Memory.new
+            args = ["-f", "silent", "--only", "Lint/Syntax", "--explain", "#{path}:1:2"]
+
+            CLI.exit_code(args, output).should eq CLI::ExitCode::Crash
+            output.to_s.should contain "Could not read the file"
+          ensure
+            # Lets the file get deleted on any platform
+            File.chmod(path, 0o644)
+          end
+        end
+      end
+
       it "is zero when showing the version" do
         CLI.exit_code(["--version"], IO::Memory.new).should eq CLI::ExitCode::Success
       end

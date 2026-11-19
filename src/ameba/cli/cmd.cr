@@ -93,13 +93,26 @@ module Ameba::CLI
 
       if location_to_explain
         runner.explain(location_to_explain, output)
-        return ExitCode::Success
+        print_crashes(runner, location_to_explain, output)
+        return runner.crashed? ? ExitCode::Crash : ExitCode::Success
       end
 
       exit_code_of(runner)
     end
   rescue ExitException
     ExitCode::Success
+  end
+
+  # Prints the crashes other than the explained one, which would be missed otherwise.
+  private def print_crashes(runner, explained_location, output)
+    runner.sources.each do |source|
+      source.issues.each do |issue|
+        next unless issue.crashed?
+        next if issue.location == explained_location
+
+        output.puts "#{issue.location}: #{issue.rule.name}: #{issue.message}"
+      end
+    end
   end
 
   private def exit_code_of(runner)
