@@ -143,6 +143,69 @@ module Ameba::Rule::Performance
       expect_no_corrections source
     end
 
+    it "reports but does not correct heredocs with bodies within the replaced code" do
+      source = expect_issue subject, <<-CRYSTAL
+        <<-TEXT.size.times
+        # ^^^^^^^^^^^^^^^^ error: Use `Array.new(<<-TEXT.size) {...}` instead of `<<-TEXT.size.times.map {...}.to_a`
+          abc
+          TEXT
+            .map { |i| i }.to_a
+        3.times.map { <<-TEXT }
+        # ^^^^^^^^^^^^^^^^^^^^^ error: Use `Array.new(3) {...}` instead of `3.times.map {...}.to_a`
+          abc
+          TEXT
+            .to_a
+        3.times.map(&.+(<<-TEXT))
+        # ^^^^^^^^^^^^^^^^^^^^^^^ error: Use `Array.new(3, &...)` instead of `3.times.map(&...).to_a`
+          abc
+          TEXT
+            .to_a
+        3.times.map(&->(i : Int32) { <<-TEXT })
+        # ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ error: Use `Array.new(3, &...)` instead of `3.times.map(&...).to_a`
+          abc
+          TEXT
+            .to_a
+        CRYSTAL
+
+      expect_no_corrections source
+    end
+
+    it "reports and corrects heredocs with bodies within the copied code" do
+      source = expect_issue subject, <<-CRYSTAL
+        <<-TEXT.size.times.map { |i| <<-ITEM }.to_a
+        # ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ error: Use `Array.new(<<-TEXT.size) {...}` instead of `<<-TEXT.size.times.map {...}.to_a`
+          abc
+          TEXT
+          item
+          ITEM
+        CRYSTAL
+
+      expect_correction source, <<-CRYSTAL
+        Array.new(<<-TEXT.size) { |i| <<-ITEM }
+          abc
+          TEXT
+          item
+          ITEM
+        CRYSTAL
+
+      source = expect_issue subject, <<-CRYSTAL
+        <<-TEXT.size.times.map do |i|
+        # ^^^^^^^^^^^^^^^^^^^^^^^^^^^ error: Use `Array.new(<<-TEXT.size) {...}` instead of `<<-TEXT.size.times.map {...}.to_a`
+          abc
+          TEXT
+          i
+        end.to_a
+        CRYSTAL
+
+      expect_correction source, <<-CRYSTAL
+        Array.new(<<-TEXT.size) do |i|
+          abc
+          TEXT
+          i
+        end
+        CRYSTAL
+    end
+
     it "reports and corrects parenthesized count expression" do
       source = expect_issue subject, <<-CRYSTAL
         (n + 1 if n).times.map { |i| i * 2 }.to_a

@@ -91,8 +91,8 @@ module Ameba::Rule::Performance
       !has_block?(node) && !has_arguments?(node)
     end
 
-    # Returns the original code of the `map` block, or `nil`
-    # if moving it would lose the comments around it.
+    # Returns the original code of the `map` block, or `nil` if moving it
+    # would lose the code around it (comments or heredoc bodies).
     private def block_code(source, count, map_call, end_location, block_arg) : String?
       return unless count_end_location = count.end_location
       return unless block = map_call.block_arg || map_call.block
@@ -108,7 +108,8 @@ module Ameba::Rule::Performance
       block_end_pos = source.pos(block_end_location, end: true)
       end_pos = source.pos(end_location, end: true)
 
-      return if comments_around?(source, count_end_pos...block_pos, block_end_pos...end_pos)
+      return if code_around?(source, {count, block},
+                  count_end_pos...block_pos, block_end_pos...end_pos)
 
       if short_block
         # the short block body's end location can stop short of the block's
@@ -121,11 +122,23 @@ module Ameba::Rule::Performance
       map_call.block_arg ? "&#{code}" : code
     end
 
-    # Returns `true` if any of the given *ranges* of the code around the block
-    # contains a comment. These hold no literals (only `.times.map(`, `).to_a`
-    # and alike), so any `#` found there starts a comment.
-    private def comments_around?(source, *ranges) : Bool
-      ranges.any? { |range| source.code[range].includes?('#') }
+    # Returns `true` if any of the given *ranges* of the code around the block,
+    # which the correction drops, holds anything besides the call chain
+    # (`.times.map(`, `).to_a`, whitespace and alike), namely:
+    #
+    # - a comment, since the call chain has no literals, any `#` starts one
+    #   (unless it's within a heredoc body, which is reported anyway)
+    # - a body of a heredoc opened within the *nodes*, which follows the line
+    #   the heredoc is opened at, so it spans at least one line break
+    private def code_around?(source, nodes, *ranges) : Bool
+      codes = ranges.map { |range| source.code[range] }
+
+      return true if codes.any?(&.includes?('#'))
+      return false unless codes.any?(&.includes?('\n'))
+
+      finder = HeredocBodyFinder.new(source, ranges)
+      nodes.each(&.accept(finder))
+      finder.found?
     end
 
     # Returns the position right after the last character of the short block,
@@ -166,6 +179,29 @@ module Ameba::Rule::Performance
       node.to_s
         .gsub(/\s*\n\s*(?=\.)/, "")
         .gsub(/\s*\n\s*/, " ")
+    end
+
+    # Looks for a heredoc whose body ends within any of the given *ranges*.
+    private class HeredocBodyFinder < Crystal::Visitor
+      include AST::Util
+
+      getter? found = false
+
+      def initialize(@source : Source, @ranges : Indexable(Range(Int32, Int32)))
+      end
+
+      def visit(node : Crystal::StringLiteral | Crystal::StringInterpolation)
+        if !@found && heredoc?(node, @source) && (end_location = node.end_location)
+          end_pos = @source.pos(end_location)
+          @found = @ranges.any?(&.includes?(end_pos))
+        end
+        # heredocs cannot be nested within string literals
+        false
+      end
+
+      def visit(node : Crystal::ASTNode)
+        !@found
+      end
     end
   end
 end
