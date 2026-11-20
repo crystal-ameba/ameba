@@ -28,6 +28,62 @@ module Ameba
       FileUtils.rm_rf(CONFIG_PATH)
     end
 
+    context "crashed issues" do
+      it "doesn't generate the file if there's nothing else to exclude" do
+        with_formatter do |formatter, io|
+          source = Source.new("a = 1", "crashed.cr")
+          source.add_crash_issue(DummyRule.new, "boom")
+
+          File.write(CONFIG_PATH, "existing config")
+          formatter.finished([source])
+
+          io.to_s.should contain "Crashes can't be excluded. File is not generated."
+          File.read(CONFIG_PATH).should eq "existing config"
+        end
+      end
+
+      it "doesn't exclude the source, so that the crash stays visible" do
+        with_formatter do |formatter|
+          source = Source.new("a = 1", "crashed.cr")
+          source.add_crash_issue(DummyRule.new, "boom")
+
+          other = Source.new("a = 1", "other.cr")
+          other.add_issue(DummyRule.new, {1, 1}, "regular")
+
+          formatter.finished([source, other])
+
+          todo = File.read(CONFIG_PATH)
+          todo.should contain "other.cr"
+          todo.should_not contain "crashed.cr"
+        end
+      end
+
+      it "doesn't take a file which couldn't be read for a syntax issue" do
+        with_formatter do |formatter, io|
+          source = Source.from_file(File.tempname("missing", ".cr"))
+          source.issues.first.syntax?.should be_true
+
+          formatter.finished([source])
+
+          io.to_s.should_not contain "Please fix syntax issues"
+          io.to_s.should contain "Crashes can't be excluded. File is not generated."
+        end
+      end
+
+      it "excludes the other issues if a file couldn't be read" do
+        with_formatter do |formatter|
+          source = Source.from_file(File.tempname("missing", ".cr"))
+
+          other = Source.new("a = 1", "other.cr")
+          other.add_issue(DummyRule.new, {1, 1}, "regular")
+
+          formatter.finished([source, other])
+
+          File.read(CONFIG_PATH).should contain "other.cr"
+        end
+      end
+    end
+
     context "correctable issues" do
       it "doesn't generate the file if all of them got corrected" do
         with_formatter do |formatter, io|

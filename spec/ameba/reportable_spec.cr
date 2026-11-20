@@ -24,6 +24,37 @@ module Ameba
       end
     end
 
+    describe "#add_issue" do
+      it "adds a pending issue by default" do
+        source = Source.new("a = 1", "source.cr")
+        source.add_issue(DummyRule.new, {1, 1}, "message").outcome.should eq Issue::Outcome::Pending
+      end
+
+      it "accepts an outcome" do
+        source = Source.new("a = 1", "source.cr")
+        issue = source.add_issue(DummyRule.new, {1, 1}, "message", outcome: :corrected)
+
+        issue.corrected?.should be_true
+        source.issues.first.corrected?.should be_true
+      end
+    end
+
+    describe "#add_crash_issue" do
+      it "adds an enabled issue marked as crashed on the first line" do
+        source = Source.new("a = 1 # ameba:disable #{DummyRule.rule_name}\n", "source.cr")
+        rule = DummyRule.new
+
+        source.add_crash_issue(rule, "boom")
+
+        issue = source.issues.first
+        issue.rule.should eq rule
+        issue.message.should eq "boom"
+        issue.crashed?.should be_true
+        issue.enabled?.should be_true
+        issue.location.try(&.line_number).should eq 1
+      end
+    end
+
     describe "#unresolved_issues" do
       it "returns only the issues which still need attention" do
         source = Source.new("a = 1", "source.cr")

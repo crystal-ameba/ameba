@@ -41,6 +41,33 @@ module Ameba
       disabled.unresolved?.should be_false
     end
 
+    it "#without_correction accepts a new outcome" do
+      issue = Issue.new code: "",
+        rule: DummyRule.new,
+        location: nil,
+        end_location: nil,
+        message: "Blah"
+      issue.crashed?.should be_false
+
+      crashed = issue.without_correction(outcome: :crashed)
+      crashed.crashed?.should be_true
+      crashed.message.should eq "Blah"
+      crashed.correctable?.should be_false
+      issue.crashed?.should be_false
+    end
+
+    it "has a single outcome" do
+      issue = Issue.new code: "",
+        rule: DummyRule.new,
+        location: nil,
+        end_location: nil,
+        message: "Blah"
+
+      issue.outcome.should eq Issue::Outcome::Pending
+      issue.as_corrected.outcome.should eq Issue::Outcome::Corrected
+      issue.as_corrected.without_correction(outcome: :crashed).corrected?.should be_false
+    end
+
     it "#as_corrected marks only a copy, keeping the rest" do
       issue = Issue.new code: "code",
         rule: DummyRule.new,

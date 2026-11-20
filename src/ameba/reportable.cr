@@ -14,7 +14,9 @@ module Ameba
                   end_location : Crystal::Location?,
                   message : String,
                   status : Issue::Status? = nil,
-                  block : (Source::Corrector ->)? = nil) : Issue
+                  block : (Source::Corrector ->)? = nil,
+                  *,
+                  outcome : Issue::Outcome = :pending) : Issue
       status ||=
         if location_disabled?(location, rule)
           Issue::Status::Disabled
@@ -22,7 +24,7 @@ module Ameba
           Issue::Status::Enabled
         end
 
-      Issue.new(code, rule, location, end_location, message, status, block).tap do |issue|
+      Issue.new(code, rule, location, end_location, message, status, block, outcome: outcome).tap do |issue|
         issues << issue
       end
     end
@@ -104,11 +106,13 @@ module Ameba
                   location : {Int32, Int32},
                   message : String,
                   status : Issue::Status? = nil,
-                  block : (Source::Corrector ->)? = nil) : Issue
+                  block : (Source::Corrector ->)? = nil,
+                  *,
+                  outcome : Issue::Outcome = :pending) : Issue
       location =
         Crystal::Location.new(path.to_s, *location)
 
-      add_issue(rule, location, nil, message, status, block)
+      add_issue(rule, location, nil, message, status, block, outcome: outcome)
     end
 
     # :ditto:
@@ -143,6 +147,12 @@ module Ameba
                   status : Issue::Status? = nil,
                   &block : Source::Corrector ->) : Issue
       add_issue(rule, location, end_location, message, status, block)
+    end
+
+    # Adds an issue reporting a failure which isn't about the code itself. It
+    # can't be disabled, as nothing else would tell that something went wrong.
+    def add_crash_issue(rule, message : String) : Nil
+      add_issue(rule, {1, 1}, message, status: :enabled, outcome: :crashed)
     end
 
     # Returns the issues which still need attention.

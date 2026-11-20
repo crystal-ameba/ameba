@@ -69,6 +69,40 @@ module Ameba::Rule::Lint
         CRYSTAL
     end
 
+    it "keeps the other rules when correcting" do
+      source = Source.new <<-CRYSTAL
+        a = 1 # ameba:disable #{NamedRule.name}, Lint/ComparisonToBoolean
+        CRYSTAL
+      source.add_issue NamedRule.new, location: {1, 1},
+        message: "Alarm!", status: :disabled
+
+      subject.catch(source).should_not be_valid
+      source.correct!
+      source.code.should eq "a = 1 # ameba:disable #{NamedRule.name}"
+    end
+
+    it "keeps the excluded rules when correcting" do
+      source = Source.new <<-CRYSTAL
+        a = 1 # ameba:disable Lint/ComparisonToBoolean #{NamedRule.name}
+        CRYSTAL
+      subject.test(source, Set{NamedRule.name})
+
+      source.should_not be_valid
+      source.correct!
+      source.code.should eq "a = 1 # ameba:disable #{NamedRule.name}"
+    end
+
+    it "drops the words which aren't rules when correcting" do
+      source = expect_issue subject, <<-CRYSTAL
+        a = 1 # ameba:disable Lint/ComparisonToBoolean for now
+            # ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ error: Unnecessary disabling of `Lint/ComparisonToBoolean`
+        CRYSTAL
+
+      expect_correction source, <<-CRYSTAL
+        a = 1 #{""}
+        CRYSTAL
+    end
+
     it "ignores non-existent rules" do
       expect_no_issues subject, <<-CRYSTAL
         # ameba:disable Rule1, Rule2
