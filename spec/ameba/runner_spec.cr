@@ -283,6 +283,22 @@ module Ameba
       end
 
       context "exception in correction" do
+        it "keeps reporting the ones at different lines once a correction removed their cause" do
+          rule = RaisingCorrectionRule.new.tap(&.enabled = true)
+          rule.raise_for = ".not_nil!"
+          rules = [rule, Rule::Lint::NotNilAfterNoBang.new] of Rule::Base
+
+          with_temp_file do |path|
+            File.write(path, "foo.match(/x/).not_nil!\nfoo.match(/x/).not_nil!\n")
+            source = Source.new(File.read(path), path)
+
+            Runner.new(rules, [source], formatter, default_severity, autocorrect: true).run
+
+            source.issues.select(&.crashed?).map(&.location.try(&.line_number)).should eq [1, 2]
+            File.read(path).should eq "foo.match!(/x/)\nfoo.match!(/x/)\n"
+          end
+        end
+
         it "reports the issue as uncorrected, keeping the other corrections" do
           rules = [RaisingCorrectionRule.new.tap(&.enabled = true), Rule::Lint::NotNilAfterNoBang.new] of Rule::Base
           with_temp_file do |path|

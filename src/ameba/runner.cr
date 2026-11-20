@@ -122,7 +122,11 @@ module Ameba
       # inspection iteration. This is used to output meaningful infinite loop
       # error message, and to choose the rule to report such a loop under.
       corrected_issues = [] of Array(Issue)
-      crashed_issues = [] of Issue
+
+      # The crashes of each kind found so far, kept as the corrections might
+      # remove their cause. See `#keep_crashes`.
+      crashes = {} of {String, String} => Array(Issue)
+
       original_code = source.code
 
       # When running with --fix, we need to inspect the source until no more
@@ -138,8 +142,7 @@ module Ameba
         # The issues that couldn't be corrected will be found again so we
         # only keep the corrected ones in order to avoid duplicate reporting.
         corrected_issues << applied_issues.map(&.as_corrected)
-        # Crashes are kept though, as the corrections might have removed their cause
-        crashed_issues.concat(source.issues.select(&.crashed?))
+        keep_crashes(crashes, source.issues)
 
         source.issues.clear
       end
@@ -154,7 +157,13 @@ module Ameba
         source.issues[0, 0] = corrected_issues.flatten
       end
 
-      add_earlier_crashes(source, crashed_issues)
+      keep_crashes(crashes, source.issues)
+
+      source.issues.reject!(&.crashed?)
+
+      crashes.each_value do |same_crashes|
+        source.issues.concat(same_crashes)
+      end
     ensure
       source.issues.sort_by! do |issue|
         {
@@ -286,17 +295,21 @@ module Ameba
       source.add_crash_issue(rule, message)
     end
 
-    # Adds the crashes from the earlier inspection passes,
-    # unless the same ones got reported again.
-    private def add_earlier_crashes(source, crashed_issues) : Nil
-      crash_key = ->(issue : Issue) { {issue.rule.name, issue.message} }
-
-      reported = source.issues.select(&.crashed?).map(&crash_key).to_set
-      crashed_issues.uniq!(&crash_key).reject! do |issue|
-        crash_key.call(issue).in?(reported)
-      end
-
-      source.issues.concat(crashed_issues)
+    # Adds the crashes among the *issues* of an inspection pass to *crashes*,
+    # grouped by rule and message.
+    #
+    # As locations shift along with the corrections, such a group is taken for
+    # the same crashes across the passes, keeping it from the pass with the most
+    # of them, or the latest one on a tie.
+    private def keep_crashes(crashes, issues) : Nil
+      issues
+        .select(&.crashed?)
+        .group_by { |issue| {issue.rule.name, issue.message} }
+        .each do |key, same_crashes|
+          if same_crashes.size >= (crashes[key]?.try(&.size) || 0)
+            crashes[key] = same_crashes
+          end
+        end
     end
 
     private def check_unneeded_directives(source, excluded_rules = Set(String).new)
