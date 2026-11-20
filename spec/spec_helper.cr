@@ -225,18 +225,23 @@ module Ameba
     end
   end
 
-  # A rule whose correction raises for the code including `foo`.
+  # A rule whose correction raises for each line including `foo`.
   class RaisingCorrectionRule < Rule::Base
+    # Makes it raise for the lines including the given string instead.
+    property raise_for = "foo"
+
     properties do
       description "Internal rule with a correction that raises"
       enabled false
     end
 
     def test(source)
-      return unless source.code.includes?("foo")
+      source.lines.each_with_index(1) do |line, line_number|
+        next unless line.includes?(raise_for)
 
-      source.add_issue(self, {1, 1}, {1, 3}, "foo") do
-        raise IndexError.new("Correction went wrong")
+        source.add_issue(self, {line_number, 1}, {line_number, 3}, "foo") do
+          raise IndexError.new("Correction went wrong")
+        end
       end
     end
   end
