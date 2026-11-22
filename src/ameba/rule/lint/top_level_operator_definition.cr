@@ -17,6 +17,9 @@ module Ameba::Rule::Lint
   # end
   # ```
   #
+  # The backtick method (`` def `(command) ``) is exempt, since it's
+  # called for command literals.
+  #
   # YAML configuration example:
   #
   # ```
@@ -44,6 +47,7 @@ module Ameba::Rule::Lint
 
     def test(source, node : Crystal::Def)
       return if node.receiver || !operator_method?(node)
+      return if node.name == "`"
 
       issue_for(node, MSG)
     end
