@@ -15,7 +15,7 @@ module Ameba::Rule::Lint
     it "fails if it is rand(0)" do
       expect_issue subject, <<-CRYSTAL
         rand(0)
-        # ^^^^^ error: `rand(0)` always returns `0`
+        # ^^^^^ error: `rand(0)` raises an `ArgumentError` due to an invalid bound
         CRYSTAL
     end
 
