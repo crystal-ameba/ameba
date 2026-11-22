@@ -36,6 +36,17 @@ module Ameba::Rule::Lint
         CRYSTAL
     end
 
+    it "fails if the bound is negative" do
+      expect_issue subject, <<-CRYSTAL
+        rand(-1)
+        # ^^^^^^ error: `rand(-1)` raises an `ArgumentError` due to an invalid bound
+        rand(-0.5)
+        # ^^^^^^^^ error: `rand(-0.5)` raises an `ArgumentError` due to an invalid bound
+        rand(-1_i64)
+        # ^^^^^^^^^^ error: `rand(-1_i64)` raises an `ArgumentError` due to an invalid bound
+        CRYSTAL
+    end
+
     it "fails if it is rand(1)" do
       expect_issue subject, <<-CRYSTAL
         rand(1)
