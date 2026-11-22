@@ -53,6 +53,16 @@ module Ameba::Rule::Lint
         CRYSTAL
     end
 
+    it "passes if a backtick method is defined top-level" do
+      expect_no_issues subject, <<-'CRYSTAL'
+        def `(command : String) : String
+          "handled: #{command}"
+        end
+
+        puts `example`
+        CRYSTAL
+    end
+
     it "fails if a + operator method is defined top-level" do
       expect_issue subject, <<-CRYSTAL
         def +(other)
