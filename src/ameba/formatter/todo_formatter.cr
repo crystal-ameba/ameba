@@ -25,7 +25,9 @@ module Ameba::Formatter
         return
       end
 
-      if issues.all? { |issue| !issue.unresolved? || issue.crashed? }
+      issues = sources.flat_map { |source| excludable_issues(source) }
+
+      if issues.empty?
         output.puts "Crashes can't be excluded. File is not generated."
         return
       end
@@ -70,11 +72,26 @@ module Ameba::Formatter
       end
     end
 
+    # Returns the issues of the *source* which can be excluded.
+    #
+    # A rule which crashed on the *source* might have reported only some of
+    # its issues before that, so the *source* isn't excluded from it at all,
+    # keeping the crash visible on the subsequent runs.
+    private def excludable_issues(source)
+      crashed_rules = source.issues
+        .select(&.crashed?)
+        .map(&.rule.name)
+        .to_set
+
+      source.issues.select do |issue|
+        issue.unresolved? && !issue.syntax? && !issue.crashed? &&
+          !issue.rule.name.in?(crashed_rules)
+      end
+    end
+
     private def rule_issues_map(issues)
       Hash(Rule::Base, Array(Issue)).new.tap do |hash|
         issues.each do |issue|
-          next if !issue.unresolved? || issue.syntax? || issue.crashed?
-
           (hash[issue.rule] ||= Array(Issue).new) << issue
         end
       end

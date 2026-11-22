@@ -58,6 +58,44 @@ module Ameba
         end
       end
 
+      it "doesn't exclude the source from a rule which crashed after reporting issues" do
+        with_formatter do |formatter, io|
+          source = Source.new("a = 1", "crashed.cr")
+          source.add_issue(DummyRule.new, {1, 1}, "regular")
+          source.add_crash_issue(DummyRule.new, "boom")
+
+          File.write(CONFIG_PATH, "existing config")
+          formatter.finished([source])
+
+          io.to_s.should contain "Crashes can't be excluded. File is not generated."
+          File.read(CONFIG_PATH).should eq "existing config"
+        end
+      end
+
+      it "excludes the source from the other rules and the other sources from the crashed rule" do
+        with_formatter do |formatter|
+          source = Source.new("a = 1", "crashed.cr")
+          source.add_issue(DummyRule.new, {1, 1}, "regular")
+          source.add_issue(NamedRule.new, {1, 1}, "regular")
+          source.add_crash_issue(DummyRule.new, "boom")
+
+          other = Source.new("a = 1", "other.cr")
+          other.add_issue(DummyRule.new, {1, 1}, "regular")
+
+          formatter.finished([source, other])
+
+          File.read(CONFIG_PATH).should contain <<-YAML
+            #{DummyRule.new.name}:
+              Excluded:
+              - other.cr
+
+            #{NamedRule.new.name}:
+              Excluded:
+              - crashed.cr
+            YAML
+        end
+      end
+
       it "doesn't take a file which couldn't be read for a syntax issue" do
         with_formatter do |formatter, io|
           source = Source.from_file(File.tempname("missing", ".cr"))
