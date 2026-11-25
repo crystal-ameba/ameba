@@ -1234,8 +1234,9 @@
     Overview
   </h2>
 
-  <p>A rule that disallows <code>rand(0)</code> and <code>rand(1)</code> calls.
-Such calls always return <code>0</code>.</p>
+  <p>A rule that disallows <code>rand(1)</code> calls, along with calls with a zero
+or negative bound, like <code>rand(0)</code> or <code>rand(-1)</code>.
+<code>rand(1)</code> always returns <code>0</code>, while the latter raise an <code>ArgumentError</code>.</p>
 <p>For example:</p>
 <pre><code class="language-crystal">rand(<span class="n">1</span>)</code></pre>
 <p>Should be written as:</p>
@@ -1285,15 +1286,15 @@ rand(<span class="n">2</span>)</code></pre>
   </h2>
   
     
-      <a href="https://github.com/crystal-ameba/ameba/blob/ad9ba7b/src/ameba/rule/lint/rand_zero.cr#L25" target="_blank">
-        ameba/rule/lint/rand_zero.cr:25
+      <a href="https://github.com/crystal-ameba/ameba/blob/de7eb0b/src/ameba/rule/lint/rand_zero.cr#L26" target="_blank">
+        ameba/rule/lint/rand_zero.cr:26
       </a>
     
     <br/>
   
     
-      <a href="https://github.com/crystal-ameba/ameba/blob/ad9ba7b/src/ameba/rule/lint/rand_zero.cr#L26" target="_blank">
-        ameba/rule/lint/rand_zero.cr:26
+      <a href="https://github.com/crystal-ameba/ameba/blob/de7eb0b/src/ameba/rule/lint/rand_zero.cr#L27" target="_blank">
+        ameba/rule/lint/rand_zero.cr:27
       </a>
     
     <br/>
@@ -1315,6 +1316,11 @@ rand(<span class="n">2</span>)</code></pre>
     
       <dt class="entry-const" id="MSG">
         <strong>MSG</strong> = <code><span class="s">&quot;`%s` always returns `0`&quot;</span></code>
+      </dt>
+      
+    
+      <dt class="entry-const" id="MSG_INVALID_BOUND">
+        <strong>MSG_INVALID_BOUND</strong> = <code><span class="s">&quot;`%s` raises an `ArgumentError` due to an invalid bound&quot;</span></code>
       </dt>
       
     
@@ -1341,7 +1347,7 @@ rand(<span class="n">2</span>)</code></pre>
       <li class="entry-summary">
         <a href="#new%28config%3Dnil%29-class-method" class="signature"><strong>.new</strong>(config = <span class="n">nil</span>)</a>
         
-          <div class="summary"><p>A rule that disallows <code>rand(0)</code> and <code>rand(1)</code> calls.</p></div>
+          <div class="summary"><p>A rule that disallows <code>rand(1)</code> calls, along with calls with a zero or negative bound, like <code>rand(0)</code> or <code>rand(-1)</code>.</p></div>
         
       </li>
     
@@ -1685,8 +1691,9 @@ rand(<span class="n">2</span>)</code></pre>
       
         <div class="doc">
           
-          <p>A rule that disallows <code>rand(0)</code> and <code>rand(1)</code> calls.
-Such calls always return <code>0</code>.</p>
+          <p>A rule that disallows <code>rand(1)</code> calls, along with calls with a zero
+or negative bound, like <code>rand(0)</code> or <code>rand(-1)</code>.
+<code>rand(1)</code> always returns <code>0</code>, while the latter raise an <code>ArgumentError</code>.</p>
 <p>For example:</p>
 <pre><code class="language-crystal">rand(<span class="n">1</span>)</code></pre>
 <p>Should be written as:</p>
@@ -1701,7 +1708,7 @@ rand(<span class="n">2</span>)</code></pre>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/ad9ba7b/src/ameba/rule/lint/rand_zero.cr#L25" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/de7eb0b/src/ameba/rule/lint/rand_zero.cr#L26" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2011,7 +2018,7 @@ referred to by their full names, which fails for the private ones</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/ad9ba7b/src/ameba/rule/lint/rand_zero.cr#L26" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/de7eb0b/src/ameba/rule/lint/rand_zero.cr#L27" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2047,7 +2054,7 @@ referred to by their full names, which fails for the private ones</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/crystal-ameba/ameba/blob/ad9ba7b/src/ameba/rule/lint/rand_zero.cr#L33" target="_blank">View source</a>]
+          [<a href="https://github.com/crystal-ameba/ameba/blob/de7eb0b/src/ameba/rule/lint/rand_zero.cr#L35" target="_blank">View source</a>]
         
       </div>
     </div>
