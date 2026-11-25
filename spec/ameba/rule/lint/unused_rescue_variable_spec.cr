@@ -321,6 +321,29 @@ module Ameba::Rule::Lint
         CRYSTAL
     end
 
+    it "passes when untyped variable is used after the handler or in ensure (#1027)" do
+      expect_no_issues subject, <<-CRYSTAL
+        def after_handler
+          begin
+            raise "after"
+          rescue ex
+            nil
+          end
+          puts ex.try(&.message)
+        end
+
+        def in_ensure
+          begin
+            raise "ensure"
+          rescue ex
+            nil
+          ensure
+            puts ex.try(&.message)
+          end
+        end
+        CRYSTAL
+    end
+
     it "passes when variable is used in ensure of a nested handler on return" do
       expect_no_issues subject, <<-CRYSTAL
         def foo
