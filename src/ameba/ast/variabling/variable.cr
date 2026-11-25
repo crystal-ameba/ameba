@@ -137,8 +137,10 @@ module Ameba::AST
     # Collects the macro definitions (`macro foo ... end`), including
     # the macro code defining them (i.e. `{% for %} macro foo ... {% end %}`)
     private class MacroDefinitionsFinder < Crystal::Visitor
-      # Matches a macro definition within the macro literal
-      MACRO_DEFINITION = /(?<![\p{L}\p{N}_.:@$])macro\s+[\p{L}_]/
+      # Matches a macro definition within the macro literal, also one
+      # with an interpolated name (i.e. `macro {{ name.id }}`), but not
+      # a method named `macro` (i.e. `def macro`)
+      MACRO_DEFINITION = /(?<![\p{L}\p{N}_.:@$]|\bdef\s)macro(?:\s+[\p{L}_]|[ \t]+\z)/
 
       getter macros = [] of Crystal::ASTNode
 
@@ -166,27 +168,7 @@ module Ameba::AST
       end
 
       private def defines_macro?(node) : Bool
-        MacroLiteralsMatcher.new(node, MACRO_DEFINITION).matches?
-      end
-    end
-
-    # Matches the code of the macro literals within a node (that is,
-    # without comments and literals) against a regex
-    private class MacroLiteralsMatcher < Crystal::Visitor
-      getter? matches = false
-
-      @scanner = MacroCodeScanner.new
-
-      def initialize(node, @regex : Regex)
-        node.accept(self)
-      end
-
-      def visit(node : Crystal::MacroLiteral)
-        !(@matches ||= @scanner.scan(node.value).matches?(@regex))
-      end
-
-      def visit(node : Crystal::ASTNode)
-        !@matches
+        MacroCodeMatcher.new(node, MACRO_DEFINITION).matches?
       end
     end
 

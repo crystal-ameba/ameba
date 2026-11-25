@@ -108,6 +108,50 @@ module Ameba::AST
         scan("a // b").should eq ["a // b"]
       end
 
+      it "keeps the division operator following an identifier" do
+        scan("a /b").should eq ["a /b"]
+        scan("a /b\nc / d").should eq ["a /b\nc / d"]
+        scan("a /b / c").should eq ["a /b / c"]
+      end
+
+      it "blanks out regex literals following an identifier" do
+        scan("foo /a/").should eq ["foo    "]
+        scan("foo /a\\/b/").should eq ["foo       "]
+      end
+
+      it "keeps the operators following a value" do
+        scan("@a /b/ c").should eq ["@a /b/ c"]
+        scan("@@a /b/ c").should eq ["@@a /b/ c"]
+        scan("$a /b/ c").should eq ["$a /b/ c"]
+        scan("A /b/ c").should eq ["A /b/ c"]
+        scan("A::B /b/ c").should eq ["A::B /b/ c"]
+        scan("1.5 /b/ c").should eq ["1.5 /b/ c"]
+        scan(":a /b/ c").should eq ["   /b/ c"]
+        scan("@a %(b) c").should eq ["@a %(b) c"]
+        scan("self /b/ c").should eq ["self /b/ c"]
+        scan("nil %(b) c").should eq ["nil %(b) c"]
+        scan("(a) /b/ c").should eq ["(a) /b/ c"]
+        scan(%("a" /b/ c)).should eq ["    /b/ c"]
+      end
+
+      it "blanks out the literals following a method call or a keyword" do
+        scan("a.b /c / d").should eq ["a.b      d"]
+        scan("a&.b /c/").should eq ["a&.b    "]
+        scan("A::b /c/").should eq ["A::b    "]
+        scan("a.split /, / if b\nc").should eq ["a.split      if b\nc"]
+        scan("when /a / then b").should eq ["when      then b"]
+        scan("1..a /b").should eq ["1..a /b"]
+        scan("a? /b/").should eq ["a?    "]
+        scan("a.b! %(c)").should eq ["a.b!     "]
+      end
+
+      it "tells the operand apart from the previously scanned literals" do
+        scan("puts", %( %r{a\#{b}})).should eq ["puts", "       b  "]
+        scan("puts", " /a/").should eq ["puts", "    "]
+        scan("@a", " /b/ c").should eq ["@a", " /b/ c"]
+        scan("a.b", " ", " /c/").should eq ["a.b", " ", "    "]
+      end
+
       it "keeps operators used as names" do
         scan("def /(other)\n  a / other / b\nend").should eq ["def /(other)\n  a / other / b\nend"]
         scan("def %(other); end").should eq ["def %(other); end"]
@@ -143,6 +187,33 @@ module Ameba::AST
         scanner.scan("a = ")
         scanner.after_value!
         scanner.scan(" / b / c").should eq " / b / c"
+      end
+    end
+
+    describe "#ambiguous?" do
+      it "returns true if the literal has a division operator, which might start a regex" do
+        scanner = MacroCodeScanner.new
+
+        # the line of `a /b` might continue after a macro expression
+        {"a /b / c", "a /b", "a /", "a.b /"}.each do |literal|
+          scanner.scan(literal)
+          scanner.ambiguous?.should be_true
+        end
+
+        {"a /b\n", "a /b/ c", "a %(b)", "a.b /c / d", "@a /b / c", "a / b / c"}.each do |literal|
+          scanner.scan(literal)
+          scanner.ambiguous?.should be_false
+        end
+      end
+    end
+
+    describe "#flipped" do
+      it "reads the ambiguous `/` of the next literal as regex literals" do
+        scanner = MacroCodeScanner.new
+        flipped = scanner.flipped
+        flipped.scan("foo /a\#{b} / c").should eq "foo     b    c"
+        flipped.scan("d /e / f").should eq "d /e / f"
+        scanner.scan("foo /a\#{b} / c").should eq "foo /a        "
       end
     end
 
