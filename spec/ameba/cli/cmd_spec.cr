@@ -73,6 +73,20 @@ module Ameba
         end
       end
 
+      it "reports a crash at the location of the explained issue" do
+        with_temp_file do |path|
+          File.write(path, "#{IssueThenRaiseRule::MARKER}\n")
+
+          output = IO::Memory.new
+          location = "#{Path[path].relative_to(Dir.current)}:1:1"
+          args = ["-f", "silent", "--only", "Ameba/IssueThenRaiseRule", "--explain", location]
+
+          CLI.exit_code(args, output).should eq CLI::ExitCode::Crash
+          output.to_s.should contain "Issue before raising"
+          output.to_s.should contain "something went wrong"
+        end
+      end
+
       it "is zero when showing the version" do
         CLI.exit_code(["--version"], IO::Memory.new).should eq CLI::ExitCode::Success
       end

@@ -225,6 +225,23 @@ module Ameba
     end
   end
 
+  # A rule that adds an issue, and raises afterwards,
+  # for the code including `MARKER` only.
+  class IssueThenRaiseRule < Rule::Base
+    MARKER = "issue" + "_then_raise"
+
+    properties do
+      description "Internal rule that adds an issue and raises"
+    end
+
+    def test(source)
+      return unless source.code.includes?(MARKER)
+
+      issue_for({1, 1}, "Issue before raising")
+      raise "something went wrong"
+    end
+  end
+
   # A rule whose correction raises for each line including `foo`.
   class RaisingCorrectionRule < Rule::Base
     # Makes it raise for the lines including the given string instead.

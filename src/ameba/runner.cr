@@ -174,7 +174,7 @@ module Ameba
       @formatter.source_finished(source)
     end
 
-    # Explains an issue at a specified *location*.
+    # Explains an issue at a specified *location*, and returns it.
     #
     # Runner should perform inspection before doing the explain.
     # This is necessary to be able to find the issue at a specified location.
@@ -184,8 +184,8 @@ module Ameba
     # runner.run
     # runner.explain(Crystal::Location.new(file, line, column))
     # ```
-    def explain(location, output = STDOUT)
-      Formatter::ExplainFormatter.new(output, location).finished(@sources)
+    def explain(location, output = STDOUT) : Issue?
+      Formatter::ExplainFormatter.new(output, location).explain_issue(@sources)
     end
 
     # Indicates whether the last inspection successful or not.

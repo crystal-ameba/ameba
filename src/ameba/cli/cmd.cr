@@ -92,8 +92,8 @@ module Ameba::CLI
       runner = Ameba.run(config)
 
       if location_to_explain
-        runner.explain(location_to_explain, output)
-        print_crashes(runner, location_to_explain, output)
+        explained_issue = runner.explain(location_to_explain, output)
+        print_crashes(runner, explained_issue, output)
         return runner.crashed? ? ExitCode::Crash : ExitCode::Success
       end
 
@@ -104,11 +104,11 @@ module Ameba::CLI
   end
 
   # Prints the crashes other than the explained one, which would be missed otherwise.
-  private def print_crashes(runner, explained_location, output)
+  private def print_crashes(runner, explained_issue, output)
     runner.sources.each do |source|
       source.issues.each do |issue|
         next unless issue.crashed?
-        next if issue.location == explained_location
+        next if issue == explained_issue
 
         output.puts "#{issue.location}: #{issue.rule.name}: #{issue.message}"
       end
