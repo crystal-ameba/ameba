@@ -35,7 +35,7 @@ module Ameba::Rule::Lint
       corrections : Array(String),
       location : {Int32, Int32},
       end_location : {Int32, Int32} do
-      def self.parse(str) : self?
+      def self.parse(str, source : Source) : self?
         issue =
           JSON.parse(str)
 
@@ -47,7 +47,13 @@ module Ameba::Rule::Lint
         return if typo.empty? || corrections.empty?
 
         line_no = issue["line_num"].as_i
-        col_no = issue["byte_offset"].as_i + 1
+        return if line_no < 1
+        return unless line = source.lines[line_no - 1]?
+
+        byte_offset = issue["byte_offset"].as_i
+        return unless char_index = line.byte_index_to_char_index(byte_offset)
+
+        col_no = char_index + 1
         end_col_no = col_no + (typo.size - 1)
 
         new(typo, corrections,
@@ -72,7 +78,7 @@ module Ameba::Rule::Lint
       ([] of Typo).tap do |typos|
         # NOTE: `--format json` is actually JSON Lines (`jsonl`)
         result.each_line do |line|
-          Typo.parse(line).try { |typo| typos << typo }
+          Typo.parse(line, source).try { |typo| typos << typo }
         end
       end
     end
