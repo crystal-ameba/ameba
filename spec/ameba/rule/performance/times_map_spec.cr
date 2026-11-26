@@ -21,9 +21,9 @@ module Ameba::Rule::Performance
         3.times.map { |i| i * i }.to_a
         # ^^^^^^^^^^^^^^^^^^^^^^^^^^^^ error: Use `Array.new(3) {...}` instead of `3.times.map {...}.to_a`
         3.times.map(&block).to_a
-        # ^^^^^^^^^^^^^^^^^^^^^^ error: Use `Array.new(3) {...}` instead of `3.times.map {...}.to_a`
+        # ^^^^^^^^^^^^^^^^^^^^^^ error: Use `Array.new(3, &...)` instead of `3.times.map(&...).to_a`
         3.times.map(&block).to_a.select(&.odd?)
-        # ^^^^^^^^^^^^^^^^^^^^^^ error: Use `Array.new(3) {...}` instead of `3.times.map {...}.to_a`
+        # ^^^^^^^^^^^^^^^^^^^^^^ error: Use `Array.new(3, &...)` instead of `3.times.map(&...).to_a`
         CRYSTAL
 
       expect_correction source, <<-CRYSTAL
@@ -33,6 +33,286 @@ module Ameba::Rule::Performance
         Array.new(3) { |i| i * i }
         Array.new(3, &block)
         Array.new(3, &block).select(&.odd?)
+        CRYSTAL
+    end
+
+    it "reports and corrects short block syntax" do
+      source = expect_issue subject, <<-CRYSTAL
+        3.times.map(&.to_s).to_a
+        # ^^^^^^^^^^^^^^^^^^^^^^ error: Use `Array.new(3, &...)` instead of `3.times.map(&...).to_a`
+        3.times.map( &.to_s ).to_a
+        # ^^^^^^^^^^^^^^^^^^^^^^^^ error: Use `Array.new(3, &...)` instead of `3.times.map(&...).to_a`
+        CRYSTAL
+
+      expect_correction source, <<-CRYSTAL
+        Array.new(3, &.to_s)
+        Array.new(3, &.to_s)
+        CRYSTAL
+    end
+
+    it "reports and corrects short block syntax with a setter call" do
+      source = expect_issue subject, <<-CRYSTAL
+        3.times.map(&.example=(42)).to_a
+        # ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ error: Use `Array.new(3, &...)` instead of `3.times.map(&...).to_a`
+        3.times.map( &.example=(42) ).to_a
+        # ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ error: Use `Array.new(3, &...)` instead of `3.times.map(&...).to_a`
+        3.times.map(&.[1]).to_a
+        # ^^^^^^^^^^^^^^^^^^^^^ error: Use `Array.new(3, &...)` instead of `3.times.map(&...).to_a`
+        CRYSTAL
+
+      expect_correction source, <<-CRYSTAL
+        Array.new(3, &.example=(42))
+        Array.new(3, &.example=(42))
+        Array.new(3, &.[1])
+        CRYSTAL
+    end
+
+    it "reports and corrects multi-line short block syntax" do
+      source = expect_issue subject, <<-CRYSTAL
+        3.times.map(
+        # ^^^^^^^^^^ error: Use `Array.new(3, &...)` instead of `3.times.map(&...).to_a`
+          &.example=(42)
+        ).to_a
+        3.times.map(&.to_s \\
+        # ^^^^^^^^^^^^^^^^^^ error: Use `Array.new(3, &...)` instead of `3.times.map(&...).to_a`
+        ).to_a
+        3.times.map(&.example=(42) \\
+        # ^^^^^^^^^^^^^^^^^^^^^^^^^^ error: Use `Array.new(3, &...)` instead of `3.times.map(&...).to_a`
+        ).to_a
+        CRYSTAL
+
+      expect_correction source, <<-CRYSTAL
+        Array.new(3, &.example=(42))
+        Array.new(3, &.to_s)
+        Array.new(3, &.example=(42))
+        CRYSTAL
+    end
+
+    it "reports and corrects empty argument parentheses followed by a block" do
+      source = expect_issue subject, <<-CRYSTAL
+        3.times.map() { |i| i * 2 }.to_a
+        # ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ error: Use `Array.new(3) {...}` instead of `3.times.map {...}.to_a`
+        3.times.map( ) do |i|
+        # ^^^^^^^^^^^^^^^^^^^ error: Use `Array.new(3) {...}` instead of `3.times.map {...}.to_a`
+          i * 2
+        end.to_a
+        CRYSTAL
+
+      expect_correction source, <<-CRYSTAL
+        Array.new(3) { |i| i * 2 }
+        Array.new(3) do |i|
+          i * 2
+        end
+        CRYSTAL
+    end
+
+    it "reports and corrects comments within the block" do
+      source = expect_issue subject, <<-CRYSTAL
+        3.times.map do |i|
+        # ^^^^^^^^^^^^^^^^ error: Use `Array.new(3) {...}` instead of `3.times.map {...}.to_a`
+          i * 2 # comment
+        end.to_a
+        CRYSTAL
+
+      expect_correction source, <<-CRYSTAL
+        Array.new(3) do |i|
+          i * 2 # comment
+        end
+        CRYSTAL
+    end
+
+    it "reports but does not correct comments outside of the block" do
+      source = expect_issue subject, <<-CRYSTAL
+        3.times.map( # comment
+        # ^^^^^^^^^^^^^^^^^^^^ error: Use `Array.new(3) {...}` instead of `3.times.map {...}.to_a`
+        ) { |i| i * 2 }.to_a
+        3.times
+        # ^^^^^ error: Use `Array.new(3) {...}` instead of `3.times.map {...}.to_a`
+          .map { |i| i * 2 } # comment
+          .to_a
+        3.times # comment
+        # ^^^^^^^^^^^^^^^ error: Use `Array.new(3, &...)` instead of `3.times.map(&...).to_a`
+          .map(&.to_s)
+          .to_a
+        3.times.map(
+        # ^^^^^^^^^^ error: Use `Array.new(3, &...)` instead of `3.times.map(&...).to_a`
+          &.example=(42) # comment
+        ).to_a
+        CRYSTAL
+
+      expect_no_corrections source
+    end
+
+    it "reports but does not correct heredocs with bodies within the replaced code" do
+      source = expect_issue subject, <<-CRYSTAL
+        <<-TEXT.size.times
+        # ^^^^^^^^^^^^^^^^ error: Use `Array.new(<<-TEXT.size) {...}` instead of `<<-TEXT.size.times.map {...}.to_a`
+          abc
+          TEXT
+            .map { |i| i }.to_a
+        3.times.map { <<-TEXT }
+        # ^^^^^^^^^^^^^^^^^^^^^ error: Use `Array.new(3) {...}` instead of `3.times.map {...}.to_a`
+          abc
+          TEXT
+            .to_a
+        3.times.map(&.+(<<-TEXT))
+        # ^^^^^^^^^^^^^^^^^^^^^^^ error: Use `Array.new(3, &...)` instead of `3.times.map(&...).to_a`
+          abc
+          TEXT
+            .to_a
+        3.times.map(&->(i : Int32) { <<-TEXT })
+        # ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ error: Use `Array.new(3, &...)` instead of `3.times.map(&...).to_a`
+          abc
+          TEXT
+            .to_a
+        CRYSTAL
+
+      expect_no_corrections source
+    end
+
+    it "reports and corrects heredocs with bodies within the copied code" do
+      source = expect_issue subject, <<-CRYSTAL
+        <<-TEXT.size.times.map { |i| <<-ITEM }.to_a
+        # ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ error: Use `Array.new(<<-TEXT.size) {...}` instead of `<<-TEXT.size.times.map {...}.to_a`
+          abc
+          TEXT
+          item
+          ITEM
+        CRYSTAL
+
+      expect_correction source, <<-CRYSTAL
+        Array.new(<<-TEXT.size) { |i| <<-ITEM }
+          abc
+          TEXT
+          item
+          ITEM
+        CRYSTAL
+
+      source = expect_issue subject, <<-CRYSTAL
+        <<-TEXT.size.times.map do |i|
+        # ^^^^^^^^^^^^^^^^^^^^^^^^^^^ error: Use `Array.new(<<-TEXT.size) {...}` instead of `<<-TEXT.size.times.map {...}.to_a`
+          abc
+          TEXT
+          i
+        end.to_a
+        CRYSTAL
+
+      expect_correction source, <<-CRYSTAL
+        Array.new(<<-TEXT.size) do |i|
+          abc
+          TEXT
+          i
+        end
+        CRYSTAL
+    end
+
+    it "reports and corrects parenthesized count expression" do
+      source = expect_issue subject, <<-CRYSTAL
+        (n + 1 if n).times.map { |i| i * 2 }.to_a
+        # ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ error: Use `Array.new((n + 1 if n)) {...}` instead of `(n + 1 if n).times.map {...}.to_a`
+        CRYSTAL
+
+      expect_correction source, <<-CRYSTAL
+        Array.new((n + 1 if n)) { |i| i * 2 }
+        CRYSTAL
+    end
+
+    it "reports and corrects multi-line count expression" do
+      source = expect_issue subject, <<-CRYSTAL
+        [
+        # ^{} error: Use `Array.new([1, 2].size) {...}` instead of `[1, 2].size.times.map {...}.to_a`
+          1, 2,
+        ].size.times.map { |i| i * 2 }.to_a
+        CRYSTAL
+
+      expect_correction source, <<-CRYSTAL
+        Array.new([
+          1, 2,
+        ].size) { |i| i * 2 }
+        CRYSTAL
+    end
+
+    it "reports and corrects multi-line call chain count expression" do
+      source = expect_issue subject, <<-CRYSTAL
+        foo
+        # ^ error: Use `Array.new(foo.bar) {...}` instead of `foo.bar.times.map {...}.to_a`
+          .bar.times.map { |i| i * 2 }.to_a
+        CRYSTAL
+
+      expect_correction source, <<-CRYSTAL
+        Array.new(foo
+          .bar) { |i| i * 2 }
+        CRYSTAL
+    end
+
+    it "reports and corrects keeping CRLF line endings" do
+      source = Source.new("foo\r\n  .bar.times.map(&.to_s).to_a\r\n")
+      subject.catch(source).should_not be_valid
+      source.issues.first.message.should eq \
+        "Use `Array.new(foo.bar, &...)` instead of `foo.bar.times.map(&...).to_a`"
+
+      source.correct!.should_not be_nil
+      source.code.should eq "Array.new(foo\r\n  .bar, &.to_s)\r\n"
+    end
+
+    it "reports and corrects keeping mixed line endings" do
+      source = Source.new("foo\n  .bar.times.map(&.to_s).to_a\r\nbaz\r\n")
+      subject.catch(source).should_not be_valid
+
+      source.correct!.should_not be_nil
+      source.code.should eq "Array.new(foo\n  .bar, &.to_s)\r\nbaz\r\n"
+    end
+
+    it "reports and corrects comments within the count expression" do
+      source = expect_issue subject, <<-CRYSTAL
+        [
+        # ^{} error: Use `Array.new([1, 2].size) {...}` instead of `[1, 2].size.times.map {...}.to_a`
+          1, # one
+          2,
+        ].size.times.map { |i| i * 2 }.to_a
+        CRYSTAL
+
+      expect_correction source, <<-CRYSTAL
+        Array.new([
+          1, # one
+          2,
+        ].size) { |i| i * 2 }
+        CRYSTAL
+    end
+
+    it "reports and corrects block arguments" do
+      source = expect_issue subject, <<-CRYSTAL
+        3.times.map(&block).to_a
+        # ^^^^^^^^^^^^^^^^^^^^^^ error: Use `Array.new(3, &...)` instead of `3.times.map(&...).to_a`
+        3.times.map(&->(i : Int32) { i * 2 }).to_a
+        # ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ error: Use `Array.new(3, &...)` instead of `3.times.map(&...).to_a`
+        CRYSTAL
+
+      expect_correction source, <<-CRYSTAL
+        Array.new(3, &block)
+        Array.new(3, &->(i : Int32) { i * 2 })
+        CRYSTAL
+    end
+
+    it "reports and corrects `to_a` call with parentheses" do
+      source = expect_issue subject, <<-CRYSTAL
+        3.times.map { |i| i * 2 }.to_a()
+        # ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ error: Use `Array.new(3) {...}` instead of `3.times.map {...}.to_a`
+        CRYSTAL
+
+      expect_correction source, <<-CRYSTAL
+        Array.new(3) { |i| i * 2 }
+        CRYSTAL
+    end
+
+    it "preserves the original formatting of the count expression" do
+      source = expect_issue subject, <<-CRYSTAL
+        1_000.times.map { |i| i * 2 }.to_a
+        # ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ error: Use `Array.new(1_000) {...}` instead of `1_000.times.map {...}.to_a`
+        CRYSTAL
+
+      expect_correction source, <<-CRYSTAL
+        Array.new(1_000) { |i| i * 2 }
         CRYSTAL
     end
 

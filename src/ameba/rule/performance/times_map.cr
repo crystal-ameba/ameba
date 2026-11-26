@@ -37,41 +37,170 @@ module Ameba::Rule::Performance
       description "Identifies usage of `times.map { ... }.to_a` calls"
     end
 
-    MSG = "Use `Array.new(%1$s) {...}` instead of `%1$s.times.map {...}.to_a`"
+    MSG           = "Use `Array.new(%1$s) {...}` instead of `%1$s.times.map {...}.to_a`"
+    MSG_BLOCK_ARG = "Use `Array.new(%1$s, &...)` instead of `%1$s.times.map(&...).to_a`"
 
     def test(source)
       AST::NodeVisitor.new(self, source, skip: :macro)
     end
 
-    # ameba:disable Metrics/CyclomaticComplexity
     def test(source, node : Crystal::Call)
-      return if has_block?(node) || has_arguments?(node)
-      return unless node.name == "to_a" && (obj = node.obj)
+      return unless chain = times_map_chain(node)
 
-      return unless obj.is_a?(Crystal::Call) && has_block?(obj)
-      return if has_arguments?(obj)
-      return unless obj.name == "map" && (obj2 = obj.obj)
+      count, map_call = chain
+      return unless location = count.location
+      return unless end_location = node.end_location
 
-      return if !obj2.is_a?(Crystal::Call) || has_block?(obj2) || has_arguments?(obj2)
-      return unless obj2.name == "times" && (obj3 = obj2.obj)
+      count_code = code_between(source, location, count.end_location)
+      block_arg = block_arg?(source, map_call)
 
-      return unless location = obj3.location
-      return unless end_location = name_end_location(node)
+      message = (block_arg ? MSG_BLOCK_ARG : MSG) % single_line(count, count_code)
 
-      issue_for(location, end_location, MSG % obj3) do |corrector|
+      if count_code && (block_code = block_code(source, count, map_call, end_location, block_arg))
         corrected_code =
-          case
-          when block = obj.block
-            block_code =
-              node_source(block, source.lines)
-
-            "Array.new(%s) %s" % {obj3, block_code}
-          when block_arg = obj.block_arg
-            "Array.new(%s, &%s)" % {obj3, block_arg}
+          if block_arg
+            "Array.new(%s, %s)" % {count_code, block_code}
+          else
+            "Array.new(%s) %s" % {count_code, block_code}
           end
-        next unless corrected_code
 
-        corrector.replace(location, end_location, corrected_code)
+        issue_for(location, end_location, message) do |corrector|
+          corrector.replace(location, end_location, corrected_code)
+        end
+      else
+        issue_for(location, end_location, message)
+      end
+    end
+
+    # Returns the count expression and the `map` call
+    # of a `count.times.map { ... }.to_a` call chain.
+    private def times_map_chain(node) : {Crystal::ASTNode, Crystal::Call}?
+      return unless node.name == "to_a" && plain_call?(node)
+      return unless (map_call = node.obj).is_a?(Crystal::Call)
+      return unless map_call.name == "map" && has_block?(map_call)
+      return if has_arguments?(map_call)
+      return unless (times_call = map_call.obj).is_a?(Crystal::Call)
+      return unless times_call.name == "times" && plain_call?(times_call)
+      return unless count = times_call.obj
+
+      {count, map_call}
+    end
+
+    # Returns `true` if the call has neither arguments nor a block.
+    private def plain_call?(node)
+      !has_block?(node) && !has_arguments?(node)
+    end
+
+    # Returns the original code of the `map` block, or `nil` if moving it
+    # would lose the code around it (comments or heredoc bodies).
+    private def block_code(source, count, map_call, end_location, block_arg) : String?
+      return unless count_end_location = count.end_location
+      return unless block = map_call.block_arg || map_call.block
+      return unless block_location = block.location
+
+      # short blocks (`&.foo`) have no end location of their own
+      short_block = map_call.block if block_arg
+      return unless block_end_location =
+                      short_block ? short_block.body.end_location : block.end_location
+
+      count_end_pos = source.pos(count_end_location, end: true)
+      block_pos = source.pos(block_location)
+      block_end_pos = source.pos(block_end_location, end: true)
+      end_pos = source.pos(end_location, end: true)
+
+      return if code_around?(source, {count, block},
+                  count_end_pos...block_pos, block_end_pos...end_pos)
+
+      if short_block
+        # the short block body's end location can stop short of the block's
+        # actual end (e.g. `&.foo=(42)` ends at `42`), so extend it up to
+        # the closing parenthesis of the `map` call
+        return unless block_end_pos = short_block_end_pos(source, map_call, block_end_pos)
+      end
+
+      code = source.code[block_pos...block_end_pos]
+      map_call.block_arg ? "&#{code}" : code
+    end
+
+    # Returns `true` if any of the given *ranges* of the code around the block,
+    # which the correction drops, holds anything besides the call chain
+    # (`.times.map(`, `).to_a`, whitespace and alike), namely:
+    #
+    # - a comment, since the call chain has no literals, any `#` starts one
+    #   (unless it's within a heredoc body, which is reported anyway)
+    # - a body of a heredoc opened within the *nodes*, which follows the line
+    #   the heredoc is opened at, so it spans at least one line break
+    private def code_around?(source, nodes, *ranges) : Bool
+      codes = ranges.map { |range| source.code[range] }
+
+      return true if codes.any?(&.includes?('#'))
+      return false unless codes.any?(&.includes?('\n'))
+
+      finder = HeredocBodyFinder.new(source, ranges)
+      nodes.each(&.accept(finder))
+      finder.found?
+    end
+
+    # Returns the position right after the last character of the short block,
+    # passed within the parentheses of the `map` call, the trailing whitespace
+    # and line continuations (`\`) before the closing parenthesis excluded.
+    private def short_block_end_pos(source, map_call, body_end_pos) : Int32?
+      return unless map_end_location = map_call.end_location
+
+      map_end_pos = source.pos(map_end_location)
+      return unless map_end_pos >= body_end_pos
+      return unless source.code[map_end_pos]? == ')'
+
+      body_end_pos +
+        source.code[body_end_pos...map_end_pos].rstrip(" \t\r\n\\").size
+    end
+
+    # Returns `true` if the block is passed as an argument
+    # (`&block`) or using the short block syntax (`&.foo`).
+    private def block_arg?(source, map_call) : Bool
+      return true if map_call.block_arg
+      return false unless location = map_call.block.try(&.location)
+
+      source.code[source.pos(location)]? == '&'
+    end
+
+    # Returns the original code between *location* and *end_location* (inclusive),
+    # slicing it from the source keeps its line endings intact.
+    private def code_between(source, location, end_location) : String?
+      return unless location && end_location
+
+      source.code[source.pos(location)...source.pos(end_location, end: true)]?
+    end
+
+    # Keeps the issue message on a single line.
+    private def single_line(node, code)
+      return code if code && !code.includes?('\n')
+
+      node.to_s
+        .gsub(/\s*\n\s*(?=\.)/, "")
+        .gsub(/\s*\n\s*/, " ")
+    end
+
+    # Looks for a heredoc whose body ends within any of the given *ranges*.
+    private class HeredocBodyFinder < Crystal::Visitor
+      include AST::Util
+
+      getter? found = false
+
+      def initialize(@source : Source, @ranges : Indexable(Range(Int32, Int32)))
+      end
+
+      def visit(node : Crystal::StringLiteral | Crystal::StringInterpolation)
+        if !@found && heredoc?(node, @source) && (end_location = node.end_location)
+          end_pos = @source.pos(end_location)
+          @found = @ranges.any?(&.includes?(end_pos))
+        end
+        # heredocs cannot be nested within string literals
+        false
+      end
+
+      def visit(node : Crystal::ASTNode)
+        !@found
       end
     end
   end
