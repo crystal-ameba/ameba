@@ -92,6 +92,17 @@ module Ameba::Rule::Lint
       source.code.should eq "a = 1 # ameba:disable #{NamedRule.name}"
     end
 
+    it "keeps the groups when correcting" do
+      source = expect_issue subject, <<-CRYSTAL
+        a = 1 # ameba:disable Style, Lint/ComparisonToBoolean
+            # ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ error: Unnecessary disabling of `Lint/ComparisonToBoolean`
+        CRYSTAL
+
+      expect_correction source, <<-CRYSTAL
+        a = 1 # ameba:disable Style
+        CRYSTAL
+    end
+
     it "drops the words which aren't rules when correcting" do
       source = expect_issue subject, <<-CRYSTAL
         a = 1 # ameba:disable Lint/ComparisonToBoolean for now

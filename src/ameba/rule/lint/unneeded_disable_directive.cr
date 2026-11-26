@@ -49,9 +49,9 @@ module Ameba::Rule::Lint
         location = name_location_or(token, token.value)
 
         issue_for(*location, message) do |corrector|
-          # Keeps the rules which are needed, or whose need is unknown.
+          # Keeps the rules and groups which are needed, or whose need is unknown.
           # Other words, like a reason following the rules, are dropped.
-          kept_rules = (rules - names).select(&->known_rule?(String))
+          kept_rules = (rules - names).select(&->known_rule_or_group?(String))
 
           if kept_rules.empty?
             corrector.remove(*location)
@@ -69,6 +69,10 @@ module Ameba::Rule::Lint
 
     private def known_rule?(rule_name)
       Rule.rules.any?(&.rule_name.== rule_name)
+    end
+
+    private def known_rule_or_group?(name)
+      Rule.rules.any? { |rule| rule.rule_name == name || rule.group_name == name }
     end
 
     private def unneeded_disables(source, rules, location, excluded_rules)
