@@ -10,6 +10,54 @@ module Ameba
   # runner.run.success? # => true or false
   # ```
   class Runner
+    # Keeps the crashes found on a source across the inspection passes,
+    # as the corrections might remove their cause.
+    private class CrashLog
+      # The crashes of each rule and message, from a single pass. See `#keep`.
+      @crashes = {} of {String, String} => Array(Issue)
+
+      # The latest crash of each rule. A rule raises at most once per pass,
+      # but the message might differ between the passes.
+      @rule_crashes = {} of Rule::Base => String
+
+      # Adds an exception raised by a *rule*.
+      def add_rule_crash(rule, ex : Exception) : Nil
+        @rule_crashes[rule] = "Rule raised an exception: #{ex.message} (#{ex.class})"
+      end
+
+      # Adds the crashes among the *issues* of an inspection pass, grouped by
+      # rule and message.
+      #
+      # As locations shift along with the corrections, such a group is taken for
+      # the same crashes across the passes, keeping it from the pass with the most
+      # of them, or the latest one on a tie.
+      def keep(issues) : Nil
+        issues
+          .select(&.crashed?)
+          .group_by { |issue| {issue.rule.name, issue.message} }
+          .each do |key, same_crashes|
+            if same_crashes.size >= (@crashes[key]?.try(&.size) || 0)
+              @crashes[key] = same_crashes
+            end
+          end
+      end
+
+      # Replaces the crashes among the issues of the *source* with all the ones kept.
+      def report(source) : Nil
+        keep(source.issues)
+
+        source.issues.reject!(&.crashed?)
+
+        @crashes.each_value do |same_crashes|
+          source.issues.concat(same_crashes)
+        end
+
+        @rule_crashes.each do |rule, message|
+          source.add_crash_issue(rule, message)
+        end
+      end
+    end
+
     # A list of rules to do inspection based on.
     @rules : Array(Rule::Base)
 
@@ -123,13 +171,7 @@ module Ameba
       # error message, and to choose the rules to report such a loop under.
       corrected_issues = [] of Array(Issue)
 
-      # The crashes of each kind found so far, kept as the corrections might
-      # remove their cause. See `#keep_crashes`.
-      crashes = {} of {String, String} => Array(Issue)
-
-      # The latest crash of each rule, kept for the same reason. A rule raises
-      # at most once per pass, but the message might differ between the passes.
-      rule_crashes = {} of Rule::Base => String
+      crashes = CrashLog.new
 
       original_code = source.code
 
@@ -137,7 +179,7 @@ module Ameba
       # corrections are made (because automatic corrections can introduce new
       # issues). In the normal case the loop is only executed once.
       looping_issues = loop_unless_infinite(source, corrected_issues) do
-        break unless inspect_source(source, rule_crashes)
+        break unless inspect_source(source, crashes)
         break unless autocorrect?
 
         applied_issues = source.correct_safely!
@@ -146,7 +188,7 @@ module Ameba
         # The issues that couldn't be corrected will be found again so we
         # only keep the corrected ones in order to avoid duplicate reporting.
         corrected_issues << applied_issues.map(&.as_corrected)
-        keep_crashes(crashes, source.issues)
+        crashes.keep(source.issues)
 
         source.issues.clear
       end
@@ -157,25 +199,15 @@ module Ameba
         looping_rules = looping_issues.flat_map(&.map(&.rule)).uniq!
         message = infinite_loop_message(source, looping_issues)
 
-        report_failure(source, original_code, rule_crashes, looping_rules, message)
+        report_failure(source, original_code, crashes, looping_rules, message)
       when message = write_corrected_code(source, corrected_issues)
         # Like failing to read the file, it isn't about any rule in particular
-        report_failure(source, original_code, rule_crashes, {Rule::Lint::Syntax.new}, message)
+        report_failure(source, original_code, crashes, {Rule::Lint::Syntax.new}, message)
       else
         source.issues[0, 0] = corrected_issues.flatten
       end
 
-      keep_crashes(crashes, source.issues)
-
-      source.issues.reject!(&.crashed?)
-
-      crashes.each_value do |same_crashes|
-        source.issues.concat(same_crashes)
-      end
-
-      rule_crashes.each do |rule, crash_message|
-        source.add_crash_issue(rule, crash_message)
-      end
+      crashes.report(source)
     ensure
       source.issues.sort_by! do |issue|
         {
@@ -265,8 +297,8 @@ module Ameba
 
     # Inspects the source, returning `false` if it has syntax errors,
     # in which case there's nothing to inspect or correct. The exceptions
-    # raised by the rules are added to *rule_crashes*.
-    private def inspect_source(source, rule_crashes) : Bool
+    # raised by the rules are added to *crashes*.
+    private def inspect_source(source, crashes) : Bool
       @syntax_rule.test(source)
       return false unless source.valid?
 
@@ -278,12 +310,12 @@ module Ameba
           next
         end
         # Whether its directives are needed is unknown if the rule hasn't finished
-        if report_exception(rule_crashes, rule) { rule.test(source) }
+        if report_exception(crashes, rule) { rule.test(source) }
           excluded_rules << rule.name
         end
       end
 
-      check_unneeded_directives(source, excluded_rules, rule_crashes)
+      check_unneeded_directives(source, excluded_rules, crashes)
 
       true
     end
@@ -302,48 +334,31 @@ module Ameba
     # Goes back to the original code, so that nothing gets reported as corrected,
     # and reports the failure under each of the *rules*, along with the issues
     # of that code.
-    private def report_failure(source, original_code, rule_crashes, rules, message) : Nil
+    private def report_failure(source, original_code, crashes, rules, message) : Nil
       source.revert_to(original_code)
-      inspect_source(source, rule_crashes)
+      inspect_source(source, crashes)
 
       rules.each do |rule|
         source.add_crash_issue(rule, message)
       end
     end
 
-    # Adds the crashes among the *issues* of an inspection pass to *crashes*,
-    # grouped by rule and message.
-    #
-    # As locations shift along with the corrections, such a group is taken for
-    # the same crashes across the passes, keeping it from the pass with the most
-    # of them, or the latest one on a tie.
-    private def keep_crashes(crashes, issues) : Nil
-      issues
-        .select(&.crashed?)
-        .group_by { |issue| {issue.rule.name, issue.message} }
-        .each do |key, same_crashes|
-          if same_crashes.size >= (crashes[key]?.try(&.size) || 0)
-            crashes[key] = same_crashes
-          end
-        end
-    end
-
-    private def check_unneeded_directives(source, excluded_rules, rule_crashes)
+    private def check_unneeded_directives(source, excluded_rules, crashes)
       return unless rule = @unneeded_disable_directive_rule
       return unless rule.enabled?
       return if rule.excluded?(source, root)
 
-      report_exception(rule_crashes, rule) { rule.test(source, excluded_rules) }
+      report_exception(crashes, rule) { rule.test(source, excluded_rules) }
     end
 
-    # Adds an exception raised by a *rule* to *rule_crashes*, to be reported
-    # as an issue, so that it fails the run without stopping the other rules
+    # Adds an exception raised by a *rule* to *crashes*, to be reported as
+    # an issue, so that it fails the run without stopping the other rules
     # and sources from being inspected. Returns `true` if that happened.
-    private def report_exception(rule_crashes, rule, &) : Bool
+    private def report_exception(crashes, rule, &) : Bool
       yield
       false
     rescue ex
-      rule_crashes[rule] = "Rule raised an exception: #{ex.message} (#{ex.class})"
+      crashes.add_rule_crash(rule, ex)
       true
     end
   end
