@@ -25,11 +25,15 @@ module Ameba::Formatter
         return
       end
 
-      issues = sources.flat_map { |source| excludable_issues(source) }
+      crashed_rules = sources.to_h { |source| {source, crashed_rules(source)} }
+
+      issues = sources.flat_map do |source|
+        excludable_issues(source, crashed_rules[source])
+      end
 
       if issues.empty?
         output.puts "The rules which crashed can't be excluded. File is not generated."
-        print_crashed_rules(sources)
+        print_crashed_rules(crashed_rules)
         return
       end
 
@@ -45,14 +49,14 @@ module Ameba::Formatter
       generate_todo_config(issues)
 
       output.puts "Created #{config_path}"
-      print_crashed_rules(sources)
+      print_crashed_rules(crashed_rules)
     end
 
-    # Lists the rules which crashed on each source, since nothing else
+    # Lists the *crashed_rules* of each source, since nothing else
     # would tell that they're left out of the file.
-    private def print_crashed_rules(sources) : Nil
-      crashes = sources.flat_map do |source|
-        crashed_rules(source).map { |name| "#{name} on #{source.path}" }
+    private def print_crashed_rules(crashed_rules) : Nil
+      crashes = crashed_rules.flat_map do |source, names|
+        names.map { |name| "#{name} on #{source.path}" }
       end
       return if crashes.empty?
 
@@ -88,12 +92,10 @@ module Ameba::Formatter
 
     # Returns the issues of the *source* which can be excluded.
     #
-    # A rule which crashed on the *source* might have reported only some of
-    # its issues before that, so the *source* isn't excluded from it at all,
-    # keeping the crash visible on the subsequent runs.
-    private def excludable_issues(source)
-      crashed_rules = crashed_rules(source)
-
+    # A rule which crashed on the *source*, being one of its *crashed_rules*,
+    # might have reported only some of its issues before that, so the *source*
+    # isn't excluded from it at all, keeping the crash visible on the subsequent runs.
+    private def excludable_issues(source, crashed_rules)
       source.issues.select do |issue|
         issue.unresolved? && !issue.syntax? && !issue.crashed? &&
           !issue.rule.name.in?(crashed_rules)
