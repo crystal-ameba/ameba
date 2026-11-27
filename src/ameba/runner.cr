@@ -230,7 +230,7 @@ module Ameba
         report_failure(source, original_code, crashes, looping_rules, message)
       when message = write_corrected_code(source, corrected_issues)
         # Like failing to read the file, it isn't about any rule in particular
-        report_failure(source, original_code, crashes, {Rule::Lint::Syntax.new}, message)
+        report_failure(source, original_code, crashes, {@syntax_rule}, message)
       else
         source.issues[0, 0] = corrected_issues.flatten
       end
