@@ -26,6 +26,11 @@ module Ameba::Formatter
 
     # Reports the explanations at the *@location*.
     def finished(sources) : Nil
+      explain_issue(sources)
+    end
+
+    # Reports the explanations at the *@location*, and returns the explained issue.
+    def explain_issue(sources) : Issue?
       source = sources.find(&.path.to_s.==(@location.filename))
       return unless source
 
@@ -33,6 +38,7 @@ module Ameba::Formatter
       return unless issue
 
       explain(source, issue)
+      issue
     end
 
     private def explain(source, issue) : Nil

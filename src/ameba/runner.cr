@@ -10,18 +10,79 @@ module Ameba
   # runner.run.success? # => true or false
   # ```
   class Runner
-    # An error indicating that the inspection loop got stuck correcting
-    # issues back and forth.
-    class InfiniteCorrectionLoopError < RuntimeError
-      def initialize(path, issues_by_iteration, loop_start = -1)
-        root_cause =
-          issues_by_iteration[loop_start..-1]
-            .join(" -> ", &.map(&.rule.name).uniq!.join(", "))
+    # Keeps the crashes found on a source across the inspection passes,
+    # as the corrections might remove their cause.
+    private class CrashLog
+      # The crashes of each rule and original message, from a single pass.
+      # See `#keep`.
+      @crashes = {} of {String, String} => Array(Issue)
 
-        message =
-          "Infinite loop in #{path} caused by #{root_cause}"
+      # The crashes of the first pass, the only ones located in the original code.
+      @first_pass_crashes : Hash({String, String}, Array(Issue))?
 
-        super message
+      # The latest crash of each rule. A rule raises at most once per pass,
+      # but the message might differ between the passes.
+      @rule_crashes = {} of Rule::Base => String
+
+      # The failures of processing the source as a whole, under each of their rules.
+      @failures = [] of {Rule::Base, String}
+
+      # Adds an exception raised by a *rule*.
+      def add_rule_crash(rule, ex : Exception) : Nil
+        @rule_crashes[rule] = "Rule raised an exception: #{ex.message} (#{ex.class})"
+      end
+
+      # Adds a failure described by the *message*, reported under each of the *rules*.
+      def add_failure(rules, message : String) : Nil
+        rules.each do |rule|
+          @failures << {rule, message}
+        end
+      end
+
+      # Adds the crashes among the *issues* of an inspection pass, grouped by
+      # rule and original message, since the message of a crashed correction
+      # includes the one of its exception, which might differ between the passes.
+      #
+      # As locations shift along with the corrections, such a group is taken for
+      # the same crashes across the passes, keeping it from the pass with the most
+      # of them, or the latest one on a tie.
+      def keep(issues) : Nil
+        crashes = issues
+          .select(&.crashed?)
+          .group_by { |issue| {issue.rule.name, issue.original_message} }
+
+        @first_pass_crashes ||= crashes
+
+        crashes.each do |key, same_crashes|
+          if same_crashes.size >= (@crashes[key]?.try(&.size) || 0)
+            @crashes[key] = same_crashes
+          end
+        end
+      end
+
+      # Forgets the crashes found after the first pass, as the source went back
+      # to the original code, which their locations might not be within.
+      def revert : Nil
+        @crashes = @first_pass_crashes.try(&.dup) || @crashes.class.new
+      end
+
+      # Replaces the crashes among the issues of the *source* with all the ones kept.
+      def report(source) : Nil
+        keep(source.issues)
+
+        source.issues.reject!(&.crashed?)
+
+        @crashes.each_value do |same_crashes|
+          source.issues.concat(same_crashes)
+        end
+
+        @rule_crashes.each do |rule, message|
+          source.add_crash_issue(rule, message)
+        end
+
+        @failures.each do |rule, message|
+          source.add_crash_issue(rule, message)
+        end
       end
     end
 
@@ -122,9 +183,8 @@ module Ameba
         end
       end
 
-      channels.each do |chan|
-        chan.receive.try { |ex| raise ex }
-      end
+      # Let the other sources finish first, as they might get corrected on disk
+      channels.compact_map(&.receive).first?.try { |ex| raise ex }
 
       self
     ensure
@@ -136,28 +196,18 @@ module Ameba
 
       # This variable is a 2D array used to track corrected issues after each
       # inspection iteration. This is used to output meaningful infinite loop
-      # error message.
+      # error message, and to choose the rules to report such a loop under.
       corrected_issues = [] of Array(Issue)
+
+      crashes = CrashLog.new
+
+      original_code = source.code
 
       # When running with --fix, we need to inspect the source until no more
       # corrections are made (because automatic corrections can introduce new
       # issues). In the normal case the loop is only executed once.
-      loop_unless_infinite(source, corrected_issues) do
-        # There's nothing to inspect or correct in a source with syntax errors.
-        @syntax_rule.test(source)
-        break unless source.valid?
-
-        excluded_rules = Set(String).new
-
-        @rules.each do |rule|
-          if rule.excluded?(source, root)
-            excluded_rules << rule.name
-            next
-          end
-          rule.test(source)
-        end
-
-        check_unneeded_directives(source, excluded_rules)
+      looping_issues = loop_unless_infinite(source, corrected_issues) do
+        break unless inspect_source(source, crashes)
         break unless autocorrect?
 
         applied_issues = source.correct_safely!
@@ -166,12 +216,26 @@ module Ameba
         # The issues that couldn't be corrected will be found again so we
         # only keep the corrected ones in order to avoid duplicate reporting.
         corrected_issues << applied_issues.map(&.as_corrected)
+        crashes.keep(source.issues)
+
         source.issues.clear
       end
 
-      source.issues[0, 0] = corrected_issues.flatten
+      case
+      when looping_issues
+        # Each of the rules going in circles is to blame as much as the others
+        looping_rules = looping_issues.flat_map(&.map(&.rule)).uniq!
+        message = infinite_loop_message(source, looping_issues)
 
-      File.write(source.path, source.code) unless corrected_issues.empty?
+        report_failure(source, original_code, crashes, looping_rules, message)
+      when message = write_corrected_code(source, corrected_issues)
+        # Like failing to read the file, it isn't about any rule in particular
+        report_failure(source, original_code, crashes, {@syntax_rule}, message)
+      else
+        source.issues[0, 0] = corrected_issues.flatten
+      end
+
+      crashes.report(source)
     ensure
       source.issues.sort_by! do |issue|
         {
@@ -182,7 +246,7 @@ module Ameba
       @formatter.source_finished(source)
     end
 
-    # Explains an issue at a specified *location*.
+    # Explains an issue at a specified *location*, and returns it.
     #
     # Runner should perform inspection before doing the explain.
     # This is necessary to be able to find the issue at a specified location.
@@ -192,8 +256,8 @@ module Ameba
     # runner.run
     # runner.explain(Crystal::Location.new(file, line, column))
     # ```
-    def explain(location, output = STDOUT)
-      Formatter::ExplainFormatter.new(output, location).finished(@sources)
+    def explain(location, output = STDOUT) : Issue?
+      Formatter::ExplainFormatter.new(output, location).explain_issue(@sources)
     end
 
     # Indicates whether the last inspection successful or not.
@@ -208,9 +272,24 @@ module Ameba
       @sources.all?(&.valid?)
     end
 
+    # Indicates whether any rule or correction raised an exception, corrections
+    # got stuck in a loop, or a file couldn't be read or written during the last
+    # inspection.
+    #
+    # ```
+    # runner = Ameba::Runner.new(config)
+    # runner.run
+    # runner.crashed? # => true or false
+    # ```
+    def crashed?
+      @sources.any?(&.issues.any?(&.crashed?))
+    end
+
     private MAX_ITERATIONS = 200
 
-    private def loop_unless_infinite(source, corrected_issues, &)
+    # Runs the block until it breaks out, which returns `nil`, or until it gets
+    # stuck, which returns the issues corrected by each iteration going in circles.
+    private def loop_unless_infinite(source, corrected_issues, &) : Array(Array(Issue))?
       # Keep track of the state of the source. If a rule modifies the source
       # and another rule undoes it producing identical source we have an
       # infinite loop.
@@ -222,38 +301,93 @@ module Ameba
       iterations = 0
 
       loop do
-        check_for_infinite_loop(source, corrected_issues, processed_sources)
+        checksum = source.code.hash
+
+        if loop_start = processed_sources.index(checksum)
+          return corrected_issues[loop_start..]
+        end
+        processed_sources << checksum
 
         if (iterations += 1) > MAX_ITERATIONS
-          raise InfiniteCorrectionLoopError.new(source.path, corrected_issues)
+          return corrected_issues.last(1)
         end
 
         yield
       end
     end
 
-    # Check whether a run created source identical to a previous run, which
-    # means that we definitely have an infinite loop.
-    private def check_for_infinite_loop(source, corrected_issues, processed_sources)
-      checksum = source.code.hash
+    private def infinite_loop_message(source, issues_by_iteration)
+      root_cause =
+        issues_by_iteration.join(" -> ", &.map(&.rule.name).uniq!.join(", "))
 
-      if loop_start = processed_sources.index(checksum)
-        raise InfiniteCorrectionLoopError.new(
-          source.path,
-          corrected_issues,
-          loop_start: loop_start,
-        )
-      end
-
-      processed_sources << checksum
+      "Infinite loop in #{source.path} caused by #{root_cause}"
     end
 
-    private def check_unneeded_directives(source, excluded_rules = Set(String).new)
+    # Inspects the source, returning `false` if it has syntax errors,
+    # in which case there's nothing to inspect or correct. The exceptions
+    # raised by the rules are added to *crashes*.
+    private def inspect_source(source, crashes) : Bool
+      @syntax_rule.test(source)
+      return false unless source.valid?
+
+      excluded_rules = Set(String).new
+
+      @rules.each do |rule|
+        if rule.excluded?(source, root)
+          excluded_rules << rule.name
+          next
+        end
+        # Whether its directives are needed is unknown if the rule hasn't finished
+        if report_exception(crashes, rule) { rule.test(source) }
+          excluded_rules << rule.name
+        end
+      end
+
+      check_unneeded_directives(source, excluded_rules, crashes)
+
+      true
+    end
+
+    # Writes the corrected code to the file, unless nothing got corrected.
+    # Returns a message describing the failure if that didn't work out.
+    private def write_corrected_code(source, corrected_issues) : String?
+      if corrected_issues.present?
+        File.write(source.path, source.code)
+      end
+      nil
+    rescue ex
+      "Could not write the corrected code: #{ex.message}"
+    end
+
+    # Goes back to the original code, so that nothing gets reported as corrected,
+    # and reports the failure under each of the *rules*, along with the issues
+    # of that code.
+    private def report_failure(source, original_code, crashes, rules, message) : Nil
+      source.revert_to(original_code)
+      crashes.revert
+
+      inspect_source(source, crashes)
+
+      crashes.add_failure(rules, message)
+    end
+
+    private def check_unneeded_directives(source, excluded_rules, crashes)
       return unless rule = @unneeded_disable_directive_rule
       return unless rule.enabled?
       return if rule.excluded?(source, root)
 
-      rule.test(source, excluded_rules)
+      report_exception(crashes, rule) { rule.test(source, excluded_rules) }
+    end
+
+    # Adds an exception raised by a *rule* to *crashes*, to be reported as
+    # an issue, so that it fails the run without stopping the other rules
+    # and sources from being inspected. Returns `true` if that happened.
+    private def report_exception(crashes, rule, &) : Bool
+      yield
+      false
+    rescue ex
+      crashes.add_rule_crash(rule, ex)
+      true
     end
   end
 end

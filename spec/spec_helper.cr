@@ -14,6 +14,15 @@ module Ameba
     end
   end
 
+  # A formatter failing for the source with a given path.
+  class RaisingFormatter < Formatter::BaseFormatter
+    property failing_path = ""
+
+    def source_started(source : Source) : Nil
+      raise "formatter went wrong" if source.path.to_s == failing_path
+    end
+  end
+
   # A rule correcting `foo` to `bar`, and `bar` to code which doesn't parse.
   class BreakingCorrectionRule < Rule::Base
     properties do
@@ -201,12 +210,68 @@ module Ameba
   class RaiseRule < Rule::Base
     property? should_raise = false
 
+    # Makes it raise only for the code including the given string.
+    property raise_for : String?
+
+    # Makes the message of the exception differ along with the code.
+    property? varying_message = false
+
     properties do
       description "Internal rule that always raises"
     end
 
     def test(source)
-      should_raise? && raise "something went wrong"
+      return unless should_raise?
+      return if (raise_for = @raise_for) && !source.code.includes?(raise_for)
+
+      message = "something went wrong"
+      message += " with #{source.code.bytesize} bytes" if varying_message?
+
+      raise message
+    end
+  end
+
+  # A rule that adds an issue, and raises afterwards,
+  # for the code including `MARKER` only.
+  class IssueThenRaiseRule < Rule::Base
+    MARKER = "issue" + "_then_raise"
+
+    properties do
+      description "Internal rule that adds an issue and raises"
+    end
+
+    def test(source)
+      return unless source.code.includes?(MARKER)
+
+      issue_for({1, 1}, "Issue before raising")
+      raise "something went wrong"
+    end
+  end
+
+  # A rule whose correction raises for each line including `foo`.
+  class RaisingCorrectionRule < Rule::Base
+    # Makes it raise for the lines including the given string instead.
+    property raise_for = "foo"
+
+    # Makes the message of the exception differ along with the code.
+    property? varying_message = false
+
+    properties do
+      description "Internal rule with a correction that raises"
+      enabled false
+    end
+
+    def test(source)
+      source.lines.each_with_index(1) do |line, line_number|
+        next unless line.includes?(raise_for)
+
+        message = "Correction went wrong"
+        message += " with #{source.code.bytesize} bytes" if varying_message?
+
+        source.add_issue(self, {line_number, 1}, {line_number, 3}, "foo") do
+          raise IndexError.new(message)
+        end
+      end
     end
   end
 
@@ -423,6 +488,19 @@ end
 
 def as_nodes(source, *, wants_doc = false)
   Ameba::TestNodeVisitor.new(as_node(source, wants_doc: wants_doc))
+end
+
+# Yields paths to temporary source files, deleting whatever got created there.
+def with_temp_files(count, &)
+  paths = Array.new(count) { File.tempname("source", ".cr") }
+  yield paths
+ensure
+  paths.try(&.each { |path| File.delete(path) rescue nil })
+end
+
+# :ditto:
+def with_temp_file(&)
+  with_temp_files(1) { |paths| yield paths.first }
 end
 
 def trailing_whitespace

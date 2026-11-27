@@ -49,8 +49,39 @@ module Ameba::Rule::Lint
         location = name_location_or(token, token.value)
 
         issue_for(*location, message) do |corrector|
-          corrector.remove(*location)
+          # The directive stays if it still disables any rule or group, along
+          # with the other words, like a reason or a misspelled rule name.
+          if (rules - names).any? { |rule_name| known_rule?(rule_name, or_group: true) }
+            corrector.replace(*location, without_rules(token.value.to_s, names))
+          else
+            corrector.remove(*location)
+          end
         end
+      end
+    end
+
+    # Removes the *names* from the directive in the *comment*, each one along
+    # with a separator, leaving the rest of the *comment* as it was.
+    private def without_rules(comment, names)
+      comment.sub(InlineComments::COMMENT_DIRECTIVE_REGEX) do |_, match|
+        rules = String.build do |io|
+          match["rules"].scan(/(,? )?(\w+(?:\/\w+)?)/) do |rule_match|
+            next if rule_match[2].in?(names)
+
+            io << rule_match[1]? unless io.bytesize.zero?
+            io << rule_match[2]
+          end
+        end
+
+        "# ameba:#{match["action"]} #{rules}"
+      end
+    end
+
+    # Returns `true` if *name* is the name of a known rule, or of a group
+    # of them if *or_group* is set.
+    private def known_rule?(name, *, or_group = false)
+      Rule.rules.any? do |rule|
+        rule.rule_name == name || (or_group && rule.group_name == name)
       end
     end
 
@@ -59,8 +90,7 @@ module Ameba::Rule::Lint
         next true if rule_name == name
 
         next if rule_name.in?(excluded_rules)
-        # skip non-existent rules
-        next if Rule.rules.none?(&.rule_name.== rule_name)
+        next unless known_rule?(rule_name)
 
         source.issues.none? do |issue|
           issue.rule.name == rule_name &&

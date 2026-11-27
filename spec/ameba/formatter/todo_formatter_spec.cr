@@ -28,6 +28,127 @@ module Ameba
       FileUtils.rm_rf(CONFIG_PATH)
     end
 
+    context "crashed issues" do
+      it "doesn't generate the file if there's nothing else to exclude" do
+        with_formatter do |formatter, io|
+          source = Source.new("a = 1", "crashed.cr")
+          source.add_crash_issue(DummyRule.new, "boom")
+
+          File.write(CONFIG_PATH, "existing config")
+          formatter.finished([source])
+
+          io.to_s.should contain "The rules which crashed can't be excluded. File is not generated."
+          File.read(CONFIG_PATH).should eq "existing config"
+        end
+      end
+
+      it "doesn't exclude the source, so that the crash stays visible" do
+        with_formatter do |formatter|
+          source = Source.new("a = 1", "crashed.cr")
+          source.add_crash_issue(DummyRule.new, "boom")
+
+          other = Source.new("a = 1", "other.cr")
+          other.add_issue(DummyRule.new, {1, 1}, "regular")
+
+          formatter.finished([source, other])
+
+          todo = File.read(CONFIG_PATH)
+          todo.should contain "other.cr"
+          todo.should_not contain "crashed.cr"
+        end
+      end
+
+      it "lists the rules left out of the file" do
+        with_formatter do |formatter, io|
+          source = Source.new("a = 1", "crashed.cr")
+          source.add_issue(NamedRule.new, {1, 1}, "regular")
+          source.add_crash_issue(DummyRule.new, "boom")
+
+          formatter.finished([source])
+
+          io.to_s.should contain <<-TEXT
+            Created #{CONFIG_PATH}
+            Left out the rules which crashed:
+              - #{DummyRule.new.name} on crashed.cr
+            TEXT
+        end
+      end
+
+      it "lists the rules left out if the file isn't generated" do
+        with_formatter do |formatter, io|
+          source = Source.new("a = 1", "crashed.cr")
+          source.add_crash_issue(DummyRule.new, "boom")
+
+          formatter.finished([source])
+
+          io.to_s.should contain "  - #{DummyRule.new.name} on crashed.cr"
+        end
+      end
+
+      it "doesn't exclude the source from a rule which crashed after reporting issues" do
+        with_formatter do |formatter, io|
+          source = Source.new("a = 1", "crashed.cr")
+          source.add_issue(DummyRule.new, {1, 1}, "regular")
+          source.add_crash_issue(DummyRule.new, "boom")
+
+          File.write(CONFIG_PATH, "existing config")
+          formatter.finished([source])
+
+          io.to_s.should contain "The rules which crashed can't be excluded. File is not generated."
+          File.read(CONFIG_PATH).should eq "existing config"
+        end
+      end
+
+      it "excludes the source from the other rules and the other sources from the crashed rule" do
+        with_formatter do |formatter|
+          source = Source.new("a = 1", "crashed.cr")
+          source.add_issue(DummyRule.new, {1, 1}, "regular")
+          source.add_issue(NamedRule.new, {1, 1}, "regular")
+          source.add_crash_issue(DummyRule.new, "boom")
+
+          other = Source.new("a = 1", "other.cr")
+          other.add_issue(DummyRule.new, {1, 1}, "regular")
+
+          formatter.finished([source, other])
+
+          File.read(CONFIG_PATH).should contain <<-YAML
+            #{DummyRule.new.name}:
+              Excluded:
+              - other.cr
+
+            #{NamedRule.new.name}:
+              Excluded:
+              - crashed.cr
+            YAML
+        end
+      end
+
+      it "doesn't take a file which couldn't be read for a syntax issue" do
+        with_formatter do |formatter, io|
+          source = Source.from_file(File.tempname("missing", ".cr"))
+          source.issues.first.syntax?.should be_true
+
+          formatter.finished([source])
+
+          io.to_s.should_not contain "Please fix syntax issues"
+          io.to_s.should contain "The rules which crashed can't be excluded. File is not generated."
+        end
+      end
+
+      it "excludes the other issues if a file couldn't be read" do
+        with_formatter do |formatter|
+          source = Source.from_file(File.tempname("missing", ".cr"))
+
+          other = Source.new("a = 1", "other.cr")
+          other.add_issue(DummyRule.new, {1, 1}, "regular")
+
+          formatter.finished([source, other])
+
+          File.read(CONFIG_PATH).should contain "other.cr"
+        end
+      end
+    end
+
     context "correctable issues" do
       it "doesn't generate the file if all of them got corrected" do
         with_formatter do |formatter, io|
