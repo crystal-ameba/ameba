@@ -120,7 +120,7 @@ module Ameba
 
       # This variable is a 2D array used to track corrected issues after each
       # inspection iteration. This is used to output meaningful infinite loop
-      # error message, and to choose the rule to report such a loop under.
+      # error message, and to choose the rules to report such a loop under.
       corrected_issues = [] of Array(Issue)
 
       # The crashes of each kind found so far, kept as the corrections might
@@ -136,7 +136,7 @@ module Ameba
       # When running with --fix, we need to inspect the source until no more
       # corrections are made (because automatic corrections can introduce new
       # issues). In the normal case the loop is only executed once.
-      loop_message = loop_unless_infinite(source, corrected_issues) do
+      looping_issues = loop_unless_infinite(source, corrected_issues) do
         break unless inspect_source(source, rule_crashes)
         break unless autocorrect?
 
@@ -152,11 +152,15 @@ module Ameba
       end
 
       case
-      when message = loop_message
-        report_failure(source, original_code, rule_crashes, corrected_issues.last.first.rule, message)
+      when looping_issues
+        # Each of the rules going in circles is to blame as much as the others
+        looping_rules = looping_issues.flat_map(&.map(&.rule)).uniq!
+        message = infinite_loop_message(source, looping_issues)
+
+        report_failure(source, original_code, rule_crashes, looping_rules, message)
       when message = write_corrected_code(source, corrected_issues)
         # Like failing to read the file, it isn't about any rule in particular
-        report_failure(source, original_code, rule_crashes, Rule::Lint::Syntax.new, message)
+        report_failure(source, original_code, rule_crashes, {Rule::Lint::Syntax.new}, message)
       else
         source.issues[0, 0] = corrected_issues.flatten
       end
@@ -223,9 +227,9 @@ module Ameba
 
     private MAX_ITERATIONS = 200
 
-    # Runs the block until it breaks out, which returns `nil`, or until
-    # it gets stuck, which returns a message describing what caused that.
-    private def loop_unless_infinite(source, corrected_issues, &) : String?
+    # Runs the block until it breaks out, which returns `nil`, or until it gets
+    # stuck, which returns the issues corrected by each iteration going in circles.
+    private def loop_unless_infinite(source, corrected_issues, &) : Array(Array(Issue))?
       # Keep track of the state of the source. If a rule modifies the source
       # and another rule undoes it producing identical source we have an
       # infinite loop.
@@ -240,12 +244,12 @@ module Ameba
         checksum = source.code.hash
 
         if loop_start = processed_sources.index(checksum)
-          return infinite_loop_message(source, corrected_issues[loop_start..])
+          return corrected_issues[loop_start..]
         end
         processed_sources << checksum
 
         if (iterations += 1) > MAX_ITERATIONS
-          return infinite_loop_message(source, corrected_issues.last(1))
+          return corrected_issues.last(1)
         end
 
         yield
@@ -296,12 +300,15 @@ module Ameba
     end
 
     # Goes back to the original code, so that nothing gets reported as corrected,
-    # and reports the failure along with the issues of that code.
-    private def report_failure(source, original_code, rule_crashes, rule, message) : Nil
+    # and reports the failure under each of the *rules*, along with the issues
+    # of that code.
+    private def report_failure(source, original_code, rule_crashes, rules, message) : Nil
       source.revert_to(original_code)
       inspect_source(source, rule_crashes)
 
-      source.add_crash_issue(rule, message)
+      rules.each do |rule|
+        source.add_crash_issue(rule, message)
+      end
     end
 
     # Adds the crashes among the *issues* of an inspection pass to *crashes*,

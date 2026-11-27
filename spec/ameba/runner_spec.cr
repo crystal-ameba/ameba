@@ -928,15 +928,14 @@ module Ameba
         source.issues.map(&.message).should_not contain "B to A"
       end
 
-      it "reports the loop only once, on the first line" do
+      it "reports the loop once under each of its rules, on the first line" do
         source = Source.new("\n\nclass A; end\n", "source.cr")
 
         Runner.new(rules, [source], formatter, default_severity, autocorrect: true).run
 
         crashed = source.issues.select(&.crashed?)
-        crashed.size.should eq 1
-        crashed.first.location.try(&.line_number).should eq 1
-        crashed.first.rule.should be_a Rule::Base
+        crashed.map(&.rule).should eq rules
+        crashed.map(&.location.try(&.line_number)).should eq [1, 1]
       end
 
       it "fails the run" do
@@ -1020,6 +1019,15 @@ module Ameba
           Runner.new(rules, [source], formatter, default_severity, autocorrect: true).run
 
           source.issues.find!(&.crashed?).message.should eq message
+        end
+
+        it "reports the loop only under the rules going in circles" do
+          rules = [CtoA.new, AtoB.new, BtoA.new]
+          source = Source.new("class C; end", "source.cr")
+
+          Runner.new(rules, [source], formatter, default_severity, autocorrect: true).run
+
+          source.issues.select(&.crashed?).map(&.rule).should eq rules[1..]
         end
       end
 
