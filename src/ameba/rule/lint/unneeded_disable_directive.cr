@@ -51,7 +51,7 @@ module Ameba::Rule::Lint
         issue_for(*location, message) do |corrector|
           # The directive stays if it still disables any rule or group, along
           # with the other words, like a reason or a misspelled rule name.
-          if (rules - names).any?(&->known_rule_or_group?(String))
+          if (rules - names).any? { |rule_name| known_rule?(rule_name, or_group: true) }
             corrector.replace(*location, without_rules(token.value.to_s, names))
           else
             corrector.remove(*location)
@@ -77,12 +77,12 @@ module Ameba::Rule::Lint
       end
     end
 
-    private def known_rule?(rule_name)
-      Rule.rules.any?(&.rule_name.== rule_name)
-    end
-
-    private def known_rule_or_group?(name)
-      Rule.rules.any? { |rule| rule.rule_name == name || rule.group_name == name }
+    # Returns `true` if *name* is the name of a known rule, or of a group
+    # of them if *or_group* is set.
+    private def known_rule?(name, *, or_group = false)
+      Rule.rules.any? do |rule|
+        rule.rule_name == name || (or_group && rule.group_name == name)
+      end
     end
 
     private def unneeded_disables(source, rules, location, excluded_rules)
