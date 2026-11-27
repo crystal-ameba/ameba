@@ -979,6 +979,17 @@ module Ameba
         end
       end
 
+      it "reports only the correction crashes located in the original code" do
+        rule = RaisingCorrectionRule.new.tap(&.enabled = true)
+        rule.raise_for = "B"
+        source = Source.new("B = 1\nclass A; end\n", "source.cr")
+
+        Runner.new(rules + [rule] of Rule::Base, [source], formatter, default_severity, autocorrect: true).run
+
+        crashed = source.issues.select { |issue| issue.crashed? && issue.rule == rule }
+        crashed.map(&.location.try(&.line_number)).should eq [1]
+      end
+
       it "drops corrections made before getting stuck, along with their issues" do
         rules_with_fix = rules + [Rule::Lint::NotNilAfterNoBang.new] of Rule::Base
         code = "class A; end\nfoo.match(/x/).not_nil!\n"

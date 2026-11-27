@@ -17,6 +17,9 @@ module Ameba
       # See `#keep`.
       @crashes = {} of {String, String} => Array(Issue)
 
+      # The crashes of the first pass, the only ones located in the original code.
+      @first_pass_crashes : Hash({String, String}, Array(Issue))?
+
       # The latest crash of each rule. A rule raises at most once per pass,
       # but the message might differ between the passes.
       @rule_crashes = {} of Rule::Base => String
@@ -34,14 +37,23 @@ module Ameba
       # the same crashes across the passes, keeping it from the pass with the most
       # of them, or the latest one on a tie.
       def keep(issues) : Nil
-        issues
+        crashes = issues
           .select(&.crashed?)
           .group_by { |issue| {issue.rule.name, issue.original_message} }
-          .each do |key, same_crashes|
-            if same_crashes.size >= (@crashes[key]?.try(&.size) || 0)
-              @crashes[key] = same_crashes
-            end
+
+        @first_pass_crashes ||= crashes
+
+        crashes.each do |key, same_crashes|
+          if same_crashes.size >= (@crashes[key]?.try(&.size) || 0)
+            @crashes[key] = same_crashes
           end
+        end
+      end
+
+      # Forgets the crashes found after the first pass, as the source went back
+      # to the original code, which their locations might not be within.
+      def revert : Nil
+        @crashes = @first_pass_crashes.try(&.dup) || @crashes.class.new
       end
 
       # Replaces the crashes among the issues of the *source* with all the ones kept.
@@ -338,6 +350,8 @@ module Ameba
     # of that code.
     private def report_failure(source, original_code, crashes, rules, message) : Nil
       source.revert_to(original_code)
+      crashes.revert
+
       inspect_source(source, crashes)
 
       rules.each do |rule|
