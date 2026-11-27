@@ -24,9 +24,19 @@ module Ameba
       # but the message might differ between the passes.
       @rule_crashes = {} of Rule::Base => String
 
+      # The failures of processing the source as a whole, under each of their rules.
+      @failures = [] of {Rule::Base, String}
+
       # Adds an exception raised by a *rule*.
       def add_rule_crash(rule, ex : Exception) : Nil
         @rule_crashes[rule] = "Rule raised an exception: #{ex.message} (#{ex.class})"
+      end
+
+      # Adds a failure described by the *message*, reported under each of the *rules*.
+      def add_failure(rules, message : String) : Nil
+        rules.each do |rule|
+          @failures << {rule, message}
+        end
       end
 
       # Adds the crashes among the *issues* of an inspection pass, grouped by
@@ -67,6 +77,10 @@ module Ameba
         end
 
         @rule_crashes.each do |rule, message|
+          source.add_crash_issue(rule, message)
+        end
+
+        @failures.each do |rule, message|
           source.add_crash_issue(rule, message)
         end
       end
@@ -354,9 +368,7 @@ module Ameba
 
       inspect_source(source, crashes)
 
-      rules.each do |rule|
-        source.add_crash_issue(rule, message)
-      end
+      crashes.add_failure(rules, message)
     end
 
     private def check_unneeded_directives(source, excluded_rules, crashes)
