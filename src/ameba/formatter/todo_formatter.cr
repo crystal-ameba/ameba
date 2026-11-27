@@ -28,7 +28,8 @@ module Ameba::Formatter
       issues = sources.flat_map { |source| excludable_issues(source) }
 
       if issues.empty?
-        output.puts "Crashes can't be excluded. File is not generated."
+        output.puts "The rules which crashed can't be excluded. File is not generated."
+        print_crashed_rules(sources)
         return
       end
 
@@ -44,6 +45,19 @@ module Ameba::Formatter
       generate_todo_config(issues)
 
       output.puts "Created #{config_path}"
+      print_crashed_rules(sources)
+    end
+
+    # Lists the rules which crashed on each source, since nothing else
+    # would tell that they're left out of the file.
+    private def print_crashed_rules(sources) : Nil
+      crashes = sources.flat_map do |source|
+        crashed_rules(source).map { |name| "#{name} on #{source.path}" }
+      end
+      return if crashes.empty?
+
+      output.puts "Left out the rules which crashed:"
+      crashes.each { |crash| output.puts "  - #{crash}" }
     end
 
     private def generate_todo_config(issues) : Nil
@@ -78,15 +92,20 @@ module Ameba::Formatter
     # its issues before that, so the *source* isn't excluded from it at all,
     # keeping the crash visible on the subsequent runs.
     private def excludable_issues(source)
-      crashed_rules = source.issues
-        .select(&.crashed?)
-        .map(&.rule.name)
-        .to_set
+      crashed_rules = crashed_rules(source)
 
       source.issues.select do |issue|
         issue.unresolved? && !issue.syntax? && !issue.crashed? &&
           !issue.rule.name.in?(crashed_rules)
       end
+    end
+
+    # Returns the names of the rules which crashed on the *source*.
+    private def crashed_rules(source) : Set(String)
+      source.issues
+        .select(&.crashed?)
+        .map(&.rule.name)
+        .to_set
     end
 
     private def rule_issues_map(issues)

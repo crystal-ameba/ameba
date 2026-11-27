@@ -37,7 +37,7 @@ module Ameba
           File.write(CONFIG_PATH, "existing config")
           formatter.finished([source])
 
-          io.to_s.should contain "Crashes can't be excluded. File is not generated."
+          io.to_s.should contain "The rules which crashed can't be excluded. File is not generated."
           File.read(CONFIG_PATH).should eq "existing config"
         end
       end
@@ -58,6 +58,33 @@ module Ameba
         end
       end
 
+      it "lists the rules left out of the file" do
+        with_formatter do |formatter, io|
+          source = Source.new("a = 1", "crashed.cr")
+          source.add_issue(NamedRule.new, {1, 1}, "regular")
+          source.add_crash_issue(DummyRule.new, "boom")
+
+          formatter.finished([source])
+
+          io.to_s.should contain <<-TEXT
+            Created #{CONFIG_PATH}
+            Left out the rules which crashed:
+              - #{DummyRule.new.name} on crashed.cr
+            TEXT
+        end
+      end
+
+      it "lists the rules left out if the file isn't generated" do
+        with_formatter do |formatter, io|
+          source = Source.new("a = 1", "crashed.cr")
+          source.add_crash_issue(DummyRule.new, "boom")
+
+          formatter.finished([source])
+
+          io.to_s.should contain "  - #{DummyRule.new.name} on crashed.cr"
+        end
+      end
+
       it "doesn't exclude the source from a rule which crashed after reporting issues" do
         with_formatter do |formatter, io|
           source = Source.new("a = 1", "crashed.cr")
@@ -67,7 +94,7 @@ module Ameba
           File.write(CONFIG_PATH, "existing config")
           formatter.finished([source])
 
-          io.to_s.should contain "Crashes can't be excluded. File is not generated."
+          io.to_s.should contain "The rules which crashed can't be excluded. File is not generated."
           File.read(CONFIG_PATH).should eq "existing config"
         end
       end
@@ -104,7 +131,7 @@ module Ameba
           formatter.finished([source])
 
           io.to_s.should_not contain "Please fix syntax issues"
-          io.to_s.should contain "Crashes can't be excluded. File is not generated."
+          io.to_s.should contain "The rules which crashed can't be excluded. File is not generated."
         end
       end
 
