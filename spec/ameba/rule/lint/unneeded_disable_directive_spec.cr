@@ -103,7 +103,29 @@ module Ameba::Rule::Lint
         CRYSTAL
     end
 
-    it "drops the words which aren't rules when correcting" do
+    it "keeps the other words when correcting" do
+      source = expect_issue subject, <<-CRYSTAL
+        a = 1 # ameba:disable Style, Lint/ComparisonToBoolean -- for now
+            # ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ error: Unnecessary disabling of `Lint/ComparisonToBoolean`
+        CRYSTAL
+
+      expect_correction source, <<-CRYSTAL
+        a = 1 # ameba:disable Style -- for now
+        CRYSTAL
+    end
+
+    it "keeps the unknown rules when correcting" do
+      source = expect_issue subject, <<-CRYSTAL
+        a = 1 # ameba:disable Lint/ComparisonToBoolean, Typo/Rule Style
+            # ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ error: Unnecessary disabling of `Lint/ComparisonToBoolean`
+        CRYSTAL
+
+      expect_correction source, <<-CRYSTAL
+        a = 1 # ameba:disable Typo/Rule Style
+        CRYSTAL
+    end
+
+    it "removes the other words along with the directive when correcting" do
       source = expect_issue subject, <<-CRYSTAL
         a = 1 # ameba:disable Lint/ComparisonToBoolean for now
             # ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ error: Unnecessary disabling of `Lint/ComparisonToBoolean`

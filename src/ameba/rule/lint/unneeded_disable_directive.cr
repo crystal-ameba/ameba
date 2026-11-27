@@ -49,22 +49,32 @@ module Ameba::Rule::Lint
         location = name_location_or(token, token.value)
 
         issue_for(*location, message) do |corrector|
-          # Keeps the rules and groups which are needed, or whose need is unknown.
-          # Other words, like a reason following the rules, are dropped.
-          kept_rules = (rules - names).select(&->known_rule_or_group?(String))
-
-          if kept_rules.empty?
-            corrector.remove(*location)
+          # The directive stays if it still disables any rule or group, along
+          # with the other words, like a reason or a misspelled rule name.
+          if (rules - names).any?(&->known_rule_or_group?(String))
+            corrector.replace(*location, without_rules(token.value.to_s, names))
           else
-            corrector.replace(*location, disable_directive(token.value.to_s, kept_rules))
+            corrector.remove(*location)
           end
         end
       end
     end
 
-    private def disable_directive(comment, rules)
-      comment.sub(InlineComments::COMMENT_DIRECTIVE_REGEX,
-        "# ameba:disable #{rules.join(", ")}")
+    # Removes the *names* from the directive in the *comment*, each one along
+    # with a separator, leaving the rest of the *comment* as it was.
+    private def without_rules(comment, names)
+      comment.sub(InlineComments::COMMENT_DIRECTIVE_REGEX) do |_, match|
+        rules = String.build do |io|
+          match["rules"].scan(/(,? )?(\w+(?:\/\w+)?)/) do |rule_match|
+            next if rule_match[2].in?(names)
+
+            io << rule_match[1]? unless io.bytesize.zero?
+            io << rule_match[2]
+          end
+        end
+
+        "# ameba:#{match["action"]} #{rules}"
+      end
     end
 
     private def known_rule?(rule_name)
