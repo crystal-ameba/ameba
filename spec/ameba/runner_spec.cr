@@ -242,6 +242,23 @@ module Ameba
           end
         end
 
+        it "reports it once if its message differed between the correction passes" do
+          rule = RaiseRule.new
+          rule.should_raise = true
+          rule.varying_message = true
+          rules = [rule, Rule::Lint::NotNilAfterNoBang.new] of Rule::Base
+
+          with_temp_file do |path|
+            File.write(path, "foo.match(/x/).not_nil!\n")
+            source = Source.new(File.read(path), path)
+
+            Runner.new(rules, [source], formatter, default_severity, autocorrect: true).run
+
+            source.issues.select(&.crashed?).map(&.message)
+              .should eq ["Rule raised an exception: something went wrong with 16 bytes (Exception)"]
+          end
+        end
+
         it "still reports other unneeded directives" do
           rule = RaiseRule.new
           rule.should_raise = true

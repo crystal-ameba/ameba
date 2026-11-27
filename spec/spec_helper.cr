@@ -213,6 +213,9 @@ module Ameba
     # Makes it raise only for the code including the given string.
     property raise_for : String?
 
+    # Makes the message of the exception differ along with the code.
+    property? varying_message = false
+
     properties do
       description "Internal rule that always raises"
     end
@@ -221,7 +224,10 @@ module Ameba
       return unless should_raise?
       return if (raise_for = @raise_for) && !source.code.includes?(raise_for)
 
-      raise "something went wrong"
+      message = "something went wrong"
+      message += " with #{source.code.bytesize} bytes" if varying_message?
+
+      raise message
     end
   end
 

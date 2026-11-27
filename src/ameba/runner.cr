@@ -127,13 +127,17 @@ module Ameba
       # remove their cause. See `#keep_crashes`.
       crashes = {} of {String, String} => Array(Issue)
 
+      # The latest crash of each rule, kept for the same reason. A rule raises
+      # at most once per pass, but the message might differ between the passes.
+      rule_crashes = {} of Rule::Base => String
+
       original_code = source.code
 
       # When running with --fix, we need to inspect the source until no more
       # corrections are made (because automatic corrections can introduce new
       # issues). In the normal case the loop is only executed once.
       loop_message = loop_unless_infinite(source, corrected_issues) do
-        break unless inspect_source(source)
+        break unless inspect_source(source, rule_crashes)
         break unless autocorrect?
 
         applied_issues = source.correct_safely!
@@ -149,10 +153,10 @@ module Ameba
 
       case
       when message = loop_message
-        report_failure(source, original_code, corrected_issues.last.first.rule, message)
+        report_failure(source, original_code, rule_crashes, corrected_issues.last.first.rule, message)
       when message = write_corrected_code(source, corrected_issues)
         # Like failing to read the file, it isn't about any rule in particular
-        report_failure(source, original_code, Rule::Lint::Syntax.new, message)
+        report_failure(source, original_code, rule_crashes, Rule::Lint::Syntax.new, message)
       else
         source.issues[0, 0] = corrected_issues.flatten
       end
@@ -163,6 +167,10 @@ module Ameba
 
       crashes.each_value do |same_crashes|
         source.issues.concat(same_crashes)
+      end
+
+      rule_crashes.each do |rule, crash_message|
+        source.add_crash_issue(rule, crash_message)
       end
     ensure
       source.issues.sort_by! do |issue|
@@ -252,8 +260,9 @@ module Ameba
     end
 
     # Inspects the source, returning `false` if it has syntax errors,
-    # in which case there's nothing to inspect or correct.
-    private def inspect_source(source) : Bool
+    # in which case there's nothing to inspect or correct. The exceptions
+    # raised by the rules are added to *rule_crashes*.
+    private def inspect_source(source, rule_crashes) : Bool
       @syntax_rule.test(source)
       return false unless source.valid?
 
@@ -265,12 +274,12 @@ module Ameba
           next
         end
         # Whether its directives are needed is unknown if the rule hasn't finished
-        if report_exception(source, rule) { rule.test(source) }
+        if report_exception(rule_crashes, rule) { rule.test(source) }
           excluded_rules << rule.name
         end
       end
 
-      check_unneeded_directives(source, excluded_rules)
+      check_unneeded_directives(source, excluded_rules, rule_crashes)
 
       true
     end
@@ -288,9 +297,9 @@ module Ameba
 
     # Goes back to the original code, so that nothing gets reported as corrected,
     # and reports the failure along with the issues of that code.
-    private def report_failure(source, original_code, rule, message) : Nil
+    private def report_failure(source, original_code, rule_crashes, rule, message) : Nil
       source.revert_to(original_code)
-      inspect_source(source)
+      inspect_source(source, rule_crashes)
 
       source.add_crash_issue(rule, message)
     end
@@ -312,24 +321,22 @@ module Ameba
         end
     end
 
-    private def check_unneeded_directives(source, excluded_rules = Set(String).new)
+    private def check_unneeded_directives(source, excluded_rules, rule_crashes)
       return unless rule = @unneeded_disable_directive_rule
       return unless rule.enabled?
       return if rule.excluded?(source, root)
 
-      report_exception(source, rule) { rule.test(source, excluded_rules) }
+      report_exception(rule_crashes, rule) { rule.test(source, excluded_rules) }
     end
 
-    # Reports an exception raised by a *rule* as an issue, so that it fails the
-    # run without stopping the other rules and sources from being inspected.
-    # Returns `true` if that happened.
-    private def report_exception(source, rule, &) : Bool
+    # Adds an exception raised by a *rule* to *rule_crashes*, to be reported
+    # as an issue, so that it fails the run without stopping the other rules
+    # and sources from being inspected. Returns `true` if that happened.
+    private def report_exception(rule_crashes, rule, &) : Bool
       yield
       false
     rescue ex
-      message = "Rule raised an exception: #{ex.message} (#{ex.class})"
-
-      source.add_crash_issue(rule, message)
+      rule_crashes[rule] = "Rule raised an exception: #{ex.message} (#{ex.class})"
       true
     end
   end
