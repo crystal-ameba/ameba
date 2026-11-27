@@ -253,6 +253,9 @@ module Ameba
     # Makes it raise for the lines including the given string instead.
     property raise_for = "foo"
 
+    # Makes the message of the exception differ along with the code.
+    property? varying_message = false
+
     properties do
       description "Internal rule with a correction that raises"
       enabled false
@@ -262,8 +265,11 @@ module Ameba
       source.lines.each_with_index(1) do |line, line_number|
         next unless line.includes?(raise_for)
 
+        message = "Correction went wrong"
+        message += " with #{source.code.bytesize} bytes" if varying_message?
+
         source.add_issue(self, {line_number, 1}, {line_number, 3}, "foo") do
-          raise IndexError.new("Correction went wrong")
+          raise IndexError.new(message)
         end
       end
     end

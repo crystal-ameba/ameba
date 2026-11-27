@@ -13,7 +13,8 @@ module Ameba
     # Keeps the crashes found on a source across the inspection passes,
     # as the corrections might remove their cause.
     private class CrashLog
-      # The crashes of each rule and message, from a single pass. See `#keep`.
+      # The crashes of each rule and original message, from a single pass.
+      # See `#keep`.
       @crashes = {} of {String, String} => Array(Issue)
 
       # The latest crash of each rule. A rule raises at most once per pass,
@@ -26,7 +27,8 @@ module Ameba
       end
 
       # Adds the crashes among the *issues* of an inspection pass, grouped by
-      # rule and message.
+      # rule and original message, since the message of a crashed correction
+      # includes the one of its exception, which might differ between the passes.
       #
       # As locations shift along with the corrections, such a group is taken for
       # the same crashes across the passes, keeping it from the pass with the most
@@ -34,7 +36,7 @@ module Ameba
       def keep(issues) : Nil
         issues
           .select(&.crashed?)
-          .group_by { |issue| {issue.rule.name, issue.message} }
+          .group_by { |issue| {issue.rule.name, issue.original_message} }
           .each do |key, same_crashes|
             if same_crashes.size >= (@crashes[key]?.try(&.size) || 0)
               @crashes[key] = same_crashes

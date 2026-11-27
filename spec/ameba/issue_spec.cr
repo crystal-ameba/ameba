@@ -107,6 +107,17 @@ module Ameba
       issue.without_correction("Foo").message.should eq "Foo"
     end
 
+    it "#without_correction keeps the original message" do
+      issue = Issue.new code: "",
+        rule: DummyRule.new,
+        location: nil,
+        end_location: nil,
+        message: "Blah"
+
+      issue.original_message.should eq "Blah"
+      issue.without_correction("Foo").without_correction("Bar").original_message.should eq "Blah"
+    end
+
     it "accepts rule and message" do
       issue = Issue.new code: "",
         rule: DummyRule.new,

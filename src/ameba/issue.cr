@@ -34,6 +34,10 @@ module Ameba
     # Issue message.
     getter message : String
 
+    # The message the issue was reported with, before `#without_correction`
+    # replaced it, e.g. adding why the correction got dropped.
+    getter original_message : String
+
     # Issue status.
     getter status : Status
 
@@ -46,7 +50,8 @@ module Ameba
     delegate :corrected?, :crashed?,
       to: outcome
 
-    def initialize(@code, @rule, @location, @end_location, @message, @status : Status = :enabled, @block : (Source::Corrector ->)? = nil, *, @outcome = :pending)
+    def initialize(@code, @rule, @location, @end_location, @message, @status : Status = :enabled, @block : (Source::Corrector ->)? = nil, *, @outcome = :pending, original_message : String? = nil)
+      @original_message = original_message || @message
     end
 
     def syntax?
@@ -73,13 +78,13 @@ module Ameba
     end
 
     # Returns the same issue with the given *message* and *outcome*, but without
-    # the means of correcting it.
+    # the means of correcting it. Its `#original_message` stays the same.
     def without_correction(message = @message, *, outcome : Outcome = :pending) : self
       copy_with(message: message, block: nil, outcome: outcome)
     end
 
     private def copy_with(*, message = @message, block = @block, outcome : Outcome = @outcome)
-      self.class.new(code, rule, location, end_location, message, status, block, outcome: outcome)
+      self.class.new(code, rule, location, end_location, message, status, block, outcome: outcome, original_message: original_message)
     end
   end
 end

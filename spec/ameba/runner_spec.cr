@@ -300,6 +300,23 @@ module Ameba
       end
 
       context "exception in correction" do
+        it "reports it once if its message differed between the correction passes" do
+          rule = RaisingCorrectionRule.new.tap(&.enabled = true)
+          rule.raise_for = "bar"
+          rule.varying_message = true
+          rules = [rule, Rule::Lint::NotNilAfterNoBang.new] of Rule::Base
+
+          with_temp_file do |path|
+            File.write(path, "foo.match(/x/).not_nil!\nbar\n")
+            source = Source.new(File.read(path), path)
+
+            Runner.new(rules, [source], formatter, default_severity, autocorrect: true).run
+
+            source.issues.count(&.crashed?).should eq 1
+            File.read(path).should eq "foo.match!(/x/)\nbar\n"
+          end
+        end
+
         it "keeps reporting the ones at different lines once a correction removed their cause" do
           rule = RaisingCorrectionRule.new.tap(&.enabled = true)
           rule.raise_for = ".not_nil!"
